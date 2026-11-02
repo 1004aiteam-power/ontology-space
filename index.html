@@ -4,165 +4,126 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ontology Space</title>
-<meta name="description" content="온톨로지의 기본 개념과 IEC CIM 기반 전력망 온톨로지 소개">
-<style>
-:root{
-  --bg:#fbfaf7; --surface:#ffffff; --text:#1d1f24; --muted:#5d6370; --line:#e3e1db;
-  --accent:#1f6feb; --accent-soft:#e8f0fe; --warm:#c2410c; --code:#f3f1ec;
-  --hv:#b42318; --mv:#1f6feb; --node:#1d1f24;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#121417; --surface:#1a1d22; --text:#e7e8ea; --muted:#a0a6b1; --line:#2c3038;
-    --accent:#6ea8fe; --accent-soft:#1c2a40; --warm:#fb923c; --code:#22262d;
-    --hv:#f97066; --mv:#6ea8fe; --node:#e7e8ea;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#121417; --surface:#1a1d22; --text:#e7e8ea; --muted:#a0a6b1; --line:#2c3038;
-  --accent:#6ea8fe; --accent-soft:#1c2a40; --warm:#fb923c; --code:#22262d;
-  --hv:#f97066; --mv:#6ea8fe; --node:#e7e8ea;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);
-  font:16px/1.7 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
-  word-break:keep-all}
-a{color:var(--accent)}
-.wrap{max-width:960px;margin:0 auto;padding:0 16px}
-header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
-  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-header.top .wrap{display:flex;align-items:center;gap:16px;height:56px}
-.brand{font-weight:700;text-decoration:none;color:var(--text);white-space:nowrap}
-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
-nav a{padding:6px 10px;border-radius:6px;text-decoration:none;color:var(--muted);font-size:14px;white-space:nowrap}
-nav a:hover{background:var(--accent-soft);color:var(--accent)}
-#theme{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:6px;padding:4px 8px;cursor:pointer}
-.hero{padding:72px 0 48px}
-.eyebrow{color:var(--warm);font-weight:600;font-size:14px;letter-spacing:.04em}
-h1{font-size:clamp(30px,5vw,46px);line-height:1.25;margin:8px 0 16px}
-.lead{font-size:18px;color:var(--muted);max-width:680px}
-section{padding:48px 0;border-top:1px solid var(--line)}
-h2{font-size:26px;margin:0 0 8px}
-h3{font-size:19px;margin:32px 0 8px}
-.sub{color:var(--muted);margin:0 0 24px}
-blockquote{margin:16px 0;padding:16px 20px;background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 8px 8px 0}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
-.card h4{margin:0 0 6px;font-size:16px}
-.card p{margin:0;color:var(--muted);font-size:15px}
-.card .ex{margin-top:8px;font-size:14px;color:var(--text)}
-.tbl{overflow-x:auto;margin:16px 0}
-table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px;background:var(--surface)}
-th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
-th{background:var(--code);font-weight:600}
-code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
-code{background:var(--code);padding:1px 5px;border-radius:4px}
-pre{background:var(--code);padding:16px;border-radius:8px;overflow-x:auto;line-height:1.5}
-pre code{background:none;padding:0}
-.stack{display:flex;flex-direction:column;gap:6px;max-width:520px}
-.stack div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;gap:12px}
-.stack b{white-space:nowrap}
-.stack span{color:var(--muted);font-size:14px;text-align:right}
-.tree{white-space:pre;overflow-x:auto}
-.diagram{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
-.diagram svg{display:block;min-width:640px;width:100%;height:auto}
-.diagram text{fill:var(--text);font-size:13px}
-.diagram .muted{fill:var(--muted);font-size:12px}
-.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
-.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px}
-#info{margin-top:12px;min-height:48px;font-size:15px;color:var(--muted)}
-.eq{cursor:pointer}
-.eq:hover rect,.eq:hover circle,.eq.sel rect,.eq.sel circle{stroke:var(--warm);stroke-width:3}
-ol li,ul li{margin:4px 0}
-footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
-.badge{display:inline-block;font-size:12px;font-weight:600;color:var(--warm);border:1px solid var(--warm);border-radius:999px;padding:1px 10px;margin-bottom:8px}
-.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0 0}
-.tabs button{border:1px solid var(--line);border-bottom:none;background:var(--code);color:var(--muted);padding:6px 12px;border-radius:8px 8px 0 0;cursor:pointer;font:13px ui-monospace,Menlo,Consolas,monospace}
-.tabs button[aria-selected=true]{background:var(--surface);color:var(--text);font-weight:600}
-.viewer{border:1px solid var(--line);border-radius:0 8px 8px 8px;background:var(--surface);overflow:hidden}
-.viewer .bar{display:flex;justify-content:space-between;gap:8px;padding:8px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
-.viewer pre{margin:0;border-radius:0;max-height:560px;background:var(--surface)}
-.hljs-keyword,.hljs-built_in{color:#a626a4}.hljs-string{color:#50a14f}.hljs-comment{color:var(--muted);font-style:italic}
-.hljs-title,.hljs-title.function_,.hljs-title.class_{color:#1f6feb}.hljs-number,.hljs-literal{color:#c2410c}.hljs-meta{color:#b45309}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hljs-keyword,:root:not([data-theme="light"]) .hljs-built_in{color:#d197f5}:root:not([data-theme="light"]) .hljs-string{color:#9ece6a}:root:not([data-theme="light"]) .hljs-title{color:#7aa2f7}:root:not([data-theme="light"]) .hljs-number,:root:not([data-theme="light"]) .hljs-literal{color:#ff9e64}}
-:root[data-theme="dark"] .hljs-keyword,:root[data-theme="dark"] .hljs-built_in{color:#d197f5}:root[data-theme="dark"] .hljs-string{color:#9ece6a}:root[data-theme="dark"] .hljs-title{color:#7aa2f7}:root[data-theme="dark"] .hljs-number,:root[data-theme="dark"] .hljs-literal{color:#ff9e64}
-</style>
+<meta name="title-ko" content="Ontology Space · 온톨로지 소개">
+<meta name="title-en" content="Ontology Space · Introduction to Ontology">
+<meta name="description" content="온톨로지의 기본 개념, IEC CIM 기반 전력망 온톨로지, CIM 파이썬 프로젝트 pycim">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="brand" href="#">Ontology Space</a>
+  <a class="brand" href="index.html">Ontology Space</a>
   <nav>
-    <a href="#what">온톨로지란</a><a href="#parts">구성요소</a><a href="#stack">기술 스택</a>
-    <a href="#grid">전력망 온톨로지</a><a href="#cim">CIM 모델</a><a href="#example">예제</a><a href="#pycim">파이썬 프로젝트</a><a href="#tools">해석 도구 비교</a><a href="#use">활용</a><a href="#ref">참고</a>
+    <a href="index.html" aria-current="page"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
   </nav>
-  <button id="theme" aria-label="테마 전환">◐</button>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
 </div></header>
 
 <main class="wrap">
 <div class="hero">
   <div class="eyebrow">ONTOLOGY × POWER GRID</div>
-  <h1>온톨로지로 전력망을<br>기계가 이해하는 지식으로</h1>
-  <p class="lead">온톨로지의 기본 개념부터 IEC CIM 기반 전력망 온톨로지, 직접 질의해 볼 수 있는 예제, 그리고 <b>CIM을 파이썬 클래스로 설계하는 프로젝트(pycim)</b>를 소개합니다.</p>
+  <h1 lang="ko">온톨로지로 전력망을<br>기계가 이해하는 지식으로</h1>
+  <h1 lang="en">Turning the power grid into<br>knowledge machines understand</h1>
+  <p class="lead" lang="ko">온톨로지의 기본 개념, IEC CIM 기반 전력망 온톨로지, 그리고 CIM을 파이썬 클래스로 설계하는 프로젝트 <b>pycim</b>을 소개합니다.</p>
+  <p class="lead" lang="en">An introduction to ontologies, the IEC CIM–based power grid ontology, and <b>pycim</b>, a project that designs CIM as Python classes.</p>
+  <div class="grid" style="margin-top:28px">
+    <a class="card" href="#what"><h4><span lang="ko">① 온톨로지 소개</span><span lang="en">① What is an ontology</span></h4>
+      <p lang="ko">개념, 구성요소, RDF · OWL · SPARQL</p><p lang="en">Concepts, building blocks, RDF · OWL · SPARQL</p>
+      <span class="more"><span lang="ko">이 페이지 ↓</span><span lang="en">This page ↓</span></span></a>
+    <a class="card" href="grid.html"><h4><span lang="ko">② 전력망 온톨로지</span><span lang="en">② Power grid ontology</span></h4>
+      <p lang="ko">IEC CIM, CGMES, 인터랙티브 단선도</p><p lang="en">IEC CIM, CGMES, interactive single-line diagram</p>
+      <span class="more"><span lang="ko">전력망 페이지 →</span><span lang="en">Power Grid →</span></span></a>
+    <a class="card" href="project.html"><h4><span lang="ko">③ 프로젝트 pycim</span><span lang="en">③ Project: pycim</span></h4>
+      <p lang="ko">CIM 파이썬 클래스, pandapower · OpenDSS 변환</p><p lang="en">CIM in Python, export to pandapower · OpenDSS</p>
+      <span class="more"><span lang="ko">프로젝트 페이지 →</span><span lang="en">Project →</span></span></a>
+  </div>
 </div>
 
 <section id="what">
-  <h2>온톨로지란?</h2>
-  <p class="sub">철학의 "존재론"에서 온 말로, 정보과학에서는 도메인 지식을 형식적으로 정의한 모델을 뜻합니다.</p>
-  <blockquote><b>온톨로지</b>는 특정 도메인의 개념과 개념 사이의 관계를 사람과 기계가 함께 이해할 수 있도록 <b>명시적이고 형식적으로</b> 정의한 지식 모델입니다.<br><small>— Gruber (1993), “an explicit specification of a conceptualization”</small></blockquote>
-  <p>쉽게 말하면 <b>"이 분야에서 쓰는 용어와, 그 용어들이 서로 어떻게 연결되는지에 대한 합의된 사전 + 규칙집"</b>입니다.</p>
-  <h3>왜 필요한가</h3>
+  <h2><span lang="ko">온톨로지란?</span><span lang="en">What is an ontology?</span></h2>
+  <p class="sub" lang="ko">철학의 "존재론"에서 온 말로, 정보과학에서는 도메인 지식을 형식적으로 정의한 모델을 뜻합니다.</p>
+  <p class="sub" lang="en">Borrowed from philosophy ("the study of being"), in computer science it means a formal model of domain knowledge.</p>
+  <blockquote lang="ko"><b>온톨로지</b>는 특정 도메인의 개념과 개념 사이의 관계를 사람과 기계가 함께 이해할 수 있도록 <b>명시적이고 형식적으로</b> 정의한 지식 모델입니다.<br><small>— Gruber (1993), “an explicit specification of a conceptualization”</small></blockquote>
+  <blockquote lang="en">An <b>ontology</b> is a knowledge model that defines the concepts of a domain and the relations between them <b>explicitly and formally</b>, so that both people and machines can understand them.<br><small>— Gruber (1993), “an explicit specification of a conceptualization”</small></blockquote>
+  <p lang="ko">쉽게 말하면 <b>"이 분야에서 쓰는 용어와, 그 용어들이 서로 어떻게 연결되는지에 대한 합의된 사전 + 규칙집"</b>입니다.</p>
+  <p lang="en">Put simply, it is <b>an agreed dictionary and rulebook of a field's terms and how they connect</b>.</p>
+  <h3><span lang="ko">왜 필요한가</span><span lang="en">Why it matters</span></h3>
   <div class="grid">
-    <div class="card"><h4>의미 통일</h4><p>시스템마다 "선로", "Line", "ACLineSegment"로 다르게 부르는 대상을 공통 어휘로 묶습니다.</p></div>
-    <div class="card"><h4>데이터 연결</h4><p>흩어진 테이블과 파일을 하나의 지식 그래프로 연결합니다.</p></div>
-    <div class="card"><h4>추론</h4><p>코드 속에 숨어 있던 도메인 규칙을 모델에 드러내 새로운 사실을 도출합니다.</p></div>
-    <div class="card"><h4>AI 연계</h4><p>LLM에 구조화된 도메인 지식을 제공합니다 (GraphRAG, 근거 기반 답변).</p></div>
+    <div class="card"><h4><span lang="ko">의미 통일</span><span lang="en">Shared meaning</span></h4>
+      <p lang="ko">시스템마다 "선로", "Line", "ACLineSegment"로 다르게 부르는 대상을 공통 어휘로 묶습니다.</p>
+      <p lang="en">One vocabulary for the thing systems call "선로", "Line" or "ACLineSegment".</p></div>
+    <div class="card"><h4><span lang="ko">데이터 연결</span><span lang="en">Connected data</span></h4>
+      <p lang="ko">흩어진 테이블과 파일을 하나의 지식 그래프로 연결합니다.</p>
+      <p lang="en">Scattered tables and files become one knowledge graph.</p></div>
+    <div class="card"><h4><span lang="ko">추론</span><span lang="en">Reasoning</span></h4>
+      <p lang="ko">코드 속에 숨어 있던 도메인 규칙을 모델에 드러내 새로운 사실을 도출합니다.</p>
+      <p lang="en">Domain rules hidden in code become explicit, so new facts can be inferred.</p></div>
+    <div class="card"><h4><span lang="ko">AI 연계</span><span lang="en">AI ready</span></h4>
+      <p lang="ko">LLM에 구조화된 도메인 지식을 제공합니다 (GraphRAG, 근거 기반 답변).</p>
+      <p lang="en">Gives LLMs structured domain knowledge (GraphRAG, grounded answers).</p></div>
   </div>
 </section>
 
 <section id="parts">
-  <h2>구성요소</h2>
-  <p class="sub">스키마(TBox)와 데이터(ABox) 두 층으로 나눠 봅니다.</p>
+  <h2><span lang="ko">구성요소</span><span lang="en">Building blocks</span></h2>
+  <p class="sub" lang="ko">스키마(TBox)와 데이터(ABox) 두 층으로 나눠 봅니다.</p>
+  <p class="sub" lang="en">Usually split into two layers: schema (TBox) and data (ABox).</p>
   <div class="grid">
-    <div class="card"><h4>클래스 (Class)</h4><p>개념의 범주</p><div class="ex">변압기, 변전소, 송전선로</div></div>
-    <div class="card"><h4>개체 (Individual)</h4><p>클래스의 구체적 실체</p><div class="ex">A변전소, M.Tr #1</div></div>
-    <div class="card"><h4>속성 (Property)</h4><p>개체 간 관계 또는 값</p><div class="ex">설치위치, 정격용량 = 60 MVA</div></div>
-    <div class="card"><h4>계층 (Hierarchy)</h4><p>상위-하위 개념 (<code>subClassOf</code>)</p><div class="ex">차단기 ⊂ 개폐기 ⊂ 도전성 설비</div></div>
-    <div class="card"><h4>공리 (Axiom)</h4><p>논리 규칙과 제약</p><div class="ex">모든 선로 구간은 단자 2개를 가진다</div></div>
+    <div class="card"><h4><span lang="ko">클래스</span><span lang="en">Class</span></h4><p lang="ko">개념의 범주</p><p lang="en">A category of things</p>
+      <div class="ex" lang="ko">변압기, 변전소, 송전선로</div><div class="ex" lang="en">Transformer, Substation, Line</div></div>
+    <div class="card"><h4><span lang="ko">개체</span><span lang="en">Individual</span></h4><p lang="ko">클래스의 구체적 실체</p><p lang="en">A concrete instance</p>
+      <div class="ex" lang="ko">A변전소, M.Tr #1</div><div class="ex" lang="en">Substation A, M.Tr #1</div></div>
+    <div class="card"><h4><span lang="ko">속성</span><span lang="en">Property</span></h4><p lang="ko">개체 간 관계 또는 값</p><p lang="en">A relation or a value</p>
+      <div class="ex" lang="ko">설치위치, 정격용량 = 60 MVA</div><div class="ex" lang="en">located in, rated power = 60 MVA</div></div>
+    <div class="card"><h4><span lang="ko">계층</span><span lang="en">Hierarchy</span></h4><p lang="ko">상위-하위 개념 (<code>subClassOf</code>)</p><p lang="en">Super/sub classes (<code>subClassOf</code>)</p>
+      <div class="ex" lang="ko">차단기 ⊂ 개폐기 ⊂ 도전성 설비</div><div class="ex" lang="en">Breaker ⊂ Switch ⊂ ConductingEquipment</div></div>
+    <div class="card"><h4><span lang="ko">공리</span><span lang="en">Axiom</span></h4><p lang="ko">논리 규칙과 제약</p><p lang="en">Logical rules and constraints</p>
+      <div class="ex" lang="ko">모든 선로 구간은 단자 2개를 가진다</div><div class="ex" lang="en">Every line segment has two terminals</div></div>
   </div>
 </section>
 
 <section id="stack">
-  <h2>W3C 시맨틱 웹 기술 스택</h2>
-  <p class="sub">아래 층일수록 기본, 위로 갈수록 표현력과 활용도가 높아집니다.</p>
+  <h2><span lang="ko">W3C 시맨틱 웹 기술 스택</span><span lang="en">The W3C Semantic Web stack</span></h2>
+  <p class="sub" lang="ko">아래 층일수록 기본, 위로 갈수록 표현력과 활용도가 높아집니다.</p>
+  <p class="sub" lang="en">Lower layers are the foundation; higher layers add expressiveness.</p>
   <div class="stack">
-    <div><b>응용</b><span>검색 · 추론 · AI · 시각화</span></div>
-    <div><b>SPARQL / SHACL</b><span>질의 / 데이터 검증</span></div>
-    <div><b>OWL</b><span>풍부한 논리 표현</span></div>
-    <div><b>RDFS</b><span>클래스·속성 계층</span></div>
-    <div><b>RDF</b><span>주어–술어–목적어 트리플</span></div>
-    <div><b>IRI</b><span>전역 식별자</span></div>
+    <div><b><span lang="ko">응용</span><span lang="en">Apps</span></b><span><span lang="ko">검색 · 추론 · AI · 시각화</span><span lang="en">search · reasoning · AI · visualization</span></span></div>
+    <div><b>SPARQL / SHACL</b><span><span lang="ko">질의 / 데이터 검증</span><span lang="en">query / validation</span></span></div>
+    <div><b>OWL</b><span><span lang="ko">풍부한 논리 표현</span><span lang="en">rich logic</span></span></div>
+    <div><b>RDFS</b><span><span lang="ko">클래스·속성 계층</span><span lang="en">class &amp; property hierarchy</span></span></div>
+    <div><b>RDF</b><span><span lang="ko">주어–술어–목적어 트리플</span><span lang="en">subject–predicate–object triples</span></span></div>
+    <div><b>IRI</b><span><span lang="ko">전역 식별자</span><span lang="en">global identifiers</span></span></div>
   </div>
-  <h3>RDF 트리플 (Turtle)</h3>
+  <h3><span lang="ko">RDF 트리플 (Turtle)</span><span lang="en">RDF triples (Turtle)</span></h3>
 <pre><code>ex:TR_1  a                                cim:PowerTransformer .
 ex:TR_1  cim:Equipment.EquipmentContainer  ex:SS_A .
 ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
-  <h3>SPARQL 질의</h3>
-<pre><code># 변전소별 변압기 목록
-SELECT ?substation ?transformer WHERE {
+  <h3><span lang="ko">SPARQL 질의</span><span lang="en">SPARQL query</span></h3>
+<pre><code>SELECT ?substation ?transformer WHERE {
   ?transformer a cim:PowerTransformer ;
                cim:Equipment.EquipmentContainer ?substation .
 }</code></pre>
-  <h3>다른 데이터 모델과 비교</h3>
-  <div class="tbl"><table>
+
+  <h3><span lang="ko">다른 데이터 모델과 비교</span><span lang="en">Compared with other data models</span></h3>
+  <div class="tbl" lang="ko"><table>
     <tr><th>구분</th><th>관계형 DB</th><th>택소노미</th><th>온톨로지</th></tr>
     <tr><td>구조</td><td>테이블, 고정 스키마</td><td>트리 계층</td><td>그래프, 유연한 스키마</td></tr>
     <tr><td>관계 표현</td><td>외래키</td><td>상하위만</td><td>임의의 의미 있는 관계</td></tr>
     <tr><td>추론</td><td>없음</td><td>제한적</td><td>논리 추론 가능</td></tr>
     <tr><td>시스템 통합</td><td>매핑 작업 필요</td><td>어려움</td><td>IRI로 자연스럽게 연결</td></tr>
   </table></div>
-  <h3>구축 절차</h3>
-  <ol>
+  <div class="tbl" lang="en"><table>
+    <tr><th></th><th>Relational DB</th><th>Taxonomy</th><th>Ontology</th></tr>
+    <tr><td>Structure</td><td>Tables, fixed schema</td><td>Tree</td><td>Graph, flexible schema</td></tr>
+    <tr><td>Relations</td><td>Foreign keys</td><td>Parent/child only</td><td>Any meaningful relation</td></tr>
+    <tr><td>Reasoning</td><td>None</td><td>Limited</td><td>Logical inference</td></tr>
+    <tr><td>Integration</td><td>Needs mapping</td><td>Hard</td><td>Natural via IRIs</td></tr>
+  </table></div>
+
+  <h3><span lang="ko">구축 절차</span><span lang="en">How to build one</span></h3>
+  <ol lang="ko">
     <li><b>범위 정의</b>: 답하려는 질문(Competency Questions) 작성</li>
     <li><b>기존 온톨로지 재사용</b>: 전력 분야라면 IEC CIM부터 확인</li>
     <li>핵심 용어 나열, 클래스와 속성 구분</li>
@@ -171,315 +132,38 @@ SELECT ?substation ?transformer WHERE {
     <li>개체(데이터) 입력</li>
     <li><b>검증</b>: 추론기, SHACL, 질의로 확인</li>
   </ol>
-</section>
+  <ol lang="en">
+    <li><b>Scope</b>: write the questions it must answer (competency questions)</li>
+    <li><b>Reuse</b>: for power systems, start with IEC CIM</li>
+    <li>List key terms; separate classes from properties</li>
+    <li>Design the class hierarchy</li>
+    <li>Define properties and constraints</li>
+    <li>Add individuals (data)</li>
+    <li><b>Validate</b> with reasoners, SHACL and queries</li>
+  </ol>
 
-<section id="grid">
-  <h2>전력망 온톨로지</h2>
-  <p class="sub">EMS, DMS, SCADA, GIS, AMI, 자산관리… 같은 변압기를 시스템마다 다르게 표현하는 문제를 공통 의미 모델로 풉니다.</p>
+  <h3><span lang="ko">주요 도구</span><span lang="en">Tools</span></h3>
   <div class="tbl"><table>
-    <tr><th>표준 / 온톨로지</th><th>범위</th></tr>
-    <tr><td><b>IEC 61970</b> (CIM)</td><td>송전·EMS. Core, Wires, Topology, Measurement 등. 61970-301이 기본 CIM</td></tr>
-    <tr><td><b>IEC 61968</b> (CIM)</td><td>배전 관리. 자산, 작업, 고객, 계량</td></tr>
-    <tr><td><b>IEC 62325</b> (CIM)</td><td>전력시장</td></tr>
-    <tr><td>IEC 61970-552</td><td>CIM 데이터의 RDF/XML 교환 형식 (CIMXML)</td></tr>
-    <tr><td><b>CGMES</b> (ENTSO-E)</td><td>CIM 기반 계통 모델 교환 규격. EQ · TP · SSH · SV · DL/GL 프로파일</td></tr>
-    <tr><td><b>IEC 61850</b></td><td>변전소 자동화 통신, SCL로 변전소 구성 기술. CIM과 조화 연구 활발</td></tr>
-    <tr><td>SAREF4ENER</td><td>ETSI SAREF의 에너지 확장. 수요반응, 기기 연계</td></tr>
-    <tr><td>Open Energy Ontology</td><td>에너지 시스템 모델링·연구 데이터용 오픈 온톨로지</td></tr>
+    <tr><th><span lang="ko">도구</span><span lang="en">Tool</span></th><th><span lang="ko">용도</span><span lang="en">Use</span></th></tr>
+    <tr><td>Protégé</td><td><span lang="ko">온톨로지 편집기 (Stanford, 무료)</span><span lang="en">Ontology editor (Stanford, free)</span></td></tr>
+    <tr><td>Apache Jena / Fuseki</td><td><span lang="ko">Java RDF 프레임워크, SPARQL 서버</span><span lang="en">Java RDF framework, SPARQL server</span></td></tr>
+    <tr><td>GraphDB · Stardog · Virtuoso</td><td><span lang="ko">트리플 스토어</span><span lang="en">Triple stores</span></td></tr>
+    <tr><td>rdflib · pySHACL</td><td><span lang="ko">파이썬 RDF 처리 · SHACL 검증</span><span lang="en">Python RDF · SHACL validation</span></td></tr>
   </table></div>
-  <h3>CGMES 프로파일</h3>
-  <div class="grid">
-    <div class="card"><h4>EQ</h4><p>설비와 연결 구조</p></div>
-    <div class="card"><h4>TP</h4><p>개폐 상태를 반영한 토폴로지</p></div>
-    <div class="card"><h4>SSH</h4><p>해석 입력 조건 (부하, 발전, 탭)</p></div>
-    <div class="card"><h4>SV</h4><p>조류계산 결과 (전압, 위상, 조류)</p></div>
-  </div>
 </section>
 
-<section id="cim">
-  <h2>CIM 핵심 모델</h2>
-  <p class="sub">모든 객체는 <code>IdentifiedObject</code>(mRID, name)에서 시작합니다.</p>
-<pre class="tree"><code>IdentifiedObject
- └─ PowerSystemResource
-     ├─ EquipmentContainer
-     │   ├─ Substation          변전소
-     │   ├─ VoltageLevel        전압계급
-     │   ├─ Bay                 베이
-     │   └─ Line                선로
-     └─ Equipment
-         └─ ConductingEquipment 도전성 설비 (Terminal 보유)
-             ├─ ACLineSegment   교류 선로 구간
-             ├─ PowerTransformer 변압기
-             ├─ Switch ─ Breaker / Disconnector / LoadBreakSwitch
-             ├─ BusbarSection   모선
-             ├─ EnergyConsumer  부하
-             └─ SynchronousMachine 동기발전기
-
-Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</code></pre>
-
-  <h3>연결 패턴: Terminal과 ConnectivityNode</h3>
-  <p>CIM은 설비끼리 직접 연결하지 않습니다. 각 설비의 <b>Terminal(단자)</b>이 <b>ConnectivityNode(접속 노드)</b>에 붙는 방식으로 연결합니다. 그래서 차단기 개폐에 따라 토폴로지를 다시 계산하거나, 그래프 탐색으로 정전 영향 범위를 찾을 수 있습니다.</p>
-  <div class="diagram">
-  <svg viewBox="0 0 680 190" role="img" aria-label="Terminal과 ConnectivityNode 연결 패턴">
-    <g fill="none" stroke="var(--line)" stroke-width="2">
-      <line x1="150" y1="50" x2="320" y2="95"/><line x1="150" y1="140" x2="320" y2="95"/>
-      <line x1="360" y1="95" x2="530" y2="50"/><line x1="360" y1="95" x2="530" y2="140"/>
-    </g>
-    <g fill="var(--surface)" stroke="var(--muted)" stroke-width="1.5">
-      <rect x="20" y="30" width="130" height="40" rx="6"/><rect x="20" y="120" width="130" height="40" rx="6"/>
-      <rect x="530" y="30" width="130" height="40" rx="6"/><rect x="530" y="120" width="130" height="40" rx="6"/>
-    </g>
-    <circle cx="340" cy="95" r="22" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
-    <g fill="var(--warm)"><circle cx="150" cy="50" r="5"/><circle cx="150" cy="140" r="5"/><circle cx="530" cy="50" r="5"/><circle cx="530" cy="140" r="5"/></g>
-    <text x="85" y="55" text-anchor="middle">Breaker</text>
-    <text x="85" y="145" text-anchor="middle">ACLineSegment</text>
-    <text x="595" y="55" text-anchor="middle">BusbarSection</text>
-    <text x="595" y="145" text-anchor="middle">PowerTransformer</text>
-    <text x="340" y="99" text-anchor="middle" style="font-size:11px">CN</text>
-    <text x="340" y="140" text-anchor="middle" class="muted">ConnectivityNode</text>
-    <text x="230" y="185" text-anchor="middle" class="muted">● Terminal</text>
-  </svg>
-  </div>
-</section>
-
-<section id="example">
-  <h2>예제: 작은 변전소</h2>
-  <p class="sub">저장소의 <code>examples/power-grid-sample.ttl</code>을 단선도로 그렸습니다. 설비를 누르면 CIM 표현을 볼 수 있습니다.</p>
-  <div class="diagram">
-  <svg viewBox="0 0 760 230" role="img" aria-label="예제 단선도">
-    <g stroke-width="3" fill="none">
-      <line x1="30" y1="110" x2="320" y2="110" stroke="var(--hv)"/>
-      <line x1="320" y1="60" x2="320" y2="160" stroke="var(--hv)" stroke-width="6"/>
-      <line x1="320" y1="110" x2="380" y2="110" stroke="var(--hv)"/>
-      <line x1="440" y1="110" x2="500" y2="110" stroke="var(--mv)"/>
-      <line x1="500" y1="60" x2="500" y2="160" stroke="var(--mv)" stroke-width="6"/>
-      <line x1="500" y1="110" x2="700" y2="110" stroke="var(--mv)"/>
-    </g>
-    <g class="eq" data-id="ACLS_1"><rect x="70" y="98" width="110" height="24" rx="4" fill="var(--surface)" stroke="var(--hv)" stroke-width="1.5"/><text x="125" y="115" text-anchor="middle">B-A 1회선</text></g>
-    <g class="eq" data-id="CB_154_1"><rect x="225" y="96" width="28" height="28" fill="var(--surface)" stroke="var(--node)" stroke-width="2"/><text x="239" y="150" text-anchor="middle" class="muted">CB</text></g>
-    <g class="eq" data-id="BUS_154"><rect x="312" y="56" width="16" height="108" fill="transparent" stroke="none"/><text x="320" y="48" text-anchor="middle" class="muted">154kV 모선</text></g>
-    <g class="eq" data-id="TR_1"><circle cx="398" cy="110" r="20" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><circle cx="422" cy="110" r="20" fill="none" stroke="var(--mv)" stroke-width="2"/><text x="410" y="152" text-anchor="middle" class="muted">M.Tr #1</text></g>
-    <g class="eq" data-id="BUS_22"><rect x="492" y="56" width="16" height="108" fill="transparent" stroke="none"/><text x="500" y="48" text-anchor="middle" class="muted">22.9kV 모선</text></g>
-    <g class="eq" data-id="CB_22_1"><rect x="566" y="96" width="28" height="28" fill="var(--surface)" stroke="var(--node)" stroke-width="2"/><text x="580" y="150" text-anchor="middle" class="muted">D/L CB</text></g>
-    <g class="eq" data-id="LOAD_1"><polygon points="700,96 728,110 700,124" fill="var(--surface)" stroke="var(--mv)" stroke-width="2"/><text x="712" y="150" text-anchor="middle" class="muted">부하</text></g>
-    <text x="30" y="90" class="muted">← B변전소</text>
-    <rect x="205" y="20" width="410" height="190" rx="10" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
-    <text x="410" y="205" text-anchor="middle" class="muted">A변전소 (Substation)</text>
-  </svg>
-  <div class="legend"><span><i style="background:var(--hv)"></i>154 kV</span><span><i style="background:var(--mv)"></i>22.9 kV</span></div>
-  <div id="info">설비를 눌러 보세요.</div>
-  </div>
-
-  <h3>SPARQL로 인접 설비 찾기</h3>
-<pre><code>PREFIX cim: &lt;http://iec.ch/TC57/CIM100#&gt;
-SELECT DISTINCT ?a ?b WHERE {
-  ?t1 cim:Terminal.ConductingEquipment ?e1 ; cim:Terminal.ConnectivityNode ?cn .
-  ?t2 cim:Terminal.ConductingEquipment ?e2 ; cim:Terminal.ConnectivityNode ?cn .
-  FILTER(?e1 != ?e2)
-  ?e1 cim:IdentifiedObject.name ?a .
-  ?e2 cim:IdentifiedObject.name ?b .
-}</code></pre>
-  <p>질의 모음은 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">examples/queries.md</a>, 데이터는 <a href="examples/power-grid-sample.ttl">power-grid-sample.ttl</a>에 있습니다.</p>
-</section>
-
-<section id="pycim">
-  <div class="badge">PROJECT</div>
-  <h2>CIM을 파이썬 클래스로 설계하기 · <code>pycim</code></h2>
-  <p class="sub">IEC CIM의 UML 모델을 파이썬 클래스로 그대로 옮겨, 전력망 데이터를 코드로 만들고 분석하고 온톨로지(RDF)로 내보내는 프로젝트입니다. 지금은 Core · Topology · Wires 패키지의 핵심 클래스를 구현한 프로토타입 단계입니다.</p>
-  <div class="grid">
-    <div class="card"><h4>CIM 상속 = 파이썬 상속</h4><p>UML 계층을 그대로 옮겼습니다.</p><div class="ex"><code>Breaker → ProtectedSwitch → Switch → ConductingEquipment</code></div></div>
-    <div class="card"><h4>이름 자동 변환</h4><p>필드는 snake_case로 쓰고, RDF로 내보낼 때 CIM 이름으로 바꿉니다.</p><div class="ex"><code>length</code> → <code>Conductor.length</code></div></div>
-    <div class="card"><h4>역방향 연관 자동 관리</h4><p>Terminal을 만들면 설비와 노드 양쪽에 자동으로 등록됩니다.</p></div>
-    <div class="card"><h4>의존성 없음</h4><p>표준 <code>dataclasses</code>만 사용합니다. RDF 직렬화도 직접 구현했습니다.</p></div>
-  </div>
-
-  <h3>사용 예</h3>
-<pre><code class="language-python">from pycim import *
-
-m = Model()
-n1, n2 = m.add(ConnectivityNode(name="N1")), m.add(ConnectivityNode(name="N2"))
-src = m.add(ExternalNetworkInjection(name="계통")).connect(n1)
-cb  = m.add(Breaker(name="CB")).connect(n1, n2)        # Terminal 1, 2 자동 생성
-ld  = m.add(EnergyConsumer(name="부하", p=8.5)).connect(n2)
-
-cb.open = True
-topology.deenergized_loads(m, [src])   # → [EnergyConsumer('부하')]
-print(to_turtle(m))                    # CIM RDF(Turtle)로 내보내기</code></pre>
-
-  <h3>실제 코드</h3>
-  <p>저장소의 파이썬 파일을 그대로 불러와 보여 줍니다.</p>
-  <div class="tabs" role="tablist" id="codeTabs">
-    <button role="tab" data-file="pycim/base.py">base.py</button>
-    <button role="tab" data-file="pycim/core.py">core.py</button>
-    <button role="tab" data-file="pycim/wires.py">wires.py</button>
-    <button role="tab" data-file="pycim/topology.py">topology.py</button>
-    <button role="tab" data-file="pycim/rdf.py">rdf.py</button>
-    <button role="tab" data-file="pycim/model.py">model.py</button>
-    <button role="tab" data-file="examples/build_sample_grid.py">build_sample_grid.py</button>
-  </div>
-  <div class="viewer">
-    <div class="bar"><span id="codePath"></span><a id="codeLink" href="https://github.com/1004aiteam-power/ontology-space/blob/main/pycim" target="_blank" rel="noopener">GitHub에서 보기 ↗</a></div>
-    <pre><code id="codeView" class="language-python">불러오는 중…</code></pre>
-  </div>
-
-  <h3>실행 결과 (<code>examples/build_sample_grid.py</code>)</h3>
-<pre><code>== CIM 상속 계층 ==
-Breaker → ProtectedSwitch → Switch → ConductingEquipment → Equipment → PowerSystemResource → IdentifiedObject
-
-== 변압기 인접 설비 ==
-[Breaker('154kV 선로 CB'), BusbarSection('154kV 모선'), BusbarSection('22.9kV 모선'), Breaker('D/L #1 CB')]
-
-== 정전 영향 분석 ==
-평상시   : []
-154kV CB 개방: [EnergyConsumer('D/L #1 부하')]
-
-== Turtle 내보내기: 객체 33개 (Terminal, TransformerEnd 포함) ==</code></pre>
-  <p>설계 문서: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/03-python-cim-design.md">docs/03-python-cim-design.md</a></p>
-</section>
-
-<section id="tools">
-  <h2>계통 해석 도구 비교: pandapower vs OpenDSS</h2>
-  <p class="sub">CIM 모델은 계통을 <b>표현</b>하고, 해석 도구는 그 계통을 <b>계산</b>합니다. 대표적인 오픈소스 도구 두 가지를 비교했습니다.</p>
-  <div class="tbl"><table>
-    <tr><th style="width:18%">구분</th><th>pandapower</th><th>OpenDSS</th></tr>
-    <tr><td>개발</td><td>독일 Fraunhofer IEE · 카셀 대학교</td><td>미국 EPRI (1997년~)</td></tr>
-    <tr><td>주 대상</td><td>송전망 + 배전망</td><td><b>배전망</b></td></tr>
-    <tr><td>모델링</td><td>3상 평형(정상분)이 기본. 불평형 해석은 일부 지원</td><td><b>다상·불평형</b>이 기본, 상별 해석</td></tr>
-    <tr><td>주요 기능</td><td>조류계산, <b>최적조류계산(OPF)</b>, <b>단락계산(IEC 60909)</b>, 상태추정, 그래프 분석</td><td>조류계산, <b>시계열 해석</b>(8760시간 등), <b>고조파</b>, 고장 해석, DER 호스팅 용량</td></tr>
-    <tr><td>제어 설비</td><td>변압기 탭, 제어기 프레임워크</td><td>전압조정기, 커패시터 제어, 인버터 기능(Volt-VAR 등)이 풍부</td></tr>
-    <tr><td>사용 방식</td><td>순수 파이썬 라이브러리</td><td>전용 스크립트 언어(<code>.dss</code>). 파이썬에서는 <code>OpenDSSDirect.py</code>, <code>py-dss-interface</code>로 호출</td></tr>
-    <tr><td>데이터 구조</td><td>pandas DataFrame (bus, line, trafo, load … 표)</td><td>텍스트 명령으로 설비 정의 (<code>New Line.L1 Bus1=… Bus2=…</code>)</td></tr>
-    <tr><td>CIM 연계</td><td>CGMES 변환기 제공</td><td>CIM(배전) 내보내기 지원</td></tr>
-    <tr><td>설치</td><td><code>pip install pandapower</code></td><td>EPRI 설치 파일(Windows) 또는 <code>pip install opendssdirect.py</code></td></tr>
-    <tr><td>라이선스</td><td>BSD</td><td>BSD 계열 오픈소스</td></tr>
-  </table></div>
-
-  <h3>이럴 때 선택하세요</h3>
-  <div class="grid">
-    <div class="card"><h4>pandapower</h4><p>154kV 이상 송전망의 조류·단락용량 계산, 최적 운전점 탐색, 파이썬 데이터 분석과 바로 연결하고 싶을 때</p></div>
-    <div class="card"><h4>OpenDSS</h4><p>22.9kV 배전선로의 상별 불평형, 태양광·ESS 연계 시 1년 시계열 전압 변동, 호스팅 용량을 분석할 때</p></div>
-  </div>
-
-  <h3>같은 문제를 두 도구로</h3>
-  <div class="grid">
-<pre style="margin:0"><code class="language-python"># pandapower
-import pandapower as pp
-net = pp.create_empty_network()
-b1 = pp.create_bus(net, vn_kv=22.9)
-b2 = pp.create_bus(net, vn_kv=22.9)
-pp.create_ext_grid(net, b1)
-pp.create_line_from_parameters(net, b1, b2,
-    length_km=5, r_ohm_per_km=0.18,
-    x_ohm_per_km=0.39, c_nf_per_km=10,
-    max_i_ka=0.4)
-pp.create_load(net, b2, p_mw=3, q_mvar=1)
-pp.runpp(net)
-print(net.res_bus.vm_pu)</code></pre>
-<pre style="margin:0"><code># OpenDSS (.dss 스크립트)
-Clear
-New Circuit.demo basekv=22.9 bus1=B1 pu=1.0
-New Linecode.LC nphases=3 units=km
-~ r1=0.18 x1=0.39 c1=10
-New Line.L1 bus1=B1 bus2=B2
-~ linecode=LC length=5 units=km
-New Load.LD1 bus1=B2 phases=3
-~ kV=22.9 kW=3000 kvar=1000
-Set voltagebases=[22.9]
-Calcvoltagebases
-Solve
-Show Voltages LN</code></pre>
-  </div>
-
-  <p><b>실행 결과</b>: 부하 모선(B2) 전압은 pandapower <b>0.991 pu</b>, OpenDSS <b>0.990 pu</b>로 거의 같습니다. 조금 차이 나는 이유는 OpenDSS가 전원(Circuit)에 기본 내부 임피던스를 넣기 때문입니다.</p>
-
-  <h3>pycim과의 연결 (계획)</h3>
-<pre><code>             ┌──▶ pandapower 네트워크 ──▶ 조류·단락·OPF
-CIM 모델 ────┤
- (pycim)     └──▶ OpenDSS 스크립트   ──▶ 불평형·시계열·DER
-       ▲
-       └── 계산 결과(전압, 조류)를 다시 CIM SV 프로파일로</code></pre>
-  <p>하나의 CIM 모델에서 두 도구용 입력을 자동으로 만들어, 같은 계통을 서로 다른 관점에서 해석하는 것이 목표입니다.</p>
-</section>
-
-<section id="use">
-  <h2>활용 사례</h2>
-  <div class="grid">
-    <div class="card"><h4>계통 모델 교환</h4><p>TSO/DSO 간, 시스템 간 CGMES/CIMXML 교환</p></div>
-    <div class="card"><h4>디지털 트윈</h4><p>설비·토폴로지·실시간 측정·자산 정보를 하나의 지식 그래프로</p></div>
-    <div class="card"><h4>정전 영향 분석</h4><p>그래프 탐색으로 차단기 개방 시 영향받는 부하 산출</p></div>
-    <div class="card"><h4>자산관리</h4><p>설비 이력, 고장, 점검 데이터를 연결한 위험도 분석</p></div>
-    <div class="card"><h4>DER 관리</h4><p>태양광, ESS, EV 충전기를 배전 토폴로지에 연결해 호스팅 용량 분석</p></div>
-    <div class="card"><h4>데이터 품질</h4><p>SHACL로 "선로 구간은 단자 2개" 같은 규칙 검증</p></div>
-    <div class="card"><h4>AI / LLM</h4><p>전력망 지식 그래프 기반 GraphRAG, 운영자 질의 응답</p></div>
-  </div>
-</section>
-
-<section id="ref">
-  <h2>참고 자료</h2>
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
   <ul>
     <li><a href="https://www.w3.org/TR/rdf11-primer/">W3C RDF 1.1 Primer</a> · <a href="https://www.w3.org/TR/owl2-primer/">OWL 2 Primer</a></li>
-    <li><a href="https://cimug.ucaiug.org/">CIM Users Group (CIMug)</a></li>
-    <li><a href="https://www.entsoe.eu/data/cim/cim-for-grid-models-exchange/">ENTSO-E CGMES</a></li>
-    <li><a href="https://www.powsybl.org/">PowSyBl</a> · <a href="https://github.com/sogno-platform/cimpy">CIMpy</a></li>
-    <li><a href="https://openenergyplatform.org/ontology/">Open Energy Ontology</a> · <a href="https://saref.etsi.org/saref4ener/">SAREF4ENER</a></li>
-    <li><a href="https://protege.stanford.edu/">Protégé</a> (온톨로지 편집기)</li>
-    <li><a href="https://www.pandapower.org/">pandapower</a> · <a href="https://www.epri.com/pages/sa/opendss">OpenDSS (EPRI)</a> · <a href="https://dss-extensions.org/">DSS-Extensions</a></li>
+    <li>Noy &amp; McGuinness, <i>Ontology Development 101</i> (Stanford)</li>
+    <li><a href="https://protege.stanford.edu/">Protégé</a></li>
+    <li><span lang="ko">문서 원본</span><span lang="en">Source document</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/01-ontology-introduction.md">docs/01-ontology-introduction.md</a></li>
   </ul>
-  <p>문서 원본: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/01-ontology-introduction.md">온톨로지 소개</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/02-power-grid-ontology.md">전력망 온톨로지</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/03-python-cim-design.md">파이썬 CIM 설계</a></p>
+  <div class="pager"><span></span><a href="grid.html"><span lang="ko">다음: 전력망 온톨로지 →</span><span lang="en">Next: Power grid ontology →</span></a></div>
 </section>
 </main>
 
-<footer><div class="wrap">Ontology Space · 1004aiteam-power</div></footer>
-
-<script>
-const INFO = {
-  ACLS_1:  ["ACLineSegment", "B-A 1회선 · 12.5 km · Terminal 2개 (B변전소 측 노드, 선로-CB 접점)"],
-  CB_154_1:["Breaker", "154kV 선로 CB · normalOpen = false · 선로와 154kV 모선 노드를 연결"],
-  BUS_154: ["BusbarSection", "154kV 모선 · VoltageLevel \"A변전소 154kV\"에 포함"],
-  TR_1:    ["PowerTransformer", "M.Tr #1 · PowerTransformerEnd 2개 (154 kV / 22.9 kV, 60 MVA)"],
-  BUS_22:  ["BusbarSection", "22.9kV 모선 · VoltageLevel \"A변전소 22.9kV\"에 포함"],
-  CB_22_1: ["Breaker", "D/L #1 CB · 22.9kV 모선 노드와 인출 노드를 연결"],
-  LOAD_1:  ["EnergyConsumer", "D/L #1 부하 · P = 8.5 MW, Q = 2.1 MVAr"]
-};
-const info = document.getElementById('info');
-document.querySelectorAll('.eq').forEach(g => g.addEventListener('click', () => {
-  document.querySelectorAll('.eq.sel').forEach(x => x.classList.remove('sel'));
-  g.classList.add('sel');
-  const [cls, txt] = INFO[g.dataset.id];
-  info.innerHTML = `<code>ex:${g.dataset.id}</code> a <code>cim:${cls}</code><br>${txt}`;
-}));
-const root = document.documentElement, btn = document.getElementById('theme');
-try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch (e) {}
-btn.addEventListener('click', () => {
-  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  root.dataset.theme = dark ? 'light' : 'dark';
-  try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-});
-
-// ---- pycim 코드 뷰어: 같은 사이트의 .py 파일을 불러와 표시 ----
-const tabs = document.querySelectorAll('#codeTabs button');
-const view = document.getElementById('codeView');
-async function showFile(btn) {
-  tabs.forEach(b => b.setAttribute('aria-selected', b === btn));
-  const file = btn.dataset.file;
-  document.getElementById('codePath').textContent = file;
-  document.getElementById('codeLink').href = "https://github.com/1004aiteam-power/ontology-space/blob/main/" + file;
-  try {
-    const res = await fetch(file);
-    if (!res.ok) throw new Error(res.status);
-    view.textContent = await res.text();
-  } catch (e) {
-    view.textContent = "# 코드를 불러오지 못했습니다. 위의 'GitHub에서 보기' 링크를 이용하세요.";
-  }
-  view.removeAttribute('data-highlighted');
-  if (window.hljs) hljs.highlightElement(view);
-}
-tabs.forEach(b => b.addEventListener('click', () => showFile(b)));
-showFile(tabs[0]);
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script>
-if (window.hljs) document.querySelectorAll('pre code.language-python').forEach(el => hljs.highlightElement(el));
-</script>
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a></div></footer>
 </body>
 </html>

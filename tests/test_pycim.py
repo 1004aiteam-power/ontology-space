@@ -73,3 +73,33 @@ def test_turtle_parses():
     cim = rdflib.Namespace("http://iec.ch/TC57/CIM100#")
     assert len(list(g.subjects(rdflib.RDF.type, cim.Terminal))) == 6
     assert (None, cim["Switch.open"], rdflib.Literal(False)) in g
+
+
+def test_transformer_percent():
+    from pycim.export_pandapower import transformer_percent
+    from pycim.samples import sample_grid
+    tr = sample_grid().of_type(PowerTransformer)[0]
+    vk, vkr = transformer_percent(tr)
+    assert round(vk, 1) == 12.0 and round(vkr, 2) == 0.25
+
+
+def test_opendss_script():
+    from pycim.export_opendss import to_opendss
+    from pycim.samples import sample_grid
+    m = sample_grid()
+    m.by_name("154kV 선로 CB").open = True
+    script, names = to_opendss(m)
+    assert "New Circuit.pycim basekv=154" in script
+    assert script.count("switch=yes") == 2 and "Open Line.SW1 1" in script
+    assert len(names) == 5
+
+
+def test_pandapower_and_opendss_agree():
+    pytest.importorskip("pandapower")
+    pytest.importorskip("opendssdirect")
+    from pycim import export_opendss, export_pandapower
+    from pycim.samples import sample_grid
+    m = sample_grid()
+    a, b = export_pandapower.solve(m), export_opendss.solve(m)
+    for cn in a:
+        assert abs(a[cn] - b[cn]) < 1e-3

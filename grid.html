@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 전력망 온톨로지</title>
+<meta name="title-ko" content="Ontology Space · 전력망 온톨로지">
+<meta name="title-en" content="Ontology Space · Power Grid Ontology">
+<meta name="description" content="IEC CIM, CGMES 등 전력망 온톨로지와 인터랙티브 단선도 예제">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html" aria-current="page"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">POWER GRID ONTOLOGY</div>
+  <h1><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></h1>
+  <p class="lead" lang="ko">EMS, DMS, SCADA, GIS, AMI, 자산관리… 같은 변압기를 시스템마다 다르게 표현하는 문제를, 공통 의미 모델인 IEC CIM으로 풉니다.</p>
+  <p class="lead" lang="en">EMS, DMS, SCADA, GIS, AMI, asset management… each system describes the same transformer differently. IEC CIM solves this with a shared semantic model.</p>
+</div>
+
+<section id="standards">
+  <h2><span lang="ko">주요 표준과 온톨로지</span><span lang="en">Key standards and ontologies</span></h2>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">표준 / 온톨로지</span><span lang="en">Standard / ontology</span></th><th><span lang="ko">범위</span><span lang="en">Scope</span></th></tr>
+    <tr><td><b>IEC 61970</b> (CIM)</td><td><span lang="ko">송전·EMS. Core, Wires, Topology, Measurement 등. 61970-301이 기본 CIM</span><span lang="en">Transmission &amp; EMS: Core, Wires, Topology, Measurement… 61970-301 is the base CIM</span></td></tr>
+    <tr><td><b>IEC 61968</b> (CIM)</td><td><span lang="ko">배전 관리. 자산, 작업, 고객, 계량</span><span lang="en">Distribution management: assets, work, customers, metering</span></td></tr>
+    <tr><td><b>IEC 62325</b> (CIM)</td><td><span lang="ko">전력시장</span><span lang="en">Energy markets</span></td></tr>
+    <tr><td>IEC 61970-552</td><td><span lang="ko">CIM 데이터의 RDF/XML 교환 형식 (CIMXML)</span><span lang="en">RDF/XML exchange format for CIM data (CIMXML)</span></td></tr>
+    <tr><td><b>CGMES</b> (ENTSO-E)</td><td><span lang="ko">CIM 기반 계통 모델 교환 규격. EQ · TP · SSH · SV · DL/GL 프로파일</span><span lang="en">CIM-based grid model exchange: EQ · TP · SSH · SV · DL/GL profiles</span></td></tr>
+    <tr><td><b>IEC 61850</b></td><td><span lang="ko">변전소 자동화 통신, SCL로 변전소 구성 기술. CIM과 조화 연구 활발</span><span lang="en">Substation automation; SCL describes substation configuration. Active harmonization with CIM</span></td></tr>
+    <tr><td>SAREF4ENER</td><td><span lang="ko">ETSI SAREF의 에너지 확장. 수요반응, 기기 연계</span><span lang="en">ETSI SAREF energy extension: demand response, devices</span></td></tr>
+    <tr><td>Open Energy Ontology</td><td><span lang="ko">에너지 시스템 모델링·연구 데이터용 오픈 온톨로지</span><span lang="en">Open ontology for energy system modelling and research data</span></td></tr>
+  </table></div>
+  <h3><span lang="ko">CGMES 프로파일</span><span lang="en">CGMES profiles</span></h3>
+  <div class="grid">
+    <div class="card"><h4>EQ</h4><p lang="ko">설비와 연결 구조</p><p lang="en">Equipment and connectivity</p></div>
+    <div class="card"><h4>TP</h4><p lang="ko">개폐 상태를 반영한 토폴로지</p><p lang="en">Topology after switch states</p></div>
+    <div class="card"><h4>SSH</h4><p lang="ko">해석 입력 조건 (부하, 발전, 탭)</p><p lang="en">Analysis inputs (loads, generation, taps)</p></div>
+    <div class="card"><h4>SV</h4><p lang="ko">조류계산 결과 (전압, 위상, 조류)</p><p lang="en">Power flow results (voltage, angle, flow)</p></div>
+  </div>
+</section>
+
+<section id="cim">
+  <h2><span lang="ko">CIM 핵심 모델</span><span lang="en">The CIM core model</span></h2>
+  <p class="sub" lang="ko">모든 객체는 <code>IdentifiedObject</code>(mRID, name)에서 시작합니다.</p>
+  <p class="sub" lang="en">Everything starts from <code>IdentifiedObject</code> (mRID, name).</p>
+<pre lang="ko"><code>IdentifiedObject
+ └─ PowerSystemResource
+     ├─ EquipmentContainer
+     │   ├─ Substation          변전소
+     │   ├─ VoltageLevel        전압계급
+     │   ├─ Bay                 베이
+     │   └─ Line                선로
+     └─ Equipment
+         └─ ConductingEquipment 도전성 설비 (Terminal 보유)
+             ├─ ACLineSegment   교류 선로 구간
+             ├─ PowerTransformer 변압기
+             ├─ Switch ─ Breaker / Disconnector / LoadBreakSwitch
+             ├─ BusbarSection   모선
+             ├─ EnergyConsumer  부하
+             └─ SynchronousMachine 동기발전기
+
+Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</code></pre>
+<pre lang="en"><code>IdentifiedObject
+ └─ PowerSystemResource
+     ├─ EquipmentContainer
+     │   ├─ Substation
+     │   ├─ VoltageLevel
+     │   ├─ Bay
+     │   └─ Line
+     └─ Equipment
+         └─ ConductingEquipment   (has Terminals)
+             ├─ ACLineSegment
+             ├─ PowerTransformer
+             ├─ Switch ─ Breaker / Disconnector / LoadBreakSwitch
+             ├─ BusbarSection
+             ├─ EnergyConsumer    (load)
+             └─ SynchronousMachine
+
+Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</code></pre>
+
+  <h3><span lang="ko">연결 패턴: Terminal과 ConnectivityNode</span><span lang="en">Connectivity pattern: Terminal and ConnectivityNode</span></h3>
+  <p lang="ko">CIM은 설비끼리 직접 연결하지 않습니다. 각 설비의 <b>Terminal(단자)</b>이 <b>ConnectivityNode(접속 노드)</b>에 붙는 방식으로 연결합니다. 그래서 차단기 개폐에 따라 토폴로지를 다시 계산하거나, 그래프 탐색으로 정전 범위를 찾을 수 있습니다.</p>
+  <p lang="en">CIM never links equipment directly. Each piece of equipment has <b>Terminals</b> that attach to <b>ConnectivityNodes</b>. This makes it possible to re-run topology when switches change and to find outage areas by graph search.</p>
+  <div class="diagram">
+  <svg viewBox="0 0 680 190" role="img" aria-label="Terminal – ConnectivityNode">
+    <g fill="none" stroke="var(--line)" stroke-width="2">
+      <line x1="150" y1="50" x2="320" y2="95"/><line x1="150" y1="140" x2="320" y2="95"/>
+      <line x1="360" y1="95" x2="530" y2="50"/><line x1="360" y1="95" x2="530" y2="140"/>
+    </g>
+    <g fill="var(--surface)" stroke="var(--muted)" stroke-width="1.5">
+      <rect x="20" y="30" width="130" height="40" rx="6"/><rect x="20" y="120" width="130" height="40" rx="6"/>
+      <rect x="530" y="30" width="130" height="40" rx="6"/><rect x="530" y="120" width="130" height="40" rx="6"/>
+    </g>
+    <circle cx="340" cy="95" r="22" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+    <g fill="var(--warm)"><circle cx="150" cy="50" r="5"/><circle cx="150" cy="140" r="5"/><circle cx="530" cy="50" r="5"/><circle cx="530" cy="140" r="5"/></g>
+    <text x="85" y="55" text-anchor="middle">Breaker</text>
+    <text x="85" y="145" text-anchor="middle">ACLineSegment</text>
+    <text x="595" y="55" text-anchor="middle">BusbarSection</text>
+    <text x="595" y="145" text-anchor="middle">PowerTransformer</text>
+    <text x="340" y="99" text-anchor="middle" style="font-size:11px">CN</text>
+    <text x="340" y="140" text-anchor="middle" class="muted">ConnectivityNode</text>
+    <text x="230" y="185" text-anchor="middle" class="muted">● Terminal</text>
+  </svg>
+  </div>
+</section>
+
+<section id="example">
+  <h2><span lang="ko">인터랙티브 예제: 작은 변전소</span><span lang="en">Interactive example: a small substation</span></h2>
+  <p class="sub" lang="ko"><b>차단기(■)를 눌러 열고 닫아 보세요.</b> 토폴로지를 다시 탐색해 정전 범위를 표시하고, 각 노드에는 pycim → pandapower로 계산한 전압[pu]이 나옵니다. 다른 설비를 누르면 CIM 표현을 볼 수 있습니다.</p>
+  <p class="sub" lang="en"><b>Click a breaker (■) to open or close it.</b> The topology is re-traced to show the outage area, and each node shows the voltage [pu] computed with pycim → pandapower. Click other equipment to see its CIM representation.</p>
+  <div class="diagram sld">
+  <svg viewBox="0 0 760 240" role="img" aria-label="single-line diagram">
+    <rect x="205" y="20" width="410" height="200" rx="10" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
+    <text x="410" y="212" text-anchor="middle" class="muted"><tspan data-i18n="ss"></tspan> (Substation)</text>
+    <g stroke-width="3" fill="none">
+      <line data-dep="N1" x1="44" y1="110" x2="70" y2="110" stroke="var(--hv)"/>
+      <line data-dep="N2" x1="180" y1="110" x2="225" y2="110" stroke="var(--hv)"/>
+      <line data-dep="N3" x1="253" y1="110" x2="378" y2="110" stroke="var(--hv)"/>
+      <line data-dep="N4" x1="442" y1="110" x2="566" y2="110" stroke="var(--mv)"/>
+      <line data-dep="N5" x1="594" y1="110" x2="700" y2="110" stroke="var(--mv)"/>
+    </g>
+    <g class="eq" data-id="SRC" data-dep="SRC"><circle class="shape" cx="30" cy="110" r="14" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><text x="30" y="115" text-anchor="middle">~</text><text x="12" y="150" text-anchor="start" class="muted" data-i18n="src"></text></g>
+    <g class="eq" data-id="ACLS_1" data-dep="ACLS_1"><rect class="shape" x="70" y="98" width="110" height="24" rx="4" fill="var(--surface)" stroke="var(--hv)" stroke-width="1.5"/><text x="125" y="115" text-anchor="middle" data-i18n="line"></text></g>
+    <g class="eq cb" data-id="CB_154_1" data-dep="CB_154_1"><rect class="shape" x="225" y="96" width="28" height="28" stroke="var(--node)" stroke-width="2"/><text x="239" y="150" text-anchor="middle" class="muted">CB</text></g>
+    <g class="eq" data-id="BUS_154" data-dep="N3"><rect class="shape" x="314" y="56" width="12" height="108" fill="var(--hv)" stroke="none"/><text x="320" y="48" text-anchor="middle" class="muted" data-i18n="bus154"></text></g>
+    <g class="eq" data-id="TR_1" data-dep="TR_1"><circle class="shape" cx="398" cy="110" r="20" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><circle cx="422" cy="110" r="20" fill="none" stroke="var(--mv)" stroke-width="2"/><text x="410" y="152" text-anchor="middle" class="muted">M.Tr #1</text></g>
+    <g class="eq" data-id="BUS_22" data-dep="N4"><rect class="shape" x="494" y="56" width="12" height="108" fill="var(--mv)" stroke="none"/><text x="500" y="48" text-anchor="middle" class="muted" data-i18n="bus22"></text></g>
+    <g class="eq cb mv" data-id="CB_22_1" data-dep="CB_22_1"><rect class="shape" x="566" y="96" width="28" height="28" stroke="var(--node)" stroke-width="2"/><text x="580" y="150" text-anchor="middle" class="muted">D/L CB</text></g>
+    <g class="eq" data-id="LOAD_1" data-dep="LOAD_1"><polygon class="shape" points="700,96 728,110 700,124" fill="var(--surface)" stroke="var(--mv)" stroke-width="2"/><text x="712" y="150" text-anchor="middle" class="muted" data-i18n="load"></text></g>
+    <text class="volt" data-v="1" x="202" y="86" text-anchor="middle"></text>
+    <text class="volt" data-v="2" x="320" y="182" text-anchor="middle"></text>
+    <text class="volt" data-v="3" x="500" y="182" text-anchor="middle"></text>
+    <text class="volt" data-v="4" x="647" y="86" text-anchor="middle"></text>
+  </svg>
+  <div class="legend"><span><i style="background:var(--hv)"></i>154 kV</span><span><i style="background:var(--mv)"></i>22.9 kV</span>
+    <span>■ <span lang="ko">닫힘</span><span lang="en">closed</span></span><span>□ <span lang="ko">열림</span><span lang="en">open</span></span></div>
+  <div class="sld-bar"><span id="outage"></span><button id="sldReset"><span lang="ko">초기화</span><span lang="en">Reset</span></button></div>
+  <div id="info"></div>
+  </div>
+  <p lang="ko">같은 계통의 RDF 데이터는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>, SPARQL 예제는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">queries.md</a>에 있습니다.</p>
+  <p lang="en">The RDF data for this grid is in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>; SPARQL examples are in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">queries.md</a>.</p>
+  <h3><span lang="ko">SPARQL로 인접 설비 찾기</span><span lang="en">Finding adjacent equipment with SPARQL</span></h3>
+<pre><code>PREFIX cim: &lt;http://iec.ch/TC57/CIM100#&gt;
+SELECT DISTINCT ?a ?b WHERE {
+  ?t1 cim:Terminal.ConductingEquipment ?e1 ; cim:Terminal.ConnectivityNode ?cn .
+  ?t2 cim:Terminal.ConductingEquipment ?e2 ; cim:Terminal.ConnectivityNode ?cn .
+  FILTER(?e1 != ?e2)
+  ?e1 cim:IdentifiedObject.name ?a .
+  ?e2 cim:IdentifiedObject.name ?b .
+}</code></pre>
+</section>
+
+<section id="use">
+  <h2><span lang="ko">활용 사례</span><span lang="en">Use cases</span></h2>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">계통 모델 교환</span><span lang="en">Model exchange</span></h4><p lang="ko">TSO/DSO 간, 시스템 간 CGMES/CIMXML 교환</p><p lang="en">CGMES/CIMXML exchange between TSOs, DSOs and systems</p></div>
+    <div class="card"><h4><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span></h4><p lang="ko">설비·토폴로지·실시간 측정·자산 정보를 하나의 지식 그래프로</p><p lang="en">Equipment, topology, live measurements and assets in one knowledge graph</p></div>
+    <div class="card"><h4><span lang="ko">정전 영향 분석</span><span lang="en">Outage impact</span></h4><p lang="ko">그래프 탐색으로 차단기 개방 시 영향받는 부하 산출</p><p lang="en">Graph search finds loads affected when a breaker opens</p></div>
+    <div class="card"><h4><span lang="ko">자산관리</span><span lang="en">Asset management</span></h4><p lang="ko">설비 이력, 고장, 점검 데이터를 연결한 위험도 분석</p><p lang="en">Risk analysis linking history, faults and inspections</p></div>
+    <div class="card"><h4><span lang="ko">DER 관리</span><span lang="en">DER integration</span></h4><p lang="ko">태양광, ESS, EV 충전기를 배전 토폴로지에 연결해 호스팅 용량 분석</p><p lang="en">PV, storage and EV chargers on the feeder topology for hosting-capacity studies</p></div>
+    <div class="card"><h4><span lang="ko">데이터 품질</span><span lang="en">Data quality</span></h4><p lang="ko">SHACL로 "선로 구간은 단자 2개" 같은 규칙 검증</p><p lang="en">SHACL rules such as "a line segment has two terminals"</p></div>
+    <div class="card"><h4>AI / LLM</h4><p lang="ko">전력망 지식 그래프 기반 GraphRAG, 운영자 질의 응답</p><p lang="en">GraphRAG over the grid knowledge graph, operator Q&amp;A</p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li><a href="https://cimug.ucaiug.org/">CIM Users Group (CIMug)</a> · <a href="https://www.entsoe.eu/data/cim/cim-for-grid-models-exchange/">ENTSO-E CGMES</a></li>
+    <li><a href="https://www.powsybl.org/">PowSyBl</a> · <a href="https://github.com/sogno-platform/cimpy">CIMpy</a></li>
+    <li><a href="https://openenergyplatform.org/ontology/">Open Energy Ontology</a> · <a href="https://saref.etsi.org/saref4ener/">SAREF4ENER</a></li>
+    <li><span lang="ko">문서 원본</span><span lang="en">Source document</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/02-power-grid-ontology.md">docs/02-power-grid-ontology.md</a></li>
+  </ul>
+  <div class="pager"><a href="index.html"><span lang="ko">← 이전: 온톨로지 소개</span><span lang="en">← Prev: Intro</span></a><a href="project.html"><span lang="ko">다음: 프로젝트 pycim →</span><span lang="en">Next: Project pycim →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a></div></footer>
+
+<script>
+// ---- 인터랙티브 단선도: pycim.topology.energized()와 같은 알고리즘 ----
+const EQ = {
+  SRC:      { t: ['N1'],       cls: 'ExternalNetworkInjection', ko: 'B변전소 계통 · 상위 계통 등가 전원', en: 'Grid at Substation B · upstream network equivalent' },
+  ACLS_1:   { t: ['N1', 'N2'], cls: 'ACLineSegment', ko: 'B-A 1회선 · 12.5 km · r = 0.98 Ω, x = 4.20 Ω', en: 'B-A circuit 1 · 12.5 km · r = 0.98 Ω, x = 4.20 Ω' },
+  CB_154_1: { t: ['N2', 'N3'], cls: 'Breaker', sw: true, ko: '154kV 선로 CB', en: '154 kV line breaker' },
+  BUS_154:  { t: ['N3'],       cls: 'BusbarSection', ko: '154kV 모선 · VoltageLevel "A변전소 154kV"에 포함', en: '154 kV busbar · in VoltageLevel "Substation A 154 kV"' },
+  TR_1:     { t: ['N3', 'N4'], cls: 'PowerTransformer', ko: 'M.Tr #1 · 154/22.9 kV, 60 MVA, %Z ≈ 12% · PowerTransformerEnd 2개', en: 'M.Tr #1 · 154/22.9 kV, 60 MVA, %Z ≈ 12% · two PowerTransformerEnds' },
+  BUS_22:   { t: ['N4'],       cls: 'BusbarSection', ko: '22.9kV 모선', en: '22.9 kV busbar' },
+  CB_22_1:  { t: ['N4', 'N5'], cls: 'Breaker', sw: true, ko: 'D/L #1 CB · 배전선로 인출 차단기', en: 'Feeder #1 breaker' },
+  LOAD_1:   { t: ['N5'],       cls: 'EnergyConsumer', ko: 'D/L #1 부하 · P = 8.5 MW, Q = 2.1 MVAr', en: 'Feeder #1 load · P = 8.5 MW, Q = 2.1 MVAr' }
+};
+const LABELS = {
+  ss: { ko: 'A변전소', en: 'Substation A' }, src: { ko: 'B변전소 계통', en: 'Grid (Sub. B)' },
+  line: { ko: 'B-A 1회선', en: 'B-A line' }, bus154: { ko: '154kV 모선', en: '154 kV bus' },
+  bus22: { ko: '22.9kV 모선', en: '22.9 kV bus' }, load: { ko: '부하', en: 'Load' }
+};
+// pycim → pandapower 조류계산 결과 [N1..N5], 키 = (154kV CB 열림)(D/L CB 열림)
+const VOLT = { '00': [1.0, 0.9992, 0.9992, 0.9945, 0.9945], '01': [1.0, 1.0, 1.0, 1.0, null],
+               '10': [1.0, 1.0, null, null, null], '11': [1.0, 1.0, null, null, null] };
+const open = { CB_154_1: false, CB_22_1: false };
+let selected = null;
+
+function energized() {
+  const nodeTerms = {};
+  for (const [id, e] of Object.entries(EQ)) e.t.forEach(n => (nodeTerms[n] ||= []).push(id));
+  const seenEq = new Set(), seenCn = new Set(), stack = ['SRC'];
+  while (stack.length) {
+    const id = stack.pop();
+    if (seenEq.has(id)) continue;
+    seenEq.add(id);
+    if (EQ[id].sw && open[id]) continue;          // 열린 차단기 너머로는 진행하지 않음
+    for (const n of EQ[id].t) {
+      if (seenCn.has(n)) continue;
+      seenCn.add(n);
+      stack.push(...nodeTerms[n]);
+    }
+  }
+  return { eq: seenEq, cn: seenCn };
+}
+
+function render() {
+  const live = energized();
+  document.querySelectorAll('.sld [data-dep]').forEach(el => {
+    const d = el.dataset.dep;
+    el.classList.toggle('off', !(live.eq.has(d) || live.cn.has(d)));
+  });
+  document.querySelectorAll('.sld .cb').forEach(g => g.classList.toggle('open', open[g.dataset.id]));
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(LABELS[el.dataset.i18n]));
+  const v = VOLT[`${+open.CB_154_1}${+open.CB_22_1}`];
+  document.querySelectorAll('.sld .volt').forEach(el => {
+    const x = v[+el.dataset.v];
+    el.textContent = x == null ? t({ ko: '정전', en: 'dead' }) : x.toFixed(4) + ' pu';
+    el.classList.toggle('out', x == null);
+  });
+  const dead = Object.keys(EQ).filter(id => EQ[id].cls === 'EnergyConsumer' && !live.eq.has(id));
+  const out = document.getElementById('outage');
+  out.textContent = dead.length ? t({ ko: '⚠ 정전 부하: ', en: '⚠ De-energized load: ' }) + dead.map(id => t(EQ[id]).split(' · ')[0]).join(', ')
+                                : t({ ko: '✓ 모든 부하 가압', en: '✓ All loads energized' });
+  out.classList.toggle('bad', dead.length > 0);
+  const info = document.getElementById('info');
+  if (!selected) { info.textContent = t({ ko: '설비를 눌러 보세요.', en: 'Click any equipment.' }); return; }
+  const e = EQ[selected];
+  const state = e.sw ? ` · <b>${open[selected] ? t({ ko: '열림', en: 'OPEN' }) : t({ ko: '닫힘', en: 'CLOSED' })}</b> (<code>cim:Switch.open ${open[selected]}</code>)` : '';
+  info.innerHTML = `<code>ex:${selected}</code> a <code>cim:${e.cls}</code>${state}<br>${t(e)} · Terminal ${e.t.length}`;
+}
+
+document.querySelectorAll('.sld .eq').forEach(g => g.addEventListener('click', () => {
+  const id = g.dataset.id;
+  if (EQ[id].sw) open[id] = !open[id];
+  selected = id;
+  document.querySelectorAll('.sld .eq.sel').forEach(x => x.classList.remove('sel'));
+  g.classList.add('sel');
+  render();
+}));
+document.getElementById('sldReset').addEventListener('click', () => {
+  open.CB_154_1 = open.CB_22_1 = false; selected = null;
+  document.querySelectorAll('.sld .eq.sel').forEach(x => x.classList.remove('sel'));
+  render();
+});
+document.addEventListener('langchange', render);
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>

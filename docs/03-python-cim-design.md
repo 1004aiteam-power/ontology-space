@@ -27,7 +27,10 @@ pycim/
 │                EnergyConsumer, ExternalNetworkInjection, PowerTransformer(+End)
 ├── topology.py  인접 설비, 가압 범위 탐색, 정전 영향 분석
 ├── rdf.py       Turtle 직렬화
-└── model.py     객체 저장소 (타입별 조회)
+├── model.py     객체 저장소 (타입별 조회)
+├── samples.py   예제 계통 (154kV 선로 → 변전소 → 22.9kV 부하)
+├── export_pandapower.py  pandapower 네트워크로 변환 + 조류계산
+└── export_opendss.py     OpenDSS 스크립트로 변환 + 조류계산
 ```
 
 ## 3. 핵심 코드
@@ -91,14 +94,49 @@ python examples/build_sample_grid.py
 ```
 
 ```bash
+pip install pandapower opendssdirect.py   # 변환기 사용 시
 python -m pytest tests
 ```
 
-## 5. 로드맵
+## 5. 해석 도구 변환 (pandapower · OpenDSS)
 
+| CIM (pycim) | pandapower | OpenDSS |
+|---|---|---|
+| ConnectivityNode | bus | bus (n1, n2, …) |
+| ExternalNetworkInjection | ext_grid | Circuit (Vsource, `MVAsc3=1e6`로 이상 전원에 가깝게) |
+| ACLineSegment | line | Line |
+| Switch / Breaker | switch (bus-bus) | Line `switch=yes` (+ `Open`) |
+| PowerTransformer + End ×2 | trafo (vk%, vkr%) | Transformer (XHL, %Rs) |
+| EnergyConsumer | load | Load (model=1) |
+| RotatingMachine | sgen | Generator |
+
+노드 공칭전압은 `topology.nominal_voltages()`가 VoltageLevel → 설비 BaseVoltage → 변압기 권선단 정격전압 순서로 찾고, 없으면 이웃 노드에서 전파합니다.
+
+```python
+from pycim import export_pandapower, export_opendss
+from pycim.samples import sample_grid
+
+m = sample_grid()
+net, bus_map = export_pandapower.to_pandapower(m)   # pandapower net
+script, names = export_opendss.to_opendss(m)        # .dss 문자열
+export_pandapower.solve(m)                          # {노드: 전압 pu}
+```
+
+`python examples/compare_solvers.py` 결과 (두 도구가 소수 넷째 자리까지 일치):
+
+| 노드 | kV | 평상시 pandapower | 평상시 OpenDSS | 154kV CB 개방 |
+|---|---|---|---|---|
+| B변전소 측 노드 | 154 | 1.0000 | 1.0000 | 1.0000 |
+| 선로-CB 접점 | 154 | 0.9992 | 0.9992 | 1.0000 |
+| 154kV 모선 노드 | 154 | 0.9992 | 0.9992 | 정전 |
+| 22.9kV 모선 노드 | 22.9 | 0.9945 | 0.9945 | 정전 |
+| D/L #1 인출 노드 | 22.9 | 0.9945 | 0.9945 | 정전 |
+
+## 6. 로드맵
+
+- [x] pandapower / OpenDSS 모델로 변환해 조류계산
 - [ ] CGMES(RDF/XML) 파일 읽기 → 파이썬 객체 생성
-- [ ] EQ / SSH / SV 프로파일 분리 직렬화
+- [ ] EQ / SSH / SV 프로파일 분리 직렬화 (계산 결과 → SV)
 - [ ] Measurement / Analog 클래스와 SCADA 값 연계
 - [ ] SHACL 규칙으로 모델 검증
-- [ ] pandapower / OpenDSS 모델로 변환해 조류계산
-- [ ] 배전(IEC 61968)·DER 클래스 확장
+- [ ] 배전(IEC 61968)·DER 클래스 확장, 불평형(상별) 모델

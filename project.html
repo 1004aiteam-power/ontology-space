@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · pycim 프로젝트</title>
+<meta name="title-ko" content="Ontology Space · pycim 프로젝트">
+<meta name="title-en" content="Ontology Space · pycim project">
+<meta name="description" content="CIM을 파이썬 클래스로 설계하고 pandapower · OpenDSS로 변환하는 프로젝트">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html" aria-current="page"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="badge">PROJECT</div>
+  <h1><span lang="ko">CIM을 파이썬 클래스로 설계하기</span><span lang="en">Designing CIM as Python classes</span> · <code>pycim</code></h1>
+  <p class="lead" lang="ko">IEC CIM의 UML 모델을 파이썬 클래스로 그대로 옮겨, 전력망 데이터를 코드로 만들고, 분석하고, 온톨로지(RDF)로 내보내고, <b>pandapower · OpenDSS</b>로 계산합니다. 지금은 Core · Topology · Wires 패키지의 핵심 클래스를 구현한 프로토타입 단계입니다.</p>
+  <p class="lead" lang="en">pycim mirrors the IEC CIM UML model as Python classes: build grid data in code, analyse it, export it as an ontology (RDF), and solve it with <b>pandapower · OpenDSS</b>. It is a prototype covering the core classes of the Core · Topology · Wires packages.</p>
+</div>
+
+<section id="design">
+  <h2><span lang="ko">설계 원칙</span><span lang="en">Design principles</span></h2>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">CIM 상속 = 파이썬 상속</span><span lang="en">CIM inheritance = Python inheritance</span></h4>
+      <p lang="ko">UML 계층을 그대로 옮겼습니다.</p><p lang="en">The UML hierarchy, as is.</p>
+      <div class="ex"><code>Breaker → ProtectedSwitch → Switch → ConductingEquipment</code></div></div>
+    <div class="card"><h4><span lang="ko">이름 자동 변환</span><span lang="en">Automatic CIM naming</span></h4>
+      <p lang="ko">필드는 snake_case로 쓰고, RDF로 내보낼 때 CIM 이름으로 바꿉니다.</p><p lang="en">Fields are snake_case; exported with their CIM names.</p>
+      <div class="ex"><code>length</code> → <code>Conductor.length</code></div></div>
+    <div class="card"><h4><span lang="ko">역방향 연관 자동 관리</span><span lang="en">Managed inverse associations</span></h4>
+      <p lang="ko">Terminal을 만들면 설비와 노드 양쪽에 자동으로 등록됩니다.</p><p lang="en">Creating a Terminal registers it on both the equipment and the node.</p></div>
+    <div class="card"><h4><span lang="ko">의존성 없음</span><span lang="en">No dependencies</span></h4>
+      <p lang="ko">표준 <code>dataclasses</code>만 사용합니다. 해석 도구는 변환할 때만 필요합니다.</p><p lang="en">Only the standard <code>dataclasses</code>. Solvers are needed only for export.</p></div>
+  </div>
+  <h3><span lang="ko">사용 예</span><span lang="en">Usage</span></h3>
+<pre><code class="language-python">from pycim import *
+
+m = Model()
+n1, n2 = m.add(ConnectivityNode(name="N1")), m.add(ConnectivityNode(name="N2"))
+src = m.add(ExternalNetworkInjection(name="grid")).connect(n1)
+cb  = m.add(Breaker(name="CB")).connect(n1, n2)        # creates Terminal 1, 2
+ld  = m.add(EnergyConsumer(name="load", p=8.5)).connect(n2)
+
+cb.open = True
+topology.deenergized_loads(m, [src])   # → [EnergyConsumer('load')]
+print(to_turtle(m))                    # export as CIM RDF (Turtle)</code></pre>
+</section>
+
+<section id="convert">
+  <h2><span lang="ko">하나의 CIM 모델, 두 개의 해석 도구</span><span lang="en">One CIM model, two solvers</span></h2>
+  <p class="sub" lang="ko">pycim 모델을 pandapower 네트워크와 OpenDSS 스크립트로 자동 변환해, 같은 계통을 두 도구로 계산합니다.</p>
+  <p class="sub" lang="en">A pycim model is converted automatically to a pandapower network and an OpenDSS script, so the same grid is solved by both tools.</p>
+<pre><code>             ┌──▶ export_pandapower ──▶ pandapower net ──▶ runpp()
+CIM model ───┤
+ (pycim)     └──▶ export_opendss    ──▶ .dss script    ──▶ Solve</code></pre>
+  <h3><span lang="ko">매핑 규칙</span><span lang="en">Mapping</span></h3>
+  <div class="tbl"><table>
+    <tr><th>CIM (pycim)</th><th>pandapower</th><th>OpenDSS</th></tr>
+    <tr><td>ConnectivityNode</td><td>bus</td><td>bus (n1, n2, …)</td></tr>
+    <tr><td>ExternalNetworkInjection</td><td>ext_grid</td><td>Circuit (Vsource)</td></tr>
+    <tr><td>ACLineSegment</td><td>line</td><td>Line</td></tr>
+    <tr><td>Switch / Breaker</td><td>switch (bus-bus)</td><td>Line <code>switch=yes</code> + <code>Open</code></td></tr>
+    <tr><td>PowerTransformer + End ×2</td><td>trafo (vk%, vkr%)</td><td>Transformer (XHL, %Rs)</td></tr>
+    <tr><td>EnergyConsumer</td><td>load</td><td>Load (model=1)</td></tr>
+    <tr><td>RotatingMachine</td><td>sgen</td><td>Generator</td></tr>
+  </table></div>
+  <p lang="ko">노드의 공칭전압은 VoltageLevel → 설비의 BaseVoltage → 변압기 권선단 정격전압 순서로 찾고, 그래도 없으면 이웃 노드에서 전파합니다 (<code>topology.nominal_voltages</code>).</p>
+  <p lang="en">Node voltages come from the VoltageLevel, then equipment BaseVoltage, then transformer end ratings, and are finally propagated from neighbours (<code>topology.nominal_voltages</code>).</p>
+
+  <h3><span lang="ko">계산 결과 비교 (<code>examples/compare_solvers.py</code>)</span><span lang="en">Results (<code>examples/compare_solvers.py</code>)</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">노드</span><span lang="en">Node</span></th><th>kV</th><th><span lang="ko">평상시</span><span lang="en">Normal</span><br>pandapower</th><th><span lang="ko">평상시</span><span lang="en">Normal</span><br>OpenDSS</th><th><span lang="ko">154kV CB 개방</span><span lang="en">154 kV CB open</span><br>pandapower</th><th><span lang="ko">154kV CB 개방</span><span lang="en">154 kV CB open</span><br>OpenDSS</th></tr>
+    <tr><td><span lang="ko">B변전소 측 노드</span><span lang="en">Sub. B node</span></td><td class="num">154</td><td class="num">1.0000</td><td class="num">1.0000</td><td class="num">1.0000</td><td class="num">1.0000</td></tr>
+    <tr><td><span lang="ko">선로-CB 접점</span><span lang="en">Line–CB node</span></td><td class="num">154</td><td class="num">0.9992</td><td class="num">0.9992</td><td class="num">1.0000</td><td class="num">1.0000</td></tr>
+    <tr><td><span lang="ko">154kV 모선</span><span lang="en">154 kV bus</span></td><td class="num">154</td><td class="num">0.9992</td><td class="num">0.9992</td><td class="dead"><span lang="ko">정전</span><span lang="en">dead</span></td><td class="dead"><span lang="ko">정전</span><span lang="en">dead</span></td></tr>
+    <tr><td><span lang="ko">22.9kV 모선</span><span lang="en">22.9 kV bus</span></td><td class="num">22.9</td><td class="num">0.9945</td><td class="num">0.9945</td><td class="dead"><span lang="ko">정전</span><span lang="en">dead</span></td><td class="dead"><span lang="ko">정전</span><span lang="en">dead</span></td></tr>
+    <tr><td><span lang="ko">D/L #1 인출</span><span lang="en">Feeder #1</span></td><td class="num">22.9</td><td class="num">0.9945</td><td class="num">0.9945</td><td class="dead"><span lang="ko">정전</span><span lang="en">dead</span></td><td class="dead"><span lang="ko">정전</span><span lang="en">dead</span></td></tr>
+  </table></div>
+  <p lang="ko">두 도구의 결과가 소수 넷째 자리까지 일치합니다. 이 결과는 <a href="grid.html#example">전력망 페이지의 인터랙티브 단선도</a>에서도 확인할 수 있습니다.</p>
+  <p lang="en">Both solvers agree to four decimal places. Try it on the <a href="grid.html#example">interactive single-line diagram</a>.</p>
+</section>
+
+<section id="code">
+  <h2><span lang="ko">실제 코드</span><span lang="en">Source code</span></h2>
+  <p class="sub" lang="ko">저장소의 파일을 그대로 불러와 보여 줍니다.</p>
+  <p class="sub" lang="en">Loaded live from the repository.</p>
+  <div data-viewer>
+    <div class="tabs" role="tablist">
+      <button data-file="pycim/base.py">base.py</button>
+      <button data-file="pycim/core.py">core.py</button>
+      <button data-file="pycim/wires.py">wires.py</button>
+      <button data-file="pycim/topology.py">topology.py</button>
+      <button data-file="pycim/export_pandapower.py">export_pandapower.py</button>
+      <button data-file="pycim/export_opendss.py">export_opendss.py</button>
+      <button data-file="pycim/rdf.py">rdf.py</button>
+      <button data-file="pycim/samples.py">samples.py</button>
+      <button data-file="examples/compare_solvers.py">compare_solvers.py</button>
+      <button data-file="examples/sample_grid.dss">sample_grid.dss</button>
+    </div>
+    <div class="viewer">
+      <div class="bar"><span class="path"></span><a class="gh" target="_blank" rel="noopener"><span lang="ko">GitHub에서 보기 ↗</span><span lang="en">View on GitHub ↗</span></a></div>
+      <pre><code class="language-python">…</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <h2><span lang="ko">해석 도구 비교: pandapower vs OpenDSS</span><span lang="en">Solver comparison: pandapower vs OpenDSS</span></h2>
+  <div class="tbl" lang="ko"><table>
+    <tr><th style="width:18%">구분</th><th>pandapower</th><th>OpenDSS</th></tr>
+    <tr><td>개발</td><td>독일 Fraunhofer IEE · 카셀 대학교</td><td>미국 EPRI (1997년~)</td></tr>
+    <tr><td>주 대상</td><td>송전망 + 배전망</td><td><b>배전망</b></td></tr>
+    <tr><td>모델링</td><td>3상 평형(정상분)이 기본. 불평형 해석은 일부 지원</td><td><b>다상·불평형</b>이 기본, 상별 해석</td></tr>
+    <tr><td>주요 기능</td><td>조류계산, <b>최적조류계산(OPF)</b>, <b>단락계산(IEC 60909)</b>, 상태추정, 그래프 분석</td><td>조류계산, <b>시계열 해석</b>(8760시간 등), <b>고조파</b>, 고장 해석, DER 호스팅 용량</td></tr>
+    <tr><td>제어 설비</td><td>변압기 탭, 제어기 프레임워크</td><td>전압조정기, 커패시터 제어, 인버터 기능(Volt-VAR 등)이 풍부</td></tr>
+    <tr><td>사용 방식</td><td>순수 파이썬 라이브러리</td><td>전용 스크립트 언어(<code>.dss</code>). 파이썬에서는 <code>OpenDSSDirect.py</code>, <code>py-dss-interface</code>로 호출</td></tr>
+    <tr><td>데이터 구조</td><td>pandas DataFrame (bus, line, trafo, load … 표)</td><td>텍스트 명령으로 설비 정의</td></tr>
+    <tr><td>CIM 연계</td><td>CGMES 변환기 제공</td><td>CIM(배전) 내보내기 지원</td></tr>
+    <tr><td>설치</td><td><code>pip install pandapower</code></td><td>EPRI 설치 파일(Windows) 또는 <code>pip install opendssdirect.py</code></td></tr>
+    <tr><td>라이선스</td><td>BSD</td><td>BSD 계열 오픈소스</td></tr>
+  </table></div>
+  <div class="tbl" lang="en"><table>
+    <tr><th style="width:18%"></th><th>pandapower</th><th>OpenDSS</th></tr>
+    <tr><td>Developed by</td><td>Fraunhofer IEE · University of Kassel (Germany)</td><td>EPRI (USA, since 1997)</td></tr>
+    <tr><td>Focus</td><td>Transmission + distribution</td><td><b>Distribution</b></td></tr>
+    <tr><td>Modelling</td><td>Balanced (positive sequence) by default; partial unbalanced support</td><td><b>Multi-phase, unbalanced</b> by default</td></tr>
+    <tr><td>Key features</td><td>Power flow, <b>OPF</b>, <b>short circuit (IEC 60909)</b>, state estimation, graph analysis</td><td>Power flow, <b>time series</b> (e.g. 8760 h), <b>harmonics</b>, fault studies, DER hosting capacity</td></tr>
+    <tr><td>Controls</td><td>Transformer taps, controller framework</td><td>Rich regulator, capacitor and inverter controls (Volt-VAR…)</td></tr>
+    <tr><td>Interface</td><td>Pure Python library</td><td>Own script language (<code>.dss</code>); from Python via <code>OpenDSSDirect.py</code>, <code>py-dss-interface</code></td></tr>
+    <tr><td>Data</td><td>pandas DataFrames (bus, line, trafo, load…)</td><td>Text commands</td></tr>
+    <tr><td>CIM</td><td>CGMES converter</td><td>CIM (distribution) export</td></tr>
+    <tr><td>Install</td><td><code>pip install pandapower</code></td><td>EPRI installer (Windows) or <code>pip install opendssdirect.py</code></td></tr>
+    <tr><td>License</td><td>BSD</td><td>BSD-style open source</td></tr>
+  </table></div>
+  <div class="grid two">
+    <div class="card"><h4>pandapower</h4><p lang="ko">154kV 이상 송전망의 조류·단락용량 계산, 최적 운전점 탐색, 파이썬 데이터 분석과 바로 연결하고 싶을 때</p><p lang="en">Transmission (154 kV+) power flow and short-circuit studies, optimal operation, and tight integration with Python data analysis</p></div>
+    <div class="card"><h4>OpenDSS</h4><p lang="ko">22.9kV 배전선로의 상별 불평형, 태양광·ESS 연계 시 1년 시계열 전압 변동, 호스팅 용량을 분석할 때</p><p lang="en">Per-phase unbalance on 22.9 kV feeders, year-long time series with PV and storage, hosting capacity</p></div>
+  </div>
+  <h3><span lang="ko">같은 문제를 두 도구로</span><span lang="en">The same problem in both tools</span></h3>
+  <div class="grid two">
+<pre style="margin:0"><code class="language-python"># pandapower
+import pandapower as pp
+net = pp.create_empty_network()
+b1 = pp.create_bus(net, vn_kv=22.9)
+b2 = pp.create_bus(net, vn_kv=22.9)
+pp.create_ext_grid(net, b1)
+pp.create_line_from_parameters(net, b1, b2,
+    length_km=5, r_ohm_per_km=0.18,
+    x_ohm_per_km=0.39, c_nf_per_km=10,
+    max_i_ka=0.4)
+pp.create_load(net, b2, p_mw=3, q_mvar=1)
+pp.runpp(net)
+print(net.res_bus.vm_pu)</code></pre>
+<pre style="margin:0"><code># OpenDSS (.dss)
+Clear
+New Circuit.demo basekv=22.9 bus1=B1 pu=1.0
+New Linecode.LC nphases=3 units=km
+~ r1=0.18 x1=0.39 c1=10
+New Line.L1 bus1=B1 bus2=B2
+~ linecode=LC length=5 units=km
+New Load.LD1 bus1=B2 phases=3
+~ kV=22.9 kW=3000 kvar=1000
+Set voltagebases=[22.9]
+Calcvoltagebases
+Solve
+Show Voltages LN</code></pre>
+  </div>
+  <p lang="ko">부하 모선 전압: pandapower <b>0.991 pu</b>, OpenDSS <b>0.990 pu</b>. 작은 차이는 OpenDSS가 전원에 기본 내부 임피던스를 넣기 때문입니다. pycim 변환기는 OpenDSS 전원을 매우 강하게(<code>MVAsc3=1e6</code>) 설정해 이 차이를 없앴습니다.</p>
+  <p lang="en">Load bus voltage: pandapower <b>0.991 pu</b>, OpenDSS <b>0.990 pu</b>. The small gap comes from OpenDSS's default source impedance; the pycim exporter removes it by using a very stiff source (<code>MVAsc3=1e6</code>).</p>
+</section>
+
+<section id="roadmap">
+  <h2><span lang="ko">로드맵</span><span lang="en">Roadmap</span></h2>
+  <ul lang="ko">
+    <li>✅ Core · Topology · Wires 핵심 클래스, Turtle 내보내기, 정전 분석</li>
+    <li>✅ pandapower · OpenDSS 변환과 결과 비교</li>
+    <li>⬜ CGMES(RDF/XML) 파일 읽기</li>
+    <li>⬜ 계산 결과를 CIM SV 프로파일로 되돌려 저장</li>
+    <li>⬜ Measurement / Analog 클래스와 SCADA 값 연계</li>
+    <li>⬜ SHACL 규칙으로 모델 검증</li>
+    <li>⬜ 배전(IEC 61968) · DER 클래스 확장, 불평형(상별) 모델</li>
+  </ul>
+  <ul lang="en">
+    <li>✅ Core · Topology · Wires classes, Turtle export, outage analysis</li>
+    <li>✅ Export to pandapower · OpenDSS with result comparison</li>
+    <li>⬜ CGMES (RDF/XML) import</li>
+    <li>⬜ Write solver results back as CIM SV profile</li>
+    <li>⬜ Measurement / Analog classes linked to SCADA values</li>
+    <li>⬜ SHACL validation</li>
+    <li>⬜ Distribution (IEC 61968) · DER classes, unbalanced per-phase model</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li><a href="https://www.pandapower.org/">pandapower</a> · <a href="https://www.epri.com/pages/sa/opendss">OpenDSS (EPRI)</a> · <a href="https://dss-extensions.org/">DSS-Extensions</a></li>
+    <li><span lang="ko">설계 문서</span><span lang="en">Design doc</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/03-python-cim-design.md">docs/03-python-cim-design.md</a></li>
+  </ul>
+  <div class="pager"><a href="grid.html"><span lang="ko">← 이전: 전력망 온톨로지</span><span lang="en">← Prev: Power grid ontology</span></a><span></span></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a></div></footer>
+</body>
+</html>

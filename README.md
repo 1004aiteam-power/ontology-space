@@ -13,7 +13,11 @@
 | [examples/queries.md](examples/queries.md) | 예제 데이터에 대한 SPARQL 질의 모음 |
 | [pycim/](pycim/) | CIM 파이썬 클래스 패키지 |
 | [examples/build_sample_grid.py](examples/build_sample_grid.py) | pycim으로 예제 변전소 구성, 정전 분석, RDF 내보내기 |
-| [index.html](index.html) | GitHub Pages용 소개 웹페이지 (단일 HTML)  |
+| [examples/compare_solvers.py](examples/compare_solvers.py) | 같은 CIM 모델을 pandapower · OpenDSS로 계산해 비교 |
+| [examples/sample_grid.dss](examples/sample_grid.dss) | pycim이 생성한 OpenDSS 스크립트 |
+| `index.html` · `grid.html` · `project.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트, 한·영 전환) |
+
+웹사이트: https://1004aiteam-power.github.io/ontology-space/
 
 ## 빠르게 써 보기
 

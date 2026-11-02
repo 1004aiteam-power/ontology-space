@@ -1,0 +1,29 @@
+! pycim에서 자동 생성한 OpenDSS 스크립트
+Clear
+Set DefaultBaseFrequency=60
+
+! B변전소 계통
+New Circuit.pycim basekv=154 bus1=n1 pu=1.0 phases=3 MVAsc3=1e6 MVAsc1=1e6
+
+! B-A 1회선
+New Line.L1 bus1=n1 bus2=n2 phases=3 r1=0.0784 x1=0.336 c1=0 r0=0.0784 x0=0.336 c0=0 length=12.5 units=km
+! 154kV 선로 CB
+New Line.SW1 bus1=n2 bus2=n3 phases=3 switch=yes
+! M.Tr #1
+New Transformer.T1 phases=3 windings=2 buses=[n3 n4] conns=[wye wye] kVs=[154 22.9] kVAs=[60000 60000] %Rs=[0.126497 0.126497] XHL=11.9919 %noloadloss=0 %imag=0
+! D/L #1 CB
+New Line.SW2 bus1=n4 bus2=n5 phases=3 switch=yes
+! D/L #1 부하
+New Load.LD1 bus1=n5 phases=3 kV=22.9 kW=8500 kvar=2100 model=1 vminpu=0.5
+
+
+Set voltagebases=[154 22.9]
+Calcvoltagebases
+Solve
+
+! 모선 이름 ↔ CIM ConnectivityNode
+!   n1 = B변전소 측 노드
+!   n2 = 선로-CB 접점
+!   n3 = 154kV 모선 노드
+!   n4 = 22.9kV 모선 노드
+!   n5 = D/L #1 인출 노드
