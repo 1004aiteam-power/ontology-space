@@ -27,3 +27,7 @@ python -c "import rdflib; g=rdflib.Graph().parse('examples/power-grid-sample.ttl
 ```
 
 [Protégé](https://protege.stanford.edu/)로 `.ttl` 파일을 열어 클래스 계층과 개체를 시각적으로 볼 수도 있습니다.
+
+## 라이선스
+
+[MIT License](LICENSE) © 2026 1004aiteam-power
