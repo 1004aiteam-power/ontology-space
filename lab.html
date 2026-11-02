@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 실습</title>
+<meta name="title-ko" content="Ontology Space · 실습">
+<meta name="title-en" content="Ontology Space · Lab">
+<meta name="description" content="브라우저에서 SPARQL 질의, 지식 그래프 시각화, SHACL 검증 결과 보기">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+<script src="assets/vendor/cytoscape.min.js"></script>
+<script type="module" src="assets/lab.js"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html" aria-current="page"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">HANDS-ON</div>
+  <h1><span lang="ko">직접 질의하고, 그래프로 보고, 검증하기</span><span lang="en">Query it, see it as a graph, validate it</span></h1>
+  <p class="lead" lang="ko">전력망 데이터를 브라우저 안에서 다룹니다. 서버 없이 <b>Oxigraph</b>(WebAssembly SPARQL 엔진)가 RDF를 메모리에 올려 질의를 실행합니다.</p>
+  <p class="lead" lang="en">Work with grid data right in your browser. No server: <b>Oxigraph</b> (a WebAssembly SPARQL engine) loads the RDF into memory and runs your queries.</p>
+  <div class="lab-bar">
+    <label for="dataset"><b><span lang="ko">데이터</span><span lang="en">Dataset</span></b></label>
+    <select id="dataset"></select>
+    <span id="status"></span>
+  </div>
+</div>
+
+<section id="sparql">
+  <h2><span lang="ko">SPARQL 실습</span><span lang="en">SPARQL playground</span></h2>
+  <p class="sub" lang="ko">예제 질의를 고르거나 직접 고쳐서 실행하세요 (Ctrl/⌘ + Enter). <code>cim:</code> · <code>rdf:</code> · <code>rdfs:</code> · <code>ex:</code> 접두어는 자동으로 붙습니다. 결과의 IRI를 누르면 아래 그래프에서 해당 노드로 이동합니다.</p>
+  <p class="sub" lang="en">Pick a preset or edit and run (Ctrl/⌘ + Enter). Prefixes <code>cim:</code> · <code>rdf:</code> · <code>rdfs:</code> · <code>ex:</code> are added for you. Click an IRI in the results to jump to it in the graph.</p>
+  <div class="presets" id="presets"></div>
+  <textarea id="query" spellcheck="false" aria-label="SPARQL"></textarea>
+  <div class="lab-bar"><button id="run" class="primary">▶ <span lang="ko">실행</span><span lang="en">Run</span></button></div>
+  <div id="results"></div>
+</section>
+
+<section id="graph-section">
+  <h2><span lang="ko">지식 그래프</span><span lang="en">Knowledge graph</span></h2>
+  <p class="sub" lang="ko">위에서 고른 데이터를 그래프로 그립니다. 노드는 개체, 화살표는 CIM 관계(예: <code>Equipment.EquipmentContainer</code>)입니다. 이 그림도 SPARQL 질의 결과로 만든 것입니다. 단자(Terminal)를 끄면 설비와 노드를 점선으로 바로 잇습니다.</p>
+  <p class="sub" lang="en">The selected dataset drawn as a graph: nodes are individuals, arrows are CIM relations (e.g. <code>Equipment.EquipmentContainer</code>). It is built from a SPARQL query too. With Terminals hidden, equipment links straight to nodes with dashed lines.</p>
+  <div class="layers" id="layers"><span id="legend" class="layers" style="margin:0"></span>
+    <span class="lab-bar" style="margin:0"><button id="relayout">↻ <span lang="ko">다시 배치</span><span lang="en">Re-layout</span></button></span></div>
+  <div id="graph" role="img" aria-label="knowledge graph"></div>
+  <p id="graphInfo" class="meta"></p>
+  <div id="nodeInfo"></div>
+</section>
+
+<section id="shacl">
+  <h2><span lang="ko">SHACL 데이터 품질 검증</span><span lang="en">SHACL data-quality validation</span></h2>
+  <p class="sub" lang="ko">"선로 구간은 단자 2개", "mRID는 UUID" 같은 규칙을 SHACL로 정의하고, 데이터가 규칙을 지키는지 검사합니다. 아래 결과는 <code>examples/validate.py</code>(pyshacl)를 실행해 만든 보고서입니다.</p>
+  <p class="sub" lang="en">Rules such as "a line segment has two terminals" or "an mRID is a UUID" are written in SHACL, and the data is checked against them. The report below is produced by <code>examples/validate.py</code> (pyshacl).</p>
+  <h3><span lang="ko">규칙 예시</span><span lang="en">Example rule</span></h3>
+<pre><code># 선로·개폐기·2권선 변압기는 Terminal이 정확히 2개
+ps:TwoTerminalShape a sh:NodeShape ;
+    sh:targetClass cim:ACLineSegment, cim:Switch, cim:PowerTransformer ;
+    sh:property [
+        sh:path [ sh:inversePath cim:Terminal.ConductingEquipment ] ;
+        sh:minCount 2 ; sh:maxCount 2 ;
+    ] .
+
+# 모든 IdentifiedObject의 mRID는 UUID 형식
+ps:MRIDShape a sh:NodeShape ;
+    sh:targetClass cim:IdentifiedObject ;          # 하위 클래스 전체에 적용
+    sh:property [ sh:path cim:IdentifiedObject.mRID ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:pattern "^[0-9a-fA-F]{8}-…$" ] .</code></pre>
+  <p lang="ko">전체 규칙(8종): <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/shapes/cim-shapes.ttl">shapes/cim-shapes.ttl</a> · 위반 예제: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/broken-sample.ttl">broken-sample.ttl</a> (위 SPARQL 실습에서도 불러올 수 있습니다)</p>
+  <p lang="en">All rules (8 groups): <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/shapes/cim-shapes.ttl">shapes/cim-shapes.ttl</a> · Broken sample: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/broken-sample.ttl">broken-sample.ttl</a> (also loadable in the playground above)</p>
+  <h3><span lang="ko">검증 결과</span><span lang="en">Results</span></h3>
+  <div id="shaclReport"></div>
+</section>
+
+<section>
+  <div class="pager"><a href="project.html"><span lang="ko">← 이전: 프로젝트 pycim</span><span lang="en">← Prev: Project pycim</span></a><span></span></div>
+  <p class="meta"><span lang="ko">사용한 라이브러리</span><span lang="en">Libraries</span>: <a href="https://github.com/oxigraph/oxigraph">Oxigraph</a> (MIT/Apache-2.0) · <a href="https://js.cytoscape.org/">Cytoscape.js</a> (MIT) · <a href="https://github.com/RDFLib/pySHACL">pySHACL</a> (Apache-2.0)</p>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE">MIT License</a></div></footer>
+</body>
+</html>

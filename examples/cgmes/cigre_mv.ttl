@@ -1,0 +1,1795 @@
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix ex:  <http://example.org/grid#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:_d2995e50-380e-4f1b-beca-45ef75624ec5 a cim:NameType ;
+    cim:NameType.name "description" .
+
+ex:_9ab60b89-1c09-4ded-a42f-0ebd0eef8930 a cim:NameType ;
+    cim:NameType.name "description" .
+
+ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 a cim:BaseVoltage ;
+    cim:IdentifiedObject.mRID "a5b4e1c5-b844-4a1a-870c-1ee07662d7b4" ;
+    cim:BaseVoltage.nominalVoltage "20.0"^^xsd:float .
+
+ex:_a55f97f1-c485-414c-a845-678fe1eb19cf a cim:BaseVoltage ;
+    cim:IdentifiedObject.mRID "a55f97f1-c485-414c-a845-678fe1eb19cf" ;
+    cim:BaseVoltage.nominalVoltage "110.0"^^xsd:float .
+
+ex:_6bd6b703-519b-46a8-a1f8-632f7e9d05f1 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "6bd6b703-519b-46a8-a1f8-632f7e9d05f1" ;
+    cim:IdentifiedObject.name "189" ;
+    cim:VoltageLevel.Substation ex:_7f8de5c3-5562-538b-a60f-707915eeb3f1 ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_60deeb94-c9f8-4ea3-b52f-1940ea528164 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "60deeb94-c9f8-4ea3-b52f-1940ea528164" ;
+    cim:IdentifiedObject.name "136" ;
+    cim:VoltageLevel.Substation ex:_b2b8f20e-0793-5bc9-97a6-f21456fc9faa ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_16f5db35-83c6-418e-ae9e-69f05e77147b a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "16f5db35-83c6-418e-ae9e-69f05e77147b" ;
+    cim:IdentifiedObject.name "153" ;
+    cim:VoltageLevel.Substation ex:_92435c1b-c611-5823-92dd-2c64bf12d70c ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_dba75717-e472-42b9-a82a-b4c7819f9f2b a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "dba75717-e472-42b9-a82a-b4c7819f9f2b" ;
+    cim:IdentifiedObject.name "145" ;
+    cim:VoltageLevel.Substation ex:_08b2e24c-0763-51df-ba9d-2f44e6de4a7e ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_169f9dc8-61b6-4c5d-82f9-3def05cf3c86 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "169f9dc8-61b6-4c5d-82f9-3def05cf3c86" ;
+    cim:IdentifiedObject.name "139" ;
+    cim:VoltageLevel.Substation ex:_202b9ef0-f5e5-5fd7-a08b-669a1379c6f9 ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_5c3f2d5c-750f-4d3c-b283-eee33929abaa a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "5c3f2d5c-750f-4d3c-b283-eee33929abaa" ;
+    cim:IdentifiedObject.name "128" ;
+    cim:VoltageLevel.Substation ex:_440406a8-ee94-5455-b59d-b0429c8ea9cc ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_394f1e7a-c67b-446d-ab76-174e31ddc9b8 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "394f1e7a-c67b-446d-ab76-174e31ddc9b8" ;
+    cim:IdentifiedObject.name "112" ;
+    cim:VoltageLevel.Substation ex:_97014e4b-42e4-5ee5-83e1-ccc87c019498 ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_09dafd64-e08f-4a20-8e19-7ca5c2ea5ba2 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "09dafd64-e08f-4a20-8e19-7ca5c2ea5ba2" ;
+    cim:IdentifiedObject.name "291" ;
+    cim:VoltageLevel.Substation ex:_08c1b333-82d4-55c0-a0d5-d7075c9561ba ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_f67b0540-9424-4b6e-9b12-9f112e5e7f01 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "f67b0540-9424-4b6e-9b12-9f112e5e7f01" ;
+    cim:IdentifiedObject.name "120" ;
+    cim:VoltageLevel.Substation ex:_934b1311-fafd-52bd-994b-2a871c959313 ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_f88faca2-f0cf-419e-907e-3411271816ce a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "f88faca2-f0cf-419e-907e-3411271816ce" ;
+    cim:IdentifiedObject.name "83" ;
+    cim:VoltageLevel.Substation ex:_3df913fd-4d48-5105-a0d9-9f48f363d954 ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_2a7c745b-de30-4863-88ba-dcbe73f806df a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "2a7c745b-de30-4863-88ba-dcbe73f806df" ;
+    cim:IdentifiedObject.name "41" ;
+    cim:VoltageLevel.Substation ex:_f4bdffed-4607-5e77-b267-a17a04bd1965 ;
+    cim:VoltageLevel.BaseVoltage ex:_a55f97f1-c485-414c-a845-678fe1eb19cf .
+
+ex:_371cfe37-f187-4fb8-8402-d7f7f5a0dfda a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "371cfe37-f187-4fb8-8402-d7f7f5a0dfda" ;
+    cim:IdentifiedObject.name "156" ;
+    cim:VoltageLevel.Substation ex:_154f773b-66b5-5c13-bfb1-27fdb9ef78ec ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_cd602f02-649d-4738-bb64-3e3b3d575704 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "cd602f02-649d-4738-bb64-3e3b3d575704" ;
+    cim:IdentifiedObject.name "297" ;
+    cim:VoltageLevel.Substation ex:_d3aa3c0a-7d6e-5581-a3a3-fe2b34b82195 ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_d0b232c3-0a56-4916-9471-66f49036ddc8 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "d0b232c3-0a56-4916-9471-66f49036ddc8" ;
+    cim:IdentifiedObject.name "305" ;
+    cim:VoltageLevel.Substation ex:_793ac9d1-6e7e-50aa-afa9-c2e68bf6079f ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_6077adb4-c337-4b45-9304-d71dd9ae5697 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "6077adb4-c337-4b45-9304-d71dd9ae5697" ;
+    cim:IdentifiedObject.name "142" ;
+    cim:VoltageLevel.Substation ex:_8a2cc70c-2330-5ab2-97c5-eba530171782 ;
+    cim:VoltageLevel.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 .
+
+ex:_f4bdffed-4607-5e77-b267-a17a04bd1965 a cim:Substation ;
+    cim:IdentifiedObject.mRID "f4bdffed-4607-5e77-b267-a17a04bd1965" ;
+    cim:IdentifiedObject.name "N0" .
+
+ex:_9ba0cc94-9d96-5c9c-8b31-623be67a39c2 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000003431" ;
+    cim:Name.IdentifiedObject ex:_f4bdffed-4607-5e77-b267-a17a04bd1965 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_92435c1b-c611-5823-92dd-2c64bf12d70c a cim:Substation ;
+    cim:IdentifiedObject.mRID "92435c1b-c611-5823-92dd-2c64bf12d70c" ;
+    cim:IdentifiedObject.name "N7" .
+
+ex:_17bd2977-d301-5629-912c-efa395b99737 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313533" ;
+    cim:Name.IdentifiedObject ex:_92435c1b-c611-5823-92dd-2c64bf12d70c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_154f773b-66b5-5c13-bfb1-27fdb9ef78ec a cim:Substation ;
+    cim:IdentifiedObject.mRID "154f773b-66b5-5c13-bfb1-27fdb9ef78ec" ;
+    cim:IdentifiedObject.name "N6" .
+
+ex:_63881888-a937-5cff-883c-55a7527ea4fd a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313536" ;
+    cim:Name.IdentifiedObject ex:_154f773b-66b5-5c13-bfb1-27fdb9ef78ec ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_7f8de5c3-5562-538b-a60f-707915eeb3f1 a cim:Substation ;
+    cim:IdentifiedObject.mRID "7f8de5c3-5562-538b-a60f-707915eeb3f1" ;
+    cim:IdentifiedObject.name "N9" .
+
+ex:_0e8747c4-83a8-52fb-9153-8c1d71778c17 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313839" ;
+    cim:Name.IdentifiedObject ex:_7f8de5c3-5562-538b-a60f-707915eeb3f1 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_3df913fd-4d48-5105-a0d9-9f48f363d954 a cim:Substation ;
+    cim:IdentifiedObject.mRID "3df913fd-4d48-5105-a0d9-9f48f363d954" ;
+    cim:IdentifiedObject.name "N1" .
+
+ex:_7706017c-03c3-57b1-b5f4-2f8a4c577e87 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000003833" ;
+    cim:Name.IdentifiedObject ex:_3df913fd-4d48-5105-a0d9-9f48f363d954 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_793ac9d1-6e7e-50aa-afa9-c2e68bf6079f a cim:Substation ;
+    cim:IdentifiedObject.mRID "793ac9d1-6e7e-50aa-afa9-c2e68bf6079f" ;
+    cim:IdentifiedObject.name "N14" .
+
+ex:_957cbfd3-184f-5352-b60a-d15009e59776 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000333035" ;
+    cim:Name.IdentifiedObject ex:_793ac9d1-6e7e-50aa-afa9-c2e68bf6079f ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_97014e4b-42e4-5ee5-83e1-ccc87c019498 a cim:Substation ;
+    cim:IdentifiedObject.mRID "97014e4b-42e4-5ee5-83e1-ccc87c019498" ;
+    cim:IdentifiedObject.name "N2" .
+
+ex:_b99bde0d-f94c-528f-9f8d-742a880b088b a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313132" ;
+    cim:Name.IdentifiedObject ex:_97014e4b-42e4-5ee5-83e1-ccc87c019498 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_934b1311-fafd-52bd-994b-2a871c959313 a cim:Substation ;
+    cim:IdentifiedObject.mRID "934b1311-fafd-52bd-994b-2a871c959313" ;
+    cim:IdentifiedObject.name "N3" .
+
+ex:_fad33e93-b72f-5830-a13f-051e75986e0d a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313230" ;
+    cim:Name.IdentifiedObject ex:_934b1311-fafd-52bd-994b-2a871c959313 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_440406a8-ee94-5455-b59d-b0429c8ea9cc a cim:Substation ;
+    cim:IdentifiedObject.mRID "440406a8-ee94-5455-b59d-b0429c8ea9cc" ;
+    cim:IdentifiedObject.name "N4" .
+
+ex:_175d7135-4add-5036-9cf8-3692519755ef a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313238" ;
+    cim:Name.IdentifiedObject ex:_440406a8-ee94-5455-b59d-b0429c8ea9cc ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_b2b8f20e-0793-5bc9-97a6-f21456fc9faa a cim:Substation ;
+    cim:IdentifiedObject.mRID "b2b8f20e-0793-5bc9-97a6-f21456fc9faa" ;
+    cim:IdentifiedObject.name "N5" .
+
+ex:_ac339c5b-4656-5c2a-825d-02923458a6ec a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313336" ;
+    cim:Name.IdentifiedObject ex:_b2b8f20e-0793-5bc9-97a6-f21456fc9faa ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_202b9ef0-f5e5-5fd7-a08b-669a1379c6f9 a cim:Substation ;
+    cim:IdentifiedObject.mRID "202b9ef0-f5e5-5fd7-a08b-669a1379c6f9" ;
+    cim:IdentifiedObject.name "N11" .
+
+ex:_ed180a5c-af2a-5e19-9bb3-98c3c3315045 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313339" ;
+    cim:Name.IdentifiedObject ex:_202b9ef0-f5e5-5fd7-a08b-669a1379c6f9 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_8a2cc70c-2330-5ab2-97c5-eba530171782 a cim:Substation ;
+    cim:IdentifiedObject.mRID "8a2cc70c-2330-5ab2-97c5-eba530171782" ;
+    cim:IdentifiedObject.name "N10" .
+
+ex:_37080113-c066-591a-9c08-65051a3cf515 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313432" ;
+    cim:Name.IdentifiedObject ex:_8a2cc70c-2330-5ab2-97c5-eba530171782 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_08b2e24c-0763-51df-ba9d-2f44e6de4a7e a cim:Substation ;
+    cim:IdentifiedObject.mRID "08b2e24c-0763-51df-ba9d-2f44e6de4a7e" ;
+    cim:IdentifiedObject.name "N8" .
+
+ex:_2d9c69c7-7135-5c24-a496-08b9c4a383dc a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000313435" ;
+    cim:Name.IdentifiedObject ex:_08b2e24c-0763-51df-ba9d-2f44e6de4a7e ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_08c1b333-82d4-55c0-a0d5-d7075c9561ba a cim:Substation ;
+    cim:IdentifiedObject.mRID "08c1b333-82d4-55c0-a0d5-d7075c9561ba" ;
+    cim:IdentifiedObject.name "N12" .
+
+ex:_292b20ef-4210-51ff-b3e8-308983dc10cc a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000323931" ;
+    cim:Name.IdentifiedObject ex:_08c1b333-82d4-55c0-a0d5-d7075c9561ba ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_d3aa3c0a-7d6e-5581-a3a3-fe2b34b82195 a cim:Substation ;
+    cim:IdentifiedObject.mRID "d3aa3c0a-7d6e-5581-a3a3-fe2b34b82195" ;
+    cim:IdentifiedObject.name "N13" .
+
+ex:_994ff664-f728-5829-982f-de97439efc81 a cim:Name ;
+    cim:Name.name "_3FA2-2E-F1-00000000000000323937" ;
+    cim:Name.IdentifiedObject ex:_d3aa3c0a-7d6e-5581-a3a3-fe2b34b82195 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_46cdcf48-629b-5446-a400-bde9cc872fe5 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "46cdcf48-629b-5446-a400-bde9cc872fe5" ;
+    cim:IdentifiedObject.name "Load7-I" ;
+    cim:Equipment.EquipmentContainer ex:_16f5db35-83c6-418e-ae9e-69f05e77147b ;
+    cim:EnergyConsumer.p "0.077"^^xsd:float ;
+    cim:EnergyConsumer.q "0.048"^^xsd:float .
+
+ex:_b3098008-fe8f-59c8-8a99-74b66111eced a cim:Name ;
+    cim:Name.name "Load7-I" ;
+    cim:Name.IdentifiedObject ex:_46cdcf48-629b-5446-a400-bde9cc872fe5 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_7a736ca5-db42-565a-a371-67a41dfdb3e8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "7a736ca5-db42-565a-a371-67a41dfdb3e8" ;
+    cim:IdentifiedObject.name "Load7-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_46cdcf48-629b-5446-a400-bde9cc872fe5 ;
+    cim:Terminal.ConnectivityNode ex:_d8a406b3-692e-5d16-9c2c-d856790efc50 ;
+    cim:Terminal.TopologicalNode ex:_cef14f83-da5c-5aa2-9398-a3a46e569f51 .
+
+ex:_d1dc18e5-143b-530c-9ed3-f2b4ea2882a8 a cim:Name ;
+    cim:Name.name "E-288" ;
+    cim:Name.IdentifiedObject ex:_7a736ca5-db42-565a-a371-67a41dfdb3e8 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_c5208f67-f288-5155-a4bd-aa6abe4c1fe7 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "c5208f67-f288-5155-a4bd-aa6abe4c1fe7" ;
+    cim:IdentifiedObject.name "Load14-H" ;
+    cim:Equipment.EquipmentContainer ex:_d0b232c3-0a56-4916-9471-66f49036ddc8 ;
+    cim:EnergyConsumer.p "0.207"^^xsd:float ;
+    cim:EnergyConsumer.q "0.052"^^xsd:float .
+
+ex:_23e81668-3255-558d-a9cc-2440d99ac434 a cim:Name ;
+    cim:Name.name "Load14-H" ;
+    cim:Name.IdentifiedObject ex:_c5208f67-f288-5155-a4bd-aa6abe4c1fe7 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_42316a7b-cb2d-589e-b004-1d990e9e2ea5 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "42316a7b-cb2d-589e-b004-1d990e9e2ea5" ;
+    cim:IdentifiedObject.name "Load14-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c5208f67-f288-5155-a4bd-aa6abe4c1fe7 ;
+    cim:Terminal.ConnectivityNode ex:_703cbb8f-84fb-55b2-bb28-87d881a01263 ;
+    cim:Terminal.TopologicalNode ex:_716c57a2-3dea-5a97-b23c-7feaa313ce8d .
+
+ex:_552e12c4-5d32-553a-a1f7-6ab22fbb202a a cim:Name ;
+    cim:Name.name "E-328" ;
+    cim:Name.IdentifiedObject ex:_42316a7b-cb2d-589e-b004-1d990e9e2ea5 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_266f781e-f62b-50c9-a4e6-86b6f8a1a1f5 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "266f781e-f62b-50c9-a4e6-86b6f8a1a1f5" ;
+    cim:IdentifiedObject.name "Load13-I" ;
+    cim:Equipment.EquipmentContainer ex:_cd602f02-649d-4738-bb64-3e3b3d575704 ;
+    cim:EnergyConsumer.p "0.032"^^xsd:float ;
+    cim:EnergyConsumer.q "0.02"^^xsd:float .
+
+ex:_5abdf13e-e767-5123-b1a6-1e5288c90e1b a cim:Name ;
+    cim:Name.name "Load13-I" ;
+    cim:Name.IdentifiedObject ex:_266f781e-f62b-50c9-a4e6-86b6f8a1a1f5 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_fdeec30a-7954-5516-a031-a24b333da384 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "fdeec30a-7954-5516-a031-a24b333da384" ;
+    cim:IdentifiedObject.name "Load13-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_266f781e-f62b-50c9-a4e6-86b6f8a1a1f5 ;
+    cim:Terminal.ConnectivityNode ex:_6cf15f35-b229-5055-b2cb-3c9a58e516f5 ;
+    cim:Terminal.TopologicalNode ex:_eb10dbce-d219-5883-8474-9947d61a6048 .
+
+ex:_40577b89-ea7c-5a48-9659-c2f480cd46eb a cim:Name ;
+    cim:Name.name "E-337" ;
+    cim:Name.IdentifiedObject ex:_fdeec30a-7954-5516-a031-a24b333da384 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_7072bc6f-5283-5e6e-b026-4350e4a39f64 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "7072bc6f-5283-5e6e-b026-4350e4a39f64" ;
+    cim:IdentifiedObject.name "Load12-H" ;
+    cim:Equipment.EquipmentContainer ex:_09dafd64-e08f-4a20-8e19-7ca5c2ea5ba2 ;
+    cim:EnergyConsumer.p "15.0"^^xsd:float ;
+    cim:EnergyConsumer.q "3.0"^^xsd:float .
+
+ex:_4acaac89-4e3c-5653-b0c6-555d84b8df3d a cim:Name ;
+    cim:Name.name "Load12-H" ;
+    cim:Name.IdentifiedObject ex:_7072bc6f-5283-5e6e-b026-4350e4a39f64 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_6163d1f6-b09b-5f86-92fc-e23af87b062c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6163d1f6-b09b-5f86-92fc-e23af87b062c" ;
+    cim:IdentifiedObject.name "Load12-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_7072bc6f-5283-5e6e-b026-4350e4a39f64 ;
+    cim:Terminal.ConnectivityNode ex:_8bc502bd-707d-512e-b531-a41226e0f34a ;
+    cim:Terminal.TopologicalNode ex:_5e59d904-20ec-5536-8879-7f2c68831525 .
+
+ex:_750dafe9-5cd5-5c86-8199-247ede1ccb8c a cim:Name ;
+    cim:Name.name "E-346" ;
+    cim:Name.IdentifiedObject ex:_6163d1f6-b09b-5f86-92fc-e23af87b062c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_54df6bf9-f867-5d8a-ad52-b573a674f912 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "54df6bf9-f867-5d8a-ad52-b573a674f912" ;
+    cim:IdentifiedObject.name "Load1-I" ;
+    cim:Equipment.EquipmentContainer ex:_f88faca2-f0cf-419e-907e-3411271816ce ;
+    cim:EnergyConsumer.p "5.0"^^xsd:float ;
+    cim:EnergyConsumer.q "1.0"^^xsd:float .
+
+ex:_a508295e-9c4c-54a6-9600-4a9d455c17e7 a cim:Name ;
+    cim:Name.name "Load1-I" ;
+    cim:Name.IdentifiedObject ex:_54df6bf9-f867-5d8a-ad52-b573a674f912 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_649ee76f-f207-58eb-acaf-a2f39e028894 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "649ee76f-f207-58eb-acaf-a2f39e028894" ;
+    cim:IdentifiedObject.name "Load1-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_54df6bf9-f867-5d8a-ad52-b573a674f912 ;
+    cim:Terminal.ConnectivityNode ex:_171fdf34-a7b4-53cc-bcd4-e8c28910af6e ;
+    cim:Terminal.TopologicalNode ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 .
+
+ex:_061e412f-d5f6-5095-bcc7-fc579d2e814c a cim:Name ;
+    cim:Name.name "E-354" ;
+    cim:Name.IdentifiedObject ex:_649ee76f-f207-58eb-acaf-a2f39e028894 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_6f7e375b-6901-5003-b0b9-d2ab73ac08ab a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "6f7e375b-6901-5003-b0b9-d2ab73ac08ab" ;
+    cim:IdentifiedObject.name "Load3-H" ;
+    cim:Equipment.EquipmentContainer ex:_f67b0540-9424-4b6e-9b12-9f112e5e7f01 ;
+    cim:EnergyConsumer.p "0.276"^^xsd:float ;
+    cim:EnergyConsumer.q "0.69"^^xsd:float .
+
+ex:_76cb35d8-5ad8-5307-b391-21b098375975 a cim:Name ;
+    cim:Name.name "Load3-H" ;
+    cim:Name.IdentifiedObject ex:_6f7e375b-6901-5003-b0b9-d2ab73ac08ab ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_3e2405ca-8676-528a-8427-d6bdb93aff50 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "3e2405ca-8676-528a-8427-d6bdb93aff50" ;
+    cim:IdentifiedObject.name "Load3-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_6f7e375b-6901-5003-b0b9-d2ab73ac08ab ;
+    cim:Terminal.ConnectivityNode ex:_3ac9a174-57f5-5f27-b279-a8c5dafaf052 ;
+    cim:Terminal.TopologicalNode ex:_50070a74-4db4-5eca-8608-57e778ea554c .
+
+ex:_8779ee81-9780-540f-b66d-7e1bff34dd4b a cim:Name ;
+    cim:Name.name "E-366" ;
+    cim:Name.IdentifiedObject ex:_3e2405ca-8676-528a-8427-d6bdb93aff50 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_de7b79c1-cf94-5fca-890e-879c32b014c8 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "de7b79c1-cf94-5fca-890e-879c32b014c8" ;
+    cim:IdentifiedObject.name "Load3-I" ;
+    cim:Equipment.EquipmentContainer ex:_f67b0540-9424-4b6e-9b12-9f112e5e7f01 ;
+    cim:EnergyConsumer.p "0.224"^^xsd:float ;
+    cim:EnergyConsumer.q "0.139"^^xsd:float .
+
+ex:_19f6fbaf-5c90-5de8-823a-607dc7872c13 a cim:Name ;
+    cim:Name.name "Load3-I" ;
+    cim:Name.IdentifiedObject ex:_de7b79c1-cf94-5fca-890e-879c32b014c8 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_d73a9a6d-13f8-54b2-96b6-c8bec33a15df a cim:Terminal ;
+    cim:IdentifiedObject.mRID "d73a9a6d-13f8-54b2-96b6-c8bec33a15df" ;
+    cim:IdentifiedObject.name "Load3-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_de7b79c1-cf94-5fca-890e-879c32b014c8 ;
+    cim:Terminal.ConnectivityNode ex:_3ac9a174-57f5-5f27-b279-a8c5dafaf052 ;
+    cim:Terminal.TopologicalNode ex:_50070a74-4db4-5eca-8608-57e778ea554c .
+
+ex:_23a59e69-c378-59cd-9a8d-9d105b61cae2 a cim:Name ;
+    cim:Name.name "E-374" ;
+    cim:Name.IdentifiedObject ex:_d73a9a6d-13f8-54b2-96b6-c8bec33a15df ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_81da3dee-f16b-542c-b596-d256857ff406 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "81da3dee-f16b-542c-b596-d256857ff406" ;
+    cim:IdentifiedObject.name "Load10-I" ;
+    cim:Equipment.EquipmentContainer ex:_6077adb4-c337-4b45-9304-d71dd9ae5697 ;
+    cim:EnergyConsumer.p "0.068"^^xsd:float ;
+    cim:EnergyConsumer.q "0.042"^^xsd:float .
+
+ex:_32d1a531-d93c-56b0-a5f9-0e7c86c377ef a cim:Name ;
+    cim:Name.name "Load10-I" ;
+    cim:Name.IdentifiedObject ex:_81da3dee-f16b-542c-b596-d256857ff406 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_86ee86e0-d4fe-54fc-be58-426f093f9912 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "86ee86e0-d4fe-54fc-be58-426f093f9912" ;
+    cim:IdentifiedObject.name "Load10-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_81da3dee-f16b-542c-b596-d256857ff406 ;
+    cim:Terminal.ConnectivityNode ex:_6890145e-89f7-5ea5-a437-3df472b11849 ;
+    cim:Terminal.TopologicalNode ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e .
+
+ex:_db269f8a-aa72-5b80-9a12-182b4ac00cc6 a cim:Name ;
+    cim:Name.name "E-382" ;
+    cim:Name.IdentifiedObject ex:_86ee86e0-d4fe-54fc-be58-426f093f9912 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_63274f2d-e795-5e56-adeb-419b687ed02d a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "63274f2d-e795-5e56-adeb-419b687ed02d" ;
+    cim:IdentifiedObject.name "Load1-H" ;
+    cim:Equipment.EquipmentContainer ex:_f88faca2-f0cf-419e-907e-3411271816ce ;
+    cim:EnergyConsumer.p "15.0"^^xsd:float ;
+    cim:EnergyConsumer.q "3.1"^^xsd:float .
+
+ex:_08588895-50d9-5c76-b5a1-e265eee9d191 a cim:Name ;
+    cim:Name.name "Load1-H" ;
+    cim:Name.IdentifiedObject ex:_63274f2d-e795-5e56-adeb-419b687ed02d ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_731ff86d-20b0-5de1-9d3a-dda21dbf5327 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "731ff86d-20b0-5de1-9d3a-dda21dbf5327" ;
+    cim:IdentifiedObject.name "Load1-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_63274f2d-e795-5e56-adeb-419b687ed02d ;
+    cim:Terminal.ConnectivityNode ex:_171fdf34-a7b4-53cc-bcd4-e8c28910af6e ;
+    cim:Terminal.TopologicalNode ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 .
+
+ex:_f0be8ab6-3700-5cf3-86ac-02577bf44b09 a cim:Name ;
+    cim:Name.name "E-109" ;
+    cim:Name.IdentifiedObject ex:_731ff86d-20b0-5de1-9d3a-dda21dbf5327 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_3b0eec5f-1626-5597-9ddc-703d3fb1ad17 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "3b0eec5f-1626-5597-9ddc-703d3fb1ad17" ;
+    cim:IdentifiedObject.name "Load12-I" ;
+    cim:Equipment.EquipmentContainer ex:_09dafd64-e08f-4a20-8e19-7ca5c2ea5ba2 ;
+    cim:EnergyConsumer.p "5.0"^^xsd:float ;
+    cim:EnergyConsumer.q "1.7"^^xsd:float .
+
+ex:_ed434c65-c05e-57f3-b1f1-16b11a7cf33b a cim:Name ;
+    cim:Name.name "Load12-I" ;
+    cim:Name.IdentifiedObject ex:_3b0eec5f-1626-5597-9ddc-703d3fb1ad17 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_8f7f383f-d572-5834-bc35-a14e3fc3db94 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "8f7f383f-d572-5834-bc35-a14e3fc3db94" ;
+    cim:IdentifiedObject.name "Load12-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_3b0eec5f-1626-5597-9ddc-703d3fb1ad17 ;
+    cim:Terminal.ConnectivityNode ex:_8bc502bd-707d-512e-b531-a41226e0f34a ;
+    cim:Terminal.TopologicalNode ex:_5e59d904-20ec-5536-8879-7f2c68831525 .
+
+ex:_cb5ce0c2-f987-5202-b438-415a671d58a6 a cim:Name ;
+    cim:Name.name "E-398" ;
+    cim:Name.IdentifiedObject ex:_8f7f383f-d572-5834-bc35-a14e3fc3db94 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_559b079f-4187-5b64-b64c-9e2cdde7d3d6 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "559b079f-4187-5b64-b64c-9e2cdde7d3d6" ;
+    cim:IdentifiedObject.name "Load14-I" ;
+    cim:Equipment.EquipmentContainer ex:_d0b232c3-0a56-4916-9471-66f49036ddc8 ;
+    cim:EnergyConsumer.p "0.33"^^xsd:float ;
+    cim:EnergyConsumer.q "0.205"^^xsd:float .
+
+ex:_9fd65789-cc17-52ed-8613-9c4817a8b6fd a cim:Name ;
+    cim:Name.name "Load14-I" ;
+    cim:Name.IdentifiedObject ex:_559b079f-4187-5b64-b64c-9e2cdde7d3d6 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_06cf8da5-d753-5457-8e1f-4043f4451cde a cim:Terminal ;
+    cim:IdentifiedObject.mRID "06cf8da5-d753-5457-8e1f-4043f4451cde" ;
+    cim:IdentifiedObject.name "Load14-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_559b079f-4187-5b64-b64c-9e2cdde7d3d6 ;
+    cim:Terminal.ConnectivityNode ex:_703cbb8f-84fb-55b2-bb28-87d881a01263 ;
+    cim:Terminal.TopologicalNode ex:_716c57a2-3dea-5a97-b23c-7feaa313ce8d .
+
+ex:_5f49d4af-a251-5adf-b2cb-a6dcecc02bab a cim:Name ;
+    cim:Name.name "E-395" ;
+    cim:Name.IdentifiedObject ex:_06cf8da5-d753-5457-8e1f-4043f4451cde ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_4b74d992-37cf-59e0-a6dd-376d1545f88c a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "4b74d992-37cf-59e0-a6dd-376d1545f88c" ;
+    cim:IdentifiedObject.name "Load5_H" ;
+    cim:Equipment.EquipmentContainer ex:_60deeb94-c9f8-4ea3-b52f-1940ea528164 ;
+    cim:EnergyConsumer.p "0.725"^^xsd:float ;
+    cim:EnergyConsumer.q "0.182"^^xsd:float .
+
+ex:_9be34c95-022d-570f-9f94-c9bd86f7f46b a cim:Name ;
+    cim:Name.name "Load5_H" ;
+    cim:Name.IdentifiedObject ex:_4b74d992-37cf-59e0-a6dd-376d1545f88c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_1c006d8b-9807-5d8b-8f01-e691031b5495 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "1c006d8b-9807-5d8b-8f01-e691031b5495" ;
+    cim:IdentifiedObject.name "Load5_H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_4b74d992-37cf-59e0-a6dd-376d1545f88c ;
+    cim:Terminal.ConnectivityNode ex:_2c78c0bd-03c5-54e9-bac4-d318c2a93db5 ;
+    cim:Terminal.TopologicalNode ex:_f24511c2-0263-51e8-be16-99c11b150f6b .
+
+ex:_626e237d-8c9b-5b6d-a553-db3b93c5bbc4 a cim:Name ;
+    cim:Name.name "E-1229789158" ;
+    cim:Name.IdentifiedObject ex:_1c006d8b-9807-5d8b-8f01-e691031b5495 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_533c3f27-feba-558f-b2eb-a92405f918cb a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "533c3f27-feba-558f-b2eb-a92405f918cb" ;
+    cim:IdentifiedObject.name "Load4-H" ;
+    cim:Equipment.EquipmentContainer ex:_5c3f2d5c-750f-4d3c-b283-eee33929abaa ;
+    cim:EnergyConsumer.p "0.432"^^xsd:float ;
+    cim:EnergyConsumer.q "0.108"^^xsd:float .
+
+ex:_515e0e98-241c-5adc-9300-04607b330594 a cim:Name ;
+    cim:Name.name "Load4-H" ;
+    cim:Name.IdentifiedObject ex:_533c3f27-feba-558f-b2eb-a92405f918cb ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_c41331a8-b271-564a-b1c6-d3b294a9ebd5 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c41331a8-b271-564a-b1c6-d3b294a9ebd5" ;
+    cim:IdentifiedObject.name "Load4-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_533c3f27-feba-558f-b2eb-a92405f918cb ;
+    cim:Terminal.ConnectivityNode ex:_e8cb0310-a531-5e43-bfe4-21775c79ff0b ;
+    cim:Terminal.TopologicalNode ex:_5f90fbf5-09a4-5c93-a906-e7589de7f5a0 .
+
+ex:_6020b7ad-37da-5a62-a454-e82c017469e4 a cim:Name ;
+    cim:Name.name "E-213" ;
+    cim:Name.IdentifiedObject ex:_c41331a8-b271-564a-b1c6-d3b294a9ebd5 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_36a24557-b714-5d99-a41e-62eccdadec06 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "36a24557-b714-5d99-a41e-62eccdadec06" ;
+    cim:IdentifiedObject.name "Load11-H" ;
+    cim:Equipment.EquipmentContainer ex:_169f9dc8-61b6-4c5d-82f9-3def05cf3c86 ;
+    cim:EnergyConsumer.p "0.331"^^xsd:float ;
+    cim:EnergyConsumer.q "0.083"^^xsd:float .
+
+ex:_2e0f3b79-9e5a-532f-9724-03df11ed4cbd a cim:Name ;
+    cim:Name.name "Load11-H" ;
+    cim:Name.IdentifiedObject ex:_36a24557-b714-5d99-a41e-62eccdadec06 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_0d171a30-fee8-50e1-805f-f52f7b4d989d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "0d171a30-fee8-50e1-805f-f52f7b4d989d" ;
+    cim:IdentifiedObject.name "Load11-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_36a24557-b714-5d99-a41e-62eccdadec06 ;
+    cim:Terminal.ConnectivityNode ex:_9e0ba453-a4a6-5a4c-992e-c998a16cbeda ;
+    cim:Terminal.TopologicalNode ex:_cb1edad5-0206-5288-9ac7-328001f2b50e .
+
+ex:_17e939db-ca7c-510c-a53b-0ab478165761 a cim:Name ;
+    cim:Name.name "E-222" ;
+    cim:Name.IdentifiedObject ex:_0d171a30-fee8-50e1-805f-f52f7b4d989d ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_5253ba70-a382-5088-b58f-891ea4501975 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "5253ba70-a382-5088-b58f-891ea4501975" ;
+    cim:IdentifiedObject.name "Load10-H" ;
+    cim:Equipment.EquipmentContainer ex:_6077adb4-c337-4b45-9304-d71dd9ae5697 ;
+    cim:EnergyConsumer.p "0.477"^^xsd:float ;
+    cim:EnergyConsumer.q "0.12"^^xsd:float .
+
+ex:_b56386ec-efec-5d7d-8bc9-cb353c40ff0e a cim:Name ;
+    cim:Name.name "Load10-H" ;
+    cim:Name.IdentifiedObject ex:_5253ba70-a382-5088-b58f-891ea4501975 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_b4930a72-e6d9-5c95-8dcc-7cf33c1270d8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "b4930a72-e6d9-5c95-8dcc-7cf33c1270d8" ;
+    cim:IdentifiedObject.name "Load10-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_5253ba70-a382-5088-b58f-891ea4501975 ;
+    cim:Terminal.ConnectivityNode ex:_6890145e-89f7-5ea5-a437-3df472b11849 ;
+    cim:Terminal.TopologicalNode ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e .
+
+ex:_bc26da0b-be10-54d8-8245-4728ea9b3b4f a cim:Name ;
+    cim:Name.name "E-231" ;
+    cim:Name.IdentifiedObject ex:_b4930a72-e6d9-5c95-8dcc-7cf33c1270d8 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_96f9a74e-5c94-5ced-9e1d-c188c81d7928 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "96f9a74e-5c94-5ced-9e1d-c188c81d7928" ;
+    cim:IdentifiedObject.name "Load9-I" ;
+    cim:Equipment.EquipmentContainer ex:_6bd6b703-519b-46a8-a1f8-632f7e9d05f1 ;
+    cim:EnergyConsumer.p "0.574"^^xsd:float ;
+    cim:EnergyConsumer.q "0.356"^^xsd:float .
+
+ex:_8b15f0b8-ce23-5c52-b034-869c37bba049 a cim:Name ;
+    cim:Name.name "Load9-I" ;
+    cim:Name.IdentifiedObject ex:_96f9a74e-5c94-5ced-9e1d-c188c81d7928 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_e177dfed-ccfd-5f2f-9240-4c7b3c340e28 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "e177dfed-ccfd-5f2f-9240-4c7b3c340e28" ;
+    cim:IdentifiedObject.name "Load9-I_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_96f9a74e-5c94-5ced-9e1d-c188c81d7928 ;
+    cim:Terminal.ConnectivityNode ex:_b7dca2ba-f22c-5fbd-87a7-a30e7c1c66e0 ;
+    cim:Terminal.TopologicalNode ex:_9bed3b96-9e89-5b0f-9124-ad8c03bf3c13 .
+
+ex:_0ec56f4c-acef-568c-a1f1-878d091e89f2 a cim:Name ;
+    cim:Name.name "E-252" ;
+    cim:Name.IdentifiedObject ex:_e177dfed-ccfd-5f2f-9240-4c7b3c340e28 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_5e6f520c-de5c-5c9a-8298-a180402f71ab a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "5e6f520c-de5c-5c9a-8298-a180402f71ab" ;
+    cim:IdentifiedObject.name "Load6-H" ;
+    cim:Equipment.EquipmentContainer ex:_371cfe37-f187-4fb8-8402-d7f7f5a0dfda ;
+    cim:EnergyConsumer.p "0.55"^^xsd:float ;
+    cim:EnergyConsumer.q "0.138"^^xsd:float .
+
+ex:_fb07009f-5450-5226-8193-70331e721c03 a cim:Name ;
+    cim:Name.name "Load6-H" ;
+    cim:Name.IdentifiedObject ex:_5e6f520c-de5c-5c9a-8298-a180402f71ab ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_f240c501-f35e-5319-ae68-9cbeac450018 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "f240c501-f35e-5319-ae68-9cbeac450018" ;
+    cim:IdentifiedObject.name "Load6-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_5e6f520c-de5c-5c9a-8298-a180402f71ab ;
+    cim:Terminal.ConnectivityNode ex:_a4b95a9a-f4bf-5796-a2f6-e865eaf4925e ;
+    cim:Terminal.TopologicalNode ex:_db00fe4b-05f1-58ac-9fab-06d45761d27b .
+
+ex:_d7ed2054-58e8-5b1b-8b30-d2aa573d1b5f a cim:Name ;
+    cim:Name.name "E-261" ;
+    cim:Name.IdentifiedObject ex:_f240c501-f35e-5319-ae68-9cbeac450018 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_516b95a5-8a76-5dcf-b5a0-455cc08d32b3 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "516b95a5-8a76-5dcf-b5a0-455cc08d32b3" ;
+    cim:IdentifiedObject.name "Load8-H" ;
+    cim:Equipment.EquipmentContainer ex:_dba75717-e472-42b9-a82a-b4c7819f9f2b ;
+    cim:EnergyConsumer.p "0.588"^^xsd:float ;
+    cim:EnergyConsumer.q "0.147"^^xsd:float .
+
+ex:_d6ae4161-311e-5c25-895f-281ab70c3311 a cim:Name ;
+    cim:Name.name "Load8-H" ;
+    cim:Name.IdentifiedObject ex:_516b95a5-8a76-5dcf-b5a0-455cc08d32b3 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_78ab442f-5128-509d-bb67-fd9d5a3f2bbb a cim:Terminal ;
+    cim:IdentifiedObject.mRID "78ab442f-5128-509d-bb67-fd9d5a3f2bbb" ;
+    cim:IdentifiedObject.name "Load8-H_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_516b95a5-8a76-5dcf-b5a0-455cc08d32b3 ;
+    cim:Terminal.ConnectivityNode ex:_35162c87-179b-5c9a-a675-3b6c47484782 ;
+    cim:Terminal.TopologicalNode ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 .
+
+ex:_335c3912-f796-52ce-9b17-336fb135728a a cim:Name ;
+    cim:Name.name "E-270" ;
+    cim:Name.IdentifiedObject ex:_78ab442f-5128-509d-bb67-fd9d5a3f2bbb ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_5b2360ff-a2f9-52d6-998f-af0c27511b0b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "5b2360ff-a2f9-52d6-998f-af0c27511b0b" ;
+    cim:IdentifiedObject.name "HV-Netz_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_7627750b-e0f3-556b-9a89-6e0a08dff8e7 ;
+    cim:Terminal.ConnectivityNode ex:_e8bbbd43-0032-5bd6-ad43-f80c11bec22a ;
+    cim:Terminal.TopologicalNode ex:_2e861d34-f7f7-5d2a-94cf-b2181d1594cf .
+
+ex:_705137b3-f94c-5c8b-a79a-026a14fa9626 a cim:Name ;
+    cim:Name.name "E-67" ;
+    cim:Name.IdentifiedObject ex:_5b2360ff-a2f9-52d6-998f-af0c27511b0b ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_ef3650c8-fdcd-53a5-b3f8-29aa98379c53 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ef3650c8-fdcd-53a5-b3f8-29aa98379c53" ;
+    cim:IdentifiedObject.name "L12-13_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_ab0d35db-1c7b-582a-af76-66d2b7998415 ;
+    cim:Terminal.ConnectivityNode ex:_8bc502bd-707d-512e-b531-a41226e0f34a ;
+    cim:Terminal.TopologicalNode ex:_5e59d904-20ec-5536-8879-7f2c68831525 .
+
+ex:_8ea4faad-ad0d-5925-ac2e-9d1716e6170b a cim:Name ;
+    cim:Name.name "E-301" ;
+    cim:Name.IdentifiedObject ex:_ef3650c8-fdcd-53a5-b3f8-29aa98379c53 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_712bdc12-fd48-52de-a739-ea9433396c4c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "712bdc12-fd48-52de-a739-ea9433396c4c" ;
+    cim:IdentifiedObject.name "L12-13_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_ab0d35db-1c7b-582a-af76-66d2b7998415 ;
+    cim:Terminal.ConnectivityNode ex:_6cf15f35-b229-5055-b2cb-3c9a58e516f5 ;
+    cim:Terminal.TopologicalNode ex:_eb10dbce-d219-5883-8474-9947d61a6048 .
+
+ex:_805f6261-0e4e-503c-8f66-4263a51ce3f5 a cim:Name ;
+    cim:Name.name "E-302" ;
+    cim:Name.IdentifiedObject ex:_712bdc12-fd48-52de-a739-ea9433396c4c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_518cc510-2860-51c5-86f4-bba85e45a5ea a cim:Terminal ;
+    cim:IdentifiedObject.mRID "518cc510-2860-51c5-86f4-bba85e45a5ea" ;
+    cim:IdentifiedObject.name "L13-14_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_13af3162-58a1-5831-8059-b44254bdb28c ;
+    cim:Terminal.ConnectivityNode ex:_6cf15f35-b229-5055-b2cb-3c9a58e516f5 ;
+    cim:Terminal.TopologicalNode ex:_eb10dbce-d219-5883-8474-9947d61a6048 .
+
+ex:_a7a8b3cc-1512-5726-9476-ef99d3bc4ae5 a cim:Name ;
+    cim:Name.name "E-309" ;
+    cim:Name.IdentifiedObject ex:_518cc510-2860-51c5-86f4-bba85e45a5ea ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_29fd9dc1-3a31-568e-83a5-724207ce0adb a cim:Terminal ;
+    cim:IdentifiedObject.mRID "29fd9dc1-3a31-568e-83a5-724207ce0adb" ;
+    cim:IdentifiedObject.name "L13-14_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_13af3162-58a1-5831-8059-b44254bdb28c ;
+    cim:Terminal.ConnectivityNode ex:_703cbb8f-84fb-55b2-bb28-87d881a01263 ;
+    cim:Terminal.TopologicalNode ex:_716c57a2-3dea-5a97-b23c-7feaa313ce8d .
+
+ex:_dc515ffa-0a2a-5a2d-9f79-890c384f8f28 a cim:Name ;
+    cim:Name.name "E-310" ;
+    cim:Name.IdentifiedObject ex:_29fd9dc1-3a31-568e-83a5-724207ce0adb ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_8818eb69-90e8-510d-bb79-5281cbf84440 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "8818eb69-90e8-510d-bb79-5281cbf84440" ;
+    cim:IdentifiedObject.name "L1-2_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_4f0c9d19-2a13-5ebb-be34-dc3aeaa7ea7d ;
+    cim:Terminal.ConnectivityNode ex:_171fdf34-a7b4-53cc-bcd4-e8c28910af6e ;
+    cim:Terminal.TopologicalNode ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 .
+
+ex:_fad548f3-fa2d-5f19-846d-cfc8c92362ba a cim:Name ;
+    cim:Name.name "E-116" ;
+    cim:Name.IdentifiedObject ex:_8818eb69-90e8-510d-bb79-5281cbf84440 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_35cd8a30-9771-50fa-a73a-9ca9e99ad3d4 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "35cd8a30-9771-50fa-a73a-9ca9e99ad3d4" ;
+    cim:IdentifiedObject.name "L1-2_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_4f0c9d19-2a13-5ebb-be34-dc3aeaa7ea7d ;
+    cim:Terminal.ConnectivityNode ex:_f1b6da73-8fac-5d5a-9866-2d9aec54946b ;
+    cim:Terminal.TopologicalNode ex:_d09a4ded-0c67-5cc6-ae66-94d235261380 .
+
+ex:_5f00f718-965a-5094-8ef9-439990b38ee7 a cim:Name ;
+    cim:Name.name "E-117" ;
+    cim:Name.IdentifiedObject ex:_35cd8a30-9771-50fa-a73a-9ca9e99ad3d4 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_8d79cf0a-339c-59fb-987d-11d2b16f5a90 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "8d79cf0a-339c-59fb-987d-11d2b16f5a90" ;
+    cim:IdentifiedObject.name "L2-3_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_3154497e-c205-543a-ad66-40110313656d ;
+    cim:Terminal.ConnectivityNode ex:_f1b6da73-8fac-5d5a-9866-2d9aec54946b ;
+    cim:Terminal.TopologicalNode ex:_d09a4ded-0c67-5cc6-ae66-94d235261380 .
+
+ex:_34567193-edd4-5967-937e-bd987e4e3f1b a cim:Name ;
+    cim:Name.name "E-124" ;
+    cim:Name.IdentifiedObject ex:_8d79cf0a-339c-59fb-987d-11d2b16f5a90 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_7c4b770b-2a8c-522b-bf3a-c863a5dfd836 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "7c4b770b-2a8c-522b-bf3a-c863a5dfd836" ;
+    cim:IdentifiedObject.name "L2-3_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_3154497e-c205-543a-ad66-40110313656d ;
+    cim:Terminal.ConnectivityNode ex:_3ac9a174-57f5-5f27-b279-a8c5dafaf052 ;
+    cim:Terminal.TopologicalNode ex:_50070a74-4db4-5eca-8608-57e778ea554c .
+
+ex:_45c01f99-089b-539f-9e11-be2903a79c84 a cim:Name ;
+    cim:Name.name "E-125" ;
+    cim:Name.IdentifiedObject ex:_7c4b770b-2a8c-522b-bf3a-c863a5dfd836 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_92d75a2b-0bac-5bc9-ba87-11ef22d9c589 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "92d75a2b-0bac-5bc9-ba87-11ef22d9c589" ;
+    cim:IdentifiedObject.name "L3-4_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_970e45ed-726e-5079-8444-274e2bd6c39c ;
+    cim:Terminal.ConnectivityNode ex:_3ac9a174-57f5-5f27-b279-a8c5dafaf052 ;
+    cim:Terminal.TopologicalNode ex:_50070a74-4db4-5eca-8608-57e778ea554c .
+
+ex:_f7b82cfb-dd0a-5549-9362-00976caa6bae a cim:Name ;
+    cim:Name.name "E-132" ;
+    cim:Name.IdentifiedObject ex:_92d75a2b-0bac-5bc9-ba87-11ef22d9c589 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_feb8c3c3-a590-5ff7-b842-07183bd42c31 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "feb8c3c3-a590-5ff7-b842-07183bd42c31" ;
+    cim:IdentifiedObject.name "L3-4_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_970e45ed-726e-5079-8444-274e2bd6c39c ;
+    cim:Terminal.ConnectivityNode ex:_e8cb0310-a531-5e43-bfe4-21775c79ff0b ;
+    cim:Terminal.TopologicalNode ex:_5f90fbf5-09a4-5c93-a906-e7589de7f5a0 .
+
+ex:_b9086269-0ff6-56b3-b954-4f267d11988b a cim:Name ;
+    cim:Name.name "E-133" ;
+    cim:Name.IdentifiedObject ex:_feb8c3c3-a590-5ff7-b842-07183bd42c31 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_97112d12-4a75-5577-9d24-7da62b2f2143 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "97112d12-4a75-5577-9d24-7da62b2f2143" ;
+    cim:IdentifiedObject.name "L4-5_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_68d73045-68fa-54e8-a16a-2f8daa323957 ;
+    cim:Terminal.ConnectivityNode ex:_e8cb0310-a531-5e43-bfe4-21775c79ff0b ;
+    cim:Terminal.TopologicalNode ex:_5f90fbf5-09a4-5c93-a906-e7589de7f5a0 .
+
+ex:_96483c12-9af7-5232-b2aa-62a83bfa17e8 a cim:Name ;
+    cim:Name.name "E-149" ;
+    cim:Name.IdentifiedObject ex:_97112d12-4a75-5577-9d24-7da62b2f2143 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_164e6fb8-072f-5b49-937b-5735a5ce4915 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "164e6fb8-072f-5b49-937b-5735a5ce4915" ;
+    cim:IdentifiedObject.name "L4-5_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_68d73045-68fa-54e8-a16a-2f8daa323957 ;
+    cim:Terminal.ConnectivityNode ex:_2c78c0bd-03c5-54e9-bac4-d318c2a93db5 ;
+    cim:Terminal.TopologicalNode ex:_f24511c2-0263-51e8-be16-99c11b150f6b .
+
+ex:_639116d0-480e-5490-9a02-f91146ff6eb4 a cim:Name ;
+    cim:Name.name "E-150" ;
+    cim:Name.IdentifiedObject ex:_164e6fb8-072f-5b49-937b-5735a5ce4915 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_d6b62d6e-47b9-5397-9cec-eb7faac52436 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "d6b62d6e-47b9-5397-9cec-eb7faac52436" ;
+    cim:IdentifiedObject.name "L5-6_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f7418db1-07ee-5cda-9e2a-85f513e17c40 ;
+    cim:Terminal.ConnectivityNode ex:_2c78c0bd-03c5-54e9-bac4-d318c2a93db5 ;
+    cim:Terminal.TopologicalNode ex:_f24511c2-0263-51e8-be16-99c11b150f6b .
+
+ex:_1c6a97cf-e8a9-56cb-9e72-25a6fb9f535c a cim:Name ;
+    cim:Name.name "E-165" ;
+    cim:Name.IdentifiedObject ex:_d6b62d6e-47b9-5397-9cec-eb7faac52436 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_929dcef1-c1ac-5631-b7b6-51846e8459dc a cim:Terminal ;
+    cim:IdentifiedObject.mRID "929dcef1-c1ac-5631-b7b6-51846e8459dc" ;
+    cim:IdentifiedObject.name "L5-6_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f7418db1-07ee-5cda-9e2a-85f513e17c40 ;
+    cim:Terminal.ConnectivityNode ex:_a4b95a9a-f4bf-5796-a2f6-e865eaf4925e ;
+    cim:Terminal.TopologicalNode ex:_db00fe4b-05f1-58ac-9fab-06d45761d27b .
+
+ex:_10520e7e-2112-5571-9d38-3a628da4c6d6 a cim:Name ;
+    cim:Name.name "E-166" ;
+    cim:Name.IdentifiedObject ex:_929dcef1-c1ac-5631-b7b6-51846e8459dc ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_e7f5b68b-e363-5a1f-9e41-270aec3bd0c2 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "e7f5b68b-e363-5a1f-9e41-270aec3bd0c2" ;
+    cim:IdentifiedObject.name "L3-8_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f47333f5-3ae1-506c-a976-b800d06727ea ;
+    cim:Terminal.ConnectivityNode ex:_35162c87-179b-5c9a-a675-3b6c47484782 ;
+    cim:Terminal.TopologicalNode ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 .
+
+ex:_da5f636e-300a-5a73-836e-f37cbcba909c a cim:Name ;
+    cim:Name.name "E-180" ;
+    cim:Name.IdentifiedObject ex:_e7f5b68b-e363-5a1f-9e41-270aec3bd0c2 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_cc2279d9-5f0e-528a-8da3-f4269afa3170 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "cc2279d9-5f0e-528a-8da3-f4269afa3170" ;
+    cim:IdentifiedObject.name "L3-8_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f47333f5-3ae1-506c-a976-b800d06727ea ;
+    cim:Terminal.ConnectivityNode ex:_3ac9a174-57f5-5f27-b279-a8c5dafaf052 ;
+    cim:Terminal.TopologicalNode ex:_50070a74-4db4-5eca-8608-57e778ea554c .
+
+ex:_0697c238-6de0-52c4-b346-bcc1df532d85 a cim:Name ;
+    cim:Name.name "E-181" ;
+    cim:Name.IdentifiedObject ex:_cc2279d9-5f0e-528a-8da3-f4269afa3170 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_903b067e-4abb-5923-b67e-261b656a0f86 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "903b067e-4abb-5923-b67e-261b656a0f86" ;
+    cim:IdentifiedObject.name "L10-11_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_22780876-77da-5624-b237-b06a65298485 ;
+    cim:Terminal.ConnectivityNode ex:_9e0ba453-a4a6-5a4c-992e-c998a16cbeda ;
+    cim:Terminal.TopologicalNode ex:_cb1edad5-0206-5288-9ac7-328001f2b50e .
+
+ex:_b77fe474-726d-554b-bf4b-7ce35d5037a2 a cim:Name ;
+    cim:Name.name "E-185" ;
+    cim:Name.IdentifiedObject ex:_903b067e-4abb-5923-b67e-261b656a0f86 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_6af18154-b945-57b4-a578-3afccb3690f7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6af18154-b945-57b4-a578-3afccb3690f7" ;
+    cim:IdentifiedObject.name "L10-11_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_22780876-77da-5624-b237-b06a65298485 ;
+    cim:Terminal.ConnectivityNode ex:_6890145e-89f7-5ea5-a437-3df472b11849 ;
+    cim:Terminal.TopologicalNode ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e .
+
+ex:_a425083b-f18d-52ff-b23b-8ef9c7e14e17 a cim:Name ;
+    cim:Name.name "E-186" ;
+    cim:Name.IdentifiedObject ex:_6af18154-b945-57b4-a578-3afccb3690f7 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_d5d84a62-29e9-5ef5-a2ae-556b634ae21e a cim:Terminal ;
+    cim:IdentifiedObject.mRID "d5d84a62-29e9-5ef5-a2ae-556b634ae21e" ;
+    cim:IdentifiedObject.name "L9-10_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_4f6b7dce-bb8b-5643-afc3-a4e9a8707115 ;
+    cim:Terminal.ConnectivityNode ex:_6890145e-89f7-5ea5-a437-3df472b11849 ;
+    cim:Terminal.TopologicalNode ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e .
+
+ex:_ddac7621-1de8-592c-974b-39045a8d2696 a cim:Name ;
+    cim:Name.name "E-193" ;
+    cim:Name.IdentifiedObject ex:_d5d84a62-29e9-5ef5-a2ae-556b634ae21e ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_05a4435b-d567-513f-bc95-f82d1fe49d97 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "05a4435b-d567-513f-bc95-f82d1fe49d97" ;
+    cim:IdentifiedObject.name "L9-10_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_4f6b7dce-bb8b-5643-afc3-a4e9a8707115 ;
+    cim:Terminal.ConnectivityNode ex:_b7dca2ba-f22c-5fbd-87a7-a30e7c1c66e0 ;
+    cim:Terminal.TopologicalNode ex:_9bed3b96-9e89-5b0f-9124-ad8c03bf3c13 .
+
+ex:_5147c5e1-d621-5a8c-922a-6bc7b0145b2b a cim:Name ;
+    cim:Name.name "E-194" ;
+    cim:Name.IdentifiedObject ex:_05a4435b-d567-513f-bc95-f82d1fe49d97 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_c17d9dc3-f50c-5165-ba8a-35e0a59edb9c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c17d9dc3-f50c-5165-ba8a-35e0a59edb9c" ;
+    cim:IdentifiedObject.name "L8-9_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_863d5c33-3fa9-558b-be45-3037f4505372 ;
+    cim:Terminal.ConnectivityNode ex:_b7dca2ba-f22c-5fbd-87a7-a30e7c1c66e0 ;
+    cim:Terminal.TopologicalNode ex:_9bed3b96-9e89-5b0f-9124-ad8c03bf3c13 .
+
+ex:_768693cd-6b9c-57ef-82f6-95f480022989 a cim:Name ;
+    cim:Name.name "E-198" ;
+    cim:Name.IdentifiedObject ex:_c17d9dc3-f50c-5165-ba8a-35e0a59edb9c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_867b2e2a-37cb-5e7d-8936-a33b44d8fe4b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "867b2e2a-37cb-5e7d-8936-a33b44d8fe4b" ;
+    cim:IdentifiedObject.name "L8-9_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_863d5c33-3fa9-558b-be45-3037f4505372 ;
+    cim:Terminal.ConnectivityNode ex:_35162c87-179b-5c9a-a675-3b6c47484782 ;
+    cim:Terminal.TopologicalNode ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 .
+
+ex:_9b27e86d-4311-5941-85c8-80e03e868174 a cim:Name ;
+    cim:Name.name "E-199" ;
+    cim:Name.IdentifiedObject ex:_867b2e2a-37cb-5e7d-8936-a33b44d8fe4b ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_c44a6fe9-758f-5c84-95e1-121167e3e692 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c44a6fe9-758f-5c84-95e1-121167e3e692" ;
+    cim:IdentifiedObject.name "L7-8_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_cc0ffe94-dd20-536a-b1d2-7f70af2b9816 ;
+    cim:Terminal.ConnectivityNode ex:_35162c87-179b-5c9a-a675-3b6c47484782 ;
+    cim:Terminal.TopologicalNode ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 .
+
+ex:_70dbea3c-fe88-5bf1-8a85-e4830ae80f84 a cim:Name ;
+    cim:Name.name "E-203" ;
+    cim:Name.IdentifiedObject ex:_c44a6fe9-758f-5c84-95e1-121167e3e692 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_a651e152-3084-5de1-90d0-e2c9c5d01832 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a651e152-3084-5de1-90d0-e2c9c5d01832" ;
+    cim:IdentifiedObject.name "L7-8_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_cc0ffe94-dd20-536a-b1d2-7f70af2b9816 ;
+    cim:Terminal.ConnectivityNode ex:_d8a406b3-692e-5d16-9c2c-d856790efc50 ;
+    cim:Terminal.TopologicalNode ex:_cef14f83-da5c-5aa2-9398-a3a46e569f51 .
+
+ex:_6922d3f3-170a-58df-aa3c-895725f5dd27 a cim:Name ;
+    cim:Name.name "E-204" ;
+    cim:Name.IdentifiedObject ex:_a651e152-3084-5de1-90d0-e2c9c5d01832 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_168ac876-c19e-52fa-92b0-563ea7925a6b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "168ac876-c19e-52fa-92b0-563ea7925a6b" ;
+    cim:IdentifiedObject.name "TR1_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_43148a59-bdd8-5c86-ac3e-c2bbc07ba77e ;
+    cim:Terminal.ConnectivityNode ex:_e8bbbd43-0032-5bd6-ad43-f80c11bec22a ;
+    cim:Terminal.TopologicalNode ex:_2e861d34-f7f7-5d2a-94cf-b2181d1594cf .
+
+ex:_259a2702-3835-5cbf-98c4-efdd3bacab64 a cim:Name ;
+    cim:Name.name "E-70" ;
+    cim:Name.IdentifiedObject ex:_168ac876-c19e-52fa-92b0-563ea7925a6b ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_a592e5c0-d373-5026-97b4-a6aa06f4a4d7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a592e5c0-d373-5026-97b4-a6aa06f4a4d7" ;
+    cim:IdentifiedObject.name "TR1_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_43148a59-bdd8-5c86-ac3e-c2bbc07ba77e ;
+    cim:Terminal.ConnectivityNode ex:_171fdf34-a7b4-53cc-bcd4-e8c28910af6e ;
+    cim:Terminal.TopologicalNode ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 .
+
+ex:_e686cf32-a91b-5ab2-95b0-bd325e8da197 a cim:Name ;
+    cim:Name.name "E-86" ;
+    cim:Name.IdentifiedObject ex:_a592e5c0-d373-5026-97b4-a6aa06f4a4d7 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_2425f06f-1f3d-5138-8ca5-747d86dde2f7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "2425f06f-1f3d-5138-8ca5-747d86dde2f7" ;
+    cim:IdentifiedObject.name "TR2_0" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_d34aa04f-7966-59a3-a9ca-fe8f7b57f14b ;
+    cim:Terminal.ConnectivityNode ex:_e8bbbd43-0032-5bd6-ad43-f80c11bec22a ;
+    cim:Terminal.TopologicalNode ex:_2e861d34-f7f7-5d2a-94cf-b2181d1594cf .
+
+ex:_f4294633-f6da-5b97-8836-7ebf0fc09b22 a cim:Name ;
+    cim:Name.name "E-80" ;
+    cim:Name.IdentifiedObject ex:_2425f06f-1f3d-5138-8ca5-747d86dde2f7 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_71bc78b1-c4fc-5b0e-a401-a52181b4592f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "71bc78b1-c4fc-5b0e-a401-a52181b4592f" ;
+    cim:IdentifiedObject.name "TR2_1" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_d34aa04f-7966-59a3-a9ca-fe8f7b57f14b ;
+    cim:Terminal.ConnectivityNode ex:_8bc502bd-707d-512e-b531-a41226e0f34a ;
+    cim:Terminal.TopologicalNode ex:_5e59d904-20ec-5536-8879-7f2c68831525 .
+
+ex:_9295fd56-d47e-5f22-9a22-a89e1f5f0755 a cim:Name ;
+    cim:Name.name "E-294" ;
+    cim:Name.IdentifiedObject ex:_71bc78b1-c4fc-5b0e-a401-a52181b4592f ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_cbd79f33-9050-471d-baf8-330af085808e a cim:Name ;
+    cim:Name.name "NETWORK-FEEDER:" ;
+    cim:Name.IdentifiedObject ex:_7627750b-e0f3-556b-9a89-6e0a08dff8e7 ;
+    cim:Name.NameType ex:_d2995e50-380e-4f1b-beca-45ef75624ec5 .
+
+ex:_7627750b-e0f3-556b-9a89-6e0a08dff8e7 a cim:ExternalNetworkInjection ;
+    cim:IdentifiedObject.mRID "7627750b-e0f3-556b-9a89-6e0a08dff8e7" ;
+    cim:IdentifiedObject.name "HV-Netz" ;
+    cim:Equipment.EquipmentContainer ex:_2a7c745b-de30-4863-88ba-dcbe73f806df .
+
+ex:_3d410c66-c3ca-5c99-b440-9fd4897694b2 a cim:Name ;
+    cim:Name.name "HV-Netz" ;
+    cim:Name.IdentifiedObject ex:_7627750b-e0f3-556b-9a89-6e0a08dff8e7 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_ab0d35db-1c7b-582a-af76-66d2b7998415 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "ab0d35db-1c7b-582a-af76-66d2b7998415" ;
+    cim:IdentifiedObject.name "L12-13" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "4.89"^^xsd:float ;
+    cim:ACLineSegment.r "1.64793"^^xsd:float ;
+    cim:ACLineSegment.x "1.75062"^^xsd:float ;
+    cim:ACLineSegment.bch "0.000250221"^^xsd:float .
+
+ex:_e037df87-7ba4-51d6-843c-987298b1890f a cim:Name ;
+    cim:Name.name "L12-13" ;
+    cim:Name.IdentifiedObject ex:_ab0d35db-1c7b-582a-af76-66d2b7998415 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_13af3162-58a1-5831-8059-b44254bdb28c a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "13af3162-58a1-5831-8059-b44254bdb28c" ;
+    cim:IdentifiedObject.name "L13-14" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "2.99"^^xsd:float ;
+    cim:ACLineSegment.r "0.60398"^^xsd:float ;
+    cim:ACLineSegment.x "0.36478"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0004493794"^^xsd:float .
+
+ex:_692adf87-8fec-50aa-91e9-13a4ad18985f a cim:Name ;
+    cim:Name.name "L13-14" ;
+    cim:Name.IdentifiedObject ex:_13af3162-58a1-5831-8059-b44254bdb28c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_4f0c9d19-2a13-5ebb-be34-dc3aeaa7ea7d a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "4f0c9d19-2a13-5ebb-be34-dc3aeaa7ea7d" ;
+    cim:IdentifiedObject.name "L1-2" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "2.82"^^xsd:float ;
+    cim:ACLineSegment.r "1.63278"^^xsd:float ;
+    cim:ACLineSegment.x "1.03494"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0001407573"^^xsd:float .
+
+ex:_d50717bf-86ad-590e-8f9a-f3f6a66fe409 a cim:Name ;
+    cim:Name.name "L1-2" ;
+    cim:Name.IdentifiedObject ex:_4f0c9d19-2a13-5ebb-be34-dc3aeaa7ea7d ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_3154497e-c205-543a-ad66-40110313656d a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "3154497e-c205-543a-ad66-40110313656d" ;
+    cim:IdentifiedObject.name "L2-3" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "4.42"^^xsd:float ;
+    cim:ACLineSegment.r "0.72488"^^xsd:float ;
+    cim:ACLineSegment.x "0.49946"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0009175791"^^xsd:float .
+
+ex:_2e7c850b-dfac-5729-8881-8b30865210fb a cim:Name ;
+    cim:Name.name "L2-3" ;
+    cim:Name.IdentifiedObject ex:_3154497e-c205-543a-ad66-40110313656d ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_970e45ed-726e-5079-8444-274e2bd6c39c a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "970e45ed-726e-5079-8444-274e2bd6c39c" ;
+    cim:IdentifiedObject.name "L3-4" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "0.61"^^xsd:float ;
+    cim:ACLineSegment.r "0.15982"^^xsd:float ;
+    cim:ACLineSegment.x "0.07381"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0001241814"^^xsd:float .
+
+ex:_1f605e60-b17d-5ddd-9561-c1ea0ae4e9c6 a cim:Name ;
+    cim:Name.name "L3-4" ;
+    cim:Name.IdentifiedObject ex:_970e45ed-726e-5079-8444-274e2bd6c39c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_68d73045-68fa-54e8-a16a-2f8daa323957 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "68d73045-68fa-54e8-a16a-2f8daa323957" ;
+    cim:IdentifiedObject.name "L4-5" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "0.56"^^xsd:float ;
+    cim:ACLineSegment.r "0.19824"^^xsd:float ;
+    cim:ACLineSegment.x "0.07224"^^xsd:float ;
+    cim:ACLineSegment.bch "8.02239e-05"^^xsd:float .
+
+ex:_726bd115-7530-519f-aea2-ff5253c1c6d0 a cim:Name ;
+    cim:Name.name "L4-5" ;
+    cim:Name.IdentifiedObject ex:_68d73045-68fa-54e8-a16a-2f8daa323957 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_f7418db1-07ee-5cda-9e2a-85f513e17c40 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "f7418db1-07ee-5cda-9e2a-85f513e17c40" ;
+    cim:IdentifiedObject.name "L5-6" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "1.54"^^xsd:float ;
+    cim:ACLineSegment.r "0.51744"^^xsd:float ;
+    cim:ACLineSegment.x "0.19404"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0002655128"^^xsd:float .
+
+ex:_d1b64482-fb68-50a7-988b-e11f79c232ca a cim:Name ;
+    cim:Name.name "L5-6" ;
+    cim:Name.IdentifiedObject ex:_f7418db1-07ee-5cda-9e2a-85f513e17c40 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_f47333f5-3ae1-506c-a976-b800d06727ea a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "f47333f5-3ae1-506c-a976-b800d06727ea" ;
+    cim:IdentifiedObject.name "L3-8" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "1.3"^^xsd:float ;
+    cim:ACLineSegment.r "0.2236"^^xsd:float ;
+    cim:ACLineSegment.x "0.1495"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0002685697"^^xsd:float .
+
+ex:_e9637c50-8a49-5ca8-b1ec-ae009c1cbc5c a cim:Name ;
+    cim:Name.name "L3-8" ;
+    cim:Name.IdentifiedObject ex:_f47333f5-3ae1-506c-a976-b800d06727ea ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_22780876-77da-5624-b237-b06a65298485 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "22780876-77da-5624-b237-b06a65298485" ;
+    cim:IdentifiedObject.name "L10-11" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "0.33"^^xsd:float ;
+    cim:ACLineSegment.r "0.12111"^^xsd:float ;
+    cim:ACLineSegment.x "0.04389"^^xsd:float ;
+    cim:ACLineSegment.bch "4.72748e-05"^^xsd:float .
+
+ex:_ab6cc135-737f-57c7-b4e9-655372f15683 a cim:Name ;
+    cim:Name.name "L10-11" ;
+    cim:Name.IdentifiedObject ex:_22780876-77da-5624-b237-b06a65298485 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_4f6b7dce-bb8b-5643-afc3-a4e9a8707115 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "4f6b7dce-bb8b-5643-afc3-a4e9a8707115" ;
+    cim:IdentifiedObject.name "L9-10" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "0.77"^^xsd:float ;
+    cim:ACLineSegment.r "0.30723"^^xsd:float ;
+    cim:ACLineSegment.x "0.10241"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0001168876"^^xsd:float .
+
+ex:_5ab7c019-2486-516d-9ed4-2435cb4cf2ed a cim:Name ;
+    cim:Name.name "L9-10" ;
+    cim:Name.IdentifiedObject ex:_4f6b7dce-bb8b-5643-afc3-a4e9a8707115 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_863d5c33-3fa9-558b-be45-3037f4505372 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "863d5c33-3fa9-558b-be45-3037f4505372" ;
+    cim:IdentifiedObject.name "L8-9" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "0.32"^^xsd:float ;
+    cim:ACLineSegment.r "0.10848"^^xsd:float ;
+    cim:ACLineSegment.x "0.0416"^^xsd:float ;
+    cim:ACLineSegment.bch "4.3912e-05"^^xsd:float .
+
+ex:_5676fd99-cea0-551c-8762-7ead8c231c28 a cim:Name ;
+    cim:Name.name "L8-9" ;
+    cim:Name.IdentifiedObject ex:_863d5c33-3fa9-558b-be45-3037f4505372 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_cc0ffe94-dd20-536a-b1d2-7f70af2b9816 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "cc0ffe94-dd20-536a-b1d2-7f70af2b9816" ;
+    cim:IdentifiedObject.name "L7-8" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:Conductor.length "1.67"^^xsd:float ;
+    cim:ACLineSegment.r "0.49098"^^xsd:float ;
+    cim:ACLineSegment.x "0.20541"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0002938033"^^xsd:float .
+
+ex:_bffcf701-8c23-56e2-9a35-a320ceeacd1a a cim:Name ;
+    cim:Name.name "L7-8" ;
+    cim:Name.IdentifiedObject ex:_cc0ffe94-dd20-536a-b1d2-7f70af2b9816 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_43148a59-bdd8-5c86-ac3e-c2bbc07ba77e a cim:PowerTransformer ;
+    cim:IdentifiedObject.mRID "43148a59-bdd8-5c86-ac3e-c2bbc07ba77e" ;
+    cim:IdentifiedObject.name "TR1" ;
+    cim:Equipment.EquipmentContainer ex:_f4bdffed-4607-5e77-b267-a17a04bd1965 .
+
+ex:_a34e4452-c4aa-5f4f-8e53-74fabbeb2199 a cim:Name ;
+    cim:Name.name "TR1" ;
+    cim:Name.IdentifiedObject ex:_43148a59-bdd8-5c86-ac3e-c2bbc07ba77e ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_c59c2fea-3ad9-4cdf-bbc9-aad9e88d1b8a a cim:PowerTransformerEnd ;
+    cim:IdentifiedObject.mRID "c59c2fea-3ad9-4cdf-bbc9-aad9e88d1b8a" ;
+    cim:IdentifiedObject.name "TR1" ;
+    cim:TransformerEnd.endNumber "1"^^xsd:integer ;
+    cim:TransformerEnd.Terminal ex:_168ac876-c19e-52fa-92b0-563ea7925a6b ;
+    cim:TransformerEnd.BaseVoltage ex:_a55f97f1-c485-414c-a845-678fe1eb19cf ;
+    cim:PowerTransformerEnd.PowerTransformer ex:_43148a59-bdd8-5c86-ac3e-c2bbc07ba77e ;
+    cim:PowerTransformerEnd.ratedS "40.0"^^xsd:float ;
+    cim:PowerTransformerEnd.ratedU "110.0"^^xsd:float ;
+    cim:PowerTransformerEnd.r "1.90575"^^xsd:float ;
+    cim:PowerTransformerEnd.x "36.371106"^^xsd:float .
+
+ex:_29f4f107-eb3c-4091-9c49-257e85c3a717 a cim:PowerTransformerEnd ;
+    cim:IdentifiedObject.mRID "29f4f107-eb3c-4091-9c49-257e85c3a717" ;
+    cim:IdentifiedObject.name "TR1" ;
+    cim:TransformerEnd.endNumber "2"^^xsd:integer ;
+    cim:TransformerEnd.Terminal ex:_a592e5c0-d373-5026-97b4-a6aa06f4a4d7 ;
+    cim:TransformerEnd.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:PowerTransformerEnd.PowerTransformer ex:_43148a59-bdd8-5c86-ac3e-c2bbc07ba77e ;
+    cim:PowerTransformerEnd.ratedS "40.0"^^xsd:float ;
+    cim:PowerTransformerEnd.ratedU "20.0"^^xsd:float ;
+    cim:PowerTransformerEnd.r "0.0"^^xsd:float ;
+    cim:PowerTransformerEnd.x "0.0"^^xsd:float .
+
+ex:_d34aa04f-7966-59a3-a9ca-fe8f7b57f14b a cim:PowerTransformer ;
+    cim:IdentifiedObject.mRID "d34aa04f-7966-59a3-a9ca-fe8f7b57f14b" ;
+    cim:IdentifiedObject.name "TR2" ;
+    cim:Equipment.EquipmentContainer ex:_f4bdffed-4607-5e77-b267-a17a04bd1965 .
+
+ex:_1f64d9b9-dfdb-56db-8a4c-b06dba4dda69 a cim:Name ;
+    cim:Name.name "TR2" ;
+    cim:Name.IdentifiedObject ex:_d34aa04f-7966-59a3-a9ca-fe8f7b57f14b ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_c4fab7e2-7c77-4cf6-b80c-8fed641cd71b a cim:PowerTransformerEnd ;
+    cim:IdentifiedObject.mRID "c4fab7e2-7c77-4cf6-b80c-8fed641cd71b" ;
+    cim:IdentifiedObject.name "TR2" ;
+    cim:TransformerEnd.endNumber "1"^^xsd:integer ;
+    cim:TransformerEnd.Terminal ex:_2425f06f-1f3d-5138-8ca5-747d86dde2f7 ;
+    cim:TransformerEnd.BaseVoltage ex:_a55f97f1-c485-414c-a845-678fe1eb19cf ;
+    cim:PowerTransformerEnd.PowerTransformer ex:_d34aa04f-7966-59a3-a9ca-fe8f7b57f14b ;
+    cim:PowerTransformerEnd.ratedS "40.0"^^xsd:float ;
+    cim:PowerTransformerEnd.ratedU "110.0"^^xsd:float ;
+    cim:PowerTransformerEnd.r "1.90575"^^xsd:float ;
+    cim:PowerTransformerEnd.x "36.371106"^^xsd:float .
+
+ex:_d38af474-0fdf-4404-a812-79b12152adef a cim:PowerTransformerEnd ;
+    cim:IdentifiedObject.mRID "d38af474-0fdf-4404-a812-79b12152adef" ;
+    cim:IdentifiedObject.name "TR2" ;
+    cim:TransformerEnd.endNumber "2"^^xsd:integer ;
+    cim:TransformerEnd.Terminal ex:_71bc78b1-c4fc-5b0e-a401-a52181b4592f ;
+    cim:TransformerEnd.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:PowerTransformerEnd.PowerTransformer ex:_d34aa04f-7966-59a3-a9ca-fe8f7b57f14b ;
+    cim:PowerTransformerEnd.ratedS "40.0"^^xsd:float ;
+    cim:PowerTransformerEnd.ratedU "20.0"^^xsd:float ;
+    cim:PowerTransformerEnd.r "0.0"^^xsd:float ;
+    cim:PowerTransformerEnd.x "0.0"^^xsd:float .
+
+ex:_5b66f8c7-d23b-5ce7-95e8-4c1e937049dc a cim:SvVoltage ;
+    cim:SvVoltage.v "19.605385"^^xsd:float ;
+    cim:SvVoltage.angle "-3.57295"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_5e59d904-20ec-5536-8879-7f2c68831525 .
+
+ex:_8806db66-5eaa-5dca-9df2-9e1647b8ad16 a cim:SvVoltage ;
+    cim:SvVoltage.v "19.55215"^^xsd:float ;
+    cim:SvVoltage.angle "-3.70772"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_eb10dbce-d219-5883-8474-9947d61a6048 .
+
+ex:_a5c40252-379d-5c8a-b6d4-0ed4dad87a98 a cim:SvVoltage ;
+    cim:SvVoltage.v "19.532346"^^xsd:float ;
+    cim:SvVoltage.angle "-3.72158"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_716c57a2-3dea-5a97-b23c-7feaa313ce8d .
+
+ex:_65e0965c-2a45-53e1-b04d-fb3e6e3f6722 a cim:SvVoltage ;
+    cim:SvVoltage.v "110.0"^^xsd:float ;
+    cim:SvVoltage.angle "0.0"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_2e861d34-f7f7-5d2a-94cf-b2181d1594cf .
+
+ex:_7fefb8b2-7423-5a5d-8134-20a8877d1a07 a cim:SvVoltage ;
+    cim:SvVoltage.v "19.531205"^^xsd:float ;
+    cim:SvVoltage.angle "-4.26829"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 .
+
+ex:_6d25318c-a712-5e9c-8758-b5d500f82613 a cim:SvVoltage ;
+    cim:SvVoltage.v "19.086952"^^xsd:float ;
+    cim:SvVoltage.angle "-4.64028"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_d09a4ded-0c67-5cc6-ae66-94d235261380 .
+
+ex:_d943cefd-cc5e-5537-94ea-8ede0a9bc81b a cim:SvVoltage ;
+    cim:SvVoltage.v "18.882252"^^xsd:float ;
+    cim:SvVoltage.angle "-4.81668"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_50070a74-4db4-5eca-8608-57e778ea554c .
+
+ex:_6e923384-0b2a-5361-8839-55a491861227 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.86667"^^xsd:float ;
+    cim:SvVoltage.angle "-4.82967"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_5f90fbf5-09a4-5c93-a906-e7589de7f5a0 .
+
+ex:_73bdc050-70c2-535b-9246-a9aba4d995aa a cim:SvVoltage ;
+    cim:SvVoltage.v "18.852447"^^xsd:float ;
+    cim:SvVoltage.angle "-4.83776"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_f24511c2-0263-51e8-be16-99c11b150f6b .
+
+ex:_fe227a48-f1e2-5703-a308-48d8d6e5a54d a cim:SvVoltage ;
+    cim:SvVoltage.v "18.825361"^^xsd:float ;
+    cim:SvVoltage.angle "-4.85252"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_cb1edad5-0206-5288-9ac7-328001f2b50e .
+
+ex:_1189d966-9b80-5388-a64a-6591e3ee25de a cim:SvVoltage ;
+    cim:SvVoltage.v "18.827665"^^xsd:float ;
+    cim:SvVoltage.angle "-4.85164"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e .
+
+ex:_59ffe45c-cfa9-5265-a887-90ccfc19e3c3 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.852622"^^xsd:float ;
+    cim:SvVoltage.angle "-4.84708"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 .
+
+ex:_67f9d847-75b7-5eec-aa45-4a55ae94f94d a cim:SvVoltage ;
+    cim:SvVoltage.v "18.850663"^^xsd:float ;
+    cim:SvVoltage.angle "-4.84996"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_cef14f83-da5c-5aa2-9398-a3a46e569f51 .
+
+ex:_1f53634e-613d-57a1-b0bd-4f2bcd93ef15 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.836402"^^xsd:float ;
+    cim:SvVoltage.angle "-4.84739"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_db00fe4b-05f1-58ac-9fab-06d45761d27b .
+
+ex:_9fae5091-0571-55ec-9aca-b4f3a2219ae8 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.843089"^^xsd:float ;
+    cim:SvVoltage.angle "-4.84744"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_9bed3b96-9e89-5b0f-9124-ad8c03bf3c13 .
+
+ex:_337f7586-80b2-5f81-89c9-927617d12a19 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.077"^^xsd:float ;
+    cim:SvPowerFlow.q "0.048"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_7a736ca5-db42-565a-a371-67a41dfdb3e8 .
+
+ex:_89d949e0-6dcc-5020-a8b0-d97c1832affd a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.207"^^xsd:float ;
+    cim:SvPowerFlow.q "0.052"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_42316a7b-cb2d-589e-b004-1d990e9e2ea5 .
+
+ex:_7ba5d0d6-65d0-5f82-920e-3a3d7ad49045 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.032"^^xsd:float ;
+    cim:SvPowerFlow.q "0.02"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_fdeec30a-7954-5516-a031-a24b333da384 .
+
+ex:_f6ad7dfc-6b0a-5515-98c1-4eec53245531 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "15.0"^^xsd:float ;
+    cim:SvPowerFlow.q "3.0"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_6163d1f6-b09b-5f86-92fc-e23af87b062c .
+
+ex:_2cd610e3-d8d0-53a5-a281-b49ae7a33620 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "5.0"^^xsd:float ;
+    cim:SvPowerFlow.q "1.0"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_649ee76f-f207-58eb-acaf-a2f39e028894 .
+
+ex:_c9e912c9-9c5f-584d-830c-cf61c3da1c37 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.276"^^xsd:float ;
+    cim:SvPowerFlow.q "0.69"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_3e2405ca-8676-528a-8427-d6bdb93aff50 .
+
+ex:_00dd4568-fcbc-54ef-9eac-b0b5ac3dd112 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.224"^^xsd:float ;
+    cim:SvPowerFlow.q "0.139"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_d73a9a6d-13f8-54b2-96b6-c8bec33a15df .
+
+ex:_5063993e-2ea8-57b7-981a-dc1253c87ba1 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.068"^^xsd:float ;
+    cim:SvPowerFlow.q "0.042"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_86ee86e0-d4fe-54fc-be58-426f093f9912 .
+
+ex:_cfe3a18f-6ec6-53f5-9397-1a49d5692e35 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "15.0"^^xsd:float ;
+    cim:SvPowerFlow.q "3.1"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_731ff86d-20b0-5de1-9d3a-dda21dbf5327 .
+
+ex:_b81bd215-8242-5d27-9b26-1975f16a3a47 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "5.0"^^xsd:float ;
+    cim:SvPowerFlow.q "1.7"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_8f7f383f-d572-5834-bc35-a14e3fc3db94 .
+
+ex:_e7b334cc-5190-535a-9dff-3ec038a7fd66 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.33"^^xsd:float ;
+    cim:SvPowerFlow.q "0.205"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_06cf8da5-d753-5457-8e1f-4043f4451cde .
+
+ex:_e1feb9b0-387b-5e25-b0e0-51a07eeb2af9 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.725"^^xsd:float ;
+    cim:SvPowerFlow.q "0.182"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_1c006d8b-9807-5d8b-8f01-e691031b5495 .
+
+ex:_3326b7f5-39c8-5511-b37f-c68b2ebef7d0 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.432"^^xsd:float ;
+    cim:SvPowerFlow.q "0.108"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_c41331a8-b271-564a-b1c6-d3b294a9ebd5 .
+
+ex:_d18b8305-84a3-5aaf-9291-34d56c15996f a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.331"^^xsd:float ;
+    cim:SvPowerFlow.q "0.083"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_0d171a30-fee8-50e1-805f-f52f7b4d989d .
+
+ex:_7d9aa185-37de-5259-9d22-a858b8e30437 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.477"^^xsd:float ;
+    cim:SvPowerFlow.q "0.12"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_b4930a72-e6d9-5c95-8dcc-7cf33c1270d8 .
+
+ex:_f269fdfe-deb9-5273-ad75-4cfdabe4a775 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.574"^^xsd:float ;
+    cim:SvPowerFlow.q "0.356"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_e177dfed-ccfd-5f2f-9240-4c7b3c340e28 .
+
+ex:_a17f5248-e969-540e-bf42-c538db86799c a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.55"^^xsd:float ;
+    cim:SvPowerFlow.q "0.138"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_f240c501-f35e-5319-ae68-9cbeac450018 .
+
+ex:_8b0a61cc-655d-5b09-9753-4459b5f5c47a a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.588"^^xsd:float ;
+    cim:SvPowerFlow.q "0.147"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_78ab442f-5128-509d-bb67-fd9d5a3f2bbb .
+
+ex:_5e59d904-20ec-5536-8879-7f2c68831525 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "5e59d904-20ec-5536-8879-7f2c68831525" ;
+    cim:IdentifiedObject.name "N12" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_09dafd64-e08f-4a20-8e19-7ca5c2ea5ba2 .
+
+ex:_2282a8ab-ea0f-5287-9e70-7fcf6eb08a0c a cim:Name ;
+    cim:Name.name "N12" ;
+    cim:Name.IdentifiedObject ex:_5e59d904-20ec-5536-8879-7f2c68831525 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_eb10dbce-d219-5883-8474-9947d61a6048 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "eb10dbce-d219-5883-8474-9947d61a6048" ;
+    cim:IdentifiedObject.name "N13" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_cd602f02-649d-4738-bb64-3e3b3d575704 .
+
+ex:_3f22fa89-215d-51d7-a7f2-8451a2129fa7 a cim:Name ;
+    cim:Name.name "N13" ;
+    cim:Name.IdentifiedObject ex:_eb10dbce-d219-5883-8474-9947d61a6048 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_716c57a2-3dea-5a97-b23c-7feaa313ce8d a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "716c57a2-3dea-5a97-b23c-7feaa313ce8d" ;
+    cim:IdentifiedObject.name "N14" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_d0b232c3-0a56-4916-9471-66f49036ddc8 .
+
+ex:_32574033-d177-5f02-a8ad-eb0124821fb0 a cim:Name ;
+    cim:Name.name "N14" ;
+    cim:Name.IdentifiedObject ex:_716c57a2-3dea-5a97-b23c-7feaa313ce8d ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_2e861d34-f7f7-5d2a-94cf-b2181d1594cf a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "2e861d34-f7f7-5d2a-94cf-b2181d1594cf" ;
+    cim:IdentifiedObject.name "N0" ;
+    cim:TopologicalNode.BaseVoltage ex:_a55f97f1-c485-414c-a845-678fe1eb19cf ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_2a7c745b-de30-4863-88ba-dcbe73f806df .
+
+ex:_bb03aa1a-6493-5463-96e0-42b0cfc85248 a cim:Name ;
+    cim:Name.name "N0" ;
+    cim:Name.IdentifiedObject ex:_2e861d34-f7f7-5d2a-94cf-b2181d1594cf ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "3775bf88-9580-51f7-b5ff-eec8f3827464" ;
+    cim:IdentifiedObject.name "N1" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_f88faca2-f0cf-419e-907e-3411271816ce .
+
+ex:_cd9aa884-ac37-5022-a19d-03f7a690b07a a cim:Name ;
+    cim:Name.name "N1" ;
+    cim:Name.IdentifiedObject ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_d09a4ded-0c67-5cc6-ae66-94d235261380 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "d09a4ded-0c67-5cc6-ae66-94d235261380" ;
+    cim:IdentifiedObject.name "N2" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_394f1e7a-c67b-446d-ab76-174e31ddc9b8 .
+
+ex:_4d8cc877-ea9f-5bc1-8ed7-df499e4c2281 a cim:Name ;
+    cim:Name.name "N2" ;
+    cim:Name.IdentifiedObject ex:_d09a4ded-0c67-5cc6-ae66-94d235261380 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_50070a74-4db4-5eca-8608-57e778ea554c a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "50070a74-4db4-5eca-8608-57e778ea554c" ;
+    cim:IdentifiedObject.name "N3" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_f67b0540-9424-4b6e-9b12-9f112e5e7f01 .
+
+ex:_1695cb76-4fed-5956-89c1-82ab19389696 a cim:Name ;
+    cim:Name.name "N3" ;
+    cim:Name.IdentifiedObject ex:_50070a74-4db4-5eca-8608-57e778ea554c ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_5f90fbf5-09a4-5c93-a906-e7589de7f5a0 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "5f90fbf5-09a4-5c93-a906-e7589de7f5a0" ;
+    cim:IdentifiedObject.name "N4" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_5c3f2d5c-750f-4d3c-b283-eee33929abaa .
+
+ex:_67f4a62c-cbbe-5984-9bad-3321cc7e4739 a cim:Name ;
+    cim:Name.name "N4" ;
+    cim:Name.IdentifiedObject ex:_5f90fbf5-09a4-5c93-a906-e7589de7f5a0 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_f24511c2-0263-51e8-be16-99c11b150f6b a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "f24511c2-0263-51e8-be16-99c11b150f6b" ;
+    cim:IdentifiedObject.name "N5" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_60deeb94-c9f8-4ea3-b52f-1940ea528164 .
+
+ex:_0c55662a-17bb-5f9f-84de-cea6dd4c189d a cim:Name ;
+    cim:Name.name "N5" ;
+    cim:Name.IdentifiedObject ex:_f24511c2-0263-51e8-be16-99c11b150f6b ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_cb1edad5-0206-5288-9ac7-328001f2b50e a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "cb1edad5-0206-5288-9ac7-328001f2b50e" ;
+    cim:IdentifiedObject.name "N11" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_169f9dc8-61b6-4c5d-82f9-3def05cf3c86 .
+
+ex:_cec80b45-0d6f-50b9-be8d-79f17988873c a cim:Name ;
+    cim:Name.name "N11" ;
+    cim:Name.IdentifiedObject ex:_cb1edad5-0206-5288-9ac7-328001f2b50e ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "ce92ebb6-85d5-503a-a33e-5a911bef322e" ;
+    cim:IdentifiedObject.name "N10" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_6077adb4-c337-4b45-9304-d71dd9ae5697 .
+
+ex:_7b601a64-5b37-5c4b-a121-bc9211569812 a cim:Name ;
+    cim:Name.name "N10" ;
+    cim:Name.IdentifiedObject ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "d38f6c10-127e-5305-9ab8-b3f772c08b29" ;
+    cim:IdentifiedObject.name "N8" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_dba75717-e472-42b9-a82a-b4c7819f9f2b .
+
+ex:_9f465dff-6b5d-5661-b128-ff70e16af540 a cim:Name ;
+    cim:Name.name "N8" ;
+    cim:Name.IdentifiedObject ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_cef14f83-da5c-5aa2-9398-a3a46e569f51 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "cef14f83-da5c-5aa2-9398-a3a46e569f51" ;
+    cim:IdentifiedObject.name "N7" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_16f5db35-83c6-418e-ae9e-69f05e77147b .
+
+ex:_869ec4c0-a9fa-56f0-a14f-e2bc651af397 a cim:Name ;
+    cim:Name.name "N7" ;
+    cim:Name.IdentifiedObject ex:_cef14f83-da5c-5aa2-9398-a3a46e569f51 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_db00fe4b-05f1-58ac-9fab-06d45761d27b a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "db00fe4b-05f1-58ac-9fab-06d45761d27b" ;
+    cim:IdentifiedObject.name "N6" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_371cfe37-f187-4fb8-8402-d7f7f5a0dfda .
+
+ex:_d022cf0c-c78a-5954-b8f5-44ea56136d74 a cim:Name ;
+    cim:Name.name "N6" ;
+    cim:Name.IdentifiedObject ex:_db00fe4b-05f1-58ac-9fab-06d45761d27b ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_9bed3b96-9e89-5b0f-9124-ad8c03bf3c13 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "9bed3b96-9e89-5b0f-9124-ad8c03bf3c13" ;
+    cim:IdentifiedObject.name "N9" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_6bd6b703-519b-46a8-a1f8-632f7e9d05f1 .
+
+ex:_1b1eceb7-505b-57d4-8b8f-9a905ad3a313 a cim:Name ;
+    cim:Name.name "N9" ;
+    cim:Name.IdentifiedObject ex:_9bed3b96-9e89-5b0f-9124-ad8c03bf3c13 ;
+    cim:Name.NameType ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e .
+
+ex:_d8a406b3-692e-5d16-9c2c-d856790efc50 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "d8a406b3-692e-5d16-9c2c-d856790efc50" ;
+    cim:IdentifiedObject.name "N7" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_16f5db35-83c6-418e-ae9e-69f05e77147b ;
+    cim:ConnectivityNode.TopologicalNode ex:_cef14f83-da5c-5aa2-9398-a3a46e569f51 .
+
+ex:_703cbb8f-84fb-55b2-bb28-87d881a01263 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "703cbb8f-84fb-55b2-bb28-87d881a01263" ;
+    cim:IdentifiedObject.name "N14" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_d0b232c3-0a56-4916-9471-66f49036ddc8 ;
+    cim:ConnectivityNode.TopologicalNode ex:_716c57a2-3dea-5a97-b23c-7feaa313ce8d .
+
+ex:_6cf15f35-b229-5055-b2cb-3c9a58e516f5 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "6cf15f35-b229-5055-b2cb-3c9a58e516f5" ;
+    cim:IdentifiedObject.name "N13" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_cd602f02-649d-4738-bb64-3e3b3d575704 ;
+    cim:ConnectivityNode.TopologicalNode ex:_eb10dbce-d219-5883-8474-9947d61a6048 .
+
+ex:_8bc502bd-707d-512e-b531-a41226e0f34a a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "8bc502bd-707d-512e-b531-a41226e0f34a" ;
+    cim:IdentifiedObject.name "N12" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_09dafd64-e08f-4a20-8e19-7ca5c2ea5ba2 ;
+    cim:ConnectivityNode.TopologicalNode ex:_5e59d904-20ec-5536-8879-7f2c68831525 .
+
+ex:_171fdf34-a7b4-53cc-bcd4-e8c28910af6e a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "171fdf34-a7b4-53cc-bcd4-e8c28910af6e" ;
+    cim:IdentifiedObject.name "N1" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_f88faca2-f0cf-419e-907e-3411271816ce ;
+    cim:ConnectivityNode.TopologicalNode ex:_3775bf88-9580-51f7-b5ff-eec8f3827464 .
+
+ex:_3ac9a174-57f5-5f27-b279-a8c5dafaf052 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "3ac9a174-57f5-5f27-b279-a8c5dafaf052" ;
+    cim:IdentifiedObject.name "N3" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_f67b0540-9424-4b6e-9b12-9f112e5e7f01 ;
+    cim:ConnectivityNode.TopologicalNode ex:_50070a74-4db4-5eca-8608-57e778ea554c .
+
+ex:_6890145e-89f7-5ea5-a437-3df472b11849 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "6890145e-89f7-5ea5-a437-3df472b11849" ;
+    cim:IdentifiedObject.name "N10" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_6077adb4-c337-4b45-9304-d71dd9ae5697 ;
+    cim:ConnectivityNode.TopologicalNode ex:_ce92ebb6-85d5-503a-a33e-5a911bef322e .
+
+ex:_2c78c0bd-03c5-54e9-bac4-d318c2a93db5 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "2c78c0bd-03c5-54e9-bac4-d318c2a93db5" ;
+    cim:IdentifiedObject.name "N5" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_60deeb94-c9f8-4ea3-b52f-1940ea528164 ;
+    cim:ConnectivityNode.TopologicalNode ex:_f24511c2-0263-51e8-be16-99c11b150f6b .
+
+ex:_e8cb0310-a531-5e43-bfe4-21775c79ff0b a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "e8cb0310-a531-5e43-bfe4-21775c79ff0b" ;
+    cim:IdentifiedObject.name "N4" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_5c3f2d5c-750f-4d3c-b283-eee33929abaa ;
+    cim:ConnectivityNode.TopologicalNode ex:_5f90fbf5-09a4-5c93-a906-e7589de7f5a0 .
+
+ex:_9e0ba453-a4a6-5a4c-992e-c998a16cbeda a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "9e0ba453-a4a6-5a4c-992e-c998a16cbeda" ;
+    cim:IdentifiedObject.name "N11" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_169f9dc8-61b6-4c5d-82f9-3def05cf3c86 ;
+    cim:ConnectivityNode.TopologicalNode ex:_cb1edad5-0206-5288-9ac7-328001f2b50e .
+
+ex:_b7dca2ba-f22c-5fbd-87a7-a30e7c1c66e0 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "b7dca2ba-f22c-5fbd-87a7-a30e7c1c66e0" ;
+    cim:IdentifiedObject.name "N9" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_6bd6b703-519b-46a8-a1f8-632f7e9d05f1 ;
+    cim:ConnectivityNode.TopologicalNode ex:_9bed3b96-9e89-5b0f-9124-ad8c03bf3c13 .
+
+ex:_a4b95a9a-f4bf-5796-a2f6-e865eaf4925e a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "a4b95a9a-f4bf-5796-a2f6-e865eaf4925e" ;
+    cim:IdentifiedObject.name "N6" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_371cfe37-f187-4fb8-8402-d7f7f5a0dfda ;
+    cim:ConnectivityNode.TopologicalNode ex:_db00fe4b-05f1-58ac-9fab-06d45761d27b .
+
+ex:_35162c87-179b-5c9a-a675-3b6c47484782 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "35162c87-179b-5c9a-a675-3b6c47484782" ;
+    cim:IdentifiedObject.name "N8" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_dba75717-e472-42b9-a82a-b4c7819f9f2b ;
+    cim:ConnectivityNode.TopologicalNode ex:_d38f6c10-127e-5305-9ab8-b3f772c08b29 .
+
+ex:_e8bbbd43-0032-5bd6-ad43-f80c11bec22a a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "e8bbbd43-0032-5bd6-ad43-f80c11bec22a" ;
+    cim:IdentifiedObject.name "N0" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_2a7c745b-de30-4863-88ba-dcbe73f806df ;
+    cim:ConnectivityNode.TopologicalNode ex:_2e861d34-f7f7-5d2a-94cf-b2181d1594cf .
+
+ex:_f1b6da73-8fac-5d5a-9866-2d9aec54946b a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "f1b6da73-8fac-5d5a-9866-2d9aec54946b" ;
+    cim:IdentifiedObject.name "N2" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_394f1e7a-c67b-446d-ab76-174e31ddc9b8 ;
+    cim:ConnectivityNode.TopologicalNode ex:_d09a4ded-0c67-5cc6-ae66-94d235261380 .
+
+ex:_e61f82cc-febd-556f-b8f8-5cb19a011396 a cim:NameTypeAuthority ;
+    cim:NameTypeAuthority.name "NEPLAN" .
+
+ex:_1ad8cb92-0d1f-5fbb-87d7-4f859147a40e a cim:NameType ;
+    cim:NameType.name "rdf:ID" ;
+    cim:NameType.description "원본 파일의 rdf:ID (UUID가 아니어서 mRID를 새로 발급)" ;
+    cim:NameType.NameTypeAuthority ex:_e61f82cc-febd-556f-b8f8-5cb19a011396 .

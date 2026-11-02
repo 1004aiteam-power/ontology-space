@@ -151,3 +151,104 @@ def test_turtle_urn_style():
     g = rdflib.Graph().parse(data=to_turtle(m, iri_style="urn"), format="turtle")
     subjects = {str(s) for s in g.subjects()}
     assert all(s.startswith("urn:uuid:") for s in subjects)
+
+
+# ---- 매핑 테이블 (Name / NameType) ------------------------------------------------
+def test_name_mapping():
+    from pycim import naming
+    from pycim.samples import sample_grid
+    m = sample_grid()
+    scada = naming.name_type(m, "SCADA", "포인트 ID")
+    assert scada is naming.name_type(m, "SCADA", "포인트 ID")       # 찾기 또는 만들기
+    cb = naming.find(m, "A154_CB01", scada)
+    assert cb.name == "154kV 선로 CB"
+    assert naming.codes(cb, scada) == ["A154_CB01"]
+    rows = naming.mapping_table(m, m.of_type(naming.NameType))
+    row = next(r for r in rows if r["name"] == "154kV 선로 CB")
+    assert row["mRID"] == cb.mrid and row["설비관리(EAM):설비번호"] == "EQ-CB-2019-0123"
+
+
+# ---- 토폴로지 처리 (TP) ------------------------------------------------------------
+def test_topology_process_merges_closed_switches():
+    from pycim import TopologicalNode
+    from pycim.samples import sample_grid
+    m = sample_grid()
+    assert len(topology.process(m)) == 3                     # CB 두 개가 닫혀 노드 5개 → 3개
+    m.by_name("154kV 선로 CB").open = True
+    tns = topology.process(m)
+    assert len(tns) == 4 and len(m.of_type(TopologicalNode)) == 4
+    assert {t.mrid for t in tns} == {t.mrid for t in topology.process(m)}   # 다시 계산해도 같은 mRID
+
+
+# ---- SV ------------------------------------------------------------------------
+def test_sv_from_pandapower():
+    pytest.importorskip("pandapower")
+    from pycim import sv
+    from pycim.samples import sample_grid
+    m = sample_grid()
+    out = sv.from_pandapower(m)
+    volts = [o for o in out if isinstance(o, sv.SvVoltage)]
+    flows = {o.terminal.name: o for o in out if isinstance(o, sv.SvPowerFlow)}
+    assert len(volts) == 3
+    assert flows["D/L #1 부하 T1"].p == pytest.approx(8.5)
+    assert flows["B변전소 계통 T1"].p < 0                      # 전원: 설비 밖으로 나가는 방향
+    m.by_name("154kV 선로 CB").open = True
+    assert len([o for o in sv.from_pandapower(m) if isinstance(o, sv.SvVoltage)]) == 2   # 정전 노드 제외
+
+
+# ---- CGMES 읽기 -------------------------------------------------------------------
+CIGRE = sorted((Path(__file__).resolve().parent.parent / "examples" / "cgmes" / "CIGRE_MV").glob("*.xml"))
+
+
+def test_read_cgmes_cigre():
+    pytest.importorskip("rdflib")
+    from pycim import ACLineSegment, EnergyConsumer, NameType
+    from pycim.cgmes import read_cgmes
+    m = read_cgmes(CIGRE, source="NEPLAN")
+    assert len(m.of_type(ACLineSegment)) == 12 and len(m.of_type(EnergyConsumer)) == 18
+    assert m.import_report["created_connectivity_nodes"] == 15
+    rdf_id = next(nt for nt in m.of_type(NameType) if nt.name == "rdf:ID")
+    from pycim import naming
+    line = naming.find(m, "L12-13", rdf_id)                  # 원본 ID로 찾기
+    assert isinstance(line, ACLineSegment) and line.length == pytest.approx(4.89)
+    assert all(len(o.mrid) == 36 for o in m)
+
+
+def test_cgmes_power_flow_matches_file_sv():
+    pytest.importorskip("pandapower")
+    from pycim import StateVariable, sv
+    from pycim.cgmes import read_cgmes
+    from pycim.export_pandapower import solve
+    m = read_cgmes(CIGRE, source="NEPLAN")
+    ref = {tn.name: v for tn, v in sv.voltages_pu(m).items()}
+    for o in m.of_type(StateVariable):
+        m.remove(o)
+    ours = solve(m, f_hz=50, slack_vm_pu=ref["N0"])
+    for cn, v in ours.items():
+        assert abs(v - ref[cn.name]) < 1e-3
+
+
+# ---- SHACL ---------------------------------------------------------------------
+def test_tbox_file_is_up_to_date():
+    from pycim.rdf import class_hierarchy_turtle
+    path = Path(__file__).resolve().parent.parent / "shapes" / "cim-classes.ttl"
+    assert path.read_text(encoding="utf-8") == class_hierarchy_turtle()
+
+
+def test_shacl_validation():
+    pytest.importorskip("pyshacl")
+    from pyshacl import validate
+    import rdflib
+    from pycim.samples import sample_grid
+    root = Path(__file__).resolve().parent.parent
+    shapes = rdflib.Graph().parse(root / "shapes" / "cim-shapes.ttl")
+    classes = rdflib.Graph().parse(root / "shapes" / "cim-classes.ttl")
+
+    def ok(g):
+        return validate(g, shacl_graph=shapes, ont_graph=classes, inference="rdfs")
+
+    assert ok(rdflib.Graph().parse(data=to_turtle(sample_grid()), format="turtle"))[0]
+    assert ok(rdflib.Graph().parse(root / "examples" / "power-grid-sample.ttl"))[0]
+    conforms, report, _ = ok(rdflib.Graph().parse(root / "examples" / "broken-sample.ttl"))
+    SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
+    assert not conforms and len(list(report.subjects(rdflib.RDF.type, SH.ValidationResult))) == 8

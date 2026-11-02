@@ -1,0 +1,240 @@
+{
+ "report": {
+  "read": {
+   "NameType": 2,
+   "BaseVoltage": 2,
+   "VoltageLevel": 15,
+   "Substation": 15,
+   "EnergyConsumer": 18,
+   "Terminal": 47,
+   "Name": 1,
+   "ExternalNetworkInjection": 1,
+   "ACLineSegment": 12,
+   "PowerTransformer": 2,
+   "PowerTransformerEnd": 4,
+   "SvVoltage": 15,
+   "SvPowerFlow": 18,
+   "TopologicalNode": 15
+  },
+  "skipped": {
+   "Diagram": 1,
+   "DiagramObject": 71,
+   "DiagramObjectPoint": 126,
+   "GeographicalRegion": 1,
+   "SubGeographicalRegion": 1,
+   "OperationalLimitType": 2,
+   "OperationalLimitSet": 16,
+   "CurrentLimit": 48
+  },
+  "renamed_ids": 143,
+  "created_connectivity_nodes": 15,
+  "loads_from_sv": 18
+ },
+ "voltages": [
+  {
+   "node": "N0",
+   "neplan": 1.0,
+   "pycim": 1.0,
+   "diff": 0.0
+  },
+  {
+   "node": "N1",
+   "neplan": 0.97656,
+   "pycim": 0.9766,
+   "diff": 4e-05
+  },
+  {
+   "node": "N2",
+   "neplan": 0.95435,
+   "pycim": 0.95438,
+   "diff": 4e-05
+  },
+  {
+   "node": "N3",
+   "neplan": 0.94411,
+   "pycim": 0.94415,
+   "diff": 4e-05
+  },
+  {
+   "node": "N4",
+   "neplan": 0.94333,
+   "pycim": 0.94337,
+   "diff": 4e-05
+  },
+  {
+   "node": "N5",
+   "neplan": 0.94262,
+   "pycim": 0.94266,
+   "diff": 4e-05
+  },
+  {
+   "node": "N6",
+   "neplan": 0.94182,
+   "pycim": 0.94186,
+   "diff": 4e-05
+  },
+  {
+   "node": "N7",
+   "neplan": 0.94253,
+   "pycim": 0.94257,
+   "diff": 4e-05
+  },
+  {
+   "node": "N8",
+   "neplan": 0.94263,
+   "pycim": 0.94267,
+   "diff": 4e-05
+  },
+  {
+   "node": "N9",
+   "neplan": 0.94215,
+   "pycim": 0.94219,
+   "diff": 4e-05
+  },
+  {
+   "node": "N10",
+   "neplan": 0.94138,
+   "pycim": 0.94142,
+   "diff": 4e-05
+  },
+  {
+   "node": "N11",
+   "neplan": 0.94127,
+   "pycim": 0.94131,
+   "diff": 4e-05
+  },
+  {
+   "node": "N12",
+   "neplan": 0.98027,
+   "pycim": 0.98031,
+   "diff": 4e-05
+  },
+  {
+   "node": "N13",
+   "neplan": 0.97761,
+   "pycim": 0.97764,
+   "diff": 4e-05
+  },
+  {
+   "node": "N14",
+   "neplan": 0.97662,
+   "pycim": 0.97665,
+   "diff": 4e-05
+  }
+ ],
+ "max_diff": 4e-05,
+ "sample_mapping": [
+  {
+   "mRID": "a000fb07-bd08-5473-8626-19bc11318d53",
+   "class": "ACLineSegment",
+   "name": "B-A 1회선",
+   "SCADA:포인트 ID": "",
+   "설비관리(EAM):설비번호": "EQ-LN-2008-0031",
+   "GIS:설비 ID": "G-50211"
+  },
+  {
+   "mRID": "f4779f22-59dc-5301-b4d3-2b5387858a6e",
+   "class": "Breaker",
+   "name": "154kV 선로 CB",
+   "SCADA:포인트 ID": "A154_CB01",
+   "설비관리(EAM):설비번호": "EQ-CB-2019-0123",
+   "GIS:설비 ID": "G-77310"
+  },
+  {
+   "mRID": "2c7c010a-637e-50de-9457-e57e8379c517",
+   "class": "BusbarSection",
+   "name": "154kV 모선",
+   "SCADA:포인트 ID": "A154_BUS",
+   "설비관리(EAM):설비번호": "",
+   "GIS:설비 ID": ""
+  },
+  {
+   "mRID": "705b3ffd-05e8-5f57-b8db-92e61964052e",
+   "class": "PowerTransformer",
+   "name": "M.Tr #1",
+   "SCADA:포인트 ID": "A_MTR1",
+   "설비관리(EAM):설비번호": "EQ-TR-2015-0007",
+   "GIS:설비 ID": "G-77320"
+  },
+  {
+   "mRID": "e90a7010-44c8-5c2e-9cc0-49e6a95454ed",
+   "class": "BusbarSection",
+   "name": "22.9kV 모선",
+   "SCADA:포인트 ID": "A22_BUS",
+   "설비관리(EAM):설비번호": "",
+   "GIS:설비 ID": ""
+  },
+  {
+   "mRID": "9999b734-51b9-5206-97fe-3aaa85bcd704",
+   "class": "Breaker",
+   "name": "D/L #1 CB",
+   "SCADA:포인트 ID": "A22_DL01_CB",
+   "설비관리(EAM):설비번호": "EQ-CB-2021-0457",
+   "GIS:설비 ID": "G-77342"
+  },
+  {
+   "mRID": "c319b2f2-d3a7-5966-91b7-8bc56a9728d7",
+   "class": "EnergyConsumer",
+   "name": "D/L #1 부하",
+   "SCADA:포인트 ID": "A22_DL01_P",
+   "설비관리(EAM):설비번호": "",
+   "GIS:설비 ID": ""
+  }
+ ],
+ "sample_sv": [
+  {
+   "class": "SvVoltage",
+   "target": "B변전소 측 노드",
+   "v": 154.0,
+   "angle": 0.0
+  },
+  {
+   "class": "SvVoltage",
+   "target": "선로-CB 접점 + 154kV 모선 노드",
+   "v": 153.88415,
+   "angle": -0.081003
+  },
+  {
+   "class": "SvVoltage",
+   "target": "22.9kV 모선 노드 + D/L #1 인출 노드",
+   "v": 22.774567,
+   "angle": -1.055414
+  },
+  {
+   "class": "SvPowerFlow",
+   "target": "B변전소 계통 T1",
+   "p": -8.506471,
+   "q": -2.268635
+  },
+  {
+   "class": "SvPowerFlow",
+   "target": "B-A 1회선 T1",
+   "p": 8.506471,
+   "q": 2.268635
+  },
+  {
+   "class": "SvPowerFlow",
+   "target": "B-A 1회선 T2",
+   "p": -8.503268,
+   "q": -2.254909
+  },
+  {
+   "class": "SvPowerFlow",
+   "target": "M.Tr #1 T1",
+   "p": 8.503268,
+   "q": 2.254909
+  },
+  {
+   "class": "SvPowerFlow",
+   "target": "M.Tr #1 T2",
+   "p": -8.5,
+   "q": -2.1
+  },
+  {
+   "class": "SvPowerFlow",
+   "target": "D/L #1 부하 T1",
+   "p": 8.5,
+   "q": 2.1
+  }
+ ]
+}

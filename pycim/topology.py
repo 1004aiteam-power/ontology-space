@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from .core import ConductingEquipment, ConnectivityNode, VoltageLevel
+from .core import BaseVoltage, ConductingEquipment, ConnectivityNode, TopologicalNode, VoltageLevel
+from .ids import child_mrid
 from .wires import EnergyConsumer, PowerTransformer, Switch
 
 
@@ -95,3 +96,57 @@ def nominal_voltages(nodes: Iterable[ConnectivityNode]) -> dict[ConnectivityNode
     if missing:
         raise ValueError(f"공칭전압을 알 수 없는 노드: {missing}")
     return volts
+
+
+def process(model) -> list[TopologicalNode]:
+    """토폴로지 처리: 닫힌 개폐기로 이어진 ConnectivityNode들을 TopologicalNode 하나로 묶는다.
+
+    결과는 CGMES의 TP 프로파일에 해당한다. 기존 TopologicalNode 연결은 새로 계산한 값으로 바꾼다.
+    TopologicalNode의 mRID는 묶인 ConnectivityNode 중 가장 작은 mRID에서 파생 → 같은 토폴로지면 같은 ID.
+    """
+    nodes = model.of_type(ConnectivityNode)
+    parent = {cn: cn for cn in nodes}
+
+    def find(x):
+        while parent[x] is not x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for sw in model.of_type(Switch):
+        if sw.open:
+            continue
+        ends = [t.connectivity_node for t in sw.terminals if t.connected and t.connectivity_node in parent]
+        for a, b in zip(ends, ends[1:]):
+            parent[find(a)] = find(b)
+
+    groups: dict = {}
+    for cn in nodes:
+        groups.setdefault(find(cn), []).append(cn)
+
+    volts = nominal_voltages(nodes)
+    tns = []
+    for members in groups.values():
+        members.sort(key=lambda c: c.mrid)
+        first = members[0]
+        bv = None
+        if isinstance(first.connectivity_node_container, VoltageLevel):
+            bv = first.connectivity_node_container.base_voltage
+        if bv is None:
+            bv = next((b for b in model.of_type(BaseVoltage) if b.nominal_voltage == volts[first]), None)
+        tn = TopologicalNode(mrid=child_mrid(first.mrid, "TopologicalNode"),
+                             name=" + ".join(c.name for c in members),
+                             base_voltage=bv,
+                             connectivity_node_container=first.connectivity_node_container)
+        for cn in members:
+            cn.topological_node = tn
+            tn.connectivity_nodes.append(cn)
+            for t in cn.terminals:
+                t.topological_node = tn
+        tns.append(tn)
+    for old in model.of_type(TopologicalNode):
+        if old not in tns:
+            model.remove(old)
+    for tn in tns:
+        model.add(tn)
+    return tns

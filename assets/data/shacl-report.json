@@ -1,0 +1,107 @@
+[
+ {
+  "dataset": "power-grid-sample.ttl",
+  "ko": "손으로 작성한 예제 TTL",
+  "en": "Hand-written sample TTL",
+  "triples": 221,
+  "conforms": true,
+  "violations": []
+ },
+ {
+  "dataset": "pycim sample_grid()",
+  "ko": "pycim으로 만든 예제 계통 (Name 매핑 포함)",
+  "en": "Sample grid built with pycim (incl. Name mapping)",
+  "triples": 260,
+  "conforms": true,
+  "violations": []
+ },
+ {
+  "dataset": "CIGRE MV (CGMES → pycim)",
+  "ko": "CGMES 파일을 pycim으로 읽어 다시 내보낸 데이터",
+  "en": "CGMES files read by pycim and re-exported",
+  "triples": 1498,
+  "conforms": true,
+  "violations": []
+ },
+ {
+  "dataset": "broken-sample.ttl",
+  "ko": "일부러 규칙을 어긴 데이터",
+  "en": "Data that breaks the rules on purpose",
+  "triples": 39,
+  "conforms": false,
+  "violations": [
+   {
+    "focus": "LN",
+    "name": "D/L #2 간선",
+    "class": "ACLineSegment",
+    "path": "cim:Conductor.length",
+    "value": "-3.2",
+    "ko": "선로 길이는 0보다 커야 합니다",
+    "en": "length must be > 0"
+   },
+   {
+    "focus": "LN",
+    "name": "D/L #2 간선",
+    "class": "ACLineSegment",
+    "path": "^cim:Terminal.ConductingEquipment",
+    "value": "",
+    "ko": "선로·개폐기·2권선 변압기는 Terminal이 정확히 2개여야 합니다",
+    "en": "must have exactly 2 terminals"
+   },
+   {
+    "focus": "CB",
+    "name": "D/L #2 CB",
+    "class": "Breaker",
+    "path": "cim:Switch.open",
+    "value": "no",
+    "ko": "open은 true/false 1개입니다",
+    "en": "open must be one boolean"
+   },
+   {
+    "focus": "CB",
+    "name": "D/L #2 CB",
+    "class": "Breaker",
+    "path": "cim:IdentifiedObject.mRID",
+    "value": "CB-001",
+    "ko": "mRID는 정확히 1개, UUID 형식이어야 합니다",
+    "en": "mRID must be exactly one UUID"
+   },
+   {
+    "focus": "N1",
+    "name": "C22_DL02_CB",
+    "class": "Name",
+    "path": "cim:Name.NameType",
+    "value": "",
+    "ko": "Name은 NameType이 필요합니다",
+    "en": "needs a NameType"
+   },
+   {
+    "focus": "T_ORPHAN",
+    "name": "",
+    "class": "Terminal",
+    "path": "cim:Terminal.ConductingEquipment",
+    "value": "",
+    "ko": "Terminal은 도전성 설비 1개에 속해야 합니다",
+    "en": "must belong to exactly one ConductingEquipment"
+   },
+   {
+    "focus": "T_ORPHAN",
+    "name": "",
+    "class": "Terminal",
+    "path": "cim:ACDCTerminal.sequenceNumber",
+    "value": "",
+    "ko": "sequenceNumber는 1 이상의 정수입니다",
+    "en": "must be an integer ≥ 1"
+   },
+   {
+    "focus": "VL",
+    "name": "C변전소 22.9kV",
+    "class": "VoltageLevel",
+    "path": "cim:VoltageLevel.BaseVoltage",
+    "value": "",
+    "ko": "VoltageLevel은 BaseVoltage가 1개 필요합니다",
+    "en": "needs exactly one BaseVoltage"
+   }
+  ]
+ }
+]

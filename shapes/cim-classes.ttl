@@ -1,0 +1,47 @@
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+# pycim에서 자동 생성 (pycim.rdf.class_hierarchy_turtle)
+
+cim:ACDCTerminal a owl:Class ; rdfs:subClassOf cim:IdentifiedObject .
+cim:ACLineSegment a owl:Class ; rdfs:subClassOf cim:Conductor .
+cim:BaseVoltage a owl:Class ; rdfs:subClassOf cim:IdentifiedObject .
+cim:Bay a owl:Class ; rdfs:subClassOf cim:EquipmentContainer .
+cim:Breaker a owl:Class ; rdfs:subClassOf cim:ProtectedSwitch ; rdfs:comment "차단기: 고장전류 차단 가능."@ko .
+cim:BusbarSection a owl:Class ; rdfs:subClassOf cim:Connector .
+cim:ConductingEquipment a owl:Class ; rdfs:subClassOf cim:Equipment ; rdfs:comment "전류가 흐르는 설비. Terminal을 통해 ConnectivityNode에 연결된다."@ko .
+cim:Conductor a owl:Class ; rdfs:subClassOf cim:ConductingEquipment .
+cim:ConformLoad a owl:Class ; rdfs:subClassOf cim:EnergyConsumer ; rdfs:comment "부하 곡선을 따르는 부하."@ko .
+cim:ConnectivityNode a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:comment "단자들이 만나는 전기적 접점."@ko .
+cim:ConnectivityNodeContainer a owl:Class ; rdfs:subClassOf cim:PowerSystemResource .
+cim:Connector a owl:Class ; rdfs:subClassOf cim:ConductingEquipment .
+cim:Disconnector a owl:Class ; rdfs:subClassOf cim:Switch ; rdfs:comment "단로기: 무부하 상태에서만 개폐."@ko .
+cim:EnergyConnection a owl:Class ; rdfs:subClassOf cim:ConductingEquipment .
+cim:EnergyConsumer a owl:Class ; rdfs:subClassOf cim:EnergyConnection .
+cim:Equipment a owl:Class ; rdfs:subClassOf cim:PowerSystemResource .
+cim:EquipmentContainer a owl:Class ; rdfs:subClassOf cim:ConnectivityNodeContainer .
+cim:ExternalNetworkInjection a owl:Class ; rdfs:subClassOf cim:RegulatingCondEq ; rdfs:comment "외부 계통 등가 (상위 계통을 하나의 전원으로 표현)."@ko .
+cim:IdentifiedObject a owl:Class ; rdfs:comment "이름과 mRID를 가진 CIM 객체의 최상위 클래스 (IEC 61970-301 Core)."@ko .
+cim:Line a owl:Class ; rdfs:subClassOf cim:EquipmentContainer .
+cim:LoadBreakSwitch a owl:Class ; rdfs:subClassOf cim:ProtectedSwitch .
+cim:Name a owl:Class .
+cim:NameType a owl:Class .
+cim:NameTypeAuthority a owl:Class .
+cim:NonConformLoad a owl:Class ; rdfs:subClassOf cim:EnergyConsumer ; rdfs:comment "부하 곡선을 따르지 않는 부하 (대형 산업 부하 등)."@ko .
+cim:PowerSystemResource a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:comment "전력계통 자원: 설비와 컨테이너의 공통 상위 클래스."@ko .
+cim:PowerTransformer a owl:Class ; rdfs:subClassOf cim:ConductingEquipment .
+cim:PowerTransformerEnd a owl:Class ; rdfs:subClassOf cim:TransformerEnd ; rdfs:comment "변압기 권선단. 정격과 임피던스는 PowerTransformer가 아니라 End에 둔다."@ko .
+cim:ProtectedSwitch a owl:Class ; rdfs:subClassOf cim:Switch .
+cim:RegulatingCondEq a owl:Class ; rdfs:subClassOf cim:EnergyConnection .
+cim:RotatingMachine a owl:Class ; rdfs:subClassOf cim:RegulatingCondEq .
+cim:StateVariable a owl:Class .
+cim:Substation a owl:Class ; rdfs:subClassOf cim:EquipmentContainer .
+cim:SvPowerFlow a owl:Class ; rdfs:subClassOf cim:StateVariable .
+cim:SvVoltage a owl:Class ; rdfs:subClassOf cim:StateVariable .
+cim:Switch a owl:Class ; rdfs:subClassOf cim:ConductingEquipment .
+cim:SynchronousMachine a owl:Class ; rdfs:subClassOf cim:RotatingMachine .
+cim:Terminal a owl:Class ; rdfs:subClassOf cim:ACDCTerminal ; rdfs:comment "설비의 접속 단자. 설비 ↔ 노드 연결은 항상 Terminal을 거친다."@ko .
+cim:TopologicalNode a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:comment "닫힌 개폐기로 이어진 ConnectivityNode들을 하나로 묶은 노드 (TP 프로파일, 해석용 모선)."@ko .
+cim:TransformerEnd a owl:Class ; rdfs:subClassOf cim:IdentifiedObject .
+cim:VoltageLevel a owl:Class ; rdfs:subClassOf cim:EquipmentContainer .

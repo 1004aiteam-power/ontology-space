@@ -2,6 +2,7 @@
 # 구성: 154kV 선로 → 차단기 → 154kV 모선 → 변압기(154/22.9kV) → 22.9kV 모선 → 차단기 → 부하
 # 실제 CIM은 훨씬 크며, 여기서는 학습용 최소 TBox(클래스 계층)와 ABox(데이터)만 담았습니다.
 # 읽기 쉽도록 ex:TR_1 같은 이름형 IRI를 썼지만, 실제 데이터는 UUID 기반 mRID를 씁니다.
+# 아래 mRID 값은 pycim.samples.sample_grid()가 만드는 값(UUID v5)과 같습니다.
 #   예) <urn:uuid:6f1c2a9e-...> 또는 CGMES 2.4.15의 rdf:ID="_6f1c2a9e-..."
 #   pycim으로 만든 UUID 버전: python examples/build_sample_grid.py
 
@@ -50,19 +51,19 @@ cim:Switch.normalOpen            a owl:DatatypeProperty .
 #################################################################
 
 # --- 기준 전압 ---
-ex:BV_154  a cim:BaseVoltage ; cim:IdentifiedObject.name "154kV" ; cim:BaseVoltage.nominalVoltage "154"^^xsd:float .
-ex:BV_22.9 a cim:BaseVoltage ; cim:IdentifiedObject.name "22.9kV" ; cim:BaseVoltage.nominalVoltage "22.9"^^xsd:float .
+ex:BV_154  a cim:BaseVoltage ; cim:IdentifiedObject.mRID "a5066e12-14ca-56d8-9d83-9ea7f1d6d7de" ; cim:IdentifiedObject.name "154kV" ; cim:BaseVoltage.nominalVoltage "154"^^xsd:float .
+ex:BV_22.9 a cim:BaseVoltage ; cim:IdentifiedObject.mRID "0f062cb3-f874-5b64-a6bb-4d18bee79727" ; cim:IdentifiedObject.name "22.9kV" ; cim:BaseVoltage.nominalVoltage "22.9"^^xsd:float .
 
 # --- 변전소 / 전압계급 ---
-ex:SS_A a cim:Substation ; cim:IdentifiedObject.name "A변전소" .
-ex:VL_A_154 a cim:VoltageLevel ; cim:IdentifiedObject.name "A변전소 154kV" ;
+ex:SS_A a cim:Substation ; cim:IdentifiedObject.mRID "df9d63b8-5f27-5f24-a8b9-ab25b9b2374e" ; cim:IdentifiedObject.name "A변전소" .
+ex:VL_A_154 a cim:VoltageLevel ; cim:IdentifiedObject.mRID "9fe50229-aff9-5420-8298-da9c05d7ab43" ; cim:IdentifiedObject.name "A변전소 154kV" ;
     cim:VoltageLevel.Substation ex:SS_A ; cim:VoltageLevel.BaseVoltage ex:BV_154 .
-ex:VL_A_22  a cim:VoltageLevel ; cim:IdentifiedObject.name "A변전소 22.9kV" ;
+ex:VL_A_22  a cim:VoltageLevel ; cim:IdentifiedObject.mRID "4a1015ff-bec1-5a3d-82c4-fd0051974c83" ; cim:IdentifiedObject.name "A변전소 22.9kV" ;
     cim:VoltageLevel.Substation ex:SS_A ; cim:VoltageLevel.BaseVoltage ex:BV_22.9 .
 
 # --- 송전선로 ---
-ex:LINE_1 a cim:Line ; cim:IdentifiedObject.name "B-A 154kV T/L" .
-ex:ACLS_1 a cim:ACLineSegment ; cim:IdentifiedObject.name "B-A 1회선" ;
+ex:LINE_1 a cim:Line ; cim:IdentifiedObject.mRID "2408ba7a-2543-55a6-ac26-f06a2c9ea1b8" ; cim:IdentifiedObject.name "B-A 154kV T/L" .
+ex:ACLS_1 a cim:ACLineSegment ; cim:IdentifiedObject.mRID "a000fb07-bd08-5473-8626-19bc11318d53" ; cim:IdentifiedObject.name "B-A 1회선" ;
     cim:Equipment.EquipmentContainer ex:LINE_1 ;
     cim:ConductingEquipment.BaseVoltage ex:BV_154 ;
     cim:Conductor.length "12.5"^^xsd:float ;      # km
@@ -70,64 +71,64 @@ ex:ACLS_1 a cim:ACLineSegment ; cim:IdentifiedObject.name "B-A 1회선" ;
     cim:ACLineSegment.x "4.20"^^xsd:float .           # ohm
 
 # --- 154kV 측 설비 ---
-ex:CB_154_1 a cim:Breaker ; cim:IdentifiedObject.name "154kV 선로 CB" ;
+ex:CB_154_1 a cim:Breaker ; cim:IdentifiedObject.mRID "f4779f22-59dc-5301-b4d3-2b5387858a6e" ; cim:IdentifiedObject.name "154kV 선로 CB" ;
     cim:Equipment.EquipmentContainer ex:VL_A_154 ; cim:Switch.normalOpen false .
-ex:BUS_154 a cim:BusbarSection ; cim:IdentifiedObject.name "154kV 모선" ;
+ex:BUS_154 a cim:BusbarSection ; cim:IdentifiedObject.mRID "2c7c010a-637e-50de-9457-e57e8379c517" ; cim:IdentifiedObject.name "154kV 모선" ;
     cim:Equipment.EquipmentContainer ex:VL_A_154 .
 
 # --- 변압기 ---
-ex:TR_1 a cim:PowerTransformer ; cim:IdentifiedObject.name "M.Tr #1" ;
+ex:TR_1 a cim:PowerTransformer ; cim:IdentifiedObject.mRID "705b3ffd-05e8-5f57-b8db-92e61964052e" ; cim:IdentifiedObject.name "M.Tr #1" ;
     cim:Equipment.EquipmentContainer ex:SS_A .
-ex:TR_1_E1 a cim:PowerTransformerEnd ; cim:IdentifiedObject.name "M.Tr #1 1차" ;
+ex:TR_1_E1 a cim:PowerTransformerEnd ; cim:IdentifiedObject.mRID "0ba9e94b-c9e5-5ba1-8529-d9cea858491d" ; cim:IdentifiedObject.name "M.Tr #1 1차" ;
     cim:PowerTransformerEnd.PowerTransformer ex:TR_1 ; cim:TransformerEnd.endNumber 1 ;
     cim:PowerTransformerEnd.ratedU "154"^^xsd:float ; cim:PowerTransformerEnd.ratedS "60"^^xsd:float ;
     cim:TransformerEnd.Terminal ex:T_TR1_1 .
-ex:TR_1_E2 a cim:PowerTransformerEnd ; cim:IdentifiedObject.name "M.Tr #1 2차" ;
+ex:TR_1_E2 a cim:PowerTransformerEnd ; cim:IdentifiedObject.mRID "81bf071d-2c43-5bca-b5eb-da3fccf151e2" ; cim:IdentifiedObject.name "M.Tr #1 2차" ;
     cim:PowerTransformerEnd.PowerTransformer ex:TR_1 ; cim:TransformerEnd.endNumber 2 ;
     cim:PowerTransformerEnd.ratedU "22.9"^^xsd:float ; cim:PowerTransformerEnd.ratedS "60"^^xsd:float ;
     cim:TransformerEnd.Terminal ex:T_TR1_2 .
 
 # --- 22.9kV 측 설비 ---
-ex:BUS_22 a cim:BusbarSection ; cim:IdentifiedObject.name "22.9kV 모선" ;
+ex:BUS_22 a cim:BusbarSection ; cim:IdentifiedObject.mRID "e90a7010-44c8-5c2e-9cc0-49e6a95454ed" ; cim:IdentifiedObject.name "22.9kV 모선" ;
     cim:Equipment.EquipmentContainer ex:VL_A_22 .
-ex:CB_22_1 a cim:Breaker ; cim:IdentifiedObject.name "D/L #1 CB" ;
+ex:CB_22_1 a cim:Breaker ; cim:IdentifiedObject.mRID "9999b734-51b9-5206-97fe-3aaa85bcd704" ; cim:IdentifiedObject.name "D/L #1 CB" ;
     cim:Equipment.EquipmentContainer ex:VL_A_22 ; cim:Switch.normalOpen false .
-ex:LOAD_1 a cim:EnergyConsumer ; cim:IdentifiedObject.name "D/L #1 부하" ;
+ex:LOAD_1 a cim:EnergyConsumer ; cim:IdentifiedObject.mRID "c319b2f2-d3a7-5966-91b7-8bc56a9728d7" ; cim:IdentifiedObject.name "D/L #1 부하" ;
     cim:EnergyConsumer.p "8.5"^^xsd:float ; cim:EnergyConsumer.q "2.1"^^xsd:float .   # MW, MVAr
 
 # --- 접속 노드 ---
-ex:CN_LINE_END a cim:ConnectivityNode ; cim:IdentifiedObject.name "선로-CB 접점" .
-ex:CN_154      a cim:ConnectivityNode ; cim:IdentifiedObject.name "154kV 모선 노드" .
-ex:CN_22       a cim:ConnectivityNode ; cim:IdentifiedObject.name "22.9kV 모선 노드" .
-ex:CN_FEEDER   a cim:ConnectivityNode ; cim:IdentifiedObject.name "D/L #1 인출 노드" .
-ex:CN_REMOTE   a cim:ConnectivityNode ; cim:IdentifiedObject.name "B변전소 측 노드" .
+ex:CN_LINE_END a cim:ConnectivityNode ; cim:IdentifiedObject.mRID "0e49fd6f-67e2-5536-a26e-52bf14ba0038" ; cim:IdentifiedObject.name "선로-CB 접점" .
+ex:CN_154      a cim:ConnectivityNode ; cim:IdentifiedObject.mRID "2042926e-71cc-5675-a159-5af828d26dbd" ; cim:IdentifiedObject.name "154kV 모선 노드" .
+ex:CN_22       a cim:ConnectivityNode ; cim:IdentifiedObject.mRID "d1b15663-8f41-5b49-9921-314bb5c2fc57" ; cim:IdentifiedObject.name "22.9kV 모선 노드" .
+ex:CN_FEEDER   a cim:ConnectivityNode ; cim:IdentifiedObject.mRID "da84b90c-2d0d-5211-bac4-5815dfa02f0b" ; cim:IdentifiedObject.name "D/L #1 인출 노드" .
+ex:CN_REMOTE   a cim:ConnectivityNode ; cim:IdentifiedObject.mRID "cd223f58-4e1a-5cce-87a9-5cf02f43c8c2" ; cim:IdentifiedObject.name "B변전소 측 노드" .
 
 # --- 단자 (설비 ↔ 노드 연결) ---
-ex:T_ACLS1_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+ex:T_ACLS1_1 a cim:Terminal ; cim:IdentifiedObject.mRID "c143f761-fb91-5022-b3ce-4a6065f7c469" ; cim:ACDCTerminal.sequenceNumber 1 ;
     cim:Terminal.ConductingEquipment ex:ACLS_1 ; cim:Terminal.ConnectivityNode ex:CN_REMOTE .
-ex:T_ACLS1_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+ex:T_ACLS1_2 a cim:Terminal ; cim:IdentifiedObject.mRID "ad4ff682-dfee-52d7-bd8a-7cd5b57b82ce" ; cim:ACDCTerminal.sequenceNumber 2 ;
     cim:Terminal.ConductingEquipment ex:ACLS_1 ; cim:Terminal.ConnectivityNode ex:CN_LINE_END .
 
-ex:T_CB154_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+ex:T_CB154_1 a cim:Terminal ; cim:IdentifiedObject.mRID "77ffe666-3776-5671-a44b-113ecb0ff4a8" ; cim:ACDCTerminal.sequenceNumber 1 ;
     cim:Terminal.ConductingEquipment ex:CB_154_1 ; cim:Terminal.ConnectivityNode ex:CN_LINE_END .
-ex:T_CB154_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+ex:T_CB154_2 a cim:Terminal ; cim:IdentifiedObject.mRID "5596a1b4-f80c-50b3-a0d8-a2945760dcd0" ; cim:ACDCTerminal.sequenceNumber 2 ;
     cim:Terminal.ConductingEquipment ex:CB_154_1 ; cim:Terminal.ConnectivityNode ex:CN_154 .
 
-ex:T_BUS154 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+ex:T_BUS154 a cim:Terminal ; cim:IdentifiedObject.mRID "83fab60d-fe8b-502b-b96f-45d3c449fdad" ; cim:ACDCTerminal.sequenceNumber 1 ;
     cim:Terminal.ConductingEquipment ex:BUS_154 ; cim:Terminal.ConnectivityNode ex:CN_154 .
 
-ex:T_TR1_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+ex:T_TR1_1 a cim:Terminal ; cim:IdentifiedObject.mRID "6abbb295-2bf3-5b8f-b4e0-932a4f20748f" ; cim:ACDCTerminal.sequenceNumber 1 ;
     cim:Terminal.ConductingEquipment ex:TR_1 ; cim:Terminal.ConnectivityNode ex:CN_154 .
-ex:T_TR1_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+ex:T_TR1_2 a cim:Terminal ; cim:IdentifiedObject.mRID "a02a7c8c-1036-5942-955c-f61338944387" ; cim:ACDCTerminal.sequenceNumber 2 ;
     cim:Terminal.ConductingEquipment ex:TR_1 ; cim:Terminal.ConnectivityNode ex:CN_22 .
 
-ex:T_BUS22 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+ex:T_BUS22 a cim:Terminal ; cim:IdentifiedObject.mRID "0f636610-0a6f-5966-947b-ee3cc91ad23b" ; cim:ACDCTerminal.sequenceNumber 1 ;
     cim:Terminal.ConductingEquipment ex:BUS_22 ; cim:Terminal.ConnectivityNode ex:CN_22 .
 
-ex:T_CB22_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+ex:T_CB22_1 a cim:Terminal ; cim:IdentifiedObject.mRID "738ff6ba-be05-5b3b-a059-7f555aaa976e" ; cim:ACDCTerminal.sequenceNumber 1 ;
     cim:Terminal.ConductingEquipment ex:CB_22_1 ; cim:Terminal.ConnectivityNode ex:CN_22 .
-ex:T_CB22_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+ex:T_CB22_2 a cim:Terminal ; cim:IdentifiedObject.mRID "7118d91c-41c2-5627-9837-a39d9238955c" ; cim:ACDCTerminal.sequenceNumber 2 ;
     cim:Terminal.ConductingEquipment ex:CB_22_1 ; cim:Terminal.ConnectivityNode ex:CN_FEEDER .
 
-ex:T_LOAD1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+ex:T_LOAD1 a cim:Terminal ; cim:IdentifiedObject.mRID "e13e1c2d-9d58-568b-b48c-198369d84585" ; cim:ACDCTerminal.sequenceNumber 1 ;
     cim:Terminal.ConductingEquipment ex:LOAD_1 ; cim:Terminal.ConnectivityNode ex:CN_FEEDER .

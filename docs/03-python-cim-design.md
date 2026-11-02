@@ -29,6 +29,9 @@ pycim/
 ├── topology.py  인접 설비, 가압 범위 탐색, 정전 영향 분석
 ├── rdf.py       Turtle 직렬화
 ├── model.py     객체 저장소 (타입별 조회)
+├── naming.py    Name / NameType / NameTypeAuthority: 기존 시스템 코드 ↔ mRID 매핑
+├── cgmes.py     CGMES(RDF/XML) 읽기
+├── sv.py        SvVoltage / SvPowerFlow: 조류계산 결과 → SV 프로파일
 ├── samples.py   예제 계통 (154kV 선로 → 변전소 → 22.9kV 부하)
 ├── export_pandapower.py  pandapower 네트워크로 변환 + 조류계산
 └── export_opendss.py     OpenDSS 스크립트로 변환 + 조류계산
@@ -109,7 +112,7 @@ python examples/build_sample_grid.py
 ```
 
 ```bash
-pip install pandapower opendssdirect.py   # 변환기 사용 시
+pip install rdflib pyshacl pandapower opendssdirect.py   # CGMES·SHACL·변환기 사용 시
 python -m pytest tests
 ```
 
@@ -147,13 +150,76 @@ export_pandapower.solve(m)                          # {노드: 전압 pu}
 | 22.9kV 모선 노드 | 22.9 | 0.9945 | 0.9945 | 정전 |
 | D/L #1 인출 노드 | 22.9 | 0.9945 | 0.9945 | 정전 |
 
-## 6. 로드맵
+## 6. 매핑 테이블 (Name / NameType)
+
+mRID는 바뀌지 않는 기준 키이고, 기존 시스템의 코드는 CIM `Name`으로 붙입니다.
+
+```
+Breaker (mRID) ◀─ Name "A154_CB01" ─▶ NameType "포인트 ID" ─▶ NameTypeAuthority "SCADA"
+```
+
+```python
+from pycim import naming
+scada = naming.name_type(m, "SCADA", "포인트 ID")
+naming.add_name(cb, "A154_CB01", scada)
+naming.find(m, "A154_CB01", scada)            # → Breaker
+naming.write_csv(naming.mapping_table(m, m.of_type(naming.NameType)), "mapping_table.csv")
+```
+
+결과: [`examples/mapping_table.csv`](../examples/mapping_table.csv)
+
+## 7. CGMES 읽기 (`cgmes.py`)
+
+`read_cgmes(paths, source=...)` 가 RDF/XML 파일들을 rdflib로 읽어 pycim 객체를 만듭니다.
+
+- CIM16(2012·2013)과 CIM100 네임스페이스 인식
+- pycim에 없는 클래스(Diagram, OperationalLimit 등)는 건너뛰고 `import_report`에 기록
+- 속성 이름은 pycim 이름 변환 규칙을 거꾸로 적용해 찾음 (`Conductor.length` → `length`)
+- UUID가 아닌 rdf:ID(예: NEPLAN의 `Load7-I`)는 UUID v5 mRID를 새로 발급하고, 원본 ID를 `Name`(NameType "rdf:ID")으로 보존
+- 버스-브랜치 모델: TopologicalNode마다 ConnectivityNode 생성
+- SSH가 없으면 SV의 `SvPowerFlow` 값을 부하 입력으로 사용
+
+**CIGRE MV 검증** (`python examples/import_cgmes.py`): NEPLAN이 파일에 저장한 조류계산 결과(SV)와
+pycim → pandapower 결과를 15개 노드에서 비교한 결과, **최대 차이 0.00004 pu**.
+남은 차이는 변압기 여자 성분(b, g)을 무시해서 생깁니다.
+
+## 8. 토폴로지 처리와 SV 프로파일 (`topology.process`, `sv.py`)
+
+```
+CIM (EQ, SSH) ─ topology.process() ─▶ TopologicalNode (TP)
+              ─ pandapower 조류계산 ─▶ SvVoltage / SvPowerFlow (SV) ─ to_turtle() ─▶ RDF
+```
+
+- `topology.process(m)`: 닫힌 개폐기로 이어진 ConnectivityNode를 하나의 TopologicalNode로 묶음 (union-find)
+- `sv.from_pandapower(m)`: SvVoltage(kV, deg), SvPowerFlow(설비로 들어가는 방향이 +)
+- TopologicalNode와 SV 객체의 mRID도 부모에서 파생(v5) → 다시 계산해도 같은 ID
+
+## 9. SHACL 검증
+
+`shapes/cim-shapes.ttl`에 8종의 규칙(mRID 형식, 단자 수, Terminal 소속, 선로 파라미터, 개폐기 상태,
+전압 체계, 변압기 권선단, Name)을 정의했습니다. 클래스 계층은 `pycim.rdf.class_hierarchy_turtle()`이
+자동 생성한 `shapes/cim-classes.ttl`을 씁니다.
+
+```bash
+python examples/validate.py
+```
+
+| 데이터 | 결과 |
+|---|---|
+| power-grid-sample.ttl (손으로 작성) | 통과 |
+| pycim sample_grid() | 통과 |
+| CIGRE MV (CGMES → pycim) | 통과 |
+| broken-sample.ttl (일부러 규칙 위반) | 위반 8건 |
+
+## 10. 로드맵
 
 - [x] pandapower / OpenDSS 모델로 변환해 조류계산
 - [x] mRID 발급 규칙 (UUID v4 / v5, 종속 객체 파생, 중복 검사)
-- [ ] 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)
-- [ ] CGMES(RDF/XML) 파일 읽기 → 파이썬 객체 생성
-- [ ] EQ / SSH / SV 프로파일 분리 직렬화 (계산 결과 → SV)
+- [x] 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)
+- [x] CGMES(RDF/XML) 파일 읽기 → 파이썬 객체 생성
+- [x] 토폴로지 처리(TP), 계산 결과 → SV 프로파일
+- [x] SHACL 규칙으로 모델 검증
+- [ ] CGMES RDF/XML로 내보내기 (프로파일별 파일 분리)
 - [ ] Measurement / Analog 클래스와 SCADA 값 연계
-- [ ] SHACL 규칙으로 모델 검증
+- [ ] 변압기 탭(RatioTapChanger), 여자 성분 반영
 - [ ] 배전(IEC 61968)·DER 클래스 확장, 불평형(상별) 모델

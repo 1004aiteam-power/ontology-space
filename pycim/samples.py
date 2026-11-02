@@ -9,6 +9,7 @@ from __future__ import annotations
 from .core import BaseVoltage, ConnectivityNode, Line, Substation, VoltageLevel
 from .ids import stable_mrid
 from .model import Model
+from .naming import add_name, name_type
 from .wires import (ACLineSegment, Breaker, BusbarSection, EnergyConsumer,
                     ExternalNetworkInjection, PowerTransformer)
 
@@ -48,4 +49,22 @@ def sample_grid() -> Model:
     m.add(BusbarSection(mrid=_id("SS-A/BUS-22.9"), name="22.9kV 모선", equipment_container=vl22)).connect(cn_22)
     m.add(Breaker(mrid=_id("SS-A/CB-DL1"), name="D/L #1 CB", equipment_container=vl22)).connect(cn_22, cn_feeder)
     m.add(EnergyConsumer(mrid=_id("LOAD-DL1"), name="D/L #1 부하", p=8.5, q=2.1)).connect(cn_feeder)
+
+    # 다른 시스템의 코드를 Name으로 연결 (가상의 코드 체계)
+    scada = name_type(m, "SCADA", "포인트 ID")
+    eam = name_type(m, "설비관리(EAM)", "설비번호")
+    gis = name_type(m, "GIS", "설비 ID")
+    codes = {
+        "154kV 선로 CB": {scada: "A154_CB01", eam: "EQ-CB-2019-0123", gis: "G-77310"},
+        "D/L #1 CB":     {scada: "A22_DL01_CB", eam: "EQ-CB-2021-0457", gis: "G-77342"},
+        "M.Tr #1":       {scada: "A_MTR1", eam: "EQ-TR-2015-0007", gis: "G-77320"},
+        "B-A 1회선":     {eam: "EQ-LN-2008-0031", gis: "G-50211"},
+        "154kV 모선":    {scada: "A154_BUS"},
+        "22.9kV 모선":   {scada: "A22_BUS"},
+        "D/L #1 부하":   {scada: "A22_DL01_P"},
+    }
+    for obj_name, by_type in codes.items():
+        obj = m.by_name(obj_name)
+        for nt, value in by_type.items():
+            add_name(obj, value, nt)
     return m

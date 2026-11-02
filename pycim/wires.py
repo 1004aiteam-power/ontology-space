@@ -70,6 +70,16 @@ class EnergyConsumer(EnergyConnection):
 
 
 @cim
+class ConformLoad(EnergyConsumer):
+    """부하 곡선을 따르는 부하."""
+
+
+@cim
+class NonConformLoad(EnergyConsumer):
+    """부하 곡선을 따르지 않는 부하 (대형 산업 부하 등)."""
+
+
+@cim
 class RegulatingCondEq(EnergyConnection):
     pass
 
@@ -97,7 +107,7 @@ class PowerTransformer(ConductingEquipment):
     ends: list = inverse(repr=False)
 
     def owned(self) -> list:
-        return list(self.terminals) + list(self.ends)
+        return super().owned() + list(self.ends)
 
     def add_end(self, terminal: Terminal, **kwargs) -> "PowerTransformerEnd":
         n = len(self.ends) + 1

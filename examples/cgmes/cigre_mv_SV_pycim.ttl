@@ -1,0 +1,403 @@
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix ex:  <http://example.org/grid#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:_e232ec9a-7e11-5b86-8b0d-e5521e359134 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "e232ec9a-7e11-5b86-8b0d-e5521e359134" ;
+    cim:IdentifiedObject.name "N7" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_16f5db35-83c6-418e-ae9e-69f05e77147b .
+
+ex:_ada4cd9c-3b0c-5dff-9ccf-983356361e4e a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "ada4cd9c-3b0c-5dff-9ccf-983356361e4e" ;
+    cim:IdentifiedObject.name "N14" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_d0b232c3-0a56-4916-9471-66f49036ddc8 .
+
+ex:_5af9c262-8a1b-5420-bc9e-abb512673b10 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "5af9c262-8a1b-5420-bc9e-abb512673b10" ;
+    cim:IdentifiedObject.name "N13" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_cd602f02-649d-4738-bb64-3e3b3d575704 .
+
+ex:_4ade6606-e2d3-5771-83db-11c3ba87461d a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "4ade6606-e2d3-5771-83db-11c3ba87461d" ;
+    cim:IdentifiedObject.name "N12" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_09dafd64-e08f-4a20-8e19-7ca5c2ea5ba2 .
+
+ex:_a77a543d-0768-546e-ada1-bc96ccf8d4c9 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "a77a543d-0768-546e-ada1-bc96ccf8d4c9" ;
+    cim:IdentifiedObject.name "N1" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_f88faca2-f0cf-419e-907e-3411271816ce .
+
+ex:_77087f46-b3e8-5293-9126-2f67822c494c a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "77087f46-b3e8-5293-9126-2f67822c494c" ;
+    cim:IdentifiedObject.name "N3" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_f67b0540-9424-4b6e-9b12-9f112e5e7f01 .
+
+ex:_1c8610f6-7fec-578f-a705-4ba664c6eeb5 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "1c8610f6-7fec-578f-a705-4ba664c6eeb5" ;
+    cim:IdentifiedObject.name "N10" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_6077adb4-c337-4b45-9304-d71dd9ae5697 .
+
+ex:_42f4f171-e027-52ef-9b34-cb037b8b70f0 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "42f4f171-e027-52ef-9b34-cb037b8b70f0" ;
+    cim:IdentifiedObject.name "N5" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_60deeb94-c9f8-4ea3-b52f-1940ea528164 .
+
+ex:_131f5c5a-1983-5faf-8ac8-e03036a31ddb a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "131f5c5a-1983-5faf-8ac8-e03036a31ddb" ;
+    cim:IdentifiedObject.name "N4" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_5c3f2d5c-750f-4d3c-b283-eee33929abaa .
+
+ex:_eda339aa-0f7b-542f-8fef-f25780e0ebcd a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "eda339aa-0f7b-542f-8fef-f25780e0ebcd" ;
+    cim:IdentifiedObject.name "N11" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_169f9dc8-61b6-4c5d-82f9-3def05cf3c86 .
+
+ex:_669de3f0-e225-5f5c-b510-3dbe0d24c36d a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "669de3f0-e225-5f5c-b510-3dbe0d24c36d" ;
+    cim:IdentifiedObject.name "N9" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_6bd6b703-519b-46a8-a1f8-632f7e9d05f1 .
+
+ex:_65816b7a-f6ae-5e01-9e3f-d0f14faac7af a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "65816b7a-f6ae-5e01-9e3f-d0f14faac7af" ;
+    cim:IdentifiedObject.name "N6" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_371cfe37-f187-4fb8-8402-d7f7f5a0dfda .
+
+ex:_d8059cc3-4623-56e0-938f-bbae386ba47d a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "d8059cc3-4623-56e0-938f-bbae386ba47d" ;
+    cim:IdentifiedObject.name "N8" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_dba75717-e472-42b9-a82a-b4c7819f9f2b .
+
+ex:_0a60edfd-6954-5ae0-bcf8-4bb64e35fadc a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "0a60edfd-6954-5ae0-bcf8-4bb64e35fadc" ;
+    cim:IdentifiedObject.name "N0" ;
+    cim:TopologicalNode.BaseVoltage ex:_a55f97f1-c485-414c-a845-678fe1eb19cf ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_2a7c745b-de30-4863-88ba-dcbe73f806df .
+
+ex:_fe0a3a35-7be2-529b-9e48-aca7238421a7 a cim:TopologicalNode ;
+    cim:IdentifiedObject.mRID "fe0a3a35-7be2-529b-9e48-aca7238421a7" ;
+    cim:IdentifiedObject.name "N2" ;
+    cim:TopologicalNode.BaseVoltage ex:_a5b4e1c5-b844-4a1a-870c-1ee07662d7b4 ;
+    cim:TopologicalNode.ConnectivityNodeContainer ex:_394f1e7a-c67b-446d-ab76-174e31ddc9b8 .
+
+ex:_b037a9ee-b263-56a5-9101-28ef35e03c3d a cim:SvVoltage ;
+    cim:SvVoltage.v "18.851421"^^xsd:float ;
+    cim:SvVoltage.angle "-4.849886"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_e232ec9a-7e11-5b86-8b0d-e5521e359134 .
+
+ex:_f2a6db9e-b578-589f-be8a-dc9c0b50e6f2 a cim:SvVoltage ;
+    cim:SvVoltage.v "19.533072"^^xsd:float ;
+    cim:SvVoltage.angle "-3.721558"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_ada4cd9c-3b0c-5dff-9ccf-983356361e4e .
+
+ex:_bbc5fa35-f655-5b22-aaa4-a63bc9ed0a29 a cim:SvVoltage ;
+    cim:SvVoltage.v "19.552876"^^xsd:float ;
+    cim:SvVoltage.angle "-3.70769"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_5af9c262-8a1b-5420-bc9e-abb512673b10 .
+
+ex:_105893a4-343b-53a0-91fa-d50c94f2d084 a cim:SvVoltage ;
+    cim:SvVoltage.v "19.606107"^^xsd:float ;
+    cim:SvVoltage.angle "-3.572929"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_4ade6606-e2d3-5771-83db-11c3ba87461d .
+
+ex:_6eaad746-2788-5f3f-baf8-7ec50ec48a9a a cim:SvVoltage ;
+    cim:SvVoltage.v "19.53193"^^xsd:float ;
+    cim:SvVoltage.angle "-4.26824"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_a77a543d-0768-546e-ada1-bc96ccf8d4c9 .
+
+ex:_2163b4d4-c32e-5d21-b224-9c2979f186da a cim:SvVoltage ;
+    cim:SvVoltage.v "18.883009"^^xsd:float ;
+    cim:SvVoltage.angle "-4.816612"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_77087f46-b3e8-5293-9126-2f67822c494c .
+
+ex:_6111093f-d416-560d-ab57-8678a8c813e5 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.828424"^^xsd:float ;
+    cim:SvVoltage.angle "-4.851564"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_1c8610f6-7fec-578f-a705-4ba664c6eeb5 .
+
+ex:_26403bac-ce4d-58bb-8da5-bb746ef13b93 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.853205"^^xsd:float ;
+    cim:SvVoltage.angle "-4.837686"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_42f4f171-e027-52ef-9b34-cb037b8b70f0 .
+
+ex:_468629f6-f8e9-55a0-b0c2-fe4ca4a9f90b a cim:SvVoltage ;
+    cim:SvVoltage.v "18.867428"^^xsd:float ;
+    cim:SvVoltage.angle "-4.829602"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_131f5c5a-1983-5faf-8ac8-e03036a31ddb .
+
+ex:_c395b24b-7f38-56e9-b2d3-20c2e1d80932 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.82612"^^xsd:float ;
+    cim:SvVoltage.angle "-4.852451"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_eda339aa-0f7b-542f-8fef-f25780e0ebcd .
+
+ex:_75bd38d9-09ee-5a71-b313-cc83c9f9d1eb a cim:SvVoltage ;
+    cim:SvVoltage.v "18.843847"^^xsd:float ;
+    cim:SvVoltage.angle "-4.847373"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_669de3f0-e225-5f5c-b510-3dbe0d24c36d .
+
+ex:_1c93284c-5cd5-5443-b519-980358569b79 a cim:SvVoltage ;
+    cim:SvVoltage.v "18.837161"^^xsd:float ;
+    cim:SvVoltage.angle "-4.847316"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_65816b7a-f6ae-5e01-9e3f-d0f14faac7af .
+
+ex:_ca9e8032-15f3-5ea9-b0ba-524dc3475f4e a cim:SvVoltage ;
+    cim:SvVoltage.v "18.85338"^^xsd:float ;
+    cim:SvVoltage.angle "-4.847003"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_d8059cc3-4623-56e0-938f-bbae386ba47d .
+
+ex:_97e1a844-678f-586e-bcf7-b7c866f202ca a cim:SvVoltage ;
+    cim:SvVoltage.v "110.0"^^xsd:float ;
+    cim:SvVoltage.angle "0.0"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_0a60edfd-6954-5ae0-bcf8-4bb64e35fadc .
+
+ex:_08dc0e4c-5314-5031-9979-2d3fb1f885eb a cim:SvVoltage ;
+    cim:SvVoltage.v "19.0877"^^xsd:float ;
+    cim:SvVoltage.angle "-4.640219"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_fe0a3a35-7be2-529b-9e48-aca7238421a7 .
+
+ex:_dc3e5188-603e-5684-85d6-428f751a43e0 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.077"^^xsd:float ;
+    cim:SvPowerFlow.q "0.048"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_7a736ca5-db42-565a-a371-67a41dfdb3e8 .
+
+ex:_440ff32e-b695-5a06-b078-37d2bb7f3846 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.207"^^xsd:float ;
+    cim:SvPowerFlow.q "0.052"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_42316a7b-cb2d-589e-b004-1d990e9e2ea5 .
+
+ex:_dae3b823-c357-55d2-8182-7d458de5000a a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.032"^^xsd:float ;
+    cim:SvPowerFlow.q "0.02"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_fdeec30a-7954-5516-a031-a24b333da384 .
+
+ex:_c786f4bf-fefe-550b-a647-67de4db30655 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "15.0"^^xsd:float ;
+    cim:SvPowerFlow.q "3.0"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_6163d1f6-b09b-5f86-92fc-e23af87b062c .
+
+ex:_c157115f-b99d-5804-81c5-f1bd7f24811b a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "5.0"^^xsd:float ;
+    cim:SvPowerFlow.q "1.0"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_649ee76f-f207-58eb-acaf-a2f39e028894 .
+
+ex:_ae9af064-f055-58f5-bef9-ad29573ea953 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.276"^^xsd:float ;
+    cim:SvPowerFlow.q "0.69"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_3e2405ca-8676-528a-8427-d6bdb93aff50 .
+
+ex:_bd849687-6e15-5594-b2b4-7571d0ac1001 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.224"^^xsd:float ;
+    cim:SvPowerFlow.q "0.139"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_d73a9a6d-13f8-54b2-96b6-c8bec33a15df .
+
+ex:_fb264320-c1f3-5f8c-827f-f5c9b8499381 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.068"^^xsd:float ;
+    cim:SvPowerFlow.q "0.042"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_86ee86e0-d4fe-54fc-be58-426f093f9912 .
+
+ex:_0757a97a-4ca3-508f-aa0d-bb9e7c74c766 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "15.0"^^xsd:float ;
+    cim:SvPowerFlow.q "3.1"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_731ff86d-20b0-5de1-9d3a-dda21dbf5327 .
+
+ex:_c1e123b4-186e-5ac1-9ec5-a5bb46e807ae a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "5.0"^^xsd:float ;
+    cim:SvPowerFlow.q "1.7"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_8f7f383f-d572-5834-bc35-a14e3fc3db94 .
+
+ex:_e27c53c5-4a00-5d0e-aef9-52f5a1d41e9a a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.33"^^xsd:float ;
+    cim:SvPowerFlow.q "0.205"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_06cf8da5-d753-5457-8e1f-4043f4451cde .
+
+ex:_c67b6a53-8cc7-51be-a938-d469eb3c910e a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.725"^^xsd:float ;
+    cim:SvPowerFlow.q "0.182"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_1c006d8b-9807-5d8b-8f01-e691031b5495 .
+
+ex:_220e7105-9919-57f8-94dd-62039c6b1482 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.432"^^xsd:float ;
+    cim:SvPowerFlow.q "0.108"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_c41331a8-b271-564a-b1c6-d3b294a9ebd5 .
+
+ex:_419d5511-81a7-5930-a44f-828a97017388 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.331"^^xsd:float ;
+    cim:SvPowerFlow.q "0.083"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_0d171a30-fee8-50e1-805f-f52f7b4d989d .
+
+ex:_65e58de0-946c-5b6b-9f53-6b1144520c13 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.477"^^xsd:float ;
+    cim:SvPowerFlow.q "0.12"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_b4930a72-e6d9-5c95-8dcc-7cf33c1270d8 .
+
+ex:_06704157-e044-5294-89eb-11fc3c56c57e a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.574"^^xsd:float ;
+    cim:SvPowerFlow.q "0.356"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_e177dfed-ccfd-5f2f-9240-4c7b3c340e28 .
+
+ex:_00ad6cc2-fbb2-5bed-b824-87ac9bb57a63 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.55"^^xsd:float ;
+    cim:SvPowerFlow.q "0.138"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_f240c501-f35e-5319-ae68-9cbeac450018 .
+
+ex:_a84a2e1d-8514-539a-8b1c-dc52434b1f35 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.588"^^xsd:float ;
+    cim:SvPowerFlow.q "0.147"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_78ab442f-5128-509d-bb67-fd9d5a3f2bbb .
+
+ex:_71b2bdbd-5dc2-5c85-87b9-02533f215c28 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-45.212309"^^xsd:float ;
+    cim:SvPowerFlow.q "-13.503946"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_5b2360ff-a2f9-52d6-998f-af0c27511b0b .
+
+ex:_4975185d-a97e-5347-83be-e30501056490 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.570915"^^xsd:float ;
+    cim:SvPowerFlow.q "0.01125"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_ef3650c8-fdcd-53a5-b3f8-29aa98379c53 .
+
+ex:_ef3431cc-6d3c-5e85-87b5-4a091deef392 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-0.569503"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.105673"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_712bdc12-fd48-52de-a739-ea9433396c4c .
+
+ex:_ed801feb-3ac9-5fa4-9ec8-6961f432d33d a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.537503"^^xsd:float ;
+    cim:SvPowerFlow.q "0.085673"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_518cc510-2860-51c5-86f4-bba85e45a5ea .
+
+ex:_95aca1e4-6233-5d6f-bdde-4ee289a8c87b a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-0.537"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.257"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_29fd9dc1-3a31-568e-83a5-724207ce0adb .
+
+ex:_0b36493c-39f8-558d-aaa3-d66bb0dd5703 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "4.464711"^^xsd:float ;
+    cim:SvPowerFlow.q "1.32072"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_8818eb69-90e8-510d-bb79-5281cbf84440 .
+
+ex:_76e58ec8-ba37-5a19-ac00-c535f061aec6 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-4.371624"^^xsd:float ;
+    cim:SvPowerFlow.q "-1.314208"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_35cd8a30-9771-50fa-a73a-9ca9e99ad3d4 .
+
+ex:_2113f5dd-6a6f-5420-ab72-4b7e66b9c2ba a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "4.371624"^^xsd:float ;
+    cim:SvPowerFlow.q "1.314208"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_8d79cf0a-339c-59fb-987d-11d2b16f5a90 .
+
+ex:_d9799a0b-995d-5af1-8064-f17a6745af3b a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-4.329235"^^xsd:float ;
+    cim:SvPowerFlow.q "-1.615746"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_7c4b770b-2a8c-522b-bf3a-c863a5dfd836 .
+
+ex:_1833acb2-353a-5c73-8095-cb807dd3fc30 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "1.709732"^^xsd:float ;
+    cim:SvPowerFlow.q "0.262058"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_92d75a2b-0bac-5bc9-ba87-11ef22d9c589 .
+
+ex:_85cb29a3-d568-5f5f-9233-6e7e6d67fc85 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-1.708385"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.305679"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_feb8c3c3-a590-5ff7-b842-07183bd42c31 .
+
+ex:_9d6450be-b095-5abf-91a2-e0b6ff38f8a6 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "1.276385"^^xsd:float ;
+    cim:SvPowerFlow.q "0.197679"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_97112d12-4a75-5577-9d24-7da62b2f2143 .
+
+ex:_d5ed24d5-e8ef-55cc-b754-fd7879e9be41 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-1.275453"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.225875"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_164e6fb8-072f-5b49-937b-5735a5ce4915 .
+
+ex:_8ea549a9-49a1-51d6-968e-7d85994c6959 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.550453"^^xsd:float ;
+    cim:SvPowerFlow.q "0.043875"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_d6b62d6e-47b9-5397-9cec-eb7faac52436 .
+
+ex:_523c1915-9f13-5189-afc9-2931ae94d15d a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-0.55"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.138"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_929dcef1-c1ac-5631-b7b6-51846e8459dc .
+
+ex:_5ba23b8e-cf06-51d9-a0db-f3140acf5ea6 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-2.11648"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.618281"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_e7f5b68b-e363-5a1f-9e41-270aec3bd0c2 .
+
+ex:_5643fcf7-7cf3-5eba-98ab-2bdda7eadc4e a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "2.119503"^^xsd:float ;
+    cim:SvPowerFlow.q "0.524688"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_cc2279d9-5f0e-528a-8da3-f4269afa3170 .
+
+ex:_a8faad39-bd49-5340-b7e0-da38c227b0c4 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-0.331"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.083"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_903b067e-4abb-5923-b67e-261b656a0f86 .
+
+ex:_ec52bbf2-4d64-51c8-93b1-2ce54c943210 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.331039"^^xsd:float ;
+    cim:SvPowerFlow.q "0.066257"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_6af18154-b945-57b4-a578-3afccb3690f7 .
+
+ex:_6069127b-0ee8-57ce-a883-ef77cb11edd6 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-0.876039"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.228257"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_d5d84a62-29e9-5ef5-a2ae-556b634ae21e .
+
+ex:_e83c94bd-1b19-5454-9feb-17b7cc719453 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.876742"^^xsd:float ;
+    cim:SvPowerFlow.q "0.187019"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_05a4435b-d567-513f-bc95-f82d1fe49d97 .
+
+ex:_c4455f81-3766-50fe-a6b9-a8eb646cd53d a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-1.450742"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.543019"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_c17d9dc3-f50c-5165-ba8a-35e0a59edb9c .
+
+ex:_92e93cc5-b8c3-5dec-8759-fd31b3e290f9 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "1.451472"^^xsd:float ;
+    cim:SvPowerFlow.q "0.527699"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_867b2e2a-37cb-5e7d-8936-a33b44d8fe4b .
+
+ex:_5eb93281-8ad0-5df5-8a47-8f7d18e896c3 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "0.077008"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.056418"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_c44a6fe9-758f-5c84-95e1-121167e3e692 .
+
+ex:_8284e7bd-c947-5569-9fdd-ca7f1d5b9aa7 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-0.077"^^xsd:float ;
+    cim:SvPowerFlow.q "-0.048"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_a651e152-3084-5de1-90d0-e2c9c5d01832 .
+
+ex:_2e1c9b54-59d2-599a-8ed1-37fcc1386dc3 a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "24.568403"^^xsd:float ;
+    cim:SvPowerFlow.q "7.399674"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_168ac876-c19e-52fa-92b0-563ea7925a6b .
+
+ex:_6ae58481-19ab-51f5-bf57-a37b7e8c410b a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-24.464711"^^xsd:float ;
+    cim:SvPowerFlow.q "-5.42072"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_a592e5c0-d373-5026-97b4-a6aa06f4a4d7 .
+
+ex:_cdf89de9-6533-5c6b-8678-6ae0db22d66a a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "20.643906"^^xsd:float ;
+    cim:SvPowerFlow.q "6.104272"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_2425f06f-1f3d-5138-8ca5-747d86dde2f7 .
+
+ex:_304941c0-0cba-51f9-a0ef-052e0c64e7ec a cim:SvPowerFlow ;
+    cim:SvPowerFlow.p "-20.570915"^^xsd:float ;
+    cim:SvPowerFlow.q "-4.71125"^^xsd:float ;
+    cim:SvPowerFlow.Terminal ex:_71bc78b1-c4fc-5b0e-a401-a52181b4592f .

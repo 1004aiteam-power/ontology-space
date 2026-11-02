@@ -116,3 +116,24 @@ ol li,ul li{margin:4px 0}
 .pager a{text-decoration:none;font-weight:600}
 footer{margin-top:48px;padding:32px 0 56px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 @media (max-width:520px){ .brand{display:none} nav a{padding:6px 8px} }
+
+/* 실습 페이지 */
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.presets button,.lab-bar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13px}
+.presets button:hover,.lab-bar button:hover{border-color:var(--accent);color:var(--accent)}
+.lab-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.lab-bar select{padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text);font-size:14px;max-width:100%}
+.lab-bar .primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+textarea#query{width:100%;min-height:200px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--code);color:var(--text);
+  border:1px solid var(--line);border-radius:8px;padding:12px;resize:vertical}
+#status,.meta{color:var(--muted);font-size:14px}
+.err{color:var(--hv);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap}
+#results .tbl{max-height:420px;overflow:auto}
+#results table{font-size:13px}
+#graph{height:560px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.layers{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px;color:var(--muted);margin:8px 0}
+.layers label{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+.layers i{display:inline-block;width:10px;height:10px;border-radius:50%}
+#nodeInfo table{font-size:13px;min-width:0}
+#nodeInfo td{word-break:break-all}
+@media (max-width:520px){ #graph{height:420px} }

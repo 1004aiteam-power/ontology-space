@@ -48,7 +48,7 @@
         const file = btn.dataset.file;
         box.querySelector('.path').textContent = file;
         box.querySelector('.gh').href = GH + file;
-        view.className = 'language-' + (file.endsWith('.py') ? 'python' : 'ini');
+        view.className = file.endsWith('.py') ? 'language-python' : 'nohighlight';
         try {
           const res = await fetch(file);
           if (!res.ok) throw new Error(res.status);

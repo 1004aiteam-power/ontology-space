@@ -1,0 +1,107 @@
+# SHACL 규칙: pycim / CIM100 데이터의 품질 검증
+# 실행: python examples/validate.py
+#
+# 클래스 계층(rdfs:subClassOf)은 shapes/cim-classes.ttl 에서 가져온다.
+# 그래서 sh:targetClass cim:Switch 는 Breaker, Disconnector 에도 적용된다.
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ps:   <https://1004aiteam-power.github.io/ontology-space/shapes#> .
+
+# ---- 1. 모든 IdentifiedObject: mRID는 정확히 1개, UUID 형식 ------------------
+ps:MRIDShape a sh:NodeShape ;
+    sh:targetClass cim:IdentifiedObject ;
+    sh:property [
+        sh:path cim:IdentifiedObject.mRID ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:pattern "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" ;
+        sh:message "mRID는 정확히 1개, UUID 형식이어야 합니다 / mRID must be exactly one UUID"@ko ;
+    ] .
+
+# ---- 2. 단자 수 ------------------------------------------------------------
+ps:TwoTerminalShape a sh:NodeShape ;
+    sh:targetClass cim:ACLineSegment, cim:Switch, cim:PowerTransformer ;
+    sh:property [
+        sh:path [ sh:inversePath cim:Terminal.ConductingEquipment ] ;
+        sh:minCount 2 ; sh:maxCount 2 ;
+        sh:message "선로·개폐기·2권선 변압기는 Terminal이 정확히 2개여야 합니다 / must have exactly 2 terminals"@ko ;
+    ] .
+
+ps:OneTerminalShape a sh:NodeShape ;
+    sh:targetClass cim:EnergyConsumer, cim:BusbarSection, cim:ExternalNetworkInjection, cim:RotatingMachine ;
+    sh:property [
+        sh:path [ sh:inversePath cim:Terminal.ConductingEquipment ] ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "부하·모선·전원은 Terminal이 정확히 1개여야 합니다 / must have exactly 1 terminal"@ko ;
+    ] .
+
+# ---- 3. Terminal --------------------------------------------------------------
+ps:TerminalShape a sh:NodeShape ;
+    sh:targetClass cim:Terminal ;
+    sh:property [
+        sh:path cim:Terminal.ConductingEquipment ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:class cim:ConductingEquipment ;
+        sh:message "Terminal은 도전성 설비 1개에 속해야 합니다 / must belong to exactly one ConductingEquipment"@ko ;
+    ] ;
+    sh:property [
+        sh:path cim:Terminal.ConnectivityNode ;
+        sh:maxCount 1 ; sh:class cim:ConnectivityNode ;
+        sh:message "Terminal은 ConnectivityNode에 최대 1개 연결됩니다 / at most one ConnectivityNode"@ko ;
+    ] ;
+    sh:property [
+        sh:path cim:ACDCTerminal.sequenceNumber ;
+        sh:datatype xsd:integer ; sh:minInclusive 1 ;
+        sh:message "sequenceNumber는 1 이상의 정수입니다 / must be an integer ≥ 1"@ko ;
+    ] .
+
+# ---- 4. 선로 파라미터 ----------------------------------------------------------
+ps:ACLineSegmentShape a sh:NodeShape ;
+    sh:targetClass cim:ACLineSegment ;
+    sh:property [ sh:path cim:Conductor.length ; sh:datatype xsd:float ; sh:minExclusive 0 ;
+                  sh:message "선로 길이는 0보다 커야 합니다 / length must be > 0"@ko ] ;
+    sh:property [ sh:path cim:ACLineSegment.r ; sh:minInclusive 0 ;
+                  sh:message "저항은 음수일 수 없습니다 / r must be ≥ 0"@ko ] ;
+    sh:property [ sh:path cim:ACLineSegment.x ; sh:minInclusive 0 ;
+                  sh:message "리액턴스는 음수일 수 없습니다 / x must be ≥ 0"@ko ] .
+
+# ---- 5. 개폐기 상태 ------------------------------------------------------------
+ps:SwitchShape a sh:NodeShape ;
+    sh:targetClass cim:Switch ;
+    sh:property [ sh:path cim:Switch.normalOpen ; sh:datatype xsd:boolean ; sh:maxCount 1 ;
+                  sh:message "normalOpen은 true/false 1개입니다 / normalOpen must be one boolean"@ko ] ;
+    sh:property [ sh:path cim:Switch.open ; sh:datatype xsd:boolean ; sh:maxCount 1 ;
+                  sh:message "open은 true/false 1개입니다 / open must be one boolean"@ko ] .
+
+# ---- 6. 전압 체계 --------------------------------------------------------------
+ps:VoltageLevelShape a sh:NodeShape ;
+    sh:targetClass cim:VoltageLevel ;
+    sh:property [ sh:path cim:VoltageLevel.BaseVoltage ; sh:minCount 1 ; sh:maxCount 1 ; sh:class cim:BaseVoltage ;
+                  sh:message "VoltageLevel은 BaseVoltage가 1개 필요합니다 / needs exactly one BaseVoltage"@ko ] ;
+    sh:property [ sh:path cim:VoltageLevel.Substation ; sh:minCount 1 ; sh:maxCount 1 ; sh:class cim:Substation ;
+                  sh:message "VoltageLevel은 변전소 1개에 속해야 합니다 / must belong to one Substation"@ko ] .
+
+ps:BaseVoltageShape a sh:NodeShape ;
+    sh:targetClass cim:BaseVoltage ;
+    sh:property [ sh:path cim:BaseVoltage.nominalVoltage ; sh:minCount 1 ; sh:minExclusive 0 ;
+                  sh:message "공칭전압은 0보다 커야 합니다 / nominalVoltage must be > 0"@ko ] .
+
+# ---- 7. 변압기 -----------------------------------------------------------------
+ps:PowerTransformerShape a sh:NodeShape ;
+    sh:targetClass cim:PowerTransformer ;
+    sh:property [ sh:path [ sh:inversePath cim:PowerTransformerEnd.PowerTransformer ] ;
+                  sh:minCount 2 ; sh:maxCount 3 ;
+                  sh:message "변압기는 권선단(PowerTransformerEnd)이 2~3개여야 합니다 / needs 2–3 ends"@ko ] .
+
+ps:PowerTransformerEndShape a sh:NodeShape ;
+    sh:targetClass cim:PowerTransformerEnd ;
+    sh:property [ sh:path cim:PowerTransformerEnd.ratedU ; sh:minCount 1 ; sh:minExclusive 0 ;
+                  sh:message "권선단 정격전압이 필요합니다 / ratedU required and > 0"@ko ] .
+
+# ---- 8. 매핑 테이블 (Name) ------------------------------------------------------
+ps:NameShape a sh:NodeShape ;
+    sh:targetClass cim:Name ;
+    sh:property [ sh:path cim:Name.IdentifiedObject ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "Name은 대상 객체 1개를 가리켜야 합니다 / must point to one object"@ko ] ;
+    sh:property [ sh:path cim:Name.NameType ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "Name은 NameType이 필요합니다 / needs a NameType"@ko ] .

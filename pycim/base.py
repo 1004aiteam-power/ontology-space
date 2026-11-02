@@ -29,23 +29,27 @@ def cim(cls: type[T]) -> type[T]:
     return dataclass(kw_only=True, eq=False, repr=False)(cls)
 
 
-def inverse(**kwargs):
+def inverse(**kwargs) -> dataclasses.Field:
     """역방향 연관 필드: 직렬화하지 않고, 상대 객체 생성 시 자동으로 채워진다."""
     return field(default_factory=list, metadata={"cim": None}, **kwargs)
 
 
 @cim
-class IdentifiedObject:
-    """모든 CIM 객체의 최상위 클래스 (IEC 61970-301 Core)."""
+class CIMObject:
+    """pycim 모든 객체의 뿌리.
 
-    mrid: str = field(default_factory=new_mrid, metadata={"cim": "mRID"})  # 기본: UUID v4
-    name: str = ""
-    description: str = ""
+    mrid는 RDF IRI를 만드는 데 쓴다. CIM에서 IdentifiedObject가 아닌 클래스
+    (Name, NameType, SvVoltage 등)도 교환 파일에서는 ID가 필요하기 때문이다.
+    mRID 속성으로 직렬화하는 것은 IdentifiedObject뿐이다.
+    """
+
+    mrid: str = field(default_factory=new_mrid, metadata={"cim": None})  # 기본: UUID v4
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}({self.name or self.mrid[:8]!r})"
+        label = getattr(self, "name", "") or self.mrid[:8]
+        return f"{type(self).__name__}({label!r})"
 
-    def owned(self) -> list["IdentifiedObject"]:
+    def owned(self) -> list["CIMObject"]:
         """이 객체에 종속된 하위 객체 (예: 설비의 Terminal). Model이 자동으로 포함한다."""
         return []
 
@@ -53,7 +57,7 @@ class IdentifiedObject:
     @classmethod
     def cim_hierarchy(cls) -> list[str]:
         """['Breaker', 'ProtectedSwitch', 'Switch', ..., 'IdentifiedObject']"""
-        return [c.__name__ for c in cls.__mro__ if issubclass(c, IdentifiedObject)]
+        return [c.__name__ for c in cls.__mro__ if issubclass(c, CIMObject) and c is not CIMObject]
 
     def cim_properties(self) -> Iterator[tuple[str, object]]:
         """(CIM 속성 이름, 값) 쌍을 돌려준다. 비어 있는 값과 역방향 연관은 제외."""
@@ -62,6 +66,22 @@ class IdentifiedObject:
             if value is None or value == "" or f.metadata.get("cim", "") is None:
                 continue
             yield cim_property_name(type(self), f, value), value
+
+
+@cim
+class IdentifiedObject(CIMObject):
+    """이름과 mRID를 가진 CIM 객체의 최상위 클래스 (IEC 61970-301 Core)."""
+
+    name: str = ""
+    description: str = ""
+    names: list = inverse(repr=False)  # Name 객체들 (다른 시스템의 코드, 별칭)
+
+    def owned(self) -> list[CIMObject]:
+        return list(self.names)
+
+    def cim_properties(self) -> Iterator[tuple[str, object]]:
+        yield "IdentifiedObject.mRID", self.mrid
+        yield from super().cim_properties()
 
 
 def _declaring_class(cls: type, field_name: str) -> type:
@@ -77,7 +97,7 @@ def cim_property_name(cls: type, f: dataclasses.Field, value: object) -> str:
     if "cim" in f.metadata:
         return f"{owner}.{f.metadata['cim']}"
     parts = f.name.split("_")
-    if isinstance(value, IdentifiedObject):  # 연관 → PascalCase
+    if isinstance(value, CIMObject):        # 연관 → PascalCase
         local = "".join(p.capitalize() for p in parts)
     else:                                    # 속성 → camelCase
         local = parts[0] + "".join(p.capitalize() for p in parts[1:])

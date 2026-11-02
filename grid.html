@@ -17,6 +17,7 @@
     <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
     <a href="grid.html" aria-current="page"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
     <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
   </nav>
   <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
 </div></header>
@@ -191,6 +192,8 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
   </div>
   <p lang="ko">같은 계통의 RDF 데이터는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>, SPARQL 예제는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">queries.md</a>에 있습니다.</p>
   <p lang="en">The RDF data for this grid is in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>; SPARQL examples are in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">queries.md</a>.</p>
+  <p lang="ko">👉 이 데이터를 <a href="lab.html">실습 페이지</a>에서 직접 질의하고 지식 그래프로 볼 수 있습니다.</p>
+  <p lang="en">👉 Query this data yourself and see it as a knowledge graph on the <a href="lab.html">Lab page</a>.</p>
   <h3><span lang="ko">SPARQL로 인접 설비 찾기</span><span lang="en">Finding adjacent equipment with SPARQL</span></h3>
 <pre><code>PREFIX cim: &lt;http://iec.ch/TC57/CIM100#&gt;
 SELECT DISTINCT ?a ?b WHERE {
@@ -210,7 +213,7 @@ SELECT DISTINCT ?a ?b WHERE {
     <div class="card"><h4><span lang="ko">정전 영향 분석</span><span lang="en">Outage impact</span></h4><p lang="ko">그래프 탐색으로 차단기 개방 시 영향받는 부하 산출</p><p lang="en">Graph search finds loads affected when a breaker opens</p></div>
     <div class="card"><h4><span lang="ko">자산관리</span><span lang="en">Asset management</span></h4><p lang="ko">설비 이력, 고장, 점검 데이터를 연결한 위험도 분석</p><p lang="en">Risk analysis linking history, faults and inspections</p></div>
     <div class="card"><h4><span lang="ko">DER 관리</span><span lang="en">DER integration</span></h4><p lang="ko">태양광, ESS, EV 충전기를 배전 토폴로지에 연결해 호스팅 용량 분석</p><p lang="en">PV, storage and EV chargers on the feeder topology for hosting-capacity studies</p></div>
-    <div class="card"><h4><span lang="ko">데이터 품질</span><span lang="en">Data quality</span></h4><p lang="ko">SHACL로 "선로 구간은 단자 2개" 같은 규칙 검증</p><p lang="en">SHACL rules such as "a line segment has two terminals"</p></div>
+    <div class="card"><h4><span lang="ko">데이터 품질</span><span lang="en">Data quality</span></h4><p lang="ko">SHACL로 "선로 구간은 단자 2개" 같은 규칙 검증 → <a href="lab.html#shacl">실습</a></p><p lang="en">SHACL rules such as "a line segment has two terminals" → <a href="lab.html#shacl">Lab</a></p></div>
     <div class="card"><h4>AI / LLM</h4><p lang="ko">전력망 지식 그래프 기반 GraphRAG, 운영자 질의 응답</p><p lang="en">GraphRAG over the grid knowledge graph, operator Q&amp;A</p></div>
   </div>
 </section>

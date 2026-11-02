@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from .base import IdentifiedObject
+from .base import CIMObject
 
 CIM_NS = "http://iec.ch/TC57/CIM100#"
 
@@ -19,7 +19,7 @@ def _literal(value: object) -> str:
     return f'"{text}"'
 
 
-def iri(obj: IdentifiedObject, style: str = "cgmes2") -> str:
+def iri(obj: CIMObject, style: str = "cgmes2") -> str:
     """객체 IRI.
 
     cgmes2 : ex:_<uuid>         (CGMES 2.4.15 방식: 파일 기준 상대 IRI, rdf:about="#_<uuid>")
@@ -30,7 +30,7 @@ def iri(obj: IdentifiedObject, style: str = "cgmes2") -> str:
     return f"ex:_{obj.mrid}"
 
 
-def to_turtle(objects: Iterable[IdentifiedObject], base: str = "http://example.org/grid#",
+def to_turtle(objects: Iterable[CIMObject], base: str = "http://example.org/grid#",
               iri_style: str = "cgmes2") -> str:
     lines = [
         f"@prefix cim: <{CIM_NS}> .",
@@ -42,7 +42,31 @@ def to_turtle(objects: Iterable[IdentifiedObject], base: str = "http://example.o
         lines.append(f"{iri(obj, iri_style)} a cim:{type(obj).__name__} ;")
         props = []
         for prop, value in obj.cim_properties():
-            obj_str = iri(value, iri_style) if isinstance(value, IdentifiedObject) else _literal(value)
+            obj_str = iri(value, iri_style) if isinstance(value, CIMObject) else _literal(value)
             props.append(f"    cim:{prop} {obj_str}")
         lines.append(" ;\n".join(props) + " .\n")
     return "\n".join(lines)
+
+
+def class_hierarchy_turtle() -> str:
+    """pycim 클래스 계층을 RDFS(TBox)로 내보낸다. SHACL·SPARQL에서 하위 클래스 추론에 쓴다."""
+    from .cgmes import _all_classes
+
+    lines = [f"@prefix cim:  <{CIM_NS}> .",
+             "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .",
+             "@prefix owl:  <http://www.w3.org/2002/07/owl#> .", "",
+             "# pycim에서 자동 생성 (pycim.rdf.class_hierarchy_turtle)", ""]
+    for name, cls in sorted(_all_classes().items()):
+        if cls is CIMObject:
+            continue
+        parents = [b.__name__ for b in cls.__bases__ if issubclass(b, CIMObject) and b is not CIMObject]
+        doc = (cls.__doc__ or "").strip().splitlines()
+        if doc and doc[0].startswith(f"{name}("):   # dataclass가 자동으로 만든 서명은 제외
+            doc = []
+        line = f"cim:{name} a owl:Class"
+        for p in parents:
+            line += f" ; rdfs:subClassOf cim:{p}"
+        if doc and doc[0]:
+            line += " ; rdfs:comment " + _literal(doc[0]) + "@ko"
+        lines.append(line + " .")
+    return "\n".join(lines) + "\n"

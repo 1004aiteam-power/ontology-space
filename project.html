@@ -18,6 +18,7 @@
     <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
     <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
     <a href="project.html" aria-current="page"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
   </nav>
   <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
 </div></header>
@@ -118,6 +119,84 @@ CIM model ───┤
   <p lang="en">Both solvers agree to four decimal places. Try it on the <a href="grid.html#example">interactive single-line diagram</a>.</p>
 </section>
 
+<section id="mapping">
+  <h2><span lang="ko">매핑 테이블: Name / NameType</span><span lang="en">Mapping table: Name / NameType</span></h2>
+  <p class="sub" lang="ko">mRID는 바뀌지 않는 기준 키이고, SCADA · 설비관리 · GIS 같은 기존 시스템의 코드는 CIM <code>Name</code>으로 붙입니다. 한 설비가 여러 시스템의 코드를 동시에 가질 수 있습니다.</p>
+  <p class="sub" lang="en">The mRID is the stable key; codes from legacy systems (SCADA, asset management, GIS) are attached as CIM <code>Name</code>s. One device can carry codes from many systems.</p>
+<pre><code>Breaker  (mRID f4779f22-…)
+  ▲ Name.IdentifiedObject
+Name  "A154_CB01"  ──Name.NameType──▶  NameType "포인트 ID"  ──▶  NameTypeAuthority "SCADA"
+Name  "EQ-CB-2019-0123"  ──────────▶  NameType "설비번호"    ──▶  NameTypeAuthority "설비관리(EAM)"</code></pre>
+<pre><code class="language-python">from pycim import naming
+scada = naming.name_type(m, "SCADA", "포인트 ID")       # 찾거나 만들기 (mRID는 v5로 고정)
+naming.add_name(cb, "A154_CB01", scada)                # 설비에 SCADA 코드 붙이기
+naming.find(m, "A154_CB01", scada)                     # → Breaker('154kV 선로 CB')
+rows = naming.mapping_table(m, m.of_type(naming.NameType))
+naming.write_csv(rows, "mapping_table.csv")            # 엑셀에서 바로 열림 (UTF-8 BOM)</code></pre>
+  <h3><span lang="ko">예제 변전소의 매핑 테이블</span><span lang="en">Mapping table of the sample substation</span></h3>
+  <div id="mappingTable" class="tbl"></div>
+  <p lang="ko">CSV: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/mapping_table.csv">examples/mapping_table.csv</a> · RDF로는 <code>cim:Name</code> 객체로 저장됩니다:</p>
+  <p lang="en">CSV: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/mapping_table.csv">examples/mapping_table.csv</a> · In RDF they are stored as <code>cim:Name</code> objects:</p>
+<pre><code>ex:_e1d8565a-9d0a-5598-810a-85cfa9728775 a cim:Name ;
+    cim:Name.name "EQ-LN-2008-0031" ;
+    cim:Name.IdentifiedObject ex:_a000fb07-bd08-5473-8626-19bc11318d53 ;
+    cim:Name.NameType ex:_e720d902-1dd9-5d97-aaed-dc98922df02e .</code></pre>
+</section>
+
+<section id="cgmes">
+  <h2><span lang="ko">CGMES 파일 읽기: CIGRE MV 배전망</span><span lang="en">Reading CGMES: the CIGRE MV network</span></h2>
+  <p class="sub" lang="ko">실제 CGMES 2.4.15 파일(CIGRE 중압 배전 벤치마크, NEPLAN에서 내보냄)을 <code>pycim.cgmes.read_cgmes()</code>로 읽어 pycim 객체로 만들고, 조류계산 결과를 파일에 들어 있는 NEPLAN의 결과와 비교했습니다.</p>
+  <p class="sub" lang="en">Real CGMES 2.4.15 files (CIGRE medium-voltage benchmark exported from NEPLAN) are read into pycim objects with <code>pycim.cgmes.read_cgmes()</code>, and our power flow is compared with NEPLAN's results stored in the file.</p>
+  <h3><span lang="ko">읽을 때 처리하는 것</span><span lang="en">What the reader handles</span></h3>
+  <ul lang="ko">
+    <li><b>네임스페이스</b>: CIM16(2012·2013)과 CIM100을 모두 인식</li>
+    <li><b>모르는 클래스</b>(Diagram, OperationalLimit 등)는 건너뛰고 개수를 보고</li>
+    <li><b>UUID가 아닌 ID</b>(<code>Load7-I</code>, <code>N12</code>) → UUID v5 mRID를 새로 발급하고, 원본 ID는 <code>Name</code>(NameType "rdf:ID")으로 보존</li>
+    <li><b>버스-브랜치 모델</b>: ConnectivityNode 없이 TopologicalNode만 있으면 노드마다 ConnectivityNode 생성</li>
+    <li><b>SSH 없음</b>: 부하의 P, Q를 SV의 <code>SvPowerFlow</code>에서 가져옴</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Namespaces</b>: CIM16 (2012, 2013) and CIM100</li>
+    <li><b>Unknown classes</b> (Diagram, OperationalLimit…) are skipped and counted</li>
+    <li><b>Non-UUID IDs</b> (<code>Load7-I</code>, <code>N12</code>) → new UUID v5 mRIDs; the original ID is kept as a <code>Name</code> (NameType "rdf:ID")</li>
+    <li><b>Bus-branch models</b>: if only TopologicalNodes exist, one ConnectivityNode is created per node</li>
+    <li><b>No SSH</b>: load P, Q are taken from the SV <code>SvPowerFlow</code></li>
+  </ul>
+<pre><code class="language-python">from pycim.cgmes import read_cgmes
+m = read_cgmes(glob("examples/cgmes/CIGRE_MV/*.xml"), source="NEPLAN")
+m.import_report   # 읽은/건너뛴 클래스, 새로 발급한 mRID 수 …</code></pre>
+  <div id="importReport"></div>
+  <h3><span lang="ko">전압 비교: NEPLAN vs pycim → pandapower</span><span lang="en">Voltages: NEPLAN vs pycim → pandapower</span></h3>
+  <p id="maxDiff"></p>
+  <div id="cigreTable" class="tbl"></div>
+  <p lang="ko">남은 작은 차이는 pycim 변환기가 변압기 여자 성분(b, g)을 무시하기 때문입니다. 데이터: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/cgmes">examples/cgmes</a> (출처 cimpy, Apache-2.0) · 스크립트: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/import_cgmes.py">examples/import_cgmes.py</a></p>
+  <p lang="en">The tiny remaining gap comes from the converter ignoring transformer magnetising terms (b, g). Data: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/cgmes">examples/cgmes</a> (from cimpy, Apache-2.0) · Script: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/import_cgmes.py">examples/import_cgmes.py</a></p>
+</section>
+
+<section id="sv">
+  <h2><span lang="ko">계산 결과를 CIM SV 프로파일로</span><span lang="en">Writing results back as the CIM SV profile</span></h2>
+  <p class="sub" lang="ko">조류계산 결과를 다시 CIM 객체(<code>SvVoltage</code>, <code>SvPowerFlow</code>)로 만들어 RDF로 저장합니다. CIM에서 해석하고 다시 CIM으로 돌아오는 흐름이 완성됩니다.</p>
+  <p class="sub" lang="en">Power flow results become CIM objects (<code>SvVoltage</code>, <code>SvPowerFlow</code>) and are saved as RDF, closing the loop from CIM to analysis and back to CIM.</p>
+<pre><code>CIM 모델 (EQ, SSH)
+   │ topology.process()      닫힌 개폐기로 이어진 ConnectivityNode → TopologicalNode   (TP)
+   ▼
+pandapower 조류계산
+   │ sv.from_pandapower()
+   ▼
+SvVoltage      (TopologicalNode의 전압 kV, 위상 deg)                                   (SV)
+SvPowerFlow    (Terminal을 통해 설비로 들어가는 P, Q — 부하 기준 부호)
+   │ to_turtle()
+   ▼
+RDF  → SPARQL 질의, SHACL 검증, 다른 시스템과 교환</code></pre>
+  <div id="svTable" class="tbl"></div>
+<pre><code>ex:_6f28b58e-1d64-5245-af34-dc8e70ea32f0 a cim:SvVoltage ;
+    cim:SvVoltage.v "154.0"^^xsd:float ;
+    cim:SvVoltage.angle "0.0"^^xsd:float ;
+    cim:SvVoltage.TopologicalNode ex:_3d221b19-60c0-506b-92e1-dfb098a3ad0d .</code></pre>
+  <p lang="ko">TopologicalNode와 SV 객체의 mRID도 부모에서 파생(UUID v5)하므로, 같은 계통을 다시 계산하면 같은 ID에 새 값이 들어갑니다. 결과 파일: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/sample_grid_full.ttl">sample_grid_full.ttl</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/cgmes/cigre_mv_SV_pycim.ttl">cigre_mv_SV_pycim.ttl</a> · <a href="lab.html">실습 페이지</a>에서 "SV 전압" 질의로 확인할 수 있습니다.</p>
+  <p lang="en">TopologicalNode and SV mRIDs are derived from their parents (UUID v5), so re-running the same grid updates values under the same IDs. Output: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/sample_grid_full.ttl">sample_grid_full.ttl</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/cgmes/cigre_mv_SV_pycim.ttl">cigre_mv_SV_pycim.ttl</a> · try the "SV voltages" query on the <a href="lab.html">Lab page</a>.</p>
+</section>
+
 <section id="code">
   <h2><span lang="ko">실제 코드</span><span lang="en">Source code</span></h2>
   <p class="sub" lang="ko">저장소의 파일을 그대로 불러와 보여 줍니다.</p>
@@ -129,11 +208,17 @@ CIM model ───┤
       <button data-file="pycim/core.py">core.py</button>
       <button data-file="pycim/wires.py">wires.py</button>
       <button data-file="pycim/topology.py">topology.py</button>
+      <button data-file="pycim/naming.py">naming.py</button>
+      <button data-file="pycim/cgmes.py">cgmes.py</button>
+      <button data-file="pycim/sv.py">sv.py</button>
       <button data-file="pycim/export_pandapower.py">export_pandapower.py</button>
       <button data-file="pycim/export_opendss.py">export_opendss.py</button>
       <button data-file="pycim/rdf.py">rdf.py</button>
       <button data-file="pycim/samples.py">samples.py</button>
       <button data-file="examples/compare_solvers.py">compare_solvers.py</button>
+      <button data-file="examples/import_cgmes.py">import_cgmes.py</button>
+      <button data-file="examples/validate.py">validate.py</button>
+      <button data-file="shapes/cim-shapes.ttl">cim-shapes.ttl</button>
       <button data-file="examples/sample_grid.dss">sample_grid.dss</button>
     </div>
     <div class="viewer">
@@ -214,22 +299,26 @@ Show Voltages LN</code></pre>
     <li>✅ Core · Topology · Wires 핵심 클래스, Turtle 내보내기, 정전 분석</li>
     <li>✅ pandapower · OpenDSS 변환과 결과 비교</li>
     <li>✅ mRID 발급 규칙 (UUID v4 / v5, 종속 객체 파생, 중복 검사)</li>
-    <li>⬜ 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)</li>
-    <li>⬜ CGMES(RDF/XML) 파일 읽기</li>
-    <li>⬜ 계산 결과를 CIM SV 프로파일로 되돌려 저장</li>
+    <li>✅ 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)</li>
+    <li>✅ CGMES(RDF/XML) 파일 읽기 — CIGRE MV, NEPLAN 결과와 0.00004 pu 이내 일치</li>
+    <li>✅ 토폴로지 처리(TP)와 계산 결과의 SV 프로파일 저장</li>
+    <li>✅ SHACL 규칙으로 모델 검증, 브라우저 SPARQL 실습, 지식 그래프</li>
+    <li>⬜ CGMES RDF/XML로 내보내기 (프로파일별 파일 분리)</li>
     <li>⬜ Measurement / Analog 클래스와 SCADA 값 연계</li>
-    <li>⬜ SHACL 규칙으로 모델 검증</li>
+    <li>⬜ 변압기 탭(RatioTapChanger), 여자 성분 반영</li>
     <li>⬜ 배전(IEC 61968) · DER 클래스 확장, 불평형(상별) 모델</li>
   </ul>
   <ul lang="en">
     <li>✅ Core · Topology · Wires classes, Turtle export, outage analysis</li>
     <li>✅ Export to pandapower · OpenDSS with result comparison</li>
     <li>✅ mRID issuing rules (UUID v4 / v5, derived child IDs, duplicate check)</li>
-    <li>⬜ Legacy code ↔ mRID mapping table (CIM Name / NameType)</li>
-    <li>⬜ CGMES (RDF/XML) import</li>
-    <li>⬜ Write solver results back as CIM SV profile</li>
+    <li>✅ Legacy code ↔ mRID mapping table (CIM Name / NameType)</li>
+    <li>✅ CGMES (RDF/XML) import — CIGRE MV matches NEPLAN within 0.00004 pu</li>
+    <li>✅ Topology processing (TP) and solver results saved as the SV profile</li>
+    <li>✅ SHACL validation, in-browser SPARQL, knowledge graph</li>
+    <li>⬜ CGMES RDF/XML export (one file per profile)</li>
     <li>⬜ Measurement / Analog classes linked to SCADA values</li>
-    <li>⬜ SHACL validation</li>
+    <li>⬜ Transformer taps (RatioTapChanger) and magnetising terms</li>
     <li>⬜ Distribution (IEC 61968) · DER classes, unbalanced per-phase model</li>
   </ul>
 </section>
@@ -240,9 +329,37 @@ Show Voltages LN</code></pre>
     <li><a href="https://www.pandapower.org/">pandapower</a> · <a href="https://www.epri.com/pages/sa/opendss">OpenDSS (EPRI)</a> · <a href="https://dss-extensions.org/">DSS-Extensions</a></li>
     <li><span lang="ko">설계 문서</span><span lang="en">Design doc</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/03-python-cim-design.md">docs/03-python-cim-design.md</a></li>
   </ul>
-  <div class="pager"><a href="grid.html"><span lang="ko">← 이전: 전력망 온톨로지</span><span lang="en">← Prev: Power grid ontology</span></a><span></span></div>
+  <div class="pager"><a href="grid.html"><span lang="ko">← 이전: 전력망 온톨로지</span><span lang="en">← Prev: Power grid ontology</span></a><a href="lab.html"><span lang="ko">다음: 실습 →</span><span lang="en">Next: Lab →</span></a></div>
 </section>
 </main>
+
+<script>
+// 프로젝트 페이지: 스크립트가 만든 결과(JSON)를 표로 표시
+(async () => {
+  let d;
+  try { d = await (await fetch('assets/data/cigre-compare.json')).json(); } catch (e) { return; }
+  const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const table = (head, rows) => `<table><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+  const render = () => {
+    const cols = Object.keys(d.sample_mapping[0] || {});
+    document.getElementById('mappingTable').innerHTML = table(cols.map(esc),
+      d.sample_mapping.map(r => cols.map(c => c === 'mRID' ? `<code>${esc(r[c]).slice(0, 8)}…</code>` : esc(r[c]))));
+    const r = d.report;
+    document.getElementById('importReport').innerHTML = `<div class="grid">
+      <div class="card"><h4>${t({ ko: '읽은 객체', en: 'Objects read' })}</h4><p>${Object.entries(r.read).map(([k, v]) => `${esc(k)} ${v}`).join(' · ')}</p></div>
+      <div class="card"><h4>${t({ ko: '건너뛴 클래스', en: 'Skipped classes' })}</h4><p>${Object.entries(r.skipped).map(([k, v]) => `${esc(k)} ${v}`).join(' · ')}</p></div>
+      <div class="card"><h4>${t({ ko: '변환', en: 'Conversions' })}</h4><p>${t({ ko: `UUID가 아닌 ID ${r.renamed_ids}개 → v5 mRID<br>ConnectivityNode ${r.created_connectivity_nodes}개 생성<br>부하 ${r.loads_from_sv}개 SV에서 입력`,
+        en: `${r.renamed_ids} non-UUID IDs → v5 mRIDs<br>${r.created_connectivity_nodes} ConnectivityNodes created<br>${r.loads_from_sv} loads taken from SV` })}</p></div></div>`;
+    document.getElementById('maxDiff').innerHTML = t({ ko: `최대 차이 <b>${d.max_diff} pu</b> (노드 ${d.voltages.length}개)`, en: `Max difference <b>${d.max_diff} pu</b> (${d.voltages.length} nodes)` });
+    document.getElementById('cigreTable').innerHTML = table([t({ ko: '노드', en: 'Node' }), 'NEPLAN [pu]', 'pycim → pandapower [pu]', t({ ko: '차이', en: 'Diff' })],
+      d.voltages.map(v => [esc(v.node), `<span class="num">${v.neplan.toFixed(5)}</span>`, v.pycim.toFixed(5), v.diff.toFixed(5)]));
+    document.getElementById('svTable').innerHTML = table([t({ ko: 'SV 클래스', en: 'SV class' }), t({ ko: '대상', en: 'Target' }), t({ ko: '값', en: 'Value' })],
+      d.sample_sv.map(s => [s.class, esc(s.target), s.class === 'SvVoltage' ? `${s.v} kV ∠ ${s.angle}°` : `P ${s.p} MW · Q ${s.q} MVAr`]));
+  };
+  render();
+  document.addEventListener('langchange', render);
+})();
+</script>
 
 <footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE">MIT License</a></div></footer>
 </body>

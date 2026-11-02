@@ -1,0 +1,36 @@
+# SHACL 검증 실습용: 일부러 규칙을 어긴 데이터
+# 실행: python examples/validate.py
+
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix ex:  <http://example.org/broken#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:BV a cim:BaseVoltage ; cim:IdentifiedObject.mRID "0b8c4f9a-1d2e-4c3b-9a7f-2e6d5c4b3a21" ;
+    cim:IdentifiedObject.name "22.9kV" ; cim:BaseVoltage.nominalVoltage "22.9"^^xsd:float .
+ex:SS a cim:Substation ; cim:IdentifiedObject.mRID "5f1e2d3c-4b5a-4968-8776-655443322110" ; cim:IdentifiedObject.name "C변전소" .
+
+# (1) VoltageLevel에 BaseVoltage가 없음
+ex:VL a cim:VoltageLevel ; cim:IdentifiedObject.mRID "7a6b5c4d-3e2f-4a1b-8c9d-0e1f2a3b4c5d" ;
+    cim:IdentifiedObject.name "C변전소 22.9kV" ; cim:VoltageLevel.Substation ex:SS .
+
+# (2) mRID가 UUID가 아님 (기존 시스템 코드를 그대로 씀), open 값이 문자열
+ex:CB a cim:Breaker ; cim:IdentifiedObject.mRID "CB-001" ; cim:IdentifiedObject.name "D/L #2 CB" ;
+    cim:Switch.open "no" .
+ex:CB_T1 a cim:Terminal ; cim:IdentifiedObject.mRID "11111111-2222-4333-8444-555555555551" ;
+    cim:ACDCTerminal.sequenceNumber 1 ; cim:Terminal.ConductingEquipment ex:CB .
+ex:CB_T2 a cim:Terminal ; cim:IdentifiedObject.mRID "11111111-2222-4333-8444-555555555552" ;
+    cim:ACDCTerminal.sequenceNumber 2 ; cim:Terminal.ConductingEquipment ex:CB .
+
+# (3) 선로 단자가 1개뿐이고 길이가 음수
+ex:LN a cim:ACLineSegment ; cim:IdentifiedObject.mRID "22222222-3333-4444-8555-666666666661" ;
+    cim:IdentifiedObject.name "D/L #2 간선" ; cim:Conductor.length "-3.2"^^xsd:float ;
+    cim:ACLineSegment.r "0.18"^^xsd:float ; cim:ACLineSegment.x "0.39"^^xsd:float .
+ex:LN_T1 a cim:Terminal ; cim:IdentifiedObject.mRID "22222222-3333-4444-8555-666666666662" ;
+    cim:ACDCTerminal.sequenceNumber 1 ; cim:Terminal.ConductingEquipment ex:LN .
+
+# (4) 어떤 설비에도 속하지 않은 단자, sequenceNumber 0
+ex:T_ORPHAN a cim:Terminal ; cim:IdentifiedObject.mRID "33333333-4444-4555-8666-777777777771" ;
+    cim:ACDCTerminal.sequenceNumber 0 .
+
+# (5) 매핑 테이블의 Name에 NameType이 없음
+ex:N1 a cim:Name ; cim:Name.name "C22_DL02_CB" ; cim:Name.IdentifiedObject ex:CB .
