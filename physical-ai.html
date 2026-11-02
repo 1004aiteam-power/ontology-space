@@ -113,6 +113,62 @@
   <p lang="ko">전력 분야에서는 변전소·배전망의 디지털 트윈(이 사이트의 <a href="grid.html">CIM 모델</a>) 위에서 점검 로봇·드론의 경로와 작업을 미리 시험하는 식으로 연결됩니다.</p>
   <p lang="en">In power systems this connects naturally: inspection robots and drones can rehearse routes and tasks on a substation or feeder digital twin — such as the <a href="grid.html">CIM model</a> on this site.</p>
 
+  <h3 id="mujoco"><span lang="ko">MuJoCo: 로봇 학습의 표준 물리 엔진</span><span lang="en">MuJoCo: the go-to physics engine for robot learning</span></h3>
+  <p lang="ko"><b>MuJoCo</b>(Multi-Joint dynamics with Contact)는 관절로 이어진 몸체와 <b>접촉</b>(부딪힘, 미끄러짐, 마찰)을 빠르고 정확하게 계산하는 물리 엔진입니다. Emo Todorov가 개발해 2012년에 발표했고, 2021년 Google DeepMind가 인수해 2022년부터 <b>오픈소스(Apache-2.0)</b>로 공개하고 있습니다. 로봇 강화학습 연구에서 가장 널리 쓰이는 시뮬레이터 중 하나입니다.</p>
+  <p lang="en"><b>MuJoCo</b> (Multi-Joint dynamics with Contact) is a physics engine that computes jointed bodies and <b>contact</b> (collisions, sliding, friction) quickly and accurately. Created by Emo Todorov and released in 2012, it was acquired by Google DeepMind in 2021 and has been <b>open source (Apache-2.0)</b> since 2022. It is one of the most widely used simulators in robot reinforcement-learning research.</p>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">정확한 접촉 물리</span><span lang="en">Accurate contact physics</span></h4><p lang="ko">발이 땅을 디디고, 손가락이 물체를 쥐는 것처럼 로봇에 가장 어려운 "닿는 순간"을 안정적으로 계산합니다.</p><p lang="en">Stable simulation of the hardest moments for robots — feet striking the ground, fingers gripping objects.</p></div>
+    <div class="card"><h4><span lang="ko">빠른 속도</span><span lang="en">Speed</span></h4><p lang="ko">실제 시간보다 훨씬 빠르게 돌릴 수 있어, 로봇이 짧은 시간에 수많은 시행착오를 겪을 수 있습니다.</p><p lang="en">Runs far faster than real time, so a robot can go through huge numbers of trials quickly.</p></div>
+    <div class="card"><h4><span lang="ko">강화학습 벤치마크</span><span lang="en">RL benchmarks</span></h4><p lang="ko">Gymnasium의 Ant · Humanoid · HalfCheetah 같은 표준 과제와 DeepMind Control Suite가 MuJoCo 위에서 돌아갑니다.</p><p lang="en">Standard tasks such as Gymnasium's Ant, Humanoid and HalfCheetah, and the DeepMind Control Suite, run on MuJoCo.</p></div>
+    <div class="card"><h4>MJX · Menagerie</h4><p lang="ko"><b>MJX</b>는 JAX로 다시 구현해 GPU·TPU에서 수천 개 환경을 동시에 돌리고, <b>Menagerie</b>는 로봇 팔·사족 보행 로봇·휴머노이드 등 실제 로봇 모델을 모아 둔 저장소입니다.</p><p lang="en"><b>MJX</b> re-implements it in JAX to run thousands of environments at once on GPUs/TPUs; <b>Menagerie</b> is a curated collection of real robot models — arms, quadrupeds, humanoids.</p></div>
+  </div>
+
+  <h4 style="margin:20px 0 6px"><span lang="ko">예제: 넘어지는 막대를 세워 두기</span><span lang="en">Example: keeping a falling pole upright</span></h4>
+  <p lang="ko">로봇은 <b>MJCF</b>라는 XML 파일로 몸체·관절·모터를 적고, 파이썬에서 매 스텝 모터 명령을 넣으며 시뮬레이션합니다. 아래는 경첩에 달린 막대를 0.3 rad 기울여 놓고 간단한 제어 정책으로 다시 세우는 예입니다.</p>
+  <p lang="en">A robot is described in an XML file called <b>MJCF</b> (bodies, joints, motors), then simulated from Python by setting motor commands at every step. Below, a hinged pole starts tilted by 0.3 rad and a simple control policy stands it back up.</p>
+  <div class="grid two">
+<pre style="margin:0"><code>&lt;!-- pole.xml (MJCF) --&gt;
+&lt;mujoco&gt;
+  &lt;option timestep="0.002"/&gt;
+  &lt;worldbody&gt;
+    &lt;geom type="plane" size="2 2 0.1"/&gt;
+    &lt;body name="pole" pos="0 0 1"&gt;
+      &lt;joint name="hinge" type="hinge" axis="0 1 0"/&gt;
+      &lt;geom type="capsule" fromto="0 0 0 0 0 0.6"
+            size="0.04" mass="1"/&gt;
+    &lt;/body&gt;
+  &lt;/worldbody&gt;
+  &lt;actuator&gt;
+    &lt;motor joint="hinge" ctrlrange="-5 5"/&gt;
+  &lt;/actuator&gt;
+&lt;/mujoco&gt;</code></pre>
+<pre style="margin:0"><code class="language-python">import mujoco   # pip install mujoco
+
+model = mujoco.MjModel.from_xml_path("pole.xml")
+data = mujoco.MjData(model)
+data.qpos[0] = 0.3            # 0.3 rad 기울인 채 시작
+
+def policy(angle, vel):       # 넘어지는 반대쪽으로 토크
+    return -20 * angle - 3 * vel
+
+for _ in range(2000):         # 0.002 s × 2000 = 4초
+    data.ctrl[0] = policy(data.qpos[0], data.qvel[0])
+    mujoco.mj_step(model, data)
+
+print(data.qpos[0])           # → 0.0000 (똑바로 섬)</code></pre>
+  </div>
+  <p class="meta" lang="ko">MuJoCo 3.17로 실행 확인: 정책이 있으면 4초 뒤 각도 0.0000 rad, 정책 없이 두면 막대가 넘어져 아래로 흔들립니다(5.95 rad). 실제 연구에서는 이 <code>policy</code> 자리에 강화학습으로 학습한 신경망이 들어갑니다.</p>
+  <p class="meta" lang="en">Verified with MuJoCo 3.17: with the policy the angle is 0.0000 rad after 4 s; without it the pole falls and swings below (5.95 rad). In research, a neural network trained by reinforcement learning takes the place of <code>policy</code>.</p>
+
+  <h4 style="margin:20px 0 6px"><span lang="ko">시뮬레이터 비교</span><span lang="en">Simulator comparison</span></h4>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">시뮬레이터</span><span lang="en">Simulator</span></th><th><span lang="ko">개발</span><span lang="en">By</span></th><th><span lang="ko">강점</span><span lang="en">Strengths</span></th><th><span lang="ko">주 용도</span><span lang="en">Typical use</span></th></tr>
+    <tr><td><b>MuJoCo</b></td><td>Google DeepMind <span lang="ko">(원개발 Emo Todorov)</span><span lang="en">(created by Emo Todorov)</span></td><td><span lang="ko">정확하고 빠른 접촉 물리, 가볍고 설치 쉬움, 파이썬 API</span><span lang="en">Accurate, fast contact physics; lightweight; Python API</span></td><td><span lang="ko">강화학습 연구, 보행·조작 제어</span><span lang="en">RL research, locomotion and manipulation</span></td></tr>
+    <tr><td><b>Isaac Sim / Isaac Lab</b></td><td>NVIDIA</td><td><span lang="ko">사실적 렌더링, GPU 대규모 병렬, 카메라·LiDAR 센서 시뮬레이션</span><span lang="en">Photorealistic rendering, massive GPU parallelism, camera/LiDAR sensor simulation</span></td><td><span lang="ko">휴머노이드·산업 로봇, 합성 데이터</span><span lang="en">Humanoids, industrial robots, synthetic data</span></td></tr>
+    <tr><td><b>Gazebo</b></td><td>Open Robotics</td><td><span lang="ko">ROS와 긴밀한 연동, 다양한 센서·환경</span><span lang="en">Tight ROS integration, many sensors and worlds</span></td><td><span lang="ko">로봇 소프트웨어 통합 시험</span><span lang="en">Integration testing of robot software</span></td></tr>
+    <tr><td><b>PyBullet</b></td><td>Erwin Coumans (Bullet)</td><td><span lang="ko">설치가 쉽고 가벼움</span><span lang="en">Easy to install, lightweight</span></td><td><span lang="ko">교육, 간단한 연구</span><span lang="en">Teaching, quick research</span></td></tr>
+  </table></div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">MuJoCo는 <b>컴퓨터 안의 물리 실험실</b>입니다. 로봇이 수백만 번 넘어져도 고장 나지 않고, 시간도 빨리 감기로 돌릴 수 있습니다. 아래 자동차 실습은 평면 위의 점과 선만 계산하는 장난감 세계지만, MuJoCo는 <b>3D 공간에서 무게·관절·마찰·충돌</b>까지 계산해서, 여기서 배운 로봇을 실제 로봇에 옮겨 쓸 수 있을 만큼 현실에 가깝습니다.</p><p lang="en">MuJoCo is a <b>physics lab inside the computer</b>: a robot can fall millions of times without breaking, and time can be fast-forwarded. The car lab below is a toy world of dots and lines on a plane; MuJoCo computes <b>mass, joints, friction and collisions in 3D</b>, close enough to reality that what a robot learns there can carry over to real hardware.</p></div>
   <h3><span lang="ko">3. 센서 융합</span><span lang="en">3. Sensor fusion</span></h3>
   <p lang="ko">센서마다 강점과 약점이 달라, 여러 센서를 합쳐 더 정확하고 견고한 인지를 만듭니다.</p>
   <p lang="en">Each sensor has strengths and weaknesses; combining them gives more accurate and robust perception.</p>
@@ -230,7 +286,7 @@
     <tr><td><span lang="ko">센서 (인지)</span><span lang="en">Sensors (perception)</span></td><td><span lang="ko">−90°~+90° 7방향 거리 센서(LiDAR를 단순화)</span><span lang="en">7 range beams from −90° to +90° (a simplified LiDAR)</span></td></tr>
     <tr><td><span lang="ko">정책 (판단)</span><span lang="en">Policy (decision)</span></td><td><span lang="ko">NEAT가 진화시킨 신경망. 구조(노드·연결)까지 스스로 자람</span><span lang="en">A NEAT-evolved network whose structure (nodes, links) grows by itself</span></td></tr>
     <tr><td><span lang="ko">구동기 (행동)</span><span lang="en">Actuators (action)</span></td><td><span lang="ko">조향 (−1~+1 연속값, 한 스텝 최대 약 7°). 속도는 슬라이더로 정한 값(1~8)으로 고정</span><span lang="en">Steering (continuous −1…+1, up to about 7° per step); speed fixed to the slider value (1–8)</span></td></tr>
-    <tr><td><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></td><td><span lang="ko">무작위로 생성되는 트랙, 회전한 차체의 충돌 판정</span><span lang="en">Randomly generated tracks, collision checks on the rotated body</span></td></tr>
+    <tr><td><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></td><td><span lang="ko">무작위로 생성되는 2D 트랙, 회전한 차체의 충돌 판정 (실제 연구에서는 <a href="#mujoco">MuJoCo</a>·Isaac Sim 같은 3D 물리 엔진)</span><span lang="en">Randomly generated 2D tracks, collision checks on the rotated body (real research uses 3D physics engines such as <a href="#mujoco">MuJoCo</a> or Isaac Sim)</span></td></tr>
     <tr><td><span lang="ko">도메인 랜덤화 · 센서 잡음</span><span lang="en">Domain randomisation · sensor noise</span></td><td><span lang="ko">세대마다 새 트랙, 센서값에 가우시안 잡음</span><span lang="en">New track every generation, Gaussian noise on readings</span></td></tr>
     <tr><td>Sim-to-Real</td><td><span lang="ko">학습에 쓰지 않은 트랙에서 챔피언을 평가</span><span lang="en">Evaluate the champion on tracks never used in training</span></td></tr>
   </table></div>
@@ -270,7 +326,8 @@
     <li>K. O. Stanley, R. Miikkulainen, "Evolving Neural Networks through Augmenting Topologies", <i>Evolutionary Computation</i>, 2002</li>
     <li>J. Tobin <span lang="ko">외</span><span lang="en">et al.</span>, "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World", IROS 2017</li>
     <li><a href="https://deepmind.google/discover/blog/rt-2-new-model-translates-vision-and-language-into-action/">RT-2</a> · <a href="https://openvla.github.io/">OpenVLA</a> · <a href="https://www.physicalintelligence.company/blog/pi0">π0</a> · <a href="https://developer.nvidia.com/isaac/gr00t">Isaac GR00T</a></li>
-    <li><a href="https://developer.nvidia.com/isaac/sim">NVIDIA Isaac Sim</a> · <a href="https://mujoco.org/">MuJoCo</a> · <a href="https://gazebosim.org/">Gazebo</a> · <a href="https://www.nvidia.com/en-us/ai/cosmos/">NVIDIA Cosmos</a></li>
+    <li><a href="https://mujoco.org/">MuJoCo</a> · <a href="https://github.com/google-deepmind/mujoco">GitHub</a> · <a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie</a> · <a href="https://gymnasium.farama.org/environments/mujoco/">Gymnasium MuJoCo</a></li>
+    <li><a href="https://developer.nvidia.com/isaac/sim">NVIDIA Isaac Sim</a> · <a href="https://gazebosim.org/">Gazebo</a> · <a href="https://www.nvidia.com/en-us/ai/cosmos/">NVIDIA Cosmos</a></li>
   </ul>
   <div class="pager"><a href="lab.html"><span lang="ko">← 이전: 실습</span><span lang="en">← Prev: Lab</span></a><span></span></div>
 </section>

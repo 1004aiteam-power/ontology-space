@@ -37,6 +37,32 @@ GR00T N1 (NVIDIA, 2025), Gemini Robotics (Google DeepMind, 2025).
 - **Sim-to-Real 격차**: 가상에서 완벽해도 현실의 마찰·잡음·조명 차이로 실패할 수 있음
 - **도메인 랜덤화** (Tobin et al., 2017): 학습 환경을 계속 바꿔 현실을 "또 하나의 변형"으로 만들기
 
+### MuJoCo
+**MuJoCo**(Multi-Joint dynamics with Contact)는 관절로 이어진 몸체와 접촉(충돌·마찰)을 빠르고 정확하게 계산하는 물리 엔진입니다.
+Emo Todorov가 개발(2012)했고, Google DeepMind가 2021년 인수해 2022년부터 오픈소스(Apache-2.0)로 공개하고 있습니다.
+
+- 강화학습 벤치마크: Gymnasium의 Ant · Humanoid · HalfCheetah, DeepMind Control Suite
+- **MJX**: JAX 구현, GPU·TPU에서 수천 개 환경 병렬 / **Menagerie**: 실제 로봇 모델 모음
+- 로봇은 MJCF(XML)로 기술하고, 파이썬에서 `mujoco.mj_step()`으로 한 스텝씩 진행
+
+```python
+import mujoco                      # pip install mujoco
+model = mujoco.MjModel.from_xml_path("pole.xml")
+data = mujoco.MjData(model)
+data.qpos[0] = 0.3                 # 0.3 rad 기울인 채 시작
+for _ in range(2000):              # 4초
+    data.ctrl[0] = -20 * data.qpos[0] - 3 * data.qvel[0]   # 간단한 제어 정책
+    mujoco.mj_step(model, data)
+print(data.qpos[0])                # 0.0000 (MuJoCo 3.17로 확인)
+```
+
+| 시뮬레이터 | 개발 | 강점 | 주 용도 |
+|---|---|---|---|
+| MuJoCo | Google DeepMind | 정확하고 빠른 접촉 물리, 가벼움, 파이썬 API | 강화학습 연구, 보행·조작 |
+| Isaac Sim / Isaac Lab | NVIDIA | 사실적 렌더링, GPU 병렬, 센서 시뮬레이션 | 휴머노이드·산업 로봇, 합성 데이터 |
+| Gazebo | Open Robotics | ROS 연동 | 로봇 소프트웨어 통합 시험 |
+| PyBullet | Erwin Coumans | 설치 쉬움, 가벼움 | 교육, 간단한 연구 |
+
 ### 센서 융합
 카메라(색·물체 종류), LiDAR(정밀 거리), 레이더(속도·악천후), IMU(빠른 자세 변화, 드리프트)를
 칼만 필터, 초기/후기 융합, BEV 융합 등으로 합칩니다.
