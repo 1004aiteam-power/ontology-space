@@ -138,6 +138,16 @@
 <section id="lab">
   <div class="badge">LAB</div>
   <h2><span lang="ko">가상에서 배우기: NEAT 자율주행 시뮬레이션</span><span lang="en">Learning in a virtual world: NEAT self-driving simulation</span></h2>
+  <ol class="steps" lang="ko">
+    <li><b>라운드 1</b>: 서로 다른 신경망을 가진 150대가 동시에 출발합니다.</li>
+    <li>두 바퀴를 완주한 차가 <b>없으면</b> 라운드 실패 → 멀리 간 차들을 부모로 다음 세대를 만들어 <b>라운드 2</b>, 3, …</li>
+    <li>어떤 차든 <b>두 바퀴를 완주하는 순간 성공</b>으로 끝납니다. 우승 차량을 다시 보거나, 처음 보는 트랙에서 시험해 보세요.</li>
+  </ol>
+  <ol class="steps" lang="en">
+    <li><b>Round 1</b>: 150 cars, each with a different neural network, start together.</li>
+    <li>If <b>no</b> car completes two laps, the round fails → the cars that got furthest breed the next generation for <b>round 2</b>, 3, …</li>
+    <li>The moment <b>any car completes two laps, it's a success</b> and training stops. Replay the winner or test it on an unseen track.</li>
+  </ol>
   <p class="sub" lang="ko"><b>서로 다른 신경망을 가진 자동차 150대가 동시에</b> 달립니다. 각자 7개의 거리 센서로 벽을 감지하고 조향과 가감속을 결정합니다. 한 세대가 끝나면 멀리 간 차들이 부모가 되어 다음 세대 150대를 만들고(교차·변이), 이 과정을 반복하며 무리 전체가 <b>진화</b>로 운전을 배웁니다. 색은 종(비슷한 신경망끼리 묶은 무리), ✕는 실패한 자리, 노란 원은 현재 선두입니다.</p>
   <p class="sub" lang="en"><b>150 cars, each with its own neural network, drive at the same time.</b> Each senses walls with 7 range sensors and decides steering and throttle. When a generation ends, the cars that got furthest become parents of the next 150 (crossover and mutation); over generations the whole population <b>evolves</b> to drive. Colour = species (a group of similar networks), ✕ = where a car failed, yellow halo = current leader.</p>
 
@@ -158,11 +168,22 @@
     <div class="sim-stage" id="simStage">
       <canvas id="sim" aria-label="simulation"></canvas>
       <button id="fsBtn" class="fs-btn" aria-label="fullscreen">⛶ <span lang="ko">전체 화면</span><span lang="en">Fullscreen</span></button>
+      <div id="successBar" class="success-bar" hidden>
+        <button id="replayBtn" class="primary">▶ <span lang="ko">우승 차량 다시 보기</span><span lang="en">Replay the winner</span></button>
+        <button id="successTestBtn"><span lang="ko">처음 보는 트랙에서 테스트</span><span lang="en">Test on an unseen track</span></button>
+        <button id="continueBtn"><span lang="ko">계속 학습 (더 빠르게)</span><span lang="en">Keep training (go faster)</span></button>
+        <button id="successResetBtn"><span lang="ko">처음부터</span><span lang="en">Start over</span></button>
+      </div>
       <div id="testBar" hidden>
         <span id="modeLabel"></span><span id="testResult"></span>
         <button id="retestBtn"><span lang="ko">다른 트랙으로 다시</span><span lang="en">Try another track</span></button>
         <button id="backBtn"><span lang="ko">학습으로 돌아가기</span><span lang="en">Back to training</span></button>
       </div>
+    </div>
+    <div class="panel">
+      <b><span lang="ko">라운드 기록</span><span lang="en">Round log</span></b>
+      <span class="meta"><span lang="ko"> — 막대 = 그 라운드 최고 차량이 목표(2바퀴) 중 달린 비율</span><span lang="en"> — bar = how far the best car got towards the goal (2 laps)</span></span>
+      <div id="roundLog" class="round-log"></div>
     </div>
     <div class="panel pop-panel">
       <b><span lang="ko">개체군 — 점 하나가 자동차 한 대</span><span lang="en">Population — one dot per car</span></b>

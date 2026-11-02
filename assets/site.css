@@ -195,3 +195,16 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px;margin:8px 0}
 #popBoard{width:100%;height:60px;display:block}
 .species-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
 .species-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;box-shadow:0 0 0 1px var(--line)}
+
+.success-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-top:10px;border:2px solid #22c55e;border-radius:10px}
+.success-bar[hidden]{display:none}
+.success-bar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px}
+.success-bar button.primary{background:#16a34a;border-color:#16a34a;color:#fff;font-weight:600}
+.round-log{max-height:190px;overflow-y:auto;margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.round-row{display:grid;grid-template-columns:96px 1fr minmax(150px,auto);gap:10px;align-items:center;font-size:13.5px;padding:3px 6px;border-radius:6px}
+.round-row.ok{background:color-mix(in srgb,#22c55e 15%,transparent);font-weight:600}
+.round-row .bar{height:8px;background:var(--code);border-radius:4px;overflow:hidden}
+.round-row .bar i{display:block;height:100%;background:#f97316;border-radius:4px}
+.round-row.ok .bar i{background:#22c55e}
+ol.steps{margin:0 0 12px;padding-left:22px}
+ol.steps li{margin:4px 0}

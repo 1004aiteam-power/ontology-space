@@ -9,7 +9,11 @@ const dark = () => document.documentElement.dataset.theme === 'dark' ||
 // 차트 색상: dataviz 기준 팔레트 (라이트/다크 각각 색각 이상 검증 통과)
 const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 
-let trainer, running = false, speed = 1, mode = 'train', test = null;
+let trainer, running = false, speed = 4, mode = 'train', test = null;
+// 라운드 진행: 라운드 = NEAT의 한 세대. 2바퀴 완주한 차가 나오면 성공으로 멈춘다
+let banner = null;          // { title, sub, until, kind: 'fail' | 'start' }
+let roundLog = [];          // { round, progress, finished, ok }
+let replayCar = null;
 const SPEEDS = [1, 4, 16, 'max'];
 // 종별 색: dataviz 8색 팔레트(어두운 도로용). 도로 대비가 낮은 색이 있어 흰 테두리 + 범례(이름·대수)를 함께 쓴다
 const SPECIES_COLORS = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767'];
@@ -46,7 +50,7 @@ function drawWorld(tr, cars, leader) {
   ctx.strokeStyle = '#f5f5f5'; ctx.lineWidth = 4;
   ctx.beginPath(); ctx.moveTo(s.x + nx * tr.hw, s.y + ny * tr.hw); ctx.lineTo(s.x - nx * tr.hw, s.y - ny * tr.hw); ctx.stroke();
 
-  const sp = trainer && mode === 'train' ? trainer.speciesOf : null;
+  const sp = trainer && (mode === 'train' || mode === 'success') ? trainer.speciesOf : null;
   const col = c => (sp ? speciesColor(sp.get(c.genome) ?? 0) : '#f97316');
   // 1) 실패한 차: 멈춘 자리에 ✕ (이번 세대의 시행착오)
   ctx.lineWidth = 2;
@@ -78,13 +82,32 @@ function drawWorld(tr, cars, leader) {
     drawCar(ctx, leader, col(leader), true, leader.finished, true);
   }
   ctx.restore();
-  if (trainer && mode === 'train') drawHud(ctx, cars);
+  if (trainer && (mode === 'train' || mode === 'success')) drawHud(ctx, cars);
+  if (banner && performance.now() < banner.until) drawBanner(ctx, cw, banner);
+  if (mode === 'success') drawBanner(ctx, cw, successBanner());
+}
+
+function drawBanner(ctx, cw, b) {                   // 화면 가운데 큰 안내 (라운드 결과·성공)
+  const h = cw * WORLD.h / WORLD.w, w = Math.min(cw - 40, 560);
+  const x = (cw - w) / 2, y = h / 2 - 60;
+  ctx.fillStyle = dark() ? 'rgba(18,20,23,.92)' : 'rgba(255,255,255,.95)';
+  ctx.strokeStyle = b.kind === 'ok' ? '#22c55e' : b.kind === 'fail' ? '#f97316' : css('--line');
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(x, y, w, 120, 18); ctx.fill(); ctx.stroke();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = css('--text');
+  ctx.font = `700 ${cw < 500 ? 20 : 28}px system-ui, sans-serif`; ctx.fillText(b.title, cw / 2, y + 44);
+  ctx.font = `${cw < 500 ? 13 : 16}px system-ui, sans-serif`; ctx.fillStyle = css('--muted'); ctx.fillText(b.sub, cw / 2, y + 84);
+}
+function successBanner() {
+  const s = trainer.success;
+  return { kind: 'ok', title: t({ ko: `🎉 성공! 라운드 ${s.round}`, en: `🎉 Success! Round ${s.round}` }),
+           sub: t({ ko: `${s.winners.length}대가 ${trainer.opts.laps}바퀴를 완주했습니다 · ${s.step} 스텝`, en: `${s.winners.length} car(s) completed ${trainer.opts.laps} laps · ${s.step} steps` }) };
 }
 
 function drawHud(ctx, cars) {                       // 화면 위 안내: 동시에 학습 중인 개체 수
   const alive = cars.filter(c => c.alive && !c.finished).length, fin = cars.filter(c => c.finished).length;
-  const text = t({ ko: `세대 ${trainer.pop.generation} · ${cars.length}대가 동시에 주행 · 생존 ${alive} · 실패 ${cars.length - alive - fin} · 완주 ${fin}`,
-                   en: `Gen ${trainer.pop.generation} · ${cars.length} cars driving at once · alive ${alive} · failed ${cars.length - alive - fin} · finished ${fin}` });
+  const text = t({ ko: `라운드 ${trainer.pop.generation + 1} · ${cars.length}대 동시 주행 · 목표 ${trainer.opts.laps}바퀴 완주 · 생존 ${alive} · 실패 ${cars.length - alive - fin} · 완주 ${fin}`,
+                   en: `Round ${trainer.pop.generation + 1} · ${cars.length} cars at once · goal: ${trainer.opts.laps} laps · alive ${alive} · failed ${cars.length - alive - fin} · finished ${fin}` });
   ctx.font = '600 13px system-ui, sans-serif';
   const w = ctx.measureText(text).width + 20;
   ctx.fillStyle = dark() ? 'rgba(18,20,23,.82)' : 'rgba(255,255,255,.88)';
@@ -168,7 +191,7 @@ function drawChart() {
   }
   ctx.textAlign = 'center'; ctx.textBaseline = 'top';
   const stepX = Math.max(1, Math.ceil(xmax / 8));
-  for (let i = 0; i <= xmax; i += stepX) ctx.fillText(i, X(i), pad.t + H + 6);
+  for (let i = 0; i <= xmax; i += stepX) ctx.fillText(i + 1, X(i), pad.t + H + 6);   // 라운드 번호
   if (!h.length) {
     ctx.fillText(t({ ko: '첫 세대가 끝나면 그려집니다', en: 'Appears after the first generation' }), pad.l + W / 2, pad.t + H / 2);
     return;
@@ -189,20 +212,20 @@ function drawChart() {
     keys.forEach((k, si) => { ctx.fillStyle = cols[si]; ctx.strokeStyle = css('--surface'); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, Y(r[k]), 5, 0, 7); ctx.fill(); ctx.stroke(); });
     const tip = $('chartTip');
     tip.hidden = false;
-    tip.innerHTML = `<b>${t({ ko: '세대', en: 'Gen' })} ${r.gen}</b><br><i style="background:${cols[0]}"></i>${t({ ko: '최고', en: 'Best' })} ${r.best.toFixed(0)}<br><i style="background:${cols[1]}"></i>${t({ ko: '평균', en: 'Mean' })} ${r.mean.toFixed(0)}<br>${t({ ko: '완주', en: 'Finished' })} ${r.finished} · ${t({ ko: '종', en: 'Species' })} ${r.species}`;
+    tip.innerHTML = `<b>${t({ ko: '라운드', en: 'Round' })} ${r.gen + 1}</b><br><i style="background:${cols[0]}"></i>${t({ ko: '최고', en: 'Best' })} ${r.best.toFixed(0)}<br><i style="background:${cols[1]}"></i>${t({ ko: '평균', en: 'Mean' })} ${r.mean.toFixed(0)}<br>${t({ ko: '완주', en: 'Finished' })} ${r.finished} · ${t({ ko: '종', en: 'Species' })} ${r.species}`;
     tip.style.left = Math.min(cw - 150, x + 10) + 'px'; tip.style.top = pad.t + 'px';
   } else $('chartTip').hidden = true;
 }
 
 function updateTable() {
   const h = trainer.pop.history;
-  $('histTable').innerHTML = `<tr><th>${t({ ko: '세대', en: 'Gen' })}</th><th>${t({ ko: '최고', en: 'Best' })}</th><th>${t({ ko: '평균', en: 'Mean' })}</th><th>${t({ ko: '완주', en: 'Finished' })}</th><th>${t({ ko: '종', en: 'Species' })}</th><th>${t({ ko: '은닉', en: 'Hidden' })}</th></tr>` +
-    h.slice(-30).reverse().map(r => `<tr><td>${r.gen}</td><td>${r.best.toFixed(0)}</td><td>${r.mean.toFixed(0)}</td><td>${r.finished}</td><td>${r.species}</td><td>${r.nodes}</td></tr>`).join('');
+  $('histTable').innerHTML = `<tr><th>${t({ ko: '라운드', en: 'Round' })}</th><th>${t({ ko: '최고', en: 'Best' })}</th><th>${t({ ko: '평균', en: 'Mean' })}</th><th>${t({ ko: '완주', en: 'Finished' })}</th><th>${t({ ko: '종', en: 'Species' })}</th><th>${t({ ko: '은닉', en: 'Hidden' })}</th></tr>` +
+    h.slice(-30).reverse().map(r => `<tr><td>${r.gen + 1}</td><td>${r.best.toFixed(0)}</td><td>${r.mean.toFixed(0)}</td><td>${r.finished}</td><td>${r.species}</td><td>${r.nodes}</td></tr>`).join('');
 }
 
 // ---- 개체군 보드: 점 하나 = 자동차 한 대 ----------------------------------------------
 function drawPopulation() {
-  const canvas = $('popBoard'); if (!canvas || mode !== 'train') return;
+  const canvas = $('popBoard'); if (!canvas || !(mode === 'train' || mode === 'success')) return;
   const cars = trainer.cars, sp = trainer.speciesOf;
   const perRow = Math.max(10, Math.floor(canvas.clientWidth / 16));
   canvas.style.height = Math.ceil(cars.length / perRow) * (canvas.clientWidth / perRow) + 4 + 'px';   // 대수에 맞춘 높이
@@ -232,7 +255,7 @@ function stats() {
   const T = trainer, h = T.pop.history.at(-1);
   const leader = T.leader();
   const cells = [
-    [t({ ko: '세대', en: 'Generation' }), T.pop.generation],
+    [t({ ko: '라운드', en: 'Round' }), T.pop.generation + 1],
     [t({ ko: '생존', en: 'Alive' }), `${T.alive} / ${T.cars.length}`],
     [t({ ko: '선두 진행률', en: 'Leader progress' }), `${Math.max(0, 100 * leader.progress / T.track.L).toFixed(0)}% / ${T.opts.laps * 100}%`],
     [t({ ko: '지난 세대 완주', en: 'Finished last gen' }), h ? h.finished : '–'],
@@ -244,17 +267,20 @@ function stats() {
 
 // ---- 루프 ------------------------------------------------------------------------
 function frame() {
-  if (mode === 'train') {
-    if (running) {
+  if (mode === 'replay') {
+    for (let i = 0; i < 2 && replayCar.alive && !replayCar.finished; i++) stepCar(replayCar, trainer.track, trainer.opts);
+    drawWorld(trainer.track, [], replayCar);
+    drawNet(replayCar.genome, replayCar.net);
+    if (!replayCar.alive || replayCar.finished) { mode = 'success'; $('successBar').hidden = false; }
+  } else if (mode === 'train' || mode === 'success') {
+    if (running && mode === 'train' && !(banner && performance.now() < banner.until)) {
       const t0 = performance.now();
-      let n = 0, genEnded = false;
-      do {
-        genEnded = trainer.tick() || genEnded;
-        n++;
-      } while (speed === 'max' ? performance.now() - t0 < 14 : n < speed);
-      if (genEnded) { drawChart(); updateTable(); }
+      let n = 0, res = false;
+      do { res = trainer.tick(); n++; } while (!res && (speed === 'max' ? performance.now() - t0 < 14 : n < speed));
+      if (res === 'round') onRoundEnd();
+      if (res === 'success') onSuccess();
     }
-    const leader = trainer.leader();
+    const leader = mode === 'success' ? trainer.success.winners[0] : trainer.leader();
     drawWorld(trainer.track, trainer.cars, leader);
     drawNet(leader.genome, leader.net);
     stats();
@@ -275,37 +301,74 @@ function frame() {
 const causeText = c => t({ crash: { ko: '벽에 충돌', en: 'Crashed' }, reverse: { ko: '역주행', en: 'Drove backwards' },
   stall: { ko: '정체(진전 없음)', en: 'Stalled' }, timeout: { ko: '시간 초과', en: 'Timed out' } }[c] || { ko: c, en: c });
 
+// ---- 라운드 진행 -----------------------------------------------------------------
+const BANNER_MS = { 1: 1800, 4: 1300, 16: 500, max: 150 };
+function onRoundEnd() {
+  const h = trainer.pop.history.at(-1), round = h.gen + 1;
+  roundLog.push({ round, progress: h.bestProgress, finished: h.finished, ok: false });
+  banner = { kind: 'fail', until: performance.now() + BANNER_MS[speed],
+             title: t({ ko: `라운드 ${round} 실패 — 완주 0대`, en: `Round ${round} failed — no car finished` }),
+             sub: t({ ko: `최고 진행률 ${(100 * h.bestProgress / trainer.opts.laps).toFixed(0)}% · 우수한 차들로 다음 세대를 만들어 라운드 ${round + 1} 시작`,
+                      en: `Best progress ${(100 * h.bestProgress / trainer.opts.laps).toFixed(0)}% · breeding the best cars → round ${round + 1}` }) };
+  drawChart(); updateTable(); renderLog();
+}
+function onSuccess() {
+  running = false; mode = 'success'; label();
+  const s = trainer.success;
+  roundLog.push({ round: s.round, progress: trainer.opts.laps, finished: s.winners.length, ok: true });
+  $('successBar').hidden = false;
+  renderLog();
+}
+function renderLog() {
+  const box = $('roundLog');
+  if (!roundLog.length) { box.innerHTML = `<p class="meta">${t({ ko: '학습을 시작하면 라운드 결과가 여기에 쌓입니다.', en: 'Round results will appear here once training starts.' })}</p>`; return; }
+  box.innerHTML = roundLog.slice().reverse().slice(0, 60).map(r => `<div class="round-row ${r.ok ? 'ok' : ''}">
+      <b>${t({ ko: '라운드', en: 'Round' })} ${r.round}</b>
+      <span class="bar"><i style="width:${Math.min(100, 100 * r.progress / trainer.opts.laps)}%"></i></span>
+      <span>${r.ok ? t({ ko: `🎉 성공 · ${r.finished}대 ${trainer.opts.laps}바퀴 완주`, en: `🎉 Success · ${r.finished} finished` })
+                   : t({ ko: `실패 · 최고 ${(100 * r.progress / trainer.opts.laps).toFixed(0)}%`, en: `Failed · best ${(100 * r.progress / trainer.opts.laps).toFixed(0)}%` })}</span></div>`).join('');
+}
+function continueTraining() {                       // 성공 이후에도 더 빠른 주행을 위해 학습 계속
+  trainer.opts.stopOnFinish = false;
+  mode = 'train'; running = true; $('successBar').hidden = true; label();
+}
+
 // ---- 일반화 테스트 (sim-to-real 맛보기) ---------------------------------------------
 function startTest() {
-  const g = trainer.pop.best || trainer.leader().genome;
+  const g = trainer.success?.winners[0].genome || trainer.pop.best || trainer.leader().genome;
   const track = makeTrack('random');
   test = { track, car: new Car(track, g), max: maxStepsFor(track, trainer.opts) };
-  mode = 'test';
+  mode = 'test'; $('successBar').hidden = true;
   $('testBar').hidden = false;
   $('modeLabel').textContent = t({ ko: '일반화 테스트: 학습 때 본 적 없는 트랙', en: 'Generalisation test: a track never seen in training' });
 }
 function batchTest() {
-  const g = trainer.pop.best;
+  const g = trainer.success?.winners[0].genome || trainer.pop.best;
   if (!g) { $('batchResult').textContent = t({ ko: '먼저 한 세대 이상 학습하세요.', en: 'Train at least one generation first.' }); return; }
   let ok = 0; const N = 20;
   for (let i = 0; i < N; i++) if (testRun(g, makeTrack('random'), trainer.opts).finished) ok++;
   $('batchResult').innerHTML = t({ ko: `처음 보는 트랙 ${N}개 중 <b>${ok}개</b> 완주 (${(100 * ok / N).toFixed(0)}%)`, en: `Completed <b>${ok}</b> of ${N} unseen tracks (${(100 * ok / N).toFixed(0)}%)` });
 }
-function endTest() { mode = 'train'; test = null; $('testBar').hidden = true; $('modeLabel').textContent = ''; }
+function endTest() {
+  mode = trainer?.success && trainer.opts.stopOnFinish ? 'success' : 'train';
+  test = null; $('testBar').hidden = true; $('modeLabel').textContent = '';
+  if (mode === 'success') $('successBar').hidden = false;
+}
 
 // ---- 조작부 ----------------------------------------------------------------------
 function restart() {
   trainer = new Trainer(Population, {
     trackType: $('trackType').value, popSize: +$('popSize').value,
-    randomize: $('randomize').checked, noise: $('noise').checked ? 0.05 : 0
+    randomize: $('randomize').checked, noise: $('noise').checked ? 0.05 : 0, stopOnFinish: true
   });
-  endTest(); drawChart(); updateTable(); $('batchResult').textContent = '';
+  roundLog = []; banner = null; replayCar = null; mode = 'train'; $('successBar').hidden = true;
+  endTest(); drawChart(); updateTable(); renderLog(); label(); $('batchResult').textContent = '';
 }
 
 const TRACKS = [['blob', { ko: '둥근 트랙', en: 'Round track' }], ['mm', { ko: 'M-M 트랙 (어려움)', en: 'M-M track (hard)' }],
                 ['random', { ko: '무작위', en: 'Random' }]];
 function fillTrackSelect() {
-  const sel = $('trackType'), v = sel.value || 'blob';
+  const sel = $('trackType'), v = sel.value || 'mm';
   sel.innerHTML = TRACKS.map(([k, l]) => `<option value="${k}">${t(l)}</option>`).join('');
   sel.value = v;
   $('popSize').querySelectorAll('option').forEach(o => o.textContent = t({ ko: `${o.value}대`, en: `${o.value} cars` }));
@@ -313,7 +376,10 @@ function fillTrackSelect() {
 
 function bind() {
   fillTrackSelect();
-  $('playBtn').addEventListener('click', () => { running = !running; label(); });
+  $('playBtn').addEventListener('click', () => {
+    if (mode === 'success' || mode === 'replay') { continueTraining(); return; }
+    running = !running; label();
+  });
   $('speedBtn').addEventListener('click', () => { speed = SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length]; label(); });
   $('resetBtn').addEventListener('click', restart);
   $('trackType').addEventListener('change', () => { trainer.opts.trackType = $('trackType').value; trainer.newTrack(); });
@@ -322,6 +388,10 @@ function bind() {
   $('randomize').addEventListener('change', () => trainer.setRandomize($('randomize').checked));
   $('noise').addEventListener('change', () => { trainer.opts.noise = $('noise').checked ? 0.05 : 0; });
   $('testBtn').addEventListener('click', startTest);
+  $('replayBtn').addEventListener('click', () => { replayCar = trainer.replay(trainer.success.winners[0]); mode = 'replay'; $('successBar').hidden = true; });
+  $('continueBtn').addEventListener('click', continueTraining);
+  $('successTestBtn').addEventListener('click', startTest);
+  $('successResetBtn').addEventListener('click', restart);
   $('retestBtn').addEventListener('click', startTest);
   $('backBtn').addEventListener('click', endTest);
   $('batchBtn').addEventListener('click', batchTest);
@@ -343,13 +413,14 @@ function bind() {
     hoverGen = i >= 0 && i < h.length ? i : null; drawChart();
   });
   chart.addEventListener('mouseleave', () => { hoverGen = null; drawChart(); });
-  document.addEventListener('langchange', () => { fillTrackSelect(); label(); drawChart(); updateTable(); });
+  document.addEventListener('langchange', () => { fillTrackSelect(); label(); drawChart(); updateTable(); renderLog(); });
   window.addEventListener('resize', () => drawChart());
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => drawChart());
   $('themeBtn')?.addEventListener('click', () => setTimeout(drawChart, 0));
 }
 function label() {
-  $('playBtn').innerHTML = running ? t({ ko: '⏸ 일시정지', en: '⏸ Pause' }) : t({ ko: '▶ 학습 시작', en: '▶ Train' });
+  $('playBtn').innerHTML = mode === 'success' ? t({ ko: '▶ 계속 학습', en: '▶ Keep training' })
+    : running ? t({ ko: '⏸ 일시정지', en: '⏸ Pause' }) : t({ ko: '▶ 학습 시작', en: '▶ Train' });
   $('speedBtn').textContent = t({ ko: '속도 ', en: 'Speed ' }) + (speed === 'max' ? t({ ko: '최대', en: 'max' }) : speed + '×');
 }
 

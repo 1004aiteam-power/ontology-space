@@ -8,7 +8,7 @@
 //  - 조작: 좌/우 on-off, 속도 고정 → 조향·가감속 연속 제어, 관성과 저항
 
 export const WORLD = { w: 1000, h: 700 };
-export const CAR = { len: 18, wid: 9, vMin: 0.5, vMax: 8, accel: 0.25, drag: 0.985, turn: 0.085 };
+export const CAR = { len: 18, wid: 9, v0: 2, vMin: 0.5, vMax: 8, accel: 0.25, drag: 0.985, turn: 0.085 };   // v0: 모든 차의 출발 속도(동일)
 export const RADAR = { angles: [-90, -60, -30, 0, 30, 60, 90], range: 220 };
 
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -180,7 +180,9 @@ export class Car {
     // jitter > 0: 차선 안에서 출발 위치·방향을 조금씩 다르게 (초기 조건 무작위화, 화면에서 겹치지 않게)
     const off = (Math.random() - 0.5) * tr.hw * 0.9 * jitter, nx = -Math.sin(tr.start.a), ny = Math.cos(tr.start.a);
     this.x = tr.start.x + nx * off; this.y = tr.start.y + ny * off;
-    this.a = tr.start.a + (Math.random() - 0.5) * 0.16 * jitter; this.v = 2;
+    this.a = tr.start.a + (Math.random() - 0.5) * 0.16 * jitter;
+    this.v = CAR.v0;                                            // 출발 속도는 모든 차가 같다
+    this.start = { x: this.x, y: this.y, a: this.a };          // 다시 보기용 출발 상태
     this.idx = 0; this.s = 0; this.progress = 0; this.maxProgress = 0; this.lastImprove = 0;
     this.alive = true; this.finished = false; this.steps = 0; this.cause = '';
     this.radar = new Array(RADAR.angles.length).fill(RADAR.range);
@@ -260,11 +262,18 @@ export class Trainer {
     for (const c of this.cars) if ((c.alive && !c.finished) && (!best || c.progress > best.progress)) best = c;
     return best || this.cars.reduce((a, b) => (b.maxProgress > a.maxProgress ? b : a));
   }
-  // 한 프레임 진행. 세대가 끝나면 true
+  // 한 프레임 진행. 세대(라운드)가 끝나면 'round', 목표 달성(stopOnFinish)이면 'success', 아니면 false
   tick() {
     for (const c of this.cars) stepCar(c, this.track, this.opts);
     this.step++;
-    if (this.alive === 0 || this.step >= this.maxSteps) { this.endGeneration(); return true; }
+    if (this.opts.stopOnFinish && !this.success) {
+      const winners = this.cars.filter(c => c.finished);
+      if (winners.length) {
+        this.success = { round: this.pop.generation + 1, winners, step: this.step, track: this.track };
+        return 'success';
+      }
+    }
+    if (this.alive === 0 || this.step >= this.maxSteps) { this.endGeneration(); return 'round'; }
     return false;
   }
   endGeneration() {
@@ -281,6 +290,11 @@ export class Trainer {
     this.reset();
   }
   newTrack() { this.track = makeTrack(this.opts.trackType); this.reset(); }
+  replay(car) {                                      // 우승 차량을 같은 트랙·같은 출발 상태로 다시 달리게
+    const c = new Car(this.track, car.genome);
+    Object.assign(c, { x: car.start.x, y: car.start.y, a: car.start.a, start: car.start });
+    return c;
+  }
   setRandomize(on) { this.opts.randomize = on; this.pop.cfg.championPerGeneration = on; }
 }
 
