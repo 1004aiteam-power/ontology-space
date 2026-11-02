@@ -208,3 +208,8 @@ details summary{cursor:pointer;color:var(--accent);font-size:14px;margin:8px 0}
 .round-row.ok .bar i{background:#22c55e}
 ol.steps{margin:0 0 12px;padding-left:22px}
 ol.steps li{margin:4px 0}
+
+.speed-ctl{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:4px 10px}
+.speed-ctl input[type=range]{width:140px;accent-color:var(--accent)}
+.speed-ctl output{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.2em;text-align:right}
+#speedHint{font-size:13px}

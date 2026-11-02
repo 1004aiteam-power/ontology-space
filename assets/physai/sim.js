@@ -9,9 +9,9 @@
 
 export const WORLD = { w: 1000, h: 700 };
 export const CAR = { len: 18, wid: 9, turn: 0.12 };   // turn: 한 스텝 최대 회전(rad, 약 7°)
-// 차량 속도(스텝당 이동 거리). 모든 차가 같은 속도로 고정되고 신경망은 조향만 배운다.
-// M-M 트랙 기준 6 이상은 급커브를 돌 수 없어 제외 (실험: 속도 4 → 보통 6~15 라운드에 성공)
-export const CAR_SPEEDS = [2, 3, 4, 5];
+// 차량 속도(스텝당 이동 거리)는 사용자가 1~8로 정한다. 모든 차가 같은 속도로 고정되고 신경망은 조향만 배운다.
+// 실험(M-M 트랙): 속도 2 → 3~7라운드, 4 → 7~11라운드, 5 → 18~32라운드, 6 이상은 급커브를 돌기 매우 어려움
+export const CAR_SPEED = { min: 1, max: 8, step: 0.5, default: 4, hard: 5 };
 export const RADAR = { angles: [-90, -60, -30, 0, 30, 60, 90], range: 220 };
 
 const rnd = (a, b) => a + Math.random() * (b - a);

@@ -148,20 +148,21 @@
     <li>If <b>no</b> car completes two laps, the round fails → the cars that got furthest breed the next generation for <b>round 2</b>, 3, …</li>
     <li>The moment <b>any car completes two laps, it's a success</b> and training stops. Replay the winner or test it on an unseen track.</li>
   </ol>
-  <p class="sub" lang="ko"><b>서로 다른 신경망을 가진 자동차 150대가 동시에</b> 달립니다. 모든 차는 메뉴에서 고른 <b>같은 속도로 고정</b>되어 달리고, 각자 7개의 거리 센서로 벽을 감지해 <b>조향만</b> 결정합니다. 한 세대가 끝나면 멀리 간 차들이 부모가 되어 다음 세대 150대를 만들고(교차·변이), 이 과정을 반복하며 무리 전체가 <b>진화</b>로 운전을 배웁니다. 색은 종(비슷한 신경망끼리 묶은 무리), ✕는 실패한 자리, 노란 원은 현재 선두입니다.</p>
-  <p class="sub" lang="en"><b>150 cars, each with its own neural network, drive at the same time.</b> All cars run at the <b>same fixed speed</b> chosen in the menu; each senses walls with 7 range sensors and decides <b>only the steering</b>. When a generation ends, the cars that got furthest become parents of the next 150 (crossover and mutation); over generations the whole population <b>evolves</b> to drive. Colour = species (a group of similar networks), ✕ = where a car failed, yellow halo = current leader.</p>
+  <p class="sub" lang="ko"><b>서로 다른 신경망을 가진 자동차 150대가 동시에</b> 달립니다. 모든 차는 <b>차량 속도</b> 슬라이더로 정한 <b>같은 속도로 고정</b>되어 달리고, 각자 7개의 거리 센서로 벽을 감지해 <b>조향만</b> 결정합니다. 한 세대가 끝나면 멀리 간 차들이 부모가 되어 다음 세대 150대를 만들고(교차·변이), 이 과정을 반복하며 무리 전체가 <b>진화</b>로 운전을 배웁니다. 색은 종(비슷한 신경망끼리 묶은 무리), ✕는 실패한 자리, 노란 원은 현재 선두입니다.</p>
+  <p class="sub" lang="en"><b>150 cars, each with its own neural network, drive at the same time.</b> All cars run at the <b>same fixed speed</b> set with the <b>car speed</b> slider; each senses walls with 7 range sensors and decides <b>only the steering</b>. When a generation ends, the cars that got furthest become parents of the next 150 (crossover and mutation); over generations the whole population <b>evolves</b> to drive. Colour = species (a group of similar networks), ✕ = where a car failed, yellow halo = current leader.</p>
 
   <div class="ctrl">
     <button id="playBtn" class="primary"></button>
     <button id="speedBtn"></button>
     <select id="trackType" aria-label="track"></select>
     <button id="newTrackBtn"><span lang="ko">새 트랙</span><span lang="en">New track</span></button>
-    <select id="carSpeed" aria-label="car speed">
-      <option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option>
-    </select>
+    <label class="speed-ctl"><span lang="ko">차량 속도</span><span lang="en">Car speed</span>
+      <input type="range" id="carSpeed" min="1" max="8" step="0.5" value="4" aria-label="car speed">
+      <output id="carSpeedOut">4</output></label>
     <select id="popSize" aria-label="population size">
       <option value="60">60</option><option value="100">100</option><option value="150" selected>150</option><option value="250">250</option>
     </select>
+    <span id="speedHint" class="meta"></span>
     <label><input type="checkbox" id="randomize"> <span lang="ko">도메인 랜덤화 (세대마다 새 트랙)</span><span lang="en">Domain randomisation (new track each gen)</span></label>
     <label><input type="checkbox" id="noise"> <span lang="ko">센서 잡음</span><span lang="en">Sensor noise</span></label>
     <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
@@ -228,7 +229,7 @@
     <tr><th><span lang="ko">Physical AI 요소</span><span lang="en">Physical AI element</span></th><th><span lang="ko">이 실습에서</span><span lang="en">In this lab</span></th></tr>
     <tr><td><span lang="ko">센서 (인지)</span><span lang="en">Sensors (perception)</span></td><td><span lang="ko">−90°~+90° 7방향 거리 센서(LiDAR를 단순화)</span><span lang="en">7 range beams from −90° to +90° (a simplified LiDAR)</span></td></tr>
     <tr><td><span lang="ko">정책 (판단)</span><span lang="en">Policy (decision)</span></td><td><span lang="ko">NEAT가 진화시킨 신경망. 구조(노드·연결)까지 스스로 자람</span><span lang="en">A NEAT-evolved network whose structure (nodes, links) grows by itself</span></td></tr>
-    <tr><td><span lang="ko">구동기 (행동)</span><span lang="en">Actuators (action)</span></td><td><span lang="ko">조향 (−1~+1 연속값, 한 스텝 최대 약 7°). 속도는 메뉴에서 고른 값으로 고정</span><span lang="en">Steering (continuous −1…+1, up to about 7° per step); speed fixed to the menu value</span></td></tr>
+    <tr><td><span lang="ko">구동기 (행동)</span><span lang="en">Actuators (action)</span></td><td><span lang="ko">조향 (−1~+1 연속값, 한 스텝 최대 약 7°). 속도는 슬라이더로 정한 값(1~8)으로 고정</span><span lang="en">Steering (continuous −1…+1, up to about 7° per step); speed fixed to the slider value (1–8)</span></td></tr>
     <tr><td><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></td><td><span lang="ko">무작위로 생성되는 트랙, 회전한 차체의 충돌 판정</span><span lang="en">Randomly generated tracks, collision checks on the rotated body</span></td></tr>
     <tr><td><span lang="ko">도메인 랜덤화 · 센서 잡음</span><span lang="en">Domain randomisation · sensor noise</span></td><td><span lang="ko">세대마다 새 트랙, 센서값에 가우시안 잡음</span><span lang="en">New track every generation, Gaussian noise on readings</span></td></tr>
     <tr><td>Sim-to-Real</td><td><span lang="ko">학습에 쓰지 않은 트랙에서 챔피언을 평가</span><span lang="en">Evaluate the champion on tracks never used in training</span></td></tr>
@@ -254,7 +255,7 @@
     <tr><td><span lang="ko">실행 환경</span><span lang="en">Runtime</span></td><td><span lang="ko">파이썬 설치, pygame 창</span><span lang="en">Python install, pygame window</span></td><td><span lang="ko">브라우저만 있으면 됨 (NEAT 직접 구현)</span><span lang="en">Just a browser (NEAT implemented from scratch)</span></td></tr>
     <tr><td><span lang="ko">벽 판정 · 센서</span><span lang="en">Walls · sensors</span></td><td><span lang="ko">화면 픽셀 색을 1px씩 검사</span><span lang="en">Read screen pixel colours 1 px at a time</span></td><td><span lang="ko">벽 선분과의 교차 계산 + 공간 격자 (정확하고 빠름)</span><span lang="en">Ray–segment intersection with a spatial grid (exact and fast)</span></td></tr>
     <tr><td><span lang="ko">충돌</span><span lang="en">Collision</span></td><td><span lang="ko">회전하지 않은 사각형의 네 모서리</span><span lang="en">Four corners of an unrotated box</span></td><td><span lang="ko">회전한 차체의 네 모서리 ↔ 중심선 거리</span><span lang="en">Rotated body corners vs. centre-line distance</span></td></tr>
-    <tr><td><span lang="ko">조작</span><span lang="en">Control</span></td><td><span lang="ko">좌/우 on-off (출력 &gt; 0.5), 속도 고정</span><span lang="en">Left/right on-off (output &gt; 0.5), fixed speed</span></td><td><span lang="ko">조향 연속값(−1~+1). 속도는 메뉴에서 고른 값으로 고정 (2·3·4·5)</span><span lang="en">Continuous steering (−1…+1); speed fixed to a menu value (2·3·4·5)</span></td></tr>
+    <tr><td><span lang="ko">조작</span><span lang="en">Control</span></td><td><span lang="ko">좌/우 on-off (출력 &gt; 0.5), 속도 고정</span><span lang="en">Left/right on-off (output &gt; 0.5), fixed speed</span></td><td><span lang="ko">조향 연속값(−1~+1). 속도는 사용자가 슬라이더로 정한 값(1~8)으로 고정</span><span lang="en">Continuous steering (−1…+1); speed fixed to a user-set slider value (1–8)</span></td></tr>
     <tr><td><span lang="ko">적합도</span><span lang="en">Fitness</span></td><td><span lang="ko">생존 시간 + "x &gt; 850" 통과 보너스</span><span lang="en">Survival time + "x &gt; 850" bonus</span></td><td><span lang="ko">중심선을 따라 전진한 거리(트랙 길이로 정규화) + 완주 시간 보너스, 역주행·정체 즉시 탈락</span><span lang="en">Progress along the centre line (normalised) + finishing-time bonus; reversing or stalling ends the run</span></td></tr>
     <tr><td><span lang="ko">트랙</span><span lang="en">Tracks</span></td><td><span lang="ko">M-M 트랙: 꼭짓점이 V자로 뾰족함</span><span lang="en">M-M track with sharp V-shaped peaks</span></td><td><span lang="ko">봉우리를 아치로 만들고 평활화, 겹침·급커브 자동 검사 후 재생성</span><span lang="en">Arched peaks with smoothing; overlaps and too-tight bends are detected and regenerated</span></td></tr>
     <tr><td><span lang="ko">변이 확률</span><span lang="en">Mutation rates</span></td><td><span lang="ko">노드 추가 0.5, 연결 추가 0.7 (구조가 너무 빨리 커짐)</span><span lang="en">Add node 0.5, add link 0.7 (structure balloons)</span></td><td><span lang="ko">0.03 / 0.12 + 종 개수에 맞춰 종 분화 임계값 자동 조절</span><span lang="en">0.03 / 0.12 + auto-tuned speciation threshold</span></td></tr>

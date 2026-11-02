@@ -1,6 +1,6 @@
 // Physical AI 페이지: NEAT 자율주행 학습을 브라우저에서 실행·시각화
 import { Population, Genome } from './neat.js';
-import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEEDS } from './sim.js';
+import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEED } from './sim.js';
 
 const $ = (id) => document.getElementById(id);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -373,10 +373,14 @@ function fillTrackSelect() {
   sel.innerHTML = TRACKS.map(([k, l]) => `<option value="${k}">${t(l)}</option>`).join('');
   sel.value = v;
   $('popSize').querySelectorAll('option').forEach(o => o.textContent = t({ ko: `${o.value}대`, en: `${o.value} cars` }));
-  const cs = $('carSpeed'), cv = cs.value || '4';
-  const SPEED_NAMES = { 2: { ko: ' (느림)', en: ' (slow)' }, 4: { ko: ' (기본)', en: ' (default)' }, 5: { ko: ' (빠름·어려움)', en: ' (fast, hard)' } };
-  cs.innerHTML = CAR_SPEEDS.map(v => `<option value="${v}">${t({ ko: '차량 속도 ', en: 'Car speed ' })}${v}${SPEED_NAMES[v] ? t(SPEED_NAMES[v]) : ''}</option>`).join('');
-  cs.value = cv;
+  speedHint();
+}
+function speedHint() {                               // 슬라이더 값 표시 + 난이도 안내
+  const v = +$('carSpeed').value;
+  $('carSpeedOut').textContent = v.toFixed(1);
+  $('speedHint').textContent = v > CAR_SPEED.hard
+    ? t({ ko: '⚠ 5보다 빠르면 M-M 트랙 급커브를 돌기 매우 어렵습니다', en: '⚠ Above 5 the M-M hairpins are very hard to take' })
+    : v <= 2 ? t({ ko: '느림: 빨리 배우지만 2바퀴에 시간이 오래 걸립니다', en: 'Slow: learns fast, but two laps take a while' }) : '';
 }
 
 function bind() {
@@ -390,7 +394,10 @@ function bind() {
   $('trackType').addEventListener('change', () => { trainer.opts.trackType = $('trackType').value; trainer.newTrack(); });
   $('newTrackBtn').addEventListener('click', () => trainer.newTrack());
   $('popSize').addEventListener('change', restart);
-  $('carSpeed').addEventListener('change', restart);      // 속도가 바뀌면 처음부터 다시 학습
+  const cs = $('carSpeed');
+  Object.assign(cs, { min: CAR_SPEED.min, max: CAR_SPEED.max, step: CAR_SPEED.step });
+  cs.addEventListener('input', speedHint);               // 움직이는 동안: 값만 표시
+  cs.addEventListener('change', restart);                // 놓으면: 그 속도로 처음부터 다시 학습
   $('randomize').addEventListener('change', () => trainer.setRandomize($('randomize').checked));
   $('noise').addEventListener('change', () => { trainer.opts.noise = $('noise').checked ? 0.05 : 0; });
   $('testBtn').addEventListener('click', startTest);
