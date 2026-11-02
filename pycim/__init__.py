@@ -8,6 +8,7 @@ from .wires import (ACLineSegment, Breaker, BusbarSection, Conductor, Connector,
                     PowerTransformer, PowerTransformerEnd, ProtectedSwitch, RegulatingCondEq,
                     RotatingMachine, Switch, SynchronousMachine, TransformerEnd)
 from .model import Model
+from .ids import child_mrid, new_mrid, stable_mrid
 from .rdf import to_turtle
 from . import topology
 

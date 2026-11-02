@@ -116,6 +116,46 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
   </div>
 </section>
 
+<section id="mrid">
+  <h2><span lang="ko">mRID: 설비의 주민등록번호</span><span lang="en">mRID: the equipment's permanent ID</span></h2>
+  <p class="sub" lang="ko">CIM의 모든 객체는 <code>IdentifiedObject.mRID</code>(Master Resource Identifier)를 가집니다. 시스템 간에 같은 설비를 가리키는 유일한 근거입니다.</p>
+  <p class="sub" lang="en">Every CIM object carries <code>IdentifiedObject.mRID</code> (Master Resource Identifier), the only reliable way for systems to agree on "the same equipment".</p>
+  <blockquote lang="ko">CIM의 정의: mRID는 <b>모델 관리 주체가 발급</b>하며, 교환 범위 안에서 유일해야 합니다. 전역 유일성은 <b>UUID</b>로 쉽게 얻을 수 있으므로 UUID 사용을 강력히 권장합니다.</blockquote>
+  <blockquote lang="en">From the CIM: the mRID is <b>issued by a model authority</b> and is unique within an exchange context. Global uniqueness is easily achieved with a <b>UUID</b>, which is strongly recommended.</blockquote>
+
+  <h3><span lang="ko">RDF 파일에서의 표기</span><span lang="en">How it appears in RDF files</span></h3>
+<pre><code>&lt;!-- CGMES 2.4.15 : 파일 기준 상대 IRI (rdf:ID / rdf:resource="#_…") --&gt;
+&lt;cim:Breaker rdf:ID="_6f1c2a9e-…"&gt;
+  &lt;cim:IdentifiedObject.name&gt;154kV 선로 CB&lt;/cim:IdentifiedObject.name&gt;
+  &lt;cim:Equipment.EquipmentContainer rdf:resource="#_0b7d…"/&gt;
+&lt;/cim:Breaker&gt;
+
+&lt;!-- IEC 61970-552 Ed.2 / CGMES 3.0 : 위치와 무관한 urn:uuid --&gt;
+&lt;cim:Breaker rdf:about="urn:uuid:6f1c2a9e-…"&gt; … &lt;/cim:Breaker&gt;</code></pre>
+
+  <h3><span lang="ko">발급 전략</span><span lang="en">Issuing strategy</span></h3>
+  <div class="tbl" lang="ko"><table>
+    <tr><th>상황</th><th>방법</th></tr>
+    <tr><td>새 설비를 모델에 처음 등록</td><td>UUID <b>v4</b> 발급 후 저장. 이후 계속 같은 값 사용</td></tr>
+    <tr><td>기존 시스템(SCADA, GIS, 설비관리)의 데이터를 CIM으로 변환</td><td>조직 네임스페이스 + 기존 설비코드로 UUID <b>v5</b> → 변환을 다시 돌려도 같은 mRID</td></tr>
+    <tr><td>Terminal, TransformerEnd 같은 종속 객체</td><td>부모 mRID + 번호로 v5 → 부모가 같으면 항상 같음</td></tr>
+    <tr><td>여러 시스템이 서로 다른 ID를 이미 쓰는 경우</td><td>mRID를 기준으로 하는 <b>매핑 테이블</b> (CIM <code>Name</code> / <code>NameType</code>으로 표현 가능)</td></tr>
+  </table></div>
+  <div class="tbl" lang="en"><table>
+    <tr><th>Situation</th><th>Approach</th></tr>
+    <tr><td>Registering new equipment</td><td>Issue a UUID <b>v4</b>, store it, and keep using it</td></tr>
+    <tr><td>Converting legacy data (SCADA, GIS, asset systems) to CIM</td><td>UUID <b>v5</b> from an organisation namespace + the legacy code → re-running the conversion gives the same mRIDs</td></tr>
+    <tr><td>Dependent objects (Terminal, TransformerEnd)</td><td>v5 from the parent mRID + number → stable as long as the parent is</td></tr>
+    <tr><td>Several systems already use their own IDs</td><td>A <b>mapping table</b> keyed by mRID (expressible with CIM <code>Name</code> / <code>NameType</code>)</td></tr>
+  </table></div>
+
+  <h3><span lang="ko">변압기를 교체하면 mRID는?</span><span lang="en">What happens to the mRID when a transformer is replaced?</span></h3>
+  <p lang="ko">CIM은 <b>기능 위치</b>(<code>PowerSystemResource</code>, 예: "A변전소 M.Tr #1 자리")와 <b>물리 자산</b>(<code>Asset</code>, IEC 61968, 예: 제조번호 XYZ-123인 변압기)을 구분합니다. 변압기를 교체하면 계통 모델의 <code>PowerTransformer</code> mRID는 <b>그대로</b> 두고, 새 <code>Asset</code>에 <b>새 mRID</b>를 발급해 연결합니다. 그래서 계통 해석 모델은 그대로 쓰면서 자산 이력도 추적할 수 있습니다.</p>
+  <p lang="en">CIM separates the <b>functional position</b> (<code>PowerSystemResource</code>, e.g. "M.Tr #1 bay at Substation A") from the <b>physical asset</b> (<code>Asset</code>, IEC 61968, e.g. serial no. XYZ-123). On replacement, the <code>PowerTransformer</code> mRID <b>stays</b>; the new <code>Asset</code> gets a <b>new mRID</b> and is linked to it. The network model is untouched while asset history is preserved.</p>
+  <p lang="ko">pycim의 구현은 <a href="project.html#mrid">프로젝트 페이지</a>에서 볼 수 있습니다.</p>
+  <p lang="en">See the pycim implementation on the <a href="project.html#mrid">Project page</a>.</p>
+</section>
+
 <section id="example">
   <h2><span lang="ko">인터랙티브 예제: 작은 변전소</span><span lang="en">Interactive example: a small substation</span></h2>
   <p class="sub" lang="ko"><b>차단기(■)를 눌러 열고 닫아 보세요.</b> 토폴로지를 다시 탐색해 정전 범위를 표시하고, 각 노드에는 pycim → pandapower로 계산한 전압[pu]이 나옵니다. 다른 설비를 누르면 CIM 표현을 볼 수 있습니다.</p>

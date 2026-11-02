@@ -152,12 +152,64 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
   </table></div>
 </section>
 
+<section id="ids">
+  <h2><span lang="ko">식별자: IRI와 UUID</span><span lang="en">Identifiers: IRIs and UUIDs</span></h2>
+  <p class="sub" lang="ko">온톨로지에서 모든 개체는 <b>IRI(전역 식별자)</b>로 구별됩니다. 이름은 겹치고 바뀌지만, 식별자는 유일하고 바뀌지 않아야 합니다.</p>
+  <p class="sub" lang="en">Every resource in an ontology is identified by an <b>IRI</b>. Names collide and change; identifiers must be unique and stable.</p>
+  <blockquote lang="ko">"M.Tr #1"이라는 이름의 변압기는 전국 변전소마다 있습니다. 이름만으로는 어느 변압기인지 알 수 없고, 변전소 이름이 바뀌면 이름을 기준으로 한 연결이 모두 끊깁니다. 그래서 <b>이름은 속성으로, 식별은 IRI로</b> 합니다.</blockquote>
+  <blockquote lang="en">Almost every substation has a transformer named "M.Tr #1". A name cannot tell them apart, and renaming a substation breaks every link built on names. So: <b>names are properties; identity is the IRI</b>.</blockquote>
+
+  <h3><span lang="ko">IRI를 만드는 두 가지 방식</span><span lang="en">Two ways to mint IRIs</span></h3>
+  <div class="tbl" lang="ko"><table>
+    <tr><th>방식</th><th>예</th><th>장점</th><th>단점</th></tr>
+    <tr><td>의미 있는 경로</td><td><code>…/grid/SS_A/TR_1</code></td><td>사람이 읽기 쉬움</td><td>이름·소속이 바뀌면 IRI도 바뀌어야 함</td></tr>
+    <tr><td><b>불투명 ID (UUID)</b></td><td><code>urn:uuid:3f2b…</code></td><td>의미가 없어 바뀔 이유가 없음, 중앙 발급 없이 유일</td><td>사람이 읽기 어려움 → 이름은 별도 속성으로</td></tr>
+  </table></div>
+  <div class="tbl" lang="en"><table>
+    <tr><th>Style</th><th>Example</th><th>Pros</th><th>Cons</th></tr>
+    <tr><td>Meaningful path</td><td><code>…/grid/SS_A/TR_1</code></td><td>Human-readable</td><td>Must change when names or ownership change</td></tr>
+    <tr><td><b>Opaque ID (UUID)</b></td><td><code>urn:uuid:3f2b…</code></td><td>Carries no meaning, so never needs to change; unique without a central registry</td><td>Not human-readable → keep names as properties</td></tr>
+  </table></div>
+
+  <h3>UUID</h3>
+  <p lang="ko">128비트 식별자(RFC 9562, 구 RFC 4122)로, 중앙 발급 기관 없이 각 시스템이 따로 만들어도 사실상 충돌하지 않습니다. 용도에 따라 버전을 고릅니다.</p>
+  <p lang="en">A 128-bit identifier (RFC 9562, formerly RFC 4122). Independent systems can mint them without coordination and practically never collide. Pick the version by purpose.</p>
+  <div class="tbl" lang="ko"><table>
+    <tr><th>버전</th><th>만드는 방법</th><th>언제 쓰나</th></tr>
+    <tr><td><b>v4</b></td><td>무작위 (122비트)</td><td>새 객체를 처음 등록할 때. 가장 흔함</td></tr>
+    <tr><td><b>v5</b></td><td>네임스페이스 + 이름의 SHA-1 해시. <b>같은 입력 → 항상 같은 UUID</b></td><td>기존 코드(설비번호 등)가 있어 매번 같은 ID를 다시 만들어야 할 때</td></tr>
+    <tr><td><b>v7</b></td><td>시각(ms) + 무작위. 시간순 정렬됨</td><td>데이터베이스 기본키 (인덱스 효율)</td></tr>
+  </table></div>
+  <div class="tbl" lang="en"><table>
+    <tr><th>Version</th><th>How</th><th>When</th></tr>
+    <tr><td><b>v4</b></td><td>Random (122 bits)</td><td>Registering a new object. Most common</td></tr>
+    <tr><td><b>v5</b></td><td>SHA-1 of namespace + name. <b>Same input → same UUID</b></td><td>When an existing code (e.g. equipment number) must map to the same ID every time</td></tr>
+    <tr><td><b>v7</b></td><td>Timestamp (ms) + random; sortable</td><td>Database primary keys (index-friendly)</td></tr>
+  </table></div>
+
+  <h3><span lang="ko">식별자 운영 원칙</span><span lang="en">Rules for identifiers</span></h3>
+  <ul lang="ko">
+    <li><b>한 번 발급하면 바꾸지 않는다.</b> 데이터를 다시 내보낼 때마다 ID가 바뀌면 시스템 간 연결과 이력이 모두 끊깁니다.</li>
+    <li><b>재사용하지 않는다.</b> 철거된 설비의 ID를 새 설비에 붙이지 않습니다.</li>
+    <li><b>ID에 의미를 넣지 않는다.</b> 위치, 전압, 소속은 속성으로 표현합니다.</li>
+    <li><b>매핑 테이블을 관리한다.</b> 기존 시스템의 코드(SCADA 포인트, GIS ID, 자산번호)와 UUID의 대응을 기록합니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Never change an issued ID.</b> If IDs change on every export, cross-system links and history break.</li>
+    <li><b>Never reuse.</b> A removed device's ID is not given to a new one.</li>
+    <li><b>Keep meaning out of IDs.</b> Location, voltage and ownership are properties.</li>
+    <li><b>Maintain a mapping table</b> between legacy codes (SCADA points, GIS IDs, asset numbers) and UUIDs.</li>
+  </ul>
+  <p lang="ko">전력 분야의 CIM에서는 이 식별자를 <b>mRID</b>라고 부릅니다. → <a href="grid.html#mrid">전력망 페이지의 mRID 설명</a></p>
+  <p lang="en">In the power-system CIM this identifier is the <b>mRID</b>. → <a href="grid.html#mrid">mRID on the Power Grid page</a></p>
+</section>
+
 <section>
   <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
   <ul>
     <li><a href="https://www.w3.org/TR/rdf11-primer/">W3C RDF 1.1 Primer</a> · <a href="https://www.w3.org/TR/owl2-primer/">OWL 2 Primer</a></li>
     <li>Noy &amp; McGuinness, <i>Ontology Development 101</i> (Stanford)</li>
-    <li><a href="https://protege.stanford.edu/">Protégé</a></li>
+    <li><a href="https://protege.stanford.edu/">Protégé</a> · <a href="https://www.rfc-editor.org/rfc/rfc9562">RFC 9562 (UUID)</a> · <a href="https://www.w3.org/TR/cooluris/">W3C Cool URIs for the Semantic Web</a></li>
     <li><span lang="ko">문서 원본</span><span lang="en">Source document</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/01-ontology-introduction.md">docs/01-ontology-introduction.md</a></li>
   </ul>
   <div class="pager"><span></span><a href="grid.html"><span lang="ko">다음: 전력망 온톨로지 →</span><span lang="en">Next: Power grid ontology →</span></a></div>

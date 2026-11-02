@@ -13,7 +13,7 @@ IEC CIM의 UML 모델을 **파이썬 클래스로 그대로 옮겨**,
 | **파이썬다운 이름, CIM 이름 자동 변환** | 필드는 `snake_case`. 직렬화할 때 *선언한 클래스명.CIM이름*으로 변환 (`rated_s` → `PowerTransformerEnd.ratedS`) |
 | **속성 vs 연관 구분** | 값은 camelCase(`normalOpen`), 다른 객체 참조는 PascalCase(`Equipment.EquipmentContainer`). CIM 규칙과 같음 |
 | **역방향 연관 자동 관리** | `Terminal`을 만들면 `equipment.terminals`, `node.terminals`에 자동 등록. 역방향 필드는 직렬화하지 않음 |
-| **mRID 기본 제공** | 모든 객체에 UUID `mRID` 자동 부여 |
+| **안정적인 mRID** | 기본은 UUID v4. 기존 코드가 있으면 `stable_mrid()`(v5), Terminal·TransformerEnd는 부모에서 파생. 비UUID·중복은 `Model.add`에서 거부 |
 | **표준 라이브러리만 사용** | `dataclasses` 기반. RDF 직렬화도 의존성 없이 구현 (`rdflib`는 테스트에만 사용) |
 
 ## 2. 패키지 구조
@@ -21,6 +21,7 @@ IEC CIM의 UML 모델을 **파이썬 클래스로 그대로 옮겨**,
 ```
 pycim/
 ├── base.py      IdentifiedObject, @cim 데코레이터, CIM 이름 매핑 규칙
+├── ids.py       mRID 발급 (UUID v4 / v5 / 종속 객체 파생)
 ├── core.py      PowerSystemResource, 컨테이너(Substation, VoltageLevel…), Equipment,
 │                ConductingEquipment, Terminal, ConnectivityNode, BaseVoltage
 ├── wires.py     ACLineSegment, Switch/Breaker/Disconnector, BusbarSection,
@@ -69,6 +70,20 @@ class Breaker(ProtectedSwitch): ...
 ACLineSegment(length=12.5)   →  cim:Conductor.length "12.5"
 Breaker(open=True)           →  cim:Switch.open "true"
 VoltageLevel(substation=ss)  →  cim:VoltageLevel.Substation ex:_<mRID>
+```
+
+### mRID 발급 (`ids.py`)
+
+| 함수 | UUID | 용도 |
+|---|---|---|
+| `new_mrid()` | v4 | 기본값. 새 설비 등록 |
+| `stable_mrid(*keys)` | v5 | 기존 설비코드에서 항상 같은 mRID |
+| `child_mrid(parent, *keys)` | v5 | Terminal, TransformerEnd (자동 적용) |
+
+```python
+cb = Breaker(mrid=stable_mrid("SCADA", "A변전소", "CB-154-01"), name="154kV 선로 CB")
+cb.connect(n1, n2)          # Terminal mRID = child_mrid(cb.mrid, "Terminal", 1), ...
+to_turtle(m, iri_style="urn")   # <urn:uuid:...> 형식 IRI (기본은 CGMES 2.4.15식 ex:_uuid)
 ```
 
 ## 4. 사용 예
@@ -135,6 +150,8 @@ export_pandapower.solve(m)                          # {노드: 전압 pu}
 ## 6. 로드맵
 
 - [x] pandapower / OpenDSS 모델로 변환해 조류계산
+- [x] mRID 발급 규칙 (UUID v4 / v5, 종속 객체 파생, 중복 검사)
+- [ ] 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)
 - [ ] CGMES(RDF/XML) 파일 읽기 → 파이썬 객체 생성
 - [ ] EQ / SSH / SV 프로파일 분리 직렬화 (계산 결과 → SV)
 - [ ] Measurement / Analog 클래스와 SCADA 값 연계

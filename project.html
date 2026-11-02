@@ -41,6 +41,8 @@
       <div class="ex"><code>length</code> → <code>Conductor.length</code></div></div>
     <div class="card"><h4><span lang="ko">역방향 연관 자동 관리</span><span lang="en">Managed inverse associations</span></h4>
       <p lang="ko">Terminal을 만들면 설비와 노드 양쪽에 자동으로 등록됩니다.</p><p lang="en">Creating a Terminal registers it on both the equipment and the node.</p></div>
+    <div class="card"><h4><span lang="ko">안정적인 mRID</span><span lang="en">Stable mRIDs</span></h4>
+      <p lang="ko">UUID v4/v5로 발급하고, 단자 같은 종속 객체는 부모에서 파생합니다. 중복·비UUID는 거부합니다.</p><p lang="en">Issued as UUID v4/v5; dependent objects derive from their parent. Duplicates and non-UUIDs are rejected.</p></div>
     <div class="card"><h4><span lang="ko">의존성 없음</span><span lang="en">No dependencies</span></h4>
       <p lang="ko">표준 <code>dataclasses</code>만 사용합니다. 해석 도구는 변환할 때만 필요합니다.</p><p lang="en">Only the standard <code>dataclasses</code>. Solvers are needed only for export.</p></div>
   </div>
@@ -56,6 +58,30 @@ ld  = m.add(EnergyConsumer(name="load", p=8.5)).connect(n2)
 cb.open = True
 topology.deenergized_loads(m, [src])   # → [EnergyConsumer('load')]
 print(to_turtle(m))                    # export as CIM RDF (Turtle)</code></pre>
+</section>
+
+<section id="mrid">
+  <h2><span lang="ko">mRID 발급 (<code>pycim/ids.py</code>)</span><span lang="en">Issuing mRIDs (<code>pycim/ids.py</code>)</span></h2>
+  <p class="sub" lang="ko">CIM의 mRID는 한 번 발급하면 바뀌면 안 됩니다. pycim은 세 가지 방식을 제공합니다.</p>
+  <p class="sub" lang="en">An mRID must never change once issued. pycim offers three ways to issue one.</p>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">함수</span><span lang="en">Function</span></th><th>UUID</th><th><span lang="ko">용도</span><span lang="en">Use</span></th></tr>
+    <tr><td><code>new_mrid()</code></td><td>v4</td><td><span lang="ko">기본값. 새 설비 등록</span><span lang="en">Default. New equipment</span></td></tr>
+    <tr><td><code>stable_mrid(*keys)</code></td><td>v5</td><td><span lang="ko">기존 설비코드에서 항상 같은 mRID 생성</span><span lang="en">Same mRID every time from a legacy code</span></td></tr>
+    <tr><td><code>child_mrid(parent, *keys)</code></td><td>v5</td><td><span lang="ko">Terminal, TransformerEnd (자동 적용)</span><span lang="en">Terminal, TransformerEnd (applied automatically)</span></td></tr>
+  </table></div>
+<pre><code class="language-python">from pycim import Breaker, ConnectivityNode, Model, stable_mrid
+
+# 기존 SCADA 설비코드 → 항상 같은 mRID (UUID v5)
+cb = Breaker(mrid=stable_mrid("SCADA", "A변전소", "CB-154-01"), name="154kV 선로 CB")
+cb.connect(ConnectivityNode(), ConnectivityNode())   # Terminal mRID도 cb에서 파생
+
+m = Model()
+m.add(cb)
+m.add(Breaker(mrid="CB-154-01"))   # ValueError: mRID는 UUID여야 합니다
+m.add(Breaker(mrid=cb.mrid))       # ValueError: 중복 mRID</code></pre>
+  <p lang="ko">RDF로 내보낼 때는 <code>to_turtle(m, iri_style="urn")</code>으로 <code>urn:uuid:…</code> 형식의 IRI를 쓸 수 있습니다 (기본값은 CGMES 2.4.15식 <code>_uuid</code>). 예제 계통(<code>samples.py</code>)은 모든 mRID를 v5로 발급해 몇 번을 만들어도 같은 ID가 나옵니다.</p>
+  <p lang="en">For RDF, <code>to_turtle(m, iri_style="urn")</code> emits <code>urn:uuid:…</code> IRIs (default: CGMES 2.4.15-style <code>_uuid</code>). The sample grid (<code>samples.py</code>) issues all mRIDs as v5, so it is identical on every build.</p>
 </section>
 
 <section id="convert">
@@ -99,6 +125,7 @@ CIM model ───┤
   <div data-viewer>
     <div class="tabs" role="tablist">
       <button data-file="pycim/base.py">base.py</button>
+      <button data-file="pycim/ids.py">ids.py</button>
       <button data-file="pycim/core.py">core.py</button>
       <button data-file="pycim/wires.py">wires.py</button>
       <button data-file="pycim/topology.py">topology.py</button>
@@ -186,6 +213,8 @@ Show Voltages LN</code></pre>
   <ul lang="ko">
     <li>✅ Core · Topology · Wires 핵심 클래스, Turtle 내보내기, 정전 분석</li>
     <li>✅ pandapower · OpenDSS 변환과 결과 비교</li>
+    <li>✅ mRID 발급 규칙 (UUID v4 / v5, 종속 객체 파생, 중복 검사)</li>
+    <li>⬜ 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)</li>
     <li>⬜ CGMES(RDF/XML) 파일 읽기</li>
     <li>⬜ 계산 결과를 CIM SV 프로파일로 되돌려 저장</li>
     <li>⬜ Measurement / Analog 클래스와 SCADA 값 연계</li>
@@ -195,6 +224,8 @@ Show Voltages LN</code></pre>
   <ul lang="en">
     <li>✅ Core · Topology · Wires classes, Turtle export, outage analysis</li>
     <li>✅ Export to pandapower · OpenDSS with result comparison</li>
+    <li>✅ mRID issuing rules (UUID v4 / v5, derived child IDs, duplicate check)</li>
+    <li>⬜ Legacy code ↔ mRID mapping table (CIM Name / NameType)</li>
     <li>⬜ CGMES (RDF/XML) import</li>
     <li>⬜ Write solver results back as CIM SV profile</li>
     <li>⬜ Measurement / Analog classes linked to SCADA values</li>

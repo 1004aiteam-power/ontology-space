@@ -122,16 +122,50 @@ Measurement ──PowerSystemResource──▶ 설비
 Analog ──AnalogValues──▶ AnalogValue (실제 값, SCADA 연계)
 ```
 
-## 4. CIM 네이밍 규칙 (RDF로 쓸 때)
+## 4. mRID: 설비의 식별자
+
+CIM의 모든 객체는 `IdentifiedObject.mRID`(Master Resource Identifier)를 가집니다.
+
+> CIM의 정의: mRID는 **모델 관리 주체가 발급**하며, 교환 범위 안에서 유일해야 합니다.
+> 전역 유일성은 **UUID**로 쉽게 얻을 수 있으므로 UUID 사용을 강력히 권장합니다.
+
+### RDF 파일에서의 표기
+
+```xml
+<!-- CGMES 2.4.15: 파일 기준 상대 IRI -->
+<cim:Breaker rdf:ID="_6f1c2a9e-...">
+  <cim:Equipment.EquipmentContainer rdf:resource="#_0b7d..."/>
+</cim:Breaker>
+
+<!-- IEC 61970-552 Ed.2 / CGMES 3.0: 위치와 무관한 urn:uuid -->
+<cim:Breaker rdf:about="urn:uuid:6f1c2a9e-..."> ... </cim:Breaker>
+```
+
+### 발급 전략
+
+| 상황 | 방법 |
+|---|---|
+| 새 설비를 처음 등록 | UUID **v4** 발급 후 저장, 이후 계속 사용 |
+| 기존 시스템(SCADA, GIS, 설비관리) 데이터를 CIM으로 변환 | 조직 네임스페이스 + 기존 설비코드로 UUID **v5** → 변환을 다시 돌려도 같은 mRID |
+| Terminal, TransformerEnd 같은 종속 객체 | 부모 mRID + 번호로 v5 |
+| 여러 시스템이 각자 ID를 쓰는 경우 | mRID 기준 **매핑 테이블** (CIM `Name` / `NameType`으로 표현 가능) |
+
+### 설비 교체와 mRID
+
+CIM은 **기능 위치**(`PowerSystemResource`, 예: "A변전소 M.Tr #1 자리")와 **물리 자산**(`Asset`, IEC 61968, 예: 제조번호 XYZ-123)을 구분합니다.
+변압기를 교체하면 `PowerTransformer`의 mRID는 **그대로** 두고, 새 `Asset`에 **새 mRID**를 발급해 연결합니다.
+계통 해석 모델은 그대로 쓰면서 자산 이력도 추적할 수 있습니다.
+
+## 5. CIM 네이밍 규칙 (RDF로 쓸 때)
 
 - 네임스페이스: CIM 버전마다 다름
   - CGMES 2.4.15: `http://iec.ch/TC57/2013/CIM-schema-cim16#`
   - CGMES 3.0 / CIM100: `http://iec.ch/TC57/CIM100#`
 - 클래스: `cim:PowerTransformer`
 - 속성: `클래스명.속성명` 형식. 예: `cim:IdentifiedObject.name`, `cim:Terminal.ConnectivityNode`
-- 식별자: `mRID` (UUID 권장)
+- 식별자: `mRID` (UUID 권장, 위 4장 참고)
 
-## 5. 활용 사례
+## 6. 활용 사례
 
 | 분야 | 활용 |
 |---|---|
@@ -143,14 +177,14 @@ Analog ──AnalogValues──▶ AnalogValue (실제 값, SCADA 연계)
 | **데이터 품질 검증** | SHACL로 "모든 ACLineSegment는 Terminal을 2개 가진다" 같은 규칙 검증 |
 | **AI / LLM 연계** | 전력망 지식 그래프 기반 GraphRAG, 운영자 질의 응답 |
 
-## 6. 국내 관점에서의 적용 포인트 (아이디어)
+## 7. 국내 관점에서의 적용 포인트 (아이디어)
 
 - 송전(154/345/765 kV)·배전(22.9 kV) 계통을 같은 CIM 모델 안에서 표현하기
-- 기존 시스템(SCADA, GIS, 설비관리)의 코드 체계와 CIM `mRID` 사이 매핑 테이블 설계
+- 기존 시스템(SCADA, GIS, 설비관리)의 코드 체계와 CIM `mRID` 사이 매핑 테이블 설계 (UUID v5로 결정적 발급)
 - 재생에너지·ESS 확산에 대비한 DER 확장 모델 (IEC 61968 및 CIM DER 확장 참고)
 - 온톨로지와 계통 해석 툴 연계 (예: CGMES ↔ OpenDSS, pandapower 변환)
 
-## 7. 참고 자료
+## 8. 참고 자료
 
 - IEC CIM 사용자 그룹 (CIMug): https://cimug.ucaiug.org/
 - ENTSO-E CGMES: https://www.entsoe.eu/data/cim/cim-for-grid-models-exchange/

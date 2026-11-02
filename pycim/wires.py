@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .base import IdentifiedObject, cim, inverse
+from .ids import child_mrid
 from .core import BaseVoltage, ConductingEquipment, Terminal
 
 
@@ -99,8 +100,9 @@ class PowerTransformer(ConductingEquipment):
         return list(self.terminals) + list(self.ends)
 
     def add_end(self, terminal: Terminal, **kwargs) -> "PowerTransformerEnd":
-        return PowerTransformerEnd(power_transformer=self, terminal=terminal,
-                                   end_number=len(self.ends) + 1, **kwargs)
+        n = len(self.ends) + 1
+        kwargs.setdefault("mrid", child_mrid(self.mrid, "PowerTransformerEnd", n))
+        return PowerTransformerEnd(power_transformer=self, terminal=terminal, end_number=n, **kwargs)
 
 
 @cim

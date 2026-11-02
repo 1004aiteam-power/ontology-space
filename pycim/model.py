@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Iterator, TypeVar
 
 from .base import IdentifiedObject
+from .ids import is_uuid
 
 T = TypeVar("T", bound=IdentifiedObject)
 
@@ -13,6 +14,11 @@ class Model:
         self._objects: dict[str, IdentifiedObject] = {}
 
     def add(self, obj: T) -> T:
+        """객체 등록. mRID가 UUID가 아니거나 이미 있으면 거부한다."""
+        if not is_uuid(obj.mrid):
+            raise ValueError(f"mRID는 UUID여야 합니다: {obj.mrid!r}")
+        if obj.mrid in self._objects and self._objects[obj.mrid] is not obj:
+            raise ValueError(f"중복 mRID: {obj.mrid} ({self._objects[obj.mrid]!r}, {obj!r})")
         self._objects[obj.mrid] = obj
         return obj
 

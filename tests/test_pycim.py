@@ -103,3 +103,51 @@ def test_pandapower_and_opendss_agree():
     a, b = export_pandapower.solve(m), export_opendss.solve(m)
     for cn in a:
         assert abs(a[cn] - b[cn]) < 1e-3
+
+
+# ---- mRID 발급 -------------------------------------------------------------
+def test_default_mrid_is_uuid4():
+    import uuid
+    a, b = Breaker(name="x"), Breaker(name="x")
+    assert uuid.UUID(a.mrid).version == 4 and a.mrid != b.mrid
+
+
+def test_stable_mrid_is_deterministic():
+    import uuid
+    from pycim import stable_mrid
+    a = stable_mrid("SCADA", "A변전소", "CB-154-01")
+    assert a == stable_mrid("SCADA", "A변전소", "CB-154-01")
+    assert a != stable_mrid("SCADA", "A변전소", "CB-154-02")
+    assert uuid.UUID(a).version == 5
+
+
+def test_sample_grid_ids_are_reproducible():
+    from pycim.samples import sample_grid
+    a, b = sample_grid(), sample_grid()
+    assert [o.mrid for o in a] == [o.mrid for o in b]
+    assert len({o.mrid for o in a}) == len(a)          # 전부 유일
+
+
+def test_terminal_and_end_ids_follow_parent():
+    from pycim import stable_mrid
+    tr = PowerTransformer(mrid=stable_mrid("T"), name="T").connect(ConnectivityNode(), ConnectivityNode())
+    tr2 = PowerTransformer(mrid=stable_mrid("T"), name="T").connect(ConnectivityNode(), ConnectivityNode())
+    assert [t.mrid for t in tr.terminals] == [t.mrid for t in tr2.terminals]
+    assert tr.add_end(tr.terminals[0]).mrid == tr2.add_end(tr2.terminals[0]).mrid
+
+
+def test_model_rejects_bad_or_duplicate_mrid():
+    m = Model()
+    with pytest.raises(ValueError):
+        m.add(Breaker(mrid="CB-1"))
+    m.add(Breaker(mrid="9d1f0c1e-3a55-4d9b-9a3e-2f7f2c1b0a11"))
+    with pytest.raises(ValueError):
+        m.add(Breaker(mrid="9d1f0c1e-3a55-4d9b-9a3e-2f7f2c1b0a11"))
+
+
+def test_turtle_urn_style():
+    rdflib = pytest.importorskip("rdflib")
+    m, *_ = build()
+    g = rdflib.Graph().parse(data=to_turtle(m, iri_style="urn"), format="turtle")
+    subjects = {str(s) for s in g.subjects()}
+    assert all(s.startswith("urn:uuid:") for s in subjects)

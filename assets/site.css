@@ -115,3 +115,4 @@ ol li,ul li{margin:4px 0}
 .pager{display:flex;justify-content:space-between;gap:12px;padding:32px 0 0;flex-wrap:wrap}
 .pager a{text-decoration:none;font-weight:600}
 footer{margin-top:48px;padding:32px 0 56px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+@media (max-width:520px){ .brand{display:none} nav a{padding:6px 8px} }

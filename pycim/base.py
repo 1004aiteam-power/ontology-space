@@ -12,9 +12,10 @@
 from __future__ import annotations
 
 import dataclasses
-import uuid
 from dataclasses import dataclass, field
 from typing import Iterator, TypeVar
+
+from .ids import new_mrid
 
 T = TypeVar("T")
 
@@ -37,7 +38,7 @@ def inverse(**kwargs):
 class IdentifiedObject:
     """모든 CIM 객체의 최상위 클래스 (IEC 61970-301 Core)."""
 
-    mrid: str = field(default_factory=lambda: str(uuid.uuid4()), metadata={"cim": "mRID"})
+    mrid: str = field(default_factory=new_mrid, metadata={"cim": "mRID"})  # 기본: UUID v4
     name: str = ""
     description: str = ""
 

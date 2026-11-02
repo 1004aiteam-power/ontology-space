@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .base import IdentifiedObject, cim, inverse
+from .ids import child_mrid
 
 
 @cim
@@ -72,7 +73,8 @@ class ConductingEquipment(Equipment):
         """노드 순서대로 Terminal(sequenceNumber 1, 2, ...)을 만들어 연결한다."""
         for node in nodes:
             n = len(self.terminals) + 1
-            Terminal(name=f"{self.name} T{n}", sequence_number=n,
+            Terminal(mrid=child_mrid(self.mrid, "Terminal", n),  # 설비 mRID가 같으면 단자도 같다
+                     name=f"{self.name} T{n}", sequence_number=n,
                      conducting_equipment=self, connectivity_node=node)
         return self
 
