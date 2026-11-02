@@ -213,3 +213,4 @@ ol.steps li{margin:4px 0}
 .speed-ctl input[type=range]{width:140px;accent-color:var(--accent)}
 .speed-ctl output{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.2em;text-align:right}
 #speedHint{font-size:13px}
+@media (max-width:600px){ .fs-btn{top:auto;bottom:8px;left:8px;right:auto;font-size:12px;padding:3px 8px} }
