@@ -139,11 +139,17 @@ textarea#query{width:100%;min-height:200px;font:13px/1.5 ui-monospace,Menlo,Cons
 @media (max-width:520px){ #graph{height:420px} }
 
 /* Physical AI 페이지 */
-.sim-wrap{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
-@media (min-width:900px){ .sim-wrap{grid-template-columns:minmax(0,1fr) 260px} }
-#sim{width:100%;display:block;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
-.side{display:flex;flex-direction:column;gap:12px}
-#stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* 시뮬레이션은 본문(960px)보다 넓게: 화면 폭에 맞춰 최대 1200px */
+.sim-wrap{display:grid;gap:14px;width:min(1200px,100vw - 32px);position:relative;left:50%;transform:translateX(-50%)}
+.sim-stage{position:relative}
+#sim{width:100%;display:block;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.fs-btn{position:absolute;top:10px;right:10px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 85%,transparent);
+  color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px}
+.sim-stage:fullscreen{background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:16px}
+.sim-stage:fullscreen #sim{max-height:calc(100vh - 90px);width:auto;max-width:100%;aspect-ratio:10/7;margin:0 auto;height:auto !important}
+.side{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:760px){ .side{grid-template-columns:1.4fr 1fr auto;align-items:start} }
+#stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 #stats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 #stats span{display:block;font-size:12px;color:var(--muted)}
 #stats b{font-variant-numeric:tabular-nums;font-size:15px}
@@ -160,9 +166,21 @@ textarea#query{width:100%;min-height:200px;font:13px/1.5 ui-monospace,Menlo,Cons
 .chart-legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:6px}
 #testBar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--warm);border-radius:8px;margin-top:10px}
 #modeLabel{font-weight:600;color:var(--warm)}
-.loop{display:block;width:100%;max-width:640px;height:auto;margin:8px auto}
-.loop text{fill:var(--text);font-size:13px}
-.loop .muted{fill:var(--muted);font-size:11px}
+/* 감지 → 판단 → 행동 순환 그림 (파스텔) */
+.loop{display:block;width:100%;max-width:700px;height:auto;margin:12px auto;
+  --b1:#fde2e4;--b1s:#f4a7b0;--b2:#e4defb;--b2s:#b9aef0;--b3:#d6f2e2;--b3s:#93d4b0;--b4:#fff2c7;--b4s:#ecd27d;--ink:#2d2f36;--arr:#a7adb8}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .loop{
+  --b1:#4a3036;--b1s:#c98490;--b2:#373052;--b2s:#9e91de;--b3:#22453a;--b3s:#6fbf98;--b4:#4a4227;--b4s:#cdb15e;--ink:#eceef2;--arr:#6b717c} }
+:root[data-theme="dark"] .loop{--b1:#4a3036;--b1s:#c98490;--b2:#373052;--b2s:#9e91de;--b3:#22453a;--b3s:#6fbf98;--b4:#4a4227;--b4s:#cdb15e;--ink:#eceef2;--arr:#6b717c}
+.loop .b1 rect{fill:var(--b1);stroke:var(--b1s)} .loop .b2 rect{fill:var(--b2);stroke:var(--b2s)}
+.loop .b3 rect{fill:var(--b3);stroke:var(--b3s)} .loop .b4 rect{fill:var(--b4);stroke:var(--b4s)}
+.loop .box rect{stroke-width:2}
+.loop .ttl{fill:var(--ink);font-size:16px;font-weight:700}
+.loop .sub2{fill:var(--ink);opacity:.72;font-size:12.5px}
+.loop .muted{fill:var(--muted);font-size:12px}
+.loop .arrows{stroke:var(--arr)} .loop .arrow-head{fill:var(--arr)}
+.loop .arrows path:nth-child(1){stroke:var(--b1s)} .loop .arrows path:nth-child(2){stroke:var(--b2s)}
+.loop .arrows path:nth-child(3){stroke:var(--b3s)} .loop .arrows path:nth-child(4){stroke:var(--b4s)}
 details summary{cursor:pointer;color:var(--accent);font-size:14px;margin:8px 0}
 #testBar[hidden]{display:none}
 #testBar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}

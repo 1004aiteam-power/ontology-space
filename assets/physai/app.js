@@ -18,7 +18,7 @@ function fit(canvas, w, h) {
   const ch = h ? cw * h / w : canvas.clientHeight;
   if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)) {
     canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
-    if (h) canvas.style.height = ch + 'px';
+    if (h && !document.fullscreenElement) canvas.style.height = ch + 'px';
   }
   const ctx = canvas.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -259,6 +259,11 @@ function bind() {
   $('retestBtn').addEventListener('click', startTest);
   $('backBtn').addEventListener('click', endTest);
   $('batchBtn').addEventListener('click', batchTest);
+  $('fsBtn').addEventListener('click', () => {
+    const st = $('simStage');
+    if (document.fullscreenElement) document.exitFullscreen(); else st.requestFullscreen?.();
+  });
+  document.addEventListener('fullscreenchange', () => { $('sim').style.height = ''; });
   $('saveBtn').addEventListener('click', () => {
     const g = trainer.pop.best; if (!g) return;
     const blob = new Blob([JSON.stringify({ format: 'neat-genome/1', inputs: IN_LABELS.en, outputs: OUT_LABELS.en, generation: trainer.pop.generation, genome: g.toJSON() }, null, 1)], { type: 'application/json' });

@@ -38,23 +38,23 @@
   <blockquote lang="en"><b>Physical AI</b> <b>perceives</b> the real world through sensors, <b>decides</b> by understanding the situation, and <b>acts</b> through actuators such as motors, wheels and arms. It must work in real time in a world governed by physics — gravity, friction, collisions.</blockquote>
 
   <h3><span lang="ko">구성요소: 감지 → 판단 → 행동의 반복</span><span lang="en">Building blocks: the sense → decide → act loop</span></h3>
-  <svg class="loop" viewBox="0 0 640 230" role="img" aria-label="sense-decide-act loop">
-    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker></defs>
-    <g fill="var(--surface)" stroke="var(--line)" stroke-width="1.5">
-      <rect x="20" y="70" width="150" height="70" rx="10"/><rect x="245" y="70" width="150" height="70" rx="10"/>
-      <rect x="470" y="70" width="150" height="70" rx="10"/><rect x="245" y="172" width="150" height="46" rx="10" stroke-dasharray="4 3"/>
+  <svg class="loop" viewBox="0 0 660 260" role="img" aria-label="sense-decide-act loop">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrow-head"/></marker></defs>
+    <text x="330" y="26" text-anchor="middle" class="muted"><tspan lang="ko">이 고리가 초당 수십~수백 번 반복되며, 결과로부터 학습한다</tspan><tspan lang="en">The loop runs tens to hundreds of times per second, and the system learns from the outcome</tspan></text>
+    <g class="arrows" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar)">
+      <path d="M180 108 H238"/><path d="M422 108 H480"/><path d="M570 150 V214 H426"/><path d="M234 214 H90 V152"/>
     </g>
-    <g stroke="var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#ar)">
-      <path d="M170 105 H243"/><path d="M395 105 H468"/><path d="M545 140 V195 H397"/><path d="M243 195 H95 V142"/>
-    </g>
-    <text x="95" y="100" text-anchor="middle" font-weight="600"><tspan lang="ko">① 인지</tspan><tspan lang="en">① Perceive</tspan></text>
-    <text x="95" y="120" text-anchor="middle" class="muted"><tspan lang="ko">카메라·LiDAR·IMU</tspan><tspan lang="en">camera · LiDAR · IMU</tspan></text>
-    <text x="320" y="100" text-anchor="middle" font-weight="600"><tspan lang="ko">② 판단</tspan><tspan lang="en">② Decide</tspan></text>
-    <text x="320" y="120" text-anchor="middle" class="muted"><tspan lang="ko">월드 모델·정책</tspan><tspan lang="en">world model · policy</tspan></text>
-    <text x="545" y="100" text-anchor="middle" font-weight="600"><tspan lang="ko">③ 행동</tspan><tspan lang="en">③ Act</tspan></text>
-    <text x="545" y="120" text-anchor="middle" class="muted"><tspan lang="ko">모터·조향·그리퍼</tspan><tspan lang="en">motors · steering · gripper</tspan></text>
-    <text x="320" y="200" text-anchor="middle"><tspan lang="ko">④ 물리 세계 (환경이 바뀜)</tspan><tspan lang="en">④ Physical world changes</tspan></text>
-    <text x="320" y="40" text-anchor="middle" class="muted"><tspan lang="ko">이 고리가 초당 수십~수백 번 반복되며, 결과로부터 학습한다</tspan><tspan lang="en">The loop runs tens to hundreds of times per second, and the system learns from the outcome</tspan></text>
+    <g class="box b1"><rect x="16" y="64" width="164" height="88" rx="16"/>
+      <text x="98" y="98" text-anchor="middle" class="ttl">👁️ <tspan lang="ko">① 인지</tspan><tspan lang="en">① Perceive</tspan></text>
+      <text x="98" y="122" text-anchor="middle" class="sub2"><tspan lang="ko">카메라 · LiDAR · IMU</tspan><tspan lang="en">camera · LiDAR · IMU</tspan></text></g>
+    <g class="box b2"><rect x="248" y="64" width="164" height="88" rx="16"/>
+      <text x="330" y="98" text-anchor="middle" class="ttl">🧠 <tspan lang="ko">② 판단</tspan><tspan lang="en">② Decide</tspan></text>
+      <text x="330" y="122" text-anchor="middle" class="sub2"><tspan lang="ko">월드 모델 · 정책</tspan><tspan lang="en">world model · policy</tspan></text></g>
+    <g class="box b3"><rect x="480" y="64" width="164" height="88" rx="16"/>
+      <text x="562" y="98" text-anchor="middle" class="ttl">⚙️ <tspan lang="ko">③ 행동</tspan><tspan lang="en">③ Act</tspan></text>
+      <text x="562" y="122" text-anchor="middle" class="sub2"><tspan lang="ko">모터 · 조향 · 그리퍼</tspan><tspan lang="en">motors · steering · gripper</tspan></text></g>
+    <g class="box b4"><rect x="236" y="186" width="188" height="56" rx="16"/>
+      <text x="330" y="219" text-anchor="middle" class="ttl">🌍 <tspan lang="ko">④ 물리 세계가 바뀜</tspan><tspan lang="en">④ The world changes</tspan></text></g>
   </svg>
   <div class="grid">
     <div class="card"><h4><span lang="ko">① 인지 (Perception)</span><span lang="en">① Perception</span></h4><p lang="ko">카메라, LiDAR, 레이더, IMU, 촉각 센서로 주변과 자기 상태를 측정합니다.</p><p lang="en">Cameras, LiDAR, radar, IMUs and touch sensors measure the surroundings and the body itself.</p></div>
@@ -155,8 +155,9 @@
   </div>
 
   <div class="sim-wrap">
-    <div>
+    <div class="sim-stage" id="simStage">
       <canvas id="sim" aria-label="simulation"></canvas>
+      <button id="fsBtn" class="fs-btn" aria-label="fullscreen">⛶ <span lang="ko">전체 화면</span><span lang="en">Fullscreen</span></button>
       <div id="testBar" hidden>
         <span id="modeLabel"></span><span id="testResult"></span>
         <button id="retestBtn"><span lang="ko">다른 트랙으로 다시</span><span lang="en">Try another track</span></button>
