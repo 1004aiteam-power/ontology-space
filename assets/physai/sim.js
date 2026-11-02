@@ -175,9 +175,12 @@ export function raycast(tr, x, y, ang) {
 
 // ---- 자동차 -------------------------------------------------------------------
 export class Car {
-  constructor(tr, genome) {
+  constructor(tr, genome, jitter = 0) {
     this.genome = genome; this.net = genome ? genome.network() : null;
-    this.x = tr.start.x; this.y = tr.start.y; this.a = tr.start.a; this.v = 2;
+    // jitter > 0: 차선 안에서 출발 위치·방향을 조금씩 다르게 (초기 조건 무작위화, 화면에서 겹치지 않게)
+    const off = (Math.random() - 0.5) * tr.hw * 0.9 * jitter, nx = -Math.sin(tr.start.a), ny = Math.cos(tr.start.a);
+    this.x = tr.start.x + nx * off; this.y = tr.start.y + ny * off;
+    this.a = tr.start.a + (Math.random() - 0.5) * 0.16 * jitter; this.v = 2;
     this.idx = 0; this.s = 0; this.progress = 0; this.maxProgress = 0; this.lastImprove = 0;
     this.alive = true; this.finished = false; this.steps = 0; this.cause = '';
     this.radar = new Array(RADAR.angles.length).fill(RADAR.range);
@@ -244,7 +247,10 @@ export class Trainer {
     this.reset();
   }
   reset() {
-    this.cars = this.pop.genomes.map(g => new Car(this.track, g));
+    this.cars = this.pop.genomes.map(g => new Car(this.track, g, 1));
+    // 각 차가 속한 종 (화면에서 종별 색으로 표시)
+    this.speciesOf = new Map();
+    for (const s of this.pop.species) for (const g of s.members) this.speciesOf.set(g, s.id);
     this.step = 0;
     this.maxSteps = maxStepsFor(this.track, this.opts);
   }

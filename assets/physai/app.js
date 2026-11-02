@@ -11,6 +11,9 @@ const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 
 let trainer, running = false, speed = 1, mode = 'train', test = null;
 const SPEEDS = [1, 4, 16, 'max'];
+// 종별 색: dataviz 8색 팔레트(어두운 도로용). 도로 대비가 낮은 색이 있어 흰 테두리 + 범례(이름·대수)를 함께 쓴다
+const SPECIES_COLORS = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767'];
+const speciesColor = (id) => SPECIES_COLORS[((id % 8) + 8) % 8];
 
 // ---- 캔버스 공통 -------------------------------------------------------------------
 function fit(canvas, w, h) {
@@ -43,7 +46,28 @@ function drawWorld(tr, cars, leader) {
   ctx.strokeStyle = '#f5f5f5'; ctx.lineWidth = 4;
   ctx.beginPath(); ctx.moveTo(s.x + nx * tr.hw, s.y + ny * tr.hw); ctx.lineTo(s.x - nx * tr.hw, s.y - ny * tr.hw); ctx.stroke();
 
-  for (const c of cars) if ((c.alive || c.finished) && c !== leader) drawCar(ctx, c, c.finished ? '#22c55e' : 'rgba(120,170,255,.55)');
+  const sp = trainer && mode === 'train' ? trainer.speciesOf : null;
+  const col = c => (sp ? speciesColor(sp.get(c.genome) ?? 0) : '#f97316');
+  // 1) 실패한 차: 멈춘 자리에 ✕ (이번 세대의 시행착오)
+  ctx.lineWidth = 2;
+  for (const c of cars) if (!c.alive && !c.finished) {
+    ctx.strokeStyle = col(c); ctx.globalAlpha = 0.55;
+    ctx.beginPath(); ctx.moveTo(c.x - 4, c.y - 4); ctx.lineTo(c.x + 4, c.y + 4); ctx.moveTo(c.x + 4, c.y - 4); ctx.lineTo(c.x - 4, c.y + 4); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  // 2) 상위 차량 몇 대의 센서 (흐리게)
+  const alive = cars.filter(c => c.alive && !c.finished).sort((a, b) => b.progress - a.progress);
+  ctx.lineWidth = 0.8;
+  for (const c of alive.slice(1, 6)) {
+    ctx.strokeStyle = col(c); ctx.globalAlpha = 0.35;
+    RADAR.angles.forEach((deg, i) => {
+      const a = c.a + deg * Math.PI / 180, d = c.radar[i];
+      ctx.beginPath(); ctx.moveTo(c.x, c.y); ctx.lineTo(c.x + Math.cos(a) * d, c.y + Math.sin(a) * d); ctx.stroke();
+    });
+  }
+  ctx.globalAlpha = 1;
+  // 3) 살아 있는 차 / 완주한 차: 종별 색 + 흰 테두리
+  for (const c of cars) if ((c.alive || c.finished) && c !== leader) drawCar(ctx, c, col(c), true, c.finished);
   if (leader) {
     ctx.strokeStyle = 'rgba(250,204,21,.85)'; ctx.lineWidth = 1;
     RADAR.angles.forEach((deg, i) => {
@@ -51,15 +75,29 @@ function drawWorld(tr, cars, leader) {
       ctx.beginPath(); ctx.moveTo(leader.x, leader.y); ctx.lineTo(leader.x + Math.cos(a) * d, leader.y + Math.sin(a) * d); ctx.stroke();
       ctx.fillStyle = '#facc15'; ctx.beginPath(); ctx.arc(leader.x + Math.cos(a) * d, leader.y + Math.sin(a) * d, 3, 0, 7); ctx.fill();
     });
-    drawCar(ctx, leader, '#f97316', true);
+    drawCar(ctx, leader, col(leader), true, leader.finished, true);
   }
   ctx.restore();
+  if (trainer && mode === 'train') drawHud(ctx, cars);
 }
 
-function drawCar(ctx, c, color, outline) {
+function drawHud(ctx, cars) {                       // 화면 위 안내: 동시에 학습 중인 개체 수
+  const alive = cars.filter(c => c.alive && !c.finished).length, fin = cars.filter(c => c.finished).length;
+  const text = t({ ko: `세대 ${trainer.pop.generation} · ${cars.length}대가 동시에 주행 · 생존 ${alive} · 실패 ${cars.length - alive - fin} · 완주 ${fin}`,
+                   en: `Gen ${trainer.pop.generation} · ${cars.length} cars driving at once · alive ${alive} · failed ${cars.length - alive - fin} · finished ${fin}` });
+  ctx.font = '600 13px system-ui, sans-serif';
+  const w = ctx.measureText(text).width + 20;
+  ctx.fillStyle = dark() ? 'rgba(18,20,23,.82)' : 'rgba(255,255,255,.88)';
+  ctx.beginPath(); ctx.roundRect(10, 10, w, 28, 14); ctx.fill();
+  ctx.fillStyle = css('--text'); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  ctx.fillText(text, 20, 24);
+}
+
+function drawCar(ctx, c, color, outline, finished, leader) {
   ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.a);
+  if (leader) { ctx.fillStyle = 'rgba(250,204,21,.35)'; ctx.beginPath(); ctx.arc(0, 0, 16, 0, 7); ctx.fill(); }
   ctx.fillStyle = color; ctx.fillRect(-9, -4.5, 18, 9);
-  if (outline) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.strokeRect(-9, -4.5, 18, 9); }
+  if (outline) { ctx.strokeStyle = finished ? '#4ade80' : '#fff'; ctx.lineWidth = finished ? 2.5 : 1.2; ctx.strokeRect(-9, -4.5, 18, 9); }
   ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(3, -3.5, 4, 7);              // 앞유리 (진행 방향 표시)
   ctx.restore();
 }
@@ -162,6 +200,33 @@ function updateTable() {
     h.slice(-30).reverse().map(r => `<tr><td>${r.gen}</td><td>${r.best.toFixed(0)}</td><td>${r.mean.toFixed(0)}</td><td>${r.finished}</td><td>${r.species}</td><td>${r.nodes}</td></tr>`).join('');
 }
 
+// ---- 개체군 보드: 점 하나 = 자동차 한 대 ----------------------------------------------
+function drawPopulation() {
+  const canvas = $('popBoard'); if (!canvas || mode !== 'train') return;
+  const cars = trainer.cars, sp = trainer.speciesOf;
+  const perRow = Math.max(10, Math.floor(canvas.clientWidth / 16));
+  canvas.style.height = Math.ceil(cars.length / perRow) * (canvas.clientWidth / perRow) + 4 + 'px';   // 대수에 맞춘 높이
+  const { ctx, cw, ch } = fit(canvas);
+  ctx.clearRect(0, 0, cw, ch);
+  // 종별로 묶어 정렬 → 같은 색이 모여 보인다
+  const order = [...cars].sort((a, b) => (sp.get(a.genome) - sp.get(b.genome)) || (b.maxProgress - a.maxProgress));
+  const n = order.length, cols = Math.max(10, Math.floor(cw / 16)), rows = Math.ceil(n / cols);
+  const cell = Math.min(cw / cols, (ch - 4) / rows), r = Math.max(3, cell * 0.36);
+  order.forEach((c, i) => {
+    const x = (i % cols) * cell + cell / 2, y = Math.floor(i / cols) * cell + cell / 2 + 2;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 7);
+    const color = speciesColor(sp.get(c.genome) ?? 0);
+    if (c.finished) { ctx.fillStyle = color; ctx.fill(); ctx.strokeStyle = '#22c55e'; ctx.lineWidth = 2.5; ctx.stroke(); }
+    else if (c.alive) { ctx.fillStyle = color; ctx.fill(); }
+    else { ctx.strokeStyle = color; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.5; ctx.stroke(); ctx.globalAlpha = 1; }
+  });
+  // 종 범례: 색만으로 구분하지 않도록 이름과 대수
+  const counts = new Map();
+  for (const c of cars) { const s = sp.get(c.genome); counts.set(s, (counts.get(s) || 0) + 1); }
+  $('speciesLegend').innerHTML = [...counts].sort((a, b) => b[1] - a[1]).map(([s, k]) =>
+    `<span><i style="background:${speciesColor(s)}"></i>${t({ ko: '종', en: 'Species' })} ${s} · ${k}${t({ ko: '대', en: '' })}</span>`).join('');
+}
+
 // ---- 상태 표시 -------------------------------------------------------------------
 function stats() {
   const T = trainer, h = T.pop.history.at(-1);
@@ -193,6 +258,7 @@ function frame() {
     drawWorld(trainer.track, trainer.cars, leader);
     drawNet(leader.genome, leader.net);
     stats();
+    drawPopulation();
   } else if (test) {
     for (let i = 0; i < 2 && test.car.alive && !test.car.finished && test.car.steps < test.max; i++) stepCar(test.car, test.track, trainer.opts);
     drawWorld(test.track, [], test.car);

@@ -15,7 +15,7 @@ export const DEFAULTS = {
   addConnRate: 0.12, addNodeRate: 0.03, toggleRate: 0.01,
   crossoverRate: 0.75,
   cDisjoint: 1.0, cWeight: 0.5,
-  compatThreshold: 2.0, targetSpecies: 7,
+  compatThreshold: 1.0, targetSpecies: 7,     // 첫 세대에 이분 탐색으로 정하고, 이후 세대마다 자동 조절
   survivalRate: 0.3, elitism: 1, stagnationLimit: 15
 };
 
@@ -223,10 +223,18 @@ export class Population {
     this.generation = 0;
     this.best = null;         // 지금까지 최고 개체
     this.history = [];        // 세대별 { gen, best, mean, species, nodes, conns }
-    this.speciate();
+    // 첫 세대는 모두 같은 구조라 거리가 비슷하다 → 목표 종 수가 나오는 임계값을 이분 탐색으로 찾는다
+    let lo = 0.05, hi = 5;
+    for (let i = 0; i < 14; i++) {
+      this.cfg.compatThreshold = (lo + hi) / 2;
+      this.species = []; this.speciate(false);
+      if (this.species.length > this.cfg.targetSpecies) lo = this.cfg.compatThreshold; else hi = this.cfg.compatThreshold;
+    }
+    this.cfg.compatThreshold = hi;
+    this.species = []; this.speciate(false);
   }
 
-  speciate() {
+  speciate(adjust = true) {
     for (const s of this.species) s.members = [];
     for (const g of this.genomes) {
       let home = this.species.find(s => Genome.distance(g, s.rep, this.cfg) < this.cfg.compatThreshold);
@@ -238,8 +246,9 @@ export class Population {
     }
     this.species = this.species.filter(s => s.members.length);
     // 종 개수가 목표에 가깝도록 임계값 자동 조절
-    if (this.species.length < this.cfg.targetSpecies) this.cfg.compatThreshold = Math.max(0.15, this.cfg.compatThreshold - 0.05);
-    else if (this.species.length > this.cfg.targetSpecies) this.cfg.compatThreshold = Math.min(6, this.cfg.compatThreshold + 0.05);
+    if (!adjust) return;
+    if (this.species.length < this.cfg.targetSpecies) this.cfg.compatThreshold = Math.max(0.15, this.cfg.compatThreshold - 0.1);
+    else if (this.species.length > this.cfg.targetSpecies) this.cfg.compatThreshold = Math.min(6, this.cfg.compatThreshold + 0.1);
   }
 
   // 모든 개체의 fitness가 정해진 뒤 호출 → 다음 세대
