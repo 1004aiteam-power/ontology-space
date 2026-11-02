@@ -1,0 +1,129 @@
+# 간단한 CIM 스타일 전력망 예제
+# 구성: 154kV 선로 → 차단기 → 154kV 모선 → 변압기(154/22.9kV) → 22.9kV 모선 → 차단기 → 부하
+# 실제 CIM은 훨씬 크며, 여기서는 학습용 최소 TBox(클래스 계층)와 ABox(데이터)만 담았습니다.
+
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix ex:   <http://example.org/grid#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# TBox: 클래스 계층 (CIM 일부 발췌)
+#################################################################
+
+cim:IdentifiedObject      a owl:Class ; rdfs:label "식별 객체"@ko .
+cim:PowerSystemResource   a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:label "전력계통 자원"@ko .
+cim:EquipmentContainer    a owl:Class ; rdfs:subClassOf cim:PowerSystemResource ; rdfs:label "설비 컨테이너"@ko .
+cim:Substation            a owl:Class ; rdfs:subClassOf cim:EquipmentContainer ; rdfs:label "변전소"@ko .
+cim:VoltageLevel          a owl:Class ; rdfs:subClassOf cim:EquipmentContainer ; rdfs:label "전압계급"@ko .
+cim:Line                  a owl:Class ; rdfs:subClassOf cim:EquipmentContainer ; rdfs:label "선로"@ko .
+cim:Equipment             a owl:Class ; rdfs:subClassOf cim:PowerSystemResource ; rdfs:label "설비"@ko .
+cim:ConductingEquipment   a owl:Class ; rdfs:subClassOf cim:Equipment ; rdfs:label "도전성 설비"@ko .
+cim:ACLineSegment         a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "교류 선로 구간"@ko .
+cim:PowerTransformer      a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "변압기"@ko .
+cim:BusbarSection         a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "모선"@ko .
+cim:EnergyConsumer        a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "부하"@ko .
+cim:Switch                a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "개폐기"@ko .
+cim:Breaker               a owl:Class ; rdfs:subClassOf cim:Switch ; rdfs:label "차단기"@ko .
+cim:Terminal              a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:label "단자"@ko .
+cim:ConnectivityNode      a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:label "접속 노드"@ko .
+cim:BaseVoltage           a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:label "기준 전압"@ko .
+cim:PowerTransformerEnd   a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:label "변압기 권선단"@ko .
+
+cim:Terminal.ConductingEquipment a owl:ObjectProperty ; rdfs:domain cim:Terminal ; rdfs:range cim:ConductingEquipment .
+cim:Terminal.ConnectivityNode    a owl:ObjectProperty ; rdfs:domain cim:Terminal ; rdfs:range cim:ConnectivityNode .
+cim:Equipment.EquipmentContainer a owl:ObjectProperty ; rdfs:domain cim:Equipment ; rdfs:range cim:EquipmentContainer .
+cim:VoltageLevel.Substation      a owl:ObjectProperty ; rdfs:domain cim:VoltageLevel ; rdfs:range cim:Substation .
+cim:VoltageLevel.BaseVoltage     a owl:ObjectProperty ; rdfs:domain cim:VoltageLevel ; rdfs:range cim:BaseVoltage .
+cim:PowerTransformerEnd.PowerTransformer a owl:ObjectProperty ; rdfs:domain cim:PowerTransformerEnd ; rdfs:range cim:PowerTransformer .
+cim:IdentifiedObject.name        a owl:DatatypeProperty .
+cim:Switch.normalOpen            a owl:DatatypeProperty .
+
+#################################################################
+# ABox: 데이터
+#################################################################
+
+# --- 기준 전압 ---
+ex:BV_154  a cim:BaseVoltage ; cim:IdentifiedObject.name "154kV" ; cim:BaseVoltage.nominalVoltage "154"^^xsd:float .
+ex:BV_22.9 a cim:BaseVoltage ; cim:IdentifiedObject.name "22.9kV" ; cim:BaseVoltage.nominalVoltage "22.9"^^xsd:float .
+
+# --- 변전소 / 전압계급 ---
+ex:SS_A a cim:Substation ; cim:IdentifiedObject.name "A변전소" .
+ex:VL_A_154 a cim:VoltageLevel ; cim:IdentifiedObject.name "A변전소 154kV" ;
+    cim:VoltageLevel.Substation ex:SS_A ; cim:VoltageLevel.BaseVoltage ex:BV_154 .
+ex:VL_A_22  a cim:VoltageLevel ; cim:IdentifiedObject.name "A변전소 22.9kV" ;
+    cim:VoltageLevel.Substation ex:SS_A ; cim:VoltageLevel.BaseVoltage ex:BV_22.9 .
+
+# --- 송전선로 ---
+ex:LINE_1 a cim:Line ; cim:IdentifiedObject.name "B-A 154kV T/L" .
+ex:ACLS_1 a cim:ACLineSegment ; cim:IdentifiedObject.name "B-A 1회선" ;
+    cim:Equipment.EquipmentContainer ex:LINE_1 ;
+    cim:ConductingEquipment.BaseVoltage ex:BV_154 ;
+    cim:ACLineSegment.length "12.5"^^xsd:float ;      # km
+    cim:ACLineSegment.r "0.98"^^xsd:float ;           # ohm
+    cim:ACLineSegment.x "4.20"^^xsd:float .           # ohm
+
+# --- 154kV 측 설비 ---
+ex:CB_154_1 a cim:Breaker ; cim:IdentifiedObject.name "154kV 선로 CB" ;
+    cim:Equipment.EquipmentContainer ex:VL_A_154 ; cim:Switch.normalOpen false .
+ex:BUS_154 a cim:BusbarSection ; cim:IdentifiedObject.name "154kV 모선" ;
+    cim:Equipment.EquipmentContainer ex:VL_A_154 .
+
+# --- 변압기 ---
+ex:TR_1 a cim:PowerTransformer ; cim:IdentifiedObject.name "M.Tr #1" ;
+    cim:Equipment.EquipmentContainer ex:SS_A .
+ex:TR_1_E1 a cim:PowerTransformerEnd ; cim:IdentifiedObject.name "M.Tr #1 1차" ;
+    cim:PowerTransformerEnd.PowerTransformer ex:TR_1 ; cim:TransformerEnd.endNumber 1 ;
+    cim:PowerTransformerEnd.ratedU "154"^^xsd:float ; cim:PowerTransformerEnd.ratedS "60"^^xsd:float ;
+    cim:TransformerEnd.Terminal ex:T_TR1_1 .
+ex:TR_1_E2 a cim:PowerTransformerEnd ; cim:IdentifiedObject.name "M.Tr #1 2차" ;
+    cim:PowerTransformerEnd.PowerTransformer ex:TR_1 ; cim:TransformerEnd.endNumber 2 ;
+    cim:PowerTransformerEnd.ratedU "22.9"^^xsd:float ; cim:PowerTransformerEnd.ratedS "60"^^xsd:float ;
+    cim:TransformerEnd.Terminal ex:T_TR1_2 .
+
+# --- 22.9kV 측 설비 ---
+ex:BUS_22 a cim:BusbarSection ; cim:IdentifiedObject.name "22.9kV 모선" ;
+    cim:Equipment.EquipmentContainer ex:VL_A_22 .
+ex:CB_22_1 a cim:Breaker ; cim:IdentifiedObject.name "D/L #1 CB" ;
+    cim:Equipment.EquipmentContainer ex:VL_A_22 ; cim:Switch.normalOpen false .
+ex:LOAD_1 a cim:EnergyConsumer ; cim:IdentifiedObject.name "D/L #1 부하" ;
+    cim:EnergyConsumer.p "8.5"^^xsd:float ; cim:EnergyConsumer.q "2.1"^^xsd:float .   # MW, MVAr
+
+# --- 접속 노드 ---
+ex:CN_LINE_END a cim:ConnectivityNode ; cim:IdentifiedObject.name "선로-CB 접점" .
+ex:CN_154      a cim:ConnectivityNode ; cim:IdentifiedObject.name "154kV 모선 노드" .
+ex:CN_22       a cim:ConnectivityNode ; cim:IdentifiedObject.name "22.9kV 모선 노드" .
+ex:CN_FEEDER   a cim:ConnectivityNode ; cim:IdentifiedObject.name "D/L #1 인출 노드" .
+ex:CN_REMOTE   a cim:ConnectivityNode ; cim:IdentifiedObject.name "B변전소 측 노드" .
+
+# --- 단자 (설비 ↔ 노드 연결) ---
+ex:T_ACLS1_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+    cim:Terminal.ConductingEquipment ex:ACLS_1 ; cim:Terminal.ConnectivityNode ex:CN_REMOTE .
+ex:T_ACLS1_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+    cim:Terminal.ConductingEquipment ex:ACLS_1 ; cim:Terminal.ConnectivityNode ex:CN_LINE_END .
+
+ex:T_CB154_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+    cim:Terminal.ConductingEquipment ex:CB_154_1 ; cim:Terminal.ConnectivityNode ex:CN_LINE_END .
+ex:T_CB154_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+    cim:Terminal.ConductingEquipment ex:CB_154_1 ; cim:Terminal.ConnectivityNode ex:CN_154 .
+
+ex:T_BUS154 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+    cim:Terminal.ConductingEquipment ex:BUS_154 ; cim:Terminal.ConnectivityNode ex:CN_154 .
+
+ex:T_TR1_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+    cim:Terminal.ConductingEquipment ex:TR_1 ; cim:Terminal.ConnectivityNode ex:CN_154 .
+ex:T_TR1_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+    cim:Terminal.ConductingEquipment ex:TR_1 ; cim:Terminal.ConnectivityNode ex:CN_22 .
+
+ex:T_BUS22 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+    cim:Terminal.ConductingEquipment ex:BUS_22 ; cim:Terminal.ConnectivityNode ex:CN_22 .
+
+ex:T_CB22_1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+    cim:Terminal.ConductingEquipment ex:CB_22_1 ; cim:Terminal.ConnectivityNode ex:CN_22 .
+ex:T_CB22_2 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 2 ;
+    cim:Terminal.ConductingEquipment ex:CB_22_1 ; cim:Terminal.ConnectivityNode ex:CN_FEEDER .
+
+ex:T_LOAD1 a cim:Terminal ; cim:ACDCTerminal.sequenceNumber 1 ;
+    cim:Terminal.ConductingEquipment ex:LOAD_1 ; cim:Terminal.ConnectivityNode ex:CN_FEEDER .
