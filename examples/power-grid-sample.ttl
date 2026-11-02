@@ -21,7 +21,8 @@ cim:VoltageLevel          a owl:Class ; rdfs:subClassOf cim:EquipmentContainer ;
 cim:Line                  a owl:Class ; rdfs:subClassOf cim:EquipmentContainer ; rdfs:label "선로"@ko .
 cim:Equipment             a owl:Class ; rdfs:subClassOf cim:PowerSystemResource ; rdfs:label "설비"@ko .
 cim:ConductingEquipment   a owl:Class ; rdfs:subClassOf cim:Equipment ; rdfs:label "도전성 설비"@ko .
-cim:ACLineSegment         a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "교류 선로 구간"@ko .
+cim:Conductor             a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "도체"@ko .
+cim:ACLineSegment         a owl:Class ; rdfs:subClassOf cim:Conductor ; rdfs:label "교류 선로 구간"@ko .
 cim:PowerTransformer      a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "변압기"@ko .
 cim:BusbarSection         a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "모선"@ko .
 cim:EnergyConsumer        a owl:Class ; rdfs:subClassOf cim:ConductingEquipment ; rdfs:label "부하"@ko .
@@ -61,7 +62,7 @@ ex:LINE_1 a cim:Line ; cim:IdentifiedObject.name "B-A 154kV T/L" .
 ex:ACLS_1 a cim:ACLineSegment ; cim:IdentifiedObject.name "B-A 1회선" ;
     cim:Equipment.EquipmentContainer ex:LINE_1 ;
     cim:ConductingEquipment.BaseVoltage ex:BV_154 ;
-    cim:ACLineSegment.length "12.5"^^xsd:float ;      # km
+    cim:Conductor.length "12.5"^^xsd:float ;      # km
     cim:ACLineSegment.r "0.98"^^xsd:float ;           # ohm
     cim:ACLineSegment.x "4.20"^^xsd:float .           # ohm
 
