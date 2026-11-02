@@ -229,3 +229,8 @@ ol.steps li{margin:4px 0}
 :root[data-theme="dark"] .easy > b{color:#f2c94c}
 html.hide-easy .easy{display:none}
 #easyBtn[aria-pressed="false"]{opacity:.45}
+
+/* Physical AI 철학 문장 */
+.manifesto{margin:4px 0 26px;padding:18px 22px;border:none;border-left:5px solid var(--warm);border-radius:0 12px 12px 0;
+  background:color-mix(in srgb,var(--warm) 8%,var(--surface));font-size:clamp(17px,2.2vw,21px);line-height:1.65;max-width:760px}
+.manifesto b{color:var(--text)}
