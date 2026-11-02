@@ -94,7 +94,7 @@ footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);f
   <a class="brand" href="#">Ontology Space</a>
   <nav>
     <a href="#what">온톨로지란</a><a href="#parts">구성요소</a><a href="#stack">기술 스택</a>
-    <a href="#grid">전력망 온톨로지</a><a href="#cim">CIM 모델</a><a href="#example">예제</a><a href="#pycim">파이썬 프로젝트</a><a href="#use">활용</a><a href="#ref">참고</a>
+    <a href="#grid">전력망 온톨로지</a><a href="#cim">CIM 모델</a><a href="#example">예제</a><a href="#pycim">파이썬 프로젝트</a><a href="#tools">해석 도구 비교</a><a href="#use">활용</a><a href="#ref">참고</a>
   </nav>
   <button id="theme" aria-label="테마 전환">◐</button>
 </div></header>
@@ -337,6 +337,70 @@ Breaker → ProtectedSwitch → Switch → ConductingEquipment → Equipment →
   <p>설계 문서: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/03-python-cim-design.md">docs/03-python-cim-design.md</a></p>
 </section>
 
+<section id="tools">
+  <h2>계통 해석 도구 비교: pandapower vs OpenDSS</h2>
+  <p class="sub">CIM 모델은 계통을 <b>표현</b>하고, 해석 도구는 그 계통을 <b>계산</b>합니다. 대표적인 오픈소스 도구 두 가지를 비교했습니다.</p>
+  <div class="tbl"><table>
+    <tr><th style="width:18%">구분</th><th>pandapower</th><th>OpenDSS</th></tr>
+    <tr><td>개발</td><td>독일 Fraunhofer IEE · 카셀 대학교</td><td>미국 EPRI (1997년~)</td></tr>
+    <tr><td>주 대상</td><td>송전망 + 배전망</td><td><b>배전망</b></td></tr>
+    <tr><td>모델링</td><td>3상 평형(정상분)이 기본. 불평형 해석은 일부 지원</td><td><b>다상·불평형</b>이 기본, 상별 해석</td></tr>
+    <tr><td>주요 기능</td><td>조류계산, <b>최적조류계산(OPF)</b>, <b>단락계산(IEC 60909)</b>, 상태추정, 그래프 분석</td><td>조류계산, <b>시계열 해석</b>(8760시간 등), <b>고조파</b>, 고장 해석, DER 호스팅 용량</td></tr>
+    <tr><td>제어 설비</td><td>변압기 탭, 제어기 프레임워크</td><td>전압조정기, 커패시터 제어, 인버터 기능(Volt-VAR 등)이 풍부</td></tr>
+    <tr><td>사용 방식</td><td>순수 파이썬 라이브러리</td><td>전용 스크립트 언어(<code>.dss</code>). 파이썬에서는 <code>OpenDSSDirect.py</code>, <code>py-dss-interface</code>로 호출</td></tr>
+    <tr><td>데이터 구조</td><td>pandas DataFrame (bus, line, trafo, load … 표)</td><td>텍스트 명령으로 설비 정의 (<code>New Line.L1 Bus1=… Bus2=…</code>)</td></tr>
+    <tr><td>CIM 연계</td><td>CGMES 변환기 제공</td><td>CIM(배전) 내보내기 지원</td></tr>
+    <tr><td>설치</td><td><code>pip install pandapower</code></td><td>EPRI 설치 파일(Windows) 또는 <code>pip install opendssdirect.py</code></td></tr>
+    <tr><td>라이선스</td><td>BSD</td><td>BSD 계열 오픈소스</td></tr>
+  </table></div>
+
+  <h3>이럴 때 선택하세요</h3>
+  <div class="grid">
+    <div class="card"><h4>pandapower</h4><p>154kV 이상 송전망의 조류·단락용량 계산, 최적 운전점 탐색, 파이썬 데이터 분석과 바로 연결하고 싶을 때</p></div>
+    <div class="card"><h4>OpenDSS</h4><p>22.9kV 배전선로의 상별 불평형, 태양광·ESS 연계 시 1년 시계열 전압 변동, 호스팅 용량을 분석할 때</p></div>
+  </div>
+
+  <h3>같은 문제를 두 도구로</h3>
+  <div class="grid">
+<pre style="margin:0"><code class="language-python"># pandapower
+import pandapower as pp
+net = pp.create_empty_network()
+b1 = pp.create_bus(net, vn_kv=22.9)
+b2 = pp.create_bus(net, vn_kv=22.9)
+pp.create_ext_grid(net, b1)
+pp.create_line_from_parameters(net, b1, b2,
+    length_km=5, r_ohm_per_km=0.18,
+    x_ohm_per_km=0.39, c_nf_per_km=10,
+    max_i_ka=0.4)
+pp.create_load(net, b2, p_mw=3, q_mvar=1)
+pp.runpp(net)
+print(net.res_bus.vm_pu)</code></pre>
+<pre style="margin:0"><code># OpenDSS (.dss 스크립트)
+Clear
+New Circuit.demo basekv=22.9 bus1=B1 pu=1.0
+New Linecode.LC nphases=3 units=km
+~ r1=0.18 x1=0.39 c1=10
+New Line.L1 bus1=B1 bus2=B2
+~ linecode=LC length=5 units=km
+New Load.LD1 bus1=B2 phases=3
+~ kV=22.9 kW=3000 kvar=1000
+Set voltagebases=[22.9]
+Calcvoltagebases
+Solve
+Show Voltages LN</code></pre>
+  </div>
+
+  <p><b>실행 결과</b>: 부하 모선(B2) 전압은 pandapower <b>0.991 pu</b>, OpenDSS <b>0.990 pu</b>로 거의 같습니다. 조금 차이 나는 이유는 OpenDSS가 전원(Circuit)에 기본 내부 임피던스를 넣기 때문입니다.</p>
+
+  <h3>pycim과의 연결 (계획)</h3>
+<pre><code>             ┌──▶ pandapower 네트워크 ──▶ 조류·단락·OPF
+CIM 모델 ────┤
+ (pycim)     └──▶ OpenDSS 스크립트   ──▶ 불평형·시계열·DER
+       ▲
+       └── 계산 결과(전압, 조류)를 다시 CIM SV 프로파일로</code></pre>
+  <p>하나의 CIM 모델에서 두 도구용 입력을 자동으로 만들어, 같은 계통을 서로 다른 관점에서 해석하는 것이 목표입니다.</p>
+</section>
+
 <section id="use">
   <h2>활용 사례</h2>
   <div class="grid">
@@ -359,6 +423,7 @@ Breaker → ProtectedSwitch → Switch → ConductingEquipment → Equipment →
     <li><a href="https://www.powsybl.org/">PowSyBl</a> · <a href="https://github.com/sogno-platform/cimpy">CIMpy</a></li>
     <li><a href="https://openenergyplatform.org/ontology/">Open Energy Ontology</a> · <a href="https://saref.etsi.org/saref4ener/">SAREF4ENER</a></li>
     <li><a href="https://protege.stanford.edu/">Protégé</a> (온톨로지 편집기)</li>
+    <li><a href="https://www.pandapower.org/">pandapower</a> · <a href="https://www.epri.com/pages/sa/opendss">OpenDSS (EPRI)</a> · <a href="https://dss-extensions.org/">DSS-Extensions</a></li>
   </ul>
   <p>문서 원본: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/01-ontology-introduction.md">온톨로지 소개</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/02-power-grid-ontology.md">전력망 온톨로지</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/03-python-cim-design.md">파이썬 CIM 설계</a></p>
 </section>
