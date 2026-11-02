@@ -9,7 +9,7 @@ const dark = () => document.documentElement.dataset.theme === 'dark' ||
 // 차트 색상: dataviz 기준 팔레트 (라이트/다크 각각 색각 이상 검증 통과)
 const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 
-let trainer, running = false, speed = 4, mode = 'train', test = null;
+let trainer, running = false, speed = 1, mode = 'train', test = null;
 // 라운드 진행: 라운드 = NEAT의 한 세대. 2바퀴 완주한 차가 나오면 성공으로 멈춘다
 let banner = null;          // { title, sub, until, kind: 'fail' | 'start' }
 let roundLog = [];          // { round, progress, finished, ok }
@@ -369,7 +369,7 @@ function restart() {
 const TRACKS = [['blob', { ko: '둥근 트랙', en: 'Round track' }], ['mm', { ko: 'M-M 트랙 (어려움)', en: 'M-M track (hard)' }],
                 ['random', { ko: '무작위', en: 'Random' }]];
 function fillTrackSelect() {
-  const sel = $('trackType'), v = sel.value || 'mm';
+  const sel = $('trackType'), v = sel.value || 'blob';
   sel.innerHTML = TRACKS.map(([k, l]) => `<option value="${k}">${t(l)}</option>`).join('');
   sel.value = v;
   $('popSize').querySelectorAll('option').forEach(o => o.textContent = t({ ko: `${o.value}대`, en: `${o.value} cars` }));
