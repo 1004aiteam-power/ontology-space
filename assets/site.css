@@ -214,3 +214,18 @@ ol.steps li{margin:4px 0}
 .speed-ctl output{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.2em;text-align:right}
 #speedHint{font-size:13px}
 @media (max-width:600px){ .fs-btn{top:auto;bottom:8px;left:8px;right:auto;font-size:12px;padding:3px 8px} }
+
+/* 💡 쉽게 말하면: 기술 설명 옆의 쉬운 설명 */
+.easy{margin:14px 0 18px;padding:12px 16px 12px 14px;border-radius:12px;border:1px solid #f2d27a;border-left:5px solid #eab308;
+  background:#fffbea;color:#3d3a2e;font-size:15px}
+.easy > b{display:block;margin-bottom:4px;color:#8a6100;font-size:14px}
+.easy p{margin:4px 0}
+.easy ul{margin:4px 0;padding-left:20px}
+.easy li{margin:3px 0}
+.easy code{background:rgba(234,179,8,.15)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .easy{background:#2e2a1a;border-color:#5c4f22;border-left-color:#d4a72c;color:#ece6cf}
+  :root:not([data-theme="light"]) .easy > b{color:#f2c94c} }
+:root[data-theme="dark"] .easy{background:#2e2a1a;border-color:#5c4f22;border-left-color:#d4a72c;color:#ece6cf}
+:root[data-theme="dark"] .easy > b{color:#f2c94c}
+html.hide-easy .easy{display:none}
+#easyBtn[aria-pressed="false"]{opacity:.45}

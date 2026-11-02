@@ -48,6 +48,7 @@
     <div class="card"><h4><span lang="ko">의존성 없음</span><span lang="en">No dependencies</span></h4>
       <p lang="ko">표준 <code>dataclasses</code>만 사용합니다. 해석 도구는 변환할 때만 필요합니다.</p><p lang="en">Only the standard <code>dataclasses</code>. Solvers are needed only for export.</p></div>
   </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">전력 설비 공용 사전(CIM)을 <b>파이썬 코드의 블록</b>으로 그대로 옮긴 것입니다. 레고 설명서처럼 "차단기 블록", "선로 블록"을 만들고 단자로 끼워 맞추면 전력망이 조립됩니다. 조립한 결과는 온톨로지 문장(RDF)으로 저장하거나 계산 프로그램에 넘길 수 있습니다.</p><p lang="en">The shared power-equipment dictionary (CIM) turned into <b>Python building blocks</b>. Like LEGO instructions, you create "breaker blocks" and "line blocks", snap them together via terminals, and a grid is assembled — then saved as ontology sentences (RDF) or handed to a calculator.</p></div>
   <h3><span lang="ko">사용 예</span><span lang="en">Usage</span></h3>
 <pre><code class="language-python">from pycim import *
 
@@ -84,6 +85,7 @@ m.add(Breaker(mrid="CB-154-01"))   # ValueError: mRID는 UUID여야 합니다
 m.add(Breaker(mrid=cb.mrid))       # ValueError: 중복 mRID</code></pre>
   <p lang="ko">RDF로 내보낼 때는 <code>to_turtle(m, iri_style="urn")</code>으로 <code>urn:uuid:…</code> 형식의 IRI를 쓸 수 있습니다 (기본값은 CGMES 2.4.15식 <code>_uuid</code>). 예제 계통(<code>samples.py</code>)은 모든 mRID를 v5로 발급해 몇 번을 만들어도 같은 ID가 나옵니다.</p>
   <p lang="en">For RDF, <code>to_turtle(m, iri_style="urn")</code> emits <code>urn:uuid:…</code> IRIs (default: CGMES 2.4.15-style <code>_uuid</code>). The sample grid (<code>samples.py</code>) issues all mRIDs as v5, so it is identical on every build.</p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">설비 번호를 만드는 <b>번호표 발급기 세 가지</b>입니다. 새 설비는 제비뽑기(<code>new_mrid</code>), 기존 시스템에서 옮겨 오는 설비는 옛 코드로 찍는 도장(<code>stable_mrid</code>, 몇 번을 옮겨도 같은 번호), 단자 같은 부속품은 본체 번호에서 이어 붙이기(<code>child_mrid</code>)입니다. 형식이 틀렸거나 이미 있는 번호는 받아 주지 않습니다.</p><p lang="en"><b>Three ticket machines</b> for equipment numbers: a lottery draw for new equipment (<code>new_mrid</code>), a stamp made from the old code for migrated equipment (<code>stable_mrid</code>, same number every time), and numbers derived from the parent for parts like terminals (<code>child_mrid</code>). Badly formed or duplicate numbers are refused.</p></div>
 </section>
 
 <section id="convert">
@@ -93,6 +95,7 @@ m.add(Breaker(mrid=cb.mrid))       # ValueError: 중복 mRID</code></pre>
 <pre><code>             ┌──▶ export_pandapower ──▶ pandapower net ──▶ runpp()
 CIM model ───┤
  (pycim)     └──▶ export_opendss    ──▶ .dss script    ──▶ Solve</code></pre>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">같은 설계도를 <b>두 가지 계산기의 언어로 번역</b>하는 것입니다. pandapower는 표(엑셀 같은)로, OpenDSS는 명령문으로 전력망을 받아들이기 때문에, 하나의 CIM 모델에서 두 형식을 자동으로 만들어 넘겨줍니다. 두 계산기의 답이 같으면 번역이 제대로 됐다는 증거입니다.</p><p lang="en"><b>Translating one blueprint into two calculators' languages.</b> pandapower takes the grid as tables, OpenDSS as text commands, so one CIM model is automatically turned into both. Matching answers from both prove the translation is right.</p></div>
   <h3><span lang="ko">매핑 규칙</span><span lang="en">Mapping</span></h3>
   <div class="tbl"><table>
     <tr><th>CIM (pycim)</th><th>pandapower</th><th>OpenDSS</th></tr>
@@ -134,6 +137,7 @@ naming.add_name(cb, "A154_CB01", scada)                # 설비에 SCADA 코드 
 naming.find(m, "A154_CB01", scada)                     # → Breaker('154kV 선로 CB')
 rows = naming.mapping_table(m, m.of_type(naming.NameType))
 naming.write_csv(rows, "mapping_table.csv")            # 엑셀에서 바로 열림 (UTF-8 BOM)</code></pre>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">한 사람의 <b>연락처 카드</b>에 주민등록번호(mRID) 옆으로 사번·학번·회원번호를 함께 적어 두는 것과 같습니다. 설비 하나에 SCADA 번호, 설비관리 번호, 지도(GIS) 번호를 붙여 두면, 어느 시스템의 번호로 찾아도 같은 설비에 도착합니다.</p><p lang="en">Like a <b>contact card</b> that lists a person's national ID (mRID) alongside their employee, student and membership numbers. Attach the SCADA, asset and GIS numbers to one device, and any of them leads to the same equipment.</p></div>
   <h3><span lang="ko">예제 변전소의 매핑 테이블</span><span lang="en">Mapping table of the sample substation</span></h3>
   <div id="mappingTable" class="tbl"></div>
   <p lang="ko">CSV: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/mapping_table.csv">examples/mapping_table.csv</a> · RDF로는 <code>cim:Name</code> 객체로 저장됩니다:</p>
@@ -148,6 +152,7 @@ naming.write_csv(rows, "mapping_table.csv")            # 엑셀에서 바로 열
   <h2><span lang="ko">CGMES 파일 읽기: CIGRE MV 배전망</span><span lang="en">Reading CGMES: the CIGRE MV network</span></h2>
   <p class="sub" lang="ko">실제 CGMES 2.4.15 파일(CIGRE 중압 배전 벤치마크, NEPLAN에서 내보냄)을 <code>pycim.cgmes.read_cgmes()</code>로 읽어 pycim 객체로 만들고, 조류계산 결과를 파일에 들어 있는 NEPLAN의 결과와 비교했습니다.</p>
   <p class="sub" lang="en">Real CGMES 2.4.15 files (CIGRE medium-voltage benchmark exported from NEPLAN) are read into pycim objects with <code>pycim.cgmes.read_cgmes()</code>, and our power flow is compared with NEPLAN's results stored in the file.</p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko"><b>다른 회사 양식의 서류를 우리 양식으로 옮겨 적는 일</b>입니다. 우리가 모르는 칸(도면 좌표 등)은 건너뛰고, 번호 체계가 다르면 우리 규칙대로 새 번호를 주되 원래 번호는 메모(Name)로 남깁니다. 다 옮긴 뒤 계산해 보니 원래 회사(NEPLAN)의 답과 거의 같아서, 제대로 옮겨졌다는 것을 확인했습니다.</p><p lang="en"><b>Copying another company's forms into our own format.</b> Unknown fields (drawing coordinates etc.) are skipped; if numbering differs, new numbers are issued our way while the originals are kept as notes (Names). Recalculating afterwards gives almost the same answers as the original tool (NEPLAN), confirming a faithful copy.</p></div>
   <h3><span lang="ko">읽을 때 처리하는 것</span><span lang="en">What the reader handles</span></h3>
   <ul lang="ko">
     <li><b>네임스페이스</b>: CIM16(2012·2013)과 CIM100을 모두 인식</li>
@@ -196,6 +201,7 @@ RDF  → SPARQL 질의, SHACL 검증, 다른 시스템과 교환</code></pre>
     cim:SvVoltage.TopologicalNode ex:_3d221b19-60c0-506b-92e1-dfb098a3ad0d .</code></pre>
   <p lang="ko">TopologicalNode와 SV 객체의 mRID도 부모에서 파생(UUID v5)하므로, 같은 계통을 다시 계산하면 같은 ID에 새 값이 들어갑니다. 결과 파일: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/sample_grid_full.ttl">sample_grid_full.ttl</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/cgmes/cigre_mv_SV_pycim.ttl">cigre_mv_SV_pycim.ttl</a> · <a href="lab.html">실습 페이지</a>에서 "SV 전압" 질의로 확인할 수 있습니다.</p>
   <p lang="en">TopologicalNode and SV mRIDs are derived from their parents (UUID v5), so re-running the same grid updates values under the same IDs. Output: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/sample_grid_full.ttl">sample_grid_full.ttl</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/cgmes/cigre_mv_SV_pycim.ttl">cigre_mv_SV_pycim.ttl</a> · try the "SV voltages" query on the <a href="lab.html">Lab page</a>.</p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">계산 결과를 <b>원래 장부에 다시 기록</b>하는 것입니다. 전압과 전력 흐름이 설비 정보와 같은 형식(온톨로지 문장)으로 저장되므로, "전압이 0.95 미만인 곳은?" 같은 질문을 바로 할 수 있고, 같은 규칙으로 검사하고, 다른 시스템과 그대로 주고받을 수 있습니다.</p><p lang="en"><b>Writing the results back into the same ledger.</b> Voltages and flows are stored in the same form (ontology sentences) as the equipment, so you can immediately ask "where is voltage below 0.95?", check them with the same rules, and exchange them as-is.</p></div>
 </section>
 
 <section id="code">

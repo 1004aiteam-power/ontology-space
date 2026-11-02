@@ -34,8 +34,26 @@
       store.set('theme', root.dataset.theme);
     });
     if (window.hljs) document.querySelectorAll('pre code[class*="language-"]').forEach(el => hljs.highlightElement(el));
+    initEasy();
     initViewers();
   });
+
+  // ---- 💡 쉬운 설명 켜기/끄기 (쉬운 설명이 있는 페이지에만 버튼 표시) ----
+  function initEasy() {
+    if (!document.querySelector('.easy')) return;
+    const tools = document.querySelector('header .tools');
+    const btn = document.createElement('button');
+    btn.id = 'easyBtn'; btn.textContent = '💡';
+    const apply = (on) => {
+      root.classList.toggle('hide-easy', !on);
+      btn.setAttribute('aria-pressed', on);
+      btn.title = on ? t({ ko: '쉬운 설명 숨기기', en: 'Hide plain-language notes' }) : t({ ko: '쉬운 설명 보기', en: 'Show plain-language notes' });
+    };
+    apply(store.get('easy') !== 'off');
+    btn.addEventListener('click', () => { const on = root.classList.contains('hide-easy'); store.set('easy', on ? 'on' : 'off'); apply(on); });
+    document.addEventListener('langchange', () => apply(!root.classList.contains('hide-easy')));
+    tools.prepend(btn);
+  }
 
   // ---- 코드 뷰어: 같은 사이트의 파일을 불러와 표시 ----
   const GH = 'https://github.com/1004aiteam-power/ontology-space/blob/main/';

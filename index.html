@@ -57,6 +57,7 @@
   <blockquote lang="en">An <b>ontology</b> is a knowledge model that defines the concepts of a domain and the relations between them <b>explicitly and formally</b>, so that both people and machines can understand them.<br><small>— Gruber (1993), “an explicit specification of a conceptualization”</small></blockquote>
   <p lang="ko">쉽게 말하면 <b>"이 분야에서 쓰는 용어와, 그 용어들이 서로 어떻게 연결되는지에 대한 합의된 사전 + 규칙집"</b>입니다.</p>
   <p lang="en">Put simply, it is <b>an agreed dictionary and rulebook of a field's terms and how they connect</b>.</p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">사람은 "변압기는 변전소 안에 있고, 변전소는 전기를 바꾸는 곳"이라는 걸 그냥 압니다. 하지만 컴퓨터는 글자만 볼 뿐 그 뜻과 관계를 모릅니다. 온톨로지는 이런 <b>상식을 컴퓨터가 읽을 수 있게 적어 둔 "단어 사전 + 관계 지도"</b>입니다. 도서관이 책을 분류하고 "이 책은 저 책의 속편"이라고 적어 두는 것과 비슷합니다.</p><p lang="en">People simply know that "a transformer sits inside a substation". A computer only sees letters, not meaning. An ontology writes that <b>common sense down as a dictionary plus a map of relationships</b> a computer can read — like a library catalogue that also notes "this book is the sequel to that one".</p></div>
   <h3><span lang="ko">왜 필요한가</span><span lang="en">Why it matters</span></h3>
   <div class="grid">
     <div class="card"><h4><span lang="ko">의미 통일</span><span lang="en">Shared meaning</span></h4>
@@ -72,6 +73,7 @@
       <p lang="ko">LLM에 구조화된 도메인 지식을 제공합니다 (GraphRAG, 근거 기반 답변).</p>
       <p lang="en">Gives LLMs structured domain knowledge (GraphRAG, grounded answers).</p></div>
   </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>의미 통일</b>: 회사마다 같은 물건을 다른 이름으로 부를 때, 모두가 보는 <b>공용 사전</b>을 두는 것</li><li><b>데이터 연결</b>: 여러 엑셀 파일에 흩어진 정보를 <b>마인드맵 하나</b>로 이어 붙이는 것</li><li><b>추론</b>: "차단기는 개폐기다", "개폐기는 전기 설비다"를 알려 주면 "차단기는 전기 설비다"를 <b>스스로 알아내는 것</b></li><li><b>AI 연계</b>: AI가 아무렇게나 지어내지 않도록 <b>믿을 수 있는 참고서</b>를 쥐여 주는 것</li></ul><ul lang="en"><li><b>Shared meaning</b>: a <b>common dictionary</b> everyone uses, even if each company has its own word</li><li><b>Connected data</b>: stitching scattered spreadsheets into <b>one mind map</b></li><li><b>Reasoning</b>: told "a breaker is a switch" and "a switch is equipment", it <b>works out</b> "a breaker is equipment"</li><li><b>AI ready</b>: giving the AI a <b>trusted reference book</b> so it does not make things up</li></ul></div>
 </section>
 
 <section id="parts">
@@ -90,6 +92,7 @@
     <div class="card"><h4><span lang="ko">공리</span><span lang="en">Axiom</span></h4><p lang="ko">논리 규칙과 제약</p><p lang="en">Logical rules and constraints</p>
       <div class="ex" lang="ko">모든 선로 구간은 단자 2개를 가진다</div><div class="ex" lang="en">Every line segment has two terminals</div></div>
   </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>클래스 = 붕어빵 틀</b>, <b>개체 = 그 틀로 찍은 붕어빵 하나하나</b>. "변압기"는 틀, "A변전소의 M.Tr #1"은 실제 붕어빵입니다.</li><li><b>속성</b> = 붕어빵에 붙은 정보와 관계. "팥이 들었다"(값), "○○가게에서 샀다"(다른 것과의 관계)</li><li><b>계층</b> = 분류의 위아래. "붕어빵 ⊂ 빵 ⊂ 간식"처럼, 차단기는 개폐기의 한 종류</li><li><b>공리</b> = 반드시 지켜야 할 규칙. "모든 선로는 양 끝이 있다"</li><li><b>TBox</b>는 <b>설계도·규칙집</b>(어떤 종류가 있고 어떻게 연결되는지), <b>ABox</b>는 그 규칙대로 적은 <b>실제 장부</b>(어느 변전소에 어떤 설비가 있는지)</li></ul><ul lang="en"><li><b>Class = a cookie cutter</b>; <b>individual = each cookie</b> cut with it. "Transformer" is the cutter; "M.Tr #1 at Substation A" is a real cookie.</li><li><b>Property</b> = facts and links on a cookie: "has chocolate chips" (a value), "bought at shop X" (a link to something else)</li><li><b>Hierarchy</b> = levels of classification, like "cookie ⊂ baked goods ⊂ snacks"; a breaker is a kind of switch</li><li><b>Axiom</b> = a rule that must always hold: "every line has two ends"</li><li><b>TBox</b> is the <b>blueprint and rulebook</b> (what kinds exist and how they connect); <b>ABox</b> is the <b>actual ledger</b> written by those rules (which equipment is where)</li></ul></div>
 </section>
 
 <section id="stack">
@@ -104,16 +107,19 @@
     <div><b>RDF</b><span><span lang="ko">주어–술어–목적어 트리플</span><span lang="en">subject–predicate–object triples</span></span></div>
     <div><b>IRI</b><span><span lang="ko">전역 식별자</span><span lang="en">global identifiers</span></span></div>
   </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>IRI</b>: 세상의 모든 것에 붙이는 <b>겹치지 않는 이름표</b> (웹 주소처럼 생김)</li><li><b>RDF</b>: 모든 지식을 <b>"누가 – 어떻다 – 무엇을"</b> 짧은 문장으로 적는 방법</li><li><b>RDFS</b>: "차단기는 개폐기의 한 종류"처럼 <b>분류표</b>를 적는 방법</li><li><b>OWL</b>: "변압기는 권선이 2개 이상"처럼 더 <b>정교한 규칙</b>을 적는 방법</li><li><b>SPARQL</b>: 이렇게 적은 지식에 <b>질문하는 검색 언어</b></li><li><b>SHACL</b>: 데이터가 규칙대로 잘 적혔는지 확인하는 <b>검사 체크리스트</b></li><li>아래층이 단단해야 위층을 올릴 수 있는 <b>건물</b>처럼, 아래 기술 위에 위 기술이 쌓입니다.</li></ul><ul lang="en"><li><b>IRI</b>: a <b>unique name tag</b> for anything in the world (looks like a web address)</li><li><b>RDF</b>: writing all knowledge as tiny <b>"who – does what – to what"</b> sentences</li><li><b>RDFS</b>: writing a <b>classification chart</b>, e.g. "a breaker is a kind of switch"</li><li><b>OWL</b>: writing <b>finer rules</b>, e.g. "a transformer has at least two windings"</li><li><b>SPARQL</b>: the <b>search language</b> for asking questions of that knowledge</li><li><b>SHACL</b>: a <b>checklist</b> that verifies the data follows the rules</li><li>Like a <b>building</b>, each layer stands on the one below it.</li></ul></div>
   <h3><span lang="ko">RDF 트리플 (Turtle)</span><span lang="en">RDF triples (Turtle)</span></h3>
 <pre><code>ex:TR_1  a                                cim:PowerTransformer .
 ex:TR_1  cim:Equipment.EquipmentContainer  ex:SS_A .
 ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">"M.Tr #1은 – 속해 있다 – A변전소에" 처럼 <b>주어·서술어·목적어 세 칸짜리 문장</b> 하나가 트리플입니다. 이런 문장이 수천 개 모이면, 같은 단어끼리 이어지면서 <b>거대한 그물(그래프)</b>이 됩니다. 표의 한 줄이 아니라 문장 하나하나가 데이터라서, 새로운 종류의 정보도 문장만 추가하면 됩니다.</p><p lang="en">A triple is one <b>three-part sentence: subject – verb – object</b>, e.g. "M.Tr #1 – belongs to – Substation A". Thousands of them, joined wherever they share a word, form a <b>giant web (graph)</b>. Because each sentence is data, adding a new kind of fact just means adding sentences — no table redesign.</p></div>
   <h3><span lang="ko">SPARQL 질의</span><span lang="en">SPARQL query</span></h3>
 <pre><code>SELECT ?substation ?transformer WHERE {
   ?transformer a cim:PowerTransformer ;
                cim:Equipment.EquipmentContainer ?substation .
 }</code></pre>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">데이터에게 하는 <b>빈칸 채우기 질문</b>입니다. <code>?transformer</code>, <code>?substation</code>처럼 물음표가 붙은 곳이 빈칸이고, "<b>변압기이면서 어떤 변전소에 속한 것</b>을 모두 찾아서 빈칸을 채워 줘"라는 뜻입니다. 엑셀 필터와 비슷하지만, 관계를 따라 여러 단계를 건너가며 찾을 수 있습니다.</p><p lang="en">It is a <b>fill-in-the-blanks question</b> to the data. Words with a question mark (<code>?transformer</code>, <code>?substation</code>) are the blanks: "find everything that <b>is a transformer and belongs to some substation</b>, and fill in the blanks". Like a spreadsheet filter — but it can hop along relationships across many steps.</p></div>
   <h3><span lang="ko">다른 데이터 모델과 비교</span><span lang="en">Compared with other data models</span></h3>
   <div class="tbl" lang="ko"><table>
     <tr><th>구분</th><th>관계형 DB</th><th>택소노미</th><th>온톨로지</th></tr>
@@ -130,6 +136,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
     <tr><td>Integration</td><td>Needs mapping</td><td>Hard</td><td>Natural via IRIs</td></tr>
   </table></div>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>관계형 DB</b> = 칸이 정해진 <b>엑셀 표</b>. 새 항목이 생기면 표를 다시 설계해야 함</li><li><b>택소노미</b> = <b>폴더 트리</b>나 족보. 위아래 관계만 표현</li><li><b>온톨로지</b> = 규칙이 있는 <b>마인드맵</b>. 무엇이든 어떤 관계로든 이을 수 있고, 규칙으로 새 사실도 알아냄</li></ul><ul lang="en"><li><b>Relational DB</b> = a <b>spreadsheet</b> with fixed columns; new kinds of data mean redesigning the table</li><li><b>Taxonomy</b> = a <b>folder tree</b> or family tree; only parent–child links</li><li><b>Ontology</b> = a <b>mind map with rules</b>; anything can link to anything, and rules reveal new facts</li></ul></div>
   <h3><span lang="ko">구축 절차</span><span lang="en">How to build one</span></h3>
   <ol lang="ko">
     <li><b>범위 정의</b>: 답하려는 질문(Competency Questions) 작성</li>
@@ -150,6 +157,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
     <li><b>Validate</b> with reasoners, SHACL and queries → <a href="lab.html#shacl">Lab</a></li>
   </ol>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">새로 입사한 회사의 <b>업무 용어집</b>을 만드는 과정과 같습니다. ① 무엇에 답하려는지 정하고 ② 이미 있는 용어집(전력은 IEC CIM)을 가져오고 ③ 용어를 나열해 ④ 큰 분류·작은 분류로 정리하고 ⑤ 용어 사이의 관계와 규칙을 적고 ⑥ 실제 사례를 채운 뒤 ⑦ 틀린 곳이 없는지 검사합니다.</p><p lang="en">It is like building a <b>glossary for a new workplace</b>: ① decide what questions it must answer, ② reuse an existing glossary (IEC CIM for power), ③ list the terms, ④ sort them into big and small categories, ⑤ write how terms relate and the rules, ⑥ fill in real examples, ⑦ check for mistakes.</p></div>
   <h3><span lang="ko">주요 도구</span><span lang="en">Tools</span></h3>
   <div class="tbl"><table>
     <tr><th><span lang="ko">도구</span><span lang="en">Tool</span></th><th><span lang="ko">용도</span><span lang="en">Use</span></th></tr>
@@ -167,6 +175,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
   <blockquote lang="ko">"M.Tr #1"이라는 이름의 변압기는 전국 변전소마다 있습니다. 이름만으로는 어느 변압기인지 알 수 없고, 변전소 이름이 바뀌면 이름을 기준으로 한 연결이 모두 끊깁니다. 그래서 <b>이름은 속성으로, 식별은 IRI로</b> 합니다.</blockquote>
   <blockquote lang="en">Almost every substation has a transformer named "M.Tr #1". A name cannot tell them apart, and renaming a substation breaks every link built on names. So: <b>names are properties; identity is the IRI</b>.</blockquote>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko"><b>이름 vs 주민등록번호</b>입니다. "김민수"라는 이름은 전국에 수천 명이고 개명도 할 수 있지만, 주민등록번호는 한 사람에게 하나이고 평생 바뀌지 않습니다. 온톨로지에서도 설비를 <b>이름이 아니라 바뀌지 않는 번호(IRI)</b>로 구별합니다.</p><p lang="en">It is <b>name vs national ID number</b>. Thousands of people share a name, and names can change, but an ID number belongs to one person for life. Ontologies likewise identify things by an <b>unchanging number (IRI), not by name</b>.</p></div>
   <h3><span lang="ko">IRI를 만드는 두 가지 방식</span><span lang="en">Two ways to mint IRIs</span></h3>
   <div class="tbl" lang="ko"><table>
     <tr><th>방식</th><th>예</th><th>장점</th><th>단점</th></tr>
@@ -179,6 +188,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
     <tr><td><b>Opaque ID (UUID)</b></td><td><code>urn:uuid:3f2b…</code></td><td>Carries no meaning, so never needs to change; unique without a central registry</td><td>Not human-readable → keep names as properties</td></tr>
   </table></div>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko"><b>집 주소 vs 평생 번호</b>입니다. "○○시 ○○동 3번지"처럼 뜻이 담긴 주소는 읽기 쉽지만 이사하면 바뀝니다. 아무 뜻 없는 번호는 외우기 어렵지만 이사를 가도 그대로입니다. 그래서 번호로 식별하고, 읽기 쉬운 이름은 따로 적어 둡니다.</p><p lang="en">It is <b>a street address vs a lifelong number</b>. A meaningful address is easy to read but changes when you move; a meaningless number is hard to remember but never changes. So we identify by number and keep the readable name alongside.</p></div>
   <h3>UUID</h3>
   <p lang="ko">128비트 식별자(RFC 9562, 구 RFC 4122)로, 중앙 발급 기관 없이 각 시스템이 따로 만들어도 사실상 충돌하지 않습니다. 용도에 따라 버전을 고릅니다.</p>
   <p lang="en">A 128-bit identifier (RFC 9562, formerly RFC 4122). Independent systems can mint them without coordination and practically never collide. Pick the version by purpose.</p>
@@ -195,6 +205,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
     <tr><td><b>v7</b></td><td>Timestamp (ms) + random; sortable</td><td>Database primary keys (index-friendly)</td></tr>
   </table></div>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li>UUID는 <code>3f2b9c1e-…</code>처럼 생긴 <b>아주 긴 번호표</b>입니다. 경우의 수가 워낙 많아서 전 세계가 따로 뽑아도 겹칠 일이 사실상 없습니다.</li><li><b>v4</b> = <b>제비뽑기</b>. 뽑을 때마다 새 번호</li><li><b>v5</b> = <b>도장</b>. 같은 재료(예: 기존 설비코드)를 넣으면 언제나 같은 번호가 찍힘</li><li><b>v7</b> = <b>번호표 기계</b>. 뽑은 순서대로 커지는 번호</li></ul><ul lang="en"><li>A UUID is a <b>very long ticket number</b> like <code>3f2b9c1e-…</code>. There are so many possibilities that the whole world can draw independently and practically never collide.</li><li><b>v4</b> = a <b>lottery draw</b>: a fresh number every time</li><li><b>v5</b> = a <b>rubber stamp</b>: the same input (e.g. an old equipment code) always stamps the same number</li><li><b>v7</b> = a <b>queue-ticket machine</b>: numbers grow in the order they are taken</li></ul></div>
   <h3><span lang="ko">식별자 운영 원칙</span><span lang="en">Rules for identifiers</span></h3>
   <ul lang="ko">
     <li><b>한 번 발급하면 바꾸지 않는다.</b> 데이터를 다시 내보낼 때마다 ID가 바뀌면 시스템 간 연결과 이력이 모두 끊깁니다.</li>
@@ -210,6 +221,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
   </ul>
   <p lang="ko">전력 분야의 CIM에서는 이 식별자를 <b>mRID</b>라고 부릅니다. → <a href="grid.html#mrid">전력망 페이지의 mRID 설명</a></p>
   <p lang="en">In the power-system CIM this identifier is the <b>mRID</b>. → <a href="grid.html#mrid">mRID on the Power Grid page</a></p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">운동선수의 <b>영구결번</b>과 비슷합니다. 한 번 준 번호는 바꾸지 않고, 은퇴(철거)한 설비의 번호를 새 설비에 다시 주지 않습니다. 번호에 "154kV" 같은 뜻을 넣지 않는 이유는, 뜻이 바뀌면 번호도 바꿔야 하기 때문입니다. 다른 시스템이 쓰는 번호는 <b>별명 목록(매핑 테이블)</b>에 함께 적어 둡니다.</p><p lang="en">Think of a <b>retired jersey number</b>: an issued number never changes, and a removed device's number is never reused. We keep meaning (like "154 kV") out of the number because meaning can change. Numbers used by other systems go into an <b>alias list (mapping table)</b>.</p></div>
 </section>
 
 <section>

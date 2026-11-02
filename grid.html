@@ -44,6 +44,7 @@
     <tr><td>SAREF4ENER</td><td><span lang="ko">ETSI SAREF의 에너지 확장. 수요반응, 기기 연계</span><span lang="en">ETSI SAREF energy extension: demand response, devices</span></td></tr>
     <tr><td>Open Energy Ontology</td><td><span lang="ko">에너지 시스템 모델링·연구 데이터용 오픈 온톨로지</span><span lang="en">Open ontology for energy system modelling and research data</span></td></tr>
   </table></div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>IEC CIM</b> = 전 세계 전력회사가 함께 쓰는 <b>"전력 설비 공용 사전"</b>. 변압기·차단기·선로를 무엇이라 부르고 어떻게 연결하는지 정해 둠</li><li><b>IEC 61970 / 61968 / 62325</b> = 그 사전의 <b>송전 편 / 배전 편 / 전력시장 편</b></li><li><b>CGMES</b> = 유럽 송전회사들이 계통 모델을 주고받을 때 쓰는 <b>택배 포장 규격</b>. 사전(CIM)에서 필요한 부분만 골라 정해진 상자에 담음</li><li><b>IEC 61850</b> = 변전소 안 장치들끼리 대화하는 <b>무전 규칙</b></li></ul><ul lang="en"><li><b>IEC CIM</b> = a <b>shared dictionary of power equipment</b> used worldwide: what to call transformers, breakers and lines, and how they connect</li><li><b>IEC 61970 / 61968 / 62325</b> = the <b>transmission / distribution / market volumes</b> of that dictionary</li><li><b>CGMES</b> = the <b>parcel-packing standard</b> European grid operators use to exchange models: pick the needed parts of CIM and pack them into fixed boxes</li><li><b>IEC 61850</b> = the <b>radio etiquette</b> devices inside a substation use to talk to each other</li></ul></div>
   <h3><span lang="ko">CGMES 프로파일</span><span lang="en">CGMES profiles</span></h3>
   <div class="grid">
     <div class="card"><h4>EQ</h4><p lang="ko">설비와 연결 구조</p><p lang="en">Equipment and connectivity</p></div>
@@ -51,6 +52,7 @@
     <div class="card"><h4>SSH</h4><p lang="ko">해석 입력 조건 (부하, 발전, 탭)</p><p lang="en">Analysis inputs (loads, generation, taps)</p></div>
     <div class="card"><h4>SV</h4><p lang="ko">조류계산 결과 (전압, 위상, 조류)</p><p lang="en">Power flow results (voltage, angle, flow)</p></div>
   </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">같은 지도 위에 겹쳐 놓는 <b>투명 필름 네 장</b>이라고 생각하면 됩니다. <b>EQ</b>는 도로망 지도(어떤 설비가 어떻게 이어졌나), <b>TP</b>는 지금 실제로 다닐 수 있는 길(열리고 닫힌 스위치 반영), <b>SSH</b>는 오늘 가정한 교통량(부하·발전량), <b>SV</b>는 내비게이션이 계산한 결과(각 지점의 전압·전력 흐름)입니다.</p><p lang="en">Think of <b>four transparent sheets</b> stacked on one map: <b>EQ</b> is the road network (what equipment connects to what), <b>TP</b> the roads actually open right now (switch states applied), <b>SSH</b> today's assumed traffic (loads and generation), and <b>SV</b> the navigation result (voltages and flows everywhere).</p></div>
 </section>
 
 <section id="cim">
@@ -92,6 +94,7 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
 
 Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</code></pre>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>분류 계층</b>은 생물 분류(동물 ⊃ 포유류 ⊃ 고양이)와 같습니다. 차단기 ⊂ 개폐기 ⊂ 전기가 흐르는 설비 ⊂ 설비. 그래서 "설비를 모두 찾아"라고 하면 차단기도 함께 찾아집니다.</li><li><b>포함 관계</b>는 건물 구조와 같습니다. 변전소(건물) ⊃ 전압계급(층) ⊃ 베이(방) ⊃ 설비(가구)</li><li><b>mRID와 name</b>: 모든 객체는 바뀌지 않는 번호(mRID)와 사람이 읽는 이름(name)을 함께 가집니다.</li></ul><ul lang="en"><li><b>The class hierarchy</b> works like biology (animal ⊃ mammal ⊃ cat): breaker ⊂ switch ⊂ conducting equipment ⊂ equipment, so "find all equipment" also finds breakers.</li><li><b>Containment</b> works like a building: substation (building) ⊃ voltage level (floor) ⊃ bay (room) ⊃ equipment (furniture)</li><li><b>mRID and name</b>: every object has an unchanging number (mRID) and a human-readable name.</li></ul></div>
   <h3><span lang="ko">연결 패턴: Terminal과 ConnectivityNode</span><span lang="en">Connectivity pattern: Terminal and ConnectivityNode</span></h3>
   <p lang="ko">CIM은 설비끼리 직접 연결하지 않습니다. 각 설비의 <b>Terminal(단자)</b>이 <b>ConnectivityNode(접속 노드)</b>에 붙는 방식으로 연결합니다. 그래서 차단기 개폐에 따라 토폴로지를 다시 계산하거나, 그래프 탐색으로 정전 범위를 찾을 수 있습니다.</p>
   <p lang="en">CIM never links equipment directly. Each piece of equipment has <b>Terminals</b> that attach to <b>ConnectivityNodes</b>. This makes it possible to re-run topology when switches change and to find outage areas by graph search.</p>
@@ -116,6 +119,7 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
     <text x="230" y="185" text-anchor="middle" class="muted">● Terminal</text>
   </svg>
   </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko"><b>플러그와 멀티탭</b>을 떠올리세요. 각 설비에는 플러그(<b>Terminal</b>)가 달려 있고, 설비끼리 선을 직접 잇지 않고 모두 멀티탭(<b>ConnectivityNode</b>)에 꽂습니다. 그래서 어떤 스위치를 끄면 그 멀티탭 너머로 전기가 어디까지 안 가는지 하나씩 따라가 볼 수 있습니다.</p><p lang="en">Picture <b>plugs and power strips</b>. Every device has plugs (<b>Terminals</b>), and devices never wire straight to each other — they all plug into power strips (<b>ConnectivityNodes</b>). That is why, when a switch opens, you can trace step by step where power no longer reaches.</p></div>
 </section>
 
 <section id="mrid">
@@ -125,6 +129,7 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
   <blockquote lang="ko">CIM의 정의: mRID는 <b>모델 관리 주체가 발급</b>하며, 교환 범위 안에서 유일해야 합니다. 전역 유일성은 <b>UUID</b>로 쉽게 얻을 수 있으므로 UUID 사용을 강력히 권장합니다.</blockquote>
   <blockquote lang="en">From the CIM: the mRID is <b>issued by a model authority</b> and is unique within an exchange context. Global uniqueness is easily achieved with a <b>UUID</b>, which is strongly recommended.</blockquote>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">"M.Tr #1"이라는 이름의 변압기는 변전소마다 있고, 이름은 바뀔 수도 있습니다. <b>mRID는 그 설비만의 주민등록번호</b>입니다. 송전 운영 시스템, 설비관리 시스템, 지도 시스템이 같은 변압기를 이야기할 때 이 번호로 서로 확인합니다.</p><p lang="en">Almost every substation has a transformer called "M.Tr #1", and names can change. <b>The mRID is that one device's national ID number</b>; operations, asset and GIS systems use it to agree they mean the same transformer.</p></div>
   <h3><span lang="ko">RDF 파일에서의 표기</span><span lang="en">How it appears in RDF files</span></h3>
 <pre><code>&lt;!-- CGMES 2.4.15 : 파일 기준 상대 IRI (rdf:ID / rdf:resource="#_…") --&gt;
 &lt;cim:Breaker rdf:ID="_6f1c2a9e-…"&gt;
@@ -135,6 +140,7 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
 &lt;!-- IEC 61970-552 Ed.2 / CGMES 3.0 : 위치와 무관한 urn:uuid --&gt;
 &lt;cim:Breaker rdf:about="urn:uuid:6f1c2a9e-…"&gt; … &lt;/cim:Breaker&gt;</code></pre>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">파일 안에 번호를 적는 두 가지 방식입니다. <code>#_번호</code>는 "<b>이 파일 안의</b> ○번"이라는 뜻이고, <code>urn:uuid:번호</code>는 <b>어디에 가져가도 통하는</b> 번호라는 뜻입니다.</p><p lang="en">Two ways to write the number in a file: <code>#_number</code> means "number ○ <b>within this file</b>", while <code>urn:uuid:number</code> is a number that works <b>anywhere</b>.</p></div>
   <h3><span lang="ko">발급 전략</span><span lang="en">Issuing strategy</span></h3>
   <div class="tbl" lang="ko"><table>
     <tr><th>상황</th><th>방법</th></tr>
@@ -151,11 +157,13 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
     <tr><td>Several systems already use their own IDs</td><td>A <b>mapping table</b> keyed by mRID (expressible with CIM <code>Name</code> / <code>NameType</code>)</td></tr>
   </table></div>
 
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>새 설비</b>: 새 번호를 제비뽑기(v4)로 뽑아 장부에 적고 계속 씀</li><li><b>옛 장부에서 옮겨 올 때</b>: 옛 설비코드를 도장(v5)에 넣어 번호를 찍음 → 몇 번을 옮겨도 같은 번호</li><li><b>부속품(단자 등)</b>: 본체 번호에서 이어 붙인 번호</li><li><b>다른 시스템의 번호</b>: 버리지 않고 "별명"으로 함께 적어 둠 (매핑 테이블)</li></ul><ul lang="en"><li><b>New equipment</b>: draw a new number (v4), record it, keep it</li><li><b>Moving from an old ledger</b>: stamp the old code with v5 → the same number every time you migrate</li><li><b>Parts (terminals, etc.)</b>: numbers derived from the main device's number</li><li><b>Other systems' numbers</b>: kept as "aliases" (a mapping table), not thrown away</li></ul></div>
   <h3><span lang="ko">변압기를 교체하면 mRID는?</span><span lang="en">What happens to the mRID when a transformer is replaced?</span></h3>
   <p lang="ko">CIM은 <b>기능 위치</b>(<code>PowerSystemResource</code>, 예: "A변전소 M.Tr #1 자리")와 <b>물리 자산</b>(<code>Asset</code>, IEC 61968, 예: 제조번호 XYZ-123인 변압기)을 구분합니다. 변압기를 교체하면 계통 모델의 <code>PowerTransformer</code> mRID는 <b>그대로</b> 두고, 새 <code>Asset</code>에 <b>새 mRID</b>를 발급해 연결합니다. 그래서 계통 해석 모델은 그대로 쓰면서 자산 이력도 추적할 수 있습니다.</p>
   <p lang="en">CIM separates the <b>functional position</b> (<code>PowerSystemResource</code>, e.g. "M.Tr #1 bay at Substation A") from the <b>physical asset</b> (<code>Asset</code>, IEC 61968, e.g. serial no. XYZ-123). On replacement, the <code>PowerTransformer</code> mRID <b>stays</b>; the new <code>Asset</code> gets a <b>new mRID</b> and is linked to it. The network model is untouched while asset history is preserved.</p>
   <p lang="ko">pycim의 구현은 <a href="project.html#mrid">프로젝트 페이지</a>에서 볼 수 있습니다.</p>
   <p lang="en">See the pycim implementation on the <a href="project.html#mrid">Project page</a>.</p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">회사의 <b>"팀장 자리"와 그 자리에 앉은 사람</b>을 구분하는 것과 같습니다. 사람이 바뀌어도 팀장 자리는 그대로이고, 새로 온 사람은 새 사원번호를 받습니다. 변압기 <b>자리</b>(PowerTransformer)의 번호는 그대로 두고, 새로 들어온 <b>기계</b>(Asset)에만 새 번호를 줍니다. 그래서 계통 그림은 그대로 쓰면서 기계의 이력도 따로 관리할 수 있습니다.</p><p lang="en">It is like separating <b>the team-lead position from the person in it</b>: the position stays when people change, and each new person gets a new employee number. The transformer <b>position</b> (PowerTransformer) keeps its number; only the new <b>machine</b> (Asset) gets a new one — so the grid model stays intact while each machine keeps its own history.</p></div>
 </section>
 
 <section id="example">
@@ -195,6 +203,7 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
   <p lang="en">The RDF data for this grid is in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>; SPARQL examples are in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">queries.md</a>.</p>
   <p lang="ko">👉 이 데이터를 <a href="lab.html">실습 페이지</a>에서 직접 질의하고 지식 그래프로 볼 수 있습니다.</p>
   <p lang="en">👉 Query this data yourself and see it as a knowledge graph on the <a href="lab.html">Lab page</a>.</p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">차단기는 <b>수도 밸브</b>와 같습니다. 밸브를 잠그면 그 아래쪽 집들에 물이 끊기듯, 차단기를 열면 그 뒤쪽 설비에 전기가 끊깁니다. 이 그림은 멀티탭(노드)을 따라가며 <b>전기가 어디까지 가는지</b> 계산해 보여 주고, 숫자(pu)는 정상 전압을 1로 봤을 때의 비율입니다(0.99면 정상의 99%).</p><p lang="en">A breaker is like a <b>water valve</b>: close it and the houses downstream lose water; open a breaker and the equipment behind it loses power. The diagram follows the power strips (nodes) to show <b>how far power reaches</b>, and each number (pu) is voltage relative to normal (0.99 = 99% of normal).</p></div>
   <h3><span lang="ko">SPARQL로 인접 설비 찾기</span><span lang="en">Finding adjacent equipment with SPARQL</span></h3>
 <pre><code>PREFIX cim: &lt;http://iec.ch/TC57/CIM100#&gt;
 SELECT DISTINCT ?a ?b WHERE {
@@ -204,6 +213,7 @@ SELECT DISTINCT ?a ?b WHERE {
   ?e1 cim:IdentifiedObject.name ?a .
   ?e2 cim:IdentifiedObject.name ?b .
 }</code></pre>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">"<b>같은 멀티탭(ConnectivityNode)에 꽂혀 있는 설비 두 개를 모두 짝지어 보여 줘</b>"라는 질문입니다. 이것만으로 어떤 설비가 어떤 설비와 바로 이웃해 있는지 전체 연결 지도를 얻을 수 있습니다.</p><p lang="en">The question is "<b>pair up every two devices plugged into the same power strip (ConnectivityNode)</b>". That alone yields the full map of which equipment sits right next to which.</p></div>
 </section>
 
 <section id="use">
