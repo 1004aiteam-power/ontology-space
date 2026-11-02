@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Physical AI</title>
+<meta name="title-ko" content="Ontology Space · 피지컬 AI">
+<meta name="title-en" content="Ontology Space · Physical AI">
+<meta name="description" content="Physical AI 개념, 관련 기술, 그리고 가상 환경에서 스스로 운전을 배우는 NEAT 시뮬레이션">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+<script type="module" src="assets/physai/app.js"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <a href="physical-ai.html" aria-current="page"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">PHYSICAL AI</div>
+  <h1><span lang="ko">현실 세계에서 보고, 판단하고,<br>움직이는 AI</span><span lang="en">AI that perceives, decides<br>and acts in the physical world</span></h1>
+  <p class="lead" lang="ko">글과 그림을 만드는 생성형 AI를 넘어, 로봇·자율주행차·드론처럼 몸을 가지고 물리 세계에서 행동하는 AI를 소개합니다. 마지막에는 <b>가상 환경에서 스스로 운전을 배우는 시뮬레이션</b>을 직접 돌려 볼 수 있습니다.</p>
+  <p class="lead" lang="en">Beyond generative AI that writes and draws: AI with a body — robots, self-driving cars, drones — acting in the physical world. At the end you can run <b>a simulation where cars learn to drive by themselves in a virtual world</b>.</p>
+</div>
+
+<section id="concept">
+  <h2><span lang="ko">Physical AI란?</span><span lang="en">What is Physical AI?</span></h2>
+  <blockquote lang="ko"><b>Physical AI</b>는 센서로 현실 세계를 <b>인지</b>하고, 상황을 이해해 <b>판단</b>하며, 모터·바퀴·팔 같은 구동기로 <b>행동</b>하는 AI입니다. 물리 법칙(중력, 마찰, 충돌)이 지배하는 공간에서 실시간으로 동작해야 한다는 점이 핵심입니다.</blockquote>
+  <blockquote lang="en"><b>Physical AI</b> <b>perceives</b> the real world through sensors, <b>decides</b> by understanding the situation, and <b>acts</b> through actuators such as motors, wheels and arms. It must work in real time in a world governed by physics — gravity, friction, collisions.</blockquote>
+
+  <h3><span lang="ko">구성요소: 감지 → 판단 → 행동의 반복</span><span lang="en">Building blocks: the sense → decide → act loop</span></h3>
+  <svg class="loop" viewBox="0 0 640 230" role="img" aria-label="sense-decide-act loop">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker></defs>
+    <g fill="var(--surface)" stroke="var(--line)" stroke-width="1.5">
+      <rect x="20" y="70" width="150" height="70" rx="10"/><rect x="245" y="70" width="150" height="70" rx="10"/>
+      <rect x="470" y="70" width="150" height="70" rx="10"/><rect x="245" y="172" width="150" height="46" rx="10" stroke-dasharray="4 3"/>
+    </g>
+    <g stroke="var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#ar)">
+      <path d="M170 105 H243"/><path d="M395 105 H468"/><path d="M545 140 V195 H397"/><path d="M243 195 H95 V142"/>
+    </g>
+    <text x="95" y="100" text-anchor="middle" font-weight="600"><tspan lang="ko">① 인지</tspan><tspan lang="en">① Perceive</tspan></text>
+    <text x="95" y="120" text-anchor="middle" class="muted"><tspan lang="ko">카메라·LiDAR·IMU</tspan><tspan lang="en">camera · LiDAR · IMU</tspan></text>
+    <text x="320" y="100" text-anchor="middle" font-weight="600"><tspan lang="ko">② 판단</tspan><tspan lang="en">② Decide</tspan></text>
+    <text x="320" y="120" text-anchor="middle" class="muted"><tspan lang="ko">월드 모델·정책</tspan><tspan lang="en">world model · policy</tspan></text>
+    <text x="545" y="100" text-anchor="middle" font-weight="600"><tspan lang="ko">③ 행동</tspan><tspan lang="en">③ Act</tspan></text>
+    <text x="545" y="120" text-anchor="middle" class="muted"><tspan lang="ko">모터·조향·그리퍼</tspan><tspan lang="en">motors · steering · gripper</tspan></text>
+    <text x="320" y="200" text-anchor="middle"><tspan lang="ko">④ 물리 세계 (환경이 바뀜)</tspan><tspan lang="en">④ Physical world changes</tspan></text>
+    <text x="320" y="40" text-anchor="middle" class="muted"><tspan lang="ko">이 고리가 초당 수십~수백 번 반복되며, 결과로부터 학습한다</tspan><tspan lang="en">The loop runs tens to hundreds of times per second, and the system learns from the outcome</tspan></text>
+  </svg>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">① 인지 (Perception)</span><span lang="en">① Perception</span></h4><p lang="ko">카메라, LiDAR, 레이더, IMU, 촉각 센서로 주변과 자기 상태를 측정합니다.</p><p lang="en">Cameras, LiDAR, radar, IMUs and touch sensors measure the surroundings and the body itself.</p></div>
+    <div class="card"><h4><span lang="ko">② 판단 (Reasoning)</span><span lang="en">② Reasoning</span></h4><p lang="ko">세상이 어떻게 움직일지 예측하는 월드 모델과, 다음 행동을 고르는 정책(policy)이 결정을 내립니다.</p><p lang="en">A world model predicts how the world will evolve; a policy chooses the next action.</p></div>
+    <div class="card"><h4><span lang="ko">③ 행동 (Action)</span><span lang="en">③ Action</span></h4><p lang="ko">모터, 바퀴, 관절, 그리퍼를 제어해 실제로 움직입니다. 안전과 실시간성이 필수입니다.</p><p lang="en">Motors, wheels, joints and grippers move the body. Safety and real-time response are mandatory.</p></div>
+    <div class="card"><h4><span lang="ko">④ 학습 (Learning)</span><span lang="en">④ Learning</span></h4><p lang="ko">행동의 결과를 보고 더 나은 행동을 배웁니다. 현실에서 실패는 비싸서 대부분 <b>시뮬레이션</b>에서 먼저 배웁니다.</p><p lang="en">It improves from the outcome of its actions. Failure in reality is expensive, so most learning happens first <b>in simulation</b>.</p></div>
+  </div>
+
+  <h3><span lang="ko">생성형 AI와 무엇이 다른가</span><span lang="en">How it differs from generative AI</span></h3>
+  <div class="tbl" lang="ko"><table>
+    <tr><th>구분</th><th>생성형 AI</th><th>Physical AI</th></tr>
+    <tr><td>출력</td><td>글, 그림, 코드, 소리</td><td><b>행동</b>: 조향, 관절 토크, 그리퍼 개폐</td></tr>
+    <tr><td>환경</td><td>디지털 (화면 안)</td><td>물리 세계 (중력, 마찰, 충돌)</td></tr>
+    <tr><td>학습 데이터</td><td>인터넷 규모의 텍스트·이미지</td><td>로봇 상호작용 데이터 — 귀하고 비쌈 → 시뮬레이션·합성 데이터</td></tr>
+    <tr><td>실패의 대가</td><td>틀린 답변 (다시 생성하면 됨)</td><td>파손, 사고, 사람의 안전</td></tr>
+    <tr><td>시간 제약</td><td>몇 초 기다려도 됨</td><td>밀리초 단위 실시간 제어</td></tr>
+    <tr><td>평가</td><td>사람의 선호, 벤치마크</td><td>과제 성공률, 안전성, 현실 이전(sim-to-real) 성능</td></tr>
+  </table></div>
+  <div class="tbl" lang="en"><table>
+    <tr><th></th><th>Generative AI</th><th>Physical AI</th></tr>
+    <tr><td>Output</td><td>Text, images, code, audio</td><td><b>Actions</b>: steering, joint torques, gripper commands</td></tr>
+    <tr><td>Environment</td><td>Digital (on screen)</td><td>Physical world (gravity, friction, contact)</td></tr>
+    <tr><td>Training data</td><td>Internet-scale text and images</td><td>Robot interaction data — scarce and costly → simulation, synthetic data</td></tr>
+    <tr><td>Cost of failure</td><td>A wrong answer (just regenerate)</td><td>Damage, accidents, human safety</td></tr>
+    <tr><td>Time budget</td><td>Seconds are fine</td><td>Millisecond real-time control</td></tr>
+    <tr><td>Evaluation</td><td>Human preference, benchmarks</td><td>Task success, safety, sim-to-real transfer</td></tr>
+  </table></div>
+  <p lang="ko">두 흐름은 합쳐지고 있습니다. 대규모 언어·비전 모델의 상식과 추론을 로봇의 행동으로 잇는 것이 아래의 <b>로봇 파운데이션 모델</b>입니다.</p>
+  <p lang="en">The two are converging: <b>robot foundation models</b> (below) connect the common sense of large vision-language models to robot actions.</p>
+</section>
+
+<section id="tech">
+  <h2><span lang="ko">관련 기술</span><span lang="en">Key technologies</span></h2>
+
+  <h3><span lang="ko">1. 로봇 파운데이션 모델 (VLA)</span><span lang="en">1. Robot foundation models (VLA)</span></h3>
+  <p lang="ko"><b>VLA(Vision-Language-Action)</b> 모델은 카메라 영상과 "컵을 집어 선반에 올려"같은 자연어 지시를 받아 로봇 동작을 바로 출력합니다. 다양한 로봇·과제 데이터로 사전학습해, 새 과제에도 적은 데이터로 적응하는 것이 목표입니다.</p>
+  <p lang="en"><b>VLA (Vision-Language-Action)</b> models take camera images and an instruction like "put the cup on the shelf" and output robot actions directly. Pre-trained on many robots and tasks, they aim to adapt to new tasks with little data.</p>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">모델</span><span lang="en">Model</span></th><th><span lang="ko">개발</span><span lang="en">By</span></th><th><span lang="ko">특징</span><span lang="en">Notes</span></th></tr>
+    <tr><td>RT-2 (2023)</td><td>Google DeepMind</td><td><span lang="ko">비전-언어 모델이 로봇 동작을 텍스트 토큰처럼 출력</span><span lang="en">A vision-language model emits robot actions as text tokens</span></td></tr>
+    <tr><td>OpenVLA (2024)</td><td>Stanford <span lang="ko">외</span><span lang="en">et al.</span></td><td><span lang="ko">오픈소스 7B VLA, Open X-Embodiment 데이터로 학습</span><span lang="en">Open-source 7B VLA trained on Open X-Embodiment</span></td></tr>
+    <tr><td>π0 (2024)</td><td>Physical Intelligence</td><td><span lang="ko">여러 종류의 로봇을 하나의 모델로, 빨래 개기 같은 섬세한 조작</span><span lang="en">One model across robot types; dexterous tasks like folding laundry</span></td></tr>
+    <tr><td>GR00T N1 (2025)</td><td>NVIDIA</td><td><span lang="ko">휴머노이드용 오픈 파운데이션 모델</span><span lang="en">Open foundation model for humanoids</span></td></tr>
+    <tr><td>Gemini Robotics (2025)</td><td>Google DeepMind</td><td><span lang="ko">Gemini 기반 VLA, 처음 보는 물체·지시에 대한 일반화</span><span lang="en">Gemini-based VLA generalising to unseen objects and instructions</span></td></tr>
+  </table></div>
+
+  <h3><span lang="ko">2. 시뮬레이션과 디지털 트윈</span><span lang="en">2. Simulation and digital twins</span></h3>
+  <p lang="ko">현실에서 로봇을 수천 번 넘어뜨리며 배울 수는 없습니다. 그래서 물리 엔진으로 만든 가상 세계에서 <b>수백만 번</b> 시행착오를 거친 뒤 현실로 옮깁니다. 실제 설비·공장·도시를 그대로 본뜬 가상 복제본이 <b>디지털 트윈</b>입니다.</p>
+  <p lang="en">You cannot knock a real robot over thousands of times. Instead, it trials <b>millions of times</b> in a physics-engine world and then transfers to reality. A virtual replica of a real plant, factory or city is a <b>digital twin</b>.</p>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">시뮬레이터</span><span lang="en">Simulators</span></h4><p>NVIDIA Isaac Sim / Isaac Lab, MuJoCo, Gazebo, PyBullet</p></div>
+    <div class="card"><h4><span lang="ko">월드 모델</span><span lang="en">World models</span></h4><p lang="ko">영상으로 학습해 "다음에 세상이 어떻게 보일지"를 생성하는 모델 (예: NVIDIA Cosmos). 합성 학습 데이터 생성에도 쓰입니다.</p><p lang="en">Models that generate what the world will look like next, learned from video (e.g. NVIDIA Cosmos); also used to synthesise training data.</p></div>
+    <div class="card"><h4>Sim-to-Real <span lang="ko">격차</span><span lang="en">gap</span></h4><p lang="ko">시뮬레이션과 현실은 마찰, 센서 잡음, 조명 등이 다릅니다. 가상에서 완벽해도 현실에서 실패할 수 있습니다.</p><p lang="en">Friction, sensor noise and lighting differ between simulation and reality. Perfect in sim can still fail in the real world.</p></div>
+    <div class="card"><h4><span lang="ko">도메인 랜덤화</span><span lang="en">Domain randomisation</span></h4><p lang="ko">학습할 때 환경(지형, 마찰, 색, 잡음)을 계속 바꿔, 현실을 "또 하나의 변형"으로 느끼게 만드는 기법입니다. 아래 실습에서 직접 확인할 수 있습니다.</p><p lang="en">Keep changing the environment (terrain, friction, colours, noise) during training so reality feels like "just another variation". Try it in the lab below.</p></div>
+  </div>
+  <p lang="ko">전력 분야에서는 변전소·배전망의 디지털 트윈(이 사이트의 <a href="grid.html">CIM 모델</a>) 위에서 점검 로봇·드론의 경로와 작업을 미리 시험하는 식으로 연결됩니다.</p>
+  <p lang="en">In power systems this connects naturally: inspection robots and drones can rehearse routes and tasks on a substation or feeder digital twin — such as the <a href="grid.html">CIM model</a> on this site.</p>
+
+  <h3><span lang="ko">3. 센서 융합</span><span lang="en">3. Sensor fusion</span></h3>
+  <p lang="ko">센서마다 강점과 약점이 달라, 여러 센서를 합쳐 더 정확하고 견고한 인지를 만듭니다.</p>
+  <p lang="en">Each sensor has strengths and weaknesses; combining them gives more accurate and robust perception.</p>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">센서</span><span lang="en">Sensor</span></th><th><span lang="ko">강점</span><span lang="en">Strength</span></th><th><span lang="ko">약점</span><span lang="en">Weakness</span></th></tr>
+    <tr><td><span lang="ko">카메라</span><span lang="en">Camera</span></td><td><span lang="ko">색, 글자, 물체 종류</span><span lang="en">Colour, text, object type</span></td><td><span lang="ko">거리 추정이 약함, 어둠·역광</span><span lang="en">Weak depth, darkness, glare</span></td></tr>
+    <tr><td>LiDAR</td><td><span lang="ko">정밀한 3D 거리</span><span lang="en">Precise 3D range</span></td><td><span lang="ko">비싸고, 비·안개에 약함</span><span lang="en">Costly; rain and fog</span></td></tr>
+    <tr><td><span lang="ko">레이더</span><span lang="en">Radar</span></td><td><span lang="ko">속도 측정, 악천후에 강함</span><span lang="en">Measures velocity; all-weather</span></td><td><span lang="ko">해상도가 낮음</span><span lang="en">Low resolution</span></td></tr>
+    <tr><td>IMU</td><td><span lang="ko">가속도·회전을 매우 빠르게</span><span lang="en">Very fast acceleration and rotation</span></td><td><span lang="ko">시간이 지나면 오차 누적(드리프트)</span><span lang="en">Drift accumulates over time</span></td></tr>
+  </table></div>
+  <ul lang="ko">
+    <li><b>칼만 필터 / 확장 칼만 필터</b>: 예측(움직임 모델)과 측정(센서)을 불확실성에 따라 가중 평균해 상태를 추정</li>
+    <li><b>초기 융합 vs 후기 융합</b>: 원시 데이터를 먼저 합칠지, 센서별로 인식한 결과를 나중에 합칠지</li>
+    <li><b>BEV(Bird's-Eye View) 융합</b>: 카메라와 LiDAR 특징을 위에서 내려다본 공통 좌표로 모아 자율주행 인지에 사용</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Kalman / extended Kalman filters</b>: weight a motion-model prediction and sensor measurements by their uncertainty to estimate state</li>
+    <li><b>Early vs late fusion</b>: merge raw data first, or merge per-sensor detections later</li>
+    <li><b>BEV (bird's-eye-view) fusion</b>: bring camera and LiDAR features into a shared top-down frame for driving perception</li>
+  </ul>
+</section>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">가상에서 배우기: NEAT 자율주행 시뮬레이션</span><span lang="en">Learning in a virtual world: NEAT self-driving simulation</span></h2>
+  <p class="sub" lang="ko">자동차 150대가 7개의 거리 센서로 벽을 감지하고, 각자의 작은 신경망으로 조향과 가감속을 결정합니다. 아무것도 모르는 상태에서 시작해, 세대가 지날수록 <b>진화</b>로 운전을 배웁니다. 모든 계산은 브라우저 안에서 이루어집니다.</p>
+  <p class="sub" lang="en">150 cars sense walls with 7 range sensors, and each one's small neural network decides steering and throttle. They start knowing nothing and learn to drive by <b>evolution</b> over generations — all inside your browser.</p>
+
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="speedBtn"></button>
+    <select id="trackType" aria-label="track"></select>
+    <button id="newTrackBtn"><span lang="ko">새 트랙</span><span lang="en">New track</span></button>
+    <select id="popSize" aria-label="population size">
+      <option value="60">60</option><option value="100">100</option><option value="150" selected>150</option><option value="250">250</option>
+    </select>
+    <label><input type="checkbox" id="randomize"> <span lang="ko">도메인 랜덤화 (세대마다 새 트랙)</span><span lang="en">Domain randomisation (new track each gen)</span></label>
+    <label><input type="checkbox" id="noise"> <span lang="ko">센서 잡음</span><span lang="en">Sensor noise</span></label>
+    <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+  </div>
+
+  <div class="sim-wrap">
+    <div>
+      <canvas id="sim" aria-label="simulation"></canvas>
+      <div id="testBar" hidden>
+        <span id="modeLabel"></span><span id="testResult"></span>
+        <button id="retestBtn"><span lang="ko">다른 트랙으로 다시</span><span lang="en">Try another track</span></button>
+        <button id="backBtn"><span lang="ko">학습으로 돌아가기</span><span lang="en">Back to training</span></button>
+      </div>
+    </div>
+    <div class="side">
+      <div id="stats"></div>
+      <div class="panel">
+        <b><span lang="ko">Sim-to-Real 테스트</span><span lang="en">Sim-to-real test</span></b>
+        <p class="meta" lang="ko">지금까지의 챔피언을 학습 때 본 적 없는 트랙에서 달리게 합니다.</p>
+        <p class="meta" lang="en">Run the current champion on tracks it has never seen.</p>
+        <div class="ctrl" style="margin:6px 0">
+          <button id="testBtn"><span lang="ko">새 트랙에서 주행</span><span lang="en">Drive a new track</span></button>
+          <button id="batchBtn"><span lang="ko">20개 일괄 평가</span><span lang="en">Score 20 tracks</span></button>
+        </div>
+        <div id="batchResult" class="meta"></div>
+      </div>
+      <button id="saveBtn" class="panel" style="cursor:pointer;color:var(--text)"><span lang="ko">⬇ 챔피언 유전체 저장 (JSON)</span><span lang="en">⬇ Save champion genome (JSON)</span></button>
+    </div>
+  </div>
+
+  <h3><span lang="ko">선두 차량의 신경망 (실시간)</span><span lang="en">Leader's neural network (live)</span></h3>
+  <div class="panel"><canvas id="net" aria-label="neural network"></canvas><p id="netInfo" class="meta"></p></div>
+
+  <h3><span lang="ko">학습 곡선</span><span lang="en">Learning curve</span></h3>
+  <div class="panel chart-box">
+    <div class="chart-legend"><span><i style="background:#2a78d6"></i><span lang="ko">세대 최고 적합도</span><span lang="en">Best fitness</span></span><span><i style="background:#eb6834"></i><span lang="ko">세대 평균 적합도</span><span lang="en">Mean fitness</span></span></div>
+    <canvas id="chart" aria-label="fitness by generation"></canvas>
+    <div id="chartTip" hidden></div>
+    <p class="meta" lang="ko">적합도 = 트랙 한 바퀴를 1000점으로 정규화한 전진 거리 + 완주 시 남은 시간 보너스 (2바퀴 완주 ≈ 2500~3500)</p>
+    <p class="meta" lang="en">Fitness = forward progress normalised to 1000 per lap + a time bonus on finishing (two laps ≈ 2500–3500)</p>
+    <details><summary><span lang="ko">표로 보기 (최근 30세대)</span><span lang="en">View as table (last 30 generations)</span></summary><div class="tbl"><table id="histTable"></table></div></details>
+  </div>
+
+  <h3><span lang="ko">Physical AI로 읽는 이 시뮬레이션</span><span lang="en">Reading this simulation as Physical AI</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">Physical AI 요소</span><span lang="en">Physical AI element</span></th><th><span lang="ko">이 실습에서</span><span lang="en">In this lab</span></th></tr>
+    <tr><td><span lang="ko">센서 (인지)</span><span lang="en">Sensors (perception)</span></td><td><span lang="ko">−90°~+90° 7방향 거리 센서(LiDAR를 단순화) + 현재 속도</span><span lang="en">7 range beams from −90° to +90° (a simplified LiDAR) + current speed</span></td></tr>
+    <tr><td><span lang="ko">정책 (판단)</span><span lang="en">Policy (decision)</span></td><td><span lang="ko">NEAT가 진화시킨 신경망. 구조(노드·연결)까지 스스로 자람</span><span lang="en">A NEAT-evolved network whose structure (nodes, links) grows by itself</span></td></tr>
+    <tr><td><span lang="ko">구동기 (행동)</span><span lang="en">Actuators (action)</span></td><td><span lang="ko">조향, 가감속 (−1~+1 연속값), 관성·저항이 있는 차량 모델</span><span lang="en">Steering and throttle (continuous −1…+1) on a car model with inertia and drag</span></td></tr>
+    <tr><td><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></td><td><span lang="ko">무작위로 생성되는 트랙, 회전한 차체의 충돌 판정</span><span lang="en">Randomly generated tracks, collision checks on the rotated body</span></td></tr>
+    <tr><td><span lang="ko">도메인 랜덤화 · 센서 잡음</span><span lang="en">Domain randomisation · sensor noise</span></td><td><span lang="ko">세대마다 새 트랙, 센서값에 가우시안 잡음</span><span lang="en">New track every generation, Gaussian noise on readings</span></td></tr>
+    <tr><td>Sim-to-Real</td><td><span lang="ko">학습에 쓰지 않은 트랙에서 챔피언을 평가</span><span lang="en">Evaluate the champion on tracks never used in training</span></td></tr>
+  </table></div>
+  <blockquote lang="ko"><b>직접 해 보기:</b> 둥근 트랙 하나로만 학습하면 몇 세대 만에 완주하지만, "20개 일괄 평가"를 누르면 처음 보는 트랙에서는 대부분 실패합니다 — <b>가상 환경에 과적합</b>된 것입니다. "도메인 랜덤화"를 켜거나 어려운 M-M 트랙으로 학습하면 일반화 성능이 올라갑니다. (개발 중 측정: 30세대 학습 후 처음 보는 트랙 30개 완주 — 둥근 트랙만 0개, 랜덤화 9개, M-M 트랙 22개. 진화는 무작위라 실행마다 달라집니다.)</blockquote>
+  <blockquote lang="en"><b>Try it:</b> trained on one round track, the cars finish within a few generations — yet "Score 20 tracks" shows they mostly fail on unseen tracks: they have <b>overfitted the simulation</b>. Turn on domain randomisation or train on the hard M-M track and generalisation improves. (Measured during development after 30 generations, unseen tracks completed out of 30: round only 0, randomised 9, M-M 22. Evolution is random, so your runs will differ.)</blockquote>
+
+  <h3><span lang="ko">NEAT 알고리즘</span><span lang="en">The NEAT algorithm</span></h3>
+  <p lang="ko"><b>NEAT(NeuroEvolution of Augmenting Topologies)</b>는 Stanley와 Miikkulainen(2002)이 제안한 방법으로, 신경망의 가중치뿐 아니라 <b>구조까지</b> 유전 알고리즘으로 진화시킵니다.</p>
+  <p lang="en"><b>NEAT (NeuroEvolution of Augmenting Topologies)</b>, by Stanley and Miikkulainen (2002), evolves not only the weights of neural networks but their <b>structure</b>, using a genetic algorithm.</p>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">최소 구조에서 시작</span><span lang="en">Start minimal</span></h4><p lang="ko">입력과 출력만 연결된 가장 단순한 신경망에서 출발해, 필요할 때만 노드와 연결을 추가합니다.</p><p lang="en">Begin with inputs wired straight to outputs, adding nodes and links only when they help.</p></div>
+    <div class="card"><h4><span lang="ko">혁신 번호</span><span lang="en">Innovation numbers</span></h4><p lang="ko">새 연결마다 역사적 번호를 붙여, 구조가 다른 두 신경망도 유전자를 줄 맞춰 교차할 수 있습니다.</p><p lang="en">Every new gene gets a historical marker, so networks with different shapes can still be crossed over gene by gene.</p></div>
+    <div class="card"><h4><span lang="ko">종 분화</span><span lang="en">Speciation</span></h4><p lang="ko">비슷한 구조끼리 종으로 묶어 경쟁시켜, 막 생겨난 새 구조가 최적화될 시간을 보호합니다.</p><p lang="en">Similar genomes form species and compete within them, giving brand-new structures time to mature.</p></div>
+    <div class="card"><h4><span lang="ko">선택 · 교차 · 변이</span><span lang="en">Select · cross · mutate</span></h4><p lang="ko">잘 달린 개체가 부모가 되어 자식을 만들고, 가중치 변이·연결 추가·노드 추가가 일어납니다.</p><p lang="en">Good drivers become parents; children get weight changes, new links and new nodes.</p></div>
+  </div>
+  <p lang="ko"><b>참고:</b> NEAT는 이해하기 쉬운 교육용 예시입니다. 오늘날의 Physical AI는 주로 대규모 시뮬레이션에서의 강화학습, 시연 데이터를 이용한 모방학습, 그리고 위의 파운데이션 모델로 학습합니다. "가상에서 시행착오로 배우고 현실로 옮긴다"는 핵심 흐름은 같습니다.</p>
+  <p lang="en"><b>Note:</b> NEAT is an easy-to-follow teaching example. Modern Physical AI mostly learns by reinforcement learning in massive simulations, imitation learning from demonstrations, and the foundation models above. The core idea — learn by trial and error in a virtual world, then transfer to reality — is the same.</p>
+
+  <h3><span lang="ko">원본 Python 코드에서 개선한 점</span><span lang="en">Improvements over the original Python code</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">항목</span><span lang="en">Item</span></th><th><span lang="ko">원본 (pygame + neat-python)</span><span lang="en">Original (pygame + neat-python)</span></th><th><span lang="ko">웹 버전</span><span lang="en">Web version</span></th></tr>
+    <tr><td><span lang="ko">실행 환경</span><span lang="en">Runtime</span></td><td><span lang="ko">파이썬 설치, pygame 창</span><span lang="en">Python install, pygame window</span></td><td><span lang="ko">브라우저만 있으면 됨 (NEAT 직접 구현)</span><span lang="en">Just a browser (NEAT implemented from scratch)</span></td></tr>
+    <tr><td><span lang="ko">벽 판정 · 센서</span><span lang="en">Walls · sensors</span></td><td><span lang="ko">화면 픽셀 색을 1px씩 검사</span><span lang="en">Read screen pixel colours 1 px at a time</span></td><td><span lang="ko">벽 선분과의 교차 계산 + 공간 격자 (정확하고 빠름)</span><span lang="en">Ray–segment intersection with a spatial grid (exact and fast)</span></td></tr>
+    <tr><td><span lang="ko">충돌</span><span lang="en">Collision</span></td><td><span lang="ko">회전하지 않은 사각형의 네 모서리</span><span lang="en">Four corners of an unrotated box</span></td><td><span lang="ko">회전한 차체의 네 모서리 ↔ 중심선 거리</span><span lang="en">Rotated body corners vs. centre-line distance</span></td></tr>
+    <tr><td><span lang="ko">조작</span><span lang="en">Control</span></td><td><span lang="ko">좌/우 on-off (출력 &gt; 0.5), 속도 고정</span><span lang="en">Left/right on-off (output &gt; 0.5), fixed speed</span></td><td><span lang="ko">조향·가감속 연속값, 관성·저항, 속도도 입력으로</span><span lang="en">Continuous steering and throttle, inertia and drag, speed as an input</span></td></tr>
+    <tr><td><span lang="ko">적합도</span><span lang="en">Fitness</span></td><td><span lang="ko">생존 시간 + "x &gt; 850" 통과 보너스</span><span lang="en">Survival time + "x &gt; 850" bonus</span></td><td><span lang="ko">중심선을 따라 전진한 거리(트랙 길이로 정규화) + 완주 시간 보너스, 역주행·정체 즉시 탈락</span><span lang="en">Progress along the centre line (normalised) + finishing-time bonus; reversing or stalling ends the run</span></td></tr>
+    <tr><td><span lang="ko">트랙</span><span lang="en">Tracks</span></td><td><span lang="ko">M-M 트랙: 꼭짓점이 V자로 뾰족함</span><span lang="en">M-M track with sharp V-shaped peaks</span></td><td><span lang="ko">봉우리를 아치로 만들고 평활화, 겹침·급커브 자동 검사 후 재생성</span><span lang="en">Arched peaks with smoothing; overlaps and too-tight bends are detected and regenerated</span></td></tr>
+    <tr><td><span lang="ko">변이 확률</span><span lang="en">Mutation rates</span></td><td><span lang="ko">노드 추가 0.5, 연결 추가 0.7 (구조가 너무 빨리 커짐)</span><span lang="en">Add node 0.5, add link 0.7 (structure balloons)</span></td><td><span lang="ko">0.03 / 0.12 + 종 개수에 맞춰 종 분화 임계값 자동 조절</span><span lang="en">0.03 / 0.12 + auto-tuned speciation threshold</span></td></tr>
+    <tr><td><span lang="ko">일반화</span><span lang="en">Generalisation</span></td><td><span lang="ko">없음</span><span lang="en">None</span></td><td><span lang="ko">도메인 랜덤화, 센서 잡음, 처음 보는 트랙 평가</span><span lang="en">Domain randomisation, sensor noise, unseen-track evaluation</span></td></tr>
+  </table></div>
+  <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/neat.js">neat.js</a> (NEAT) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/sim.js">sim.js</a> (<span lang="ko">트랙·차량·센서</span><span lang="en">track · car · sensors</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/app.js">app.js</a> (<span lang="ko">화면</span><span lang="en">UI</span>)</p>
+</section>
+
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li>K. O. Stanley, R. Miikkulainen, "Evolving Neural Networks through Augmenting Topologies", <i>Evolutionary Computation</i>, 2002</li>
+    <li>J. Tobin <span lang="ko">외</span><span lang="en">et al.</span>, "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World", IROS 2017</li>
+    <li><a href="https://deepmind.google/discover/blog/rt-2-new-model-translates-vision-and-language-into-action/">RT-2</a> · <a href="https://openvla.github.io/">OpenVLA</a> · <a href="https://www.physicalintelligence.company/blog/pi0">π0</a> · <a href="https://developer.nvidia.com/isaac/gr00t">Isaac GR00T</a></li>
+    <li><a href="https://developer.nvidia.com/isaac/sim">NVIDIA Isaac Sim</a> · <a href="https://mujoco.org/">MuJoCo</a> · <a href="https://gazebosim.org/">Gazebo</a> · <a href="https://www.nvidia.com/en-us/ai/cosmos/">NVIDIA Cosmos</a></li>
+  </ul>
+  <div class="pager"><a href="lab.html"><span lang="ko">← 이전: 실습</span><span lang="en">← Prev: Lab</span></a><span></span></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE">MIT License</a></div></footer>
+</body>
+</html>

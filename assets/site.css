@@ -137,3 +137,38 @@ textarea#query{width:100%;min-height:200px;font:13px/1.5 ui-monospace,Menlo,Cons
 #nodeInfo table{font-size:13px;min-width:0}
 #nodeInfo td{word-break:break-all}
 @media (max-width:520px){ #graph{height:420px} }
+
+/* Physical AI 페이지 */
+.sim-wrap{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .sim-wrap{grid-template-columns:minmax(0,1fr) 260px} }
+#sim{width:100%;display:block;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+.side{display:flex;flex-direction:column;gap:12px}
+#stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#stats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+#stats span{display:block;font-size:12px;color:var(--muted)}
+#stats b{font-variant-numeric:tabular-nums;font-size:15px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.ctrl button,.ctrl select{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px}
+.ctrl button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.ctrl label{display:inline-flex;gap:6px;align-items:center;font-size:14px;cursor:pointer}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
+#net{width:100%;height:300px;display:block}
+.chart-box{position:relative}
+#chart{width:100%;height:240px;display:block}
+#chartTip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;line-height:1.5;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+#chartTip i,.chart-legend i{display:inline-block;width:10px;height:3px;margin-right:6px;vertical-align:middle;border-radius:2px}
+.chart-legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:6px}
+#testBar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--warm);border-radius:8px;margin-top:10px}
+#modeLabel{font-weight:600;color:var(--warm)}
+.loop{display:block;width:100%;max-width:640px;height:auto;margin:8px auto}
+.loop text{fill:var(--text);font-size:13px}
+.loop .muted{fill:var(--muted);font-size:11px}
+details summary{cursor:pointer;color:var(--accent);font-size:14px;margin:8px 0}
+#testBar[hidden]{display:none}
+#testBar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
+@media (max-width:520px){
+  header.top .wrap{height:auto;flex-wrap:wrap;padding-top:8px;padding-bottom:6px;row-gap:4px}
+  .brand{display:block;flex:1}
+  nav{order:3;flex-basis:100%;justify-content:space-between}
+  nav a{padding:4px 6px;font-size:14px}
+}
