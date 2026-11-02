@@ -1,6 +1,6 @@
 // Physical AI 페이지: NEAT 자율주행 학습을 브라우저에서 실행·시각화
 import { Population, Genome } from './neat.js';
-import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD } from './sim.js';
+import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEEDS } from './sim.js';
 
 const $ = (id) => document.getElementById(id);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -126,8 +126,8 @@ function drawCar(ctx, c, color, outline, finished, leader) {
 }
 
 // ---- 신경망 그리기 ----------------------------------------------------------------
-const IN_LABELS = { ko: ['좌90°', '좌60°', '좌30°', '정면', '우30°', '우60°', '우90°', '속도'], en: ['L90°', 'L60°', 'L30°', 'Front', 'R30°', 'R60°', 'R90°', 'Speed'] };
-const OUT_LABELS = { ko: ['조향', '가감속'], en: ['Steer', 'Throttle'] };
+const IN_LABELS = { ko: ['좌90°', '좌60°', '좌30°', '정면', '우30°', '우60°', '우90°'], en: ['L90°', 'L60°', 'L30°', 'Front', 'R30°', 'R60°', 'R90°'] };
+const OUT_LABELS = { ko: ['조향'], en: ['Steer'] };
 
 function drawNet(genome, net) {
   const canvas = $('net'), { ctx, cw, ch } = fit(canvas);
@@ -260,7 +260,7 @@ function stats() {
     [t({ ko: '선두 진행률', en: 'Leader progress' }), `${Math.max(0, 100 * leader.progress / T.track.L).toFixed(0)}% / ${T.opts.laps * 100}%`],
     [t({ ko: '지난 세대 완주', en: 'Finished last gen' }), h ? h.finished : '–'],
     [t({ ko: '종(species)', en: 'Species' }), T.pop.species.length],
-    [t({ ko: '스텝', en: 'Step' }), `${T.step} / ${T.maxSteps}`]
+    [t({ ko: '스텝 · 차량 속도', en: 'Step · car speed' }), `${T.step} / ${T.maxSteps} · ${T.opts.carSpeed}`]
   ];
   $('stats').innerHTML = cells.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');
 }
@@ -337,7 +337,7 @@ function continueTraining() {                       // 성공 이후에도 더 �
 function startTest() {
   const g = trainer.success?.winners[0].genome || trainer.pop.best || trainer.leader().genome;
   const track = makeTrack('random');
-  test = { track, car: new Car(track, g), max: maxStepsFor(track, trainer.opts) };
+  test = { track, car: new Car(track, g, 0, trainer.opts.carSpeed), max: maxStepsFor(track, trainer.opts) };
   mode = 'test'; $('successBar').hidden = true;
   $('testBar').hidden = false;
   $('modeLabel').textContent = t({ ko: '일반화 테스트: 학습 때 본 적 없는 트랙', en: 'Generalisation test: a track never seen in training' });
@@ -359,7 +359,8 @@ function endTest() {
 function restart() {
   trainer = new Trainer(Population, {
     trackType: $('trackType').value, popSize: +$('popSize').value,
-    randomize: $('randomize').checked, noise: $('noise').checked ? 0.05 : 0, stopOnFinish: true
+    randomize: $('randomize').checked, noise: $('noise').checked ? 0.05 : 0, stopOnFinish: true,
+    carSpeed: +$('carSpeed').value
   });
   roundLog = []; banner = null; replayCar = null; mode = 'train'; $('successBar').hidden = true;
   endTest(); drawChart(); updateTable(); renderLog(); label(); $('batchResult').textContent = '';
@@ -372,6 +373,10 @@ function fillTrackSelect() {
   sel.innerHTML = TRACKS.map(([k, l]) => `<option value="${k}">${t(l)}</option>`).join('');
   sel.value = v;
   $('popSize').querySelectorAll('option').forEach(o => o.textContent = t({ ko: `${o.value}대`, en: `${o.value} cars` }));
+  const cs = $('carSpeed'), cv = cs.value || '4';
+  const SPEED_NAMES = { 2: { ko: ' (느림)', en: ' (slow)' }, 4: { ko: ' (기본)', en: ' (default)' }, 5: { ko: ' (빠름·어려움)', en: ' (fast, hard)' } };
+  cs.innerHTML = CAR_SPEEDS.map(v => `<option value="${v}">${t({ ko: '차량 속도 ', en: 'Car speed ' })}${v}${SPEED_NAMES[v] ? t(SPEED_NAMES[v]) : ''}</option>`).join('');
+  cs.value = cv;
 }
 
 function bind() {
@@ -385,6 +390,7 @@ function bind() {
   $('trackType').addEventListener('change', () => { trainer.opts.trackType = $('trackType').value; trainer.newTrack(); });
   $('newTrackBtn').addEventListener('click', () => trainer.newTrack());
   $('popSize').addEventListener('change', restart);
+  $('carSpeed').addEventListener('change', restart);      // 속도가 바뀌면 처음부터 다시 학습
   $('randomize').addEventListener('change', () => trainer.setRandomize($('randomize').checked));
   $('noise').addEventListener('change', () => { trainer.opts.noise = $('noise').checked ? 0.05 : 0; });
   $('testBtn').addEventListener('click', startTest);
@@ -421,7 +427,7 @@ function bind() {
 function label() {
   $('playBtn').innerHTML = mode === 'success' ? t({ ko: '▶ 계속 학습', en: '▶ Keep training' })
     : running ? t({ ko: '⏸ 일시정지', en: '⏸ Pause' }) : t({ ko: '▶ 학습 시작', en: '▶ Train' });
-  $('speedBtn').textContent = t({ ko: '속도 ', en: 'Speed ' }) + (speed === 'max' ? t({ ko: '최대', en: 'max' }) : speed + '×');
+  $('speedBtn').textContent = t({ ko: '배속 ', en: 'Playback ' }) + (speed === 'max' ? t({ ko: '최대', en: 'max' }) : speed + '×');
 }
 
 function main() {

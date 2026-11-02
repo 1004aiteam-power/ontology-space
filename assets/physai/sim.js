@@ -5,10 +5,13 @@
 //  - 충돌: 회전하지 않은 사각형 → 실제로 회전한 차체의 네 모서리
 //  - 레이더: 1px씩 전진하며 픽셀 검사 → 벽 선분과의 교차 계산 (공간 격자로 가속)
 //  - 적합도: "x > 850 통과 보너스" → 중심선을 따라 실제로 전진한 거리 (역주행·제자리 돌기 무효)
-//  - 조작: 좌/우 on-off, 속도 고정 → 조향·가감속 연속 제어, 관성과 저항
+//  - 조작: 좌/우 on-off(출력 > 0.5) → 조향 연속값(-1..1). 속도는 메뉴에서 고른 값으로 고정, 조향만 학습
 
 export const WORLD = { w: 1000, h: 700 };
-export const CAR = { len: 18, wid: 9, v0: 2, vMin: 0.5, vMax: 8, accel: 0.25, drag: 0.985, turn: 0.085 };   // v0: 모든 차의 출발 속도(동일)
+export const CAR = { len: 18, wid: 9, turn: 0.12 };   // turn: 한 스텝 최대 회전(rad, 약 7°)
+// 차량 속도(스텝당 이동 거리). 모든 차가 같은 속도로 고정되고 신경망은 조향만 배운다.
+// M-M 트랙 기준 6 이상은 급커브를 돌 수 없어 제외 (실험: 속도 4 → 보통 6~15 라운드에 성공)
+export const CAR_SPEEDS = [2, 3, 4, 5];
 export const RADAR = { angles: [-90, -60, -30, 0, 30, 60, 90], range: 220 };
 
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -175,18 +178,18 @@ export function raycast(tr, x, y, ang) {
 
 // ---- 자동차 -------------------------------------------------------------------
 export class Car {
-  constructor(tr, genome, jitter = 0) {
+  constructor(tr, genome, jitter = 0, speed = 4) {
     this.genome = genome; this.net = genome ? genome.network() : null;
     // jitter > 0: 차선 안에서 출발 위치·방향을 조금씩 다르게 (초기 조건 무작위화, 화면에서 겹치지 않게)
     const off = (Math.random() - 0.5) * tr.hw * 0.9 * jitter, nx = -Math.sin(tr.start.a), ny = Math.cos(tr.start.a);
     this.x = tr.start.x + nx * off; this.y = tr.start.y + ny * off;
     this.a = tr.start.a + (Math.random() - 0.5) * 0.16 * jitter;
-    this.v = CAR.v0;                                            // 출발 속도는 모든 차가 같다
+    this.v = speed;                                             // 모든 차가 같은 속도, 끝까지 고정
     this.start = { x: this.x, y: this.y, a: this.a };          // 다시 보기용 출발 상태
     this.idx = 0; this.s = 0; this.progress = 0; this.maxProgress = 0; this.lastImprove = 0;
     this.alive = true; this.finished = false; this.steps = 0; this.cause = '';
     this.radar = new Array(RADAR.angles.length).fill(RADAR.range);
-    this.inputs = []; this.outputs = [0, 0];
+    this.inputs = []; this.outputs = [0];
   }
   sense(tr, noise) {
     this.inputs = RADAR.angles.map((deg, k) => {
@@ -195,13 +198,11 @@ export class Car {
       const v = d / RADAR.range + (noise ? gauss() * noise : 0);
       return v < 0 ? 0 : v > 1 ? 1 : v;
     });
-    this.inputs.push(this.v / CAR.vMax);
     return this.inputs;
   }
-  act(steer, throttle) {                           // 조향·가감속은 -1..1 연속값
-    this.outputs = [steer, throttle];
-    this.v = Math.min(CAR.vMax, Math.max(CAR.vMin, (this.v + throttle * CAR.accel) * CAR.drag));
-    this.a += steer * CAR.turn * Math.min(1, 0.35 + this.v / 4);
+  act(steer) {                                     // 조향만: -1(왼쪽 최대) ~ +1(오른쪽 최대)
+    this.outputs = [steer];
+    this.a += steer * CAR.turn;
     this.x += Math.cos(this.a) * this.v;
     this.y += Math.sin(this.a) * this.v;
   }
@@ -215,7 +216,7 @@ export class Car {
 export function stepCar(car, tr, opts) {
   if (!car.alive || car.finished) return;
   const out = car.net.activate(car.sense(tr, opts.noise));
-  car.act(out[0], out[1]);
+  car.act(out[0]);
   car.steps++;
   const p = project(tr, car.x, car.y, car.idx);
   let ds = p.s - car.s;
@@ -237,19 +238,19 @@ export function fitness(car, tr, maxSteps) {
   return progress + (car.finished ? 500 + 1500 * (maxSteps - car.steps) / maxSteps : 0);
 }
 
-export const maxStepsFor = (tr, opts) => Math.ceil((tr.L * opts.laps) / 2.2) + 240;
+export const maxStepsFor = (tr, opts) => Math.ceil((tr.L * opts.laps) / opts.carSpeed * 1.3) + 240;
 
 // ---- 학습기 ------------------------------------------------------------------
 export class Trainer {
   constructor(Population, opts) {
-    this.opts = { laps: 2, stallSteps: 150, noise: 0, trackType: 'blob', randomize: false, popSize: 150, ...opts };
-    this.pop = new Population({ popSize: this.opts.popSize, nInputs: RADAR.angles.length + 1, nOutputs: 2,
+    this.opts = { laps: 2, stallSteps: 150, noise: 0, trackType: 'blob', randomize: false, popSize: 150, carSpeed: 4, ...opts };
+    this.pop = new Population({ popSize: this.opts.popSize, nInputs: RADAR.angles.length, nOutputs: 1,   // 레이더 7 → 조향 1
                                 championPerGeneration: this.opts.randomize });
     this.track = makeTrack(this.opts.trackType);
     this.reset();
   }
   reset() {
-    this.cars = this.pop.genomes.map(g => new Car(this.track, g, 1));
+    this.cars = this.pop.genomes.map(g => new Car(this.track, g, 1, this.opts.carSpeed));
     // 각 차가 속한 종 (화면에서 종별 색으로 표시)
     this.speciesOf = new Map();
     for (const s of this.pop.species) for (const g of s.members) this.speciesOf.set(g, s.id);
@@ -291,7 +292,7 @@ export class Trainer {
   }
   newTrack() { this.track = makeTrack(this.opts.trackType); this.reset(); }
   replay(car) {                                      // 우승 차량을 같은 트랙·같은 출발 상태로 다시 달리게
-    const c = new Car(this.track, car.genome);
+    const c = new Car(this.track, car.genome, 0, this.opts.carSpeed);
     Object.assign(c, { x: car.start.x, y: car.start.y, a: car.start.a, start: car.start });
     return c;
   }
@@ -300,8 +301,8 @@ export class Trainer {
 
 // 일반화 테스트: 학습 때 본 적 없는 트랙에서 한 대만 주행
 export function testRun(genome, tr, opts) {
-  const car = new Car(tr, genome);
-  const max = maxStepsFor(tr, opts);
+  const car = new Car(tr, genome, 0, opts.carSpeed ?? 4);
+  const max = maxStepsFor(tr, { carSpeed: 4, ...opts });
   while (car.alive && !car.finished && car.steps < max) stepCar(car, tr, opts);
   return { finished: car.finished, progress: car.maxProgress / tr.L, steps: car.steps, cause: car.cause || 'timeout' };
 }

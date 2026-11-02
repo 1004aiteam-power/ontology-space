@@ -2,14 +2,14 @@
 // 브라우저용 최소 구현: 혁신 번호(historical marking), 종 분화(speciation), 구조 확장(complexification)
 //
 // 원본 Python(neat-python) 설정과 비교해 바꾼 점
-//  - 출력 3개(좌/우/가속, sigmoid > 0.5)  → 출력 2개(조향, 가감속) tanh 연속값
-//  - 입력 7개(레이더)                      → 레이더 7개 + 현재 속도
+//  - 출력 3개(좌/우/가속, sigmoid > 0.5)  → 출력 1개(조향) tanh 연속값, 속도는 고정
+//  - 입력 7개(레이더)                      → 그대로 레이더 7개
 //  - node_add 0.5 / conn_add 0.7 (너무 공격적) → 0.03 / 0.12 + 종 분화 임계값 자동 조절
 
 export const DEFAULTS = {
   popSize: 150,
-  nInputs: 8,
-  nOutputs: 2,
+  nInputs: 7,
+  nOutputs: 1,
   weightMutateRate: 0.8, weightPerturb: 0.5, weightReplaceRate: 0.1, weightMax: 8,
   biasMutateRate: 0.7,
   addConnRate: 0.12, addNodeRate: 0.03, toggleRate: 0.01,
@@ -247,8 +247,10 @@ export class Population {
     this.species = this.species.filter(s => s.members.length);
     // 종 개수가 목표에 가깝도록 임계값 자동 조절
     if (!adjust) return;
-    if (this.species.length < this.cfg.targetSpecies) this.cfg.compatThreshold = Math.max(0.15, this.cfg.compatThreshold - 0.1);
-    else if (this.species.length > this.cfg.targetSpecies) this.cfg.compatThreshold = Math.min(6, this.cfg.compatThreshold + 0.1);
+    // 목표와 차이가 클수록 크게 조절 (비율 방식)
+    const n = this.species.length, target = this.cfg.targetSpecies;
+    if (n > target) this.cfg.compatThreshold = Math.min(8, this.cfg.compatThreshold * (1 + 0.3 * Math.min(1, (n - target) / target)));
+    else if (n < target) this.cfg.compatThreshold = Math.max(0.15, this.cfg.compatThreshold * 0.92);
   }
 
   // 모든 개체의 fitness가 정해진 뒤 호출 → 다음 세대
