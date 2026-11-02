@@ -10,6 +10,7 @@
 | [docs/02-power-grid-ontology.md](docs/02-power-grid-ontology.md) | 전력망 온톨로지: IEC CIM, CGMES, IEC 61850 등과 핵심 모델 |
 | [examples/power-grid-sample.ttl](examples/power-grid-sample.ttl) | CIM 스타일의 간단한 전력망 예제 (Turtle) |
 | [examples/queries.md](examples/queries.md) | 예제 데이터에 대한 SPARQL 질의 모음 |
+| [index.html](index.html) | GitHub Pages용 소개 웹페이지 (단일 HTML)  |
 
 ## 빠르게 써 보기
 
