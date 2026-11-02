@@ -305,11 +305,19 @@ const causeText = c => t({ crash: { ko: '벽에 충돌', en: 'Crashed' }, revers
 const BANNER_MS = { 1: 1800, 4: 1300, 16: 500, max: 150 };
 function onRoundEnd() {
   const h = trainer.pop.history.at(-1), round = h.gen + 1;
-  roundLog.push({ round, progress: h.bestProgress, finished: h.finished, ok: false });
-  banner = { kind: 'fail', until: performance.now() + BANNER_MS[speed],
-             title: t({ ko: `라운드 ${round} 실패 — 완주 0대`, en: `Round ${round} failed — no car finished` }),
-             sub: t({ ko: `최고 진행률 ${(100 * h.bestProgress / trainer.opts.laps).toFixed(0)}% · 우수한 차들로 다음 세대를 만들어 라운드 ${round + 1} 시작`,
-                      en: `Best progress ${(100 * h.bestProgress / trainer.opts.laps).toFixed(0)}% · breeding the best cars → round ${round + 1}` }) };
+  const ok = h.finished > 0;                         // 2바퀴 완주한 차가 한 대라도 있으면 성공 라운드
+  const pct = (100 * Math.min(h.bestProgress, trainer.opts.laps) / trainer.opts.laps).toFixed(0);
+  const last = roundLog.at(-1);
+  if (last && last.round === round) Object.assign(last, { finished: h.finished, ok: last.ok || ok, progress: Math.max(last.progress, h.bestProgress) });
+  else roundLog.push({ round, progress: h.bestProgress, finished: h.finished, ok });
+  banner = ok
+    ? { kind: 'ok', until: performance.now() + BANNER_MS[speed],
+        title: t({ ko: `라운드 ${round} 성공 — ${h.finished}대 완주`, en: `Round ${round} succeeded — ${h.finished} finished` }),
+        sub: t({ ko: `완주한 차들을 부모로 라운드 ${round + 1}에서 더 빠른 주행을 학습합니다`, en: `The finishers breed round ${round + 1} to learn faster driving` }) }
+    : { kind: 'fail', until: performance.now() + BANNER_MS[speed],
+        title: t({ ko: `라운드 ${round} 실패 — 완주 0대`, en: `Round ${round} failed — no car finished` }),
+        sub: t({ ko: `최고 진행률 ${pct}% · 우수한 차들로 다음 세대를 만들어 라운드 ${round + 1} 시작`,
+                 en: `Best progress ${pct}% · breeding the best cars → round ${round + 1}` }) };
   drawChart(); updateTable(); renderLog();
 }
 function onSuccess() {
