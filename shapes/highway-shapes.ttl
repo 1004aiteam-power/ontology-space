@@ -1,0 +1,79 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
+# SHACL 규칙: 가상 전국 고속도로 온톨로지 (examples/highway)
+# 실행: python examples/highway/build_highway.py
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix hw:   <https://1004aiteam-power.github.io/ontology-space/highway#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix hs:   <https://1004aiteam-power.github.io/ontology-space/highway-shapes#> .
+
+hs:prefixes a owl:Ontology ;
+    sh:declare [ sh:prefix "hw" ; sh:namespace "https://1004aiteam-power.github.io/ontology-space/highway#"^^xsd:anyURI ] .
+
+# ---- 1. 구간: 노선 1개 이상, 양 끝 노드 정확히 2개, 길이 > 0, 위치(WKT) 있음 --------------
+hs:SectionShape a sh:NodeShape ;
+    sh:targetClass hw:Section ;
+    sh:property [ sh:path hw:onRoute ; sh:minCount 1 ; sh:class hw:Route ] ;
+    sh:property [ sh:path hw:endpoint ; sh:minCount 2 ; sh:maxCount 2 ; sh:class hw:Node ;
+                  sh:message "구간은 서로 다른 양 끝 노드가 정확히 2개여야 합니다 / a section needs exactly two distinct end nodes"@ko ] ;
+    sh:property [ sh:path hw:lengthKm ; sh:minCount 1 ; sh:minExclusive 0 ] ;
+    sh:property [ sh:path geo:hasGeometry ; sh:minCount 1 ] .
+
+# ---- 2. 구간마다 방향 링크가 정확히 2개, 서로 반대 방향 -------------------------------
+hs:SectionLinksShape a sh:NodeShape ;
+    sh:targetClass hw:Section ;
+    sh:property [ sh:path [ sh:inversePath hw:ofSection ] ; sh:minCount 2 ; sh:maxCount 2 ;
+                  sh:message "구간에는 상행·하행 링크가 정확히 2개 있어야 합니다 / a section needs exactly two directional links"@ko ] .
+
+hs:LinkShape a sh:NodeShape ;
+    sh:targetClass hw:Link ;
+    sh:property [ sh:path hw:lanes ; sh:minCount 1 ; sh:minInclusive 1 ; sh:datatype xsd:integer ] ;
+    sh:property [ sh:path hw:oppositeOf ; sh:minCount 1 ; sh:maxCount 1 ; sh:class hw:Link ] ;
+    sh:sparql [
+        sh:message "링크의 출발·도착 노드가 같거나, 반대 링크와 방향이 맞지 않습니다 / link endpoints are equal or do not mirror the opposite link"@ko ;
+        sh:prefixes hs:prefixes ;
+        sh:select """
+            SELECT $this WHERE {
+              $this hw:fromNode ?a ; hw:toNode ?b ; hw:oppositeOf ?o .
+              ?o hw:fromNode ?oa ; hw:toNode ?ob .
+              FILTER(?a = ?b || ?oa != ?b || ?ob != ?a)
+            }""" ;
+    ] .
+
+# ---- 3. 분기점(JC)은 노선이 2개 이상 만나야 한다 -----------------------------------
+hs:JunctionShape a sh:NodeShape ;
+    sh:targetClass hw:Junction ;
+    sh:property [ sh:path hw:connectsRoute ; sh:minCount 2 ;
+                  sh:message "분기점에는 노선이 2개 이상 만나야 합니다 / a junction must connect two or more routes"@ko ] .
+
+# ---- 4. 나들목(IC)은 교통 존과 이어져야 한다 ---------------------------------------
+hs:InterchangeShape a sh:NodeShape ;
+    sh:targetClass hw:Interchange ;
+    sh:property [ sh:path hw:servesZone ; sh:minCount 1 ; sh:class hw:Zone ] .
+
+# ---- 5. 모든 노드는 서울에서 닿을 수 있어야 한다 (네트워크 연결성) ---------------------
+hs:ConnectedShape a sh:NodeShape ;
+    sh:targetClass hw:Node ;
+    sh:sparql [
+        sh:message "서울에서 이 노드로 가는 길이 없습니다 / node is not reachable from Seoul"@ko ;
+        sh:prefixes hs:prefixes ;
+        sh:select """SELECT $this WHERE { FILTER NOT EXISTS { hw:N_SEOUL hw:adjacentTo* $this } }""" ;
+    ] .
+
+# ---- 6. 교통 상태: v/c와 서비스수준이 맞아야 한다 -----------------------------------
+hs:TrafficStateShape a sh:NodeShape ;
+    sh:targetClass hw:TrafficState ;
+    sh:property [ sh:path hw:vcRatio ; sh:minCount 1 ; sh:minInclusive 0 ] ;
+    sh:sparql [
+        sh:message "v/c 값이 서비스수준 등급의 범위를 벗어났습니다 / v/c is outside the range of its LOS grade"@ko ;
+        sh:prefixes hs:prefixes ;
+        sh:select """
+            SELECT $this WHERE {
+              $this hw:vcRatio ?vc ; hw:los ?g . ?g hw:maxVc ?hi .
+              OPTIONAL { ?lower hw:maxVc ?lo . FILTER(?lo < ?hi) FILTER NOT EXISTS { ?mid hw:maxVc ?m . FILTER(?m > ?lo && ?m < ?hi) } }
+              FILTER(?vc > ?hi || (BOUND(?lo) && ?vc < ?lo))
+            }""" ;
+    ] .

@@ -1,0 +1,1458 @@
+@prefix hw:   <https://1004aiteam-power.github.io/ontology-space/highway#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+
+<https://1004aiteam-power.github.io/ontology-space/highway> a owl:Ontology ;
+    rdfs:label "가상 전국 고속도로 온톨로지"@ko ; owl:versionInfo "0.1" ;
+    rdfs:comment "노선·구간·방향 링크·노드(IC/JC)·교통 존·수요·시나리오·교통 상태. 위치는 GeoSPARQL WKT. 모든 교통 데이터는 가상."@ko .
+
+### 클래스
+hw:Route a owl:Class ; rdfs:label "노선"@ko ; rdfs:comment "이름이 붙은 도로. 여러 구간의 순서 있는 묶음."@ko .
+hw:Node a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "노드"@ko .
+hw:Interchange a owl:Class ; rdfs:subClassOf hw:Node ; rdfs:label "나들목(IC)"@ko ; rdfs:comment "고속도로에 들어오고 나갈 수 있는 지점. 교통 존과 이어진다."@ko .
+hw:Junction a owl:Class ; rdfs:subClassOf hw:Node ; rdfs:label "분기점(JC)"@ko ; rdfs:comment "둘 이상의 노선이 만나는 지점. IC와 배타적이지 않다(다중 분류)."@ko .
+hw:Section a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "구간"@ko ; rdfs:comment "두 노드 사이의 물리적인 도로. 방향이 없다."@ko .
+hw:Link a owl:Class ; rdfs:label "방향 링크"@ko ; rdfs:comment "구간의 한 방향(상행 또는 하행). 교통량·속도는 링크에 붙는다."@ko .
+hw:Zone a owl:Class ; rdfs:label "교통 존"@ko ; rdfs:comment "통행이 생기고 끝나는 지역(도시). 가중치는 가상."@ko .
+hw:Demand a owl:Class ; rdfs:label "기종점 수요(OD)"@ko .
+hw:Scenario a owl:Class ; rdfs:label "시나리오"@ko .
+hw:Incident a owl:Class ; rdfs:label "사고·차로 차단"@ko .
+hw:TrafficState a owl:Class ; rdfs:label "교통 상태"@ko ; rdfs:comment "한 링크의 한 시나리오·시각 상태. 여기에는 첨두 시각만 싣고, 24시간 전체는 highway.json에 있다."@ko .
+hw:LevelOfService a owl:Class ; rdfs:label "서비스수준(LOS)"@ko .
+hw:Section owl:disjointWith hw:Link, hw:Node .
+
+### 객체 속성
+hw:onRoute a owl:ObjectProperty ; rdfs:domain hw:Section ; rdfs:range hw:Route ; rdfs:label "소속 노선"@ko .
+hw:endpoint a owl:ObjectProperty ; rdfs:domain hw:Section ; rdfs:range hw:Node ; rdfs:label "양 끝 노드"@ko .
+hw:ofSection a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Link ; rdfs:range hw:Section ; rdfs:label "소속 구간"@ko .
+hw:fromNode a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Link ; rdfs:range hw:Node ; rdfs:label "출발 노드"@ko .
+hw:toNode a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Link ; rdfs:range hw:Node ; rdfs:label "도착 노드"@ko .
+hw:oppositeOf a owl:ObjectProperty, owl:SymmetricProperty ; rdfs:domain hw:Link ; rdfs:range hw:Link ; rdfs:label "반대 방향 링크"@ko .
+hw:adjacentTo a owl:ObjectProperty ; rdfs:domain hw:Node ; rdfs:range hw:Node ; rdfs:label "링크로 바로 이어진 노드"@ko ;
+    rdfs:comment "링크에서 생성한 지름길 (fromNode → toNode)."@ko .
+hw:servesZone a owl:ObjectProperty ; rdfs:domain hw:Interchange ; rdfs:range hw:Zone ; rdfs:label "연결 존"@ko .
+hw:connectsRoute a owl:ObjectProperty ; rdfs:domain hw:Junction ; rdfs:range hw:Route ; rdfs:label "만나는 노선"@ko .
+hw:originZone a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Demand ; rdfs:range hw:Zone .
+hw:destinationZone a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Demand ; rdfs:range hw:Zone .
+hw:affectsLink a owl:ObjectProperty ; rdfs:domain hw:Incident ; rdfs:range hw:Link .
+hw:hasIncident a owl:ObjectProperty ; rdfs:domain hw:Scenario ; rdfs:range hw:Incident .
+hw:onLink a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:TrafficState ; rdfs:range hw:Link .
+hw:inScenario a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:TrafficState ; rdfs:range hw:Scenario .
+hw:los a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:TrafficState ; rdfs:range hw:LevelOfService .
+
+### 데이터 속성
+hw:code a owl:DatatypeProperty ; rdfs:range xsd:string .
+hw:routeOrder a owl:DatatypeProperty ; rdfs:domain hw:Section ; rdfs:range xsd:integer ; rdfs:label "노선 안 순서"@ko .
+hw:lengthKm a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+hw:lanes a owl:DatatypeProperty ; rdfs:domain hw:Link ; rdfs:range xsd:integer ; rdfs:label "한 방향 차로 수"@ko .
+hw:capacityVph a owl:DatatypeProperty ; rdfs:domain hw:Link ; rdfs:range xsd:integer ; rdfs:label "용량(대/시)"@ko .
+hw:freeSpeedKph a owl:DatatypeProperty ; rdfs:domain hw:Link ; rdfs:range xsd:decimal .
+hw:zoneWeight a owl:DatatypeProperty ; rdfs:domain hw:Zone ; rdfs:range xsd:decimal ; rdfs:label "존 가중치(가상)"@ko .
+hw:dailyTrips a owl:DatatypeProperty ; rdfs:domain hw:Demand ; rdfs:range xsd:decimal .
+hw:hour a owl:DatatypeProperty ; rdfs:range xsd:integer .
+hw:startHour a owl:DatatypeProperty ; rdfs:domain hw:Incident ; rdfs:range xsd:integer .
+hw:endHour a owl:DatatypeProperty ; rdfs:domain hw:Incident ; rdfs:range xsd:integer .
+hw:lanesClosed a owl:DatatypeProperty ; rdfs:domain hw:Incident ; rdfs:range xsd:integer .
+hw:volumeVph a owl:DatatypeProperty ; rdfs:domain hw:TrafficState ; rdfs:range xsd:integer .
+hw:vcRatio a owl:DatatypeProperty ; rdfs:domain hw:TrafficState ; rdfs:range xsd:decimal .
+hw:speedKph a owl:DatatypeProperty ; rdfs:domain hw:TrafficState ; rdfs:range xsd:decimal .
+hw:dailyVolume a owl:DatatypeProperty ; rdfs:domain hw:Link ; rdfs:range xsd:integer ; rdfs:label "기본 시나리오 하루 교통량"@ko .
+hw:maxVc a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+
+### 서비스수준
+
+hw:LOS_A a hw:LevelOfService ; rdfs:label "LOS A" ; hw:maxVc 0.35 .
+hw:LOS_B a hw:LevelOfService ; rdfs:label "LOS B" ; hw:maxVc 0.55 .
+hw:LOS_C a hw:LevelOfService ; rdfs:label "LOS C" ; hw:maxVc 0.75 .
+hw:LOS_D a hw:LevelOfService ; rdfs:label "LOS D" ; hw:maxVc 0.9 .
+hw:LOS_E a hw:LevelOfService ; rdfs:label "LOS E" ; hw:maxVc 1.0 .
+hw:LOS_F a hw:LevelOfService ; rdfs:label "LOS F" ; hw:maxVc 1.0E9 .
+
+### 노선
+hw:R_GYEONGBU a hw:Route ; hw:code "GYEONGBU" ; rdfs:label "경부선"@ko, "Gyeongbu"@en .
+hw:R_GYEONGIN a hw:Route ; hw:code "GYEONGIN" ; rdfs:label "경인선"@ko, "Gyeongin"@en .
+hw:R_SEOHAEAN a hw:Route ; hw:code "SEOHAEAN" ; rdfs:label "서해안선"@ko, "Seohaean"@en .
+hw:R_YEONGDONG a hw:Route ; hw:code "YEONGDONG" ; rdfs:label "영동선"@ko, "Yeongdong"@en .
+hw:R_JUNGBU a hw:Route ; hw:code "JUNGBU" ; rdfs:label "중부선"@ko, "Jungbu"@en .
+hw:R_JUNGBU_NAERYUK a hw:Route ; hw:code "JUNGBU_NAERYUK" ; rdfs:label "중부내륙선"@ko, "Jungbu Inland"@en .
+hw:R_HONAM a hw:Route ; hw:code "HONAM" ; rdfs:label "호남선"@ko, "Honam"@en .
+hw:R_NONSAN_CHEONAN a hw:Route ; hw:code "NONSAN_CHEONAN" ; rdfs:label "논산천안선"@ko, "Nonsan–Cheonan"@en .
+hw:R_NAMHAE a hw:Route ; hw:code "NAMHAE" ; rdfs:label "남해선"@ko, "Namhae"@en .
+hw:R_TONGYEONG_DAEJEON a hw:Route ; hw:code "TONGYEONG_DAEJEON" ; rdfs:label "통영대전선"@ko, "Tongyeong–Daejeon"@en .
+hw:R_GWANGJU_DAEGU a hw:Route ; hw:code "GWANGJU_DAEGU" ; rdfs:label "광주대구선"@ko, "Gwangju–Daegu"@en .
+hw:R_JUNGANG a hw:Route ; hw:code "JUNGANG" ; rdfs:label "중앙선"@ko, "Jungang"@en .
+hw:R_DONGHAE a hw:Route ; hw:code "DONGHAE" ; rdfs:label "동해선"@ko, "Donghae"@en .
+hw:R_DAEGU_POHANG a hw:Route ; hw:code "DAEGU_POHANG" ; rdfs:label "대구포항선"@ko, "Daegu–Pohang"@en .
+hw:R_DANGJIN_YEONGDEOK a hw:Route ; hw:code "DANGJIN_YEONGDEOK" ; rdfs:label "당진영덕선"@ko, "Dangjin–Yeongdeok"@en .
+hw:R_PYEONGTAEK_JECHEON a hw:Route ; hw:code "PYEONGTAEK_JECHEON" ; rdfs:label "평택제천선"@ko, "Pyeongtaek–Jecheon"@en .
+hw:R_SEOUL_YANGYANG a hw:Route ; hw:code "SEOUL_YANGYANG" ; rdfs:label "서울양양선"@ko, "Seoul–Yangyang"@en .
+
+### 노드와 존
+hw:N_SEOUL a hw:Interchange, hw:Junction ;
+    hw:code "SEOUL" ;
+    rdfs:label "서울"@ko, "Seoul"@en ;
+    hw:servesZone hw:Z_SEOUL ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.05 37.50)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_GYEONGBU, hw:R_GYEONGIN, hw:R_JUNGBU, hw:R_SEOHAEAN, hw:R_SEOUL_YANGYANG ;
+    hw:adjacentTo hw:N_CHUNCHEON, hw:N_INCHEON, hw:N_PYEONGTAEK, hw:N_SUWON, hw:N_YEOJU .
+hw:Z_SEOUL a hw:Zone ; rdfs:label "서울 존"@ko ; hw:zoneWeight 950 .
+hw:N_INCHEON a hw:Interchange, hw:Junction ;
+    hw:code "INCHEON" ;
+    rdfs:label "인천"@ko, "Incheon"@en ;
+    hw:servesZone hw:Z_INCHEON ;
+    geo:hasGeometry [ geo:asWKT "POINT(126.70 37.46)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_GYEONGIN, hw:R_YEONGDONG ;
+    hw:adjacentTo hw:N_SEOUL, hw:N_SUWON .
+hw:Z_INCHEON a hw:Zone ; rdfs:label "인천 존"@ko ; hw:zoneWeight 300 .
+hw:N_SUWON a hw:Interchange, hw:Junction ;
+    hw:code "SUWON" ;
+    rdfs:label "수원·신갈"@ko, "Suwon"@en ;
+    hw:servesZone hw:Z_SUWON ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.10 37.28)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_GYEONGBU, hw:R_YEONGDONG ;
+    hw:adjacentTo hw:N_CHEONAN, hw:N_INCHEON, hw:N_SEOUL, hw:N_YEOJU .
+hw:Z_SUWON a hw:Zone ; rdfs:label "수원·신갈 존"@ko ; hw:zoneWeight 120 .
+hw:N_PYEONGTAEK a hw:Interchange, hw:Junction ;
+    hw:code "PYEONGTAEK" ;
+    rdfs:label "평택"@ko, "Pyeongtaek"@en ;
+    hw:servesZone hw:Z_PYEONGTAEK ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.05 36.99)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_PYEONGTAEK_JECHEON, hw:R_SEOHAEAN ;
+    hw:adjacentTo hw:N_CHUNGJU, hw:N_SEOSAN, hw:N_SEOUL .
+hw:Z_PYEONGTAEK a hw:Zone ; rdfs:label "평택 존"@ko ; hw:zoneWeight 60 .
+hw:N_CHEONAN a hw:Interchange, hw:Junction ;
+    hw:code "CHEONAN" ;
+    rdfs:label "천안"@ko, "Cheonan"@en ;
+    hw:servesZone hw:Z_CHEONAN ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.17 36.80)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_GYEONGBU, hw:R_NONSAN_CHEONAN ;
+    hw:adjacentTo hw:N_CHEONGJU, hw:N_NONSAN, hw:N_SUWON .
+hw:Z_CHEONAN a hw:Zone ; rdfs:label "천안 존"@ko ; hw:zoneWeight 70 .
+hw:N_CHEONGJU a hw:Interchange, hw:Junction ;
+    hw:code "CHEONGJU" ;
+    rdfs:label "청주"@ko, "Cheongju"@en ;
+    hw:servesZone hw:Z_CHEONGJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.45 36.64)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_DANGJIN_YEONGDEOK, hw:R_GYEONGBU, hw:R_JUNGBU ;
+    hw:adjacentTo hw:N_ANDONG, hw:N_CHEONAN, hw:N_DAEJEON, hw:N_SEJONG, hw:N_YEOJU .
+hw:Z_CHEONGJU a hw:Zone ; rdfs:label "청주 존"@ko ; hw:zoneWeight 85 .
+hw:N_SEJONG a hw:Interchange ;
+    hw:code "SEJONG" ;
+    rdfs:label "세종"@ko, "Sejong"@en ;
+    hw:servesZone hw:Z_SEJONG ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.28 36.50)"^^geo:wktLiteral ] ;
+    hw:adjacentTo hw:N_CHEONGJU, hw:N_SEOSAN .
+hw:Z_SEJONG a hw:Zone ; rdfs:label "세종 존"@ko ; hw:zoneWeight 39 .
+hw:N_DAEJEON a hw:Interchange, hw:Junction ;
+    hw:code "DAEJEON" ;
+    rdfs:label "대전"@ko, "Daejeon"@en ;
+    hw:servesZone hw:Z_DAEJEON ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.42 36.37)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_GYEONGBU, hw:R_HONAM, hw:R_TONGYEONG_DAEJEON ;
+    hw:adjacentTo hw:N_CHEONGJU, hw:N_GIMCHEON, hw:N_JINJU, hw:N_NONSAN .
+hw:Z_DAEJEON a hw:Zone ; rdfs:label "대전 존"@ko ; hw:zoneWeight 145 .
+hw:N_NONSAN a hw:Interchange, hw:Junction ;
+    hw:code "NONSAN" ;
+    rdfs:label "논산"@ko, "Nonsan"@en ;
+    hw:servesZone hw:Z_NONSAN ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.10 36.20)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_HONAM, hw:R_NONSAN_CHEONAN ;
+    hw:adjacentTo hw:N_CHEONAN, hw:N_DAEJEON, hw:N_JEONJU .
+hw:Z_NONSAN a hw:Zone ; rdfs:label "논산 존"@ko ; hw:zoneWeight 12 .
+hw:N_JEONJU a hw:Interchange ;
+    hw:code "JEONJU" ;
+    rdfs:label "전주"@ko, "Jeonju"@en ;
+    hw:servesZone hw:Z_JEONJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.13 35.82)"^^geo:wktLiteral ] ;
+    hw:adjacentTo hw:N_GWANGJU, hw:N_NONSAN .
+hw:Z_JEONJU a hw:Zone ; rdfs:label "전주 존"@ko ; hw:zoneWeight 65 .
+hw:N_GUNSAN a hw:Interchange ;
+    hw:code "GUNSAN" ;
+    rdfs:label "군산"@ko, "Gunsan"@en ;
+    hw:servesZone hw:Z_GUNSAN ;
+    geo:hasGeometry [ geo:asWKT "POINT(126.73 35.97)"^^geo:wktLiteral ] ;
+    hw:adjacentTo hw:N_MOKPO, hw:N_SEOSAN .
+hw:Z_GUNSAN a hw:Zone ; rdfs:label "군산 존"@ko ; hw:zoneWeight 27 .
+hw:N_GWANGJU a hw:Interchange, hw:Junction ;
+    hw:code "GWANGJU" ;
+    rdfs:label "광주"@ko, "Gwangju"@en ;
+    hw:servesZone hw:Z_GWANGJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(126.85 35.16)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_GWANGJU_DAEGU, hw:R_HONAM ;
+    hw:adjacentTo hw:N_DAEGU, hw:N_JEONJU, hw:N_SUNCHEON .
+hw:Z_GWANGJU a hw:Zone ; rdfs:label "광주 존"@ko ; hw:zoneWeight 145 .
+hw:N_MOKPO a hw:Interchange, hw:Junction ;
+    hw:code "MOKPO" ;
+    rdfs:label "목포"@ko, "Mokpo"@en ;
+    hw:servesZone hw:Z_MOKPO ;
+    geo:hasGeometry [ geo:asWKT "POINT(126.40 34.80)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_NAMHAE, hw:R_SEOHAEAN ;
+    hw:adjacentTo hw:N_GUNSAN, hw:N_SUNCHEON .
+hw:Z_MOKPO a hw:Zone ; rdfs:label "목포 존"@ko ; hw:zoneWeight 22 .
+hw:N_SUNCHEON a hw:Interchange, hw:Junction ;
+    hw:code "SUNCHEON" ;
+    rdfs:label "순천"@ko, "Suncheon"@en ;
+    hw:servesZone hw:Z_SUNCHEON ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.49 34.95)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_HONAM, hw:R_NAMHAE ;
+    hw:adjacentTo hw:N_GWANGJU, hw:N_JINJU, hw:N_MOKPO .
+hw:Z_SUNCHEON a hw:Zone ; rdfs:label "순천 존"@ko ; hw:zoneWeight 28 .
+hw:N_JINJU a hw:Interchange, hw:Junction ;
+    hw:code "JINJU" ;
+    rdfs:label "진주"@ko, "Jinju"@en ;
+    hw:servesZone hw:Z_JINJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.10 35.18)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_NAMHAE, hw:R_TONGYEONG_DAEJEON ;
+    hw:adjacentTo hw:N_CHANGWON, hw:N_DAEJEON, hw:N_SUNCHEON .
+hw:Z_JINJU a hw:Zone ; rdfs:label "진주 존"@ko ; hw:zoneWeight 35 .
+hw:N_CHANGWON a hw:Interchange, hw:Junction ;
+    hw:code "CHANGWON" ;
+    rdfs:label "창원"@ko, "Changwon"@en ;
+    hw:servesZone hw:Z_CHANGWON ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.66 35.24)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_JUNGBU_NAERYUK, hw:R_NAMHAE ;
+    hw:adjacentTo hw:N_BUSAN, hw:N_GIMCHEON, hw:N_JINJU .
+hw:Z_CHANGWON a hw:Zone ; rdfs:label "창원 존"@ko ; hw:zoneWeight 100 .
+hw:N_BUSAN a hw:Interchange, hw:Junction ;
+    hw:code "BUSAN" ;
+    rdfs:label "부산"@ko, "Busan"@en ;
+    hw:servesZone hw:Z_BUSAN ;
+    geo:hasGeometry [ geo:asWKT "POINT(129.05 35.20)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_DONGHAE, hw:R_GYEONGBU, hw:R_NAMHAE ;
+    hw:adjacentTo hw:N_CHANGWON, hw:N_GYEONGJU, hw:N_ULSAN .
+hw:Z_BUSAN a hw:Zone ; rdfs:label "부산 존"@ko ; hw:zoneWeight 330 .
+hw:N_ULSAN a hw:Interchange ;
+    hw:code "ULSAN" ;
+    rdfs:label "울산"@ko, "Ulsan"@en ;
+    hw:servesZone hw:Z_ULSAN ;
+    geo:hasGeometry [ geo:asWKT "POINT(129.30 35.55)"^^geo:wktLiteral ] ;
+    hw:adjacentTo hw:N_BUSAN, hw:N_POHANG .
+hw:Z_ULSAN a hw:Zone ; rdfs:label "울산 존"@ko ; hw:zoneWeight 110 .
+hw:N_POHANG a hw:Interchange, hw:Junction ;
+    hw:code "POHANG" ;
+    rdfs:label "포항"@ko, "Pohang"@en ;
+    hw:servesZone hw:Z_POHANG ;
+    geo:hasGeometry [ geo:asWKT "POINT(129.35 36.02)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_DAEGU_POHANG, hw:R_DANGJIN_YEONGDEOK, hw:R_DONGHAE ;
+    hw:adjacentTo hw:N_ANDONG, hw:N_DAEGU, hw:N_ULSAN .
+hw:Z_POHANG a hw:Zone ; rdfs:label "포항 존"@ko ; hw:zoneWeight 50 .
+hw:N_GYEONGJU a hw:Interchange ;
+    hw:code "GYEONGJU" ;
+    rdfs:label "경주"@ko, "Gyeongju"@en ;
+    hw:servesZone hw:Z_GYEONGJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(129.21 35.84)"^^geo:wktLiteral ] ;
+    hw:adjacentTo hw:N_BUSAN, hw:N_DAEGU .
+hw:Z_GYEONGJU a hw:Zone ; rdfs:label "경주 존"@ko ; hw:zoneWeight 25 .
+hw:N_DAEGU a hw:Interchange, hw:Junction ;
+    hw:code "DAEGU" ;
+    rdfs:label "대구"@ko, "Daegu"@en ;
+    hw:servesZone hw:Z_DAEGU ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.58 35.88)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_DAEGU_POHANG, hw:R_GWANGJU_DAEGU, hw:R_GYEONGBU, hw:R_JUNGANG ;
+    hw:adjacentTo hw:N_ANDONG, hw:N_GIMCHEON, hw:N_GWANGJU, hw:N_GYEONGJU, hw:N_POHANG .
+hw:Z_DAEGU a hw:Zone ; rdfs:label "대구 존"@ko ; hw:zoneWeight 240 .
+hw:N_GIMCHEON a hw:Interchange, hw:Junction ;
+    hw:code "GIMCHEON" ;
+    rdfs:label "김천"@ko, "Gimcheon"@en ;
+    hw:servesZone hw:Z_GIMCHEON ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.10 36.13)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_GYEONGBU, hw:R_JUNGBU_NAERYUK ;
+    hw:adjacentTo hw:N_CHANGWON, hw:N_CHUNGJU, hw:N_DAEGU, hw:N_DAEJEON .
+hw:Z_GIMCHEON a hw:Zone ; rdfs:label "김천 존"@ko ; hw:zoneWeight 15 .
+hw:N_ANDONG a hw:Interchange, hw:Junction ;
+    hw:code "ANDONG" ;
+    rdfs:label "안동"@ko, "Andong"@en ;
+    hw:servesZone hw:Z_ANDONG ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.73 36.57)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_DANGJIN_YEONGDEOK, hw:R_JUNGANG ;
+    hw:adjacentTo hw:N_CHEONGJU, hw:N_DAEGU, hw:N_POHANG, hw:N_WONJU .
+hw:Z_ANDONG a hw:Zone ; rdfs:label "안동 존"@ko ; hw:zoneWeight 16 .
+hw:N_CHUNGJU a hw:Interchange, hw:Junction ;
+    hw:code "CHUNGJU" ;
+    rdfs:label "충주"@ko, "Chungju"@en ;
+    hw:servesZone hw:Z_CHUNGJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.93 36.98)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_JUNGBU_NAERYUK, hw:R_PYEONGTAEK_JECHEON ;
+    hw:adjacentTo hw:N_GIMCHEON, hw:N_PYEONGTAEK, hw:N_YEOJU .
+hw:Z_CHUNGJU a hw:Zone ; rdfs:label "충주 존"@ko ; hw:zoneWeight 21 .
+hw:N_YEOJU a hw:Interchange, hw:Junction ;
+    hw:code "YEOJU" ;
+    rdfs:label "여주"@ko, "Yeoju"@en ;
+    hw:servesZone hw:Z_YEOJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.64 37.30)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_JUNGBU, hw:R_JUNGBU_NAERYUK, hw:R_YEONGDONG ;
+    hw:adjacentTo hw:N_CHEONGJU, hw:N_CHUNGJU, hw:N_SEOUL, hw:N_SUWON, hw:N_WONJU .
+hw:Z_YEOJU a hw:Zone ; rdfs:label "여주 존"@ko ; hw:zoneWeight 11 .
+hw:N_WONJU a hw:Interchange, hw:Junction ;
+    hw:code "WONJU" ;
+    rdfs:label "원주"@ko, "Wonju"@en ;
+    hw:servesZone hw:Z_WONJU ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.93 37.34)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_JUNGANG, hw:R_YEONGDONG ;
+    hw:adjacentTo hw:N_ANDONG, hw:N_CHUNCHEON, hw:N_GANGNEUNG, hw:N_YEOJU .
+hw:Z_WONJU a hw:Zone ; rdfs:label "원주 존"@ko ; hw:zoneWeight 36 .
+hw:N_GANGNEUNG a hw:Interchange ;
+    hw:code "GANGNEUNG" ;
+    rdfs:label "강릉"@ko, "Gangneung"@en ;
+    hw:servesZone hw:Z_GANGNEUNG ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.88 37.75)"^^geo:wktLiteral ] ;
+    hw:adjacentTo hw:N_WONJU .
+hw:Z_GANGNEUNG a hw:Zone ; rdfs:label "강릉 존"@ko ; hw:zoneWeight 21 .
+hw:N_CHUNCHEON a hw:Interchange, hw:Junction ;
+    hw:code "CHUNCHEON" ;
+    rdfs:label "춘천"@ko, "Chuncheon"@en ;
+    hw:servesZone hw:Z_CHUNCHEON ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.73 37.88)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_JUNGANG, hw:R_SEOUL_YANGYANG ;
+    hw:adjacentTo hw:N_SEOUL, hw:N_WONJU .
+hw:Z_CHUNCHEON a hw:Zone ; rdfs:label "춘천 존"@ko ; hw:zoneWeight 29 .
+hw:N_SEOSAN a hw:Interchange, hw:Junction ;
+    hw:code "SEOSAN" ;
+    rdfs:label "서산"@ko, "Seosan"@en ;
+    hw:servesZone hw:Z_SEOSAN ;
+    geo:hasGeometry [ geo:asWKT "POINT(126.45 36.78)"^^geo:wktLiteral ] ;
+    hw:connectsRoute hw:R_DANGJIN_YEONGDEOK, hw:R_SEOHAEAN ;
+    hw:adjacentTo hw:N_GUNSAN, hw:N_PYEONGTAEK, hw:N_SEJONG .
+hw:Z_SEOSAN a hw:Zone ; rdfs:label "서산 존"@ko ; hw:zoneWeight 18 .
+
+### 구간과 방향 링크
+hw:S01 a hw:Section ; hw:code "S01" ; rdfs:label "인천–서울"@ko ; hw:onRoute hw:R_GYEONGIN ; hw:routeOrder 1 ; hw:endpoint hw:N_INCHEON, hw:N_SEOUL ; hw:lengthKm 37.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.70 37.46, 127.05 37.50)"^^geo:wktLiteral ] .
+hw:S02 a hw:Section ; hw:code "S02" ; rdfs:label "서울–수원·신갈"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 1 ; hw:endpoint hw:N_SEOUL, hw:N_SUWON ; hw:lengthKm 29.8 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.05 37.50, 127.10 37.28)"^^geo:wktLiteral ] .
+hw:S03 a hw:Section ; hw:code "S03" ; rdfs:label "수원·신갈–천안"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 2 ; hw:endpoint hw:N_SUWON, hw:N_CHEONAN ; hw:lengthKm 64.5 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.10 37.28, 127.17 36.80)"^^geo:wktLiteral ] .
+hw:S04 a hw:Section ; hw:code "S04" ; rdfs:label "천안–청주"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 3 ; hw:endpoint hw:N_CHEONAN, hw:N_CHEONGJU ; hw:lengthKm 36.8 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.17 36.80, 127.45 36.64)"^^geo:wktLiteral ] .
+hw:S05 a hw:Section ; hw:code "S05" ; rdfs:label "청주–대전"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 4 ; hw:endpoint hw:N_CHEONGJU, hw:N_DAEJEON ; hw:lengthKm 36.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.45 36.64, 127.42 36.37)"^^geo:wktLiteral ] .
+hw:S06 a hw:Section ; hw:code "S06" ; rdfs:label "대전–김천"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 5 ; hw:endpoint hw:N_DAEJEON, hw:N_GIMCHEON ; hw:lengthKm 79.9 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.42 36.37, 128.10 36.13)"^^geo:wktLiteral ] .
+hw:S07 a hw:Section ; hw:code "S07" ; rdfs:label "김천–대구"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 6 ; hw:endpoint hw:N_GIMCHEON, hw:N_DAEGU ; hw:lengthKm 61.6 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.10 36.13, 128.58 35.88)"^^geo:wktLiteral ] .
+hw:S08 a hw:Section ; hw:code "S08" ; rdfs:label "대구–경주"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 7 ; hw:endpoint hw:N_DAEGU, hw:N_GYEONGJU ; hw:lengthKm 68.3 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.58 35.88, 129.21 35.84)"^^geo:wktLiteral ] .
+hw:S09 a hw:Section ; hw:code "S09" ; rdfs:label "경주–부산"@ko ; hw:onRoute hw:R_GYEONGBU ; hw:routeOrder 8 ; hw:endpoint hw:N_GYEONGJU, hw:N_BUSAN ; hw:lengthKm 87.1 ; geo:hasGeometry [ geo:asWKT "LINESTRING(129.21 35.84, 129.05 35.20)"^^geo:wktLiteral ] .
+hw:S10 a hw:Section ; hw:code "S10" ; rdfs:label "서울–평택"@ko ; hw:onRoute hw:R_SEOHAEAN ; hw:routeOrder 1 ; hw:endpoint hw:N_SEOUL, hw:N_PYEONGTAEK ; hw:lengthKm 68.1 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.05 37.50, 127.05 36.99)"^^geo:wktLiteral ] .
+hw:S11 a hw:Section ; hw:code "S11" ; rdfs:label "평택–서산"@ko ; hw:onRoute hw:R_SEOHAEAN ; hw:routeOrder 2 ; hw:endpoint hw:N_PYEONGTAEK, hw:N_SEOSAN ; hw:lengthKm 69.9 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.05 36.99, 126.45 36.78)"^^geo:wktLiteral ] .
+hw:S12 a hw:Section ; hw:code "S12" ; rdfs:label "서산–군산"@ko ; hw:onRoute hw:R_SEOHAEAN ; hw:routeOrder 3 ; hw:endpoint hw:N_SEOSAN, hw:N_GUNSAN ; hw:lengthKm 112.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.45 36.78, 126.73 35.97)"^^geo:wktLiteral ] .
+hw:S13 a hw:Section ; hw:code "S13" ; rdfs:label "군산–목포"@ko ; hw:onRoute hw:R_SEOHAEAN ; hw:routeOrder 4 ; hw:endpoint hw:N_GUNSAN, hw:N_MOKPO ; hw:lengthKm 160.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.73 35.97, 126.40 34.80)"^^geo:wktLiteral ] .
+hw:S14 a hw:Section ; hw:code "S14" ; rdfs:label "인천–수원·신갈"@ko ; hw:onRoute hw:R_YEONGDONG ; hw:routeOrder 1 ; hw:endpoint hw:N_INCHEON, hw:N_SUWON ; hw:lengthKm 48.7 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.70 37.46, 127.10 37.28)"^^geo:wktLiteral ] .
+hw:S15 a hw:Section ; hw:code "S15" ; rdfs:label "수원·신갈–여주"@ko ; hw:onRoute hw:R_YEONGDONG ; hw:routeOrder 2 ; hw:endpoint hw:N_SUWON, hw:N_YEOJU ; hw:lengthKm 57.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.10 37.28, 127.64 37.30)"^^geo:wktLiteral ] .
+hw:S16 a hw:Section ; hw:code "S16" ; rdfs:label "여주–원주"@ko ; hw:onRoute hw:R_YEONGDONG ; hw:routeOrder 3 ; hw:endpoint hw:N_YEOJU, hw:N_WONJU ; hw:lengthKm 31.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.64 37.30, 127.93 37.34)"^^geo:wktLiteral ] .
+hw:S17 a hw:Section ; hw:code "S17" ; rdfs:label "원주–강릉"@ko ; hw:onRoute hw:R_YEONGDONG ; hw:routeOrder 4 ; hw:endpoint hw:N_WONJU, hw:N_GANGNEUNG ; hw:lengthKm 114.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.93 37.34, 128.88 37.75)"^^geo:wktLiteral ] .
+hw:S18 a hw:Section ; hw:code "S18" ; rdfs:label "서울–여주"@ko ; hw:onRoute hw:R_JUNGBU ; hw:routeOrder 1 ; hw:endpoint hw:N_SEOUL, hw:N_YEOJU ; hw:lengthKm 68.0 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.05 37.50, 127.64 37.30)"^^geo:wktLiteral ] .
+hw:S19 a hw:Section ; hw:code "S19" ; rdfs:label "여주–청주"@ko ; hw:onRoute hw:R_JUNGBU ; hw:routeOrder 2 ; hw:endpoint hw:N_YEOJU, hw:N_CHEONGJU ; hw:lengthKm 90.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.64 37.30, 127.45 36.64)"^^geo:wktLiteral ] .
+hw:S20 a hw:Section ; hw:code "S20" ; rdfs:label "여주–충주"@ko ; hw:onRoute hw:R_JUNGBU_NAERYUK ; hw:routeOrder 1 ; hw:endpoint hw:N_YEOJU, hw:N_CHUNGJU ; hw:lengthKm 52.7 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.64 37.30, 127.93 36.98)"^^geo:wktLiteral ] .
+hw:S21 a hw:Section ; hw:code "S21" ; rdfs:label "충주–김천"@ko ; hw:onRoute hw:R_JUNGBU_NAERYUK ; hw:routeOrder 2 ; hw:endpoint hw:N_CHUNGJU, hw:N_GIMCHEON ; hw:lengthKm 114.9 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.93 36.98, 128.10 36.13)"^^geo:wktLiteral ] .
+hw:S22 a hw:Section ; hw:code "S22" ; rdfs:label "김천–창원"@ko ; hw:onRoute hw:R_JUNGBU_NAERYUK ; hw:routeOrder 3 ; hw:endpoint hw:N_GIMCHEON, hw:N_CHANGWON ; hw:lengthKm 133.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.10 36.13, 128.66 35.24)"^^geo:wktLiteral ] .
+hw:S23 a hw:Section ; hw:code "S23" ; rdfs:label "대전–논산"@ko ; hw:onRoute hw:R_HONAM ; hw:routeOrder 1 ; hw:endpoint hw:N_DAEJEON, hw:N_NONSAN ; hw:lengthKm 41.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.42 36.37, 127.10 36.20)"^^geo:wktLiteral ] .
+hw:S24 a hw:Section ; hw:code "S24" ; rdfs:label "논산–전주"@ko ; hw:onRoute hw:R_HONAM ; hw:routeOrder 2 ; hw:endpoint hw:N_NONSAN, hw:N_JEONJU ; hw:lengthKm 50.8 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.10 36.20, 127.13 35.82)"^^geo:wktLiteral ] .
+hw:S25 a hw:Section ; hw:code "S25" ; rdfs:label "전주–광주"@ko ; hw:onRoute hw:R_HONAM ; hw:routeOrder 3 ; hw:endpoint hw:N_JEONJU, hw:N_GWANGJU ; hw:lengthKm 93.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.13 35.82, 126.85 35.16)"^^geo:wktLiteral ] .
+hw:S26 a hw:Section ; hw:code "S26" ; rdfs:label "광주–순천"@ko ; hw:onRoute hw:R_HONAM ; hw:routeOrder 4 ; hw:endpoint hw:N_GWANGJU, hw:N_SUNCHEON ; hw:lengthKm 75.3 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.85 35.16, 127.49 34.95)"^^geo:wktLiteral ] .
+hw:S27 a hw:Section ; hw:code "S27" ; rdfs:label "천안–논산"@ko ; hw:onRoute hw:R_NONSAN_CHEONAN ; hw:routeOrder 1 ; hw:endpoint hw:N_CHEONAN, hw:N_NONSAN ; hw:lengthKm 80.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.17 36.80, 127.10 36.20)"^^geo:wktLiteral ] .
+hw:S28 a hw:Section ; hw:code "S28" ; rdfs:label "목포–순천"@ko ; hw:onRoute hw:R_NAMHAE ; hw:routeOrder 1 ; hw:endpoint hw:N_MOKPO, hw:N_SUNCHEON ; hw:lengthKm 121.0 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.40 34.80, 127.49 34.95)"^^geo:wktLiteral ] .
+hw:S29 a hw:Section ; hw:code "S29" ; rdfs:label "순천–진주"@ko ; hw:onRoute hw:R_NAMHAE ; hw:routeOrder 2 ; hw:endpoint hw:N_SUNCHEON, hw:N_JINJU ; hw:lengthKm 73.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.49 34.95, 128.10 35.18)"^^geo:wktLiteral ] .
+hw:S30 a hw:Section ; hw:code "S30" ; rdfs:label "진주–창원"@ko ; hw:onRoute hw:R_NAMHAE ; hw:routeOrder 3 ; hw:endpoint hw:N_JINJU, hw:N_CHANGWON ; hw:lengthKm 61.6 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.10 35.18, 128.66 35.24)"^^geo:wktLiteral ] .
+hw:S31 a hw:Section ; hw:code "S31" ; rdfs:label "창원–부산"@ko ; hw:onRoute hw:R_NAMHAE ; hw:routeOrder 4 ; hw:endpoint hw:N_CHANGWON, hw:N_BUSAN ; hw:lengthKm 42.8 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.66 35.24, 129.05 35.20)"^^geo:wktLiteral ] .
+hw:S32 a hw:Section ; hw:code "S32" ; rdfs:label "대전–진주"@ko ; hw:onRoute hw:R_TONGYEONG_DAEJEON ; hw:routeOrder 1 ; hw:endpoint hw:N_DAEJEON, hw:N_JINJU ; hw:lengthKm 175.0 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.42 36.37, 128.10 35.18)"^^geo:wktLiteral ] .
+hw:S33 a hw:Section ; hw:code "S33" ; rdfs:label "광주–대구"@ko ; hw:onRoute hw:R_GWANGJU_DAEGU ; hw:routeOrder 1 ; hw:endpoint hw:N_GWANGJU, hw:N_DAEGU ; hw:lengthKm 211.0 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.85 35.16, 128.58 35.88)"^^geo:wktLiteral ] .
+hw:S34 a hw:Section ; hw:code "S34" ; rdfs:label "춘천–원주"@ko ; hw:onRoute hw:R_JUNGANG ; hw:routeOrder 1 ; hw:endpoint hw:N_CHUNCHEON, hw:N_WONJU ; hw:lengthKm 75.1 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.73 37.88, 127.93 37.34)"^^geo:wktLiteral ] .
+hw:S35 a hw:Section ; hw:code "S35" ; rdfs:label "원주–안동"@ko ; hw:onRoute hw:R_JUNGANG ; hw:routeOrder 2 ; hw:endpoint hw:N_WONJU, hw:N_ANDONG ; hw:lengthKm 133.5 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.93 37.34, 128.73 36.57)"^^geo:wktLiteral ] .
+hw:S36 a hw:Section ; hw:code "S36" ; rdfs:label "안동–대구"@ko ; hw:onRoute hw:R_JUNGANG ; hw:routeOrder 3 ; hw:endpoint hw:N_ANDONG, hw:N_DAEGU ; hw:lengthKm 93.5 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.73 36.57, 128.58 35.88)"^^geo:wktLiteral ] .
+hw:S37 a hw:Section ; hw:code "S37" ; rdfs:label "부산–울산"@ko ; hw:onRoute hw:R_DONGHAE ; hw:routeOrder 1 ; hw:endpoint hw:N_BUSAN, hw:N_ULSAN ; hw:lengthKm 54.0 ; geo:hasGeometry [ geo:asWKT "LINESTRING(129.05 35.20, 129.30 35.55)"^^geo:wktLiteral ] .
+hw:S38 a hw:Section ; hw:code "S38" ; rdfs:label "울산–포항"@ko ; hw:onRoute hw:R_DONGHAE ; hw:routeOrder 2 ; hw:endpoint hw:N_ULSAN, hw:N_POHANG ; hw:lengthKm 62.9 ; geo:hasGeometry [ geo:asWKT "LINESTRING(129.30 35.55, 129.35 36.02)"^^geo:wktLiteral ] .
+hw:S39 a hw:Section ; hw:code "S39" ; rdfs:label "대구–포항"@ko ; hw:onRoute hw:R_DAEGU_POHANG ; hw:routeOrder 1 ; hw:endpoint hw:N_DAEGU, hw:N_POHANG ; hw:lengthKm 85.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.58 35.88, 129.35 36.02)"^^geo:wktLiteral ] .
+hw:S40 a hw:Section ; hw:code "S40" ; rdfs:label "서산–세종"@ko ; hw:onRoute hw:R_DANGJIN_YEONGDEOK ; hw:routeOrder 1 ; hw:endpoint hw:N_SEOSAN, hw:N_SEJONG ; hw:lengthKm 96.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(126.45 36.78, 127.28 36.50)"^^geo:wktLiteral ] .
+hw:S41 a hw:Section ; hw:code "S41" ; rdfs:label "세종–청주"@ko ; hw:onRoute hw:R_DANGJIN_YEONGDEOK ; hw:routeOrder 2 ; hw:endpoint hw:N_SEJONG, hw:N_CHEONGJU ; hw:lengthKm 26.1 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.28 36.50, 127.45 36.64)"^^geo:wktLiteral ] .
+hw:S42 a hw:Section ; hw:code "S42" ; rdfs:label "청주–안동"@ko ; hw:onRoute hw:R_DANGJIN_YEONGDEOK ; hw:routeOrder 3 ; hw:endpoint hw:N_CHEONGJU, hw:N_ANDONG ; hw:lengthKm 137.4 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.45 36.64, 128.73 36.57)"^^geo:wktLiteral ] .
+hw:S43 a hw:Section ; hw:code "S43" ; rdfs:label "안동–포항"@ko ; hw:onRoute hw:R_DANGJIN_YEONGDEOK ; hw:routeOrder 4 ; hw:endpoint hw:N_ANDONG, hw:N_POHANG ; hw:lengthKm 99.2 ; geo:hasGeometry [ geo:asWKT "LINESTRING(128.73 36.57, 129.35 36.02)"^^geo:wktLiteral ] .
+hw:S44 a hw:Section ; hw:code "S44" ; rdfs:label "평택–충주"@ko ; hw:onRoute hw:R_PYEONGTAEK_JECHEON ; hw:routeOrder 1 ; hw:endpoint hw:N_PYEONGTAEK, hw:N_CHUNGJU ; hw:lengthKm 93.8 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.05 36.99, 127.93 36.98)"^^geo:wktLiteral ] .
+hw:S45 a hw:Section ; hw:code "S45" ; rdfs:label "서울–춘천"@ko ; hw:onRoute hw:R_SEOUL_YANGYANG ; hw:routeOrder 1 ; hw:endpoint hw:N_SEOUL, hw:N_CHUNCHEON ; hw:lengthKm 87.9 ; geo:hasGeometry [ geo:asWKT "LINESTRING(127.05 37.50, 127.73 37.88)"^^geo:wktLiteral ] .
+hw:S01F a hw:Link ; hw:code "S01F" ; hw:ofSection hw:S01 ; hw:fromNode hw:N_INCHEON ; hw:toNode hw:N_SEOUL ; hw:oppositeOf hw:S01R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 37.4 ; hw:dailyVolume 45937 .
+hw:S01R a hw:Link ; hw:code "S01R" ; hw:ofSection hw:S01 ; hw:fromNode hw:N_SEOUL ; hw:toNode hw:N_INCHEON ; hw:oppositeOf hw:S01F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 37.4 ; hw:dailyVolume 44559 .
+hw:S02F a hw:Link ; hw:code "S02F" ; hw:ofSection hw:S02 ; hw:fromNode hw:N_SEOUL ; hw:toNode hw:N_SUWON ; hw:oppositeOf hw:S02R ; hw:lanes 5 ; hw:capacityVph 10000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 29.8 ; hw:dailyVolume 86645 .
+hw:S02R a hw:Link ; hw:code "S02R" ; hw:ofSection hw:S02 ; hw:fromNode hw:N_SUWON ; hw:toNode hw:N_SEOUL ; hw:oppositeOf hw:S02F ; hw:lanes 5 ; hw:capacityVph 10000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 29.8 ; hw:dailyVolume 88720 .
+hw:S03F a hw:Link ; hw:code "S03F" ; hw:ofSection hw:S03 ; hw:fromNode hw:N_SUWON ; hw:toNode hw:N_CHEONAN ; hw:oppositeOf hw:S03R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 64.5 ; hw:dailyVolume 117733 .
+hw:S03R a hw:Link ; hw:code "S03R" ; hw:ofSection hw:S03 ; hw:fromNode hw:N_CHEONAN ; hw:toNode hw:N_SUWON ; hw:oppositeOf hw:S03F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 64.5 ; hw:dailyVolume 119125 .
+hw:S04F a hw:Link ; hw:code "S04F" ; hw:ofSection hw:S04 ; hw:fromNode hw:N_CHEONAN ; hw:toNode hw:N_CHEONGJU ; hw:oppositeOf hw:S04R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 36.8 ; hw:dailyVolume 85701 .
+hw:S04R a hw:Link ; hw:code "S04R" ; hw:ofSection hw:S04 ; hw:fromNode hw:N_CHEONGJU ; hw:toNode hw:N_CHEONAN ; hw:oppositeOf hw:S04F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 36.8 ; hw:dailyVolume 86324 .
+hw:S05F a hw:Link ; hw:code "S05F" ; hw:ofSection hw:S05 ; hw:fromNode hw:N_CHEONGJU ; hw:toNode hw:N_DAEJEON ; hw:oppositeOf hw:S05R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 36.2 ; hw:dailyVolume 95688 .
+hw:S05R a hw:Link ; hw:code "S05R" ; hw:ofSection hw:S05 ; hw:fromNode hw:N_DAEJEON ; hw:toNode hw:N_CHEONGJU ; hw:oppositeOf hw:S05F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 36.2 ; hw:dailyVolume 95929 .
+hw:S06F a hw:Link ; hw:code "S06F" ; hw:ofSection hw:S06 ; hw:fromNode hw:N_DAEJEON ; hw:toNode hw:N_GIMCHEON ; hw:oppositeOf hw:S06R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 79.9 ; hw:dailyVolume 51209 .
+hw:S06R a hw:Link ; hw:code "S06R" ; hw:ofSection hw:S06 ; hw:fromNode hw:N_GIMCHEON ; hw:toNode hw:N_DAEJEON ; hw:oppositeOf hw:S06F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 79.9 ; hw:dailyVolume 51026 .
+hw:S07F a hw:Link ; hw:code "S07F" ; hw:ofSection hw:S07 ; hw:fromNode hw:N_GIMCHEON ; hw:toNode hw:N_DAEGU ; hw:oppositeOf hw:S07R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 61.6 ; hw:dailyVolume 53644 .
+hw:S07R a hw:Link ; hw:code "S07R" ; hw:ofSection hw:S07 ; hw:fromNode hw:N_DAEGU ; hw:toNode hw:N_GIMCHEON ; hw:oppositeOf hw:S07F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 61.6 ; hw:dailyVolume 54159 .
+hw:S08F a hw:Link ; hw:code "S08F" ; hw:ofSection hw:S08 ; hw:fromNode hw:N_DAEGU ; hw:toNode hw:N_GYEONGJU ; hw:oppositeOf hw:S08R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 68.3 ; hw:dailyVolume 25286 .
+hw:S08R a hw:Link ; hw:code "S08R" ; hw:ofSection hw:S08 ; hw:fromNode hw:N_GYEONGJU ; hw:toNode hw:N_DAEGU ; hw:oppositeOf hw:S08F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 68.3 ; hw:dailyVolume 25512 .
+hw:S09F a hw:Link ; hw:code "S09F" ; hw:ofSection hw:S09 ; hw:fromNode hw:N_GYEONGJU ; hw:toNode hw:N_BUSAN ; hw:oppositeOf hw:S09R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 87.1 ; hw:dailyVolume 22446 .
+hw:S09R a hw:Link ; hw:code "S09R" ; hw:ofSection hw:S09 ; hw:fromNode hw:N_BUSAN ; hw:toNode hw:N_GYEONGJU ; hw:oppositeOf hw:S09F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 87.1 ; hw:dailyVolume 22633 .
+hw:S10F a hw:Link ; hw:code "S10F" ; hw:ofSection hw:S10 ; hw:fromNode hw:N_SEOUL ; hw:toNode hw:N_PYEONGTAEK ; hw:oppositeOf hw:S10R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 68.1 ; hw:dailyVolume 49745 .
+hw:S10R a hw:Link ; hw:code "S10R" ; hw:ofSection hw:S10 ; hw:fromNode hw:N_PYEONGTAEK ; hw:toNode hw:N_SEOUL ; hw:oppositeOf hw:S10F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 68.1 ; hw:dailyVolume 50440 .
+hw:S11F a hw:Link ; hw:code "S11F" ; hw:ofSection hw:S11 ; hw:fromNode hw:N_PYEONGTAEK ; hw:toNode hw:N_SEOSAN ; hw:oppositeOf hw:S11R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 69.9 ; hw:dailyVolume 21959 .
+hw:S11R a hw:Link ; hw:code "S11R" ; hw:ofSection hw:S11 ; hw:fromNode hw:N_SEOSAN ; hw:toNode hw:N_PYEONGTAEK ; hw:oppositeOf hw:S11F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 69.9 ; hw:dailyVolume 22152 .
+hw:S12F a hw:Link ; hw:code "S12F" ; hw:ofSection hw:S12 ; hw:fromNode hw:N_SEOSAN ; hw:toNode hw:N_GUNSAN ; hw:oppositeOf hw:S12R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 112.2 ; hw:dailyVolume 14683 .
+hw:S12R a hw:Link ; hw:code "S12R" ; hw:ofSection hw:S12 ; hw:fromNode hw:N_GUNSAN ; hw:toNode hw:N_SEOSAN ; hw:oppositeOf hw:S12F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 112.2 ; hw:dailyVolume 14775 .
+hw:S13F a hw:Link ; hw:code "S13F" ; hw:ofSection hw:S13 ; hw:fromNode hw:N_GUNSAN ; hw:toNode hw:N_MOKPO ; hw:oppositeOf hw:S13R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 160.2 ; hw:dailyVolume 5954 .
+hw:S13R a hw:Link ; hw:code "S13R" ; hw:ofSection hw:S13 ; hw:fromNode hw:N_MOKPO ; hw:toNode hw:N_GUNSAN ; hw:oppositeOf hw:S13F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 160.2 ; hw:dailyVolume 5975 .
+hw:S14F a hw:Link ; hw:code "S14F" ; hw:ofSection hw:S14 ; hw:fromNode hw:N_INCHEON ; hw:toNode hw:N_SUWON ; hw:oppositeOf hw:S14R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 48.7 ; hw:dailyVolume 41114 .
+hw:S14R a hw:Link ; hw:code "S14R" ; hw:ofSection hw:S14 ; hw:fromNode hw:N_SUWON ; hw:toNode hw:N_INCHEON ; hw:oppositeOf hw:S14F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 48.7 ; hw:dailyVolume 41662 .
+hw:S15F a hw:Link ; hw:code "S15F" ; hw:ofSection hw:S15 ; hw:fromNode hw:N_SUWON ; hw:toNode hw:N_YEOJU ; hw:oppositeOf hw:S15R ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 57.4 ; hw:dailyVolume 12365 .
+hw:S15R a hw:Link ; hw:code "S15R" ; hw:ofSection hw:S15 ; hw:fromNode hw:N_YEOJU ; hw:toNode hw:N_SUWON ; hw:oppositeOf hw:S15F ; hw:lanes 4 ; hw:capacityVph 8000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 57.4 ; hw:dailyVolume 13198 .
+hw:S16F a hw:Link ; hw:code "S16F" ; hw:ofSection hw:S16 ; hw:fromNode hw:N_YEOJU ; hw:toNode hw:N_WONJU ; hw:oppositeOf hw:S16R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 31.2 ; hw:dailyVolume 40146 .
+hw:S16R a hw:Link ; hw:code "S16R" ; hw:ofSection hw:S16 ; hw:fromNode hw:N_WONJU ; hw:toNode hw:N_YEOJU ; hw:oppositeOf hw:S16F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 31.2 ; hw:dailyVolume 40654 .
+hw:S17F a hw:Link ; hw:code "S17F" ; hw:ofSection hw:S17 ; hw:fromNode hw:N_WONJU ; hw:toNode hw:N_GANGNEUNG ; hw:oppositeOf hw:S17R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 114.4 ; hw:dailyVolume 7767 .
+hw:S17R a hw:Link ; hw:code "S17R" ; hw:ofSection hw:S17 ; hw:fromNode hw:N_GANGNEUNG ; hw:toNode hw:N_WONJU ; hw:oppositeOf hw:S17F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 114.4 ; hw:dailyVolume 7827 .
+hw:S18F a hw:Link ; hw:code "S18F" ; hw:ofSection hw:S18 ; hw:fromNode hw:N_SEOUL ; hw:toNode hw:N_YEOJU ; hw:oppositeOf hw:S18R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 68.0 ; hw:dailyVolume 58499 .
+hw:S18R a hw:Link ; hw:code "S18R" ; hw:ofSection hw:S18 ; hw:fromNode hw:N_YEOJU ; hw:toNode hw:N_SEOUL ; hw:oppositeOf hw:S18F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 68.0 ; hw:dailyVolume 59430 .
+hw:S19F a hw:Link ; hw:code "S19F" ; hw:ofSection hw:S19 ; hw:fromNode hw:N_YEOJU ; hw:toNode hw:N_CHEONGJU ; hw:oppositeOf hw:S19R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 90.4 ; hw:dailyVolume 12045 .
+hw:S19R a hw:Link ; hw:code "S19R" ; hw:ofSection hw:S19 ; hw:fromNode hw:N_CHEONGJU ; hw:toNode hw:N_YEOJU ; hw:oppositeOf hw:S19F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 90.4 ; hw:dailyVolume 12145 .
+hw:S20F a hw:Link ; hw:code "S20F" ; hw:ofSection hw:S20 ; hw:fromNode hw:N_YEOJU ; hw:toNode hw:N_CHUNGJU ; hw:oppositeOf hw:S20R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 52.7 ; hw:dailyVolume 40723 .
+hw:S20R a hw:Link ; hw:code "S20R" ; hw:ofSection hw:S20 ; hw:fromNode hw:N_CHUNGJU ; hw:toNode hw:N_YEOJU ; hw:oppositeOf hw:S20F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 52.7 ; hw:dailyVolume 41748 .
+hw:S21F a hw:Link ; hw:code "S21F" ; hw:ofSection hw:S21 ; hw:fromNode hw:N_CHUNGJU ; hw:toNode hw:N_GIMCHEON ; hw:oppositeOf hw:S21R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 114.9 ; hw:dailyVolume 35927 .
+hw:S21R a hw:Link ; hw:code "S21R" ; hw:ofSection hw:S21 ; hw:fromNode hw:N_GIMCHEON ; hw:toNode hw:N_CHUNGJU ; hw:oppositeOf hw:S21F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 114.9 ; hw:dailyVolume 36839 .
+hw:S22F a hw:Link ; hw:code "S22F" ; hw:ofSection hw:S22 ; hw:fromNode hw:N_GIMCHEON ; hw:toNode hw:N_CHANGWON ; hw:oppositeOf hw:S22R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 133.4 ; hw:dailyVolume 45941 .
+hw:S22R a hw:Link ; hw:code "S22R" ; hw:ofSection hw:S22 ; hw:fromNode hw:N_CHANGWON ; hw:toNode hw:N_GIMCHEON ; hw:oppositeOf hw:S22F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 133.4 ; hw:dailyVolume 46113 .
+hw:S23F a hw:Link ; hw:code "S23F" ; hw:ofSection hw:S23 ; hw:fromNode hw:N_DAEJEON ; hw:toNode hw:N_NONSAN ; hw:oppositeOf hw:S23R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 41.2 ; hw:dailyVolume 25598 .
+hw:S23R a hw:Link ; hw:code "S23R" ; hw:ofSection hw:S23 ; hw:fromNode hw:N_NONSAN ; hw:toNode hw:N_DAEJEON ; hw:oppositeOf hw:S23F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 41.2 ; hw:dailyVolume 25595 .
+hw:S24F a hw:Link ; hw:code "S24F" ; hw:ofSection hw:S24 ; hw:fromNode hw:N_NONSAN ; hw:toNode hw:N_JEONJU ; hw:oppositeOf hw:S24R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 50.8 ; hw:dailyVolume 44937 .
+hw:S24R a hw:Link ; hw:code "S24R" ; hw:ofSection hw:S24 ; hw:fromNode hw:N_JEONJU ; hw:toNode hw:N_NONSAN ; hw:oppositeOf hw:S24F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 50.8 ; hw:dailyVolume 45274 .
+hw:S25F a hw:Link ; hw:code "S25F" ; hw:ofSection hw:S25 ; hw:fromNode hw:N_JEONJU ; hw:toNode hw:N_GWANGJU ; hw:oppositeOf hw:S25R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 93.2 ; hw:dailyVolume 28852 .
+hw:S25R a hw:Link ; hw:code "S25R" ; hw:ofSection hw:S25 ; hw:fromNode hw:N_GWANGJU ; hw:toNode hw:N_JEONJU ; hw:oppositeOf hw:S25F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 93.2 ; hw:dailyVolume 29062 .
+hw:S26F a hw:Link ; hw:code "S26F" ; hw:ofSection hw:S26 ; hw:fromNode hw:N_GWANGJU ; hw:toNode hw:N_SUNCHEON ; hw:oppositeOf hw:S26R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 75.3 ; hw:dailyVolume 21195 .
+hw:S26R a hw:Link ; hw:code "S26R" ; hw:ofSection hw:S26 ; hw:fromNode hw:N_SUNCHEON ; hw:toNode hw:N_GWANGJU ; hw:oppositeOf hw:S26F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 75.3 ; hw:dailyVolume 21240 .
+hw:S27F a hw:Link ; hw:code "S27F" ; hw:ofSection hw:S27 ; hw:fromNode hw:N_CHEONAN ; hw:toNode hw:N_NONSAN ; hw:oppositeOf hw:S27R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 80.4 ; hw:dailyVolume 27000 .
+hw:S27R a hw:Link ; hw:code "S27R" ; hw:ofSection hw:S27 ; hw:fromNode hw:N_NONSAN ; hw:toNode hw:N_CHEONAN ; hw:oppositeOf hw:S27F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 80.4 ; hw:dailyVolume 27386 .
+hw:S28F a hw:Link ; hw:code "S28F" ; hw:ofSection hw:S28 ; hw:fromNode hw:N_MOKPO ; hw:toNode hw:N_SUNCHEON ; hw:oppositeOf hw:S28R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 121.0 ; hw:dailyVolume 8252 .
+hw:S28R a hw:Link ; hw:code "S28R" ; hw:ofSection hw:S28 ; hw:fromNode hw:N_SUNCHEON ; hw:toNode hw:N_MOKPO ; hw:oppositeOf hw:S28F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 121.0 ; hw:dailyVolume 8244 .
+hw:S29F a hw:Link ; hw:code "S29F" ; hw:ofSection hw:S29 ; hw:fromNode hw:N_SUNCHEON ; hw:toNode hw:N_JINJU ; hw:oppositeOf hw:S29R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 73.4 ; hw:dailyVolume 19519 .
+hw:S29R a hw:Link ; hw:code "S29R" ; hw:ofSection hw:S29 ; hw:fromNode hw:N_JINJU ; hw:toNode hw:N_SUNCHEON ; hw:oppositeOf hw:S29F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 73.4 ; hw:dailyVolume 19519 .
+hw:S30F a hw:Link ; hw:code "S30F" ; hw:ofSection hw:S30 ; hw:fromNode hw:N_JINJU ; hw:toNode hw:N_CHANGWON ; hw:oppositeOf hw:S30R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 61.6 ; hw:dailyVolume 24281 .
+hw:S30R a hw:Link ; hw:code "S30R" ; hw:ofSection hw:S30 ; hw:fromNode hw:N_CHANGWON ; hw:toNode hw:N_JINJU ; hw:oppositeOf hw:S30F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 61.6 ; hw:dailyVolume 24281 .
+hw:S31F a hw:Link ; hw:code "S31F" ; hw:ofSection hw:S31 ; hw:fromNode hw:N_CHANGWON ; hw:toNode hw:N_BUSAN ; hw:oppositeOf hw:S31R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 42.8 ; hw:dailyVolume 67441 .
+hw:S31R a hw:Link ; hw:code "S31R" ; hw:ofSection hw:S31 ; hw:fromNode hw:N_BUSAN ; hw:toNode hw:N_CHANGWON ; hw:oppositeOf hw:S31F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 42.8 ; hw:dailyVolume 67508 .
+hw:S32F a hw:Link ; hw:code "S32F" ; hw:ofSection hw:S32 ; hw:fromNode hw:N_DAEJEON ; hw:toNode hw:N_JINJU ; hw:oppositeOf hw:S32R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 175.0 ; hw:dailyVolume 7274 .
+hw:S32R a hw:Link ; hw:code "S32R" ; hw:ofSection hw:S32 ; hw:fromNode hw:N_JINJU ; hw:toNode hw:N_DAEJEON ; hw:oppositeOf hw:S32F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 175.0 ; hw:dailyVolume 7324 .
+hw:S33F a hw:Link ; hw:code "S33F" ; hw:ofSection hw:S33 ; hw:fromNode hw:N_GWANGJU ; hw:toNode hw:N_DAEGU ; hw:oppositeOf hw:S33R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 211.0 ; hw:dailyVolume 5985 .
+hw:S33R a hw:Link ; hw:code "S33R" ; hw:ofSection hw:S33 ; hw:fromNode hw:N_DAEGU ; hw:toNode hw:N_GWANGJU ; hw:oppositeOf hw:S33F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 211.0 ; hw:dailyVolume 5986 .
+hw:S34F a hw:Link ; hw:code "S34F" ; hw:ofSection hw:S34 ; hw:fromNode hw:N_CHUNCHEON ; hw:toNode hw:N_WONJU ; hw:oppositeOf hw:S34R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 75.1 ; hw:dailyVolume 4937 .
+hw:S34R a hw:Link ; hw:code "S34R" ; hw:ofSection hw:S34 ; hw:fromNode hw:N_WONJU ; hw:toNode hw:N_CHUNCHEON ; hw:oppositeOf hw:S34F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 75.1 ; hw:dailyVolume 4935 .
+hw:S35F a hw:Link ; hw:code "S35F" ; hw:ofSection hw:S35 ; hw:fromNode hw:N_WONJU ; hw:toNode hw:N_ANDONG ; hw:oppositeOf hw:S35R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 133.5 ; hw:dailyVolume 19275 .
+hw:S35R a hw:Link ; hw:code "S35R" ; hw:ofSection hw:S35 ; hw:fromNode hw:N_ANDONG ; hw:toNode hw:N_WONJU ; hw:oppositeOf hw:S35F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 133.5 ; hw:dailyVolume 19498 .
+hw:S36F a hw:Link ; hw:code "S36F" ; hw:ofSection hw:S36 ; hw:fromNode hw:N_ANDONG ; hw:toNode hw:N_DAEGU ; hw:oppositeOf hw:S36R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 93.5 ; hw:dailyVolume 4620 .
+hw:S36R a hw:Link ; hw:code "S36R" ; hw:ofSection hw:S36 ; hw:fromNode hw:N_DAEGU ; hw:toNode hw:N_ANDONG ; hw:oppositeOf hw:S36F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 93.5 ; hw:dailyVolume 4620 .
+hw:S37F a hw:Link ; hw:code "S37F" ; hw:ofSection hw:S37 ; hw:fromNode hw:N_BUSAN ; hw:toNode hw:N_ULSAN ; hw:oppositeOf hw:S37R ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 54.0 ; hw:dailyVolume 34201 .
+hw:S37R a hw:Link ; hw:code "S37R" ; hw:ofSection hw:S37 ; hw:fromNode hw:N_ULSAN ; hw:toNode hw:N_BUSAN ; hw:oppositeOf hw:S37F ; hw:lanes 3 ; hw:capacityVph 6000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 54.0 ; hw:dailyVolume 34201 .
+hw:S38F a hw:Link ; hw:code "S38F" ; hw:ofSection hw:S38 ; hw:fromNode hw:N_ULSAN ; hw:toNode hw:N_POHANG ; hw:oppositeOf hw:S38R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 62.9 ; hw:dailyVolume 32040 .
+hw:S38R a hw:Link ; hw:code "S38R" ; hw:ofSection hw:S38 ; hw:fromNode hw:N_POHANG ; hw:toNode hw:N_ULSAN ; hw:oppositeOf hw:S38F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 62.9 ; hw:dailyVolume 31929 .
+hw:S39F a hw:Link ; hw:code "S39F" ; hw:ofSection hw:S39 ; hw:fromNode hw:N_DAEGU ; hw:toNode hw:N_POHANG ; hw:oppositeOf hw:S39R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 85.2 ; hw:dailyVolume 18479 .
+hw:S39R a hw:Link ; hw:code "S39R" ; hw:ofSection hw:S39 ; hw:fromNode hw:N_POHANG ; hw:toNode hw:N_DAEGU ; hw:oppositeOf hw:S39F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 85.2 ; hw:dailyVolume 18479 .
+hw:S40F a hw:Link ; hw:code "S40F" ; hw:ofSection hw:S40 ; hw:fromNode hw:N_SEOSAN ; hw:toNode hw:N_SEJONG ; hw:oppositeOf hw:S40R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 96.4 ; hw:dailyVolume 19046 .
+hw:S40R a hw:Link ; hw:code "S40R" ; hw:ofSection hw:S40 ; hw:fromNode hw:N_SEJONG ; hw:toNode hw:N_SEOSAN ; hw:oppositeOf hw:S40F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 96.4 ; hw:dailyVolume 19045 .
+hw:S41F a hw:Link ; hw:code "S41F" ; hw:ofSection hw:S41 ; hw:fromNode hw:N_SEJONG ; hw:toNode hw:N_CHEONGJU ; hw:oppositeOf hw:S41R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 26.1 ; hw:dailyVolume 43962 .
+hw:S41R a hw:Link ; hw:code "S41R" ; hw:ofSection hw:S41 ; hw:fromNode hw:N_CHEONGJU ; hw:toNode hw:N_SEJONG ; hw:oppositeOf hw:S41F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 26.1 ; hw:dailyVolume 43808 .
+hw:S42F a hw:Link ; hw:code "S42F" ; hw:ofSection hw:S42 ; hw:fromNode hw:N_CHEONGJU ; hw:toNode hw:N_ANDONG ; hw:oppositeOf hw:S42R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 137.4 ; hw:dailyVolume 5437 .
+hw:S42R a hw:Link ; hw:code "S42R" ; hw:ofSection hw:S42 ; hw:fromNode hw:N_ANDONG ; hw:toNode hw:N_CHEONGJU ; hw:oppositeOf hw:S42F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 137.4 ; hw:dailyVolume 5437 .
+hw:S43F a hw:Link ; hw:code "S43F" ; hw:ofSection hw:S43 ; hw:fromNode hw:N_ANDONG ; hw:toNode hw:N_POHANG ; hw:oppositeOf hw:S43R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 99.2 ; hw:dailyVolume 19261 .
+hw:S43R a hw:Link ; hw:code "S43R" ; hw:ofSection hw:S43 ; hw:fromNode hw:N_POHANG ; hw:toNode hw:N_ANDONG ; hw:oppositeOf hw:S43F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 99.2 ; hw:dailyVolume 19441 .
+hw:S44F a hw:Link ; hw:code "S44F" ; hw:ofSection hw:S44 ; hw:fromNode hw:N_PYEONGTAEK ; hw:toNode hw:N_CHUNGJU ; hw:oppositeOf hw:S44R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 93.8 ; hw:dailyVolume 5262 .
+hw:S44R a hw:Link ; hw:code "S44R" ; hw:ofSection hw:S44 ; hw:fromNode hw:N_CHUNGJU ; hw:toNode hw:N_PYEONGTAEK ; hw:oppositeOf hw:S44F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 93.8 ; hw:dailyVolume 5262 .
+hw:S45F a hw:Link ; hw:code "S45F" ; hw:ofSection hw:S45 ; hw:fromNode hw:N_SEOUL ; hw:toNode hw:N_CHUNCHEON ; hw:oppositeOf hw:S45R ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 87.9 ; hw:dailyVolume 12024 .
+hw:S45R a hw:Link ; hw:code "S45R" ; hw:ofSection hw:S45 ; hw:fromNode hw:N_CHUNCHEON ; hw:toNode hw:N_SEOUL ; hw:oppositeOf hw:S45F ; hw:lanes 2 ; hw:capacityVph 4000 ; hw:freeSpeedKph 100.0 ; hw:lengthKm 87.9 ; hw:dailyVolume 12228 .
+
+### 시나리오와 사고
+hw:SC_BASE a hw:Scenario ; rdfs:label "평일 기본"@ko, "Weekday base"@en .
+hw:SC_INCIDENT a hw:Scenario ; rdfs:label "사고: 경부선 천안→청주 2차로 차단"@ko, "Crash: Gyeongbu Cheonan→Cheongju 2 lanes closed"@en ; hw:hasIncident hw:INC_INCIDENT .
+hw:INC_INCIDENT a hw:Incident ; hw:affectsLink hw:S04F ; hw:startHour 16 ; hw:endHour 20 ; hw:lanesClosed 2 ; rdfs:comment "하행 4차로 중 2차로 16~20시 차단 (가상)"@ko .
+
+### 교통 상태 (링크·시나리오별 최대 v/c 시각)
+hw:TS_BASE_S01F a hw:TrafficState ; hw:onLink hw:S01F ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3898 ; hw:vcRatio 0.487 ; hw:speedKph 99.2 ; hw:los hw:LOS_B .
+hw:TS_BASE_S01R a hw:TrafficState ; hw:onLink hw:S01R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3769 ; hw:vcRatio 0.471 ; hw:speedKph 99.3 ; hw:los hw:LOS_B .
+hw:TS_BASE_S02F a hw:TrafficState ; hw:onLink hw:S02F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 7926 ; hw:vcRatio 0.793 ; hw:speedKph 94.4 ; hw:los hw:LOS_D .
+hw:TS_BASE_S02R a hw:TrafficState ; hw:onLink hw:S02R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 7965 ; hw:vcRatio 0.796 ; hw:speedKph 94.3 ; hw:los hw:LOS_D .
+hw:TS_BASE_S03F a hw:TrafficState ; hw:onLink hw:S03F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 9416 ; hw:vcRatio 1.177 ; hw:speedKph 77.6 ; hw:los hw:LOS_F .
+hw:TS_BASE_S03R a hw:TrafficState ; hw:onLink hw:S03R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 9390 ; hw:vcRatio 1.174 ; hw:speedKph 77.8 ; hw:los hw:LOS_F .
+hw:TS_BASE_S04F a hw:TrafficState ; hw:onLink hw:S04F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 6582 ; hw:vcRatio 0.823 ; hw:speedKph 93.6 ; hw:los hw:LOS_D .
+hw:TS_BASE_S04R a hw:TrafficState ; hw:onLink hw:S04R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 6540 ; hw:vcRatio 0.817 ; hw:speedKph 93.7 ; hw:los hw:LOS_D .
+hw:TS_BASE_S05F a hw:TrafficState ; hw:onLink hw:S05F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 6998 ; hw:vcRatio 0.875 ; hw:speedKph 91.9 ; hw:los hw:LOS_D .
+hw:TS_BASE_S05R a hw:TrafficState ; hw:onLink hw:S05R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 6884 ; hw:vcRatio 0.861 ; hw:speedKph 92.4 ; hw:los hw:LOS_D .
+hw:TS_BASE_S06F a hw:TrafficState ; hw:onLink hw:S06F ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3494 ; hw:vcRatio 0.582 ; hw:speedKph 98.3 ; hw:los hw:LOS_C .
+hw:TS_BASE_S06R a hw:TrafficState ; hw:onLink hw:S06R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3473 ; hw:vcRatio 0.579 ; hw:speedKph 98.3 ; hw:los hw:LOS_C .
+hw:TS_BASE_S07F a hw:TrafficState ; hw:onLink hw:S07F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 4102 ; hw:vcRatio 0.513 ; hw:speedKph 99.0 ; hw:los hw:LOS_B .
+hw:TS_BASE_S07R a hw:TrafficState ; hw:onLink hw:S07R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 4092 ; hw:vcRatio 0.511 ; hw:speedKph 99.0 ; hw:los hw:LOS_B .
+hw:TS_BASE_S08F a hw:TrafficState ; hw:onLink hw:S08F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 2364 ; hw:vcRatio 0.394 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S08R a hw:TrafficState ; hw:onLink hw:S08R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 2303 ; hw:vcRatio 0.384 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_BASE_S09F a hw:TrafficState ; hw:onLink hw:S09F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 2126 ; hw:vcRatio 0.354 ; hw:speedKph 99.8 ; hw:los hw:LOS_B .
+hw:TS_BASE_S09R a hw:TrafficState ; hw:onLink hw:S09R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 2067 ; hw:vcRatio 0.344 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_BASE_S10F a hw:TrafficState ; hw:onLink hw:S10F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 4178 ; hw:vcRatio 0.522 ; hw:speedKph 98.9 ; hw:los hw:LOS_B .
+hw:TS_BASE_S10R a hw:TrafficState ; hw:onLink hw:S10R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 4150 ; hw:vcRatio 0.519 ; hw:speedKph 98.9 ; hw:los hw:LOS_B .
+hw:TS_BASE_S11F a hw:TrafficState ; hw:onLink hw:S11F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1759 ; hw:vcRatio 0.293 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_BASE_S11R a hw:TrafficState ; hw:onLink hw:S11R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 1735 ; hw:vcRatio 0.289 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_BASE_S12F a hw:TrafficState ; hw:onLink hw:S12F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1148 ; hw:vcRatio 0.287 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_BASE_S12R a hw:TrafficState ; hw:onLink hw:S12R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 1129 ; hw:vcRatio 0.282 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_BASE_S13F a hw:TrafficState ; hw:onLink hw:S13F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 458 ; hw:vcRatio 0.115 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S13R a hw:TrafficState ; hw:onLink hw:S13R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 449 ; hw:vcRatio 0.112 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S14F a hw:TrafficState ; hw:onLink hw:S14F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3278 ; hw:vcRatio 0.41 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S14R a hw:TrafficState ; hw:onLink hw:S14R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3187 ; hw:vcRatio 0.398 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S15F a hw:TrafficState ; hw:onLink hw:S15F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1566 ; hw:vcRatio 0.196 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S15R a hw:TrafficState ; hw:onLink hw:S15R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 1495 ; hw:vcRatio 0.187 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S16F a hw:TrafficState ; hw:onLink hw:S16F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3319 ; hw:vcRatio 0.553 ; hw:speedKph 98.6 ; hw:los hw:LOS_C .
+hw:TS_BASE_S16R a hw:TrafficState ; hw:onLink hw:S16R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3290 ; hw:vcRatio 0.548 ; hw:speedKph 98.7 ; hw:los hw:LOS_B .
+hw:TS_BASE_S17F a hw:TrafficState ; hw:onLink hw:S17F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 613 ; hw:vcRatio 0.153 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S17R a hw:TrafficState ; hw:onLink hw:S17R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 604 ; hw:vcRatio 0.151 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S18F a hw:TrafficState ; hw:onLink hw:S18F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 5150 ; hw:vcRatio 0.858 ; hw:speedKph 92.5 ; hw:los hw:LOS_D .
+hw:TS_BASE_S18R a hw:TrafficState ; hw:onLink hw:S18R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 5192 ; hw:vcRatio 0.865 ; hw:speedKph 92.2 ; hw:los hw:LOS_D .
+hw:TS_BASE_S19F a hw:TrafficState ; hw:onLink hw:S19F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1027 ; hw:vcRatio 0.257 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_BASE_S19R a hw:TrafficState ; hw:onLink hw:S19R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 999 ; hw:vcRatio 0.25 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_BASE_S20F a hw:TrafficState ; hw:onLink hw:S20F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3965 ; hw:vcRatio 0.991 ; hw:speedKph 87.4 ; hw:los hw:LOS_E .
+hw:TS_BASE_S20R a hw:TrafficState ; hw:onLink hw:S20R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3934 ; hw:vcRatio 0.983 ; hw:speedKph 87.7 ; hw:los hw:LOS_E .
+hw:TS_BASE_S21F a hw:TrafficState ; hw:onLink hw:S21F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3525 ; hw:vcRatio 0.881 ; hw:speedKph 91.7 ; hw:los hw:LOS_D .
+hw:TS_BASE_S21R a hw:TrafficState ; hw:onLink hw:S21R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3492 ; hw:vcRatio 0.873 ; hw:speedKph 92.0 ; hw:los hw:LOS_D .
+hw:TS_BASE_S22F a hw:TrafficState ; hw:onLink hw:S22F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3129 ; hw:vcRatio 0.782 ; hw:speedKph 94.7 ; hw:los hw:LOS_D .
+hw:TS_BASE_S22R a hw:TrafficState ; hw:onLink hw:S22R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3088 ; hw:vcRatio 0.772 ; hw:speedKph 94.9 ; hw:los hw:LOS_D .
+hw:TS_BASE_S23F a hw:TrafficState ; hw:onLink hw:S23F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1892 ; hw:vcRatio 0.473 ; hw:speedKph 99.3 ; hw:los hw:LOS_B .
+hw:TS_BASE_S23R a hw:TrafficState ; hw:onLink hw:S23R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1852 ; hw:vcRatio 0.463 ; hw:speedKph 99.3 ; hw:los hw:LOS_B .
+hw:TS_BASE_S24F a hw:TrafficState ; hw:onLink hw:S24F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3526 ; hw:vcRatio 0.882 ; hw:speedKph 91.7 ; hw:los hw:LOS_D .
+hw:TS_BASE_S24R a hw:TrafficState ; hw:onLink hw:S24R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3470 ; hw:vcRatio 0.868 ; hw:speedKph 92.2 ; hw:los hw:LOS_D .
+hw:TS_BASE_S25F a hw:TrafficState ; hw:onLink hw:S25F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 2255 ; hw:vcRatio 0.564 ; hw:speedKph 98.5 ; hw:los hw:LOS_C .
+hw:TS_BASE_S25R a hw:TrafficState ; hw:onLink hw:S25R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 2219 ; hw:vcRatio 0.555 ; hw:speedKph 98.6 ; hw:los hw:LOS_C .
+hw:TS_BASE_S26F a hw:TrafficState ; hw:onLink hw:S26F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1568 ; hw:vcRatio 0.392 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S26R a hw:TrafficState ; hw:onLink hw:S26R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 1529 ; hw:vcRatio 0.382 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_BASE_S27F a hw:TrafficState ; hw:onLink hw:S27F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 2227 ; hw:vcRatio 0.557 ; hw:speedKph 98.6 ; hw:los hw:LOS_C .
+hw:TS_BASE_S27R a hw:TrafficState ; hw:onLink hw:S27R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 2212 ; hw:vcRatio 0.553 ; hw:speedKph 98.6 ; hw:los hw:LOS_C .
+hw:TS_BASE_S28F a hw:TrafficState ; hw:onLink hw:S28F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 601 ; hw:vcRatio 0.15 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S28R a hw:TrafficState ; hw:onLink hw:S28R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 601 ; hw:vcRatio 0.15 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S29F a hw:TrafficState ; hw:onLink hw:S29F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1417 ; hw:vcRatio 0.354 ; hw:speedKph 99.8 ; hw:los hw:LOS_B .
+hw:TS_BASE_S29R a hw:TrafficState ; hw:onLink hw:S29R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1417 ; hw:vcRatio 0.354 ; hw:speedKph 99.8 ; hw:los hw:LOS_B .
+hw:TS_BASE_S30F a hw:TrafficState ; hw:onLink hw:S30F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1762 ; hw:vcRatio 0.441 ; hw:speedKph 99.4 ; hw:los hw:LOS_B .
+hw:TS_BASE_S30R a hw:TrafficState ; hw:onLink hw:S30R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1762 ; hw:vcRatio 0.441 ; hw:speedKph 99.4 ; hw:los hw:LOS_B .
+hw:TS_BASE_S31F a hw:TrafficState ; hw:onLink hw:S31F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 5159 ; hw:vcRatio 0.86 ; hw:speedKph 92.4 ; hw:los hw:LOS_D .
+hw:TS_BASE_S31R a hw:TrafficState ; hw:onLink hw:S31R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 5191 ; hw:vcRatio 0.865 ; hw:speedKph 92.2 ; hw:los hw:LOS_D .
+hw:TS_BASE_S32F a hw:TrafficState ; hw:onLink hw:S32F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 568 ; hw:vcRatio 0.142 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S32R a hw:TrafficState ; hw:onLink hw:S32R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 558 ; hw:vcRatio 0.14 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S33F a hw:TrafficState ; hw:onLink hw:S33F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 434 ; hw:vcRatio 0.109 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S33R a hw:TrafficState ; hw:onLink hw:S33R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 435 ; hw:vcRatio 0.109 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S34F a hw:TrafficState ; hw:onLink hw:S34F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 393 ; hw:vcRatio 0.098 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S34R a hw:TrafficState ; hw:onLink hw:S34R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 382 ; hw:vcRatio 0.095 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S35F a hw:TrafficState ; hw:onLink hw:S35F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1581 ; hw:vcRatio 0.395 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S35R a hw:TrafficState ; hw:onLink hw:S35R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 1565 ; hw:vcRatio 0.391 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S36F a hw:TrafficState ; hw:onLink hw:S36F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 335 ; hw:vcRatio 0.084 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S36R a hw:TrafficState ; hw:onLink hw:S36R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 335 ; hw:vcRatio 0.084 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S37F a hw:TrafficState ; hw:onLink hw:S37F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 2482 ; hw:vcRatio 0.414 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S37R a hw:TrafficState ; hw:onLink hw:S37R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 2482 ; hw:vcRatio 0.414 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_BASE_S38F a hw:TrafficState ; hw:onLink hw:S38F ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 2356 ; hw:vcRatio 0.589 ; hw:speedKph 98.2 ; hw:los hw:LOS_C .
+hw:TS_BASE_S38R a hw:TrafficState ; hw:onLink hw:S38R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 2409 ; hw:vcRatio 0.602 ; hw:speedKph 98.1 ; hw:los hw:LOS_C .
+hw:TS_BASE_S39F a hw:TrafficState ; hw:onLink hw:S39F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1341 ; hw:vcRatio 0.335 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_BASE_S39R a hw:TrafficState ; hw:onLink hw:S39R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1341 ; hw:vcRatio 0.335 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_BASE_S40F a hw:TrafficState ; hw:onLink hw:S40F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1384 ; hw:vcRatio 0.346 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_BASE_S40R a hw:TrafficState ; hw:onLink hw:S40R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1382 ; hw:vcRatio 0.346 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_BASE_S41F a hw:TrafficState ; hw:onLink hw:S41F ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 3233 ; hw:vcRatio 0.808 ; hw:speedKph 94.0 ; hw:los hw:LOS_D .
+hw:TS_BASE_S41R a hw:TrafficState ; hw:onLink hw:S41R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 3305 ; hw:vcRatio 0.826 ; hw:speedKph 93.5 ; hw:los hw:LOS_D .
+hw:TS_BASE_S42F a hw:TrafficState ; hw:onLink hw:S42F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 395 ; hw:vcRatio 0.099 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S42R a hw:TrafficState ; hw:onLink hw:S42R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 395 ; hw:vcRatio 0.099 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S43F a hw:TrafficState ; hw:onLink hw:S43F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1545 ; hw:vcRatio 0.386 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_BASE_S43R a hw:TrafficState ; hw:onLink hw:S43R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 1525 ; hw:vcRatio 0.381 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_BASE_S44F a hw:TrafficState ; hw:onLink hw:S44F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 382 ; hw:vcRatio 0.095 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S44R a hw:TrafficState ; hw:onLink hw:S44R ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 382 ; hw:vcRatio 0.095 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_BASE_S45F a hw:TrafficState ; hw:onLink hw:S45F ; hw:inScenario hw:SC_BASE ; hw:hour 17 ; hw:volumeVph 1045 ; hw:vcRatio 0.261 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_BASE_S45R a hw:TrafficState ; hw:onLink hw:S45R ; hw:inScenario hw:SC_BASE ; hw:hour 7 ; hw:volumeVph 1042 ; hw:vcRatio 0.261 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S01F a hw:TrafficState ; hw:onLink hw:S01F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3898 ; hw:vcRatio 0.487 ; hw:speedKph 99.2 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S01R a hw:TrafficState ; hw:onLink hw:S01R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3769 ; hw:vcRatio 0.471 ; hw:speedKph 99.3 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S02F a hw:TrafficState ; hw:onLink hw:S02F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 7546 ; hw:vcRatio 0.755 ; hw:speedKph 95.4 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S02R a hw:TrafficState ; hw:onLink hw:S02R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 7965 ; hw:vcRatio 0.796 ; hw:speedKph 94.3 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S03F a hw:TrafficState ; hw:onLink hw:S03F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 8482 ; hw:vcRatio 1.06 ; hw:speedKph 84.1 ; hw:los hw:LOS_F .
+hw:TS_INCIDENT_S03R a hw:TrafficState ; hw:onLink hw:S03R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 9390 ; hw:vcRatio 1.174 ; hw:speedKph 77.8 ; hw:los hw:LOS_F .
+hw:TS_INCIDENT_S04F a hw:TrafficState ; hw:onLink hw:S04F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 5611 ; hw:vcRatio 1.403 ; hw:speedKph 63.3 ; hw:los hw:LOS_F .
+hw:TS_INCIDENT_S04R a hw:TrafficState ; hw:onLink hw:S04R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 6540 ; hw:vcRatio 0.817 ; hw:speedKph 93.7 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S05F a hw:TrafficState ; hw:onLink hw:S05F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 6505 ; hw:vcRatio 0.813 ; hw:speedKph 93.8 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S05R a hw:TrafficState ; hw:onLink hw:S05R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 6884 ; hw:vcRatio 0.861 ; hw:speedKph 92.4 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S06F a hw:TrafficState ; hw:onLink hw:S06F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3494 ; hw:vcRatio 0.582 ; hw:speedKph 98.3 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S06R a hw:TrafficState ; hw:onLink hw:S06R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3473 ; hw:vcRatio 0.579 ; hw:speedKph 98.3 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S07F a hw:TrafficState ; hw:onLink hw:S07F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 4102 ; hw:vcRatio 0.513 ; hw:speedKph 99.0 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S07R a hw:TrafficState ; hw:onLink hw:S07R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 4092 ; hw:vcRatio 0.511 ; hw:speedKph 99.0 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S08F a hw:TrafficState ; hw:onLink hw:S08F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2364 ; hw:vcRatio 0.394 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S08R a hw:TrafficState ; hw:onLink hw:S08R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 2303 ; hw:vcRatio 0.384 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S09F a hw:TrafficState ; hw:onLink hw:S09F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2126 ; hw:vcRatio 0.354 ; hw:speedKph 99.8 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S09R a hw:TrafficState ; hw:onLink hw:S09R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 2067 ; hw:vcRatio 0.344 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S10F a hw:TrafficState ; hw:onLink hw:S10F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 4178 ; hw:vcRatio 0.522 ; hw:speedKph 98.9 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S10R a hw:TrafficState ; hw:onLink hw:S10R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 4150 ; hw:vcRatio 0.519 ; hw:speedKph 98.9 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S11F a hw:TrafficState ; hw:onLink hw:S11F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1759 ; hw:vcRatio 0.293 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S11R a hw:TrafficState ; hw:onLink hw:S11R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 1735 ; hw:vcRatio 0.289 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S12F a hw:TrafficState ; hw:onLink hw:S12F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1148 ; hw:vcRatio 0.287 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S12R a hw:TrafficState ; hw:onLink hw:S12R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 1129 ; hw:vcRatio 0.282 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S13F a hw:TrafficState ; hw:onLink hw:S13F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 458 ; hw:vcRatio 0.115 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S13R a hw:TrafficState ; hw:onLink hw:S13R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 449 ; hw:vcRatio 0.112 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S14F a hw:TrafficState ; hw:onLink hw:S14F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3278 ; hw:vcRatio 0.41 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S14R a hw:TrafficState ; hw:onLink hw:S14R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3187 ; hw:vcRatio 0.398 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S15F a hw:TrafficState ; hw:onLink hw:S15F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2123 ; hw:vcRatio 0.265 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S15R a hw:TrafficState ; hw:onLink hw:S15R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 1495 ; hw:vcRatio 0.187 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S16F a hw:TrafficState ; hw:onLink hw:S16F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3319 ; hw:vcRatio 0.553 ; hw:speedKph 98.6 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S16R a hw:TrafficState ; hw:onLink hw:S16R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3290 ; hw:vcRatio 0.548 ; hw:speedKph 98.7 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S17F a hw:TrafficState ; hw:onLink hw:S17F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 613 ; hw:vcRatio 0.153 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S17R a hw:TrafficState ; hw:onLink hw:S17R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 604 ; hw:vcRatio 0.151 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S18F a hw:TrafficState ; hw:onLink hw:S18F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 5537 ; hw:vcRatio 0.923 ; hw:speedKph 90.2 ; hw:los hw:LOS_E .
+hw:TS_INCIDENT_S18R a hw:TrafficState ; hw:onLink hw:S18R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 5192 ; hw:vcRatio 0.865 ; hw:speedKph 92.2 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S19F a hw:TrafficState ; hw:onLink hw:S19F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1501 ; hw:vcRatio 0.375 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S19R a hw:TrafficState ; hw:onLink hw:S19R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 999 ; hw:vcRatio 0.25 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S20F a hw:TrafficState ; hw:onLink hw:S20F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 4425 ; hw:vcRatio 1.106 ; hw:speedKph 81.7 ; hw:los hw:LOS_F .
+hw:TS_INCIDENT_S20R a hw:TrafficState ; hw:onLink hw:S20R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3934 ; hw:vcRatio 0.983 ; hw:speedKph 87.7 ; hw:los hw:LOS_E .
+hw:TS_INCIDENT_S21F a hw:TrafficState ; hw:onLink hw:S21F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3985 ; hw:vcRatio 0.996 ; hw:speedKph 87.1 ; hw:los hw:LOS_E .
+hw:TS_INCIDENT_S21R a hw:TrafficState ; hw:onLink hw:S21R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3492 ; hw:vcRatio 0.873 ; hw:speedKph 92.0 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S22F a hw:TrafficState ; hw:onLink hw:S22F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3129 ; hw:vcRatio 0.782 ; hw:speedKph 94.7 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S22R a hw:TrafficState ; hw:onLink hw:S22R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3088 ; hw:vcRatio 0.772 ; hw:speedKph 94.9 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S23F a hw:TrafficState ; hw:onLink hw:S23F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1876 ; hw:vcRatio 0.469 ; hw:speedKph 99.3 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S23R a hw:TrafficState ; hw:onLink hw:S23R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1870 ; hw:vcRatio 0.468 ; hw:speedKph 99.3 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S24F a hw:TrafficState ; hw:onLink hw:S24F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3526 ; hw:vcRatio 0.882 ; hw:speedKph 91.7 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S24R a hw:TrafficState ; hw:onLink hw:S24R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3470 ; hw:vcRatio 0.868 ; hw:speedKph 92.2 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S25F a hw:TrafficState ; hw:onLink hw:S25F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2255 ; hw:vcRatio 0.564 ; hw:speedKph 98.5 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S25R a hw:TrafficState ; hw:onLink hw:S25R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 2219 ; hw:vcRatio 0.555 ; hw:speedKph 98.6 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S26F a hw:TrafficState ; hw:onLink hw:S26F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1568 ; hw:vcRatio 0.392 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S26R a hw:TrafficState ; hw:onLink hw:S26R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 1529 ; hw:vcRatio 0.382 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S27F a hw:TrafficState ; hw:onLink hw:S27F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2260 ; hw:vcRatio 0.565 ; hw:speedKph 98.5 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S27R a hw:TrafficState ; hw:onLink hw:S27R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 2212 ; hw:vcRatio 0.553 ; hw:speedKph 98.6 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S28F a hw:TrafficState ; hw:onLink hw:S28F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 601 ; hw:vcRatio 0.15 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S28R a hw:TrafficState ; hw:onLink hw:S28R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 601 ; hw:vcRatio 0.15 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S29F a hw:TrafficState ; hw:onLink hw:S29F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1417 ; hw:vcRatio 0.354 ; hw:speedKph 99.8 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S29R a hw:TrafficState ; hw:onLink hw:S29R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1417 ; hw:vcRatio 0.354 ; hw:speedKph 99.8 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S30F a hw:TrafficState ; hw:onLink hw:S30F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1762 ; hw:vcRatio 0.441 ; hw:speedKph 99.4 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S30R a hw:TrafficState ; hw:onLink hw:S30R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1762 ; hw:vcRatio 0.441 ; hw:speedKph 99.4 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S31F a hw:TrafficState ; hw:onLink hw:S31F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 5159 ; hw:vcRatio 0.86 ; hw:speedKph 92.4 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S31R a hw:TrafficState ; hw:onLink hw:S31R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 5191 ; hw:vcRatio 0.865 ; hw:speedKph 92.2 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S32F a hw:TrafficState ; hw:onLink hw:S32F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 568 ; hw:vcRatio 0.142 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S32R a hw:TrafficState ; hw:onLink hw:S32R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 558 ; hw:vcRatio 0.14 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S33F a hw:TrafficState ; hw:onLink hw:S33F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 434 ; hw:vcRatio 0.109 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S33R a hw:TrafficState ; hw:onLink hw:S33R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 435 ; hw:vcRatio 0.109 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S34F a hw:TrafficState ; hw:onLink hw:S34F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 377 ; hw:vcRatio 0.094 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S34R a hw:TrafficState ; hw:onLink hw:S34R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 382 ; hw:vcRatio 0.095 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S35F a hw:TrafficState ; hw:onLink hw:S35F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1581 ; hw:vcRatio 0.395 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S35R a hw:TrafficState ; hw:onLink hw:S35R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 1565 ; hw:vcRatio 0.391 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S36F a hw:TrafficState ; hw:onLink hw:S36F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 335 ; hw:vcRatio 0.084 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S36R a hw:TrafficState ; hw:onLink hw:S36R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 335 ; hw:vcRatio 0.084 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S37F a hw:TrafficState ; hw:onLink hw:S37F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2482 ; hw:vcRatio 0.414 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S37R a hw:TrafficState ; hw:onLink hw:S37R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2482 ; hw:vcRatio 0.414 ; hw:speedKph 99.6 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S38F a hw:TrafficState ; hw:onLink hw:S38F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 2356 ; hw:vcRatio 0.589 ; hw:speedKph 98.2 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S38R a hw:TrafficState ; hw:onLink hw:S38R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 2409 ; hw:vcRatio 0.602 ; hw:speedKph 98.1 ; hw:los hw:LOS_C .
+hw:TS_INCIDENT_S39F a hw:TrafficState ; hw:onLink hw:S39F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1341 ; hw:vcRatio 0.335 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S39R a hw:TrafficState ; hw:onLink hw:S39R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1341 ; hw:vcRatio 0.335 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S40F a hw:TrafficState ; hw:onLink hw:S40F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1389 ; hw:vcRatio 0.347 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S40R a hw:TrafficState ; hw:onLink hw:S40R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1382 ; hw:vcRatio 0.346 ; hw:speedKph 99.8 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S41F a hw:TrafficState ; hw:onLink hw:S41F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 3233 ; hw:vcRatio 0.808 ; hw:speedKph 94.0 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S41R a hw:TrafficState ; hw:onLink hw:S41R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 3305 ; hw:vcRatio 0.826 ; hw:speedKph 93.5 ; hw:los hw:LOS_D .
+hw:TS_INCIDENT_S42F a hw:TrafficState ; hw:onLink hw:S42F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 395 ; hw:vcRatio 0.099 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S42R a hw:TrafficState ; hw:onLink hw:S42R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 395 ; hw:vcRatio 0.099 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S43F a hw:TrafficState ; hw:onLink hw:S43F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1545 ; hw:vcRatio 0.386 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S43R a hw:TrafficState ; hw:onLink hw:S43R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 1525 ; hw:vcRatio 0.381 ; hw:speedKph 99.7 ; hw:los hw:LOS_B .
+hw:TS_INCIDENT_S44F a hw:TrafficState ; hw:onLink hw:S44F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 385 ; hw:vcRatio 0.096 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S44R a hw:TrafficState ; hw:onLink hw:S44R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 382 ; hw:vcRatio 0.095 ; hw:speedKph 100.0 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S45F a hw:TrafficState ; hw:onLink hw:S45F ; hw:inScenario hw:SC_INCIDENT ; hw:hour 17 ; hw:volumeVph 1045 ; hw:vcRatio 0.261 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+hw:TS_INCIDENT_S45R a hw:TrafficState ; hw:onLink hw:S45R ; hw:inScenario hw:SC_INCIDENT ; hw:hour 7 ; hw:volumeVph 1042 ; hw:vcRatio 0.261 ; hw:speedKph 99.9 ; hw:los hw:LOS_A .
+
+### 기종점 수요 (하루, 가상)
+hw:D_ANDONG_BUSAN a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 795 .
+hw:D_ANDONG_CHANGWON a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 324 .
+hw:D_ANDONG_CHEONAN a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 257 .
+hw:D_ANDONG_CHEONGJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 387 .
+hw:D_ANDONG_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 101 .
+hw:D_ANDONG_CHUNGJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 182 .
+hw:D_ANDONG_DAEGU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 1408 .
+hw:D_ANDONG_DAEJEON a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 565 .
+hw:D_ANDONG_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 107 .
+hw:D_ANDONG_GIMCHEON a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 161 .
+hw:D_ANDONG_GUNSAN a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 83 .
+hw:D_ANDONG_GWANGJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 256 .
+hw:D_ANDONG_GYEONGJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 189 .
+hw:D_ANDONG_INCHEON a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 525 .
+hw:D_ANDONG_JEONJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 200 .
+hw:D_ANDONG_JINJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 123 .
+hw:D_ANDONG_MOKPO a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 43 .
+hw:D_ANDONG_NONSAN a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 58 .
+hw:D_ANDONG_POHANG a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 374 .
+hw:D_ANDONG_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 201 .
+hw:D_ANDONG_SEJONG a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 178 .
+hw:D_ANDONG_SEOSAN a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 56 .
+hw:D_ANDONG_SEOUL a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 1534 .
+hw:D_ANDONG_SUNCHEON a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 76 .
+hw:D_ANDONG_SUWON a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 329 .
+hw:D_ANDONG_ULSAN a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 430 .
+hw:D_ANDONG_WONJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 201 .
+hw:D_ANDONG_YEOJU a hw:Demand ; hw:originZone hw:Z_ANDONG ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 67 .
+hw:D_BUSAN_ANDONG a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 795 .
+hw:D_BUSAN_CHANGWON a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 17513 .
+hw:D_BUSAN_CHEONAN a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 1493 .
+hw:D_BUSAN_CHEONGJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 2039 .
+hw:D_BUSAN_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 536 .
+hw:D_BUSAN_CHUNGJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 643 .
+hw:D_BUSAN_DAEGU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 13934 .
+hw:D_BUSAN_DAEJEON a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 3494 .
+hw:D_BUSAN_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 478 .
+hw:D_BUSAN_GIMCHEON a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 897 .
+hw:D_BUSAN_GUNSAN a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 767 .
+hw:D_BUSAN_GWANGJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 3418 .
+hw:D_BUSAN_GYEONGJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 2824 .
+hw:D_BUSAN_INCHEON a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 3379 .
+hw:D_BUSAN_JEONJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 1950 .
+hw:D_BUSAN_JINJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 3003 .
+hw:D_BUSAN_MOKPO a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 591 .
+hw:D_BUSAN_NONSAN a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 443 .
+hw:D_BUSAN_POHANG a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 3557 .
+hw:D_BUSAN_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 1187 .
+hw:D_BUSAN_SEJONG a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 1094 .
+hw:D_BUSAN_SEOSAN a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 408 .
+hw:D_BUSAN_SEOUL a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 9009 .
+hw:D_BUSAN_SUNCHEON a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 1353 .
+hw:D_BUSAN_SUWON a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 1881 .
+hw:D_BUSAN_ULSAN a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 16393 .
+hw:D_BUSAN_WONJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 825 .
+hw:D_BUSAN_YEOJU a hw:Demand ; hw:originZone hw:Z_BUSAN ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 309 .
+hw:D_CHANGWON_ANDONG a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 324 .
+hw:D_CHANGWON_BUSAN a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 17513 .
+hw:D_CHANGWON_CHEONAN a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 658 .
+hw:D_CHANGWON_CHEONGJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 912 .
+hw:D_CHANGWON_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 219 .
+hw:D_CHANGWON_CHUNGJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 273 .
+hw:D_CHANGWON_DAEGU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 6758 .
+hw:D_CHANGWON_DAEJEON a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 1619 .
+hw:D_CHANGWON_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 187 .
+hw:D_CHANGWON_GIMCHEON a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 433 .
+hw:D_CHANGWON_GUNSAN a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 359 .
+hw:D_CHANGWON_GWANGJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1660 .
+hw:D_CHANGWON_GYEONGJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 923 .
+hw:D_CHANGWON_INCHEON a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1430 .
+hw:D_CHANGWON_JEONJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 956 .
+hw:D_CHANGWON_JINJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 2158 .
+hw:D_CHANGWON_MOKPO a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 272 .
+hw:D_CHANGWON_NONSAN a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 208 .
+hw:D_CHANGWON_POHANG a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 1191 .
+hw:D_CHANGWON_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 515 .
+hw:D_CHANGWON_SEJONG a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 497 .
+hw:D_CHANGWON_SEOSAN a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 179 .
+hw:D_CHANGWON_SEOUL a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 3792 .
+hw:D_CHANGWON_SUNCHEON a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 713 .
+hw:D_CHANGWON_SUWON a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 801 .
+hw:D_CHANGWON_ULSAN a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 3883 .
+hw:D_CHANGWON_WONJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 342 .
+hw:D_CHANGWON_YEOJU a hw:Demand ; hw:originZone hw:Z_CHANGWON ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 130 .
+hw:D_CHEONAN_ANDONG a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 257 .
+hw:D_CHEONAN_BUSAN a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 1493 .
+hw:D_CHEONAN_CHANGWON a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 658 .
+hw:D_CHEONAN_CHEONGJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 4448 .
+hw:D_CHEONAN_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 458 .
+hw:D_CHEONAN_CHUNGJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 736 .
+hw:D_CHEONAN_DAEGU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 1897 .
+hw:D_CHEONAN_DAEJEON a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 4890 .
+hw:D_CHEONAN_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 232 .
+hw:D_CHEONAN_GIMCHEON a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 324 .
+hw:D_CHEONAN_GUNSAN a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 589 .
+hw:D_CHEONAN_GWANGJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1088 .
+hw:D_CHEONAN_GYEONGJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 226 .
+hw:D_CHEONAN_INCHEON a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 4980 .
+hw:D_CHEONAN_JEONJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 1077 .
+hw:D_CHEONAN_JINJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 320 .
+hw:D_CHEONAN_MOKPO a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 182 .
+hw:D_CHEONAN_NONSAN a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 500 .
+hw:D_CHEONAN_POHANG a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 390 .
+hw:D_CHEONAN_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 3366 .
+hw:D_CHEONAN_SEJONG a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 2385 .
+hw:D_CHEONAN_SEOSAN a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 729 .
+hw:D_CHEONAN_SEOUL a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 13647 .
+hw:D_CHEONAN_SUNCHEON a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 253 .
+hw:D_CHEONAN_SUWON a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 4113 .
+hw:D_CHEONAN_ULSAN a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 649 .
+hw:D_CHEONAN_WONJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 842 .
+hw:D_CHEONAN_YEOJU a hw:Demand ; hw:originZone hw:Z_CHEONAN ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 446 .
+hw:D_CHEONGJU_ANDONG a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 387 .
+hw:D_CHEONGJU_BUSAN a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 2039 .
+hw:D_CHEONGJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 912 .
+hw:D_CHEONGJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 4448 .
+hw:D_CHEONGJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 488 .
+hw:D_CHEONGJU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 1109 .
+hw:D_CHEONGJU_DAEGU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 2846 .
+hw:D_CHEONGJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 7965 .
+hw:D_CHEONGJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 285 .
+hw:D_CHEONGJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 554 .
+hw:D_CHEONGJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 703 .
+hw:D_CHEONGJU_GWANGJU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1372 .
+hw:D_CHEONGJU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 319 .
+hw:D_CHEONGJU_INCHEON a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 4103 .
+hw:D_CHEONGJU_JEONJU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 1474 .
+hw:D_CHEONGJU_JINJU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 442 .
+hw:D_CHEONGJU_MOKPO a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 221 .
+hw:D_CHEONGJU_NONSAN a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 693 .
+hw:D_CHEONGJU_POHANG a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 546 .
+hw:D_CHEONGJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 2821 .
+hw:D_CHEONGJU_SEJONG a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 2786 .
+hw:D_CHEONGJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 563 .
+hw:D_CHEONGJU_SEOUL a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 11652 .
+hw:D_CHEONGJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 334 .
+hw:D_CHEONGJU_SUWON a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 3088 .
+hw:D_CHEONGJU_ULSAN a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 895 .
+hw:D_CHEONGJU_WONJU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 1004 .
+hw:D_CHEONGJU_YEOJU a hw:Demand ; hw:originZone hw:Z_CHEONGJU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 474 .
+hw:D_CHUNCHEON_ANDONG a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 101 .
+hw:D_CHUNCHEON_BUSAN a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 536 .
+hw:D_CHUNCHEON_CHANGWON a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 219 .
+hw:D_CHUNCHEON_CHEONAN a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 458 .
+hw:D_CHUNCHEON_CHEONGJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 488 .
+hw:D_CHUNCHEON_CHUNGJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 235 .
+hw:D_CHUNCHEON_DAEGU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 603 .
+hw:D_CHUNCHEON_DAEJEON a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 593 .
+hw:D_CHUNCHEON_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 233 .
+hw:D_CHUNCHEON_GIMCHEON a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 81 .
+hw:D_CHUNCHEON_GUNSAN a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 108 .
+hw:D_CHUNCHEON_GWANGJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 286 .
+hw:D_CHUNCHEON_GYEONGJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 86 .
+hw:D_CHUNCHEON_INCHEON a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1961 .
+hw:D_CHUNCHEON_JEONJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 212 .
+hw:D_CHUNCHEON_JINJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 96 .
+hw:D_CHUNCHEON_MOKPO a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 53 .
+hw:D_CHUNCHEON_NONSAN a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 69 .
+hw:D_CHUNCHEON_POHANG a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 158 .
+hw:D_CHUNCHEON_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 465 .
+hw:D_CHUNCHEON_SEJONG a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 226 .
+hw:D_CHUNCHEON_SEOSAN a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 115 .
+hw:D_CHUNCHEON_SEOUL a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 7334 .
+hw:D_CHUNCHEON_SUNCHEON a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 73 .
+hw:D_CHUNCHEON_SUWON a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 1143 .
+hw:D_CHUNCHEON_ULSAN a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 246 .
+hw:D_CHUNCHEON_WONJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 646 .
+hw:D_CHUNCHEON_YEOJU a hw:Demand ; hw:originZone hw:Z_CHUNCHEON ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 239 .
+hw:D_CHUNGJU_ANDONG a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 182 .
+hw:D_CHUNGJU_BUSAN a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 643 .
+hw:D_CHUNGJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 273 .
+hw:D_CHUNGJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 736 .
+hw:D_CHUNGJU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 1109 .
+hw:D_CHUNGJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 235 .
+hw:D_CHUNGJU_DAEGU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 901 .
+hw:D_CHUNGJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 1105 .
+hw:D_CHUNGJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 149 .
+hw:D_CHUNGJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 149 .
+hw:D_CHUNGJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 133 .
+hw:D_CHUNGJU_GWANGJU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 329 .
+hw:D_CHUNGJU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 112 .
+hw:D_CHUNGJU_INCHEON a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1230 .
+hw:D_CHUNGJU_JEONJU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 286 .
+hw:D_CHUNGJU_JINJU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 120 .
+hw:D_CHUNGJU_MOKPO a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 56 .
+hw:D_CHUNGJU_NONSAN a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 101 .
+hw:D_CHUNGJU_POHANG a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 202 .
+hw:D_CHUNGJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 575 .
+hw:D_CHUNGJU_SEJONG a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 404 .
+hw:D_CHUNGJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 115 .
+hw:D_CHUNGJU_SEOUL a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 4044 .
+hw:D_CHUNGJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 86 .
+hw:D_CHUNGJU_SUWON a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 962 .
+hw:D_CHUNGJU_ULSAN a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 301 .
+hw:D_CHUNGJU_WONJU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 853 .
+hw:D_CHUNGJU_YEOJU a hw:Demand ; hw:originZone hw:Z_CHUNGJU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 296 .
+hw:D_DAEGU_ANDONG a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 1408 .
+hw:D_DAEGU_BUSAN a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 13934 .
+hw:D_DAEGU_CHANGWON a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 6758 .
+hw:D_DAEGU_CHEONAN a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 1897 .
+hw:D_DAEGU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 2846 .
+hw:D_DAEGU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 603 .
+hw:D_DAEGU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 901 .
+hw:D_DAEGU_DAEJEON a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 5011 .
+hw:D_DAEGU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 534 .
+hw:D_DAEGU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 2205 .
+hw:D_DAEGU_GUNSAN a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 858 .
+hw:D_DAEGU_GWANGJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 3091 .
+hw:D_DAEGU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 2931 .
+hw:D_DAEGU_INCHEON a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 3754 .
+hw:D_DAEGU_JEONJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 2319 .
+hw:D_DAEGU_JINJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 2241 .
+hw:D_DAEGU_MOKPO a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 492 .
+hw:D_DAEGU_NONSAN a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 564 .
+hw:D_DAEGU_POHANG a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 3914 .
+hw:D_DAEGU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 1442 .
+hw:D_DAEGU_SEJONG a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 1478 .
+hw:D_DAEGU_SEOSAN a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 456 .
+hw:D_DAEGU_SEOUL a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 10293 .
+hw:D_DAEGU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 1063 .
+hw:D_DAEGU_SUWON a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 2221 .
+hw:D_DAEGU_ULSAN a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 6929 .
+hw:D_DAEGU_WONJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 1038 .
+hw:D_DAEGU_YEOJU a hw:Demand ; hw:originZone hw:Z_DAEGU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 385 .
+hw:D_DAEJEON_ANDONG a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 565 .
+hw:D_DAEJEON_BUSAN a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 3494 .
+hw:D_DAEJEON_CHANGWON a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 1619 .
+hw:D_DAEJEON_CHEONAN a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 4890 .
+hw:D_DAEJEON_CHEONGJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 7965 .
+hw:D_DAEJEON_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 593 .
+hw:D_DAEJEON_CHUNGJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 1105 .
+hw:D_DAEJEON_DAEGU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 5011 .
+hw:D_DAEJEON_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 375 .
+hw:D_DAEJEON_GIMCHEON a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 1079 .
+hw:D_DAEJEON_GUNSAN a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 1467 .
+hw:D_DAEJEON_GWANGJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 2624 .
+hw:D_DAEJEON_GYEONGJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 522 .
+hw:D_DAEJEON_INCHEON a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 4983 .
+hw:D_DAEJEON_JEONJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 3493 .
+hw:D_DAEJEON_JINJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 829 .
+hw:D_DAEJEON_MOKPO a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 398 .
+hw:D_DAEJEON_NONSAN a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 1663 .
+hw:D_DAEJEON_POHANG a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 871 .
+hw:D_DAEJEON_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 2772 .
+hw:D_DAEJEON_SEJONG a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 4271 .
+hw:D_DAEJEON_SEOSAN a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 786 .
+hw:D_DAEJEON_SEOUL a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 13367 .
+hw:D_DAEJEON_SUNCHEON a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 630 .
+hw:D_DAEJEON_SUWON a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 3292 .
+hw:D_DAEJEON_ULSAN a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 1488 .
+hw:D_DAEJEON_WONJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 1105 .
+hw:D_DAEJEON_YEOJU a hw:Demand ; hw:originZone hw:Z_DAEJEON ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 486 .
+hw:D_GANGNEUNG_ANDONG a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 107 .
+hw:D_GANGNEUNG_BUSAN a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 478 .
+hw:D_GANGNEUNG_CHANGWON a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 187 .
+hw:D_GANGNEUNG_CHEONAN a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 232 .
+hw:D_GANGNEUNG_CHEONGJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 285 .
+hw:D_GANGNEUNG_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 233 .
+hw:D_GANGNEUNG_CHUNGJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 149 .
+hw:D_GANGNEUNG_DAEGU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 534 .
+hw:D_GANGNEUNG_DAEJEON a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 375 .
+hw:D_GANGNEUNG_GIMCHEON a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 64 .
+hw:D_GANGNEUNG_GUNSAN a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 67 .
+hw:D_GANGNEUNG_GWANGJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 199 .
+hw:D_GANGNEUNG_GYEONGJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 85 .
+hw:D_GANGNEUNG_INCHEON a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 697 .
+hw:D_GANGNEUNG_JEONJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 142 .
+hw:D_GANGNEUNG_JINJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 76 .
+hw:D_GANGNEUNG_MOKPO a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 37 .
+hw:D_GANGNEUNG_NONSAN a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 43 .
+hw:D_GANGNEUNG_POHANG a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 164 .
+hw:D_GANGNEUNG_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 208 .
+hw:D_GANGNEUNG_SEJONG a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 133 .
+hw:D_GANGNEUNG_SEOSAN a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 57 .
+hw:D_GANGNEUNG_SEOUL a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 2161 .
+hw:D_GANGNEUNG_SUNCHEON a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 54 .
+hw:D_GANGNEUNG_SUWON a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 407 .
+hw:D_GANGNEUNG_ULSAN a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 234 .
+hw:D_GANGNEUNG_WONJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 301 .
+hw:D_GANGNEUNG_YEOJU a hw:Demand ; hw:originZone hw:Z_GANGNEUNG ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 88 .
+hw:D_GIMCHEON_ANDONG a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 161 .
+hw:D_GIMCHEON_BUSAN a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 897 .
+hw:D_GIMCHEON_CHANGWON a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 433 .
+hw:D_GIMCHEON_CHEONAN a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 324 .
+hw:D_GIMCHEON_CHEONGJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 554 .
+hw:D_GIMCHEON_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 81 .
+hw:D_GIMCHEON_CHUNGJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 149 .
+hw:D_GIMCHEON_DAEGU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 2205 .
+hw:D_GIMCHEON_DAEJEON a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 1079 .
+hw:D_GIMCHEON_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 64 .
+hw:D_GIMCHEON_GUNSAN a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 133 .
+hw:D_GIMCHEON_GWANGJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 388 .
+hw:D_GIMCHEON_GYEONGJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 153 .
+hw:D_GIMCHEON_INCHEON a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 537 .
+hw:D_GIMCHEON_JEONJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 376 .
+hw:D_GIMCHEON_JINJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 199 .
+hw:D_GIMCHEON_MOKPO a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 59 .
+hw:D_GIMCHEON_NONSAN a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 102 .
+hw:D_GIMCHEON_POHANG a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 244 .
+hw:D_GIMCHEON_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 230 .
+hw:D_GIMCHEON_SEJONG a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 285 .
+hw:D_GIMCHEON_SEOSAN a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 69 .
+hw:D_GIMCHEON_SEOUL a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 1484 .
+hw:D_GIMCHEON_SUNCHEON a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 116 .
+hw:D_GIMCHEON_SUWON a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 334 .
+hw:D_GIMCHEON_ULSAN a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 403 .
+hw:D_GIMCHEON_WONJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 151 .
+hw:D_GIMCHEON_YEOJU a hw:Demand ; hw:originZone hw:Z_GIMCHEON ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 58 .
+hw:D_GUNSAN_ANDONG a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 83 .
+hw:D_GUNSAN_BUSAN a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 767 .
+hw:D_GUNSAN_CHANGWON a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 359 .
+hw:D_GUNSAN_CHEONAN a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 589 .
+hw:D_GUNSAN_CHEONGJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 703 .
+hw:D_GUNSAN_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 108 .
+hw:D_GUNSAN_CHUNGJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 133 .
+hw:D_GUNSAN_DAEGU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 858 .
+hw:D_GUNSAN_DAEJEON a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 1467 .
+hw:D_GUNSAN_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 67 .
+hw:D_GUNSAN_GIMCHEON a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 133 .
+hw:D_GUNSAN_GWANGJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1191 .
+hw:D_GUNSAN_GYEONGJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 99 .
+hw:D_GUNSAN_INCHEON a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1034 .
+hw:D_GUNSAN_JEONJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 1675 .
+hw:D_GUNSAN_JINJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 206 .
+hw:D_GUNSAN_MOKPO a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 166 .
+hw:D_GUNSAN_NONSAN a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 409 .
+hw:D_GUNSAN_POHANG a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 162 .
+hw:D_GUNSAN_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 433 .
+hw:D_GUNSAN_SEJONG a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 508 .
+hw:D_GUNSAN_SEOSAN a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 216 .
+hw:D_GUNSAN_SEOUL a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 2478 .
+hw:D_GUNSAN_SUNCHEON a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 203 .
+hw:D_GUNSAN_SUWON a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 563 .
+hw:D_GUNSAN_ULSAN a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 302 .
+hw:D_GUNSAN_WONJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 165 .
+hw:D_GUNSAN_YEOJU a hw:Demand ; hw:originZone hw:Z_GUNSAN ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 72 .
+hw:D_GWANGJU_ANDONG a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 256 .
+hw:D_GWANGJU_BUSAN a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 3418 .
+hw:D_GWANGJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 1660 .
+hw:D_GWANGJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 1088 .
+hw:D_GWANGJU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 1372 .
+hw:D_GWANGJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 286 .
+hw:D_GWANGJU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 329 .
+hw:D_GWANGJU_DAEGU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 3091 .
+hw:D_GWANGJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 2624 .
+hw:D_GWANGJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 199 .
+hw:D_GWANGJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 388 .
+hw:D_GWANGJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 1191 .
+hw:D_GWANGJU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 373 .
+hw:D_GWANGJU_INCHEON a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 2354 .
+hw:D_GWANGJU_JEONJU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 2899 .
+hw:D_GWANGJU_JINJU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 1119 .
+hw:D_GWANGJU_MOKPO a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 1755 .
+hw:D_GWANGJU_NONSAN a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 455 .
+hw:D_GWANGJU_POHANG a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 591 .
+hw:D_GWANGJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 852 .
+hw:D_GWANGJU_SEJONG a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 847 .
+hw:D_GWANGJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 369 .
+hw:D_GWANGJU_SEOUL a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 5790 .
+hw:D_GWANGJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 1908 .
+hw:D_GWANGJU_SUWON a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 1242 .
+hw:D_GWANGJU_ULSAN a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 1223 .
+hw:D_GWANGJU_WONJU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 422 .
+hw:D_GWANGJU_YEOJU a hw:Demand ; hw:originZone hw:Z_GWANGJU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 173 .
+hw:D_GYEONGJU_ANDONG a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 189 .
+hw:D_GYEONGJU_BUSAN a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 2824 .
+hw:D_GYEONGJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 923 .
+hw:D_GYEONGJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 226 .
+hw:D_GYEONGJU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 319 .
+hw:D_GYEONGJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 86 .
+hw:D_GYEONGJU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 112 .
+hw:D_GYEONGJU_DAEGU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 2931 .
+hw:D_GYEONGJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 522 .
+hw:D_GYEONGJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 85 .
+hw:D_GYEONGJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 153 .
+hw:D_GYEONGJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 99 .
+hw:D_GYEONGJU_GWANGJU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 373 .
+hw:D_GYEONGJU_INCHEON a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 502 .
+hw:D_GYEONGJU_JEONJU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 247 .
+hw:D_GYEONGJU_JINJU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 246 .
+hw:D_GYEONGJU_MOKPO a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 64 .
+hw:D_GYEONGJU_NONSAN a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 61 .
+hw:D_GYEONGJU_POHANG a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 1277 .
+hw:D_GYEONGJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 179 .
+hw:D_GYEONGJU_SEJONG a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 163 .
+hw:D_GYEONGJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 57 .
+hw:D_GYEONGJU_SEOUL a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 1381 .
+hw:D_GYEONGJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 128 .
+hw:D_GYEONGJU_SUWON a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 289 .
+hw:D_GYEONGJU_ULSAN a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 2399 .
+hw:D_GYEONGJU_WONJU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 140 .
+hw:D_GYEONGJU_YEOJU a hw:Demand ; hw:originZone hw:Z_GYEONGJU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 51 .
+hw:D_INCHEON_ANDONG a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 525 .
+hw:D_INCHEON_BUSAN a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 3379 .
+hw:D_INCHEON_CHANGWON a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 1430 .
+hw:D_INCHEON_CHEONAN a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 4980 .
+hw:D_INCHEON_CHEONGJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 4103 .
+hw:D_INCHEON_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 1961 .
+hw:D_INCHEON_CHUNGJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 1230 .
+hw:D_INCHEON_DAEGU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 3754 .
+hw:D_INCHEON_DAEJEON a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 4983 .
+hw:D_INCHEON_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 697 .
+hw:D_INCHEON_GIMCHEON a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 537 .
+hw:D_INCHEON_GUNSAN a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 1034 .
+hw:D_INCHEON_GWANGJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 2354 .
+hw:D_INCHEON_GYEONGJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 502 .
+hw:D_INCHEON_JEONJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 1814 .
+hw:D_INCHEON_JINJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 670 .
+hw:D_INCHEON_MOKPO a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 436 .
+hw:D_INCHEON_NONSAN a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 637 .
+hw:D_INCHEON_POHANG a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 882 .
+hw:D_INCHEON_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 6530 .
+hw:D_INCHEON_SEJONG a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 2075 .
+hw:D_INCHEON_SEOSAN a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 1824 .
+hw:D_INCHEON_SEOUL a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 29481 .
+hw:D_INCHEON_SUNCHEON a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 549 .
+hw:D_INCHEON_SUWON a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 5529 .
+hw:D_INCHEON_ULSAN a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 1473 .
+hw:D_INCHEON_WONJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 2141 .
+hw:D_INCHEON_YEOJU a hw:Demand ; hw:originZone hw:Z_INCHEON ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 1124 .
+hw:D_JEONJU_ANDONG a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 200 .
+hw:D_JEONJU_BUSAN a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 1950 .
+hw:D_JEONJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 956 .
+hw:D_JEONJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 1077 .
+hw:D_JEONJU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 1474 .
+hw:D_JEONJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 212 .
+hw:D_JEONJU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 286 .
+hw:D_JEONJU_DAEGU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 2319 .
+hw:D_JEONJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 3493 .
+hw:D_JEONJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 142 .
+hw:D_JEONJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 376 .
+hw:D_JEONJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 1675 .
+hw:D_JEONJU_GWANGJU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 2899 .
+hw:D_JEONJU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 247 .
+hw:D_JEONJU_INCHEON a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1814 .
+hw:D_JEONJU_JINJU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 593 .
+hw:D_JEONJU_MOKPO a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 341 .
+hw:D_JEONJU_NONSAN a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 818 .
+hw:D_JEONJU_POHANG a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 395 .
+hw:D_JEONJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 769 .
+hw:D_JEONJU_SEJONG a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 1027 .
+hw:D_JEONJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 315 .
+hw:D_JEONJU_SEOUL a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 4544 .
+hw:D_JEONJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 560 .
+hw:D_JEONJU_SUWON a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 1028 .
+hw:D_JEONJU_ULSAN a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 755 .
+hw:D_JEONJU_WONJU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 339 .
+hw:D_JEONJU_YEOJU a hw:Demand ; hw:originZone hw:Z_JEONJU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 143 .
+hw:D_JINJU_ANDONG a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 123 .
+hw:D_JINJU_BUSAN a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 3003 .
+hw:D_JINJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 2158 .
+hw:D_JINJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 320 .
+hw:D_JINJU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 442 .
+hw:D_JINJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 96 .
+hw:D_JINJU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 120 .
+hw:D_JINJU_DAEGU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 2241 .
+hw:D_JINJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 829 .
+hw:D_JINJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 76 .
+hw:D_JINJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 199 .
+hw:D_JINJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 206 .
+hw:D_JINJU_GWANGJU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1119 .
+hw:D_JINJU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 246 .
+hw:D_JINJU_INCHEON a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 670 .
+hw:D_JINJU_JEONJU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 593 .
+hw:D_JINJU_MOKPO a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 164 .
+hw:D_JINJU_NONSAN a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 114 .
+hw:D_JINJU_POHANG a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 352 .
+hw:D_JINJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 247 .
+hw:D_JINJU_SEJONG a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 251 .
+hw:D_JINJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 90 .
+hw:D_JINJU_SEOUL a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 1746 .
+hw:D_JINJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 632 .
+hw:D_JINJU_SUWON a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 373 .
+hw:D_JINJU_ULSAN a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 872 .
+hw:D_JINJU_WONJU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 149 .
+hw:D_JINJU_YEOJU a hw:Demand ; hw:originZone hw:Z_JINJU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 58 .
+hw:D_MOKPO_ANDONG a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 43 .
+hw:D_MOKPO_BUSAN a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 591 .
+hw:D_MOKPO_CHANGWON a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 272 .
+hw:D_MOKPO_CHEONAN a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 182 .
+hw:D_MOKPO_CHEONGJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 221 .
+hw:D_MOKPO_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 53 .
+hw:D_MOKPO_CHUNGJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 56 .
+hw:D_MOKPO_DAEGU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 492 .
+hw:D_MOKPO_DAEJEON a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 398 .
+hw:D_MOKPO_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 37 .
+hw:D_MOKPO_GIMCHEON a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 59 .
+hw:D_MOKPO_GUNSAN a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 166 .
+hw:D_MOKPO_GWANGJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1755 .
+hw:D_MOKPO_GYEONGJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 64 .
+hw:D_MOKPO_INCHEON a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 436 .
+hw:D_MOKPO_JEONJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 341 .
+hw:D_MOKPO_JINJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 164 .
+hw:D_MOKPO_NONSAN a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 66 .
+hw:D_MOKPO_POHANG a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 103 .
+hw:D_MOKPO_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 148 .
+hw:D_MOKPO_SEJONG a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 133 .
+hw:D_MOKPO_SEOSAN a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 66 .
+hw:D_MOKPO_SEOUL a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 1058 .
+hw:D_MOKPO_SUNCHEON a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 239 .
+hw:D_MOKPO_SUWON a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 222 .
+hw:D_MOKPO_ULSAN a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 213 .
+hw:D_MOKPO_WONJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 75 .
+hw:D_MOKPO_YEOJU a hw:Demand ; hw:originZone hw:Z_MOKPO ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 31 .
+hw:D_NONSAN_ANDONG a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 58 .
+hw:D_NONSAN_BUSAN a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 443 .
+hw:D_NONSAN_CHANGWON a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 208 .
+hw:D_NONSAN_CHEONAN a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 500 .
+hw:D_NONSAN_CHEONGJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 693 .
+hw:D_NONSAN_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 69 .
+hw:D_NONSAN_CHUNGJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 101 .
+hw:D_NONSAN_DAEGU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 564 .
+hw:D_NONSAN_DAEJEON a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 1663 .
+hw:D_NONSAN_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 43 .
+hw:D_NONSAN_GIMCHEON a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 102 .
+hw:D_NONSAN_GUNSAN a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 409 .
+hw:D_NONSAN_GWANGJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 455 .
+hw:D_NONSAN_GYEONGJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 61 .
+hw:D_NONSAN_INCHEON a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 637 .
+hw:D_NONSAN_JEONJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 818 .
+hw:D_NONSAN_JINJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 114 .
+hw:D_NONSAN_MOKPO a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 66 .
+hw:D_NONSAN_POHANG a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 101 .
+hw:D_NONSAN_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 319 .
+hw:D_NONSAN_SEJONG a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 582 .
+hw:D_NONSAN_SEOSAN a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 124 .
+hw:D_NONSAN_SEOUL a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 1601 .
+hw:D_NONSAN_SUNCHEON a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 96 .
+hw:D_NONSAN_SUWON a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 382 .
+hw:D_NONSAN_ULSAN a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 181 .
+hw:D_NONSAN_WONJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 115 .
+hw:D_NONSAN_YEOJU a hw:Demand ; hw:originZone hw:Z_NONSAN ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 51 .
+hw:D_POHANG_ANDONG a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 374 .
+hw:D_POHANG_BUSAN a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 3557 .
+hw:D_POHANG_CHANGWON a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 1191 .
+hw:D_POHANG_CHEONAN a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 390 .
+hw:D_POHANG_CHEONGJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 546 .
+hw:D_POHANG_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 158 .
+hw:D_POHANG_CHUNGJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 202 .
+hw:D_POHANG_DAEGU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 3914 .
+hw:D_POHANG_DAEJEON a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 871 .
+hw:D_POHANG_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 164 .
+hw:D_POHANG_GIMCHEON a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 244 .
+hw:D_POHANG_GUNSAN a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 162 .
+hw:D_POHANG_GWANGJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 591 .
+hw:D_POHANG_GYEONGJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 1277 .
+hw:D_POHANG_INCHEON a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 882 .
+hw:D_POHANG_JEONJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 395 .
+hw:D_POHANG_JINJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 352 .
+hw:D_POHANG_MOKPO a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 103 .
+hw:D_POHANG_NONSAN a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 101 .
+hw:D_POHANG_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 312 .
+hw:D_POHANG_SEJONG a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 275 .
+hw:D_POHANG_SEOSAN a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 98 .
+hw:D_POHANG_SEOUL a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 2448 .
+hw:D_POHANG_SUNCHEON a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 195 .
+hw:D_POHANG_SUWON a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 509 .
+hw:D_POHANG_ULSAN a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 3017 .
+hw:D_POHANG_WONJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 257 .
+hw:D_POHANG_YEOJU a hw:Demand ; hw:originZone hw:Z_POHANG ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 91 .
+hw:D_PYEONGTAEK_ANDONG a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 201 .
+hw:D_PYEONGTAEK_BUSAN a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 1187 .
+hw:D_PYEONGTAEK_CHANGWON a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 515 .
+hw:D_PYEONGTAEK_CHEONAN a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 3366 .
+hw:D_PYEONGTAEK_CHEONGJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 2821 .
+hw:D_PYEONGTAEK_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 465 .
+hw:D_PYEONGTAEK_CHUNGJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 575 .
+hw:D_PYEONGTAEK_DAEGU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 1442 .
+hw:D_PYEONGTAEK_DAEJEON a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 2772 .
+hw:D_PYEONGTAEK_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 208 .
+hw:D_PYEONGTAEK_GIMCHEON a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 230 .
+hw:D_PYEONGTAEK_GUNSAN a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 433 .
+hw:D_PYEONGTAEK_GWANGJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 852 .
+hw:D_PYEONGTAEK_GYEONGJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 179 .
+hw:D_PYEONGTAEK_INCHEON a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 6530 .
+hw:D_PYEONGTAEK_JEONJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 769 .
+hw:D_PYEONGTAEK_JINJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 247 .
+hw:D_PYEONGTAEK_MOKPO a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 148 .
+hw:D_PYEONGTAEK_NONSAN a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 319 .
+hw:D_PYEONGTAEK_POHANG a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 312 .
+hw:D_PYEONGTAEK_SEJONG a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 1344 .
+hw:D_PYEONGTAEK_SEOSAN a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 723 .
+hw:D_PYEONGTAEK_SEOUL a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 17837 .
+hw:D_PYEONGTAEK_SUNCHEON a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 198 .
+hw:D_PYEONGTAEK_SUWON a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 5181 .
+hw:D_PYEONGTAEK_ULSAN a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 517 .
+hw:D_PYEONGTAEK_WONJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 777 .
+hw:D_PYEONGTAEK_YEOJU a hw:Demand ; hw:originZone hw:Z_PYEONGTAEK ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 447 .
+hw:D_SEJONG_ANDONG a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 178 .
+hw:D_SEJONG_BUSAN a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 1094 .
+hw:D_SEJONG_CHANGWON a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 497 .
+hw:D_SEJONG_CHEONAN a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 2385 .
+hw:D_SEJONG_CHEONGJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 2786 .
+hw:D_SEJONG_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 226 .
+hw:D_SEJONG_CHUNGJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 404 .
+hw:D_SEJONG_DAEGU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 1478 .
+hw:D_SEJONG_DAEJEON a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 4271 .
+hw:D_SEJONG_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 133 .
+hw:D_SEJONG_GIMCHEON a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 285 .
+hw:D_SEJONG_GUNSAN a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 508 .
+hw:D_SEJONG_GWANGJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 847 .
+hw:D_SEJONG_GYEONGJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 163 .
+hw:D_SEJONG_INCHEON a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 2075 .
+hw:D_SEJONG_JEONJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 1027 .
+hw:D_SEJONG_JINJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 251 .
+hw:D_SEJONG_MOKPO a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 133 .
+hw:D_SEJONG_NONSAN a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 582 .
+hw:D_SEJONG_POHANG a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 275 .
+hw:D_SEJONG_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 1344 .
+hw:D_SEJONG_SEOSAN a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 349 .
+hw:D_SEJONG_SEOUL a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 5522 .
+hw:D_SEJONG_SUNCHEON a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 197 .
+hw:D_SEJONG_SUWON a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 1421 .
+hw:D_SEJONG_ULSAN a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 468 .
+hw:D_SEJONG_WONJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 417 .
+hw:D_SEJONG_YEOJU a hw:Demand ; hw:originZone hw:Z_SEJONG ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 193 .
+hw:D_SEOSAN_ANDONG a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 56 .
+hw:D_SEOSAN_BUSAN a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 408 .
+hw:D_SEOSAN_CHANGWON a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 179 .
+hw:D_SEOSAN_CHEONAN a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 729 .
+hw:D_SEOSAN_CHEONGJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 563 .
+hw:D_SEOSAN_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 115 .
+hw:D_SEOSAN_CHUNGJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 115 .
+hw:D_SEOSAN_DAEGU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 456 .
+hw:D_SEOSAN_DAEJEON a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 786 .
+hw:D_SEOSAN_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 57 .
+hw:D_SEOSAN_GIMCHEON a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 69 .
+hw:D_SEOSAN_GUNSAN a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 216 .
+hw:D_SEOSAN_GWANGJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 369 .
+hw:D_SEOSAN_GYEONGJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 57 .
+hw:D_SEOSAN_INCHEON a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1824 .
+hw:D_SEOSAN_JEONJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 315 .
+hw:D_SEOSAN_JINJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 90 .
+hw:D_SEOSAN_MOKPO a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 66 .
+hw:D_SEOSAN_NONSAN a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 124 .
+hw:D_SEOSAN_POHANG a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 98 .
+hw:D_SEOSAN_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 723 .
+hw:D_SEOSAN_SEJONG a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 349 .
+hw:D_SEOSAN_SEOUL a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 3615 .
+hw:D_SEOSAN_SUNCHEON a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 78 .
+hw:D_SEOSAN_SUWON a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 859 .
+hw:D_SEOSAN_ULSAN a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 171 .
+hw:D_SEOSAN_WONJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 160 .
+hw:D_SEOSAN_YEOJU a hw:Demand ; hw:originZone hw:Z_SEOSAN ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 78 .
+hw:D_SEOUL_ANDONG a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 1534 .
+hw:D_SEOUL_BUSAN a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 9009 .
+hw:D_SEOUL_CHANGWON a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 3792 .
+hw:D_SEOUL_CHEONAN a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 13647 .
+hw:D_SEOUL_CHEONGJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 11652 .
+hw:D_SEOUL_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 7334 .
+hw:D_SEOUL_CHUNGJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 4044 .
+hw:D_SEOUL_DAEGU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 10293 .
+hw:D_SEOUL_DAEJEON a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 13367 .
+hw:D_SEOUL_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 2161 .
+hw:D_SEOUL_GIMCHEON a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 1484 .
+hw:D_SEOUL_GUNSAN a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 2478 .
+hw:D_SEOUL_GWANGJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 5790 .
+hw:D_SEOUL_GYEONGJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 1381 .
+hw:D_SEOUL_INCHEON a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 29481 .
+hw:D_SEOUL_JEONJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 4544 .
+hw:D_SEOUL_JINJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 1746 .
+hw:D_SEOUL_MOKPO a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 1058 .
+hw:D_SEOUL_NONSAN a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 1601 .
+hw:D_SEOUL_POHANG a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 2448 .
+hw:D_SEOUL_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 17837 .
+hw:D_SEOUL_SEJONG a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 5522 .
+hw:D_SEOUL_SEOSAN a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 3615 .
+hw:D_SEOUL_SUNCHEON a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 1389 .
+hw:D_SEOUL_SUWON a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 14164 .
+hw:D_SEOUL_ULSAN a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 3993 .
+hw:D_SEOUL_WONJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 7876 .
+hw:D_SEOUL_YEOJU a hw:Demand ; hw:originZone hw:Z_SEOUL ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 4596 .
+hw:D_SUNCHEON_ANDONG a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 76 .
+hw:D_SUNCHEON_BUSAN a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 1353 .
+hw:D_SUNCHEON_CHANGWON a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 713 .
+hw:D_SUNCHEON_CHEONAN a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 253 .
+hw:D_SUNCHEON_CHEONGJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 334 .
+hw:D_SUNCHEON_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 73 .
+hw:D_SUNCHEON_CHUNGJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 86 .
+hw:D_SUNCHEON_DAEGU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 1063 .
+hw:D_SUNCHEON_DAEJEON a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 630 .
+hw:D_SUNCHEON_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 54 .
+hw:D_SUNCHEON_GIMCHEON a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 116 .
+hw:D_SUNCHEON_GUNSAN a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 203 .
+hw:D_SUNCHEON_GWANGJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1908 .
+hw:D_SUNCHEON_GYEONGJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 128 .
+hw:D_SUNCHEON_INCHEON a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 549 .
+hw:D_SUNCHEON_JEONJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 560 .
+hw:D_SUNCHEON_JINJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 632 .
+hw:D_SUNCHEON_MOKPO a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 239 .
+hw:D_SUNCHEON_NONSAN a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 96 .
+hw:D_SUNCHEON_POHANG a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 195 .
+hw:D_SUNCHEON_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 198 .
+hw:D_SUNCHEON_SEJONG a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 197 .
+hw:D_SUNCHEON_SEOSAN a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 78 .
+hw:D_SUNCHEON_SEOUL a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 1389 .
+hw:D_SUNCHEON_SUWON a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 296 .
+hw:D_SUNCHEON_ULSAN a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 440 .
+hw:D_SUNCHEON_WONJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 109 .
+hw:D_SUNCHEON_YEOJU a hw:Demand ; hw:originZone hw:Z_SUNCHEON ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 44 .
+hw:D_SUWON_ANDONG a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 329 .
+hw:D_SUWON_BUSAN a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 1881 .
+hw:D_SUWON_CHANGWON a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 801 .
+hw:D_SUWON_CHEONAN a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 4113 .
+hw:D_SUWON_CHEONGJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 3088 .
+hw:D_SUWON_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 1143 .
+hw:D_SUWON_CHUNGJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 962 .
+hw:D_SUWON_DAEGU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 2221 .
+hw:D_SUWON_DAEJEON a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 3292 .
+hw:D_SUWON_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 407 .
+hw:D_SUWON_GIMCHEON a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 334 .
+hw:D_SUWON_GUNSAN a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 563 .
+hw:D_SUWON_GWANGJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1242 .
+hw:D_SUWON_GYEONGJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 289 .
+hw:D_SUWON_INCHEON a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 5529 .
+hw:D_SUWON_JEONJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 1028 .
+hw:D_SUWON_JINJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 373 .
+hw:D_SUWON_MOKPO a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 222 .
+hw:D_SUWON_NONSAN a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 382 .
+hw:D_SUWON_POHANG a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 509 .
+hw:D_SUWON_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 5181 .
+hw:D_SUWON_SEJONG a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 1421 .
+hw:D_SUWON_SEOSAN a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 859 .
+hw:D_SUWON_SEOUL a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 14164 .
+hw:D_SUWON_SUNCHEON a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 296 .
+hw:D_SUWON_ULSAN a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 831 .
+hw:D_SUWON_WONJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 1653 .
+hw:D_SUWON_YEOJU a hw:Demand ; hw:originZone hw:Z_SUWON ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 1076 .
+hw:D_ULSAN_ANDONG a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 430 .
+hw:D_ULSAN_BUSAN a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 16393 .
+hw:D_ULSAN_CHANGWON a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 3883 .
+hw:D_ULSAN_CHEONAN a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 649 .
+hw:D_ULSAN_CHEONGJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 895 .
+hw:D_ULSAN_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 246 .
+hw:D_ULSAN_CHUNGJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 301 .
+hw:D_ULSAN_DAEGU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 6929 .
+hw:D_ULSAN_DAEJEON a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 1488 .
+hw:D_ULSAN_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 234 .
+hw:D_ULSAN_GIMCHEON a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 403 .
+hw:D_ULSAN_GUNSAN a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 302 .
+hw:D_ULSAN_GWANGJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 1223 .
+hw:D_ULSAN_GYEONGJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 2399 .
+hw:D_ULSAN_INCHEON a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1473 .
+hw:D_ULSAN_JEONJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 755 .
+hw:D_ULSAN_JINJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 872 .
+hw:D_ULSAN_MOKPO a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 213 .
+hw:D_ULSAN_NONSAN a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 181 .
+hw:D_ULSAN_POHANG a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 3017 .
+hw:D_ULSAN_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 517 .
+hw:D_ULSAN_SEJONG a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 468 .
+hw:D_ULSAN_SEOSAN a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 171 .
+hw:D_ULSAN_SEOUL a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 3993 .
+hw:D_ULSAN_SUNCHEON a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 440 .
+hw:D_ULSAN_SUWON a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 831 .
+hw:D_ULSAN_WONJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 386 .
+hw:D_ULSAN_YEOJU a hw:Demand ; hw:originZone hw:Z_ULSAN ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 141 .
+hw:D_WONJU_ANDONG a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 201 .
+hw:D_WONJU_BUSAN a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 825 .
+hw:D_WONJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 342 .
+hw:D_WONJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 842 .
+hw:D_WONJU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 1004 .
+hw:D_WONJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 646 .
+hw:D_WONJU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 853 .
+hw:D_WONJU_DAEGU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 1038 .
+hw:D_WONJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 1105 .
+hw:D_WONJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 301 .
+hw:D_WONJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 151 .
+hw:D_WONJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 165 .
+hw:D_WONJU_GWANGJU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 422 .
+hw:D_WONJU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 140 .
+hw:D_WONJU_INCHEON a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 2141 .
+hw:D_WONJU_JEONJU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 339 .
+hw:D_WONJU_JINJU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 149 .
+hw:D_WONJU_MOKPO a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 75 .
+hw:D_WONJU_NONSAN a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 115 .
+hw:D_WONJU_POHANG a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 257 .
+hw:D_WONJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 777 .
+hw:D_WONJU_SEJONG a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 417 .
+hw:D_WONJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 160 .
+hw:D_WONJU_SEOUL a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 7876 .
+hw:D_WONJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 109 .
+hw:D_WONJU_SUWON a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 1653 .
+hw:D_WONJU_ULSAN a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 386 .
+hw:D_WONJU_YEOJU a hw:Demand ; hw:originZone hw:Z_WONJU ; hw:destinationZone hw:Z_YEOJU ; hw:dailyTrips 509 .
+hw:D_YEOJU_ANDONG a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_ANDONG ; hw:dailyTrips 67 .
+hw:D_YEOJU_BUSAN a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_BUSAN ; hw:dailyTrips 309 .
+hw:D_YEOJU_CHANGWON a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_CHANGWON ; hw:dailyTrips 130 .
+hw:D_YEOJU_CHEONAN a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_CHEONAN ; hw:dailyTrips 446 .
+hw:D_YEOJU_CHEONGJU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_CHEONGJU ; hw:dailyTrips 474 .
+hw:D_YEOJU_CHUNCHEON a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_CHUNCHEON ; hw:dailyTrips 239 .
+hw:D_YEOJU_CHUNGJU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_CHUNGJU ; hw:dailyTrips 296 .
+hw:D_YEOJU_DAEGU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_DAEGU ; hw:dailyTrips 385 .
+hw:D_YEOJU_DAEJEON a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_DAEJEON ; hw:dailyTrips 486 .
+hw:D_YEOJU_GANGNEUNG a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_GANGNEUNG ; hw:dailyTrips 88 .
+hw:D_YEOJU_GIMCHEON a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_GIMCHEON ; hw:dailyTrips 58 .
+hw:D_YEOJU_GUNSAN a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_GUNSAN ; hw:dailyTrips 72 .
+hw:D_YEOJU_GWANGJU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_GWANGJU ; hw:dailyTrips 173 .
+hw:D_YEOJU_GYEONGJU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_GYEONGJU ; hw:dailyTrips 51 .
+hw:D_YEOJU_INCHEON a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_INCHEON ; hw:dailyTrips 1124 .
+hw:D_YEOJU_JEONJU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_JEONJU ; hw:dailyTrips 143 .
+hw:D_YEOJU_JINJU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_JINJU ; hw:dailyTrips 58 .
+hw:D_YEOJU_MOKPO a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_MOKPO ; hw:dailyTrips 31 .
+hw:D_YEOJU_NONSAN a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_NONSAN ; hw:dailyTrips 51 .
+hw:D_YEOJU_POHANG a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_POHANG ; hw:dailyTrips 91 .
+hw:D_YEOJU_PYEONGTAEK a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_PYEONGTAEK ; hw:dailyTrips 447 .
+hw:D_YEOJU_SEJONG a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_SEJONG ; hw:dailyTrips 193 .
+hw:D_YEOJU_SEOSAN a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_SEOSAN ; hw:dailyTrips 78 .
+hw:D_YEOJU_SEOUL a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_SEOUL ; hw:dailyTrips 4596 .
+hw:D_YEOJU_SUNCHEON a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_SUNCHEON ; hw:dailyTrips 44 .
+hw:D_YEOJU_SUWON a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_SUWON ; hw:dailyTrips 1076 .
+hw:D_YEOJU_ULSAN a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_ULSAN ; hw:dailyTrips 141 .
+hw:D_YEOJU_WONJU a hw:Demand ; hw:originZone hw:Z_YEOJU ; hw:destinationZone hw:Z_WONJU ; hw:dailyTrips 509 .

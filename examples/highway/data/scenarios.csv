@@ -1,0 +1,3 @@
+scenario_id,ko,en,route_id,from,to,start_h,end_h,lanes_closed,note
+BASE,평일 기본,Weekday base,,,,,,0,
+INCIDENT,사고: 경부선 천안→청주 2차로 차단,Crash: Gyeongbu Cheonan→Cheongju 2 lanes closed,GYEONGBU,CHEONAN,CHEONGJU,16,20,2,하행 4차로 중 2차로 16~20시 차단 (가상)
