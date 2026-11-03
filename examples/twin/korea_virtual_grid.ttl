@@ -161,7 +161,7 @@ ex:_8c0b56f1-ed57-50eb-9ac1-f613782d5086 a cim:PowerTransformerEnd ;
 ex:_c114eb62-0b8c-5193-9ee9-2fd7d8436311 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "c114eb62-0b8c-5193-9ee9-2fd7d8436311" ;
     cim:IdentifiedObject.name "영서 765 부하" ;
-    cim:EnergyConsumer.p "265.4867256637168"^^xsd:float ;
+    cim:EnergyConsumer.p "263.7362637362637"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_df1431fc-bd20-5a00-8fa0-d2b48a18af45 a cim:Terminal ;
@@ -177,7 +177,7 @@ ex:_a8669164-e759-5036-9461-5d6212f0db7f a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "영서 765 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "22.123893805309734"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "21.978021978021978"^^xsd:float .
 
 ex:_7cef38c8-3765-5f49-b8ab-ab20ebb6b393 a cim:Terminal ;
     cim:IdentifiedObject.mRID "7cef38c8-3765-5f49-b8ab-ab20ebb6b393" ;
@@ -314,7 +314,7 @@ ex:_13fe1070-5e00-5925-849f-6a65bb17fdba a cim:PowerTransformerEnd ;
 ex:_95abe503-f1ac-5386-96a5-f7716a53e821 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "95abe503-f1ac-5386-96a5-f7716a53e821" ;
     cim:IdentifiedObject.name "수도권 동부 부하" ;
-    cim:EnergyConsumer.p "1592.9203539823009"^^xsd:float ;
+    cim:EnergyConsumer.p "1582.4175824175823"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_f68140a7-1f2a-5c08-847f-0049c4ea3e1f a cim:Terminal ;
@@ -330,7 +330,7 @@ ex:_f6e18b8d-c8a6-5e00-af62-06114779532e a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "수도권 동부 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "132.7433628318584"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "131.86813186813185"^^xsd:float .
 
 ex:_6cceb269-4978-5f06-ba75-bdf101403376 a cim:Terminal ;
     cim:IdentifiedObject.mRID "6cceb269-4978-5f06-ba75-bdf101403376" ;
@@ -483,7 +483,7 @@ ex:_2eaf69e7-ef27-5488-805b-88d78bc26f13 a cim:PowerTransformerEnd ;
 ex:_4a5199a5-9a5b-55e2-921e-9dd44b9ca973 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "4a5199a5-9a5b-55e2-921e-9dd44b9ca973" ;
     cim:IdentifiedObject.name "수도권 남부 부하" ;
-    cim:EnergyConsumer.p "2654.867256637168"^^xsd:float ;
+    cim:EnergyConsumer.p "2637.362637362637"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_f814c5e0-f78a-5007-87f8-e2b02811aaee a cim:Terminal ;
@@ -499,7 +499,7 @@ ex:_239f8b91-a79f-5749-8e20-29233717e6eb a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "수도권 남부 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "221.23893805309734"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "219.78021978021977"^^xsd:float .
 
 ex:_9ad6592e-d58b-5c9c-9673-a6e71da3019f a cim:Terminal ;
     cim:IdentifiedObject.mRID "9ad6592e-d58b-5c9c-9673-a6e71da3019f" ;
@@ -706,7 +706,7 @@ ex:_983ffd16-5d99-522e-bf01-47403091ff30 a cim:PowerTransformerEnd ;
 ex:_8f56a76e-fc69-5cec-9836-0c12ae281dab a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "8f56a76e-fc69-5cec-9836-0c12ae281dab" ;
     cim:IdentifiedObject.name "영남 중부 부하" ;
-    cim:EnergyConsumer.p "530.9734513274336"^^xsd:float ;
+    cim:EnergyConsumer.p "527.4725274725274"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_7a3e5626-0050-566f-8384-5216a9a7e4af a cim:Terminal ;
@@ -722,7 +722,7 @@ ex:_89aef051-d05e-515e-b694-6e60b9e4effc a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "영남 중부 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "44.24778761061947"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "43.956043956043956"^^xsd:float .
 
 ex:_6ee48cf2-6a50-5309-a10a-5a27e1271f80 a cim:Terminal ;
     cim:IdentifiedObject.mRID "6ee48cf2-6a50-5309-a10a-5a27e1271f80" ;
@@ -805,7 +805,7 @@ ex:_0481f3f9-f48d-558c-8d78-45cb8fb7e5b7 a cim:PowerTransformerEnd ;
 ex:_cea34196-6cec-5356-9bcb-d7fc75b17666 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "cea34196-6cec-5356-9bcb-d7fc75b17666" ;
     cim:IdentifiedObject.name "서울 부하" ;
-    cim:EnergyConsumer.p "7433.628318584071"^^xsd:float ;
+    cim:EnergyConsumer.p "7384.615384615386"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_f1c9b292-cbe8-5fc2-b78f-57ffcffcb54f a cim:Terminal ;
@@ -821,7 +821,7 @@ ex:_0a5df812-202f-5ace-8728-6893839ee552 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "서울 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "619.4690265486726"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "615.3846153846154"^^xsd:float .
 
 ex:_a7e2216b-a22b-5558-bc66-589f0d5395f0 a cim:Terminal ;
     cim:IdentifiedObject.mRID "a7e2216b-a22b-5558-bc66-589f0d5395f0" ;
@@ -904,7 +904,7 @@ ex:_0bfcceb2-c468-53b0-9dab-19091d587aca a cim:PowerTransformerEnd ;
 ex:_bc955746-e05e-593e-bfd2-9a2638f6109d a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "bc955746-e05e-593e-bfd2-9a2638f6109d" ;
     cim:IdentifiedObject.name "경기 북부 부하" ;
-    cim:EnergyConsumer.p "2654.867256637168"^^xsd:float ;
+    cim:EnergyConsumer.p "2637.362637362637"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_0c0a3b09-1b00-5a31-bc0d-21a594025873 a cim:Terminal ;
@@ -920,7 +920,7 @@ ex:_8dc07285-35bd-54d1-a3ef-8d76dd411fea a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "경기 북부 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "221.23893805309734"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "219.78021978021977"^^xsd:float .
 
 ex:_7915f296-3e21-56a1-966f-ee0674dc0e04 a cim:Terminal ;
     cim:IdentifiedObject.mRID "7915f296-3e21-56a1-966f-ee0674dc0e04" ;
@@ -1003,7 +1003,7 @@ ex:_89262570-ffee-590c-b844-c8e1adc18637 a cim:PowerTransformerEnd ;
 ex:_aeb528f8-6584-5202-8b29-ce5da1dd64bc a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "aeb528f8-6584-5202-8b29-ce5da1dd64bc" ;
     cim:IdentifiedObject.name "경기 남부 부하" ;
-    cim:EnergyConsumer.p "4778.761061946902"^^xsd:float ;
+    cim:EnergyConsumer.p "4747.252747252747"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_6130ceec-6d09-50dc-b40b-590715977016 a cim:Terminal ;
@@ -1019,7 +1019,7 @@ ex:_13626d48-27ae-5653-986a-7b0af3cb00a5 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "경기 남부 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "398.2300884955752"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "395.60439560439556"^^xsd:float .
 
 ex:_a705e7bf-6a11-5177-befa-445abdb396b6 a cim:Terminal ;
     cim:IdentifiedObject.mRID "a705e7bf-6a11-5177-befa-445abdb396b6" ;
@@ -1102,7 +1102,7 @@ ex:_e23e8373-fdff-5137-9152-78710ade8f00 a cim:PowerTransformerEnd ;
 ex:_48a5dd82-5760-5e55-bdcd-34dedebaddcd a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "48a5dd82-5760-5e55-bdcd-34dedebaddcd" ;
     cim:IdentifiedObject.name "인천 부하" ;
-    cim:EnergyConsumer.p "3185.8407079646017"^^xsd:float ;
+    cim:EnergyConsumer.p "3164.8351648351645"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_735a2432-ed58-5f5a-a0bd-d9186770d27f a cim:Terminal ;
@@ -1118,7 +1118,7 @@ ex:_26fb5f38-2e1d-5ded-8323-b109a80f3b34 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "인천 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "265.4867256637168"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "263.7362637362637"^^xsd:float .
 
 ex:_8e5fe87b-d8ae-5836-87fc-6030f42f86b9 a cim:Terminal ;
     cim:IdentifiedObject.mRID "8e5fe87b-d8ae-5836-87fc-6030f42f86b9" ;
@@ -1201,7 +1201,7 @@ ex:_68eb235e-6b49-5d35-a9b9-541430a876be a cim:PowerTransformerEnd ;
 ex:_2d09fb0d-91b9-5594-b665-6fee5042f30b a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "2d09fb0d-91b9-5594-b665-6fee5042f30b" ;
     cim:IdentifiedObject.name "천안 부하" ;
-    cim:EnergyConsumer.p "1592.9203539823009"^^xsd:float ;
+    cim:EnergyConsumer.p "1582.4175824175823"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_958a825e-84c7-509e-8687-e4699752956d a cim:Terminal ;
@@ -1217,7 +1217,7 @@ ex:_3227adf0-a073-5137-8c5c-99a16ba67f51 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "천안 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "132.7433628318584"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "131.86813186813185"^^xsd:float .
 
 ex:_205f45d9-618a-5093-b5fa-9ec8066def89 a cim:Terminal ;
     cim:IdentifiedObject.mRID "205f45d9-618a-5093-b5fa-9ec8066def89" ;
@@ -1300,7 +1300,7 @@ ex:_8d1bcd3b-11f4-5643-8167-ecd1d04c416f a cim:PowerTransformerEnd ;
 ex:_21f5d61c-ddd7-56fa-b756-79d2d193e337 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "21f5d61c-ddd7-56fa-b756-79d2d193e337" ;
     cim:IdentifiedObject.name "청주 부하" ;
-    cim:EnergyConsumer.p "1592.9203539823009"^^xsd:float ;
+    cim:EnergyConsumer.p "1582.4175824175823"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_daca5e4b-8cfd-54d6-b9dc-45eea76d14be a cim:Terminal ;
@@ -1316,7 +1316,7 @@ ex:_fea28b88-0b5c-5ffe-aa42-685aacebc82a a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "청주 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "132.7433628318584"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "131.86813186813185"^^xsd:float .
 
 ex:_9dfe2713-e073-567a-8f9e-5224548dbd5a a cim:Terminal ;
     cim:IdentifiedObject.mRID "9dfe2713-e073-567a-8f9e-5224548dbd5a" ;
@@ -1399,7 +1399,7 @@ ex:_83de0b8c-37c9-55db-9483-1a695fe92eab a cim:PowerTransformerEnd ;
 ex:_c08519fc-f164-58cd-9e44-75eba2837de4 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "c08519fc-f164-58cd-9e44-75eba2837de4" ;
     cim:IdentifiedObject.name "대전 부하" ;
-    cim:EnergyConsumer.p "1592.9203539823009"^^xsd:float ;
+    cim:EnergyConsumer.p "1582.4175824175823"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_2f2a3fa0-a3d3-5c8b-b5b6-a60fc8c768df a cim:Terminal ;
@@ -1415,7 +1415,7 @@ ex:_f84d24f3-8cc3-55fa-b587-47a70cb3e6a4 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "대전 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "132.7433628318584"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "131.86813186813185"^^xsd:float .
 
 ex:_23e9fde9-5743-5f8f-a04d-f383ba8789e9 a cim:Terminal ;
     cim:IdentifiedObject.mRID "23e9fde9-5743-5f8f-a04d-f383ba8789e9" ;
@@ -1514,7 +1514,7 @@ ex:_0c4ac4a0-aa0a-5798-bc7d-f45894eda7b1 a cim:PowerTransformerEnd ;
 ex:_6a60c130-3874-5c6d-861d-ae4d030f99c2 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "6a60c130-3874-5c6d-861d-ae4d030f99c2" ;
     cim:IdentifiedObject.name "전주 부하" ;
-    cim:EnergyConsumer.p "1061.9469026548672"^^xsd:float ;
+    cim:EnergyConsumer.p "1054.9450549450548"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_e3c6fe97-f2b6-5679-971c-8706e02375c9 a cim:Terminal ;
@@ -1530,7 +1530,7 @@ ex:_0b63f1d4-9b62-5a02-a6cf-5d9226849043 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "전주 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "88.49557522123894"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "87.91208791208791"^^xsd:float .
 
 ex:_2a9c22a8-3717-5633-a436-8324849321e5 a cim:Terminal ;
     cim:IdentifiedObject.mRID "2a9c22a8-3717-5633-a436-8324849321e5" ;
@@ -1613,7 +1613,7 @@ ex:_47a46e30-ca72-548e-9868-37d34fb425f9 a cim:PowerTransformerEnd ;
 ex:_afec27b7-b275-5391-a9a7-42ad895edc44 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "afec27b7-b275-5391-a9a7-42ad895edc44" ;
     cim:IdentifiedObject.name "광주 부하" ;
-    cim:EnergyConsumer.p "1592.9203539823009"^^xsd:float ;
+    cim:EnergyConsumer.p "1582.4175824175823"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_7ca65b19-faae-5197-8315-4edd9bccbfb4 a cim:Terminal ;
@@ -1629,7 +1629,7 @@ ex:_3ee63136-8f61-51d3-9da3-9dde377b2b3c a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "광주 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "132.7433628318584"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "131.86813186813185"^^xsd:float .
 
 ex:_565442cf-77ad-5ef3-bb7e-ed7880b120a9 a cim:Terminal ;
     cim:IdentifiedObject.mRID "565442cf-77ad-5ef3-bb7e-ed7880b120a9" ;
@@ -1760,7 +1760,7 @@ ex:_0614bf4e-2e13-5789-968b-2cf144f43163 a cim:PowerTransformerEnd ;
 ex:_e00ef0c5-ccb1-5bd1-9097-37a64feee04d a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "e00ef0c5-ccb1-5bd1-9097-37a64feee04d" ;
     cim:IdentifiedObject.name "여수 부하" ;
-    cim:EnergyConsumer.p "2123.8938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "2109.8901098901097"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_e54f7cca-9ef8-5c05-ab01-7807a8093def a cim:Terminal ;
@@ -1776,7 +1776,7 @@ ex:_f2fd8f89-0e0e-5a1d-ab18-df11b5daa354 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "여수 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "176.99115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "175.82417582417582"^^xsd:float .
 
 ex:_a029ef57-b25c-5ae0-aeaa-167cf721d814 a cim:Terminal ;
     cim:IdentifiedObject.mRID "a029ef57-b25c-5ae0-aeaa-167cf721d814" ;
@@ -1875,7 +1875,7 @@ ex:_3cb1927f-583c-54ce-93fa-45d66020e0a9 a cim:PowerTransformerEnd ;
 ex:_cf783ef1-d50f-5053-90a8-83d3653318ab a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "cf783ef1-d50f-5053-90a8-83d3653318ab" ;
     cim:IdentifiedObject.name "대구 부하" ;
-    cim:EnergyConsumer.p "2123.8938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "2109.8901098901097"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_e97ae0fc-9d7b-5df6-930c-6f51977cc7e4 a cim:Terminal ;
@@ -1891,7 +1891,7 @@ ex:_6993dfd2-d6f8-59c6-b7ba-3143f43a573e a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "대구 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "176.99115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "175.82417582417582"^^xsd:float .
 
 ex:_bb516c29-444e-54a6-adcd-9cd3df142976 a cim:Terminal ;
     cim:IdentifiedObject.mRID "bb516c29-444e-54a6-adcd-9cd3df142976" ;
@@ -1974,7 +1974,7 @@ ex:_eb8f31f9-7174-58ef-9717-ab9762ac95da a cim:PowerTransformerEnd ;
 ex:_33b97b85-2068-576c-9325-8e839a2d3471 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "33b97b85-2068-576c-9325-8e839a2d3471" ;
     cim:IdentifiedObject.name "구미 부하" ;
-    cim:EnergyConsumer.p "1061.9469026548672"^^xsd:float ;
+    cim:EnergyConsumer.p "1054.9450549450548"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_a083df9c-0545-52ac-902f-51088ca65b61 a cim:Terminal ;
@@ -1990,7 +1990,7 @@ ex:_8eb6d9d2-86e5-5e6c-ae81-0d0e631c06ba a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "구미 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "88.49557522123894"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "87.91208791208791"^^xsd:float .
 
 ex:_ac94f658-769c-5eba-82fc-0d8aeb8c1c07 a cim:Terminal ;
     cim:IdentifiedObject.mRID "ac94f658-769c-5eba-82fc-0d8aeb8c1c07" ;
@@ -2073,7 +2073,7 @@ ex:_d0da94d8-1a4f-5d79-80c2-dba26e3fd921 a cim:PowerTransformerEnd ;
 ex:_782f0561-0050-51b0-9071-59075f8ede10 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "782f0561-0050-51b0-9071-59075f8ede10" ;
     cim:IdentifiedObject.name "포항 부하" ;
-    cim:EnergyConsumer.p "2123.8938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "2109.8901098901097"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_67ebfba7-7673-5a5a-855a-87ab0a0cae8e a cim:Terminal ;
@@ -2089,7 +2089,7 @@ ex:_261826b7-c634-5baf-9aa6-70491fc356a3 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "포항 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "176.99115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "175.82417582417582"^^xsd:float .
 
 ex:_42333ac3-b92f-5721-b6ea-2ce83b9a2293 a cim:Terminal ;
     cim:IdentifiedObject.mRID "42333ac3-b92f-5721-b6ea-2ce83b9a2293" ;
@@ -2172,7 +2172,7 @@ ex:_25722fdb-1b0e-53b8-848c-63815e661b18 a cim:PowerTransformerEnd ;
 ex:_2306cc39-9d00-5454-97d5-2ba68756993e a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "2306cc39-9d00-5454-97d5-2ba68756993e" ;
     cim:IdentifiedObject.name "울산 부하" ;
-    cim:EnergyConsumer.p "2654.867256637168"^^xsd:float ;
+    cim:EnergyConsumer.p "2637.362637362637"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_79427f03-42d5-576a-a560-2d3d9ab1d0d2 a cim:Terminal ;
@@ -2188,7 +2188,7 @@ ex:_8c1496b8-8f0f-5324-b92d-ebe20d3d1487 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "울산 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "221.23893805309734"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "219.78021978021977"^^xsd:float .
 
 ex:_42a9ce70-bb44-540b-a454-c1b167802182 a cim:Terminal ;
     cim:IdentifiedObject.mRID "42a9ce70-bb44-540b-a454-c1b167802182" ;
@@ -2271,7 +2271,7 @@ ex:_6f194096-3d93-50d4-9823-ead0cf10cb1e a cim:PowerTransformerEnd ;
 ex:_414228d2-d641-5cc4-9b8f-8aefad7b28a8 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "414228d2-d641-5cc4-9b8f-8aefad7b28a8" ;
     cim:IdentifiedObject.name "부산 부하" ;
-    cim:EnergyConsumer.p "2654.867256637168"^^xsd:float ;
+    cim:EnergyConsumer.p "2637.362637362637"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_8119c5dc-5cf2-5ac4-a7f5-b10f2987c0f5 a cim:Terminal ;
@@ -2287,7 +2287,7 @@ ex:_ed361694-24ba-5ada-b49a-0841ffeb2959 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "부산 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "221.23893805309734"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "219.78021978021977"^^xsd:float .
 
 ex:_ad982e2c-6d9f-5ab4-aac5-d7713e357a1e a cim:Terminal ;
     cim:IdentifiedObject.mRID "ad982e2c-6d9f-5ab4-aac5-d7713e357a1e" ;
@@ -2370,7 +2370,7 @@ ex:_9699cf8d-6785-5ee9-b210-b6aa59290d49 a cim:PowerTransformerEnd ;
 ex:_6bb1ff62-2631-5290-8e8c-4abed34ea46d a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "6bb1ff62-2631-5290-8e8c-4abed34ea46d" ;
     cim:IdentifiedObject.name "창원 부하" ;
-    cim:EnergyConsumer.p "1592.9203539823009"^^xsd:float ;
+    cim:EnergyConsumer.p "1582.4175824175823"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_f89b165a-6257-5a2d-96e0-3eb8072553fa a cim:Terminal ;
@@ -2386,7 +2386,7 @@ ex:_81a37cce-c327-5259-804a-bc0942d5af97 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "창원 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "132.7433628318584"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "131.86813186813185"^^xsd:float .
 
 ex:_eb5e9b6b-2490-54f5-93d4-78877a0919b4 a cim:Terminal ;
     cim:IdentifiedObject.mRID "eb5e9b6b-2490-54f5-93d4-78877a0919b4" ;
@@ -2469,7 +2469,7 @@ ex:_52cf07d1-6355-5093-83e4-3c0baea716d5 a cim:PowerTransformerEnd ;
 ex:_0ca69442-55fc-57e0-becd-40a0660beded a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "0ca69442-55fc-57e0-becd-40a0660beded" ;
     cim:IdentifiedObject.name "강릉 부하" ;
-    cim:EnergyConsumer.p "530.9734513274336"^^xsd:float ;
+    cim:EnergyConsumer.p "527.4725274725274"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_5c26f1b4-99a2-53c7-a6e8-8bd1dc916376 a cim:Terminal ;
@@ -2485,7 +2485,7 @@ ex:_92685743-4eb2-5c7b-bf4d-cc8e08b2a6ac a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "강릉 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "44.24778761061947"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "43.956043956043956"^^xsd:float .
 
 ex:_4216411c-2efa-56cd-9c20-d58670fc834b a cim:Terminal ;
     cim:IdentifiedObject.mRID "4216411c-2efa-56cd-9c20-d58670fc834b" ;
@@ -2514,7 +2514,7 @@ ex:_a77041ec-f914-51d6-aab2-0f319d07a585 a cim:ConnectivityNode ;
 ex:_44cfde23-47dd-59c4-86bf-286e037857bb a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "44cfde23-47dd-59c4-86bf-286e037857bb" ;
     cim:IdentifiedObject.name "춘천 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_783cd10b-d8c5-5b0e-8714-5033927a3971 a cim:Terminal ;
@@ -2530,7 +2530,7 @@ ex:_b5a50d17-0460-5e6e-a27d-2bc2c0080049 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "춘천 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_4465018a-7121-5118-8844-9b49aa7d7941 a cim:Terminal ;
     cim:IdentifiedObject.mRID "4465018a-7121-5118-8844-9b49aa7d7941" ;
@@ -2559,7 +2559,7 @@ ex:_b60ddced-afe2-5a44-bec6-0bcefe452fa5 a cim:ConnectivityNode ;
 ex:_8bdfc9a4-a771-52a0-8a76-d23b6a43b69f a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "8bdfc9a4-a771-52a0-8a76-d23b6a43b69f" ;
     cim:IdentifiedObject.name "원주 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_2f648ae7-a2e4-5d3f-a19c-dd477b522a80 a cim:Terminal ;
@@ -2575,7 +2575,7 @@ ex:_3a41ba45-19ce-52e4-9817-cb14bd85ff8a a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "원주 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_ac4dd1ba-e561-5f31-b3f5-af36dc0f3f7a a cim:Terminal ;
     cim:IdentifiedObject.mRID "ac4dd1ba-e561-5f31-b3f5-af36dc0f3f7a" ;
@@ -2604,7 +2604,7 @@ ex:_893b8612-f89d-54c3-982f-9e36e4622acc a cim:ConnectivityNode ;
 ex:_2013525f-5a2c-5154-bef1-d2465b2c94d9 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "2013525f-5a2c-5154-bef1-d2465b2c94d9" ;
     cim:IdentifiedObject.name "충주 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_30fdb65c-2053-5583-9331-e8a41f26d5b0 a cim:Terminal ;
@@ -2620,7 +2620,7 @@ ex:_326544cb-1520-5ab3-be8d-d3977b393af6 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "충주 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_7849b643-8dd8-5eef-bd47-c02ad6a8abbd a cim:Terminal ;
     cim:IdentifiedObject.mRID "7849b643-8dd8-5eef-bd47-c02ad6a8abbd" ;
@@ -2649,7 +2649,7 @@ ex:_d64e91a5-501c-5c08-9c11-e7b29cc05c20 a cim:ConnectivityNode ;
 ex:_417b1945-52d4-5220-906f-5e7ca839e3b3 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "417b1945-52d4-5220-906f-5e7ca839e3b3" ;
     cim:IdentifiedObject.name "서산 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_3fa45947-851d-5670-bfc6-1391d2aaffb9 a cim:Terminal ;
@@ -2665,7 +2665,7 @@ ex:_135a6f9e-466f-5ff9-ba65-87df92257c61 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "서산 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_e5c975a2-db85-5ccc-a313-42a250962cd5 a cim:Terminal ;
     cim:IdentifiedObject.mRID "e5c975a2-db85-5ccc-a313-42a250962cd5" ;
@@ -2694,7 +2694,7 @@ ex:_3274023b-f571-5b6b-ab6d-5caf4e7fc6bd a cim:ConnectivityNode ;
 ex:_819d8770-8513-5b62-bd3f-4b4425138489 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "819d8770-8513-5b62-bd3f-4b4425138489" ;
     cim:IdentifiedObject.name "군산 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_4399d770-99fc-5a01-89f2-1ccb3c07df18 a cim:Terminal ;
@@ -2710,7 +2710,7 @@ ex:_d615d17a-ec42-5f46-bb34-aa279cf166b1 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "군산 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_fa6c6780-662f-55e3-bf50-1de50166f8a8 a cim:Terminal ;
     cim:IdentifiedObject.mRID "fa6c6780-662f-55e3-bf50-1de50166f8a8" ;
@@ -2739,7 +2739,7 @@ ex:_dec7e328-059b-55e4-b51d-b2f165e3d7ea a cim:ConnectivityNode ;
 ex:_1bd8dc83-997f-573f-a17e-857742f05585 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "1bd8dc83-997f-573f-a17e-857742f05585" ;
     cim:IdentifiedObject.name "목포 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_b08536b0-40b2-5472-9c78-26d3d60db555 a cim:Terminal ;
@@ -2755,7 +2755,7 @@ ex:_93182c17-3abc-55aa-bba8-5d5ae8c185bc a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "목포 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_886aa8f2-d8bc-5649-93ad-3ecebf7446ee a cim:Terminal ;
     cim:IdentifiedObject.mRID "886aa8f2-d8bc-5649-93ad-3ecebf7446ee" ;
@@ -2784,7 +2784,7 @@ ex:_dc9860b7-46c2-5d5a-b78f-95c6cd279c9a a cim:ConnectivityNode ;
 ex:_44d164a8-fc04-5946-a445-1f6dffe755b2 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "44d164a8-fc04-5946-a445-1f6dffe755b2" ;
     cim:IdentifiedObject.name "순천 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_1f42fc25-d184-5433-9ea6-552c5d2ca5c6 a cim:Terminal ;
@@ -2800,7 +2800,7 @@ ex:_0d9bd86c-8d11-5707-b1bc-14f4653138a6 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "순천 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_5cadd53d-dcbc-5312-a05b-e8445474c21f a cim:Terminal ;
     cim:IdentifiedObject.mRID "5cadd53d-dcbc-5312-a05b-e8445474c21f" ;
@@ -2829,7 +2829,7 @@ ex:_e831851b-24e4-5c1d-86e6-a08a7961a14a a cim:ConnectivityNode ;
 ex:_6287a464-3ff9-5efb-99f6-dfb9a28f5ee2 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "6287a464-3ff9-5efb-99f6-dfb9a28f5ee2" ;
     cim:IdentifiedObject.name "진주 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_b15880ec-365b-57bd-8af9-981859b73239 a cim:Terminal ;
@@ -2845,7 +2845,7 @@ ex:_39e5a9b5-2d23-5416-8bf3-12be4f0ddabe a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "진주 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_79c8f07d-2631-5bbc-8e05-051411a3bc87 a cim:Terminal ;
     cim:IdentifiedObject.mRID "79c8f07d-2631-5bbc-8e05-051411a3bc87" ;
@@ -2874,7 +2874,7 @@ ex:_f4257922-7954-5603-9e1d-47f9017fcb92 a cim:ConnectivityNode ;
 ex:_16182644-2a58-5340-8b31-7252ae6012a0 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "16182644-2a58-5340-8b31-7252ae6012a0" ;
     cim:IdentifiedObject.name "경주 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_18df025e-4d38-5d58-92d6-72dadf4a3db8 a cim:Terminal ;
@@ -2890,7 +2890,7 @@ ex:_bf189a31-1a7a-59ee-a9a1-a279c4fbaaa1 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "경주 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_d154b467-3e59-56ea-b0b3-c2bec5b2c845 a cim:Terminal ;
     cim:IdentifiedObject.mRID "d154b467-3e59-56ea-b0b3-c2bec5b2c845" ;
@@ -2919,7 +2919,7 @@ ex:_e800f9ec-3a94-57ec-aa4d-74823057c0c8 a cim:ConnectivityNode ;
 ex:_00ddaf7e-d256-5ba1-98e4-bb6f1455832a a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "00ddaf7e-d256-5ba1-98e4-bb6f1455832a" ;
     cim:IdentifiedObject.name "김해 부하" ;
-    cim:EnergyConsumer.p "212.38938053097345"^^xsd:float ;
+    cim:EnergyConsumer.p "210.98901098901098"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_8d46732a-e83b-510a-90d1-cde4b98d690a a cim:Terminal ;
@@ -2935,7 +2935,7 @@ ex:_8b78a138-f393-5d3b-8ee8-79ccb3978a99 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "김해 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "17.699115044247787"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "17.58241758241758"^^xsd:float .
 
 ex:_0bd1723b-2e06-5a2b-aeb1-4f50b78fc918 a cim:Terminal ;
     cim:IdentifiedObject.mRID "0bd1723b-2e06-5a2b-aeb1-4f50b78fc918" ;
@@ -2964,7 +2964,7 @@ ex:_942ae245-5ba1-5322-bb92-42e0a775a563 a cim:ConnectivityNode ;
 ex:_80ef72b4-927c-528f-9ca9-d10df8348632 a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "80ef72b4-927c-528f-9ca9-d10df8348632" ;
     cim:IdentifiedObject.name "안동 부하" ;
-    cim:EnergyConsumer.p "159.2920353982301"^^xsd:float ;
+    cim:EnergyConsumer.p "158.24175824175825"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_79af3bb9-c46b-596f-8af5-8147625c2b50 a cim:Terminal ;
@@ -2980,7 +2980,7 @@ ex:_7748df6c-cf52-55d1-8b34-19c2bfccd14d a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "안동 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "13.274336283185841"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "13.186813186813186"^^xsd:float .
 
 ex:_f0b51c2c-c9e2-582e-ac77-d455e77653fd a cim:Terminal ;
     cim:IdentifiedObject.mRID "f0b51c2c-c9e2-582e-ac77-d455e77653fd" ;
@@ -3009,7 +3009,7 @@ ex:_17791c53-d9e3-556e-a8d0-17a27d2199b0 a cim:ConnectivityNode ;
 ex:_cb89b713-0e68-5800-bdba-6622b3c84fdf a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "cb89b713-0e68-5800-bdba-6622b3c84fdf" ;
     cim:IdentifiedObject.name "속초 부하" ;
-    cim:EnergyConsumer.p "159.2920353982301"^^xsd:float ;
+    cim:EnergyConsumer.p "158.24175824175825"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_fa8ee962-dcf0-5016-b592-0801aa3a48a2 a cim:Terminal ;
@@ -3025,7 +3025,7 @@ ex:_be34e4b7-6ab6-5cc9-a87e-59d461344df3 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "속초 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "13.274336283185841"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "13.186813186813186"^^xsd:float .
 
 ex:_94866f20-ac9b-5584-b173-b230b482c6a5 a cim:Terminal ;
     cim:IdentifiedObject.mRID "94866f20-ac9b-5584-b173-b230b482c6a5" ;
@@ -3054,7 +3054,7 @@ ex:_b9f8d531-585f-55b4-a5be-702926a909c5 a cim:ConnectivityNode ;
 ex:_dfed3619-280e-54fc-8e87-7b7d6fa55e5a a cim:EnergyConsumer ;
     cim:IdentifiedObject.mRID "dfed3619-280e-54fc-8e87-7b7d6fa55e5a" ;
     cim:IdentifiedObject.name "삼척 부하" ;
-    cim:EnergyConsumer.p "159.2920353982301"^^xsd:float ;
+    cim:EnergyConsumer.p "158.24175824175825"^^xsd:float ;
     cim:EnergyConsumer.q "0.0"^^xsd:float .
 
 ex:_0cac4383-f115-55c2-bd30-096969e4eb8e a cim:Terminal ;
@@ -3070,7 +3070,7 @@ ex:_43e8cda2-8199-5478-99aa-34fbb930e0b6 a cim:PowerElectronicsConnection ;
     cim:IdentifiedObject.name "삼척 분산 태양광" ;
     cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
     cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
-    cim:PowerElectronicsConnection.ratedS "13.274336283185841"^^xsd:float .
+    cim:PowerElectronicsConnection.ratedS "13.186813186813186"^^xsd:float .
 
 ex:_966d59a6-e174-5746-bd63-b5a1d36c6ebc a cim:Terminal ;
     cim:IdentifiedObject.mRID "966d59a6-e174-5746-bd63-b5a1d36c6ebc" ;
@@ -3079,6 +3079,315 @@ ex:_966d59a6-e174-5746-bd63-b5a1d36c6ebc a cim:Terminal ;
     cim:ACDCTerminal.connected "true"^^xsd:boolean ;
     cim:Terminal.ConductingEquipment ex:_43e8cda2-8199-5478-99aa-34fbb930e0b6 ;
     cim:Terminal.ConnectivityNode ex:_b9f8d531-585f-55b4-a5be-702926a909c5 .
+
+ex:_77f7b55d-b07c-5390-8538-a14d851b0687 a cim:Substation ;
+    cim:IdentifiedObject.mRID "77f7b55d-b07c-5390-8538-a14d851b0687" ;
+    cim:IdentifiedObject.name "해남 변환소 (가상)" ;
+    cim:IdentifiedObject.description "Haenam converter" .
+
+ex:_fec90b07-7e2b-58e3-88ca-11d7cd80eecf a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "fec90b07-7e2b-58e3-88ca-11d7cd80eecf" ;
+    cim:IdentifiedObject.name "해남 변환소 345kV" ;
+    cim:VoltageLevel.Substation ex:_77f7b55d-b07c-5390-8538-a14d851b0687 ;
+    cim:VoltageLevel.BaseVoltage ex:_a98c7cbe-f8f1-55ff-acd7-ec8e03996901 .
+
+ex:_eb5bf11b-b7dc-582c-bad1-c32d446f0a73 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "eb5bf11b-b7dc-582c-bad1-c32d446f0a73" ;
+    cim:IdentifiedObject.name "해남 변환소 345kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_fec90b07-7e2b-58e3-88ca-11d7cd80eecf .
+
+ex:_dd373188-04fa-5e62-832d-9bd9bf32c817 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "dd373188-04fa-5e62-832d-9bd9bf32c817" ;
+    cim:IdentifiedObject.name "해남 변환소 154kV" ;
+    cim:VoltageLevel.Substation ex:_77f7b55d-b07c-5390-8538-a14d851b0687 ;
+    cim:VoltageLevel.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 .
+
+ex:_425b00dd-6783-52c7-9826-7faa83c14178 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "425b00dd-6783-52c7-9826-7faa83c14178" ;
+    cim:IdentifiedObject.name "해남 변환소 154kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_dd373188-04fa-5e62-832d-9bd9bf32c817 .
+
+ex:_6564b215-6143-5c42-9117-b424eb88e378 a cim:PowerTransformer ;
+    cim:IdentifiedObject.mRID "6564b215-6143-5c42-9117-b424eb88e378" ;
+    cim:IdentifiedObject.name "해남 변환소 345/154kV" ;
+    cim:Equipment.EquipmentContainer ex:_77f7b55d-b07c-5390-8538-a14d851b0687 .
+
+ex:_1e966400-abf8-524f-9b76-88e4463af2c9 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "1e966400-abf8-524f-9b76-88e4463af2c9" ;
+    cim:IdentifiedObject.name "해남 변환소 345/154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_6564b215-6143-5c42-9117-b424eb88e378 ;
+    cim:Terminal.ConnectivityNode ex:_eb5bf11b-b7dc-582c-bad1-c32d446f0a73 .
+
+ex:_4fb43a6e-439e-5a2d-a50c-76bb89fd2ace a cim:Terminal ;
+    cim:IdentifiedObject.mRID "4fb43a6e-439e-5a2d-a50c-76bb89fd2ace" ;
+    cim:IdentifiedObject.name "해남 변환소 345/154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_6564b215-6143-5c42-9117-b424eb88e378 ;
+    cim:Terminal.ConnectivityNode ex:_425b00dd-6783-52c7-9826-7faa83c14178 .
+
+ex:_a6a397ae-b359-570d-803c-dc7ba1a5f705 a cim:PowerTransformerEnd ;
+    cim:IdentifiedObject.mRID "a6a397ae-b359-570d-803c-dc7ba1a5f705" ;
+    cim:TransformerEnd.endNumber "1"^^xsd:integer ;
+    cim:TransformerEnd.Terminal ex:_1e966400-abf8-524f-9b76-88e4463af2c9 ;
+    cim:TransformerEnd.BaseVoltage ex:_a98c7cbe-f8f1-55ff-acd7-ec8e03996901 ;
+    cim:PowerTransformerEnd.PowerTransformer ex:_6564b215-6143-5c42-9117-b424eb88e378 ;
+    cim:PowerTransformerEnd.ratedS "1500"^^xsd:integer ;
+    cim:PowerTransformerEnd.ratedU "345"^^xsd:integer ;
+    cim:PowerTransformerEnd.r "0.198375"^^xsd:float ;
+    cim:PowerTransformerEnd.x "9.521999999999998"^^xsd:float .
+
+ex:_9f1460da-7a9a-53af-a953-5d814f73cf40 a cim:PowerTransformerEnd ;
+    cim:IdentifiedObject.mRID "9f1460da-7a9a-53af-a953-5d814f73cf40" ;
+    cim:TransformerEnd.endNumber "2"^^xsd:integer ;
+    cim:TransformerEnd.Terminal ex:_4fb43a6e-439e-5a2d-a50c-76bb89fd2ace ;
+    cim:TransformerEnd.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:PowerTransformerEnd.PowerTransformer ex:_6564b215-6143-5c42-9117-b424eb88e378 ;
+    cim:PowerTransformerEnd.ratedS "1500"^^xsd:integer ;
+    cim:PowerTransformerEnd.ratedU "154"^^xsd:integer ;
+    cim:PowerTransformerEnd.r "0.0"^^xsd:float ;
+    cim:PowerTransformerEnd.x "0.0"^^xsd:float .
+
+ex:_77595cfb-90ed-5d9e-9917-3ebbb4f112a4 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "77595cfb-90ed-5d9e-9917-3ebbb4f112a4" ;
+    cim:IdentifiedObject.name "해남 변환소 부하" ;
+    cim:EnergyConsumer.p "105.49450549450549"^^xsd:float ;
+    cim:EnergyConsumer.q "0.0"^^xsd:float .
+
+ex:_5b1aec6b-a858-5182-bf47-158d478a7205 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "5b1aec6b-a858-5182-bf47-158d478a7205" ;
+    cim:IdentifiedObject.name "해남 변환소 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_77595cfb-90ed-5d9e-9917-3ebbb4f112a4 ;
+    cim:Terminal.ConnectivityNode ex:_425b00dd-6783-52c7-9826-7faa83c14178 .
+
+ex:_8f2e6d0a-b1ef-5194-aad8-f7a3d6333a0d a cim:PowerElectronicsConnection ;
+    cim:IdentifiedObject.mRID "8f2e6d0a-b1ef-5194-aad8-f7a3d6333a0d" ;
+    cim:IdentifiedObject.name "해남 변환소 분산 태양광" ;
+    cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.ratedS "8.79120879120879"^^xsd:float .
+
+ex:_330bebb2-9e48-5cde-b625-042c96d1f611 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "330bebb2-9e48-5cde-b625-042c96d1f611" ;
+    cim:IdentifiedObject.name "해남 변환소 분산 태양광 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_8f2e6d0a-b1ef-5194-aad8-f7a3d6333a0d ;
+    cim:Terminal.ConnectivityNode ex:_425b00dd-6783-52c7-9826-7faa83c14178 .
+
+ex:_f3b3e1fb-4016-5562-883b-11ab1f056407 a cim:Substation ;
+    cim:IdentifiedObject.mRID "f3b3e1fb-4016-5562-883b-11ab1f056407" ;
+    cim:IdentifiedObject.name "진도 변환소 (가상)" ;
+    cim:IdentifiedObject.description "Jindo converter" .
+
+ex:_7cb1a580-9877-505d-9f98-656d71209bd9 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "7cb1a580-9877-505d-9f98-656d71209bd9" ;
+    cim:IdentifiedObject.name "진도 변환소 154kV" ;
+    cim:VoltageLevel.Substation ex:_f3b3e1fb-4016-5562-883b-11ab1f056407 ;
+    cim:VoltageLevel.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 .
+
+ex:_13778978-2a6b-5ed9-b06e-7850b41536ef a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "13778978-2a6b-5ed9-b06e-7850b41536ef" ;
+    cim:IdentifiedObject.name "진도 변환소 154kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_7cb1a580-9877-505d-9f98-656d71209bd9 .
+
+ex:_6143fa98-1a16-5232-96b8-f476e894d6a4 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "6143fa98-1a16-5232-96b8-f476e894d6a4" ;
+    cim:IdentifiedObject.name "진도 변환소 부하" ;
+    cim:EnergyConsumer.p "105.49450549450549"^^xsd:float ;
+    cim:EnergyConsumer.q "0.0"^^xsd:float .
+
+ex:_ea2f1d05-5191-55fa-8d04-143353f90b3d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ea2f1d05-5191-55fa-8d04-143353f90b3d" ;
+    cim:IdentifiedObject.name "진도 변환소 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_6143fa98-1a16-5232-96b8-f476e894d6a4 ;
+    cim:Terminal.ConnectivityNode ex:_13778978-2a6b-5ed9-b06e-7850b41536ef .
+
+ex:_203bc0e5-1f8f-5dde-a756-a63114a3591c a cim:PowerElectronicsConnection ;
+    cim:IdentifiedObject.mRID "203bc0e5-1f8f-5dde-a756-a63114a3591c" ;
+    cim:IdentifiedObject.name "진도 변환소 분산 태양광" ;
+    cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.ratedS "8.79120879120879"^^xsd:float .
+
+ex:_0d9a2563-6f1d-574a-a14b-f92a1623ad21 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "0d9a2563-6f1d-574a-a14b-f92a1623ad21" ;
+    cim:IdentifiedObject.name "진도 변환소 분산 태양광 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_203bc0e5-1f8f-5dde-a756-a63114a3591c ;
+    cim:Terminal.ConnectivityNode ex:_13778978-2a6b-5ed9-b06e-7850b41536ef .
+
+ex:_44a06545-fecb-5edf-a520-729c566c1a61 a cim:Substation ;
+    cim:IdentifiedObject.mRID "44a06545-fecb-5edf-a520-729c566c1a61" ;
+    cim:IdentifiedObject.name "완도 변환소 (가상)" ;
+    cim:IdentifiedObject.description "Wando converter" .
+
+ex:_da970c6b-abc5-5ff4-b955-a19444bab81b a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "da970c6b-abc5-5ff4-b955-a19444bab81b" ;
+    cim:IdentifiedObject.name "완도 변환소 154kV" ;
+    cim:VoltageLevel.Substation ex:_44a06545-fecb-5edf-a520-729c566c1a61 ;
+    cim:VoltageLevel.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 .
+
+ex:_619ee2ab-ecf3-564a-ba88-49172a282665 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "619ee2ab-ecf3-564a-ba88-49172a282665" ;
+    cim:IdentifiedObject.name "완도 변환소 154kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_da970c6b-abc5-5ff4-b955-a19444bab81b .
+
+ex:_1229ae45-ba0b-5cc6-b073-a72771928333 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "1229ae45-ba0b-5cc6-b073-a72771928333" ;
+    cim:IdentifiedObject.name "완도 변환소 부하" ;
+    cim:EnergyConsumer.p "105.49450549450549"^^xsd:float ;
+    cim:EnergyConsumer.q "0.0"^^xsd:float .
+
+ex:_970c3f9c-0246-5ab4-912f-7a42599661ee a cim:Terminal ;
+    cim:IdentifiedObject.mRID "970c3f9c-0246-5ab4-912f-7a42599661ee" ;
+    cim:IdentifiedObject.name "완도 변환소 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_1229ae45-ba0b-5cc6-b073-a72771928333 ;
+    cim:Terminal.ConnectivityNode ex:_619ee2ab-ecf3-564a-ba88-49172a282665 .
+
+ex:_e0df1642-454c-5e7b-8910-bf7c5ef75c7b a cim:PowerElectronicsConnection ;
+    cim:IdentifiedObject.mRID "e0df1642-454c-5e7b-8910-bf7c5ef75c7b" ;
+    cim:IdentifiedObject.name "완도 변환소 분산 태양광" ;
+    cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.ratedS "8.79120879120879"^^xsd:float .
+
+ex:_5b58b5d1-a057-5983-8f76-64312c3e1fa8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "5b58b5d1-a057-5983-8f76-64312c3e1fa8" ;
+    cim:IdentifiedObject.name "완도 변환소 분산 태양광 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_e0df1642-454c-5e7b-8910-bf7c5ef75c7b ;
+    cim:Terminal.ConnectivityNode ex:_619ee2ab-ecf3-564a-ba88-49172a282665 .
+
+ex:_746b1bd6-fbcb-5a26-b79d-b251b436c995 a cim:Substation ;
+    cim:IdentifiedObject.mRID "746b1bd6-fbcb-5a26-b79d-b251b436c995" ;
+    cim:IdentifiedObject.name "제주 (가상)" ;
+    cim:IdentifiedObject.description "Jeju" .
+
+ex:_5162b166-f3cc-5389-b27f-b48c258077c9 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "5162b166-f3cc-5389-b27f-b48c258077c9" ;
+    cim:IdentifiedObject.name "제주 154kV" ;
+    cim:VoltageLevel.Substation ex:_746b1bd6-fbcb-5a26-b79d-b251b436c995 ;
+    cim:VoltageLevel.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 .
+
+ex:_d7845549-aa5f-5a2e-8aac-299ee4d422a3 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "d7845549-aa5f-5a2e-8aac-299ee4d422a3" ;
+    cim:IdentifiedObject.name "제주 154kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_5162b166-f3cc-5389-b27f-b48c258077c9 .
+
+ex:_41c8a4f5-909a-54fe-a3c6-e634c754506e a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "41c8a4f5-909a-54fe-a3c6-e634c754506e" ;
+    cim:IdentifiedObject.name "제주 부하" ;
+    cim:EnergyConsumer.p "450"^^xsd:integer ;
+    cim:EnergyConsumer.q "0.0"^^xsd:float .
+
+ex:_da68eee5-4486-58e8-be56-1b3847b40ffb a cim:Terminal ;
+    cim:IdentifiedObject.mRID "da68eee5-4486-58e8-be56-1b3847b40ffb" ;
+    cim:IdentifiedObject.name "제주 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_41c8a4f5-909a-54fe-a3c6-e634c754506e ;
+    cim:Terminal.ConnectivityNode ex:_d7845549-aa5f-5a2e-8aac-299ee4d422a3 .
+
+ex:_9e12422b-872e-5daf-a66e-5e3ff1079c58 a cim:Substation ;
+    cim:IdentifiedObject.mRID "9e12422b-872e-5daf-a66e-5e3ff1079c58" ;
+    cim:IdentifiedObject.name "한림 (가상)" ;
+    cim:IdentifiedObject.description "Hallim" .
+
+ex:_2abe423b-fe41-59a2-b1c5-be808e593d08 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "2abe423b-fe41-59a2-b1c5-be808e593d08" ;
+    cim:IdentifiedObject.name "한림 154kV" ;
+    cim:VoltageLevel.Substation ex:_9e12422b-872e-5daf-a66e-5e3ff1079c58 ;
+    cim:VoltageLevel.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 .
+
+ex:_18c3dcbe-b2a1-5a1f-9a01-a347fa14c232 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "18c3dcbe-b2a1-5a1f-9a01-a347fa14c232" ;
+    cim:IdentifiedObject.name "한림 154kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_2abe423b-fe41-59a2-b1c5-be808e593d08 .
+
+ex:_9b4f1c74-92b0-51bc-95de-e622b2721374 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "9b4f1c74-92b0-51bc-95de-e622b2721374" ;
+    cim:IdentifiedObject.name "한림 부하" ;
+    cim:EnergyConsumer.p "80"^^xsd:integer ;
+    cim:EnergyConsumer.q "0.0"^^xsd:float .
+
+ex:_c563227d-0901-5d9e-880c-3124b3d044c9 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c563227d-0901-5d9e-880c-3124b3d044c9" ;
+    cim:IdentifiedObject.name "한림 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9b4f1c74-92b0-51bc-95de-e622b2721374 ;
+    cim:Terminal.ConnectivityNode ex:_18c3dcbe-b2a1-5a1f-9a01-a347fa14c232 .
+
+ex:_cb9a5ffb-6125-5e9e-b943-600b4ffb7d09 a cim:Substation ;
+    cim:IdentifiedObject.mRID "cb9a5ffb-6125-5e9e-b943-600b4ffb7d09" ;
+    cim:IdentifiedObject.name "서귀포 (가상)" ;
+    cim:IdentifiedObject.description "Seogwipo" .
+
+ex:_88b93f68-b330-5522-ae3d-9da715a7784c a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "88b93f68-b330-5522-ae3d-9da715a7784c" ;
+    cim:IdentifiedObject.name "서귀포 154kV" ;
+    cim:VoltageLevel.Substation ex:_cb9a5ffb-6125-5e9e-b943-600b4ffb7d09 ;
+    cim:VoltageLevel.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 .
+
+ex:_69d8f555-a74c-55a8-85e9-9c8971f1e9c7 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "69d8f555-a74c-55a8-85e9-9c8971f1e9c7" ;
+    cim:IdentifiedObject.name "서귀포 154kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_88b93f68-b330-5522-ae3d-9da715a7784c .
+
+ex:_75b427c7-170c-51d2-bee7-bc49f69437cb a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "75b427c7-170c-51d2-bee7-bc49f69437cb" ;
+    cim:IdentifiedObject.name "서귀포 부하" ;
+    cim:EnergyConsumer.p "200"^^xsd:integer ;
+    cim:EnergyConsumer.q "0.0"^^xsd:float .
+
+ex:_74c1bdef-9f37-53b4-8d70-05fb640c95b8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "74c1bdef-9f37-53b4-8d70-05fb640c95b8" ;
+    cim:IdentifiedObject.name "서귀포 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_75b427c7-170c-51d2-bee7-bc49f69437cb ;
+    cim:Terminal.ConnectivityNode ex:_69d8f555-a74c-55a8-85e9-9c8971f1e9c7 .
+
+ex:_0698ca36-74cd-5883-bf38-671f04df0187 a cim:Substation ;
+    cim:IdentifiedObject.mRID "0698ca36-74cd-5883-bf38-671f04df0187" ;
+    cim:IdentifiedObject.name "동제주 (가상)" ;
+    cim:IdentifiedObject.description "East Jeju" .
+
+ex:_07b5a0f9-667f-5cf2-b9b1-8557aa4239ce a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "07b5a0f9-667f-5cf2-b9b1-8557aa4239ce" ;
+    cim:IdentifiedObject.name "동제주 154kV" ;
+    cim:VoltageLevel.Substation ex:_0698ca36-74cd-5883-bf38-671f04df0187 ;
+    cim:VoltageLevel.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 .
+
+ex:_7d2297a5-529d-5651-958b-40b9f5a3f372 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "7d2297a5-529d-5651-958b-40b9f5a3f372" ;
+    cim:IdentifiedObject.name "동제주 154kV" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_07b5a0f9-667f-5cf2-b9b1-8557aa4239ce .
+
+ex:_97987600-de2c-5234-9ba8-998b1ac0f727 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "97987600-de2c-5234-9ba8-998b1ac0f727" ;
+    cim:IdentifiedObject.name "동제주 부하" ;
+    cim:EnergyConsumer.p "120"^^xsd:integer ;
+    cim:EnergyConsumer.q "0.0"^^xsd:float .
+
+ex:_8b3488e3-9127-5854-8e12-4470ba76ce0e a cim:Terminal ;
+    cim:IdentifiedObject.mRID "8b3488e3-9127-5854-8e12-4470ba76ce0e" ;
+    cim:IdentifiedObject.name "동제주 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_97987600-de2c-5234-9ba8-998b1ac0f727 ;
+    cim:Terminal.ConnectivityNode ex:_7d2297a5-529d-5651-958b-40b9f5a3f372 .
 
 ex:_742e9fcc-1aa5-5fa7-aefc-78c85d4cbde6 a cim:ACLineSegment ;
     cim:IdentifiedObject.mRID "742e9fcc-1aa5-5fa7-aefc-78c85d4cbde6" ;
@@ -4505,6 +4814,206 @@ ex:_7bba1bcb-0d49-535e-83b5-066c40e2e4b8 a cim:Terminal ;
     cim:Terminal.ConductingEquipment ex:_1660bea7-0a11-54cc-a6f4-4be0e2977cf4 ;
     cim:Terminal.ConnectivityNode ex:_b60ddced-afe2-5a44-bec6-0bcefe452fa5 .
 
+ex:_b3c86c28-0bc5-5142-8837-273e6ced37f2 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "b3c86c28-0bc5-5142-8837-273e6ced37f2" ;
+    cim:IdentifiedObject.name "해남 변환소–호남 태양광 거점 345kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_a98c7cbe-f8f1-55ff-acd7-ec8e03996901 ;
+    cim:Conductor.length "54.8"^^xsd:float ;
+    cim:ACLineSegment.r "0.8760288246054256"^^xsd:float ;
+    cim:ACLineSegment.x "8.48652923836506"^^xsd:float ;
+    cim:ACLineSegment.bch "0.00047474168665054533"^^xsd:float .
+
+ex:_36c32595-fcc9-557c-a683-454bf171e563 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "36c32595-fcc9-557c-a683-454bf171e563" ;
+    cim:IdentifiedObject.name "해남 변환소–호남 태양광 거점 345kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_b3c86c28-0bc5-5142-8837-273e6ced37f2 ;
+    cim:Terminal.ConnectivityNode ex:_eb5bf11b-b7dc-582c-bad1-c32d446f0a73 .
+
+ex:_c1ff5578-5bb1-5038-ad8d-cb7a415d0e91 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c1ff5578-5bb1-5038-ad8d-cb7a415d0e91" ;
+    cim:IdentifiedObject.name "해남 변환소–호남 태양광 거점 345kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_b3c86c28-0bc5-5142-8837-273e6ced37f2 ;
+    cim:Terminal.ConnectivityNode ex:_9f94aaa3-17d1-51e1-b956-c26c17b3bccc .
+
+ex:_808c9653-c9df-514e-91c5-4ec64c88a30a a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "808c9653-c9df-514e-91c5-4ec64c88a30a" ;
+    cim:IdentifiedObject.name "해남 변환소–진도 변환소 154kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:Conductor.length "39.3"^^xsd:float ;
+    cim:ACLineSegment.r "0.6870353579428797"^^xsd:float ;
+    cim:ACLineSegment.x "3.729620514547061"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0005328128118700268"^^xsd:float .
+
+ex:_1ca97849-4fa6-5685-b89f-a608ff1345c7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "1ca97849-4fa6-5685-b89f-a608ff1345c7" ;
+    cim:IdentifiedObject.name "해남 변환소–진도 변환소 154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_808c9653-c9df-514e-91c5-4ec64c88a30a ;
+    cim:Terminal.ConnectivityNode ex:_425b00dd-6783-52c7-9826-7faa83c14178 .
+
+ex:_25f5cbc8-99e6-5c0c-8580-a495e32bea44 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "25f5cbc8-99e6-5c0c-8580-a495e32bea44" ;
+    cim:IdentifiedObject.name "해남 변환소–진도 변환소 154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_808c9653-c9df-514e-91c5-4ec64c88a30a ;
+    cim:Terminal.ConnectivityNode ex:_13778978-2a6b-5ed9-b06e-7850b41536ef .
+
+ex:_a10fd24d-12ba-5907-b97d-91f42bde7730 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "a10fd24d-12ba-5907-b97d-91f42bde7730" ;
+    cim:IdentifiedObject.name "해남 변환소–완도 변환소 154kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:Conductor.length "36.0"^^xsd:float ;
+    cim:ACLineSegment.r "1.2609496667878377"^^xsd:float ;
+    cim:ACLineSegment.x "6.845155333991118"^^xsd:float ;
+    cim:ACLineSegment.bch "0.00024447436722887665"^^xsd:float .
+
+ex:_7908756a-bea7-50d1-b067-e313b444f041 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "7908756a-bea7-50d1-b067-e313b444f041" ;
+    cim:IdentifiedObject.name "해남 변환소–완도 변환소 154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_a10fd24d-12ba-5907-b97d-91f42bde7730 ;
+    cim:Terminal.ConnectivityNode ex:_425b00dd-6783-52c7-9826-7faa83c14178 .
+
+ex:_f0981d18-c15a-5d57-a16b-183d2724a69f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "f0981d18-c15a-5d57-a16b-183d2724a69f" ;
+    cim:IdentifiedObject.name "해남 변환소–완도 변환소 154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_a10fd24d-12ba-5907-b97d-91f42bde7730 ;
+    cim:Terminal.ConnectivityNode ex:_619ee2ab-ecf3-564a-ba88-49172a282665 .
+
+ex:_2ae1b6f4-219b-5bca-963d-a6891a905f99 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "2ae1b6f4-219b-5bca-963d-a6891a905f99" ;
+    cim:IdentifiedObject.name "제주–한림 154kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:Conductor.length "30.3"^^xsd:float ;
+    cim:ACLineSegment.r "1.060918831116798"^^xsd:float ;
+    cim:ACLineSegment.x "5.759273654634046"^^xsd:float ;
+    cim:ACLineSegment.bch "0.00020569215944931036"^^xsd:float .
+
+ex:_4f0b35e6-217c-5092-afac-ca2855709344 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "4f0b35e6-217c-5092-afac-ca2855709344" ;
+    cim:IdentifiedObject.name "제주–한림 154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_2ae1b6f4-219b-5bca-963d-a6891a905f99 ;
+    cim:Terminal.ConnectivityNode ex:_d7845549-aa5f-5a2e-8aac-299ee4d422a3 .
+
+ex:_50d4c97f-bad3-5127-845c-94bc18d69c3e a cim:Terminal ;
+    cim:IdentifiedObject.mRID "50d4c97f-bad3-5127-845c-94bc18d69c3e" ;
+    cim:IdentifiedObject.name "제주–한림 154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_2ae1b6f4-219b-5bca-963d-a6891a905f99 ;
+    cim:Terminal.ConnectivityNode ex:_18c3dcbe-b2a1-5a1f-9a01-a347fa14c232 .
+
+ex:_40515105-20a1-5229-81b6-d6b09abe409e a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "40515105-20a1-5229-81b6-d6b09abe409e" ;
+    cim:IdentifiedObject.name "제주–동제주 154kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:Conductor.length "31.3"^^xsd:float ;
+    cim:ACLineSegment.r "1.0942999315586825"^^xsd:float ;
+    cim:ACLineSegment.x "5.940485342747134"^^xsd:float ;
+    cim:ACLineSegment.bch "0.00021216412547847175"^^xsd:float .
+
+ex:_7549f101-c879-5140-b1ff-9cc547399d0c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "7549f101-c879-5140-b1ff-9cc547399d0c" ;
+    cim:IdentifiedObject.name "제주–동제주 154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_40515105-20a1-5229-81b6-d6b09abe409e ;
+    cim:Terminal.ConnectivityNode ex:_d7845549-aa5f-5a2e-8aac-299ee4d422a3 .
+
+ex:_9febac61-6aea-5e98-8579-99012ed8d497 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "9febac61-6aea-5e98-8579-99012ed8d497" ;
+    cim:IdentifiedObject.name "제주–동제주 154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_40515105-20a1-5229-81b6-d6b09abe409e ;
+    cim:Terminal.ConnectivityNode ex:_7d2297a5-529d-5651-958b-40b9f5a3f372 .
+
+ex:_f7d0ee24-1af6-5bb9-90fa-59bb6373f131 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "f7d0ee24-1af6-5bb9-90fa-59bb6373f131" ;
+    cim:IdentifiedObject.name "제주–서귀포 154kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:Conductor.length "33.7"^^xsd:float ;
+    cim:ACLineSegment.r "1.1779225307585686"^^xsd:float ;
+    cim:ACLineSegment.x "6.394436595546515"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0002283769708948193"^^xsd:float .
+
+ex:_a085c3c5-152f-5ee2-b4ff-c242c3a10061 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a085c3c5-152f-5ee2-b4ff-c242c3a10061" ;
+    cim:IdentifiedObject.name "제주–서귀포 154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f7d0ee24-1af6-5bb9-90fa-59bb6373f131 ;
+    cim:Terminal.ConnectivityNode ex:_d7845549-aa5f-5a2e-8aac-299ee4d422a3 .
+
+ex:_c1ad004d-82c1-5898-89ce-48f8fc76b33d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c1ad004d-82c1-5898-89ce-48f8fc76b33d" ;
+    cim:IdentifiedObject.name "제주–서귀포 154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f7d0ee24-1af6-5bb9-90fa-59bb6373f131 ;
+    cim:Terminal.ConnectivityNode ex:_69d8f555-a74c-55a8-85e9-9c8971f1e9c7 .
+
+ex:_762be324-025f-5dc1-8569-dfc8d8fac650 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "762be324-025f-5dc1-8569-dfc8d8fac650" ;
+    cim:IdentifiedObject.name "한림–서귀포 154kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:Conductor.length "38.7"^^xsd:float ;
+    cim:ACLineSegment.r "1.356040231088462"^^xsd:float ;
+    cim:ACLineSegment.x "7.361361254480222"^^xsd:float ;
+    cim:ACLineSegment.bch "0.00026291063486837113"^^xsd:float .
+
+ex:_ef1faf73-0712-5324-98b7-1ee2b27b7e71 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ef1faf73-0712-5324-98b7-1ee2b27b7e71" ;
+    cim:IdentifiedObject.name "한림–서귀포 154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_762be324-025f-5dc1-8569-dfc8d8fac650 ;
+    cim:Terminal.ConnectivityNode ex:_18c3dcbe-b2a1-5a1f-9a01-a347fa14c232 .
+
+ex:_7d3b5fae-3784-5c3b-a152-d22116a0f92a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "7d3b5fae-3784-5c3b-a152-d22116a0f92a" ;
+    cim:IdentifiedObject.name "한림–서귀포 154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_762be324-025f-5dc1-8569-dfc8d8fac650 ;
+    cim:Terminal.ConnectivityNode ex:_69d8f555-a74c-55a8-85e9-9c8971f1e9c7 .
+
+ex:_e67fc8d6-5590-5128-ba38-8a998c385cc4 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "e67fc8d6-5590-5128-ba38-8a998c385cc4" ;
+    cim:IdentifiedObject.name "동제주–서귀포 154kV" ;
+    cim:ConductingEquipment.BaseVoltage ex:_9e386404-870e-5c9e-bcad-7343c59daa99 ;
+    cim:Conductor.length "44.9"^^xsd:float ;
+    cim:ACLineSegment.r "1.570316560921522"^^xsd:float ;
+    cim:ACLineSegment.x "8.524575616431118"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0003044547753902604"^^xsd:float .
+
+ex:_0a740a85-8a99-553f-9fec-09d176f84465 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "0a740a85-8a99-553f-9fec-09d176f84465" ;
+    cim:IdentifiedObject.name "동제주–서귀포 154kV T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_e67fc8d6-5590-5128-ba38-8a998c385cc4 ;
+    cim:Terminal.ConnectivityNode ex:_7d2297a5-529d-5651-958b-40b9f5a3f372 .
+
+ex:_c4a2c512-e8bd-5ae7-a6e8-72ff49fc040d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c4a2c512-e8bd-5ae7-a6e8-72ff49fc040d" ;
+    cim:IdentifiedObject.name "동제주–서귀포 154kV T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_e67fc8d6-5590-5128-ba38-8a998c385cc4 ;
+    cim:Terminal.ConnectivityNode ex:_69d8f555-a74c-55a8-85e9-9c8971f1e9c7 .
+
 ex:_9d9d2499-08f6-5096-b998-139e2b3e125b a cim:SynchronousMachine ;
     cim:IdentifiedObject.mRID "9d9d2499-08f6-5096-b998-139e2b3e125b" ;
     cim:IdentifiedObject.name "동해안 원전 (가상)" ;
@@ -4760,3 +5269,51 @@ ex:_1f4df207-da24-562c-9359-3aa5351923da a cim:Terminal ;
     cim:ACDCTerminal.connected "true"^^xsd:boolean ;
     cim:Terminal.ConductingEquipment ex:_2f7ed2f0-9dce-5c6c-95c6-cc043ee9a07d ;
     cim:Terminal.ConnectivityNode ex:_942ae245-5ba1-5322-bb92-42e0a775a563 .
+
+ex:_757b99e2-95f2-5dc3-a150-d3460bbe40f0 a cim:SynchronousMachine ;
+    cim:IdentifiedObject.mRID "757b99e2-95f2-5dc3-a150-d3460bbe40f0" ;
+    cim:IdentifiedObject.name "제주 LNG (가상)" ;
+    cim:IdentifiedObject.description "Jeju LNG (virtual)" ;
+    cim:RotatingMachine.ratedS "500"^^xsd:integer ;
+    cim:RotatingMachine.p "0.0"^^xsd:float ;
+    cim:RotatingMachine.q "0.0"^^xsd:float .
+
+ex:_50b129a0-caf2-50ad-bbc2-c9f263ae83f4 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "50b129a0-caf2-50ad-bbc2-c9f263ae83f4" ;
+    cim:IdentifiedObject.name "제주 LNG (가상) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_757b99e2-95f2-5dc3-a150-d3460bbe40f0 ;
+    cim:Terminal.ConnectivityNode ex:_d7845549-aa5f-5a2e-8aac-299ee4d422a3 .
+
+ex:_177276a5-a141-5149-81ae-9aa3eef85d65 a cim:PowerElectronicsConnection ;
+    cim:IdentifiedObject.mRID "177276a5-a141-5149-81ae-9aa3eef85d65" ;
+    cim:IdentifiedObject.name "제주 풍력 (가상)" ;
+    cim:IdentifiedObject.description "Jeju Wind (virtual)" ;
+    cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.ratedS "450"^^xsd:integer .
+
+ex:_6ea54981-3caf-5c60-876c-b1c21b7a75ba a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6ea54981-3caf-5c60-876c-b1c21b7a75ba" ;
+    cim:IdentifiedObject.name "제주 풍력 (가상) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_177276a5-a141-5149-81ae-9aa3eef85d65 ;
+    cim:Terminal.ConnectivityNode ex:_18c3dcbe-b2a1-5a1f-9a01-a347fa14c232 .
+
+ex:_8d9a9cbc-d7df-5a1e-9550-a31def188ee5 a cim:PowerElectronicsConnection ;
+    cim:IdentifiedObject.mRID "8d9a9cbc-d7df-5a1e-9550-a31def188ee5" ;
+    cim:IdentifiedObject.name "제주 태양광 (가상)" ;
+    cim:IdentifiedObject.description "Jeju Solar (virtual)" ;
+    cim:PowerElectronicsConnection.p "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.q "0.0"^^xsd:float ;
+    cim:PowerElectronicsConnection.ratedS "1200"^^xsd:integer .
+
+ex:_6f9d6d27-e825-5b79-b437-1f253909ff3c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6f9d6d27-e825-5b79-b437-1f253909ff3c" ;
+    cim:IdentifiedObject.name "제주 태양광 (가상) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_8d9a9cbc-d7df-5a1e-9550-a31def188ee5 ;
+    cim:Terminal.ConnectivityNode ex:_69d8f555-a74c-55a8-85e9-9c8971f1e9c7 .

@@ -8,7 +8,8 @@
   1) pycim으로 CIM 모델 생성 (Substation · VoltageLevel · ACLineSegment · PowerTransformer ·
      SynchronousMachine · PowerElectronicsConnection(태양광) · EnergyConsumer, mRID는 UUID v5)
   2) pycim.export_pandapower로 변환, 화력·원전은 전압 제어(PV) 발전기로 바꿈
-  3) 24시간: 부하 곡선 · 태양광 곡선 · 발전 배분(급전) → 조류계산
+  3) 24시간: 부하 곡선 · 태양광·풍력 곡선 · 발전 배분(급전) · 제주 HVDC 송전량 → 조류계산
+     (HVDC는 pycim에 아직 DC 설비 클래스가 없어 pandapower dcline으로 직접 추가)
   4) assets/data/twin.json (웹), examples/twin/korea_virtual_grid.ttl (CIM RDF)
 
 필요: pip install pandapower rdflib
@@ -86,6 +87,24 @@ STATIONS = [
     ("ANDONG", "안동", "Andong", 128.73, 36.57, [154], 0.003),
     ("SOKCHO", "속초", "Sokcho", 128.59, 38.20, [154], 0.003),
     ("SAMCHEOK", "삼척", "Samcheok", 129.17, 37.45, [154], 0.003),
+    # 제주 HVDC 육지 쪽 변환소
+    ("HAENAM", "해남 변환소", "Haenam converter", 126.60, 34.57, [345, 154], 0.002),
+    ("JINDO", "진도 변환소", "Jindo converter", 126.26, 34.48, [154], 0.002),
+    ("WANDO", "완도 변환소", "Wando converter", 126.75, 34.33, [154], 0.002),
+    # 제주 계통 (육지와 교류로 이어지지 않은 섬 계통, 부하는 JEJU_LOAD로 따로 정함)
+    ("JEJU", "제주", "Jeju", 126.52, 33.50, [154], 0),
+    ("HALLIM", "한림", "Hallim", 126.27, 33.41, [154], 0),
+    ("SEOGWIPO", "서귀포", "Seogwipo", 126.56, 33.25, [154], 0),
+    ("DONGJEJU", "동제주", "East Jeju", 126.80, 33.52, [154], 0),
+]
+JEJU = {"JEJU", "HALLIM", "SEOGWIPO", "DONGJEJU"}
+JEJU_LOAD = {"JEJU": 450, "HALLIM": 80, "SEOGWIPO": 200, "DONGJEJU": 120}      # 최대 수요 MW (가상)
+
+# 제주–육지 HVDC (가상): (id, 한글, 영문, 육지 변환소, 제주 변환소, 용량 MW, 역송 가능)
+HVDC = [
+    ("HVDC1", "HVDC #1 해남–제주 (가상)", "HVDC #1 Haenam–Jeju (virtual)", "HAENAM", "JEJU", 300, False),
+    ("HVDC2", "HVDC #2 진도–한림 (가상)", "HVDC #2 Jindo–Hallim (virtual)", "JINDO", "HALLIM", 400, True),
+    ("HVDC3", "HVDC #3 완도–동제주 (가상)", "HVDC #3 Wando–East Jeju (virtual)", "WANDO", "DONGJEJU", 200, False),
 ]
 
 # (id, 한글, 영문, 종류, 접속 변전소, 접속 전압, 용량 MW, 최소 출력 비율)
@@ -106,6 +125,10 @@ PLANTS = [
     ("S_JEONBUK", "전북 해안 태양광 (가상)", "Jeonbuk Coast Solar (virtual)", "solar", "SAEMANGEUM", 345, 2000, 0),
     ("S_CHUNGNAM", "충남 태양광 (가상)", "Chungnam Solar (virtual)", "solar", "SEOSAN", 154, 300, 0),
     ("S_GYEONGBUK", "경북 태양광 (가상)", "Gyeongbuk Solar (virtual)", "solar", "ANDONG", 154, 300, 0),
+    # 제주
+    ("J_LNG", "제주 LNG (가상)", "Jeju LNG (virtual)", "lng", "JEJU", 154, 500, 0.3),
+    ("J_WIND", "제주 풍력 (가상)", "Jeju Wind (virtual)", "wind", "HALLIM", 154, 450, 0),
+    ("J_SOLAR", "제주 태양광 (가상)", "Jeju Solar (virtual)", "solar", "SEOGWIPO", 154, 1200, 0),
 ]
 
 # 선로 (변전소 A, 변전소 B, 전압, 병렬 루트 수) — 각 루트는 2회선 송전탑 1개를 뜻함
@@ -136,6 +159,11 @@ LINES = [
     ("YEOSU", "SUNCHEON", 154, 2), ("CHANGWON", "JINJU", 154, 2), ("POHANG", "GYEONGJU", 154, 2),
     ("BUSAN", "GIMHAE", 154, 2), ("DAEGU", "ANDONG", 154, 2), ("GANGNEUNG", "SOKCHO", 154, 2),
     ("GANGNEUNG", "SAMCHEOK", 154, 2), ("CHUNCHEON", "WONJU", 154, 2),
+    # HVDC 변환소 연결
+    ("HAENAM", "HONAMPV", 345, 1), ("HAENAM", "JINDO", 154, 2), ("HAENAM", "WANDO", 154, 1),
+    # 제주 154kV
+    ("JEJU", "HALLIM", 154, 1), ("JEJU", "DONGJEJU", 154, 1), ("JEJU", "SEOGWIPO", 154, 1),
+    ("HALLIM", "SEOGWIPO", 154, 1), ("DONGJEJU", "SEOGWIPO", 154, 1),
 ]
 
 # 2회선 1루트 기준 선로 정수 (km당, 가상 대표값): r, x [Ω/km], c [nF/km], 열적 한계 [kA]
@@ -146,6 +174,8 @@ LOAD_CURVE = [0.78, 0.74, 0.71, 0.69, 0.68, 0.69, 0.73, 0.80, 0.88, 0.94, 0.97, 
               0.96, 0.98, 1.00, 1.00, 0.99, 0.97, 0.95, 0.94, 0.93, 0.91, 0.87, 0.82]
 SOLAR_CURVE = [0, 0, 0, 0, 0, 0, 0.02, 0.10, 0.28, 0.48, 0.66, 0.78,
                0.84, 0.82, 0.72, 0.56, 0.36, 0.16, 0.04, 0, 0, 0, 0, 0]
+WIND_CURVE = [0.55, 0.58, 0.60, 0.60, 0.58, 0.55, 0.50, 0.45, 0.40, 0.35, 0.33, 0.32,     # 풍력: 설비 용량 대비 (가상)
+              0.33, 0.35, 0.38, 0.40, 0.42, 0.45, 0.48, 0.50, 0.52, 0.53, 0.54, 0.55]
 
 
 def km(a, b):
@@ -171,7 +201,7 @@ def build_cim():
                                                    name=f"{ko} {kv}kV", connectivity_node_container=vl))
         # 변압기: 위 전압 → 아래 전압 (용량은 그 아래로 흐를 전력에 맞춰 넉넉히)
         for hi, lo in zip(levels, levels[1:]):
-            rating = 8000 if hi == 765 else max(600, round(PEAK_MW * share * 1.6, -2) + 600)
+            rating = 8000 if hi == 765 else 1500 if sid == "HAENAM" else max(600, round(PEAK_MW * share * 1.6, -2) + 600)
             tr = m.add(PowerTransformer(mrid=stable_mrid("kr-twin", sid, "TR", hi, lo),
                                         name=f"{ko} {hi}/{lo}kV", equipment_container=ss))
             tr.connect(node[sid, hi], node[sid, lo])
@@ -179,6 +209,9 @@ def build_cim():
             z = hi ** 2 / rating
             tr.add_end(tr.terminals[0], rated_u=hi, rated_s=rating, r=0.0025 * z, x=vk * z, base_voltage=bv[hi])
             tr.add_end(tr.terminals[1], rated_u=lo, rated_s=rating, base_voltage=bv[lo])   # 탭은 계산 중 OLTC가 조절
+        if sid in JEJU_LOAD:
+            m.add(EnergyConsumer(mrid=stable_mrid("kr-twin", sid, "LOAD"), name=f"{ko} 부하",
+                                 p=JEJU_LOAD[sid])).connect(node[sid, 154])
         if share:
             lvl = min(levels)
             m.add(EnergyConsumer(mrid=stable_mrid("kr-twin", sid, "LOAD"), name=f"{ko} 부하",
@@ -198,11 +231,11 @@ def build_cim():
                       "ratingMVA": round(math.sqrt(3) * kv * imax * routes), "eq": seg})
     plants = []
     for pid, ko, en, kind, sid, kv, cap, pmin in PLANTS:
-        cls = PowerElectronicsConnection if kind == "solar" else SynchronousMachine
+        cls = PowerElectronicsConnection if kind in ("solar", "wind") else SynchronousMachine
         eq = m.add(cls(mrid=stable_mrid("kr-twin", "GEN", pid), name=ko, description=en, rated_s=cap))
         eq.connect(node[sid, kv])
         plants.append({"id": pid, "ko": ko, "en": en, "type": kind, "station": sid, "kv": kv,
-                       "capMW": cap, "pmin": pmin, "eq": eq})
+                       "capMW": cap, "pmin": pmin, "eq": eq, "jeju": sid in JEJU})
     return m, node, lines, plants
 
 
@@ -241,13 +274,13 @@ def main():
     gen_idx = {}
     for p in plants:
         table, i = el[p["eq"]]
-        if p["type"] == "solar":
+        if p["type"] in ("solar", "wind"):
             p["sgen"] = i
             continue
         net.sgen.drop(i, inplace=True)
         b = bus[node[p["station"], p["kv"]]]
         vm = 1.03 if p["kv"] == 765 else 1.02
-        if p["id"] == "L_METRO":
+        if p["id"] in ("L_METRO", "J_LNG"):          # 육지와 제주 각각의 기준 발전기
             gen_idx[p["id"]] = ("ext_grid", pp.create_ext_grid(net, b, vm_pu=vm, name=p["ko"]))
         else:
             gen_idx[p["id"]] = ("gen", pp.create_gen(net, b, p_mw=0, vm_pu=vm, name=p["ko"]))
@@ -256,11 +289,23 @@ def main():
     dpv = [(eq, i) for eq, (t, i) in el.items() if t == "sgen" and isinstance(eq, PowerElectronicsConnection)
            and all(eq is not p["eq"] for p in plants)]
 
+    # 제주 HVDC: pandapower dcline (방향은 시간마다 바꾼다)
+    hv = []
+    for hid, ko, en, a, b, cap, rev in HVDC:
+        i = pp.create_dcline(net, from_bus=bus[node[a, 154]], to_bus=bus[node[b, 154]], p_mw=0, loss_percent=1.5,
+                             loss_mw=1, vm_from_pu=1.02, vm_to_pu=1.02, max_p_mw=cap, name=ko)
+        hv.append({"id": hid, "ko": ko, "en": en, "a": a, "b": b, "capMW": cap, "reverse": rev, "idx": i,
+                   "busA": bus[node[a, 154]], "busB": bus[node[b, 154]]})
+    mainland = [p for p in plants if not p["jeju"]]
+    jlng = next(p for p in plants if p["id"] == "J_LNG")
+
     station_of = {}
     for (sid, kv), cn in node.items():
         station_of.setdefault(sid, []).append((kv, bus[cn]))
 
-    series = {k: [] for k in ("load", "solar", "nuclear", "coal", "lng", "losses", "minV", "maxLoading")}
+    series = {k: [] for k in ("load", "solar", "wind", "nuclear", "coal", "lng", "losses", "minV", "maxLoading",
+                              "curtail", "jejuLoad")}
+    hv_flow = {x["id"]: [] for x in hv}
     st_v = {s[0]: [] for s in STATIONS}
     ln_load = {l["id"]: [] for l in lines}
     ln_flow = {l["id"]: [] for l in lines}
@@ -268,17 +313,37 @@ def main():
     loss_est = 0.02 * PEAK_MW
     tan = math.tan(math.acos(PF))
     for h in range(24):
-        load_mw = PEAK_MW * LOAD_CURVE[h]
+        jeju_load = sum(JEJU_LOAD.values()) * LOAD_CURVE[h]
+        load_mw = PEAK_MW * LOAD_CURVE[h] + jeju_load
         for eq, i in loads:
             net.load.at[i, "p_mw"] = eq.p * LOAD_CURVE[h]
             net.load.at[i, "q_mvar"] = eq.p * LOAD_CURVE[h] * tan
-        solar_total = 0.0
+        solar_total = 0.0                                 # 육지 태양광
         for eq, i in dpv:
             net.sgen.at[i, "p_mw"] = eq.rated_s * SOLAR_CURVE[h]; solar_total += eq.rated_s * SOLAR_CURVE[h]
-        for p in plants:
+        for p in mainland:
             if p["type"] == "solar":
                 net.sgen.at[p["sgen"], "p_mw"] = p["capMW"] * SOLAR_CURVE[h]; solar_total += p["capMW"] * SOLAR_CURVE[h]
-        disp = dispatch(load_mw, solar_total, plants, loss_est)
+        # ---- 제주: 부족하면 육지에서 받고(정송), 남으면 육지로 보내고(역송), 그래도 넘치면 태양광 출력제한 ----
+        jw = next(p for p in plants if p["id"] == "J_WIND"); js = next(p for p in plants if p["id"] == "J_SOLAR")
+        wind = jw["capMW"] * WIND_CURVE[h]; jsol = js["capMW"] * SOLAR_CURVE[h]
+        jmin = jlng["capMW"] * jlng["pmin"]
+        fwd_cap = sum(x["capMW"] for x in hv); rev_cap = sum(x["capMW"] for x in hv if x["reverse"])
+        transfer = jeju_load - wind - jsol - jmin            # + 육지→제주, − 제주→육지
+        curtail = 0.0
+        if transfer < -rev_cap:
+            curtail = min(jsol, -rev_cap - transfer); jsol -= curtail; transfer = -rev_cap
+        transfer = min(transfer, fwd_cap)
+        net.sgen.at[jw["sgen"], "p_mw"] = wind; net.sgen.at[js["sgen"], "p_mw"] = jsol
+        group = hv if transfer >= 0 else [x for x in hv if x["reverse"]]
+        cap_g = sum(x["capMW"] for x in group)
+        for x in hv:
+            f = transfer * x["capMW"] / cap_g if x in group else 0.0
+            x["flow"] = f
+            fb, tb = (x["busA"], x["busB"]) if f >= 0 else (x["busB"], x["busA"])
+            net.dcline.at[x["idx"], "from_bus"] = fb; net.dcline.at[x["idx"], "to_bus"] = tb
+            net.dcline.at[x["idx"], "p_mw"] = abs(f)
+        disp = dispatch(PEAK_MW * LOAD_CURVE[h] + max(transfer, 0) * 1.02, solar_total - min(transfer, 0), mainland, loss_est)
         for pid, (t, i) in gen_idx.items():
             if t == "gen":
                 net.gen.at[i, "p_mw"] = disp[pid]
@@ -305,13 +370,15 @@ def main():
             rt = net.res_trafo.join(net.trafo[["name", "sn_mva"]]).sort_values("loading_percent", ascending=False)
             print(rt[["name", "sn_mva", "loading_percent"]].head(4).to_string())
             print(net.res_gen.join(net.gen[["name"]])[["name", "p_mw", "q_mvar"]].to_string(), net.res_ext_grid)
-        losses = net.res_line.pl_mw.sum() + net.res_trafo.pl_mw.sum()
+        losses = net.res_line.pl_mw.sum() + net.res_trafo.pl_mw.sum() + net.res_dcline.pl_mw.sum()
         loss_est = losses
         # 결과 정리
-        out = {"nuclear": 0, "coal": 0, "lng": 0}
+        out = {"nuclear": 0, "coal": 0, "lng": 0, "wind": 0}
         for p in plants:
-            if p["type"] == "solar":
-                v = p["capMW"] * SOLAR_CURVE[h]
+            if p["type"] in ("solar", "wind"):
+                v = float(net.res_sgen.p_mw.at[p["sgen"]])
+                if p["type"] == "wind":
+                    out["wind"] += v
             else:
                 t, i = gen_idx[p["id"]]
                 v = float(net.res_ext_grid.p_mw.at[i]) if t == "ext_grid" else float(net.res_gen.p_mw.at[i])
@@ -320,7 +387,11 @@ def main():
         for k in out:
             series[k].append(round(out[k]))
         series["load"].append(round(load_mw))
-        series["solar"].append(round(solar_total))
+        series["solar"].append(round(solar_total + jsol))
+        series["curtail"].append(round(curtail))
+        series["jejuLoad"].append(round(jeju_load))
+        for x in hv:
+            hv_flow[x["id"]].append(round(x["flow"]))
         series["losses"].append(round(losses))
         for sid, lv in station_of.items():
             kv, b = min(lv)                              # 가장 낮은 전압 모선 = 부하가 붙는 곳
@@ -331,24 +402,27 @@ def main():
             ln_flow[l["id"]].append(round(float(net.res_line.p_from_mw.at[i])))
         series["minV"].append(min(v[-1] for v in st_v.values()))
         series["maxLoading"].append(max(v[-1] for v in ln_load.values()))
-        print(f"{h:02d}시 수요 {load_mw:7.0f} 태양광 {solar_total:6.0f} 원전 {out['nuclear']:6.0f} 석탄 {out['coal']:6.0f} "
+        print(f"{h:02d}시 제주→ HVDC {transfer:6.0f} 출력제한 {curtail:4.0f} | ", end="")
+        print(f"{h:02d}시 수요 {load_mw:7.0f} 태양광 {solar_total + jsol:6.0f} 원전 {out['nuclear']:6.0f} 석탄 {out['coal']:6.0f} "
               f"LNG {out['lng']:6.0f} 손실 {losses:5.0f} | 최저전압 {series['minV'][-1]:.3f} 최대부하율 {series['maxLoading'][-1]:.0f}%")
 
     outline = json.loads((ROOT / "examples" / "twin" / "korea_outline.geojson").read_text())
     polys = [[[round(x, 3), round(y, 3)] for x, y in poly[0]] for poly in outline["geometry"]["coordinates"]]
     data = {
         "meta": {"virtual": True, "peakMW": PEAK_MW, "distSolarMW": DIST_SOLAR_MW, "hours": list(range(24)),
-                 "loadCurve": LOAD_CURVE, "solarCurve": SOLAR_CURVE,
+                 "loadCurve": LOAD_CURVE, "solarCurve": SOLAR_CURVE, "windCurve": WIND_CURVE,
                  "objects": {k: len(m.of_type(c)) for k, c in [("Substation", Substation), ("VoltageLevel", VoltageLevel),
                              ("ACLineSegment", ACLineSegment), ("PowerTransformer", PowerTransformer),
                              ("SynchronousMachine", SynchronousMachine), ("PowerElectronicsConnection", PowerElectronicsConnection),
                              ("EnergyConsumer", EnergyConsumer)]}},
         "outline": polys,
-        "stations": [{"id": s[0], "ko": s[1], "en": s[2], "lon": s[3], "lat": s[4], "levels": s[5],
-                      "loadMW": round(PEAK_MW * s[6] / sum(x[6] for x in STATIONS))} for s in STATIONS],
+        "stations": [{"id": s[0], "ko": s[1], "en": s[2], "lon": s[3], "lat": s[4], "levels": s[5], "jeju": s[0] in JEJU,
+                      "loadMW": JEJU_LOAD.get(s[0]) or round(PEAK_MW * s[6] / sum(x[6] for x in STATIONS))} for s in STATIONS],
+        "hvdc": [{k: v for k, v in x.items() if k not in ("idx", "busA", "busB", "flow")} for x in hv],
         "lines": [{k: v for k, v in l.items() if k != "eq"} for l in lines],
         "plants": [{k: v for k, v in p.items() if k not in ("eq", "sgen", "pmin")} for p in plants],
-        "series": {**series, "stationV": st_v, "lineLoading": ln_load, "lineFlow": ln_flow, "plantP": pl_p},
+        "series": {**series, "stationV": st_v, "lineLoading": ln_load, "lineFlow": ln_flow, "plantP": pl_p,
+                   "hvdcFlow": hv_flow},
     }
     (ROOT / "assets" / "data").mkdir(parents=True, exist_ok=True)
     (ROOT / "assets" / "data" / "twin.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")

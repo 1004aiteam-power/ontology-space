@@ -59,6 +59,7 @@
         <label><input type="checkbox" id="kv765" checked> <i class="kvi k765"></i>765kV</label>
         <label><input type="checkbox" id="kv345" checked> <i class="kvi k345"></i>345kV</label>
         <label><input type="checkbox" id="kv154" checked> <i class="kvi k154"></i>154kV</label>
+        <label><input type="checkbox" id="showHvdc" checked> <i class="kvi khv"></i>HVDC</label>
         <label><input type="checkbox" id="showPlants" checked> <span lang="ko">발전소</span><span lang="en">Plants</span></label>
         <label><input type="checkbox" id="showStations" checked> <span lang="ko">변전소</span><span lang="en">Substations</span></label>
         <label><input type="checkbox" id="showLabels" checked> <span lang="ko">지명</span><span lang="en">Names</span></label>
@@ -74,7 +75,9 @@
         <span class="types"><i class="pt" style="--c:#2a78d6"></i><span lang="ko">원전</span><span lang="en">Nuclear</span>
           <i class="pt" style="--c:#eb6834"></i><span lang="ko">석탄</span><span lang="en">Coal</span>
           <i class="pt" style="--c:#1baf7a"></i>LNG
+          <i class="pt" style="--c:#e87ba4"></i><span lang="ko">풍력</span><span lang="en">Wind</span>
           <i class="pt" style="--c:#eda100"></i><span lang="ko">태양광</span><span lang="en">Solar</span></span>
+        <span><i class="kvi khv"></i><span lang="ko">제주 HVDC 해저 케이블 (보라 = 역송 중)</span><span lang="en">Jeju HVDC subsea cable (purple = reverse flow)</span></span>
         <span>· · → <span lang="ko">전력이 흐르는 방향</span><span lang="en">direction of power flow</span></span>
       </div>
     </div>
@@ -93,6 +96,7 @@
       <span><i style="background:#2a78d6"></i><span lang="ko">원전</span><span lang="en">Nuclear</span></span>
       <span><i style="background:#eb6834"></i><span lang="ko">석탄</span><span lang="en">Coal</span></span>
       <span><i style="background:#1baf7a"></i>LNG</span>
+      <span><i style="background:#e87ba4"></i><span lang="ko">풍력</span><span lang="en">Wind</span></span>
       <span><i style="background:#eda100"></i><span lang="ko">태양광</span><span lang="en">Solar</span></span>
       <span><i style="background:transparent;border-top:2px dashed var(--text);height:0"></i><span lang="ko">수요</span><span lang="en">Demand</span></span>
       <span><i style="background:var(--text);width:2px;height:12px"></i><span lang="ko">현재 시각</span><span lang="en">Current time</span></span>
@@ -111,6 +115,7 @@
     <div class="card"><h4><span lang="ko">🌙 새벽 4시</span><span lang="en">🌙 04:00</span></h4><p lang="ko">수요가 가장 낮습니다. 원전과 석탄이 바탕을 깔고 LNG는 거의 쉽니다. 전압이 조금 높아집니다.</p><p lang="en">Lowest demand: nuclear and coal carry the base, LNG nearly idle, voltages drift slightly high.</p></div>
     <div class="card"><h4><span lang="ko">☀️ 정오</span><span lang="en">☀️ Noon</span></h4><p lang="ko">태양광이 최대입니다. 호남의 태양광 전력이 북쪽으로 몰리며 <b>호남 선로가 혼잡(주의·위험)</b>해집니다. 실제로도 재생에너지가 많은 지역의 송전 제약은 중요한 과제입니다.</p><p lang="en">Solar peaks. Honam's solar power rushes north and <b>Honam lines congest (caution/critical)</b> — a real-world challenge in regions rich in renewables.</p></div>
     <div class="card"><h4><span lang="ko">🏙️ 오후 2시</span><span lang="en">🏙️ 14:00</span></h4><p lang="ko">수요가 최대입니다. 수도권으로 향하는 765kV·345kV 간선의 흐름이 가장 굵어지고, 먼 지방의 전압이 가장 낮아집니다.</p><p lang="en">Peak demand: flows into the capital region on 765/345 kV corridors are heaviest; distant buses see the lowest voltages.</p></div>
+    <div class="card"><h4><span lang="ko">🏝️ 정오의 제주</span><span lang="en">🏝️ Jeju at noon</span></h4><p lang="ko">제주는 육지와 <b>HVDC 해저 케이블</b>로만 이어진 섬 계통입니다. 밤에는 육지에서 전력을 받지만, 한낮에는 태양광이 남아 <b>제주→육지로 역송</b>하고, 그래도 넘치면 태양광 <b>출력제한</b>이 생깁니다.</p><p lang="en">Jeju is an island system linked to the mainland only by <b>HVDC subsea cables</b>. At night it imports power; at midday surplus solar is <b>sent back to the mainland</b>, and anything beyond that is <b>curtailed</b>.</p></div>
     <div class="card"><h4><span lang="ko">🌆 저녁 7시</span><span lang="en">🌆 19:00</span></h4><p lang="ko">해가 지면 태양광이 사라지고 수요는 여전히 높아, <b>LNG가 빠르게 출력을 올려</b> 빈자리를 메웁니다.</p><p lang="en">Solar vanishes while demand stays high, so <b>LNG ramps up quickly</b> to fill the gap.</p></div>
   </div>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
@@ -121,17 +126,19 @@
 <section id="how">
   <h2><span lang="ko">어떻게 만들었나</span><span lang="en">How it is built</span></h2>
 <pre><code>가상 설비 목록 ──▶ pycim CIM 모델 ──▶ pandapower ──▶ 24시간 조류계산 ──▶ twin.json ──▶ 이 지도
- (이름·위치·용량)   Substation 42 · VoltageLevel 68      (시간마다 부하·태양광·
-                    ACLineSegment 57 · PowerTransformer 26  발전 배분을 바꿔 계산)
-                    SynchronousMachine 12 · 태양광 38 · 부하 34</code></pre>
+ (이름·위치·용량)   Substation 49 · VoltageLevel 76      (시간마다 부하·태양광·풍력·
+                    ACLineSegment 65 · PowerTransformer 27  발전 배분·HVDC를 바꿔 계산)
+                    SynchronousMachine 13 · 태양광·풍력 43 · 부하 41
+                    + 제주 HVDC 3회선 (pandapower dcline)</code></pre>
   <div class="tbl"><table>
     <tr><th><span lang="ko">가정 (모두 가상)</span><span lang="en">Assumption (all virtual)</span></th><th><span lang="ko">값</span><span lang="en">Value</span></th></tr>
     <tr><td><span lang="ko">전국 최대 수요</span><span lang="en">National peak demand</span></td><td><span lang="ko">48 GW (실제 규모보다 작게 단순화)</span><span lang="en">48 GW (smaller than reality, simplified)</span></td></tr>
-    <tr><td><span lang="ko">발전 설비</span><span lang="en">Generation</span></td><td><span lang="ko">원전 16 GW · 석탄 14.5 GW · LNG 18 GW · 대규모 태양광 5.6 GW · 분산 태양광 4 GW</span><span lang="en">Nuclear 16 GW · coal 14.5 GW · LNG 18 GW · utility solar 5.6 GW · distributed solar 4 GW</span></td></tr>
+    <tr><td><span lang="ko">발전 설비</span><span lang="en">Generation</span></td><td><span lang="ko">육지: 원전 16 GW · 석탄 14.5 GW · LNG 18 GW · 대규모 태양광 5.6 GW · 분산 태양광 4 GW<br>제주: LNG 0.5 GW · 풍력 0.45 GW · 태양광 1.2 GW (최대 수요 0.85 GW)</span><span lang="en">Mainland: nuclear 16 GW · coal 14.5 GW · LNG 18 GW · utility solar 5.6 GW · distributed solar 4 GW<br>Jeju: LNG 0.5 GW · wind 0.45 GW · solar 1.2 GW (peak demand 0.85 GW)</span></td></tr>
+    <tr><td><span lang="ko">제주 HVDC</span><span lang="en">Jeju HVDC</span></td><td><span lang="ko">3회선 300 · 400 · 200 MW, 역송은 #2만 가능. 제주가 모자라면 받고, 남으면 보내고, 그래도 넘치면 태양광 출력제한. pycim에 아직 DC 설비 클래스가 없어 pandapower 직류 선로(dcline)로 직접 모델링</span><span lang="en">Three links of 300 · 400 · 200 MW, only #2 can reverse. Jeju imports when short, exports when in surplus, and curtails solar beyond that. Modelled directly as pandapower DC lines because pycim has no DC classes yet</span></td></tr>
     <tr><td><span lang="ko">급전 규칙</span><span lang="en">Dispatch rule</span></td><td><span lang="ko">원전 95% 일정 → 석탄 → LNG 순으로 부족분을 용량 비례 배분, 수도권 LNG가 기준 발전기(손실 보충)</span><span lang="en">Nuclear flat at 95% → coal → LNG share the remainder by capacity; capital-region LNG is the slack (covers losses)</span></td></tr>
     <tr><td><span lang="ko">선로</span><span lang="en">Lines</span></td><td><span lang="ko">전압 계급별 대표 정수(2회선 1루트), 길이 = 직선 거리 × 1.2</span><span lang="en">Typical per-class parameters (one double-circuit route), length = straight distance × 1.2</span></td></tr>
     <tr><td><span lang="ko">전압 제어</span><span lang="en">Voltage control</span></td><td><span lang="ko">화력·원전은 전압 유지 발전기, 345/154kV 변압기 탭을 시간마다 자동 조절(OLTC), 부하 역률 0.97</span><span lang="en">Thermal and nuclear units hold voltage, 345/154 kV transformer taps adjust every hour (OLTC), load power factor 0.97</span></td></tr>
-    <tr><td><span lang="ko">생략한 것</span><span lang="en">Left out</span></td><td><span lang="ko">제주 계통과 HVDC, 양수·ESS, 고장·예비력, 실제 설비 데이터</span><span lang="en">Jeju system and HVDC, pumped hydro/ESS, contingencies/reserves, any real facility data</span></td></tr>
+    <tr><td><span lang="ko">생략한 것</span><span lang="en">Left out</span></td><td><span lang="ko">양수·ESS, 고장·예비력, 제주 계통의 상세 구성, 실제 설비 데이터</span><span lang="en">Pumped hydro/ESS, contingencies/reserves, detailed Jeju network, any real facility data</span></td></tr>
   </table></div>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
     <p lang="ko">먼저 가상의 설비 목록을 <a href="project.html">pycim</a>으로 <b>전력 설비 공용 사전(CIM) 형식의 장부</b>로 만들고, 그 장부를 계산 프로그램(pandapower)에 넘겨 <b>하루 24시간을 한 시간씩 계산</b>했습니다. 계산 결과를 지도에 칠한 것이 이 화면입니다. 같은 장부는 <a href="lab.html">실습 페이지</a>에서 질문(SPARQL)하고 그래프로 볼 수도 있습니다.</p>

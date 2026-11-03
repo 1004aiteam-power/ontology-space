@@ -263,12 +263,19 @@ def test_twin_data_is_sane():
     S = d["series"]
     assert all(len(S[k]) == 24 for k in ("load", "solar", "nuclear", "coal", "lng", "losses"))
     for h in range(24):                                   # 발전 = 수요 + 손실 (반올림 오차 이내)
-        gen = S["nuclear"][h] + S["coal"][h] + S["lng"][h] + S["solar"][h]
+        gen = S["nuclear"][h] + S["coal"][h] + S["lng"][h] + S["solar"][h] + S["wind"][h]
         assert abs(gen - S["load"][h] - S["losses"][h]) < 10
     volts = [v for series in S["stationV"].values() for v in series]
     assert 0.95 <= min(volts) and max(volts) <= 1.05     # OLTC·발전기 전압 제어로 정상 범위
     assert max(S["maxLoading"]) < 110
     assert S["solar"][12] > 0 and S["solar"][0] == 0
+    hv = d["hvdc"]                                        # 제주 HVDC: 밤엔 정송, 한낮엔 역송, 용량 이내
+    total = [sum(S["hvdcFlow"][x["id"]][h] for x in hv) for h in range(24)]
+    assert total[0] > 0 and total[12] < 0
+    for x in hv:
+        assert all(abs(f) <= x["capMW"] + 1 for f in S["hvdcFlow"][x["id"]])
+        if not x["reverse"]:
+            assert min(S["hvdcFlow"][x["id"]]) >= 0
     ids = {s["id"] for s in d["stations"]}
     assert all(l["a"] in ids and l["b"] in ids for l in d["lines"])
 
@@ -279,5 +286,5 @@ def test_twin_cim_model_loads():
     g = rdflib.Graph().parse(root / "examples" / "twin" / "korea_virtual_grid.ttl")
     CIM = rdflib.Namespace("http://iec.ch/TC57/CIM100#")
     count = lambda c: len(list(g.subjects(rdflib.RDF.type, CIM[c])))
-    assert count("Substation") == 42 and count("ACLineSegment") == 57
+    assert count("Substation") == 49 and count("ACLineSegment") == 65
     assert count("PowerElectronicsConnection") > 0

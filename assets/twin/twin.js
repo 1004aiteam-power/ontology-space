@@ -14,10 +14,11 @@ const el = (tag, attrs = {}, parent) => {
 const esc = (s) => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 
 // 발전원 색: dataviz 팔레트 1~4번 슬롯 (라이트/다크 각각 검증)
-const TYPES = ['nuclear', 'coal', 'lng', 'solar'];
-const TYPE_NAME = { nuclear: { ko: '원전', en: 'Nuclear' }, coal: { ko: '석탄', en: 'Coal' }, lng: { ko: 'LNG', en: 'LNG' }, solar: { ko: '태양광', en: 'Solar' } };
-const typeColor = (k) => (dark() ? { nuclear: '#3987e5', coal: '#d95926', lng: '#199e70', solar: '#c98500' }
-                                  : { nuclear: '#2a78d6', coal: '#eb6834', lng: '#1baf7a', solar: '#eda100' })[k];
+const TYPES = ['nuclear', 'coal', 'lng', 'wind', 'solar'];          // 누적 순서 (색은 아래 고정 슬롯)
+const TYPE_NAME = { nuclear: { ko: '원전', en: 'Nuclear' }, coal: { ko: '석탄', en: 'Coal' }, lng: { ko: 'LNG', en: 'LNG' },
+                    solar: { ko: '태양광', en: 'Solar' }, wind: { ko: '풍력', en: 'Wind' } };
+const typeColor = (k) => (dark() ? { nuclear: '#3987e5', coal: '#d95926', lng: '#199e70', solar: '#c98500', wind: '#d55181' }
+                                  : { nuclear: '#2a78d6', coal: '#eb6834', lng: '#1baf7a', solar: '#eda100', wind: '#e87ba4' })[k];
 // 상태 색 (선로 부하율, 변전소 전압): 정상 / 주의 / 위험 — 색만으로 구분하지 않도록 툴팁·목록에 글자로도 표시
 const STATUS = { warn: '#f59e0b', crit: '#dc2626' };
 const KV_WIDTH = { 765: 5, 345: 2.6, 154: 1.3 };
@@ -56,6 +57,24 @@ function buildMap() {
     l.hit.addEventListener('pointermove', moveTip); l.hit.addEventListener('pointerleave', hideTip);
     l.hit.addEventListener('click', e => showTip(e, 'line', l));
   });
+  // 제주 HVDC 해저 케이블: 바다 위로 살짝 휜 곡선
+  for (const hv of D.hvdc || []) {
+    const [x1, y1] = proj(st[hv.a].lon, st[hv.a].lat), [x2, y2] = proj(st[hv.b].lon, st[hv.b].lat);
+    const mx = (x1 + x2) / 2 + (y2 - y1) * 0.12, my = (y1 + y2) / 2 - (x2 - x1) * 0.12;
+    const d = `M${x1.toFixed(1)},${y1.toFixed(1)}Q${mx.toFixed(1)},${my.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`;
+    hv.path = el('path', { d, class: 'hvdc' }, layer.lines);
+    hv.hit = el('path', { d, class: 'hit', 'stroke-width': 12 }, layer.lines);
+    hv.dots = el('path', { d, class: 'dots hv', 'stroke-width': 3, 'stroke-dasharray': '0.1 12' }, layer.flow);
+    hv.off = 0;
+    // 이름표: 곡선의 30% 지점, 서쪽 케이블은 왼쪽·동쪽 케이블은 오른쪽에 붙여 겹치지 않게
+    const tt = 0.3, qx = (1 - tt) ** 2 * x1 + 2 * (1 - tt) * tt * mx + tt ** 2 * x2, qy = (1 - tt) ** 2 * y1 + 2 * (1 - tt) * tt * my + tt ** 2 * y2;
+    const west = st[hv.a].lon === Math.min(...D.hvdc.map(h => st[h.a].lon));   // 가장 서쪽 케이블만 왼쪽에
+    hv.label = el('text', { x: (qx + (west ? -7 : 7)).toFixed(1), y: qy.toFixed(1), 'text-anchor': west ? 'end' : 'start' }, layer.labels);
+    hv.label.textContent = hv.id.replace('HVDC', 'HVDC #');
+    hv.hit.addEventListener('pointerenter', e => showTip(e, 'hvdc', hv));
+    hv.hit.addEventListener('pointermove', moveTip); hv.hit.addEventListener('pointerleave', hideTip);
+    hv.hit.addEventListener('click', e => showTip(e, 'hvdc', hv));
+  }
   // 변전소
   const maxLoad = Math.max(...D.stations.map(s => s.loadMW));
   for (const s of D.stations) {
@@ -66,7 +85,7 @@ function buildMap() {
     s.dot.addEventListener('pointerenter', e => showTip(e, 'station', s));
     s.dot.addEventListener('pointermove', moveTip); s.dot.addEventListener('pointerleave', hideTip);
     s.dot.addEventListener('click', e => showTip(e, 'station', s));
-    if (s.loadMW >= 1400 || s.levels.includes(765)) {
+    if (s.loadMW >= 1400 || s.levels.includes(765) || s.id === 'JEJU') {
       s.label = el('text', { x: x + s.r + 2, y: y + 3 }, layer.labels);
     }
   }
@@ -108,6 +127,12 @@ function update() {
     s.dot.style.display = $('showStations').checked ? '' : 'none';
     if (s.label) { s.label.textContent = s[lang]; s.label.style.display = $('showLabels').checked ? '' : 'none'; }
   }
+  for (const hv of D.hvdc || []) {
+    hv.flow = at(S.hvdcFlow[hv.id]);
+    hv.dots.style.display = $('showFlow').checked && $('showHvdc').checked ? '' : 'none';
+    for (const e of [hv.path, hv.hit, hv.label]) e.style.display = $('showHvdc').checked ? '' : 'none';
+    hv.path.classList.toggle('rev', hv.flow < -1);
+  }
   for (const p of D.plants) {
     const mw = at(S.plantP[p.id]); p.mw = mw;
     p.ring.style.stroke = typeColor(p.type);
@@ -129,6 +154,8 @@ function update() {
     [t1({ ko: '송전 손실', en: 'Losses' }), `${fmt(loss)} MW (${(100 * loss / total).toFixed(1)}%)`],
     [t1({ ko: '최저 전압', en: 'Lowest voltage' }), `${worstV.pu.toFixed(3)} pu · ${esc(worstV[lang])}`],
     [t1({ ko: '최대 부하율', en: 'Most loaded line' }), `${worstL.pct.toFixed(0)} % · ${esc(lineName(worstL, lang))}`],
+    [t1({ ko: '제주 ↔ 육지 (HVDC)', en: 'Jeju ↔ mainland (HVDC)' }), hvdcText()],
+    [t1({ ko: '제주 출력제한', en: 'Jeju curtailment' }), at(S.curtail) >= 1 ? `⚠ ${fmt(at(S.curtail))} MW` : t1({ ko: '없음', en: 'none' })],
     [t1({ ko: '주의·위험', en: 'Alerts' }), alarms ? `⚠ ${alarms}` : t1({ ko: '✓ 없음', en: '✓ none' })]
   ].map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');
   $('mix').innerHTML = TYPES.map(k => `<div class="mixrow"><i style="background:${typeColor(k)}"></i><span>${t1(TYPE_NAME[k])}</span>
@@ -137,6 +164,11 @@ function update() {
   if (hover) refreshTip();
 }
 const t1 = (o) => window.t(o);
+function hvdcText() {                                 // + 육지→제주(정송), − 제주→육지(역송)
+  const f = (D.hvdc || []).reduce((a, h) => a + at(D.series.hvdcFlow[h.id]), 0), v = Math.round(Math.abs(f)).toLocaleString();
+  if (Math.abs(f) < 5) return t1({ ko: '거의 0', en: '≈ 0' });
+  return f > 0 ? t1({ ko: `육지 → 제주 ${v} MW`, en: `Mainland → Jeju ${v} MW` }) : t1({ ko: `제주 → 육지 ${v} MW (역송)`, en: `Jeju → mainland ${v} MW (reverse)` });
+}
 // 지명이 서로 겹치면 오른쪽 → 왼쪽 → 위 → 아래 순으로 옮겨 본다
 function placeLabels() {
   const boxes = [];
@@ -154,6 +186,12 @@ const lineName = (l, lang) => { const st = Object.fromEntries(D.stations.map(s =
 
 // ---- 흐름 애니메이션 (점이 전력이 흐르는 방향으로 이동) --------------------------------
 function animateFlow(dt) {
+  for (const hv of D.hvdc || []) {
+    if (hv.dots.style.display === 'none' || Math.abs(hv.flow) < 1) { hv.dots.style.opacity = Math.abs(hv.flow) < 1 ? 0 : ''; continue; }
+    hv.dots.style.opacity = '';
+    hv.off = (hv.off + Math.max(0.2, Math.abs(hv.flow) / hv.capMW) * 22 * (hv.flow >= 0 ? -1 : 1) * dt) % 1000;
+    hv.dots.setAttribute('stroke-dashoffset', hv.off.toFixed(1));
+  }
   for (const l of D.lines) {
     if (l.dots.style.display === 'none') continue;
     const v = Math.min(1.4, Math.max(0.15, l.pct / 100)) * 22 * (l.flow >= 0 ? -1 : 1);
@@ -178,6 +216,11 @@ function refreshTip() {
     const from = obj.flow >= 0 ? st[obj.a] : st[obj.b], to = obj.flow >= 0 ? st[obj.b] : st[obj.a];
     tip.innerHTML = `<b>${esc(lineName(obj, lang))}</b><br>${obj.km} km · ${obj.routes > 1 ? obj.routes + t1({ ko: '루트', en: ' routes' }) + ' · ' : ''}${t1({ ko: '용량', en: 'rating' })} ${obj.ratingMVA.toLocaleString()} MVA
       <br>${t1({ ko: '부하율', en: 'Loading' })} <b>${obj.pct.toFixed(0)}%</b> (${label(lineStatus(obj.pct))})<br>${t1({ ko: '흐름', en: 'Flow' })} ${Math.abs(Math.round(obj.flow)).toLocaleString()} MW · ${esc(from[lang])} → ${esc(to[lang])}`;
+  } else if (kind === 'hvdc') {
+    const st = Object.fromEntries(D.stations.map(s => [s.id, s]));
+    const f = obj.flow, dir = f > 1 ? `${esc(st[obj.a][lang])} → ${esc(st[obj.b][lang])}` : f < -1 ? `${esc(st[obj.b][lang])} → ${esc(st[obj.a][lang])} (${t1({ ko: '역송', en: 'reverse' })})` : t1({ ko: '정지', en: 'idle' });
+    tip.innerHTML = `<b>${esc(obj[lang])}</b><br>${t1({ ko: '해저 케이블 · 용량', en: 'Subsea cable · rating' })} ${obj.capMW} MW · ${obj.reverse ? t1({ ko: '역송 가능', en: 'reversible' }) : t1({ ko: '정송 전용', en: 'forward only' })}
+      <br>${t1({ ko: '흐름', en: 'Flow' })} <b>${Math.abs(Math.round(f))} MW</b> · ${dir}`;
   } else if (kind === 'station') {
     tip.innerHTML = `<b>${esc(obj[lang])}</b> <span class="muted">(${t1({ ko: '가상', en: 'virtual' })})</span><br>${obj.levels.join(' / ')} kV
       ${obj.loadMW ? `<br>${t1({ ko: '최대 부하', en: 'Peak load' })} ${obj.loadMW.toLocaleString()} MW` : ''}
@@ -233,8 +276,8 @@ function drawChart() {
 
 function renderTable() {
   const S = D.series;
-  $('twinTable').innerHTML = `<tr><th>${t1({ ko: '시각', en: 'Hour' })}</th><th>${t1({ ko: '수요', en: 'Demand' })}</th>${TYPES.map(k => `<th>${t1(TYPE_NAME[k])}</th>`).join('')}<th>${t1({ ko: '손실', en: 'Losses' })}</th><th>${t1({ ko: '최저 전압', en: 'Min V' })}</th><th>${t1({ ko: '최대 부하율', en: 'Max loading' })}</th></tr>` +
-    S.load.map((v, h) => `<tr><td>${h}:00</td><td class="num">${v.toLocaleString()}</td>${TYPES.map(k => `<td class="num">${S[k][h].toLocaleString()}</td>`).join('')}<td class="num">${S.losses[h]}</td><td class="num">${S.minV[h].toFixed(3)}</td><td class="num">${S.maxLoading[h].toFixed(0)}%</td></tr>`).join('');
+  $('twinTable').innerHTML = `<tr><th>${t1({ ko: '시각', en: 'Hour' })}</th><th>${t1({ ko: '수요', en: 'Demand' })}</th>${TYPES.map(k => `<th>${t1(TYPE_NAME[k])}</th>`).join('')}<th>${t1({ ko: '손실', en: 'Losses' })}</th><th>HVDC</th><th>${t1({ ko: '출력제한', en: 'Curtail' })}</th><th>${t1({ ko: '최저 전압', en: 'Min V' })}</th><th>${t1({ ko: '최대 부하율', en: 'Max loading' })}</th></tr>` +
+    S.load.map((v, h) => `<tr><td>${h}:00</td><td class="num">${v.toLocaleString()}</td>${TYPES.map(k => `<td class="num">${S[k][h].toLocaleString()}</td>`).join('')}<td class="num">${S.losses[h]}</td><td class="num">${(D.hvdc || []).reduce((a, x) => a + S.hvdcFlow[x.id][h], 0)}</td><td class="num">${S.curtail[h]}</td><td class="num">${S.minV[h].toFixed(3)}</td><td class="num">${S.maxLoading[h].toFixed(0)}%</td></tr>`).join('');
 }
 
 // ---- 재생 ----------------------------------------------------------------------

@@ -17,6 +17,7 @@
 | 12시 | 태양광 최대. 호남 태양광 전력이 북쪽으로 몰려 호남 선로 혼잡 (최대 부하율 약 103%) |
 | 14시 | 최대 수요 48 GW. 수도권으로 향하는 간선 흐름 최대 |
 | 19시 | 태양광이 사라지며 LNG가 빠르게 증가 |
+| 12~13시 제주 | 태양광이 남아 HVDC로 제주 → 육지 역송(최대 400 MW), 그래도 넘쳐 태양광 출력제한(90 MW) |
 
 ## 2. 만드는 과정
 
@@ -26,13 +27,14 @@
 
 | CIM 클래스 | 개수 |
 |---|---|
-| Substation | 42 |
-| VoltageLevel | 68 |
-| ACLineSegment | 57 |
-| PowerTransformer | 26 |
-| SynchronousMachine (원전·석탄·LNG) | 12 |
-| PowerElectronicsConnection (태양광) | 38 |
-| EnergyConsumer | 34 |
+| Substation | 49 |
+| VoltageLevel | 76 |
+| ACLineSegment | 65 |
+| PowerTransformer | 27 |
+| SynchronousMachine (원전·석탄·LNG) | 13 |
+| PowerElectronicsConnection (태양광·풍력) | 43 |
+| EnergyConsumer | 41 |
+| 제주 HVDC (pandapower dcline, CIM 미포함) | 3 |
 
 ```bash
 python examples/twin/build_korea_twin.py
@@ -46,13 +48,15 @@ python examples/twin/build_korea_twin.py
 | 항목 | 값 |
 |---|---|
 | 전국 최대 수요 | 48 GW (실제보다 작게 단순화) |
-| 발전 설비 | 원전 16 GW · 석탄 14.5 GW · LNG 18 GW · 대규모 태양광 5.6 GW · 분산 태양광 4 GW |
+| 발전 설비 (육지) | 원전 16 GW · 석탄 14.5 GW · LNG 18 GW · 대규모 태양광 5.6 GW · 분산 태양광 4 GW |
+| 제주 | 최대 수요 0.85 GW, LNG 0.5 GW(제주 기준 발전기) · 풍력 0.45 GW · 태양광 1.2 GW |
+| 제주 HVDC | 3회선 300 · 400 · 200 MW, 역송은 #2만. 모자라면 받고, 남으면 보내고, 그래도 넘치면 태양광 출력제한. pycim에 DC 설비 클래스가 없어 pandapower dcline으로 직접 모델링 |
 | 급전 | 원전 95% 일정 → 석탄 → LNG 순으로 부족분을 용량 비례 배분, 수도권 LNG가 기준 발전기 |
 | 선로 | 전압 계급별 대표 정수 (2회선 1루트), 길이 = 직선 거리 × 1.2 |
 | 전압 제어 | 화력·원전은 전압 유지 발전기, 345/154kV 변압기 탭 자동 조절(OLTC 흉내), 부하 역률 0.97 |
-| 생략 | 제주 계통·HVDC, 양수·ESS, 고장·예비력, 실제 설비 데이터 |
+| 생략 | 양수·ESS, 고장·예비력, 제주 계통의 상세 구성, 실제 설비 데이터 |
 
-결과: 하루 내내 전압 0.973 ~ 1.030 pu, 송전 손실 1.2 ~ 1.9%.
+결과: 하루 내내 전압 0.972 ~ 1.030 pu, 송전 손실 약 1.1 ~ 1.9%.
 
 ## 4. 지도 데이터
 

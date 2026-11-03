@@ -285,3 +285,6 @@ html.hide-easy .easy{display:none}
 .twin-legend .pt{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-left:6px}
 @media (max-width:520px){ nav{flex-wrap:nowrap;justify-content:space-between} nav a{padding:4px 3px;font-size:13px;letter-spacing:-.2px} }
 @media (max-width:380px){ nav a{font-size:12px;padding:4px 2px;letter-spacing:-.3px} }
+.twin-map .hvdc{fill:none;stroke:var(--twin-line);stroke-width:2.6;stroke-dasharray:7 4;opacity:.9}
+.twin-map .hvdc.rev{stroke:#8b5cf6}
+.kvi.khv{height:3px;background:repeating-linear-gradient(90deg,var(--twin-line) 0 5px,transparent 5px 8px)}

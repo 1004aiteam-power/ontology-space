@@ -27,7 +27,7 @@
   "dataset": "korea_virtual_grid.ttl",
   "ko": "가상 대한민국 전력망 (디지털 트윈)",
   "en": "Virtual Korean grid (digital twin)",
-  "triples": 4108,
+  "triples": 4587,
   "conforms": true,
   "violations": []
  },
@@ -42,19 +42,19 @@
     "focus": "LN",
     "name": "D/L #2 간선",
     "class": "ACLineSegment",
-    "path": "^cim:Terminal.ConductingEquipment",
-    "value": "",
-    "ko": "선로·개폐기·2권선 변압기는 Terminal이 정확히 2개여야 합니다",
-    "en": "must have exactly 2 terminals"
+    "path": "cim:Conductor.length",
+    "value": "-3.2",
+    "ko": "선로 길이는 0보다 커야 합니다",
+    "en": "length must be > 0"
    },
    {
     "focus": "LN",
     "name": "D/L #2 간선",
     "class": "ACLineSegment",
-    "path": "cim:Conductor.length",
-    "value": "-3.2",
-    "ko": "선로 길이는 0보다 커야 합니다",
-    "en": "length must be > 0"
+    "path": "^cim:Terminal.ConductingEquipment",
+    "value": "",
+    "ko": "선로·개폐기·2권선 변압기는 Terminal이 정확히 2개여야 합니다",
+    "en": "must have exactly 2 terminals"
    },
    {
     "focus": "CB",
