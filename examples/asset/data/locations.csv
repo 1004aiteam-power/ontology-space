@@ -1,0 +1,7 @@
+location,cim_class,pycim_name,name
+ACLS_1,ACLineSegment,B-A 1회선,B-A 154kV 1회선
+CB_154_1,Breaker,154kV 선로 CB,154kV 선로 차단기
+BUS_154,BusbarSection,154kV 모선,154kV 모선
+TR_1,PowerTransformer,M.Tr #1,주변압기 #1
+BUS_22,BusbarSection,22.9kV 모선,22.9kV 모선
+CB_22_1,Breaker,D/L #1 CB,D/L #1 차단기

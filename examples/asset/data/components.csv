@@ -1,0 +1,11 @@
+component_id,asset_id,kind,name
+CP-TR7-BSH,AS-TR-0007,Bushing,154kV 부싱
+CP-TR7-OLTC,AS-TR-0007,TapChanger,부하시 탭절환기(OLTC)
+CP-TR7-COOL,AS-TR-0007,CoolingUnit,냉각장치(방열기·팬)
+CP-TR7-OIL,AS-TR-0007,InsulatingOil,절연유·권선 절연
+CP-CB123-GAS,AS-CB-0123,GasSystem,SF6 가스계통
+CP-CB123-MECH,AS-CB-0123,OperatingMechanism,조작기구
+CP-CB457-VI,AS-CB-0457,VacuumInterrupter,진공 인터럽터
+CP-CB457-MECH,AS-CB-0457,OperatingMechanism,조작기구
+CP-LN31-JNT,AS-LN-0031,Joint,접속부(점퍼·슬리브)
+CP-LN31-COND,AS-LN-0031,Conductor,도체(소선)

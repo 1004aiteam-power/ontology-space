@@ -1,0 +1,448 @@
+@prefix pam:  <https://1004aiteam-power.github.io/ontology-space/asset#> .
+@prefix aipd: <https://example.org/ai-promotion-dept/ontology#> .
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix ex:   <http://example.org/grid#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+
+<https://1004aiteam-power.github.io/ontology-space/asset> a owl:Ontology ;
+    rdfs:label "전력설비 자산관리 온톨로지 (가상 A변전소)"@ko ;
+    owl:versionInfo "0.1" ;
+    rdfs:comment "기능 위치(CIM 설비)와 물리 자산을 분리하고, 진단·고장모드·점검정비·작업지시·위험도를 잇는다. 모든 데이터는 가상."@ko ;
+    rdfs:seeAlso <https://1004aiteam-power.github.io/ontology-space/examples/power-grid-sample.ttl> ,
+                 <https://1004aiteam-power.github.io/ontology-space/examples/work/work-ontology.ttl> .
+
+### 클래스
+pam:Asset a owl:Class ; rdfs:subClassOf cim:Asset ; rdfs:label "물리 자산"@ko ;
+    rdfs:comment "제조번호가 있는 실물. 기능 위치(cim:PowerSystemResource)와 다르다: 자산은 교체되어도 위치는 남는다."@ko .
+pam:TransformerAsset a owl:Class ; rdfs:subClassOf pam:Asset ; rdfs:label "변압기 자산"@ko .
+pam:BreakerAsset a owl:Class ; rdfs:subClassOf pam:Asset ; rdfs:label "차단기 자산"@ko .
+pam:ConductorAsset a owl:Class ; rdfs:subClassOf pam:Asset ; rdfs:label "가공도체 자산"@ko .
+pam:Component a owl:Class ; rdfs:label "구성품"@ko .
+pam:ComponentType a owl:Class ; rdfs:label "구성품 종류"@ko .
+pam:Deployment a owl:Class ; rdfs:label "설치 이력"@ko ; rdfs:comment "어떤 자산이 언제부터 언제까지 어느 기능 위치에 있었는지."@ko .
+pam:FailureMode a owl:Class ; rdfs:label "고장 모드"@ko .
+pam:MaintenanceTask a owl:Class ; rdfs:label "점검·정비 업무 유형"@ko .
+pam:InspectionTask a owl:Class ; rdfs:subClassOf pam:MaintenanceTask ; rdfs:label "점검"@ko .
+pam:RepairTask a owl:Class ; rdfs:subClassOf pam:MaintenanceTask ; rdfs:label "정비·교체"@ko .
+pam:WorkflowStep a owl:Class ; rdfs:label "정비 업무 흐름 단계"@ko .
+pam:Strategy a owl:Class ; rdfs:label "정비 전략"@ko .
+pam:Diagnosis a owl:Class ; rdfs:label "진단 기록"@ko .
+pam:Judgement a owl:Class ; rdfs:label "판정"@ko .
+pam:WorkOrder a owl:Class ; rdfs:subClassOf cim:Work ; rdfs:label "작업지시"@ko .
+pam:Asset owl:disjointWith pam:Component, pam:MaintenanceTask, pam:Diagnosis, pam:WorkOrder .
+
+### 객체 속성
+pam:deployedAsset a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain pam:Deployment ; rdfs:range pam:Asset ; rdfs:label "설치 자산"@ko .
+pam:atLocation a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain pam:Deployment ; rdfs:range cim:PowerSystemResource ; rdfs:label "기능 위치"@ko .
+pam:installedAt a owl:ObjectProperty ; rdfs:domain pam:Asset ; rdfs:range cim:PowerSystemResource ; rdfs:label "현재 설치 위치"@ko ;
+    rdfs:comment "현재 유효한 Deployment에서 생성한 지름길."@ko .
+pam:hasComponent a owl:ObjectProperty ; rdfs:domain pam:Asset ; rdfs:range pam:Component ; rdfs:label "구성품"@ko .
+pam:componentType a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain pam:Component ; rdfs:range pam:ComponentType .
+pam:appliesToAssetClass a owl:AnnotationProperty ; rdfs:label "적용 자산 클래스"@ko .
+pam:affectsComponentType a owl:ObjectProperty ; rdfs:domain pam:FailureMode ; rdfs:range pam:ComponentType ; rdfs:label "고장 부위"@ko .
+pam:detectedBy a owl:ObjectProperty ; rdfs:domain pam:FailureMode ; rdfs:range pam:InspectionTask ; rdfs:label "탐지 점검"@ko .
+pam:mitigatedBy a owl:ObjectProperty ; rdfs:domain pam:FailureMode ; rdfs:range pam:RepairTask ; rdfs:label "대응 정비"@ko .
+pam:strategy a owl:ObjectProperty ; rdfs:domain pam:MaintenanceTask ; rdfs:range pam:Strategy .
+pam:onAsset a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:range pam:Asset ; rdfs:label "대상 자산"@ko .
+pam:usesMethod a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain pam:Diagnosis ; rdfs:range pam:InspectionTask ; rdfs:label "진단 방법"@ko .
+pam:judgement a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain pam:Diagnosis ; rdfs:range pam:Judgement .
+pam:indicates a owl:ObjectProperty ; rdfs:domain pam:Diagnosis ; rdfs:range pam:FailureMode ; rdfs:label "의심 고장 모드"@ko .
+pam:performs a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain pam:WorkOrder ; rdfs:range pam:MaintenanceTask ; rdfs:label "수행 업무"@ko .
+pam:addresses a owl:ObjectProperty ; rdfs:domain pam:WorkOrder ; rdfs:range pam:FailureMode ; rdfs:label "대응 고장 모드"@ko .
+pam:triggeredBy a owl:ObjectProperty ; rdfs:domain pam:WorkOrder ; rdfs:range pam:Diagnosis ; rdfs:label "발행 근거"@ko .
+pam:precedes a owl:ObjectProperty ; rdfs:subPropertyOf aipd:precedes ; rdfs:domain pam:WorkflowStep ; rdfs:range pam:WorkflowStep ; rdfs:label "선행"@ko ;
+    rdfs:comment "업무 온톨로지의 aipd:precedes를 재사용(하위 속성). 두 온톨로지를 함께 읽으면 같은 쿼리로 업무 흐름을 따라갈 수 있다."@ko .
+pam:feedsBackTo a owl:ObjectProperty ; rdfs:subPropertyOf aipd:feedsBackTo ; rdfs:domain pam:WorkflowStep ; rdfs:range pam:WorkflowStep ; rdfs:label "환류"@ko .
+
+### 데이터 속성
+pam:code a owl:DatatypeProperty ; rdfs:range xsd:string .
+pam:eamNumber a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:string ; rdfs:label "EAM 설비번호"@ko .
+pam:yearMade a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:gYear .
+pam:designLifeYears a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:integer .
+pam:status a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:string .
+pam:validFrom a owl:DatatypeProperty ; rdfs:domain pam:Deployment ; rdfs:range xsd:date .
+pam:validTo a owl:DatatypeProperty ; rdfs:domain pam:Deployment ; rdfs:range xsd:date .
+pam:date a owl:DatatypeProperty ; rdfs:range xsd:date .
+pam:finding a owl:DatatypeProperty ; rdfs:domain pam:Diagnosis ; rdfs:range xsd:string .
+pam:cycleMonths a owl:DatatypeProperty ; rdfs:domain pam:MaintenanceTask ; rdfs:range xsd:integer .
+pam:requiresOutage a owl:DatatypeProperty ; rdfs:domain pam:MaintenanceTask ; rdfs:range xsd:boolean .
+pam:workStatus a owl:DatatypeProperty ; rdfs:domain pam:WorkOrder ; rdfs:range xsd:string .
+pam:plannedDate a owl:DatatypeProperty ; rdfs:domain pam:WorkOrder ; rdfs:range xsd:date .
+pam:completedDate a owl:DatatypeProperty ; rdfs:domain pam:WorkOrder ; rdfs:range xsd:date .
+pam:outageHours a owl:DatatypeProperty ; rdfs:domain pam:WorkOrder ; rdfs:range xsd:decimal .
+pam:restoreHours a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:decimal ; rdfs:label "고장 시 복구시간(h)"@ko .
+pam:healthIndex a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:decimal ; rdfs:label "건전도 지수(계산값)"@ko .
+pam:probabilityOfFailure a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:integer ; rdfs:label "고장 가능성 1~5(계산값)"@ko .
+pam:outageMW a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:decimal ; rdfs:label "고장 시 정전 부하(계산값)"@ko .
+pam:unsuppliedMWh a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:decimal ; rdfs:label "미공급 전력량(계산값)"@ko .
+pam:consequenceOfFailure a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:integer ; rdfs:label "고장 영향 1~5(계산값)"@ko .
+pam:riskScore a owl:DatatypeProperty ; rdfs:domain pam:Asset ; rdfs:range xsd:integer ; rdfs:label "위험도 PoF×CoF(계산값)"@ko .
+
+### 값 목록
+pam:TBM a pam:Strategy ; rdfs:label "시간기반 정비(TBM)"@ko .
+pam:CBM a pam:Strategy ; rdfs:label "상태기반 정비(CBM)"@ko .
+pam:CM a pam:Strategy ; rdfs:label "사후·교정 정비(CM)"@ko .
+pam:Normal a pam:Judgement ; rdfs:label "정상"@ko .
+pam:Caution a pam:Judgement ; rdfs:label "주의"@ko .
+pam:Abnormal a pam:Judgement ; rdfs:label "이상"@ko .
+
+### 구성품 종류
+pam:CT_Bushing a pam:ComponentType ; rdfs:label "Bushing" .
+pam:CT_Conductor a pam:ComponentType ; rdfs:label "Conductor" .
+pam:CT_CoolingUnit a pam:ComponentType ; rdfs:label "CoolingUnit" .
+pam:CT_GasSystem a pam:ComponentType ; rdfs:label "GasSystem" .
+pam:CT_InsulatingOil a pam:ComponentType ; rdfs:label "InsulatingOil" .
+pam:CT_Joint a pam:ComponentType ; rdfs:label "Joint" .
+pam:CT_OperatingMechanism a pam:ComponentType ; rdfs:label "OperatingMechanism" .
+pam:CT_TapChanger a pam:ComponentType ; rdfs:label "TapChanger" .
+pam:CT_VacuumInterrupter a pam:ComponentType ; rdfs:label "VacuumInterrupter" .
+
+### 자산
+pam:AS_TR_0007 a pam:TransformerAsset ;
+    pam:code "AS-TR-0007" ;
+    pam:eamNumber "EQ-TR-2015-0007" ;
+    rdfs:label "M.Tr #1 본체"@ko ;
+    pam:yearMade "2015"^^xsd:gYear ;
+    pam:designLifeYears 40 ;
+    pam:status "운전"@ko ;
+    pam:restoreHours 2160 ;
+    rdfs:comment "가상전기 VT-60M154 · 60MVA 154/22.9kV ONAN/ONAF"@ko ;
+    pam:installedAt ex:TR_1 ;
+    pam:hasComponent pam:CP_TR7_BSH, pam:CP_TR7_OLTC, pam:CP_TR7_COOL, pam:CP_TR7_OIL ;
+    pam:healthIndex 53.0 ;
+    pam:probabilityOfFailure 3 ;
+    pam:outageMW 8.5 ;
+    pam:unsuppliedMWh 18360 ;
+    pam:consequenceOfFailure 5 ;
+    pam:riskScore 15 .
+pam:AS_TR_0002 a pam:TransformerAsset ;
+    pam:code "AS-TR-0002" ;
+    pam:eamNumber "EQ-TR-1998-0002" ;
+    rdfs:label "구 M.Tr #1 본체"@ko ;
+    pam:yearMade "1998"^^xsd:gYear ;
+    pam:designLifeYears 40 ;
+    pam:status "폐기"@ko ;
+    pam:restoreHours 2160 ;
+    rdfs:comment "가상중공업 OT-45M · 45MVA 154/22.9kV"@ko .
+pam:AS_CB_0123 a pam:BreakerAsset ;
+    pam:code "AS-CB-0123" ;
+    pam:eamNumber "EQ-CB-2019-0123" ;
+    rdfs:label "154kV 가스차단기"@ko ;
+    pam:yearMade "2019"^^xsd:gYear ;
+    pam:designLifeYears 30 ;
+    pam:status "운전"@ko ;
+    pam:restoreHours 48 ;
+    rdfs:comment "가상전기 GCB-170 · 170kV 40kA SF6"@ko ;
+    pam:installedAt ex:CB_154_1 ;
+    pam:hasComponent pam:CP_CB123_GAS, pam:CP_CB123_MECH ;
+    pam:healthIndex 70.3 ;
+    pam:probabilityOfFailure 2 ;
+    pam:outageMW 8.5 ;
+    pam:unsuppliedMWh 408 ;
+    pam:consequenceOfFailure 2 ;
+    pam:riskScore 4 .
+pam:AS_CB_0457 a pam:BreakerAsset ;
+    pam:code "AS-CB-0457" ;
+    pam:eamNumber "EQ-CB-2021-0457" ;
+    rdfs:label "22.9kV 진공차단기"@ko ;
+    pam:yearMade "2021"^^xsd:gYear ;
+    pam:designLifeYears 30 ;
+    pam:status "운전"@ko ;
+    pam:restoreHours 24 ;
+    rdfs:comment "가상전기 VCB-25 · 25.8kV 25kA 진공"@ko ;
+    pam:installedAt ex:CB_22_1 ;
+    pam:hasComponent pam:CP_CB457_VI, pam:CP_CB457_MECH ;
+    pam:healthIndex 89.3 ;
+    pam:probabilityOfFailure 1 ;
+    pam:outageMW 8.5 ;
+    pam:unsuppliedMWh 204 ;
+    pam:consequenceOfFailure 2 ;
+    pam:riskScore 2 .
+pam:AS_LN_0031 a pam:ConductorAsset ;
+    pam:code "AS-LN-0031" ;
+    pam:eamNumber "EQ-LN-2008-0031" ;
+    rdfs:label "B-A 154kV 가공도체"@ko ;
+    pam:yearMade "2008"^^xsd:gYear ;
+    pam:designLifeYears 50 ;
+    pam:status "운전"@ko ;
+    pam:restoreHours 12 ;
+    rdfs:comment "가상전선 ACSR-410 · ACSR 410mm² 12.5km"@ko ;
+    pam:installedAt ex:ACLS_1 ;
+    pam:hasComponent pam:CP_LN31_JNT, pam:CP_LN31_COND ;
+    pam:healthIndex 78.0 ;
+    pam:probabilityOfFailure 2 ;
+    pam:outageMW 8.5 ;
+    pam:unsuppliedMWh 102 ;
+    pam:consequenceOfFailure 2 ;
+    pam:riskScore 4 .
+pam:CP_TR7_BSH a pam:Component ; pam:code "CP-TR7-BSH" ; rdfs:label "154kV 부싱"@ko ; pam:componentType pam:CT_Bushing .
+pam:CP_TR7_OLTC a pam:Component ; pam:code "CP-TR7-OLTC" ; rdfs:label "부하시 탭절환기(OLTC)"@ko ; pam:componentType pam:CT_TapChanger .
+pam:CP_TR7_COOL a pam:Component ; pam:code "CP-TR7-COOL" ; rdfs:label "냉각장치(방열기·팬)"@ko ; pam:componentType pam:CT_CoolingUnit .
+pam:CP_TR7_OIL a pam:Component ; pam:code "CP-TR7-OIL" ; rdfs:label "절연유·권선 절연"@ko ; pam:componentType pam:CT_InsulatingOil .
+pam:CP_CB123_GAS a pam:Component ; pam:code "CP-CB123-GAS" ; rdfs:label "SF6 가스계통"@ko ; pam:componentType pam:CT_GasSystem .
+pam:CP_CB123_MECH a pam:Component ; pam:code "CP-CB123-MECH" ; rdfs:label "조작기구"@ko ; pam:componentType pam:CT_OperatingMechanism .
+pam:CP_CB457_VI a pam:Component ; pam:code "CP-CB457-VI" ; rdfs:label "진공 인터럽터"@ko ; pam:componentType pam:CT_VacuumInterrupter .
+pam:CP_CB457_MECH a pam:Component ; pam:code "CP-CB457-MECH" ; rdfs:label "조작기구"@ko ; pam:componentType pam:CT_OperatingMechanism .
+pam:CP_LN31_JNT a pam:Component ; pam:code "CP-LN31-JNT" ; rdfs:label "접속부(점퍼·슬리브)"@ko ; pam:componentType pam:CT_Joint .
+pam:CP_LN31_COND a pam:Component ; pam:code "CP-LN31-COND" ; rdfs:label "도체(소선)"@ko ; pam:componentType pam:CT_Conductor .
+
+### 설치 이력
+pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation ex:TR_1 ; pam:validFrom "1998-06-01"^^xsd:date ; pam:validTo "2015-04-30"^^xsd:date .
+pam:DEP_02 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0007 ; pam:atLocation ex:TR_1 ; pam:validFrom "2015-05-01"^^xsd:date .
+pam:DEP_03 a pam:Deployment ; pam:deployedAsset pam:AS_CB_0123 ; pam:atLocation ex:CB_154_1 ; pam:validFrom "2019-03-15"^^xsd:date .
+pam:DEP_04 a pam:Deployment ; pam:deployedAsset pam:AS_CB_0457 ; pam:atLocation ex:CB_22_1 ; pam:validFrom "2021-10-01"^^xsd:date .
+pam:DEP_05 a pam:Deployment ; pam:deployedAsset pam:AS_LN_0031 ; pam:atLocation ex:ACLS_1 ; pam:validFrom "2008-11-20"^^xsd:date .
+
+### 점검·정비 업무 유형과 정비 업무 흐름
+pam:IN_01 a pam:InspectionTask ;
+    pam:code "IN-01" ;
+    rdfs:label "순시점검"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 1 .
+pam:IN_02 a pam:InspectionTask ;
+    pam:code "IN-02" ;
+    rdfs:label "열화상 진단"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 3 .
+pam:IN_03 a pam:InspectionTask ;
+    pam:code "IN-03" ;
+    rdfs:label "유중가스분석(DGA)"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:CBM ;
+    pam:cycleMonths 6 .
+pam:IN_04 a pam:InspectionTask ;
+    pam:code "IN-04" ;
+    rdfs:label "절연유 특성시험"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 12 .
+pam:IN_05 a pam:InspectionTask ;
+    pam:code "IN-05" ;
+    rdfs:label "OLTC 동작횟수 확인"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:CBM ;
+    pam:cycleMonths 1 .
+pam:IN_06 a pam:InspectionTask ;
+    pam:code "IN-06" ;
+    rdfs:label "부싱 tanδ 시험"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 36 .
+pam:IN_07 a pam:InspectionTask ;
+    pam:code "IN-07" ;
+    rdfs:label "SF6 가스압 감시"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:CBM ;
+    pam:cycleMonths 1 .
+pam:IN_08 a pam:InspectionTask ;
+    pam:code "IN-08" ;
+    rdfs:label "차단기 동작특성 시험"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 36 .
+pam:IN_09 a pam:InspectionTask ;
+    pam:code "IN-09" ;
+    rdfs:label "진공도 시험"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 36 .
+pam:IN_10 a pam:InspectionTask ;
+    pam:code "IN-10" ;
+    rdfs:label "부분방전 측정"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:CBM ;
+    pam:cycleMonths 12 .
+pam:IN_11 a pam:InspectionTask ;
+    pam:code "IN-11" ;
+    rdfs:label "드론 선로 점검"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 6 .
+pam:MT_01 a pam:RepairTask ;
+    pam:code "MT-01" ;
+    rdfs:label "절연유 여과·탈기"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CBM .
+pam:MT_02 a pam:RepairTask ;
+    pam:code "MT-02" ;
+    rdfs:label "OLTC 정비"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CBM .
+pam:MT_03 a pam:RepairTask ;
+    pam:code "MT-03" ;
+    rdfs:label "부싱 교체"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CM .
+pam:MT_04 a pam:RepairTask ;
+    pam:code "MT-04" ;
+    rdfs:label "냉각장치 정비"@ko ;
+    pam:requiresOutage false ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 12 .
+pam:MT_05 a pam:RepairTask ;
+    pam:code "MT-05" ;
+    rdfs:label "SF6 보충·밀봉 정비"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CM .
+pam:MT_06 a pam:RepairTask ;
+    pam:code "MT-06" ;
+    rdfs:label "조작기구 정비"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:TBM ;
+    pam:cycleMonths 72 .
+pam:MT_07 a pam:RepairTask ;
+    pam:code "MT-07" ;
+    rdfs:label "진공 인터럽터 교체"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CM .
+pam:MT_08 a pam:RepairTask ;
+    pam:code "MT-08" ;
+    rdfs:label "접속부 재시공"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CM .
+pam:MT_09 a pam:RepairTask ;
+    pam:code "MT-09" ;
+    rdfs:label "도체 보수"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CM .
+pam:MT_10 a pam:RepairTask ;
+    pam:code "MT-10" ;
+    rdfs:label "설비 교체"@ko ;
+    pam:requiresOutage true ;
+    pam:strategy pam:CM .
+pam:WF_01 a pam:WorkflowStep ;
+    pam:code "WF-01" ;
+    rdfs:label "작업 요청 등록"@ko ;
+    pam:precedes pam:WF_02 .
+pam:WF_02 a pam:WorkflowStep ;
+    pam:code "WF-02" ;
+    rdfs:label "위험도 평가·우선순위 결정"@ko ;
+    pam:precedes pam:WF_03 .
+pam:WF_03 a pam:WorkflowStep ;
+    pam:code "WF-03" ;
+    rdfs:label "정전 계획 수립(계통운영 협의)"@ko ;
+    pam:precedes pam:WF_04 .
+pam:WF_04 a pam:WorkflowStep ;
+    pam:code "WF-04" ;
+    rdfs:label "작업 허가·안전조치(접지)"@ko ;
+    pam:precedes pam:WF_05 .
+pam:WF_05 a pam:WorkflowStep ;
+    pam:code "WF-05" ;
+    rdfs:label "작업 수행"@ko ;
+    pam:precedes pam:WF_06 .
+pam:WF_06 a pam:WorkflowStep ;
+    pam:code "WF-06" ;
+    rdfs:label "시험·검수"@ko ;
+    pam:precedes pam:WF_07 .
+pam:WF_07 a pam:WorkflowStep ;
+    pam:code "WF-07" ;
+    rdfs:label "재가압·복구"@ko ;
+    pam:precedes pam:WF_08 .
+pam:WF_08 a pam:WorkflowStep ;
+    pam:code "WF-08" ;
+    rdfs:label "이력 등록(EAM)·건전도 재산정"@ko ;
+    pam:feedsBackTo pam:WF_02 .
+
+### 고장 모드
+pam:FM_01 a pam:FailureMode ;
+    pam:code "FM-01" ;
+    rdfs:label "권선 절연 열화"@ko ;
+    pam:appliesToAssetClass pam:TransformerAsset ;
+    pam:affectsComponentType pam:CT_InsulatingOil ;
+    pam:detectedBy pam:IN_03, pam:IN_04, pam:IN_10 ;
+    pam:mitigatedBy pam:MT_01, pam:MT_10 ;
+    rdfs:comment "절연 파괴로 변압기 내부 고장"@ko .
+pam:FM_02 a pam:FailureMode ;
+    pam:code "FM-02" ;
+    rdfs:label "OLTC 접점 마모"@ko ;
+    pam:appliesToAssetClass pam:TransformerAsset ;
+    pam:affectsComponentType pam:CT_TapChanger ;
+    pam:detectedBy pam:IN_05, pam:IN_03 ;
+    pam:mitigatedBy pam:MT_02 ;
+    rdfs:comment "탭 절환 실패·아크로 변압기 정지"@ko .
+pam:FM_03 a pam:FailureMode ;
+    pam:code "FM-03" ;
+    rdfs:label "부싱 열화"@ko ;
+    pam:appliesToAssetClass pam:TransformerAsset ;
+    pam:affectsComponentType pam:CT_Bushing ;
+    pam:detectedBy pam:IN_06, pam:IN_02 ;
+    pam:mitigatedBy pam:MT_03 ;
+    rdfs:comment "부싱 섬락·파손"@ko .
+pam:FM_04 a pam:FailureMode ;
+    pam:code "FM-04" ;
+    rdfs:label "냉각 성능 저하"@ko ;
+    pam:appliesToAssetClass pam:TransformerAsset ;
+    pam:affectsComponentType pam:CT_CoolingUnit ;
+    pam:detectedBy pam:IN_01, pam:IN_02 ;
+    pam:mitigatedBy pam:MT_04 ;
+    rdfs:comment "과열로 출력 제한·수명 단축"@ko .
+pam:FM_05 a pam:FailureMode ;
+    pam:code "FM-05" ;
+    rdfs:label "SF6 가스 누설"@ko ;
+    pam:appliesToAssetClass pam:BreakerAsset ;
+    pam:affectsComponentType pam:CT_GasSystem ;
+    pam:detectedBy pam:IN_07 ;
+    pam:mitigatedBy pam:MT_05 ;
+    rdfs:comment "차단 능력 상실·동작 잠금"@ko .
+pam:FM_06 a pam:FailureMode ;
+    pam:code "FM-06" ;
+    rdfs:label "조작기구 동작 불량"@ko ;
+    pam:appliesToAssetClass pam:BreakerAsset ;
+    pam:affectsComponentType pam:CT_OperatingMechanism ;
+    pam:detectedBy pam:IN_08 ;
+    pam:mitigatedBy pam:MT_06 ;
+    rdfs:comment "고장 전류 차단 실패"@ko .
+pam:FM_07 a pam:FailureMode ;
+    pam:code "FM-07" ;
+    rdfs:label "진공도 저하"@ko ;
+    pam:appliesToAssetClass pam:BreakerAsset ;
+    pam:affectsComponentType pam:CT_VacuumInterrupter ;
+    pam:detectedBy pam:IN_09 ;
+    pam:mitigatedBy pam:MT_07 ;
+    rdfs:comment "차단 실패"@ko .
+pam:FM_08 a pam:FailureMode ;
+    pam:code "FM-08" ;
+    rdfs:label "접속부 과열"@ko ;
+    pam:appliesToAssetClass pam:ConductorAsset ;
+    pam:affectsComponentType pam:CT_Joint ;
+    pam:detectedBy pam:IN_02, pam:IN_11 ;
+    pam:mitigatedBy pam:MT_08 ;
+    rdfs:comment "접속부 용단으로 선로 정지"@ko .
+pam:FM_09 a pam:FailureMode ;
+    pam:code "FM-09" ;
+    rdfs:label "도체 부식·소선 단선"@ko ;
+    pam:appliesToAssetClass pam:ConductorAsset ;
+    pam:affectsComponentType pam:CT_Conductor ;
+    pam:detectedBy pam:IN_11 ;
+    pam:mitigatedBy pam:MT_09, pam:MT_10 ;
+    rdfs:comment "도체 단선"@ko .
+
+### 진단 기록
+pam:DG_01 a pam:Diagnosis ; pam:onAsset pam:AS_TR_0007 ; pam:usesMethod pam:IN_03 ; pam:date "2026-09-15"^^xsd:date ; pam:finding "TCG 820ppm, C2H2 2ppm (주의 기준 초과)"@ko ; pam:judgement pam:Caution ; pam:indicates pam:FM_01 .
+pam:DG_02 a pam:Diagnosis ; pam:onAsset pam:AS_TR_0007 ; pam:usesMethod pam:IN_04 ; pam:date "2026-03-10"^^xsd:date ; pam:finding "수분 18ppm, 절연파괴전압 52kV"@ko ; pam:judgement pam:Normal .
+pam:DG_03 a pam:Diagnosis ; pam:onAsset pam:AS_TR_0007 ; pam:usesMethod pam:IN_05 ; pam:date "2026-10-31"^^xsd:date ; pam:finding "OLTC 정비 후 동작 68,400회 (정비 기준 60,000회)"@ko ; pam:judgement pam:Caution ; pam:indicates pam:FM_02 .
+pam:DG_04 a pam:Diagnosis ; pam:onAsset pam:AS_TR_0007 ; pam:usesMethod pam:IN_02 ; pam:date "2026-09-20"^^xsd:date ; pam:finding "최고 61℃, 이상 없음"@ko ; pam:judgement pam:Normal .
+pam:DG_05 a pam:Diagnosis ; pam:onAsset pam:AS_CB_0123 ; pam:usesMethod pam:IN_07 ; pam:date "2026-10-05"^^xsd:date ; pam:finding "SF6 0.58MPa (정격 0.60, 경보 0.55), 월 0.005MPa 감소"@ko ; pam:judgement pam:Caution ; pam:indicates pam:FM_05 .
+pam:DG_06 a pam:Diagnosis ; pam:onAsset pam:AS_CB_0123 ; pam:usesMethod pam:IN_08 ; pam:date "2025-05-20"^^xsd:date ; pam:finding "개극 시간 32ms (기준 40ms 이하)"@ko ; pam:judgement pam:Normal .
+pam:DG_07 a pam:Diagnosis ; pam:onAsset pam:AS_CB_0457 ; pam:usesMethod pam:IN_09 ; pam:date "2024-11-12"^^xsd:date ; pam:finding "진공도 양호"@ko ; pam:judgement pam:Normal .
+pam:DG_08 a pam:Diagnosis ; pam:onAsset pam:AS_LN_0031 ; pam:usesMethod pam:IN_02 ; pam:date "2026-08-10"^^xsd:date ; pam:finding "3번 철탑 점퍼 접속부 ΔT 18℃"@ko ; pam:judgement pam:Caution ; pam:indicates pam:FM_08 .
+pam:DG_09 a pam:Diagnosis ; pam:onAsset pam:AS_LN_0031 ; pam:usesMethod pam:IN_02 ; pam:date "2026-09-20"^^xsd:date ; pam:finding "재시공 후 ΔT 3℃"@ko ; pam:judgement pam:Normal .
+pam:DG_10 a pam:Diagnosis ; pam:onAsset pam:AS_LN_0031 ; pam:usesMethod pam:IN_11 ; pam:date "2026-05-14"^^xsd:date ; pam:finding "소선 단선 없음, 경미한 부식"@ko ; pam:judgement pam:Normal .
+pam:DG_11 a pam:Diagnosis ; pam:onAsset pam:AS_CB_0457 ; pam:usesMethod pam:IN_02 ; pam:date "2026-09-20"^^xsd:date ; pam:finding "이상 없음"@ko ; pam:judgement pam:Normal .
+pam:DG_12 a pam:Diagnosis ; pam:onAsset pam:AS_CB_0123 ; pam:usesMethod pam:IN_02 ; pam:date "2026-09-20"^^xsd:date ; pam:finding "이상 없음"@ko ; pam:judgement pam:Normal .
+pam:DG_13 a pam:Diagnosis ; pam:onAsset pam:AS_TR_0007 ; pam:usesMethod pam:IN_01 ; pam:date "2026-10-28"^^xsd:date ; pam:finding "이상 없음"@ko ; pam:judgement pam:Normal .
+pam:DG_14 a pam:Diagnosis ; pam:onAsset pam:AS_CB_0123 ; pam:usesMethod pam:IN_01 ; pam:date "2026-10-28"^^xsd:date ; pam:finding "가스압 지시계 0.58MPa 확인"@ko ; pam:judgement pam:Normal .
+pam:DG_15 a pam:Diagnosis ; pam:onAsset pam:AS_CB_0457 ; pam:usesMethod pam:IN_01 ; pam:date "2026-10-28"^^xsd:date ; pam:finding "이상 없음"@ko ; pam:judgement pam:Normal .
+pam:DG_16 a pam:Diagnosis ; pam:onAsset pam:AS_LN_0031 ; pam:usesMethod pam:IN_01 ; pam:date "2026-10-21"^^xsd:date ; pam:finding "이상 없음"@ko ; pam:judgement pam:Normal .
+
+### 작업지시
+pam:WO_2026_0731 a pam:WorkOrder ; pam:code "WO-2026-0731" ; pam:onAsset pam:AS_LN_0031 ; pam:performs pam:MT_08 ; pam:addresses pam:FM_08 ; pam:triggeredBy pam:DG_08 ; pam:workStatus "완료"@ko ; pam:plannedDate "2026-08-25"^^xsd:date ; pam:outageHours 6 ; pam:completedDate "2026-08-28"^^xsd:date .
+pam:WO_2026_0877 a pam:WorkOrder ; pam:code "WO-2026-0877" ; pam:onAsset pam:AS_CB_0123 ; pam:performs pam:MT_05 ; pam:addresses pam:FM_05 ; pam:triggeredBy pam:DG_05 ; pam:workStatus "진행"@ko ; pam:plannedDate "2026-11-12"^^xsd:date ; pam:outageHours 8 .
+pam:WO_2026_0912 a pam:WorkOrder ; pam:code "WO-2026-0912" ; pam:onAsset pam:AS_TR_0007 ; pam:performs pam:MT_02 ; pam:addresses pam:FM_02 ; pam:triggeredBy pam:DG_03 ; pam:workStatus "계획"@ko ; pam:plannedDate "2026-12-08"^^xsd:date ; pam:outageHours 36 .
+pam:WO_2026_0915 a pam:WorkOrder ; pam:code "WO-2026-0915" ; pam:onAsset pam:AS_TR_0007 ; pam:performs pam:IN_03 ; pam:addresses pam:FM_01 ; pam:triggeredBy pam:DG_01 ; pam:workStatus "계획"@ko ; pam:plannedDate "2026-12-01"^^xsd:date ; pam:outageHours 0 .

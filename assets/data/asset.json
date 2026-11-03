@@ -1,0 +1,1147 @@
+{
+ "asOf": "2026-11-03",
+ "virtual": true,
+ "rules": {
+  "judgePenalty": {
+   "정상": 0,
+   "주의": 15,
+   "이상": 35
+  },
+  "pofCuts": [
+   80,
+   60,
+   40,
+   20
+  ],
+  "cofCutsMWh": [
+   100,
+   500,
+   2000,
+   10000
+  ]
+ },
+ "locations": [
+  {
+   "location": "ACLS_1",
+   "cim_class": "ACLineSegment",
+   "pycim_name": "B-A 1회선",
+   "name": "B-A 154kV 1회선",
+   "outageMW": 8.5,
+   "lostLoads": [
+    "D/L #1 부하"
+   ],
+   "asset": "AS-LN-0031"
+  },
+  {
+   "location": "CB_154_1",
+   "cim_class": "Breaker",
+   "pycim_name": "154kV 선로 CB",
+   "name": "154kV 선로 차단기",
+   "outageMW": 8.5,
+   "lostLoads": [
+    "D/L #1 부하"
+   ],
+   "asset": "AS-CB-0123"
+  },
+  {
+   "location": "BUS_154",
+   "cim_class": "BusbarSection",
+   "pycim_name": "154kV 모선",
+   "name": "154kV 모선",
+   "outageMW": 8.5,
+   "lostLoads": [
+    "D/L #1 부하"
+   ],
+   "asset": null
+  },
+  {
+   "location": "TR_1",
+   "cim_class": "PowerTransformer",
+   "pycim_name": "M.Tr #1",
+   "name": "주변압기 #1",
+   "outageMW": 8.5,
+   "lostLoads": [
+    "D/L #1 부하"
+   ],
+   "asset": "AS-TR-0007"
+  },
+  {
+   "location": "BUS_22",
+   "cim_class": "BusbarSection",
+   "pycim_name": "22.9kV 모선",
+   "name": "22.9kV 모선",
+   "outageMW": 8.5,
+   "lostLoads": [
+    "D/L #1 부하"
+   ],
+   "asset": null
+  },
+  {
+   "location": "CB_22_1",
+   "cim_class": "Breaker",
+   "pycim_name": "D/L #1 CB",
+   "name": "D/L #1 차단기",
+   "outageMW": 8.5,
+   "lostLoads": [
+    "D/L #1 부하"
+   ],
+   "asset": "AS-CB-0457"
+  }
+ ],
+ "assets": [
+  {
+   "asset_id": "AS-TR-0007",
+   "eam_no": "EQ-TR-2015-0007",
+   "kind": "TransformerAsset",
+   "name": "M.Tr #1 본체",
+   "manufacturer": "가상전기",
+   "model": "VT-60M154",
+   "year_made": "2015",
+   "rating": "60MVA 154/22.9kV ONAN/ONAF",
+   "status": "운전",
+   "design_life_y": "40",
+   "restore_h": "2160",
+   "restore_h_with_spare": "72",
+   "kindKo": "변압기",
+   "location": "TR_1",
+   "calc": {
+    "age": 11.3,
+    "age_penalty": 17.0,
+    "diag_penalty": 30,
+    "hi": 53.0,
+    "pof": 3,
+    "outage_mw": 8.5,
+    "lost_loads": [
+     "D/L #1 부하"
+    ],
+    "mwh": 18360,
+    "cof": 5,
+    "risk": 15,
+    "level": "높음",
+    "mwh_spare": 612,
+    "cof_spare": 3,
+    "risk_spare": 9,
+    "level_spare": "중간",
+    "latest": {
+     "IN-04": "DG-02",
+     "IN-03": "DG-01",
+     "IN-02": "DG-04",
+     "IN-01": "DG-13",
+     "IN-05": "DG-03"
+    }
+   },
+   "components": [
+    {
+     "component_id": "CP-TR7-BSH",
+     "asset_id": "AS-TR-0007",
+     "kind": "Bushing",
+     "name": "154kV 부싱"
+    },
+    {
+     "component_id": "CP-TR7-OLTC",
+     "asset_id": "AS-TR-0007",
+     "kind": "TapChanger",
+     "name": "부하시 탭절환기(OLTC)"
+    },
+    {
+     "component_id": "CP-TR7-COOL",
+     "asset_id": "AS-TR-0007",
+     "kind": "CoolingUnit",
+     "name": "냉각장치(방열기·팬)"
+    },
+    {
+     "component_id": "CP-TR7-OIL",
+     "asset_id": "AS-TR-0007",
+     "kind": "InsulatingOil",
+     "name": "절연유·권선 절연"
+    }
+   ],
+   "deployments": [
+    {
+     "asset_id": "AS-TR-0007",
+     "location": "TR_1",
+     "valid_from": "2015-05-01",
+     "valid_to": ""
+    }
+   ]
+  },
+  {
+   "asset_id": "AS-TR-0002",
+   "eam_no": "EQ-TR-1998-0002",
+   "kind": "TransformerAsset",
+   "name": "구 M.Tr #1 본체",
+   "manufacturer": "가상중공업",
+   "model": "OT-45M",
+   "year_made": "1998",
+   "rating": "45MVA 154/22.9kV",
+   "status": "폐기",
+   "design_life_y": "40",
+   "restore_h": "2160",
+   "restore_h_with_spare": "72",
+   "kindKo": "변압기",
+   "location": null,
+   "calc": null,
+   "components": [],
+   "deployments": [
+    {
+     "asset_id": "AS-TR-0002",
+     "location": "TR_1",
+     "valid_from": "1998-06-01",
+     "valid_to": "2015-04-30"
+    }
+   ]
+  },
+  {
+   "asset_id": "AS-CB-0123",
+   "eam_no": "EQ-CB-2019-0123",
+   "kind": "BreakerAsset",
+   "name": "154kV 가스차단기",
+   "manufacturer": "가상전기",
+   "model": "GCB-170",
+   "year_made": "2019",
+   "rating": "170kV 40kA SF6",
+   "status": "운전",
+   "design_life_y": "30",
+   "restore_h": "48",
+   "restore_h_with_spare": "48",
+   "kindKo": "차단기",
+   "location": "CB_154_1",
+   "calc": {
+    "age": 7.3,
+    "age_penalty": 14.7,
+    "diag_penalty": 15,
+    "hi": 70.3,
+    "pof": 2,
+    "outage_mw": 8.5,
+    "lost_loads": [
+     "D/L #1 부하"
+    ],
+    "mwh": 408,
+    "cof": 2,
+    "risk": 4,
+    "level": "낮음",
+    "mwh_spare": 408,
+    "cof_spare": 2,
+    "risk_spare": 4,
+    "level_spare": "낮음",
+    "latest": {
+     "IN-08": "DG-06",
+     "IN-02": "DG-12",
+     "IN-07": "DG-05",
+     "IN-01": "DG-14"
+    }
+   },
+   "components": [
+    {
+     "component_id": "CP-CB123-GAS",
+     "asset_id": "AS-CB-0123",
+     "kind": "GasSystem",
+     "name": "SF6 가스계통"
+    },
+    {
+     "component_id": "CP-CB123-MECH",
+     "asset_id": "AS-CB-0123",
+     "kind": "OperatingMechanism",
+     "name": "조작기구"
+    }
+   ],
+   "deployments": [
+    {
+     "asset_id": "AS-CB-0123",
+     "location": "CB_154_1",
+     "valid_from": "2019-03-15",
+     "valid_to": ""
+    }
+   ]
+  },
+  {
+   "asset_id": "AS-CB-0457",
+   "eam_no": "EQ-CB-2021-0457",
+   "kind": "BreakerAsset",
+   "name": "22.9kV 진공차단기",
+   "manufacturer": "가상전기",
+   "model": "VCB-25",
+   "year_made": "2021",
+   "rating": "25.8kV 25kA 진공",
+   "status": "운전",
+   "design_life_y": "30",
+   "restore_h": "24",
+   "restore_h_with_spare": "24",
+   "kindKo": "차단기",
+   "location": "CB_22_1",
+   "calc": {
+    "age": 5.3,
+    "age_penalty": 10.7,
+    "diag_penalty": 0,
+    "hi": 89.3,
+    "pof": 1,
+    "outage_mw": 8.5,
+    "lost_loads": [
+     "D/L #1 부하"
+    ],
+    "mwh": 204,
+    "cof": 2,
+    "risk": 2,
+    "level": "낮음",
+    "mwh_spare": 204,
+    "cof_spare": 2,
+    "risk_spare": 2,
+    "level_spare": "낮음",
+    "latest": {
+     "IN-09": "DG-07",
+     "IN-02": "DG-11",
+     "IN-01": "DG-15"
+    }
+   },
+   "components": [
+    {
+     "component_id": "CP-CB457-VI",
+     "asset_id": "AS-CB-0457",
+     "kind": "VacuumInterrupter",
+     "name": "진공 인터럽터"
+    },
+    {
+     "component_id": "CP-CB457-MECH",
+     "asset_id": "AS-CB-0457",
+     "kind": "OperatingMechanism",
+     "name": "조작기구"
+    }
+   ],
+   "deployments": [
+    {
+     "asset_id": "AS-CB-0457",
+     "location": "CB_22_1",
+     "valid_from": "2021-10-01",
+     "valid_to": ""
+    }
+   ]
+  },
+  {
+   "asset_id": "AS-LN-0031",
+   "eam_no": "EQ-LN-2008-0031",
+   "kind": "ConductorAsset",
+   "name": "B-A 154kV 가공도체",
+   "manufacturer": "가상전선",
+   "model": "ACSR-410",
+   "year_made": "2008",
+   "rating": "ACSR 410mm² 12.5km",
+   "status": "운전",
+   "design_life_y": "50",
+   "restore_h": "12",
+   "restore_h_with_spare": "12",
+   "kindKo": "가공도체",
+   "location": "ACLS_1",
+   "calc": {
+    "age": 18.3,
+    "age_penalty": 22.0,
+    "diag_penalty": 0,
+    "hi": 78.0,
+    "pof": 2,
+    "outage_mw": 8.5,
+    "lost_loads": [
+     "D/L #1 부하"
+    ],
+    "mwh": 102,
+    "cof": 2,
+    "risk": 4,
+    "level": "낮음",
+    "mwh_spare": 102,
+    "cof_spare": 2,
+    "risk_spare": 4,
+    "level_spare": "낮음",
+    "latest": {
+     "IN-11": "DG-10",
+     "IN-02": "DG-09",
+     "IN-01": "DG-16"
+    }
+   },
+   "components": [
+    {
+     "component_id": "CP-LN31-JNT",
+     "asset_id": "AS-LN-0031",
+     "kind": "Joint",
+     "name": "접속부(점퍼·슬리브)"
+    },
+    {
+     "component_id": "CP-LN31-COND",
+     "asset_id": "AS-LN-0031",
+     "kind": "Conductor",
+     "name": "도체(소선)"
+    }
+   ],
+   "deployments": [
+    {
+     "asset_id": "AS-LN-0031",
+     "location": "ACLS_1",
+     "valid_from": "2008-11-20",
+     "valid_to": ""
+    }
+   ]
+  }
+ ],
+ "tasks": [
+  {
+   "task_id": "IN-01",
+   "name": "순시점검",
+   "category": "점검",
+   "strategy": "TBM",
+   "cycle": "월",
+   "cycle_months": "1",
+   "applies_to": "TransformerAsset;BreakerAsset;ConductorAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-02",
+   "name": "열화상 진단",
+   "category": "점검",
+   "strategy": "TBM",
+   "cycle": "분기",
+   "cycle_months": "3",
+   "applies_to": "TransformerAsset;BreakerAsset;ConductorAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-03",
+   "name": "유중가스분석(DGA)",
+   "category": "점검",
+   "strategy": "CBM",
+   "cycle": "반기",
+   "cycle_months": "6",
+   "applies_to": "TransformerAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-04",
+   "name": "절연유 특성시험",
+   "category": "점검",
+   "strategy": "TBM",
+   "cycle": "연",
+   "cycle_months": "12",
+   "applies_to": "TransformerAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-05",
+   "name": "OLTC 동작횟수 확인",
+   "category": "점검",
+   "strategy": "CBM",
+   "cycle": "월",
+   "cycle_months": "1",
+   "applies_to": "TransformerAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-06",
+   "name": "부싱 tanδ 시험",
+   "category": "점검",
+   "strategy": "TBM",
+   "cycle": "3년",
+   "cycle_months": "36",
+   "applies_to": "TransformerAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-07",
+   "name": "SF6 가스압 감시",
+   "category": "점검",
+   "strategy": "CBM",
+   "cycle": "상시",
+   "cycle_months": "1",
+   "applies_to": "BreakerAsset:SF6",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-08",
+   "name": "차단기 동작특성 시험",
+   "category": "점검",
+   "strategy": "TBM",
+   "cycle": "3년",
+   "cycle_months": "36",
+   "applies_to": "BreakerAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-09",
+   "name": "진공도 시험",
+   "category": "점검",
+   "strategy": "TBM",
+   "cycle": "3년",
+   "cycle_months": "36",
+   "applies_to": "BreakerAsset:진공",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-10",
+   "name": "부분방전 측정",
+   "category": "점검",
+   "strategy": "CBM",
+   "cycle": "연",
+   "cycle_months": "12",
+   "applies_to": "TransformerAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "IN-11",
+   "name": "드론 선로 점검",
+   "category": "점검",
+   "strategy": "TBM",
+   "cycle": "반기",
+   "cycle_months": "6",
+   "applies_to": "ConductorAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-01",
+   "name": "절연유 여과·탈기",
+   "category": "정비",
+   "strategy": "CBM",
+   "cycle": "필요시",
+   "cycle_months": "",
+   "applies_to": "TransformerAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-02",
+   "name": "OLTC 정비",
+   "category": "정비",
+   "strategy": "CBM",
+   "cycle": "필요시",
+   "cycle_months": "",
+   "applies_to": "TransformerAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-03",
+   "name": "부싱 교체",
+   "category": "정비",
+   "strategy": "CM",
+   "cycle": "필요시",
+   "cycle_months": "",
+   "applies_to": "TransformerAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-04",
+   "name": "냉각장치 정비",
+   "category": "정비",
+   "strategy": "TBM",
+   "cycle": "연",
+   "cycle_months": "12",
+   "applies_to": "TransformerAsset",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-05",
+   "name": "SF6 보충·밀봉 정비",
+   "category": "정비",
+   "strategy": "CM",
+   "cycle": "필요시",
+   "cycle_months": "",
+   "applies_to": "BreakerAsset:SF6",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-06",
+   "name": "조작기구 정비",
+   "category": "정비",
+   "strategy": "TBM",
+   "cycle": "6년",
+   "cycle_months": "72",
+   "applies_to": "BreakerAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-07",
+   "name": "진공 인터럽터 교체",
+   "category": "정비",
+   "strategy": "CM",
+   "cycle": "필요시",
+   "cycle_months": "",
+   "applies_to": "BreakerAsset:진공",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-08",
+   "name": "접속부 재시공",
+   "category": "정비",
+   "strategy": "CM",
+   "cycle": "필요시",
+   "cycle_months": "",
+   "applies_to": "ConductorAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-09",
+   "name": "도체 보수",
+   "category": "정비",
+   "strategy": "CM",
+   "cycle": "필요시",
+   "cycle_months": "",
+   "applies_to": "ConductorAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "MT-10",
+   "name": "설비 교체",
+   "category": "교체",
+   "strategy": "CM",
+   "cycle": "수명 도달 시",
+   "cycle_months": "",
+   "applies_to": "TransformerAsset;BreakerAsset;ConductorAsset",
+   "outage": "Y",
+   "precedes": "",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-01",
+   "name": "작업 요청 등록",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "N",
+   "precedes": "WF-02",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-02",
+   "name": "위험도 평가·우선순위 결정",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "N",
+   "precedes": "WF-03",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-03",
+   "name": "정전 계획 수립(계통운영 협의)",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "N",
+   "precedes": "WF-04",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-04",
+   "name": "작업 허가·안전조치(접지)",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "N",
+   "precedes": "WF-05",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-05",
+   "name": "작업 수행",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "Y",
+   "precedes": "WF-06",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-06",
+   "name": "시험·검수",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "N",
+   "precedes": "WF-07",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-07",
+   "name": "재가압·복구",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "N",
+   "precedes": "WF-08",
+   "feeds_back_to": ""
+  },
+  {
+   "task_id": "WF-08",
+   "name": "이력 등록(EAM)·건전도 재산정",
+   "category": "업무흐름",
+   "strategy": "",
+   "cycle": "",
+   "cycle_months": "",
+   "applies_to": "",
+   "outage": "N",
+   "precedes": "",
+   "feeds_back_to": "WF-02"
+  }
+ ],
+ "failureModes": [
+  {
+   "fm_id": "FM-01",
+   "name": "권선 절연 열화",
+   "asset_kind": "TransformerAsset",
+   "component_kind": "InsulatingOil",
+   "detected_by": "IN-03;IN-04;IN-10",
+   "mitigated_by": "MT-01;MT-10",
+   "effect": "절연 파괴로 변압기 내부 고장"
+  },
+  {
+   "fm_id": "FM-02",
+   "name": "OLTC 접점 마모",
+   "asset_kind": "TransformerAsset",
+   "component_kind": "TapChanger",
+   "detected_by": "IN-05;IN-03",
+   "mitigated_by": "MT-02",
+   "effect": "탭 절환 실패·아크로 변압기 정지"
+  },
+  {
+   "fm_id": "FM-03",
+   "name": "부싱 열화",
+   "asset_kind": "TransformerAsset",
+   "component_kind": "Bushing",
+   "detected_by": "IN-06;IN-02",
+   "mitigated_by": "MT-03",
+   "effect": "부싱 섬락·파손"
+  },
+  {
+   "fm_id": "FM-04",
+   "name": "냉각 성능 저하",
+   "asset_kind": "TransformerAsset",
+   "component_kind": "CoolingUnit",
+   "detected_by": "IN-01;IN-02",
+   "mitigated_by": "MT-04",
+   "effect": "과열로 출력 제한·수명 단축"
+  },
+  {
+   "fm_id": "FM-05",
+   "name": "SF6 가스 누설",
+   "asset_kind": "BreakerAsset:SF6",
+   "component_kind": "GasSystem",
+   "detected_by": "IN-07",
+   "mitigated_by": "MT-05",
+   "effect": "차단 능력 상실·동작 잠금"
+  },
+  {
+   "fm_id": "FM-06",
+   "name": "조작기구 동작 불량",
+   "asset_kind": "BreakerAsset",
+   "component_kind": "OperatingMechanism",
+   "detected_by": "IN-08",
+   "mitigated_by": "MT-06",
+   "effect": "고장 전류 차단 실패"
+  },
+  {
+   "fm_id": "FM-07",
+   "name": "진공도 저하",
+   "asset_kind": "BreakerAsset:진공",
+   "component_kind": "VacuumInterrupter",
+   "detected_by": "IN-09",
+   "mitigated_by": "MT-07",
+   "effect": "차단 실패"
+  },
+  {
+   "fm_id": "FM-08",
+   "name": "접속부 과열",
+   "asset_kind": "ConductorAsset",
+   "component_kind": "Joint",
+   "detected_by": "IN-02;IN-11",
+   "mitigated_by": "MT-08",
+   "effect": "접속부 용단으로 선로 정지"
+  },
+  {
+   "fm_id": "FM-09",
+   "name": "도체 부식·소선 단선",
+   "asset_kind": "ConductorAsset",
+   "component_kind": "Conductor",
+   "detected_by": "IN-11",
+   "mitigated_by": "MT-09;MT-10",
+   "effect": "도체 단선"
+  }
+ ],
+ "diagnoses": [
+  {
+   "diag_id": "DG-01",
+   "asset_id": "AS-TR-0007",
+   "task_id": "IN-03",
+   "date": "2026-09-15",
+   "finding": "TCG 820ppm, C2H2 2ppm (주의 기준 초과)",
+   "judgement": "주의",
+   "fm_id": "FM-01"
+  },
+  {
+   "diag_id": "DG-02",
+   "asset_id": "AS-TR-0007",
+   "task_id": "IN-04",
+   "date": "2026-03-10",
+   "finding": "수분 18ppm, 절연파괴전압 52kV",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-03",
+   "asset_id": "AS-TR-0007",
+   "task_id": "IN-05",
+   "date": "2026-10-31",
+   "finding": "OLTC 정비 후 동작 68,400회 (정비 기준 60,000회)",
+   "judgement": "주의",
+   "fm_id": "FM-02"
+  },
+  {
+   "diag_id": "DG-04",
+   "asset_id": "AS-TR-0007",
+   "task_id": "IN-02",
+   "date": "2026-09-20",
+   "finding": "최고 61℃, 이상 없음",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-05",
+   "asset_id": "AS-CB-0123",
+   "task_id": "IN-07",
+   "date": "2026-10-05",
+   "finding": "SF6 0.58MPa (정격 0.60, 경보 0.55), 월 0.005MPa 감소",
+   "judgement": "주의",
+   "fm_id": "FM-05"
+  },
+  {
+   "diag_id": "DG-06",
+   "asset_id": "AS-CB-0123",
+   "task_id": "IN-08",
+   "date": "2025-05-20",
+   "finding": "개극 시간 32ms (기준 40ms 이하)",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-07",
+   "asset_id": "AS-CB-0457",
+   "task_id": "IN-09",
+   "date": "2024-11-12",
+   "finding": "진공도 양호",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-08",
+   "asset_id": "AS-LN-0031",
+   "task_id": "IN-02",
+   "date": "2026-08-10",
+   "finding": "3번 철탑 점퍼 접속부 ΔT 18℃",
+   "judgement": "주의",
+   "fm_id": "FM-08"
+  },
+  {
+   "diag_id": "DG-09",
+   "asset_id": "AS-LN-0031",
+   "task_id": "IN-02",
+   "date": "2026-09-20",
+   "finding": "재시공 후 ΔT 3℃",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-10",
+   "asset_id": "AS-LN-0031",
+   "task_id": "IN-11",
+   "date": "2026-05-14",
+   "finding": "소선 단선 없음, 경미한 부식",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-11",
+   "asset_id": "AS-CB-0457",
+   "task_id": "IN-02",
+   "date": "2026-09-20",
+   "finding": "이상 없음",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-12",
+   "asset_id": "AS-CB-0123",
+   "task_id": "IN-02",
+   "date": "2026-09-20",
+   "finding": "이상 없음",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-13",
+   "asset_id": "AS-TR-0007",
+   "task_id": "IN-01",
+   "date": "2026-10-28",
+   "finding": "이상 없음",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-14",
+   "asset_id": "AS-CB-0123",
+   "task_id": "IN-01",
+   "date": "2026-10-28",
+   "finding": "가스압 지시계 0.58MPa 확인",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-15",
+   "asset_id": "AS-CB-0457",
+   "task_id": "IN-01",
+   "date": "2026-10-28",
+   "finding": "이상 없음",
+   "judgement": "정상",
+   "fm_id": ""
+  },
+  {
+   "diag_id": "DG-16",
+   "asset_id": "AS-LN-0031",
+   "task_id": "IN-01",
+   "date": "2026-10-21",
+   "finding": "이상 없음",
+   "judgement": "정상",
+   "fm_id": ""
+  }
+ ],
+ "workOrders": [
+  {
+   "wo_id": "WO-2026-0731",
+   "asset_id": "AS-LN-0031",
+   "task_id": "MT-08",
+   "fm_id": "FM-08",
+   "status": "완료",
+   "planned": "2026-08-25",
+   "done": "2026-08-28",
+   "outage_h": "6",
+   "trigger": "DG-08"
+  },
+  {
+   "wo_id": "WO-2026-0877",
+   "asset_id": "AS-CB-0123",
+   "task_id": "MT-05",
+   "fm_id": "FM-05",
+   "status": "진행",
+   "planned": "2026-11-12",
+   "done": "",
+   "outage_h": "8",
+   "trigger": "DG-05"
+  },
+  {
+   "wo_id": "WO-2026-0912",
+   "asset_id": "AS-TR-0007",
+   "task_id": "MT-02",
+   "fm_id": "FM-02",
+   "status": "계획",
+   "planned": "2026-12-08",
+   "done": "",
+   "outage_h": "36",
+   "trigger": "DG-03"
+  },
+  {
+   "wo_id": "WO-2026-0915",
+   "asset_id": "AS-TR-0007",
+   "task_id": "IN-03",
+   "fm_id": "FM-01",
+   "status": "계획",
+   "planned": "2026-12-01",
+   "done": "",
+   "outage_h": "0",
+   "trigger": "DG-01"
+  }
+ ],
+ "overdue": [
+  {
+   "asset": "AS-TR-0007",
+   "task": "IN-06",
+   "last": null,
+   "state": "기록 없음"
+  },
+  {
+   "asset": "AS-TR-0007",
+   "task": "IN-10",
+   "last": null,
+   "state": "기록 없음"
+  },
+  {
+   "asset": "AS-CB-0457",
+   "task": "IN-08",
+   "last": null,
+   "state": "기록 없음"
+  }
+ ],
+ "gaps": [
+  "BUS_154",
+  "BUS_22"
+ ],
+ "shacl": [
+  {
+   "focus": "BUS_154",
+   "severity": "Warning",
+   "message": "설비 자리에 현재 설치된 자산 기록이 없습니다 / no asset is currently installed at this location"
+  },
+  {
+   "focus": "BUS_22",
+   "severity": "Warning",
+   "message": "설비 자리에 현재 설치된 자산 기록이 없습니다 / no asset is currently installed at this location"
+  }
+ ],
+ "cq": [
+  {
+   "q": "주변압기 #1 자리에 지금 있는 자산과 이전 자산은?",
+   "rows": [
+    [
+     "AS-TR-0002",
+     "1998-06-01",
+     "2015-04-30"
+    ],
+    [
+     "AS-TR-0007",
+     "2015-05-01",
+     ""
+    ]
+   ]
+  },
+  {
+   "q": "위험도가 가장 높은 자산은?",
+   "rows": [
+    [
+     "AS-TR-0007",
+     "15",
+     "53.0"
+    ]
+   ]
+  },
+  {
+   "q": "OLTC 접점 마모를 찾는 점검과 대응 정비는?",
+   "rows": [
+    [
+     "대응",
+     "OLTC 정비"
+    ],
+    [
+     "탐지",
+     "OLTC 동작횟수 확인"
+    ],
+    [
+     "탐지",
+     "유중가스분석(DGA)"
+    ]
+   ]
+  },
+  {
+   "q": "주의·이상 판정을 받았는데 작업지시가 아직 끝나지 않은 자산은?",
+   "rows": [
+    [
+     "AS-CB-0123",
+     "WO-2026-0877",
+     "진행"
+    ],
+    [
+     "AS-TR-0007",
+     "WO-2026-0912",
+     "계획"
+    ],
+    [
+     "AS-TR-0007",
+     "WO-2026-0915",
+     "계획"
+    ]
+   ]
+  },
+  {
+   "q": "정전이 필요한 미완료 작업지시와 예상 정전 시간은?",
+   "rows": [
+    [
+     "WO-2026-0877",
+     "8"
+    ],
+    [
+     "WO-2026-0912",
+     "36"
+    ]
+   ]
+  },
+  {
+   "q": "자산 기록이 없는 설비(기능 위치)는?",
+   "rows": [
+    [
+     "154kV 모선"
+    ],
+    [
+     "22.9kV 모선"
+    ]
+   ]
+  },
+  {
+   "q": "EAM 설비번호 EQ-CB-2019-0123은 어느 설비 자리에 있나?",
+   "rows": [
+    [
+     "154kV 선로 CB"
+    ]
+   ]
+  },
+  {
+   "q": "정비 작업 하나가 거치는 업무 흐름은? (aipd:precedes로 질의)",
+   "rows": [
+    [
+     "7"
+    ]
+   ]
+  }
+ ]
+}

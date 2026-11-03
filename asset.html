@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 전력설비 자산관리</title>
+<meta name="title-ko" content="Ontology Space · 전력설비 자산관리">
+<meta name="title-en" content="Ontology Space · Power Asset Management">
+<meta name="description" content="가상 A변전소의 설비 자산을 온톨로지로: 기능 위치와 자산 분리, 진단·고장 모드·작업지시, 건전도와 위험도 (가상 데이터)">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script src="assets/asset.js" defer></script>
+<style>
+/* 업무 온톨로지 페이지 전용 */
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 28px;margin-top:24px;font-variant-numeric:tabular-nums}
+.facts b{font-size:22px;margin-right:6px}
+.facts span{color:var(--muted);font-size:14px}
+.terms{border-top:1px solid var(--line);margin:16px 0}
+.terms > div{display:grid;grid-template-columns:170px minmax(0,1fr);gap:4px 20px;padding:14px 0;border-bottom:1px solid var(--line)}
+.terms dt{font-weight:700}
+.terms dt small{display:block;font-weight:400;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+.terms dd{margin:0}
+.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:24px 0;border-top:1px solid var(--line)}
+.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
+.decision h3{margin:0 0 6px}
+.decision p{margin:6px 0}
+.impl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
+.impl > div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;min-width:0}
+.impl b{display:block;font-size:12px;letter-spacing:.04em;color:var(--muted);margin-bottom:2px}
+.steps{list-style:none;margin:16px 0;padding:0;border-top:1px solid var(--line)}
+.steps li{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:4px 16px;padding:12px 0;border-bottom:1px solid var(--line);margin:0;align-items:baseline}
+.steps .n{color:var(--warm);font-weight:700}
+.steps .out{font-size:13px;color:var(--muted);text-align:right}
+.tag{display:inline-block;font-size:12px;font-weight:600;border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-right:6px;color:var(--muted)}
+.tag.ok{color:var(--ok);border-color:var(--ok)}
+.tag.no{color:var(--hv);border-color:var(--hv)}
+td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.diagram .hub{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.diagram .box{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+.diagram .edge{fill:none;stroke:var(--muted);stroke-width:1.3}
+.diagram .pre{fill:none;stroke:var(--accent);stroke-width:2}
+.diagram .fb{fill:none;stroke:var(--warm);stroke-width:2;stroke-dasharray:6 4}
+.diagram .b{font-weight:600}
+.diagram .pre-t{fill:var(--accent);font-weight:600}
+.diagram .fb-t{fill:var(--warm);font-weight:600}
+@media (max-width:560px){
+  .terms > div,.decision{grid-template-columns:minmax(0,1fr)}
+  .steps li{grid-template-columns:32px minmax(0,1fr)}
+  .steps .out{grid-column:2;text-align:left}
+}
+/* 자산관리 페이지 */
+.diagram .ext{fill:var(--code);stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 3}
+.risk-wrap{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.risk-wrap{grid-template-columns:minmax(0,1fr)}}
+#matrix{width:100%;height:auto;display:block}
+.mx-cell{stroke:var(--surface);stroke-width:2}
+.mx-lo{fill:color-mix(in srgb,var(--ok) 16%,var(--surface))}
+.mx-mid{fill:color-mix(in srgb,#eab308 24%,var(--surface))}
+.mx-hi{fill:color-mix(in srgb,var(--hv) 24%,var(--surface))}
+.mx-n{fill:var(--muted);font-size:10.5px}
+.mx-ax{fill:var(--muted);font-size:12px}
+.mx-t{fill:var(--text);font-size:12px;font-weight:600}
+.mx-dot{cursor:pointer}
+.mx-dot circle{fill:var(--surface);stroke:var(--text);stroke-width:2}
+.mx-dot.sel circle{fill:var(--accent);stroke:var(--accent)}
+.mx-dot:focus-visible{outline:none}.mx-dot:focus-visible circle{stroke:var(--accent);stroke-width:4}
+.mx-lbl{fill:var(--text);font-size:11.5px;font-weight:600}
+.spare{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:10px 0 4px;cursor:pointer}
+.lg{display:inline-block;width:12px !important;height:12px !important;border-radius:3px}
+.lg.hi{background:color-mix(in srgb,var(--hv) 40%,var(--surface))}.lg.mid{background:color-mix(in srgb,#eab308 45%,var(--surface))}.lg.lo{background:color-mix(in srgb,var(--ok) 30%,var(--surface))}
+#panel h3{margin:6px 0 2px}#panel h4{margin:16px 0 6px;font-size:14px}
+.ap-sub{color:var(--muted);font-size:14px;margin:0}
+.ap-risk{margin-top:10px;padding:8px 12px;border-radius:8px;font-size:15px}
+.ap-risk span{color:var(--muted);font-size:13px}
+.ap-hi{background:color-mix(in srgb,var(--hv) 14%,var(--surface));border:1px solid var(--hv)}
+.ap-mid{background:color-mix(in srgb,#eab308 16%,var(--surface));border:1px solid #eab308}
+.ap-lo{background:color-mix(in srgb,var(--ok) 12%,var(--surface));border:1px solid var(--ok)}
+.hi-bar{height:10px;border-radius:5px;background:var(--code);overflow:hidden}
+.hi-bar i{display:block;height:100%;background:var(--accent)}
+.ap-calc{font-size:14px;font-family:ui-monospace,Menlo,Consolas,monospace;margin:6px 0}
+.ap-list{list-style:none;padding:0;margin:0;display:grid;gap:6px;font-size:14px}
+.ap-list li.old{opacity:.5}
+.ap-list small{color:var(--muted)}
+.ap-note{font-size:12.5px;color:var(--muted);margin:4px 0}
+.chip{display:inline-block;font-size:11.5px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:0 8px;color:var(--muted)}
+.chip.ok{color:var(--ok);border-color:var(--ok)}.chip.warn{color:#b45309;border-color:#d97706}.chip.bad{color:var(--hv);border-color:var(--hv)}
+.ap-fm{min-width:0;font-size:13px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <a href="physical-ai.html"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a>
+    <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html" aria-current="page"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">POWER ASSET MANAGEMENT</div>
+  <h1><span lang="ko">전력설비 자산관리 온톨로지</span><span lang="en">Power Asset Management Ontology</span></h1>
+  <p class="thesis" lang="ko">같은 "주변압기 #1"이라도 <b>자리</b>와 <b>물건</b>은 다릅니다.<br>자산관리 온톨로지는 이 둘을 떼어 놓는 데서 시작합니다.</p>
+  <p class="thesis" lang="en">"Main transformer #1" is both a <b>place</b> and a <b>thing</b>, and they are not the same.<br>An asset ontology starts by pulling them apart.</p>
+  <p class="lead" lang="ko"><a href="grid.html">전력망 페이지</a>의 A변전소(CIM)에 실제 물건인 자산을 붙이고, 진단 기록·고장 모드·점검정비·작업지시를 이어 <b>"어느 설비부터 손봐야 하나?"</b>에 답하게 만들었습니다. <a href="work.html">업무 온톨로지</a>의 관계를 그대로 재사용해, 설계실의 두 온톨로지가 처음으로 서로 이어집니다.</p>
+  <p class="lead" lang="en">Physical assets are attached to substation A from the <a href="grid.html">Power Grid page</a> (CIM), then linked to diagnoses, failure modes, maintenance tasks and work orders so the model can answer <b>"which equipment needs attention first?"</b>. It reuses relations from the <a href="work.html">work ontology</a>, so two studio ontologies connect for the first time.</p>
+  <div class="notice">
+    <b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">This is virtual data</span></b>
+    <p lang="ko">제조사(가상전기 등), 설비번호, 진단값, 작업지시, 복구시간, 판정 기준은 모두 학습용으로 만든 값입니다. 실제 설비나 특정 기관의 기준과 관계가 없습니다.</p>
+    <p lang="en">Manufacturers, equipment numbers, diagnostic values, work orders, restoration times and thresholds are all made up for learning. They do not describe real equipment or any organisation's standards.</p>
+  </div>
+  <div class="facts">
+    <div><b>6</b><span lang="ko">설비 자리</span><span lang="en">locations</span></div>
+    <div><b>5</b><span lang="ko">자산 (운전 4)</span><span lang="en">assets (4 in service)</span></div>
+    <div><b>9</b><span lang="ko">고장 모드</span><span lang="en">failure modes</span></div>
+    <div><b>21</b><span lang="ko">점검·정비 유형</span><span lang="en">task types</span></div>
+    <div><b>16</b><span lang="ko">진단 기록</span><span lang="en">diagnoses</span></div>
+    <div><b>4</b><span lang="ko">작업지시</span><span lang="en">work orders</span></div>
+  </div>
+  <div class="grid" style="margin-top:28px">
+    <a class="card" href="#concepts"><h4><span lang="ko">① 기본 개념</span><span lang="en">① Concepts</span></h4><p lang="ko">자리와 물건, 건전도와 위험도</p><p lang="en">Place vs thing, health vs risk</p></a>
+    <a class="card" href="#risk"><h4><span lang="ko">② 위험도 지도</span><span lang="en">② Risk map</span></h4><p lang="ko">자산을 눌러 계산 과정 보기</p><p lang="en">Click an asset to see the calculation</p></a>
+    <a class="card" href="#design"><h4><span lang="ko">③ 설계 결정 8가지</span><span lang="en">③ Eight decisions</span></h4><p lang="ko">무엇을 왜 그렇게 정했나</p><p lang="en">What was decided, and why</p></a>
+    <a class="card" href="#impl"><h4><span lang="ko">④ 구현과 검증</span><span lang="en">④ Build &amp; checks</span></h4><p lang="ko">CSV → OWL · SHACL · Neo4j</p><p lang="en">CSV → OWL · SHACL · Neo4j</p></a>
+  </div>
+</div>
+
+<section id="concepts">
+  <h2><span lang="ko">① 기본 개념</span><span lang="en">① Basic concepts</span></h2>
+  <p class="sub" lang="ko">자산관리에서 자주 섞여 쓰이는 말들을 먼저 나눕니다. 이 구분이 곧 온톨로지의 뼈대가 됩니다.</p>
+  <p class="sub" lang="en">First, separate terms that are often mixed up in asset management. These distinctions become the ontology's skeleton.</p>
+  <dl class="terms">
+    <div><dt><span lang="ko">기능 위치</span><span lang="en">Functional location</span><small>cim:PowerSystemResource</small></dt><dd lang="ko">계통에서 맡은 역할이 있는 "자리"입니다. "A변전소 주변압기 #1"은 변압기를 바꿔 끼워도 그대로 있습니다. 이 사례에서는 <a href="grid.html">전력망 페이지</a>의 CIM 설비(ex:TR_1 등)를 그대로 씁니다.</dd><dd lang="en">The "place" with a role in the network. "Substation A main transformer #1" stays even when the transformer is swapped. Here the CIM equipment from the <a href="grid.html">Power Grid page</a> (ex:TR_1 etc.) is reused as-is.</dd></div>
+    <div><dt><span lang="ko">물리 자산</span><span lang="en">Physical asset</span><small>pam:Asset ⊑ cim:Asset</small></dt><dd lang="ko">제조번호가 붙은 "물건"입니다. 제작 연도, 제조사, 설계수명이 있고, 창고에 있다가 설치되고 철거되어 폐기됩니다.</dd><dd lang="en">The serial-numbered "thing", with a build year, maker and design life. It sits in a store, gets installed, removed and retired.</dd></div>
+    <div><dt><span lang="ko">설치 이력</span><span lang="en">Deployment</span><small>pam:Deployment</small></dt><dd lang="ko">"이 자산이 언제부터 언제까지 이 자리에 있었다"는 기록입니다. 자리와 물건을 잇는 다리이며, 교체 이력이 여기에 남습니다.</dd><dd lang="en">"This asset was at this place from … to …". The bridge between place and thing, and where replacement history lives.</dd></div>
+    <div><dt><span lang="ko">고장 모드</span><span lang="en">Failure mode</span><small>FMEA</small></dt><dd lang="ko">"어디가 어떻게 망가지는가"입니다. 고장 모드마다 그것을 찾아내는 점검과 막는 정비가 정해져 있습니다. 예: OLTC 접점 마모 → OLTC 동작횟수 확인 · DGA로 탐지 → OLTC 정비로 대응.</dd><dd lang="en">"What breaks, and how". Each failure mode has inspections that detect it and maintenance that prevents it, e.g. OLTC contact wear → detected by operation count and DGA → mitigated by OLTC overhaul.</dd></div>
+    <div><dt><span lang="ko">정비 전략</span><span lang="en">Maintenance strategy</span><small>TBM · CBM · CM</small></dt><dd lang="ko">시간이 되면 하는 정비(TBM), 상태를 보고 하는 정비(CBM), 고장 난 뒤 하는 정비(CM)입니다. 점검·정비 유형마다 하나씩 붙였습니다.</dd><dd lang="en">Time-based (TBM), condition-based (CBM) and corrective (CM). Every task type carries one.</dd></div>
+    <div><dt><span lang="ko">건전도와 위험도</span><span lang="en">Health vs risk</span><small>HI · PoF × CoF</small></dt><dd lang="ko">건전도(HI)는 자산이 얼마나 성한지, 고장 가능성(PoF)은 그래서 고장 날 가능성이 얼마나 되는지입니다. 고장 영향(CoF)은 고장 나면 얼마나 아픈지이고, 위험도는 둘을 곱한 값입니다. 낡았어도 영향이 작으면 급하지 않고, 멀쩡해도 영향이 크면 챙겨야 합니다.</dd><dd lang="en">Health (HI) is how sound an asset is, and PoF is how likely it is to fail as a result. Consequence (CoF) is how much a failure hurts. Risk is their product: an old asset with little impact can wait; a healthy one with huge impact still needs attention.</dd></div>
+  </dl>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
+    <p lang="ko">기능 위치는 <b>주차 자리</b>, 물리 자산은 거기 세운 <b>차</b>입니다. 차를 바꿔도 "3층 12번 자리"는 그대로이고, 어느 차가 언제 그 자리에 있었는지가 설치 이력입니다. 차의 정비 기록(진단)으로 상태를 매기고, 그 자리가 막히면 얼마나 곤란한지(영향)를 곱해 어느 차부터 손볼지 정합니다.</p>
+    <p lang="en">A functional location is a <b>parking bay</b>; the asset is the <b>car</b> parked there. Swap the car and "level 3, bay 12" remains; which car stood there when is the deployment. Service records (diagnoses) rate the car's condition; multiply by how bad it is if that bay is blocked (consequence) to decide which car to fix first.</p></div>
+</section>
+
+<section id="model">
+  <h2><span lang="ko">전체 구조</span><span lang="en">The model</span></h2>
+  <p class="sub" lang="ko">가운데 물리 자산을 중심으로, 왼쪽은 "어디에", 오른쪽은 "무엇이 망가지나", 아래는 "무엇을 했나"입니다. 회색 띠 상자 두 개는 다른 온톨로지에서 가져온 것입니다.</p>
+  <p class="sub" lang="en">Around the asset: "where" on the left, "what fails" on the right, "what was done" below. The two shaded boxes come from other ontologies.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 900 470" role="img" aria-label="Asset ontology schema">
+      <defs>
+        <marker id="a-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker>
+        <marker id="a-arp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker>
+      </defs>
+      <g class="edge">
+        <path d="M262 70H224" marker-end="url(#a-ar)"/>
+        <path d="M430 70H468" marker-end="url(#a-ar)"/>
+        <path d="M650 70H698" marker-end="url(#a-ar)"/>
+        <path d="M790 200V102" marker-end="url(#a-ar)"/>
+        <path d="M790 262V358" marker-end="url(#a-ar)"/>
+        <path d="M706 262L652 358" marker-end="url(#a-ar)"/>
+        <path d="M560 200V102" marker-end="url(#a-ar)"/>
+        <path d="M468 230H432" marker-end="url(#a-ar)"/>
+        <path d="M650 230H698" marker-end="url(#a-ar)"/>
+        <path d="M560 262V358" marker-end="url(#a-ar)"/>
+        <path d="M380 200L480 102" marker-end="url(#a-ar)"/>
+        <path d="M330 262V304H680V248H698" marker-end="url(#a-ar)"/>
+        <path d="M290 262V450H860V422" marker-end="url(#a-ar)"/>
+      </g>
+      <g class="muted">
+        <text x="243" y="32" text-anchor="middle">atLocation</text>
+        <text x="449" y="32" text-anchor="middle">deployedAsset</text>
+        <text x="674" y="32" text-anchor="middle">hasComponent</text>
+        <text x="798" y="156">affects</text>
+        <text x="798" y="318">detectedBy</text>
+        <text x="682" y="336">mitigatedBy</text>
+        <text x="568" y="156">onAsset</text>
+        <text x="450" y="192" text-anchor="middle">triggeredBy</text>
+        <text x="674" y="192" text-anchor="middle">addresses</text>
+        <text x="568" y="340">performs</text>
+        <text x="396" y="140">onAsset</text>
+        <text x="500" y="298" text-anchor="middle">indicates</text>
+        <text x="575" y="444" text-anchor="middle">usesMethod</text>
+      </g>
+      <rect class="ext" x="20" y="40" width="204" height="60" rx="8"/>
+      <text x="122" y="66" text-anchor="middle" class="b"><tspan lang="ko">기능 위치</tspan><tspan lang="en">Location</tspan></text>
+      <text x="122" y="86" text-anchor="middle" class="muted">cim:PowerSystemResource</text>
+      <rect class="box" x="262" y="40" width="168" height="60" rx="8"/>
+      <text x="346" y="66" text-anchor="middle" class="b"><tspan lang="ko">설치 이력</tspan><tspan lang="en">Deployment</tspan></text>
+      <text x="346" y="86" text-anchor="middle" class="muted">validFrom · validTo</text>
+      <rect class="hub" x="468" y="40" width="182" height="60" rx="10"/>
+      <text x="559" y="66" text-anchor="middle" class="b"><tspan lang="ko">물리 자산</tspan><tspan lang="en">Asset</tspan></text>
+      <text x="559" y="86" text-anchor="middle" class="muted">HI · PoF · CoF · risk</text>
+      <rect class="box" x="698" y="40" width="182" height="60" rx="8"/>
+      <text x="789" y="66" text-anchor="middle" class="b"><tspan lang="ko">구성품</tspan><tspan lang="en">Component</tspan></text>
+      <text x="789" y="86" text-anchor="middle" class="muted">OLTC · <tspan lang="ko">부싱</tspan><tspan lang="en">bushing</tspan> …</text>
+      <rect class="box" x="262" y="200" width="170" height="62" rx="8"/>
+      <text x="347" y="226" text-anchor="middle" class="b"><tspan lang="ko">진단 기록</tspan><tspan lang="en">Diagnosis</tspan></text>
+      <text x="347" y="246" text-anchor="middle" class="muted"><tspan lang="ko">정상 · 주의 · 이상</tspan><tspan lang="en">normal · caution · abnormal</tspan></text>
+      <rect class="box" x="468" y="200" width="182" height="62" rx="8"/>
+      <text x="559" y="226" text-anchor="middle" class="b"><tspan lang="ko">작업지시</tspan><tspan lang="en">Work order</tspan></text>
+      <text x="559" y="246" text-anchor="middle" class="muted">⊑ cim:Work</text>
+      <rect class="box" x="698" y="200" width="182" height="62" rx="8"/>
+      <text x="789" y="226" text-anchor="middle" class="b"><tspan lang="ko">고장 모드</tspan><tspan lang="en">Failure mode</tspan></text>
+      <text x="789" y="246" text-anchor="middle" class="muted">FMEA</text>
+      <rect class="box" x="468" y="360" width="182" height="62" rx="8"/>
+      <text x="559" y="386" text-anchor="middle" class="b"><tspan lang="ko">정비·교체</tspan><tspan lang="en">Repair task</tspan></text>
+      <text x="559" y="406" text-anchor="middle" class="muted">CM · CBM</text>
+      <rect class="box" x="698" y="360" width="182" height="62" rx="8"/>
+      <text x="789" y="386" text-anchor="middle" class="b"><tspan lang="ko">점검</tspan><tspan lang="en">Inspection task</tspan></text>
+      <text x="789" y="406" text-anchor="middle" class="muted">TBM · CBM</text>
+      <rect class="ext" x="20" y="200" width="204" height="62" rx="8"/>
+      <text x="122" y="226" text-anchor="middle" class="b"><tspan lang="ko">업무 온톨로지</tspan><tspan lang="en">Work ontology</tspan></text>
+      <text x="122" y="246" text-anchor="middle" class="muted">aipd:precedes</text>
+      <rect class="box" x="20" y="360" width="204" height="62" rx="8"/>
+      <text x="122" y="386" text-anchor="middle" class="b"><tspan lang="ko">정비 업무 흐름</tspan><tspan lang="en">Workflow step</tspan></text>
+      <text x="122" y="406" text-anchor="middle" class="muted"><tspan lang="ko">요청 → … → 이력 등록</tspan><tspan lang="en">request → … → record</tspan></text>
+      <path class="pre" d="M122 358V266" marker-end="url(#a-arp)"/>
+      <text x="132" y="318" class="pre-t">pam:precedes ⊑</text>
+    </svg>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--code);height:10px;border:1px solid var(--muted)"></i><span lang="ko">다른 온톨로지에서 재사용 (CIM, 업무 온톨로지)</span><span lang="en">Reused from other ontologies (CIM, work ontology)</span></span>
+    <span><i style="background:var(--accent)"></i><span lang="ko">하위 속성으로 재사용</span><span lang="en">Reused as a sub-property</span></span>
+  </div>
+</section>
+
+<section id="risk">
+  <h2><span lang="ko">② 위험도 지도</span><span lang="en">② Risk map</span></h2>
+  <p class="sub" lang="ko">운전 중인 자산 4개를 고장 가능성(세로)과 고장 영향(가로)에 놓았습니다. 점을 누르면 그 숫자가 어떻게 나왔는지 오른쪽에 펼쳐집니다. 기준일 2026-11-03.</p>
+  <p class="sub" lang="en">The four in-service assets placed by probability (up) and consequence (right). Click a dot to see how its numbers were derived. As of 2026-11-03.</p>
+  <div class="risk-wrap">
+    <div class="panel">
+      <svg id="matrix" viewBox="0 0 400 400" role="group" aria-label="risk matrix"></svg>
+      <label class="spare"><input type="checkbox" id="spare"> <span lang="ko">예비 변압기를 확보했다면? (복구 2,160h → 72h)</span><span lang="en">What if a spare transformer were on hand? (restore 2,160h → 72h)</span></label>
+      <div class="legend"><span><i class="lg hi"></i><span lang="ko">높음 15+</span><span lang="en">High 15+</span></span><span><i class="lg mid"></i><span lang="ko">중간 8–14</span><span lang="en">Medium 8–14</span></span><span><i class="lg lo"></i><span lang="ko">낮음 ≤7</span><span lang="en">Low ≤7</span></span></div>
+    </div>
+    <div class="panel" id="panel" aria-live="polite"></div>
+  </div>
+  <div class="grid two" style="margin-top:16px">
+    <div class="card"><h4><span lang="ko">점검 기록이 없는 항목</span><span lang="en">Inspections with no record</span></h4><ul class="ap-list" id="overdue"></ul></div>
+    <div class="card"><h4><span lang="ko">자산이 등록되지 않은 설비 자리</span><span lang="en">Locations with no asset</span></h4><ul class="ap-list" id="gaps"></ul></div>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">지도에서 읽을 것</span><span lang="en">What the map says</span></b>
+    <p lang="ko"><b>주변압기가 혼자 빨간 칸에 있습니다.</b> 건전도는 53으로 중간이지만, 고장 나면 새 변압기가 올 때까지 석 달(2,160h) 동안 8.5MW가 끊기기 때문입니다. "예비 변압기" 상자를 켜면 영향이 5에서 3으로 내려가 위험도가 15에서 9가 됩니다. 이 온톨로지가 내놓는 답은 <b>"OLTC 정비도 하되, 예비 변압기 확보가 위험을 더 크게 줄인다"</b>입니다.</p>
+    <p lang="en"><b>The main transformer sits alone in the red.</b> Its health (53) is only middling, but a failure would cut 8.5 MW for three months (2,160 h) until a new unit arrives. Tick "spare transformer" and consequence drops from 5 to 3, risk from 15 to 9. The ontology's answer: <b>"do the OLTC overhaul, but a spare transformer cuts risk more."</b></p>
+    <p lang="ko">또 하나: 방사형 단일 공급이라 <b>어느 설비가 고장 나도 똑같이 8.5MW가 끊깁니다</b>(pycim 토폴로지 계산). 영향의 차이는 오직 복구시간에서 나옵니다.</p>
+    <p lang="en">Also: with a single radial feed, <b>any failure cuts the same 8.5 MW</b> (pycim topology). Differences in consequence come only from restoration time.</p></div>
+</section>
+
+<section id="design">
+  <h2><span lang="ko">③ 설계 결정 8가지</span><span lang="en">③ Eight design decisions</span></h2>
+  <p class="sub" lang="ko"><a href="studio.html">설계실</a>의 원칙대로, 정답 대신 결정과 이유를 남깁니다.</p>
+  <p class="sub" lang="en">Following the <a href="studio.html">studio</a> rule: decisions and reasons, not right answers.</p>
+
+  <article class="decision"><div class="no">D1</div><div>
+    <h3><span lang="ko">자리와 물건을 나누고, 그 사이에 설치 이력을 둔다</span><span lang="en">Separate place and thing, with deployments in between</span></h3>
+    <p lang="ko">기능 위치(CIM 설비)와 물리 자산(pam:Asset)을 다른 클래스로 두고, 둘을 <code>pam:Deployment</code>(기간 포함)로 잇습니다. 지금 위치는 지름길 <code>pam:installedAt</code>으로 따로 생성합니다.</p>
+    <p lang="en">Functional locations (CIM equipment) and physical assets (pam:Asset) are different classes, linked by a dated <code>pam:Deployment</code>. The current location is also generated as a shortcut, <code>pam:installedAt</code>.</p>
+    <p lang="ko"><b>이유</b>: 둘을 합치면 변압기를 바꾸는 순간 과거 진단이 새 변압기의 기록처럼 보이거나, 자리의 이력이 사라집니다. 주변압기 #1 자리에는 1998년 변압기(폐기)와 2015년 변압기가 차례로 있었고, 이 구조에서는 둘 다 남습니다.</p>
+    <p lang="en"><b>Why</b>: merge them and swapping a transformer either makes old diagnoses look like the new unit's or erases the place's history. Bay TR_1 held a 1998 unit (retired) and then a 2015 unit; this structure keeps both.</p>
+    <div class="impl"><div><b>CSV</b>deployments.csv (valid_from, valid_to)</div><div><b>OWL</b><code>Deployment</code> · <code>atLocation</code> · <code>deployedAsset</code></div><div><b>SHACL</b><span lang="ko">같은 자리 기간 겹침 금지</span><span lang="en">No overlapping periods per place</span></div><div><b>Neo4j</b><code>[:INSTALLED_AT {from, to}]</code></div></div>
+  </div></article>
+
+  <article class="decision"><div class="no">D2</div><div>
+    <h3><span lang="ko">새로 만들지 않고 이어 붙인다</span><span lang="en">Reuse before inventing</span></h3>
+    <p lang="ko">기능 위치는 전력망 예제의 CIM IRI(ex:TR_1 등)를 그대로 가리키고, 자산은 <code>cim:Asset</code>, 작업지시는 <code>cim:Work</code>의 하위 클래스입니다. 정비 업무 흐름의 <code>pam:precedes</code>는 업무 온톨로지 <code>aipd:precedes</code>의 하위 속성입니다. EAM 설비번호도 기존 매핑 표의 번호를 씁니다.</p>
+    <p lang="en">Locations point straight at the CIM IRIs of the grid example (ex:TR_1 …); assets subclass <code>cim:Asset</code>, work orders <code>cim:Work</code>; the workflow's <code>pam:precedes</code> is a sub-property of the work ontology's <code>aipd:precedes</code>. EAM numbers come from the existing mapping table.</p>
+    <p lang="ko"><b>이유</b>: 온톨로지의 값어치는 서로 이어질 때 커집니다. 실제로 하위 속성 추론만 적용하면 <code>aipd:precedes</code>라는 업무 온톨로지의 이름으로 정비 흐름 7단계가 조회됩니다.</p>
+    <p lang="en"><b>Why</b>: ontologies gain value when they connect. With sub-property inference alone, the maintenance flow's 7 steps can be queried through the work ontology's <code>aipd:precedes</code>.</p>
+    <div class="impl"><div><b>OWL</b><code>rdfs:subClassOf cim:Asset</code>, <code>rdfs:subPropertyOf aipd:precedes</code></div><div><b><span lang="ko">검증</span><span lang="en">Check</span></b><span lang="ko">역량 질문 8번 (7단계)</span><span lang="en">Competency Q8 (7 steps)</span></div></div>
+  </div></article>
+
+  <article class="decision"><div class="no">D3</div><div>
+    <h3><span lang="ko">고장은 구성품 단위로, 점검과 정비를 고장 모드에 매단다</span><span lang="en">Failures at component level; tasks hang off failure modes</span></h3>
+    <p lang="ko">고장 모드 9개마다 고장 부위(구성품 종류), 탐지 점검, 대응 정비를 정했습니다. 점검·정비 유형 21개는 TBM·CBM·CM 전략과 주기, 정전 필요 여부를 가집니다.</p>
+    <p lang="en">Each of 9 failure modes has a component type, detecting inspections and mitigating repairs. The 21 task types carry a strategy (TBM/CBM/CM), a cycle and whether they need an outage.</p>
+    <p lang="ko"><b>이유</b>: "왜 이 점검을 하나?"에 답할 수 있어야 점검을 줄이거나 늘릴 수 있습니다. 어떤 고장 모드도 탐지하지 않는 점검은 낭비이고, 탐지 점검이 없는 고장 모드는 사각지대입니다.</p>
+    <p lang="en"><b>Why</b>: you can only add or cut an inspection if you can say why it exists. An inspection detecting no failure mode is waste; a failure mode with no detecting inspection is a blind spot.</p>
+    <div class="impl"><div><b>CSV</b>failure_modes.csv, tasks.csv</div><div><b>OWL</b><code>detectedBy</code> · <code>mitigatedBy</code> · <code>affectsComponentType</code></div></div>
+  </div></article>
+
+  <article class="decision"><div class="no">D4</div><div>
+    <h3><span lang="ko">진단은 사실, 건전도는 계산</span><span lang="en">Diagnoses are facts; health is computed</span></h3>
+    <p lang="ko">원본에는 진단 기록(날짜, 방법, 소견, 판정)만 적습니다. 건전도는 빌드할 때 규칙으로 계산하며, 같은 방법의 진단은 <b>가장 최근 것만</b> 반영합니다.</p>
+    <p lang="en">The source holds only diagnoses (date, method, finding, judgement). Health is computed at build time, counting only the <b>latest</b> diagnosis per method.</p>
+    <p lang="ko"><b>이유</b>: 계산값을 손으로 적으면 진단이 바뀔 때 어긋납니다. 선로 접속부는 8월에 "주의"였지만 재시공 후 9월 "정상"이 되어 감점이 사라졌습니다. 이것은 규칙이 자동으로 처리합니다.</p>
+    <p lang="en"><b>Why</b>: hand-written scores drift from the facts. The line joint was "caution" in August but "normal" after rework in September, so its penalty disappeared, handled by the rule.</p>
+<pre><code>HI = 100 − 60 × <span lang="ko">경과연수</span><span lang="en">age</span> / <span lang="ko">설계수명</span><span lang="en">design life</span> − Σ <span lang="ko">방법별 최신 판정 감점</span><span lang="en">latest penalty per method</span> (<span lang="ko">주의</span><span lang="en">caution</span> 15, <span lang="ko">이상</span><span lang="en">abnormal</span> 35)
+PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 밖</span><span lang="en">else</span> → 5</code></pre>
+  </div></article>
+
+  <article class="decision"><div class="no">D5</div><div>
+    <h3><span lang="ko">고장 영향은 계통 연결에서 계산한다</span><span lang="en">Consequence comes from network connectivity</span></h3>
+    <p lang="ko">고장 영향은 "정전 부하(MW) × 복구시간(h) = 미공급 전력량(MWh)"입니다. 정전 부하는 손으로 적지 않고, pycim 토폴로지로 해당 설비를 계통에서 떼어 냈을 때 끊기는 부하를 계산합니다.</p>
+    <p lang="en">Consequence = outage load (MW) × restoration time (h) = unsupplied energy (MWh). The outage load is not typed in; pycim's topology removes the equipment and finds which loads lose supply.</p>
+    <p lang="ko"><b>이유</b>: 계통이 바뀌면 영향도 바뀌어야 합니다. 만드는 중에 모선 고장의 정전 부하가 0으로 나온 오류를 테스트가 잡았습니다. 모선은 단자가 하나뿐이라 모선만 떼면 전기가 그대로 흐르기 때문입니다. 실제 모선 보호처럼 모선에 붙은 설비를 모두 분리하도록 고쳤습니다.</p>
+    <p lang="en"><b>Why</b>: consequence must follow the network. While building it, a test caught busbar failures showing 0 MW: a busbar has one terminal, so removing only it leaves power flowing. It now disconnects everything on the bus, as busbar protection would.</p>
+    <div class="impl"><div><b>Python</b><code>topology.deenergized_loads()</code></div><div><b>CSV</b>assets.csv restore_h, restore_h_with_spare</div><div><b>OWL</b><code>outageMW</code> · <code>unsuppliedMWh</code> · <code>consequenceOfFailure</code></div></div>
+  </div></article>
+
+  <article class="decision"><div class="no">D6</div><div>
+    <h3><span lang="ko">위험도 기준표는 공개하고, 바꿀 수 있게 둔다</span><span lang="en">Publish the risk thresholds, and keep them changeable</span></h3>
+    <p lang="ko">5×5 위험도(PoF × CoF)를 쓰고, 경계값(HI 80/60/40/20, MWh 100/500/2,000/10,000)을 스크립트 맨 위와 이 페이지에 공개했습니다.</p>
+    <p lang="en">A 5×5 matrix (PoF × CoF), with thresholds (HI 80/60/40/20; MWh 100/500/2,000/10,000) stated at the top of the script and on this page.</p>
+    <p lang="ko"><b>이유</b>: 이 경계값에야말로 정답이 없습니다. 조직마다 감수할 수 있는 정전의 크기가 다르기 때문입니다. 숨겨 두면 결과를 믿을 수 없고, 공개해 두면 합의해서 바꿀 수 있습니다.</p>
+    <p lang="en"><b>Why</b>: these thresholds are exactly where there is no right answer; each organisation tolerates different outages. Hidden, the result cannot be trusted; published, it can be agreed and changed.</p>
+  </div></article>
+
+  <article class="decision"><div class="no">D7</div><div>
+    <h3><span lang="ko">작업지시는 근거 진단과 반드시 잇는다</span><span lang="en">Every work order links to the diagnosis behind it</span></h3>
+    <p lang="ko">작업지시마다 수행 업무, 대응 고장 모드, 근거 진단(<code>triggeredBy</code>)을 붙였습니다. 완료된 작업지시는 완료일이 필수입니다.</p>
+    <p lang="en">Each work order names its task, the failure mode it addresses and the diagnosis that triggered it. Completed orders must have a completion date.</p>
+    <p lang="ko"><b>이유</b>: "왜 이 작업을 했나"가 남아야 정비 효과를 따질 수 있습니다. "주의 판정인데 아직 안 끝난 작업" 같은 질문도 이 연결 덕분에 답할 수 있습니다.</p>
+    <p lang="en"><b>Why</b>: without "why was this done" you cannot judge whether maintenance worked. Questions like "cautions with unfinished work" rely on this link.</p>
+  </div></article>
+
+  <article class="decision"><div class="no">D8</div><div>
+    <h3><span lang="ko">데이터 규칙은 SHACL로, 빈틈은 경고로</span><span lang="en">Data rules in SHACL; gaps as warnings</span></h3>
+    <p lang="ko">자리마다 현재 자산이 있는가, 같은 자리에 기간이 겹치지 않는가, 진단 방법이 점검 업무인가, 작업지시에 근거가 있는가를 SHACL 규칙 5개로 검사합니다. 모선 두 곳에 자산 기록이 없다는 것은 오류가 아니라 <b>경고</b>로 표시합니다.</p>
+    <p lang="en">Five SHACL rules check: a current asset per place, no overlapping periods, inspection-type methods, and a reason for every work order. The two busbars without asset records are flagged as <b>warnings</b>, not errors.</p>
+    <p lang="ko"><b>이유</b>: 현실 데이터는 늘 비어 있는 곳이 있습니다. 막아 버리면 아무것도 올릴 수 없으니, 보이게만 하고 채우는 일은 사람에게 맡깁니다.</p>
+    <p lang="en"><b>Why</b>: real data always has holes. Blocking them stops everything; making them visible lets people fill them.</p>
+  </div></article>
+</section>
+
+<section id="impl">
+  <h2><span lang="ko">④ 구현과 검증</span><span lang="en">④ Implementation and checks</span></h2>
+  <p class="sub" lang="ko">사람이 고치는 곳은 CSV 8개뿐입니다. 스크립트 하나가 계산·생성·검증을 모두 합니다.</p>
+  <p class="sub" lang="en">People edit only eight CSV files. One script computes, generates and checks everything.</p>
+<pre><code>examples/asset/data/*.csv ──▶ build_asset_ontology.py ──┬─▶ asset-ontology.ttl   (OWL, <span lang="ko">계산값 포함</span><span lang="en">with computed values</span>)
+   assets · deployments ·      ├ pycim <span lang="ko">토폴로지</span><span lang="en">topology</span> (CoF)      ├─▶ neo4j/import.cypher
+   components · tasks ·        ├ HI · PoF · <span lang="ko">위험도</span><span lang="en">risk</span>           ├─▶ assets/data/asset.json (<span lang="ko">이 페이지</span><span lang="en">this page</span>)
+   failure_modes · diagnoses · ├ <span lang="ko">점검 주기 확인</span><span lang="en">inspection cycles</span>        └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: SHACL + SPARQL
+   work_orders · locations     └ + examples/power-grid-sample.ttl (CIM)</code></pre>
+
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">개념</span><span lang="en">Concept</span></th><th><span lang="ko">원본 CSV</span><span lang="en">Source CSV</span></th><th>OWL</th><th>Neo4j</th></tr>
+    <tr><td><span lang="ko">기능 위치</span><span lang="en">Location</span></td><td>locations.csv</td><td class="code">ex:TR_1 (CIM)</td><td class="code">(:FunctionalLocation)</td></tr>
+    <tr><td><span lang="ko">물리 자산</span><span lang="en">Asset</span></td><td>assets.csv</td><td class="code">pam:TransformerAsset …</td><td class="code">(:Asset {hi, risk})</td></tr>
+    <tr><td><span lang="ko">설치 이력</span><span lang="en">Deployment</span></td><td>deployments.csv</td><td class="code">pam:Deployment</td><td class="code">[:INSTALLED_AT {from,to}]</td></tr>
+    <tr><td><span lang="ko">구성품</span><span lang="en">Component</span></td><td>components.csv</td><td class="code">hasComponent, componentType</td><td class="code">[:HAS_COMPONENT]</td></tr>
+    <tr><td><span lang="ko">고장 모드</span><span lang="en">Failure mode</span></td><td>failure_modes.csv</td><td class="code">detectedBy, mitigatedBy</td><td class="code">[:DETECTED_BY], [:MITIGATED_BY]</td></tr>
+    <tr><td><span lang="ko">점검·정비·업무 흐름</span><span lang="en">Tasks, workflow</span></td><td>tasks.csv</td><td class="code">InspectionTask, RepairTask, precedes</td><td class="code">(:MaintenanceTask), [:PRECEDES]</td></tr>
+    <tr><td><span lang="ko">진단</span><span lang="en">Diagnosis</span></td><td>diagnoses.csv</td><td class="code">usesMethod, judgement, indicates</td><td class="code">(:Diagnosis)</td></tr>
+    <tr><td><span lang="ko">작업지시</span><span lang="en">Work order</span></td><td>work_orders.csv</td><td class="code">performs, addresses, triggeredBy</td><td class="code">(:WorkOrder)</td></tr>
+  </table></div>
+
+  <h3><span lang="ko">예시: 자산 하나와 설치 이력</span><span lang="en">Example: one asset and its deployment</span></h3>
+<pre><code>pam:AS_TR_0007 a pam:TransformerAsset ;
+    pam:eamNumber "EQ-TR-2015-0007" ;
+    pam:installedAt ex:TR_1 ;                       # CIM <span lang="ko">기능 위치 (전력망 예제)</span><span lang="en">location (grid example)</span>
+    pam:hasComponent pam:CP_TR7_OLTC, pam:CP_TR7_BSH, … ;
+    pam:healthIndex 53.0 ; pam:probabilityOfFailure 3 ;
+    pam:outageMW 8.5 ; pam:unsuppliedMWh 18360 ;
+    pam:consequenceOfFailure 5 ; pam:riskScore 15 .
+pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation ex:TR_1 ;
+    pam:validFrom "1998-06-01"^^xsd:date ; pam:validTo "2015-04-30"^^xsd:date .</code></pre>
+
+  <h3><span lang="ko">예시: SHACL 규칙 하나</span><span lang="en">Example: one SHACL rule</span></h3>
+<pre><code>as:LocationHasAssetShape a sh:NodeShape ;
+    sh:targetClass cim:PowerTransformer, cim:Breaker, cim:ACLineSegment, cim:BusbarSection ;
+    sh:severity sh:Warning ;
+    sh:sparql [ sh:select """SELECT $this WHERE {
+        FILTER NOT EXISTS { ?d pam:atLocation $this . FILTER NOT EXISTS { ?d pam:validTo ?to } } }""" ] .</code></pre>
+
+  <h3><span lang="ko">역량 질문 결과</span><span lang="en">Competency questions</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">질문</span><span lang="en">Question</span></th><th><span lang="ko">답</span><span lang="en">Answer</span></th></tr>
+    <tr><td><span lang="ko">주변압기 #1 자리의 현재·이전 자산은?</span><span lang="en">Current and previous assets at TR_1?</span></td><td>AS-TR-0007 (2015~), AS-TR-0002 (1998~2015)</td></tr>
+    <tr><td><span lang="ko">위험도가 가장 높은 자산은?</span><span lang="en">Highest-risk asset?</span></td><td>AS-TR-0007 · <span lang="ko">위험도</span><span lang="en">risk</span> 15 · HI 53</td></tr>
+    <tr><td><span lang="ko">OLTC 접점 마모를 찾는 점검과 대응 정비는?</span><span lang="en">Inspections and repairs for OLTC wear?</span></td><td><span lang="ko">OLTC 동작횟수 확인, DGA → OLTC 정비</span><span lang="en">OLTC count, DGA → OLTC overhaul</span></td></tr>
+    <tr><td><span lang="ko">주의 판정 후 작업이 안 끝난 자산은?</span><span lang="en">Cautions with unfinished work?</span></td><td>AS-TR-0007 (2), AS-CB-0123 (1)</td></tr>
+    <tr><td><span lang="ko">정전이 필요한 미완료 작업지시는?</span><span lang="en">Pending work needing an outage?</span></td><td>WO-0877 8h, WO-0912 36h</td></tr>
+    <tr><td><span lang="ko">자산 기록이 없는 설비 자리는?</span><span lang="en">Locations without an asset?</span></td><td><span lang="ko">154kV 모선, 22.9kV 모선</span><span lang="en">154 kV and 22.9 kV busbars</span></td></tr>
+    <tr><td><span lang="ko">EAM 번호 EQ-CB-2019-0123은 어느 자리에?</span><span lang="en">Where is EAM EQ-CB-2019-0123?</span></td><td><span lang="ko">154kV 선로 CB</span><span lang="en">154 kV line breaker</span></td></tr>
+    <tr><td><span lang="ko">aipd:precedes로 본 정비 흐름의 단계 수는?</span><span lang="en">Workflow steps via aipd:precedes?</span></td><td>7</td></tr>
+  </table></div>
+  <p lang="ko">테스트 7개(<code>tests/test_asset.py</code>)가 위 결과와 함께, SHACL이 기간 겹침을 실제로 잡아내는지도 확인합니다.</p>
+  <p lang="en">Seven tests (<code>tests/test_asset.py</code>) check these results and that SHACL really catches an overlapping deployment.</p>
+</section>
+
+<section id="files">
+  <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
+  <div class="grid">
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/tree/main/examples/asset/data"><h4>examples/asset/data/</h4><p lang="ko">원본 CSV 8개</p><p lang="en">8 source CSVs</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/asset/build_asset_ontology.py"><h4>build_asset_ontology.py</h4><p lang="ko">계산·생성·검증</p><p lang="en">Compute, generate, check</p></a>
+    <a class="card" href="examples/asset/asset-ontology.ttl"><h4>asset-ontology.ttl</h4><p>OWL</p></a>
+    <a class="card" href="shapes/asset-shapes.ttl"><h4>shapes/asset-shapes.ttl</h4><p lang="ko">SHACL 규칙 5개</p><p lang="en">5 SHACL rules</p></a>
+    <a class="card" href="examples/asset/neo4j/import.cypher"><h4>neo4j/</h4><p lang="ko">적재 스크립트와 쿼리 8개</p><p lang="en">Load script and 8 queries</p></a>
+  </div>
+  <ul lang="ko">
+    <li><b>규모</b>: 변전소 한 곳, 방사형 단일 공급이라 고장 영향의 차이가 복구시간에서만 나옵니다. <a href="twin.html">디지털 트윈</a>의 가상 전국 계통에 붙이면 영향이 설비마다 달라집니다.</li>
+    <li><b>비용 없음</b>: 정비 비용과 예산을 넣지 않았습니다. 넣으면 "같은 돈으로 위험을 가장 많이 줄이는 작업"을 고를 수 있습니다.</li>
+    <li><b>기준값은 예시</b>: 감점, 수명, 경계값은 설명용입니다. 실제로 쓰려면 조직이 합의해야 합니다.</li>
+    <li><b>Neo4j 스크립트</b>는 실제 Neo4j에서 실행해 보지 못했습니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Scale</b>: one substation on a single radial feed, so consequence differs only by restoration time. Attached to the <a href="twin.html">digital twin</a>'s virtual national grid, it would vary by equipment.</li>
+    <li><b>No cost</b>: maintenance cost and budget are left out. Adding them would allow "most risk reduction per won" choices.</li>
+    <li><b>Thresholds are examples</b>: penalties, lives and cut-offs are illustrative; real use needs organisational agreement.</li>
+    <li>The <b>Neo4j script</b> has not been run against a live Neo4j.</li>
+  </ul>
+  <div class="pager"><a href="work.html"><span lang="ko">← 이전: 업무 온톨로지</span><span lang="en">← Prev: Work Ontology</span></a><a href="studio.html"><span lang="ko">설계실로 →</span><span lang="en">Back to the studio →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

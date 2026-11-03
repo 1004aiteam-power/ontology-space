@@ -1,0 +1,6 @@
+asset_id,eam_no,kind,name,manufacturer,model,year_made,rating,status,design_life_y,restore_h,restore_h_with_spare
+AS-TR-0007,EQ-TR-2015-0007,TransformerAsset,M.Tr #1 본체,가상전기,VT-60M154,2015,60MVA 154/22.9kV ONAN/ONAF,운전,40,2160,72
+AS-TR-0002,EQ-TR-1998-0002,TransformerAsset,구 M.Tr #1 본체,가상중공업,OT-45M,1998,45MVA 154/22.9kV,폐기,40,2160,72
+AS-CB-0123,EQ-CB-2019-0123,BreakerAsset,154kV 가스차단기,가상전기,GCB-170,2019,170kV 40kA SF6,운전,30,48,48
+AS-CB-0457,EQ-CB-2021-0457,BreakerAsset,22.9kV 진공차단기,가상전기,VCB-25,2021,25.8kV 25kA 진공,운전,30,24,24
+AS-LN-0031,EQ-LN-2008-0031,ConductorAsset,B-A 154kV 가공도체,가상전선,ACSR-410,2008,ACSR 410mm² 12.5km,운전,50,12,12

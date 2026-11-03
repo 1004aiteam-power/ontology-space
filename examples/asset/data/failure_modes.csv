@@ -1,0 +1,10 @@
+fm_id,name,asset_kind,component_kind,detected_by,mitigated_by,effect
+FM-01,권선 절연 열화,TransformerAsset,InsulatingOil,IN-03;IN-04;IN-10,MT-01;MT-10,절연 파괴로 변압기 내부 고장
+FM-02,OLTC 접점 마모,TransformerAsset,TapChanger,IN-05;IN-03,MT-02,탭 절환 실패·아크로 변압기 정지
+FM-03,부싱 열화,TransformerAsset,Bushing,IN-06;IN-02,MT-03,부싱 섬락·파손
+FM-04,냉각 성능 저하,TransformerAsset,CoolingUnit,IN-01;IN-02,MT-04,과열로 출력 제한·수명 단축
+FM-05,SF6 가스 누설,BreakerAsset:SF6,GasSystem,IN-07,MT-05,차단 능력 상실·동작 잠금
+FM-06,조작기구 동작 불량,BreakerAsset,OperatingMechanism,IN-08,MT-06,고장 전류 차단 실패
+FM-07,진공도 저하,BreakerAsset:진공,VacuumInterrupter,IN-09,MT-07,차단 실패
+FM-08,접속부 과열,ConductorAsset,Joint,IN-02;IN-11,MT-08,접속부 용단으로 선로 정지
+FM-09,도체 부식·소선 단선,ConductorAsset,Conductor,IN-11,MT-09;MT-10,도체 단선
