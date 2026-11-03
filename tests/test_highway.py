@@ -39,8 +39,8 @@ def test_incident_reroutes(B):
     for h in range(16, 20):
         assert inc[hit]["vol"][h] < base[hit]["vol"][h]           # 막힌 링크의 교통량은 줄고
         assert inc[hit]["vc"][h] > base[hit]["vc"][h]             # v/c(혼잡)는 오른다
-    others = sum(inc[l]["vol"][18] - base[l]["vol"][18] for l in base if l != hit and l[-1] == hit[-1])
-    assert others > 0                                             # 줄어든 차량은 다른 링크로 간다
+    gain = max(inc[l]["vol"][18] - base[l]["vol"][18] for l in base if l != hit)
+    assert gain > 200                                             # 줄어든 차량은 여러 우회로로 나뉘어 간다
     assert max(B["results"]["INCIDENT"]["od"]["SEOUL-BUSAN"]) > max(B["results"]["BASE"]["od"]["SEOUL-BUSAN"])
 
 
@@ -65,8 +65,27 @@ def test_shacl_catches_broken_link(B):
     assert not ok
 
 
+def test_national_roads(B):
+    nat = [lk for lk in B["links"] if lk["cls"] == "NATIONAL"]
+    assert nat and B["STATS"]["maxVc"]["NATIONAL"]["BASE"] < B["STATS"]["maxVc"]["EXPRESSWAY"]["BASE"]
+    assert 0 < B["STATS"]["nationalShareVkm"] < 0.5
+    # 사고 때 국도 1호선 천안→세종이 우회로가 된다
+    nr1 = next(lk["link_id"] for lk in nat if lk["route"] == "NR1" and lk["frm"] == "CHEONAN" and lk["to"] == "SEJONG")
+    base, inc = B["results"]["BASE"]["links"][nr1], B["results"]["INCIDENT"]["links"][nr1]
+    assert sum(inc["vol"][16:20]) > sum(base["vol"][16:20])
+    towns = {r[0] for r in next(c for c in B["cq_out"] if c["q"].startswith("고속도로에 닿지 않고"))["rows"]}
+    assert {"속초", "울진", "남원"} <= towns
+
+
+def test_shacl_catches_wrong_road_class(B):
+    g = rdflib.Graph().parse(data=B["TTL"], format="turtle")
+    g.add((HW.N_SOKCHO, rdflib.RDF.type, HW.Interchange))        # 국도만 닿는 지점을 IC로
+    ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
+    assert not ok
+
+
 def test_shacl_catches_fake_junction(B):
     g = rdflib.Graph().parse(data=B["TTL"], format="turtle")
-    g.add((HW.N_GANGNEUNG, rdflib.RDF.type, HW.Junction))         # 노선 1개뿐인 노드를 JC로
+    g.add((HW.N_ULJIN, rdflib.RDF.type, HW.Junction))             # 노선 1개(국도 7호선)뿐인 노드를 JC로
     ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
     assert not ok

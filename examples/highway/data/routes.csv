@@ -1,18 +1,29 @@
-route_id,ko,en
-GYEONGBU,경부선,Gyeongbu
-GYEONGIN,경인선,Gyeongin
-SEOHAEAN,서해안선,Seohaean
-YEONGDONG,영동선,Yeongdong
-JUNGBU,중부선,Jungbu
-JUNGBU_NAERYUK,중부내륙선,Jungbu Inland
-HONAM,호남선,Honam
-NONSAN_CHEONAN,논산천안선,Nonsan–Cheonan
-NAMHAE,남해선,Namhae
-TONGYEONG_DAEJEON,통영대전선,Tongyeong–Daejeon
-GWANGJU_DAEGU,광주대구선,Gwangju–Daegu
-JUNGANG,중앙선,Jungang
-DONGHAE,동해선,Donghae
-DAEGU_POHANG,대구포항선,Daegu–Pohang
-DANGJIN_YEONGDEOK,당진영덕선,Dangjin–Yeongdeok
-PYEONGTAEK_JECHEON,평택제천선,Pyeongtaek–Jecheon
-SEOUL_YANGYANG,서울양양선,Seoul–Yangyang
+route_id,ko,en,road_class,number
+GYEONGBU,경부선,Gyeongbu,EXPRESSWAY,
+GYEONGIN,경인선,Gyeongin,EXPRESSWAY,
+SEOHAEAN,서해안선,Seohaean,EXPRESSWAY,
+YEONGDONG,영동선,Yeongdong,EXPRESSWAY,
+JUNGBU,중부선,Jungbu,EXPRESSWAY,
+JUNGBU_NAERYUK,중부내륙선,Jungbu Inland,EXPRESSWAY,
+HONAM,호남선,Honam,EXPRESSWAY,
+NONSAN_CHEONAN,논산천안선,Nonsan–Cheonan,EXPRESSWAY,
+NAMHAE,남해선,Namhae,EXPRESSWAY,
+TONGYEONG_DAEJEON,통영대전선,Tongyeong–Daejeon,EXPRESSWAY,
+GWANGJU_DAEGU,광주대구선,Gwangju–Daegu,EXPRESSWAY,
+JUNGANG,중앙선,Jungang,EXPRESSWAY,
+DONGHAE,동해선,Donghae,EXPRESSWAY,
+DAEGU_POHANG,대구포항선,Daegu–Pohang,EXPRESSWAY,
+DANGJIN_YEONGDEOK,당진영덕선,Dangjin–Yeongdeok,EXPRESSWAY,
+PYEONGTAEK_JECHEON,평택제천선,Pyeongtaek–Jecheon,EXPRESSWAY,
+SEOUL_YANGYANG,서울양양선,Seoul–Yangyang,EXPRESSWAY,
+NR1,국도 1호선,National Route 1,NATIONAL,1
+NR2,국도 2호선,National Route 2,NATIONAL,2
+NR3,국도 3호선,National Route 3,NATIONAL,3
+NR4,국도 4호선,National Route 4,NATIONAL,4
+NR5,국도 5호선,National Route 5,NATIONAL,5
+NR6,국도 6호선,National Route 6,NATIONAL,6
+NR7,국도 7호선,National Route 7,NATIONAL,7
+NR17,국도 17호선,National Route 17,NATIONAL,17
+NR21,국도 21호선,National Route 21,NATIONAL,21
+NR38,국도 38호선,National Route 38,NATIONAL,38
+NR46,국도 46호선,National Route 46,NATIONAL,46

@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
-"""가상 전국 고속도로 온톨로지 + 24시간 차량 흐름 (⚠ 가상 데이터).
+"""가상 전국 고속도로·국도 온톨로지 + 24시간 차량 흐름 (⚠ 가상 데이터).
 
 원본: examples/highway/data/*.csv  ← 사람이 고치는 곳은 여기뿐
-      nodes(도시 노드·존 가중치) · routes(노선) · sections(구간·차로) · scenarios(평일 기본, 사고)
+      nodes(도시 노드·존 가중치) · routes(노선, 고속도로/국도) · sections(구간·차로·자유속도) · scenarios(평일 기본, 사고)
 생성: examples/highway/highway-ontology.ttl   OWL + GeoSPARQL (TBox + ABox, 요약 교통 상태 포함)
       assets/data/highway.json                웹페이지(highway.html) 데이터 (시간별 교통량 전체)
 검증: shapes/highway-shapes.ttl (SHACL) + 역량 질문을 SPARQL로 재현
@@ -14,8 +14,9 @@
          시간 분포는 평일 프로파일. 서울 관련 통행은 아침에 서울 방향, 저녁에 서울 밖 방향으로 치우친다.
   비용   t = t0 · (1 + 0.15 (v/c)^4)          (BPR 함수, t0 = 길이 / 자유속도)
   배정   시간대마다 이용자 균형(MSA, 40회 반복)
-  용량   차로당 2,000 대/시
-  규모 k 가장 붐비는 구간의 기본 시나리오 최대 v/c가 1.15가 되도록 맞춘다 (가상 보정)
+  용량   차로당 고속도로 2,000 · 국도 1,200 대/시, 자유속도 고속도로 100 · 국도 70 km/h
+         고속도로와 국도를 한 망으로 배정한다: 차는 둘 중 빠른 길을 고른다
+  규모 k 가장 붐비는 고속도로 구간의 기본 시나리오 최대 v/c가 1.15가 되도록 맞춘다 (가상 보정)
   서비스수준(LOS, v/c 기준 단순화) A <0.35, B <0.55, C <0.75, D <0.90, E ≤1.00, F >1.00
 
 실행: python examples/highway/build_highway.py   (저장소 루트에서, rdflib · pyshacl 필요)
@@ -31,7 +32,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 DATA = HERE / "data"
-CAP_PER_LANE = 2000
+CAP_PER_LANE = {"EXPRESSWAY": 2000, "NATIONAL": 1200}   # 국도는 신호·교차로가 있어 차로당 용량이 낮다
+DETOUR = {"EXPRESSWAY": 1.2, "NATIONAL": 1.3}          # 직선거리 대비 실제 길이 (굴곡 계수)
 TARGET_MAX_VC = 1.15
 MSA_ITERS = 40
 PROFILE = [0.012, 0.008, 0.006, 0.006, 0.010, 0.025, 0.050, 0.070, 0.068, 0.055, 0.050, 0.050,
@@ -74,12 +76,13 @@ ZONES = [n["node_id"] for n in nodes]
 
 for i, s in enumerate(sections, 1):
     s["section_id"] = f"S{i:02d}"
-    s["km"] = round(km(N[s["a"]], N[s["b"]]) * 1.2, 1)        # 굴곡 계수 1.2
+    s["cls"] = R[s["route_id"]]["road_class"]
+    s["km"] = round(km(N[s["a"]], N[s["b"]]) * DETOUR[s["cls"]], 1)
 
 links = []                                                     # 방향이 있는 링크: 구간마다 2개
 for s in sections:
     for d, (fr, to) in (("F", (s["a"], s["b"])), ("R", (s["b"], s["a"]))):
-        links.append(dict(link_id=f"{s['section_id']}{d}", section=s["section_id"], route=s["route_id"], frm=fr, to=to,
+        links.append(dict(link_id=f"{s['section_id']}{d}", section=s["section_id"], route=s["route_id"], cls=s["cls"], frm=fr, to=to,
                           lanes=int(s["lanes"]), km=s["km"], kph=float(s["free_kph"]),
                           t0=s["km"] / float(s["free_kph"])))
 L = {lk["link_id"]: lk for lk in links}
@@ -88,6 +91,8 @@ for lk in links:
     OUT[lk["frm"]].append(lk)
 
 node_routes = {n: sorted({s["route_id"] for s in sections if n in (s["a"], s["b"])}) for n in N}
+# 나들목(IC) = 고속도로 구간이 닿는 노드. 국도만 닿는 노드는 일반 교차점(Intersection)
+on_expressway = {n: any(s["cls"] == "EXPRESSWAY" for s in sections if n in (s["a"], s["b"])) for n in N}
 
 
 def capacity(lk: dict, scen: dict, h: int) -> float:
@@ -95,7 +100,7 @@ def capacity(lk: dict, scen: dict, h: int) -> float:
     if scen["route_id"] and lk["route"] == scen["route_id"] and lk["frm"] == scen["from"] and lk["to"] == scen["to"] \
             and int(scen["start_h"]) <= h < int(scen["end_h"]):
         lanes -= int(scen["lanes_closed"])
-    return lanes * CAP_PER_LANE
+    return lanes * CAP_PER_LANE[lk["cls"]]
 
 
 def cost(lk: dict, v: float, c: float) -> float:
@@ -182,7 +187,7 @@ BASE = next(s for s in scenarios if s["scenario_id"] == "BASE")
 k = 1.0
 for _ in range(5):
     peak = run(k, BASE, hours=(8, 18))
-    mx = max(f / capacity(L[lid], BASE, h) for h, fl in peak.items() for lid, f in fl.items())
+    mx = max(f / capacity(L[lid], BASE, h) for h, fl in peak.items() for lid, f in fl.items() if L[lid]["cls"] == "EXPRESSWAY")
     k *= (TARGET_MAX_VC / mx) ** 0.85
 
 results = {}
@@ -206,6 +211,24 @@ for scen in scenarios:
 
 DAILY_TRIPS = round(sum(daily_demand(k).values()))
 
+
+def vkm(scen: str, cls: str, hours=range(24)) -> float:
+    return sum(results[scen]["links"][lid]["vol"][h] * L[lid]["km"] for lid in L if L[lid]["cls"] == cls for h in hours)
+
+
+def veh(scen: str, cls: str, hours) -> float:
+    return sum(results[scen]["links"][lid]["vol"][h] for lid in L if L[lid]["cls"] == cls for h in hours)
+
+
+INC = next(s_ for s_ in scenarios if s_["route_id"])
+inc_hours = range(int(INC["start_h"]), int(INC["end_h"]))
+STATS = dict(
+    nationalShareVkm=round(vkm("BASE", "NATIONAL") / (vkm("BASE", "NATIONAL") + vkm("BASE", "EXPRESSWAY")), 3),
+    nationalVehIncidentHours=dict(base=round(veh("BASE", "NATIONAL", inc_hours)), incident=round(veh("INCIDENT", "NATIONAL", inc_hours))),
+    maxVc={c: {sc: round(max(max(results[sc]["links"][lid]["vc"]) for lid in L if L[lid]["cls"] == c), 3) for sc in results}
+           for c in ("EXPRESSWAY", "NATIONAL")},
+)
+
 # ---------------------------------------------------------------- Turtle (OWL + GeoSPARQL)
 PFX = """@prefix hw:   <https://1004aiteam-power.github.io/ontology-space/highway#> .
 @prefix geo:  <http://www.opengis.net/ont/geosparql#> .
@@ -222,7 +245,12 @@ TBOX = """
 ### 클래스
 hw:Route a owl:Class ; rdfs:label "노선"@ko ; rdfs:comment "이름이 붙은 도로. 여러 구간의 순서 있는 묶음."@ko .
 hw:Node a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "노드"@ko .
-hw:Interchange a owl:Class ; rdfs:subClassOf hw:Node ; rdfs:label "나들목(IC)"@ko ; rdfs:comment "고속도로에 들어오고 나갈 수 있는 지점. 교통 존과 이어진다."@ko .
+hw:Expressway a owl:Class ; rdfs:subClassOf hw:Route ; rdfs:label "고속도로"@ko ; rdfs:comment "출입이 제한된 도로. 신호가 없고 용량이 크다."@ko .
+hw:NationalRoad a owl:Class ; rdfs:subClassOf hw:Route ; rdfs:label "일반국도"@ko ; rdfs:comment "번호가 붙은 국도. 교차로·신호가 있어 속도와 차로당 용량이 낮다."@ko .
+hw:Expressway owl:disjointWith hw:NationalRoad .
+hw:Interchange a owl:Class ; rdfs:subClassOf hw:Node ; rdfs:label "나들목(IC)"@ko ; rdfs:comment "고속도로 구간이 닿아 고속도로에 들어오고 나갈 수 있는 지점."@ko .
+hw:Intersection a owl:Class ; rdfs:subClassOf hw:Node ; rdfs:label "일반 교차점"@ko ; rdfs:comment "국도만 닿는 지점. 고속도로로 바로 들어갈 수 없다."@ko .
+hw:Interchange owl:disjointWith hw:Intersection .
 hw:Junction a owl:Class ; rdfs:subClassOf hw:Node ; rdfs:label "분기점(JC)"@ko ; rdfs:comment "둘 이상의 노선이 만나는 지점. IC와 배타적이지 않다(다중 분류)."@ko .
 hw:Section a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "구간"@ko ; rdfs:comment "두 노드 사이의 물리적인 도로. 방향이 없다."@ko .
 hw:Link a owl:Class ; rdfs:label "방향 링크"@ko ; rdfs:comment "구간의 한 방향(상행 또는 하행). 교통량·속도는 링크에 붙는다."@ko .
@@ -243,7 +271,7 @@ hw:toNode a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Link ; r
 hw:oppositeOf a owl:ObjectProperty, owl:SymmetricProperty ; rdfs:domain hw:Link ; rdfs:range hw:Link ; rdfs:label "반대 방향 링크"@ko .
 hw:adjacentTo a owl:ObjectProperty ; rdfs:domain hw:Node ; rdfs:range hw:Node ; rdfs:label "링크로 바로 이어진 노드"@ko ;
     rdfs:comment "링크에서 생성한 지름길 (fromNode → toNode)."@ko .
-hw:servesZone a owl:ObjectProperty ; rdfs:domain hw:Interchange ; rdfs:range hw:Zone ; rdfs:label "연결 존"@ko .
+hw:servesZone a owl:ObjectProperty ; rdfs:domain hw:Node ; rdfs:range hw:Zone ; rdfs:label "연결 존"@ko .
 hw:connectsRoute a owl:ObjectProperty ; rdfs:domain hw:Junction ; rdfs:range hw:Route ; rdfs:label "만나는 노선"@ko .
 hw:originZone a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Demand ; rdfs:range hw:Zone .
 hw:destinationZone a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:Demand ; rdfs:range hw:Zone .
@@ -255,6 +283,7 @@ hw:los a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain hw:TrafficStat
 
 ### 데이터 속성
 hw:code a owl:DatatypeProperty ; rdfs:range xsd:string .
+hw:routeNumber a owl:DatatypeProperty ; rdfs:domain hw:NationalRoad ; rdfs:range xsd:integer ; rdfs:label "노선 번호"@ko .
 hw:routeOrder a owl:DatatypeProperty ; rdfs:domain hw:Section ; rdfs:range xsd:integer ; rdfs:label "노선 안 순서"@ko .
 hw:lengthKm a owl:DatatypeProperty ; rdfs:range xsd:decimal .
 hw:lanes a owl:DatatypeProperty ; rdfs:domain hw:Link ; rdfs:range xsd:integer ; rdfs:label "한 방향 차로 수"@ko .
@@ -288,11 +317,13 @@ def en(s: str) -> str:
 
 lines = [PFX, TBOX, LOS_TTL, "\n### 노선"]
 for r in routes:
-    lines.append(f"hw:R_{r['route_id']} a hw:Route ; hw:code \"{r['route_id']}\" ; rdfs:label {lit(r['ko'])}, {en(r['en'])} .")
+    cls = "hw:Expressway" if r["road_class"] == "EXPRESSWAY" else "hw:NationalRoad"
+    num = f" ; hw:routeNumber {r['number']}" if r["number"] else ""
+    lines.append(f"hw:R_{r['route_id']} a {cls} ; hw:code \"{r['route_id']}\" ; rdfs:label {lit(r['ko'])}, {en(r['en'])}{num} .")
 lines.append("\n### 노드와 존")
 for n in nodes:
     nid = n["node_id"]
-    types = ["hw:Interchange"] + (["hw:Junction"] if len(node_routes[nid]) >= 2 else [])
+    types = ["hw:Interchange" if on_expressway[nid] else "hw:Intersection"] + (["hw:Junction"] if len(node_routes[nid]) >= 2 else [])
     p = [f"hw:N_{nid} a {', '.join(types)}", f'hw:code "{nid}"', f"rdfs:label {lit(n['ko'])}, {en(n['en'])}",
          f"hw:servesZone hw:Z_{nid}",
          f'geo:hasGeometry [ geo:asWKT "POINT({n["lon"]} {n["lat"]})"^^geo:wktLiteral ]']
@@ -315,7 +346,7 @@ for lk in links:
     opp = lk["link_id"][:-1] + ("R" if lk["link_id"].endswith("F") else "F")
     lines.append(f"hw:{lk['link_id']} a hw:Link ; hw:code \"{lk['link_id']}\" ; hw:ofSection hw:{lk['section']} ; "
                  f"hw:fromNode hw:N_{lk['frm']} ; hw:toNode hw:N_{lk['to']} ; hw:oppositeOf hw:{opp} ; "
-                 f"hw:lanes {lk['lanes']} ; hw:capacityVph {lk['lanes'] * CAP_PER_LANE} ; hw:freeSpeedKph {lk['kph']} ; "
+                 f"hw:lanes {lk['lanes']} ; hw:capacityVph {lk['lanes'] * CAP_PER_LANE[lk['cls']]} ; hw:freeSpeedKph {lk['kph']} ; "
                  f"hw:lengthKm {lk['km']} ; hw:dailyVolume {base_links[lk['link_id']]['daily']} .")
 lines.append("\n### 시나리오와 사고")
 for sc in scenarios:
@@ -360,8 +391,8 @@ def q(s: str) -> list[list[str]]:
 CQ = [
     ("경부선 구간을 순서대로 나열하면?",
      "SELECT ?o ?n WHERE { ?s hw:onRoute hw:R_GYEONGBU ; hw:routeOrder ?o ; rdfs:label ?n } ORDER BY ?o"),
-    ("노선이 3개 이상 만나는 분기점(JC)은?",
-     "SELECT ?n (COUNT(?r) AS ?k) WHERE { ?j a hw:Junction ; hw:connectsRoute ?r ; rdfs:label ?n . FILTER(LANG(?n) = 'ko') } GROUP BY ?n HAVING (COUNT(?r) >= 3) ORDER BY DESC(?k) ?n"),
+    ("노선이 5개 이상 만나는 분기점(JC)은?",
+     "SELECT ?n (COUNT(?r) AS ?k) WHERE { ?j a hw:Junction ; hw:connectsRoute ?r ; rdfs:label ?n . FILTER(LANG(?n) = 'ko') } GROUP BY ?n HAVING (COUNT(?r) >= 5) ORDER BY DESC(?k) ?n"),
     ("기본 시나리오에서 하루 교통량이 가장 많은 링크 3개는?",
      "SELECT ?l ?v WHERE { ?x hw:code ?l ; hw:dailyVolume ?v } ORDER BY DESC(?v) LIMIT 3"),
     ("기본 시나리오에서 첨두 때 서비스수준 F가 되는 링크는?",
@@ -373,6 +404,10 @@ CQ = [
      "SELECT (COUNT(DISTINCT ?n) AS ?k) WHERE { hw:N_DAEJEON (hw:adjacentTo|hw:adjacentTo/hw:adjacentTo) ?n . FILTER(?n != hw:N_DAEJEON) }"),
     ("IC이면서 JC인 노드는 몇 개인가?",
      "SELECT (COUNT(?n) AS ?k) WHERE { ?n a hw:Interchange, hw:Junction }"),
+    ("고속도로에 닿지 않고 국도로만 갈 수 있는 지점은?",
+     "SELECT ?n WHERE { ?x a hw:Intersection ; rdfs:label ?n . FILTER(LANG(?n) = 'ko') } ORDER BY ?n"),
+    ("고속도로와 국도가 함께 지나는 도시는 몇 곳인가?",
+     "SELECT (COUNT(DISTINCT ?n) AS ?k) WHERE { ?s1 hw:endpoint ?n ; hw:onRoute ?r1 . ?r1 a hw:Expressway . ?s2 hw:endpoint ?n ; hw:onRoute ?r2 . ?r2 a hw:NationalRoad . }"),
     ("서울에서 모든 노드에 닿을 수 있나? (닿지 않는 노드 수)",
      "SELECT (COUNT(?n) AS ?k) WHERE { ?n a hw:Node . FILTER NOT EXISTS { hw:N_SEOUL hw:adjacentTo* ?n } }"),
 ]
@@ -381,13 +416,13 @@ cq_out = [dict(q=t, rows=q(s)) for t, s in CQ]
 # ---------------------------------------------------------------- 웹 데이터
 twin = json.loads((ROOT / "assets" / "data" / "twin.json").read_text(encoding="utf-8"))
 web = dict(
-    virtual=True, model=dict(capPerLane=CAP_PER_LANE, k=k, dailyTrips=DAILY_TRIPS, profile=[round(p, 4) for p in PROFILE],
+    virtual=True, stats=STATS, model=dict(capPerLane=CAP_PER_LANE, k=k, dailyTrips=DAILY_TRIPS, profile=[round(p, 4) for p in PROFILE],
                              los=[[g_, (None if lim == math.inf else lim)] for g_, lim in LOS], msaIters=MSA_ITERS),
     outline=twin["outline"],
     nodes=[dict(id=n["node_id"], ko=n["ko"], en=n["en"], lon=float(n["lon"]), lat=float(n["lat"]), w=float(n["zone_weight"]),
                 routes=node_routes[n["node_id"]]) for n in nodes],
     routes=routes, sections=[dict(id=s["section_id"], route=s["route_id"], a=s["a"], b=s["b"], km=s["km"], lanes=int(s["lanes"])) for s in sections],
-    links=[dict(id=lk["link_id"], section=lk["section"], route=lk["route"], frm=lk["frm"], to=lk["to"], lanes=lk["lanes"], km=lk["km"]) for lk in links],
+    links=[dict(id=lk["link_id"], section=lk["section"], route=lk["route"], cls=lk["cls"], frm=lk["frm"], to=lk["to"], lanes=lk["lanes"], km=lk["km"]) for lk in links],
     scenarios=scenarios, results=results, odWatch=[f"{o}-{d_}" for o, d_ in OD_WATCH], cq=cq_out, shacl=shacl,
 )
 (ROOT / "assets" / "data" / "highway.json").write_text(json.dumps(web, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
@@ -395,6 +430,7 @@ web = dict(
 if __name__ == "__main__":
     print(f"노드 {len(nodes)} · 노선 {len(routes)} · 구간 {len(sections)} · 방향 링크 {len(links)} · 트리플 {len(g)}")
     print(f"규모 보정 k={k:.3g} → 하루 통행 {DAILY_TRIPS:,}대")
+    print("통계:", STATS)
     for sid in ("BASE", "INCIDENT"):
         r = results[sid]
         worst = sorted(((max(x["vc"]), lid) for lid, x in r["links"].items()), reverse=True)[:5]

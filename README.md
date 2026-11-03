@@ -14,8 +14,8 @@
 | [examples/work/](examples/work/) | 업무 온톨로지: 가상의 AI추진부 업무 149개를 분류한 엑셀 원본, OWL, Neo4j 스크립트 (⚠ 가상 부서) |
 | [examples/asset/](examples/asset/) | 전력설비 자산관리 온톨로지: 원본 CSV → `build_asset_ontology.py` → OWL · SHACL 검증 · Neo4j (⚠ 가상 데이터) |
 | [shapes/asset-shapes.ttl](shapes/asset-shapes.ttl) | 자산관리 SHACL 규칙 (빈 설비 자리, 설치 기간 겹침, 근거 없는 작업지시) |
-| [examples/highway/](examples/highway/) | 가상 전국 고속도로 온톨로지(OWL + GeoSPARQL)와 24시간 차량 흐름: 원본 CSV → `build_highway.py` (중력모형 수요 · 시간대별 이용자 균형 배정) (⚠ 가상 데이터) |
-| [shapes/highway-shapes.ttl](shapes/highway-shapes.ttl) | 고속도로 SHACL 규칙 (구간·링크 방향, 분기점, 연결성, 서비스수준) |
+| [examples/highway/](examples/highway/) | 가상 전국 고속도로·국도 온톨로지(OWL + GeoSPARQL)와 24시간 차량 흐름: 원본 CSV → `build_highway.py` (중력모형 수요 · 시간대별 이용자 균형 배정) (⚠ 가상 데이터) |
+| [shapes/highway-shapes.ttl](shapes/highway-shapes.ttl) | 도로망 SHACL 규칙 (구간·링크 방향, 분기점, 도로 등급, 연결성, 서비스수준) |
 | [examples/power-grid-sample.ttl](examples/power-grid-sample.ttl) | CIM 스타일의 간단한 전력망 예제 (Turtle) |
 | [examples/queries.md](examples/queries.md) | 예제 데이터에 대한 SPARQL 질의 모음 |
 | [pycim/](pycim/) | CIM 파이썬 클래스 패키지 |
@@ -29,7 +29,7 @@
 | [shapes/](shapes/) | SHACL 규칙(`cim-shapes.ttl`)과 pycim 클래스 계층(`cim-classes.ttl`) |
 | [assets/physai/](assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터 |
 | [examples/twin/](examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로 교통), 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통), 한·영 전환) |
 
 웹사이트: https://1004aiteam-power.github.io/ontology-space/
 

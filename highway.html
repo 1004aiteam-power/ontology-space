@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ontology Space · 고속도로 교통</title>
-<meta name="title-ko" content="Ontology Space · 고속도로 교통">
-<meta name="title-en" content="Ontology Space · Expressway Traffic">
-<meta name="description" content="가상 전국 고속도로망의 온톨로지(OWL + GeoSPARQL)와 24시간 차량 흐름 재생: 노선·구간·방향 링크, 수요 배정, 사고 시나리오 (가상 데이터)">
+<title>Ontology Space · 고속도로·국도 교통</title>
+<meta name="title-ko" content="Ontology Space · 고속도로·국도 교통">
+<meta name="title-en" content="Ontology Space · Expressway &amp; National Road Traffic">
+<meta name="description" content="가상 전국 고속도로·국도망의 온톨로지(OWL + GeoSPARQL)와 24시간 차량 흐름 재생: 도로 등급, 노선·구간·방향 링크, 수요 배정, 사고 시나리오 (가상 데이터)">
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
@@ -93,6 +93,13 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
 .hw-incident{margin:4px 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;color:var(--muted)}
 .hw-incident.on{border-color:var(--los-F);color:var(--text);background:color-mix(in srgb,var(--los-F) 10%,var(--surface))}
 .ctrl label{display:inline-flex;gap:5px;align-items:center}
+.hw-toggles{display:inline-flex;gap:6px}
+.hw-tg{display:inline-flex;align-items:center;gap:6px}
+.hw-tg i{display:inline-block;width:18px;border-radius:2px;background:var(--twin-line)}
+.hw-tg.ex i{height:5px}.hw-tg.nr i{height:2px}
+.hw-tg[aria-pressed="true"]{border-color:var(--accent) !important;color:var(--accent);font-weight:600}
+.hw-tg[aria-pressed="false"]{opacity:.6;text-decoration:line-through}
+.hw-node.town{fill:var(--surface);stroke:var(--twin-line);stroke-width:1}
 </style>
 </head>
 <body>
@@ -111,7 +118,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
       <hr>
       <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
       <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
-      <a href="highway.html" aria-current="page"><span lang="ko">고속도로 교통</span><span lang="en">Expressway Traffic</span><small lang="ko">가상 전국 고속도로망 · 24시간 차량 흐름</small><small lang="en">Virtual national network · 24 h traffic</small></a>
+      <a href="highway.html" aria-current="page"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
     </div>
   </nav>
   <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
@@ -119,15 +126,15 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
 
 <main class="wrap">
 <div class="hero">
-  <div class="eyebrow">EXPRESSWAY ONTOLOGY × TRAFFIC FLOW</div>
-  <h1><span lang="ko">가상 전국 고속도로<br>온톨로지와 차량 흐름</span><span lang="en">A virtual national expressway:<br>ontology and traffic flow</span></h1>
+  <div class="eyebrow">ROAD ONTOLOGY × TRAFFIC FLOW</div>
+  <h1><span lang="ko">가상 전국 고속도로·국도<br>온톨로지와 차량 흐름</span><span lang="en">Virtual national expressways and roads:<br>ontology and traffic flow</span></h1>
   <p class="thesis" lang="ko">지도 위의 고속도로는 선 하나지만, 차는 늘 <b>한 방향</b>으로만 달립니다.<br>그래서 이 온톨로지는 길과 흐름을 따로 적습니다.</p>
   <p class="thesis" lang="en">On a map an expressway is one line, but traffic always runs <b>one way</b>.<br>So this ontology records the road and the flow separately.</p>
-  <p class="lead" lang="ko">도시 29곳과 노선 17개로 만든 가상 고속도로망에 하루 동안의 통행 수요를 배정해, 시간대별 교통량·속도·서비스수준을 계산했습니다. 같은 데이터가 온톨로지(OWL + GeoSPARQL)와 이 지도로 동시에 나옵니다.</p>
-  <p class="lead" lang="en">A virtual network of 29 cities and 17 routes gets a day of travel demand assigned to it, giving hourly volume, speed and level of service. The same data feeds both the ontology (OWL + GeoSPARQL) and this map.</p>
+  <p class="lead" lang="ko">도시 40곳, 고속도로 17개 노선과 국도 11개 노선으로 만든 가상 도로망에 하루 동안의 통행 수요를 배정해, 시간대별 교통량·속도·서비스수준을 계산했습니다. 차는 고속도로와 국도 중 빠른 길을 고릅니다. 같은 데이터가 온톨로지(OWL + GeoSPARQL)와 이 지도로 동시에 나옵니다.</p>
+  <p class="lead" lang="en">A virtual network of 40 cities, 17 expressways and 11 national roads gets a day of travel demand, giving hourly volume, speed and level of service. Drivers pick whichever of expressway or national road is faster. The same data feeds both the ontology (OWL + GeoSPARQL) and this map.</p>
   <div class="notice">
     <b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">This is virtual data</span></b>
-    <p lang="ko">노선 이름과 도시 위치는 실제를 참고했지만, 노선 연결은 크게 단순화했습니다. 차로 수, 도시 가중치, 통행 수요, 교통량, 속도, 사고는 모두 학습용으로 만든 값입니다. 실제 고속도로 교통 정보가 아니며, 길 안내나 판단에 쓰면 안 됩니다.</p>
+    <p lang="ko">노선 이름·번호와 도시 위치는 실제를 참고했지만, 노선 연결은 크게 단순화했습니다. 차로 수, 도시 가중치, 통행 수요, 교통량, 속도, 사고는 모두 학습용으로 만든 값입니다. 실제 고속도로 교통 정보가 아니며, 길 안내나 판단에 쓰면 안 됩니다.</p>
     <p lang="en">Route names and city locations are borrowed from reality, but the network is heavily simplified. Lanes, city weights, demand, volumes, speeds and the crash are all made up for learning. This is not real traffic information and must not be used for navigation or decisions.</p>
   </div>
 </div>
@@ -144,6 +151,10 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <button type="button" data-hw-hour="8"><span lang="ko">08시 출근</span><span lang="en">08:00 a.m. peak</span></button>
     <button type="button" data-hw-hour="13"><span lang="ko">13시 낮</span><span lang="en">13:00 midday</span></button>
     <button type="button" data-hw-hour="18"><span lang="ko">18시 퇴근</span><span lang="en">18:00 p.m. peak</span></button>
+    <span class="hw-toggles" role="group" aria-label="road class">
+      <button type="button" class="hw-tg ex" data-hw-cls="EXPRESSWAY" aria-pressed="true"><i></i><span lang="ko">고속도로</span><span lang="en">Expressways</span></button>
+      <button type="button" class="hw-tg nr" data-hw-cls="NATIONAL" aria-pressed="true"><i></i><span lang="ko">국도</span><span lang="en">National roads</span></button>
+    </span>
     <label><input type="radio" name="hwScen" value="BASE" checked> <span lang="ko">평일 기본</span><span lang="en">Weekday base</span></label>
     <label><input type="radio" name="hwScen" value="INCIDENT"> <span lang="ko">사고 시나리오</span><span lang="en">Crash scenario</span></label>
   </div>
@@ -154,7 +165,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
       <div class="legend">
         <span lang="ko">서비스수준(v/c)</span><span lang="en">Level of service (v/c)</span>
         <span><i class="los-A"></i>A</span><span><i class="los-B"></i>B</span><span><i class="los-C"></i>C</span><span><i class="los-D"></i>D</span><span><i class="los-E"></i>E</span><span><i class="los-F"></i>F</span>
-        <span lang="ko">· 굵기 = 차로 수 · 점 = 차량 흐름(빠를수록 빨리 움직임)</span><span lang="en">· width = lanes · dots = traffic (faster = moving faster)</span>
+        <span lang="ko">· 굵은 선 고속도로, 가는 선 국도 · 굵기 = 차로 수 · ● 나들목 ■ 국도만 닿는 지점 · 점 = 차량 흐름</span><span lang="en">· thick = expressway, thin = national road · width = lanes · ● interchange ■ national-road-only point · dots = traffic</span>
       </div>
     </div>
     <div class="hw-side">
@@ -168,8 +179,8 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     </div>
   </div>
   <div class="easy"><b>💡 <span lang="ko">이렇게 보세요</span><span lang="en">How to read it</span></b>
-    <p lang="ko"><b>08시와 18시를 눌러 비교해 보세요.</b> 아침에는 서울로 들어오는 방향이, 저녁에는 나가는 방향이 붉어집니다. 서울→부산은 새벽에 4시간 7분이 걸리지만 18시 무렵에는 4시간 28분이 걸립니다. <b>사고 시나리오</b>를 켜고 16~20시를 보면, 천안→청주가 막히면서 차들이 중부내륙선 등으로 돌아가는 모습이 보입니다. 선택한 도로의 그래프에는 두 시나리오가 함께 그려집니다.</p>
-    <p lang="en"><b>Compare 08:00 with 18:00.</b> In the morning the Seoul-bound direction turns red; in the evening, the outbound one. Seoul→Busan takes 4 h 7 min at night but about 4 h 28 min around 18:00. Turn on the <b>crash scenario</b> and watch 16:00–20:00: as Cheonan→Cheongju jams, traffic diverts to the Jungbu Inland route and others. The selected road's charts show both scenarios.</p></div>
+    <p lang="ko"><b>08시와 18시를 눌러 비교해 보세요.</b> 아침에는 서울로 들어오는 방향이, 저녁에는 나가는 방향이 붉어집니다. 서울→부산은 새벽에 4시간 7분이 걸리지만 17~18시 무렵에는 4시간 29분이 걸립니다. <b>사고 시나리오</b>를 켜고 16~20시를 보면, 천안→청주가 막히면서 차들이 중부내륙선과 <b>국도 1호선 천안→세종</b>으로 돌아갑니다. 위의 <b>고속도로·국도 버튼</b>으로 각 등급을 껐다 켜 보면 국도가 어디를 메워 주는지 잘 보입니다.</p>
+    <p lang="en"><b>Compare 08:00 with 18:00.</b> In the morning the Seoul-bound direction turns red; in the evening, the outbound one. Seoul→Busan takes 4 h 7 min at night but about 4 h 29 min around 17:00–18:00. Turn on the <b>crash scenario</b> and watch 16:00–20:00: as Cheonan→Cheongju jams, traffic diverts to the Jungbu Inland route and <b>National Route 1 Cheonan→Sejong</b>. Use the <b>expressway / national road buttons</b> to switch each class on and off and see where the national roads fill in.</p></div>
 </section>
 
 <section id="concepts">
@@ -177,11 +188,11 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
   <p class="sub" lang="ko">교통 분야에서 쓰는 말을 온톨로지의 클래스로 옮기면 이렇게 됩니다.</p>
   <p class="sub" lang="en">Traffic-engineering terms, turned into ontology classes.</p>
   <dl class="terms">
-    <div><dt><span lang="ko">노선</span><span lang="en">Route</span><small>hw:Route</small></dt><dd lang="ko">"경부선"처럼 이름이 붙은 도로입니다. 구간 여러 개를 순서대로 묶은 것이고, 노선 안 순서는 <code>hw:routeOrder</code>로 적습니다.</dd><dd lang="en">A named road such as "Gyeongbu". An ordered bundle of sections; the order is <code>hw:routeOrder</code>.</dd></div>
+    <div><dt><span lang="ko">노선</span><span lang="en">Route</span><small>hw:Route</small></dt><dd lang="ko">"경부선", "국도 1호선"처럼 이름이 붙은 도로입니다. 구간 여러 개를 순서대로 묶은 것이고, 노선 안 순서는 <code>hw:routeOrder</code>로 적습니다. 도로 등급에 따라 <code>hw:Expressway</code>(고속도로)와 <code>hw:NationalRoad</code>(일반국도)로 나뉩니다.</dd><dd lang="en">A named road such as "Gyeongbu" or "National Route 1". An ordered bundle of sections (<code>hw:routeOrder</code>), classed by grade as <code>hw:Expressway</code> or <code>hw:NationalRoad</code>.</dd></div>
     <div><dt><span lang="ko">구간과 방향 링크</span><span lang="en">Section vs link</span><small>hw:Section · hw:Link</small></dt><dd lang="ko">구간은 두 지점 사이의 물리적인 도로라 방향이 없습니다. 링크는 그 구간의 한 방향(상행 또는 하행)입니다. 차로 수, 용량, 교통량, 속도는 모두 링크에 붙습니다.</dd><dd lang="en">A section is the physical road between two points and has no direction. A link is one direction of it. Lanes, capacity, volume and speed all belong to links.</dd></div>
-    <div><dt><span lang="ko">나들목과 분기점</span><span lang="en">Interchange vs junction</span><small>hw:Interchange · hw:Junction</small></dt><dd lang="ko">나들목(IC)은 차가 들어오고 나가는 곳이고, 분기점(JC)은 노선끼리 만나는 곳입니다. 한 지점이 둘 다일 수 있어, 두 클래스를 배타적으로 두지 않았습니다. 이 망에서는 29곳 중 23곳이 둘 다입니다.</dd><dd lang="en">An interchange lets traffic enter and leave; a junction is where routes meet. One point can be both, so the classes are not disjoint. In this network 23 of 29 nodes are both.</dd></div>
-    <div><dt><span lang="ko">교통 존과 OD</span><span lang="en">Zone and OD demand</span><small>hw:Zone · hw:Demand</small></dt><dd lang="ko">존은 통행이 생기고 끝나는 지역(도시)입니다. OD는 "어디에서 어디로 하루 몇 대"이며, 812개 도시 쌍의 수요를 중력모형으로 만들었습니다.</dd><dd lang="en">A zone is where trips start and end (a city). OD demand is "from where to where, how many per day"; 812 city pairs come from a gravity model.</dd></div>
-    <div><dt><span lang="ko">용량, v/c, 서비스수준</span><span lang="en">Capacity, v/c, LOS</span><small>hw:LevelOfService</small></dt><dd lang="ko">용량은 한 시간에 지날 수 있는 최대 차량 수(이 사례에서는 차로당 2,000대)입니다. v/c는 교통량을 용량으로 나눈 값이고, 서비스수준은 이것을 A~F 등급으로 나눈 것입니다. F는 용량을 넘은 상태입니다.</dd><dd lang="en">Capacity is the most vehicles per hour (here 2,000 per lane). v/c is volume over capacity; LOS grades it A–F, F meaning over capacity.</dd></div>
+    <div><dt><span lang="ko">나들목과 분기점</span><span lang="en">Interchange vs junction</span><small>hw:Interchange · hw:Junction</small></dt><dd lang="ko">나들목(IC)은 고속도로에 들어가고 나오는 곳, 분기점(JC)은 노선끼리 만나는 곳입니다. 한 지점이 둘 다일 수 있어 두 클래스를 배타적으로 두지 않았습니다. 국도만 닿는 지점은 <b>일반 교차점</b>(<code>hw:Intersection</code>)이며, 이 망에서는 11곳입니다.</dd><dd lang="en">An interchange gives access to an expressway; a junction is where routes meet. One point can be both, so they are not disjoint. Points reached only by national roads are <b>intersections</b> (<code>hw:Intersection</code>), 11 in this network.</dd></div>
+    <div><dt><span lang="ko">교통 존과 OD</span><span lang="en">Zone and OD demand</span><small>hw:Zone · hw:Demand</small></dt><dd lang="ko">존은 통행이 생기고 끝나는 지역(도시)입니다. OD는 "어디에서 어디로 하루 몇 대"이며, 1,560개 도시 쌍의 수요를 중력모형으로 만들었습니다.</dd><dd lang="en">A zone is where trips start and end (a city). OD demand is "from where to where, how many per day"; 1,560 city pairs come from a gravity model.</dd></div>
+    <div><dt><span lang="ko">용량, v/c, 서비스수준</span><span lang="en">Capacity, v/c, LOS</span><small>hw:LevelOfService</small></dt><dd lang="ko">용량은 한 시간에 지날 수 있는 최대 차량 수(이 사례에서는 차로당 고속도로 2,000대, 국도 1,200대)입니다. v/c는 교통량을 용량으로 나눈 값이고, 서비스수준은 이것을 A~F 등급으로 나눈 것입니다. F는 용량을 넘은 상태입니다.</dd><dd lang="en">Capacity is the most vehicles per hour (here 2,000 per lane on expressways, 1,200 on national roads). v/c is volume over capacity; LOS grades it A–F, F meaning over capacity.</dd></div>
     <div><dt><span lang="ko">배정과 시나리오</span><span lang="en">Assignment, scenario</span><small>hw:Scenario · hw:Incident</small></dt><dd lang="ko">배정은 수요를 길에 나눠 싣는 계산입니다. 모두가 자기에게 가장 빠른 길을 고르는 상태(이용자 균형)를 찾습니다. 시나리오는 "사고가 나면?" 같은 조건이고, 같은 망에서 결과를 비교합니다.</dd><dd lang="en">Assignment loads demand onto roads, finding the state where everyone takes their fastest route (user equilibrium). A scenario is a condition like "what if there is a crash?", compared on the same network.</dd></div>
   </dl>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
@@ -224,10 +235,10 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
       </g>
       <rect class="box" x="20" y="40" width="204" height="60" rx="8"/>
       <text x="122" y="66" text-anchor="middle" class="b"><tspan lang="ko">노선</tspan><tspan lang="en">Route</tspan></text>
-      <text x="122" y="86" text-anchor="middle" class="muted">17</text>
+      <text x="122" y="86" text-anchor="middle" class="muted"><tspan lang="ko">고속도로 17 · 국도 11</tspan><tspan lang="en">17 expressways · 11 national</tspan></text>
       <rect class="box" x="262" y="40" width="168" height="60" rx="8"/>
       <text x="346" y="66" text-anchor="middle" class="b"><tspan lang="ko">구간</tspan><tspan lang="en">Section</tspan></text>
-      <text x="346" y="86" text-anchor="middle" class="muted"><tspan lang="ko">방향 없음 · 45</tspan><tspan lang="en">undirected · 45</tspan></text>
+      <text x="346" y="86" text-anchor="middle" class="muted"><tspan lang="ko">방향 없음 · 93</tspan><tspan lang="en">undirected · 93</tspan></text>
       <rect class="ext" x="468" y="40" width="182" height="60" rx="8"/>
       <text x="559" y="66" text-anchor="middle" class="b">GeoSPARQL</text>
       <text x="559" y="86" text-anchor="middle" class="muted">geo:Feature · WKT</text>
@@ -236,10 +247,10 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
       <text x="789" y="86" text-anchor="middle" class="muted"><tspan lang="ko">시간 · 차단 차로</tspan><tspan lang="en">hours · lanes closed</tspan></text>
       <rect class="box" x="20" y="200" width="160" height="60" rx="8"/>
       <text x="100" y="226" text-anchor="middle" class="b"><tspan lang="ko">수요(OD)</tspan><tspan lang="en">Demand (OD)</tspan></text>
-      <text x="100" y="246" text-anchor="middle" class="muted"><tspan lang="ko">812쌍 · 하루</tspan><tspan lang="en">812 pairs · daily</tspan></text>
+      <text x="100" y="246" text-anchor="middle" class="muted"><tspan lang="ko">1,560쌍 · 하루</tspan><tspan lang="en">1,560 pairs · daily</tspan></text>
       <rect class="hub" x="262" y="200" width="168" height="60" rx="10"/>
       <text x="346" y="226" text-anchor="middle" class="b"><tspan lang="ko">방향 링크</tspan><tspan lang="en">Link</tspan></text>
-      <text x="346" y="246" text-anchor="middle" class="muted"><tspan lang="ko">차로 · 용량 · 90</tspan><tspan lang="en">lanes · capacity · 90</tspan></text>
+      <text x="346" y="246" text-anchor="middle" class="muted"><tspan lang="ko">차로 · 용량 · 186</tspan><tspan lang="en">lanes · capacity · 186</tspan></text>
       <rect class="box" x="468" y="200" width="182" height="60" rx="8"/>
       <text x="559" y="226" text-anchor="middle" class="b"><tspan lang="ko">교통 상태</tspan><tspan lang="en">Traffic state</tspan></text>
       <text x="559" y="246" text-anchor="middle" class="muted"><tspan lang="ko">교통량 · v/c · 속도</tspan><tspan lang="en">volume · v/c · speed</tspan></text>
@@ -248,10 +259,10 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
       <text x="789" y="246" text-anchor="middle" class="muted"><tspan lang="ko">기본 · 사고</tspan><tspan lang="en">base · crash</tspan></text>
       <rect class="box" x="20" y="330" width="204" height="60" rx="8"/>
       <text x="122" y="356" text-anchor="middle" class="b"><tspan lang="ko">교통 존</tspan><tspan lang="en">Zone</tspan></text>
-      <text x="122" y="376" text-anchor="middle" class="muted"><tspan lang="ko">도시 29</tspan><tspan lang="en">29 cities</tspan></text>
+      <text x="122" y="376" text-anchor="middle" class="muted"><tspan lang="ko">도시 40</tspan><tspan lang="en">40 cities</tspan></text>
       <rect class="box" x="262" y="330" width="168" height="60" rx="8"/>
       <text x="346" y="356" text-anchor="middle" class="b"><tspan lang="ko">노드</tspan><tspan lang="en">Node</tspan></text>
-      <text x="346" y="376" text-anchor="middle" class="muted">IC ∪ JC · POINT</text>
+      <text x="346" y="376" text-anchor="middle" class="muted">IC · JC · <tspan lang="ko">교차점</tspan><tspan lang="en">intersection</tspan></text>
       <rect class="box" x="468" y="330" width="182" height="60" rx="8"/>
       <text x="559" y="356" text-anchor="middle" class="b"><tspan lang="ko">서비스수준</tspan><tspan lang="en">Level of service</tspan></text>
       <text x="559" y="376" text-anchor="middle" class="muted">A … F</text>
@@ -263,14 +274,14 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
 </section>
 
 <section id="design">
-  <h2><span lang="ko">② 설계 결정 8가지</span><span lang="en">② Eight design decisions</span></h2>
+  <h2><span lang="ko">② 설계 결정 9가지</span><span lang="en">② Nine design decisions</span></h2>
   <p class="sub" lang="ko"><a href="studio.html">설계실</a>의 원칙대로, 정답 대신 결정과 이유를 남깁니다.</p>
   <p class="sub" lang="en">As in the <a href="studio.html">studio</a>: decisions and reasons, not right answers.</p>
 
   <article class="decision"><div class="no">D1</div><div>
     <h3><span lang="ko">물리 구간과 방향 링크를 나눈다</span><span lang="en">Physical sections and directional links are separate</span></h3>
-    <p lang="ko">구간 45개는 방향이 없고, 구간마다 링크가 정확히 2개(상행·하행) 붙습니다. 두 링크는 <code>hw:oppositeOf</code>로 서로를 가리킵니다.</p>
-    <p lang="en">The 45 sections have no direction; each carries exactly two links that point at each other with <code>hw:oppositeOf</code>.</p>
+    <p lang="ko">구간 93개는 방향이 없고, 구간마다 링크가 정확히 2개(상행·하행) 붙습니다. 두 링크는 <code>hw:oppositeOf</code>로 서로를 가리킵니다.</p>
+    <p lang="en">The 93 sections have no direction; each carries exactly two links that point at each other with <code>hw:oppositeOf</code>.</p>
     <p lang="ko"><b>이유</b>: 교통은 방향마다 전혀 다릅니다. 아침 8시 경부선 수원→서울과 서울→수원의 혼잡은 같지 않습니다. 반대로 공사나 사고 기록처럼 길 자체에 붙는 정보는 구간에 둡니다.</p>
     <p lang="en"><b>Why</b>: traffic differs by direction; at 08:00 Suwon→Seoul and Seoul→Suwon are not alike. Facts about the road itself (works, geometry) stay on the section.</p>
     <div class="impl"><div><b>CSV</b>sections.csv (<span lang="ko">한 줄 = 한 구간</span><span lang="en">one row = one section</span>)</div><div><b>OWL</b><code>Section</code> · <code>Link</code> · <code>ofSection</code> · <code>oppositeOf</code></div><div><b>SHACL</b><span lang="ko">구간당 링크 2개, 방향이 서로 반대</span><span lang="en">two links per section, mirrored</span></div><div><b><span lang="ko">지도</span><span lang="en">Map</span></b><span lang="ko">진행 방향 오른쪽에 나란히 그림</span><span lang="en">drawn side by side, right-hand traffic</span></div></div>
@@ -278,8 +289,8 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
 
   <article class="decision"><div class="no">D2</div><div>
     <h3><span lang="ko">IC와 JC는 배타적이지 않다</span><span lang="en">Interchange and junction are not exclusive</span></h3>
-    <p lang="ko">모든 노드는 존과 이어진 나들목이고, 노선이 2개 이상 만나면 분기점 클래스도 함께 붙습니다(다중 분류). 분기점은 SHACL로 "노선 2개 이상"을 검사합니다.</p>
-    <p lang="en">Every node is an interchange serving a zone; where two or more routes meet it is also a junction (multiple typing). SHACL checks "two or more routes" for junctions.</p>
+    <p lang="ko">고속도로 구간이 닿는 노드는 나들목, 국도만 닿는 노드는 일반 교차점이며, 노선이 2개 이상 만나면 분기점 클래스도 함께 붙습니다(다중 분류). 분기점은 SHACL로 "노선 2개 이상"을 검사합니다.</p>
+    <p lang="en">Nodes touched by an expressway are interchanges, the rest are intersections; where two or more routes meet a node is also a junction (multiple typing). SHACL checks "two or more routes" for junctions.</p>
     <p lang="ko"><b>이유</b>: 현실의 도시는 진출입과 노선 분기를 함께 합니다. 하나만 고르게 하면 "대구는 IC인가 JC인가" 같은 쓸모없는 논쟁이 생깁니다.</p>
     <p lang="en"><b>Why</b>: real cities do both. Forcing one class invites pointless debates such as "is Daegu an IC or a JC?".</p>
   </div></article>
@@ -302,16 +313,16 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
 
   <article class="decision"><div class="no">D5</div><div>
     <h3><span lang="ko">교통 상태는 별도 개체, 온톨로지에는 요약만</span><span lang="en">Traffic state is its own entity; the ontology holds a summary</span></h3>
-    <p lang="ko">교통량은 링크의 속성이 아니라 "링크 × 시나리오 × 시각"마다 생기는 <code>hw:TrafficState</code>입니다. 온톨로지에는 링크·시나리오별 첨두 시각 상태 180개와 하루 교통량만 넣고, 24시간 전체 4,320개는 웹 데이터(JSON)에 둡니다.</p>
-    <p lang="en">Volume is not a link attribute but a <code>hw:TrafficState</code> per link × scenario × hour. The ontology stores the 180 peak-hour states plus daily totals; all 4,320 hourly states live in the web data (JSON).</p>
+    <p lang="ko">교통량은 링크의 속성이 아니라 "링크 × 시나리오 × 시각"마다 생기는 <code>hw:TrafficState</code>입니다. 온톨로지에는 링크·시나리오별 첨두 시각 상태 372개와 하루 교통량만 넣고, 24시간 전체 8,928개는 웹 데이터(JSON)에 둡니다.</p>
+    <p lang="en">Volume is not a link attribute but a <code>hw:TrafficState</code> per link × scenario × hour. The ontology stores the 372 peak-hour states plus daily totals; all 8,928 hourly states live in the web data (JSON).</p>
     <p lang="ko"><b>이유</b>: 의미(무엇이 무엇과 이어지나)와 측정값의 시계열은 다루는 도구가 다릅니다. 시계열을 모두 트리플로 만들면 온톨로지가 무거워지고 얻는 것은 적습니다. 무엇을 온톨로지에 넣을지 정하는 것도 설계입니다.</p>
     <p lang="en"><b>Why</b>: meaning (what connects to what) and time series suit different tools. Turning every reading into triples bloats the ontology for little gain. Deciding what goes in is part of the design.</p>
   </div></article>
 
   <article class="decision"><div class="no">D6</div><div>
     <h3><span lang="ko">계산 모형과 보정값을 공개한다</span><span lang="en">Publish the model and its calibration</span></h3>
-    <p lang="ko">수요는 중력모형, 통행 시간은 BPR 함수, 배정은 시간대별 이용자 균형(MSA 40회)입니다. 수요의 크기 k는 "가장 붐비는 구간의 첨두 v/c가 1.15"가 되도록 맞췄고, 그 결과 하루 약 114만 통행이 되었습니다.</p>
-    <p lang="en">Demand: gravity model. Travel time: BPR function. Assignment: hourly user equilibrium (40 MSA iterations). The demand scale k was tuned so the busiest link peaks at v/c 1.15, giving about 1.14 million trips a day.</p>
+    <p lang="ko">수요는 중력모형, 통행 시간은 BPR 함수, 배정은 시간대별 이용자 균형(MSA 40회)입니다. 수요의 크기 k는 "가장 붐비는 고속도로 구간의 첨두 v/c가 1.15"가 되도록 맞췄고, 그 결과 하루 약 126만 통행이 되었습니다.</p>
+    <p lang="en">Demand: gravity model. Travel time: BPR function. Assignment: hourly user equilibrium (40 MSA iterations). The demand scale k was tuned so the busiest expressway link peaks at v/c 1.15, giving about 1.26 million trips a day.</p>
 <pre><code><span lang="ko">수요</span><span lang="en">demand</span>   T_ij = k · f · (W_i · W_j)^0.8 / max(40, d_ij)^1.2     <span lang="ko">(수도권 안 f = 0.3)</span><span lang="en">(within the capital area f = 0.3)</span>
 <span lang="ko">시간</span><span lang="en">time</span>   t = t0 · (1 + 0.15 · (v/c)^4)
 <span lang="ko">방향</span><span lang="en">tidal</span>  <span lang="ko">서울행 06–09시 ×1.35, 서울발 17–20시 ×1.30</span><span lang="en">to Seoul 06–09 ×1.35, from Seoul 17–20 ×1.30</span></code></pre>
@@ -323,24 +334,33 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <h3><span lang="ko">"만약"은 시나리오로 다룬다</span><span lang="en">"What if" is a scenario</span></h3>
     <p lang="ko">사고는 망을 고치지 않고 시나리오에 붙은 <code>hw:Incident</code>(대상 링크, 시간, 차단 차로 수)로 적습니다. 같은 망에서 두 결과를 나란히 비교할 수 있습니다.</p>
     <p lang="en">The crash does not edit the network; it is an <code>hw:Incident</code> on a scenario (link, hours, lanes closed), so two results can be compared on one network.</p>
-    <p lang="ko"><b>결과</b>: 16~20시 경부선 천안→청주 4차로 중 2차로가 막히자 이 링크의 v/c가 1.40까지 오르고, 중부내륙선 여주→충주가 0.99에서 1.11로 넘쳤습니다. 서울→부산 최대 소요시간은 4시간 28분에서 4시간 35분이 되었습니다.</p>
-    <p lang="en"><b>Result</b>: with 2 of 4 lanes closed on Gyeongbu Cheonan→Cheongju from 16:00 to 20:00, that link hits v/c 1.40 and Jungbu Inland Yeoju→Chungju overflows from 0.99 to 1.11. Peak Seoul→Busan time goes from 4 h 28 min to 4 h 35 min.</p>
+    <p lang="ko"><b>결과</b>: 16~20시 경부선 천안→청주 4차로 중 2차로가 막히자 이 링크의 v/c가 1.38까지 오르고, 중부내륙선 여주→충주가 1.02에서 1.11로 넘쳤습니다. 국도 1호선 천안→세종은 그 4시간 동안 1,405대를 더 받았습니다. 서울→부산 최대 소요시간은 4시간 29분에서 4시간 34분이 되었습니다.</p>
+    <p lang="en"><b>Result</b>: with 2 of 4 lanes closed on Gyeongbu Cheonan→Cheongju from 16:00 to 20:00, that link hits v/c 1.38, Jungbu Inland Yeoju→Chungju overflows from 1.02 to 1.11, and National Route 1 Cheonan→Sejong takes 1,405 extra vehicles over those four hours. Peak Seoul→Busan time goes from 4 h 29 min to 4 h 34 min.</p>
   </div></article>
 
   <article class="decision"><div class="no">D8</div><div>
     <h3><span lang="ko">망의 규칙은 SHACL로</span><span lang="en">Network rules in SHACL</span></h3>
-    <p lang="ko">규칙 6개를 SHACL로 검사합니다. 구간의 양 끝은 2개, 구간당 반대 방향 링크 2개, 분기점은 노선 2개 이상, IC는 존과 연결, 모든 노드는 서울에서 닿을 수 있음, v/c와 서비스수준 등급의 일치입니다.</p>
-    <p lang="en">Six SHACL rules: two endpoints per section; two mirrored links per section; junctions meet two or more routes; interchanges serve a zone; every node reachable from Seoul; v/c consistent with its LOS grade.</p>
+    <p lang="ko">규칙 8개를 SHACL로 검사합니다. 구간의 양 끝은 2개, 구간당 반대 방향 링크 2개, 분기점은 노선 2개 이상, IC는 존과 연결, 모든 노드는 서울에서 닿을 수 있음, v/c와 서비스수준 등급의 일치, 나들목·교차점 분류가 도로 등급과 맞는지, 국도의 노선 번호입니다.</p>
+    <p lang="en">Eight SHACL rules: two endpoints per section; two mirrored links per section; junctions meet two or more routes; interchanges serve a zone; every node reachable from Seoul; v/c consistent with its LOS grade; interchange vs intersection matching the road class; a number on every national road.</p>
     <p lang="ko"><b>이유</b>: 도로망 데이터의 흔한 오류(끊긴 망, 방향이 꼬인 링크, 이름만 JC인 지점)는 눈으로 찾기 어렵습니다. 테스트에서 일부러 오류를 넣어 규칙이 잡아내는지도 확인합니다.</p>
     <p lang="en"><b>Why</b>: common network errors (disconnected parts, crossed directions, junctions in name only) are hard to spot by eye. Tests inject such errors to confirm the rules catch them.</p>
+  </div></article>
+
+  <article class="decision"><div class="no">D9</div><div>
+    <h3><span lang="ko">도로 등급은 클래스 계층으로, 배정은 한 망으로</span><span lang="en">Road class as a class hierarchy; one network for assignment</span></h3>
+    <p lang="ko">노선은 <code>hw:Expressway</code>와 <code>hw:NationalRoad</code>로 나누고(서로 배타), 국도에는 노선 번호를 둡니다. 등급의 차이는 링크의 자유속도(100 / 70km/h)와 차로당 용량(2,000 / 1,200대)으로 계산에 들어갑니다. 지도에서는 등급마다 층을 따로 두어 토글로 껐다 켤 수 있습니다.</p>
+    <p lang="en">Routes are <code>hw:Expressway</code> or <code>hw:NationalRoad</code> (disjoint); national roads carry a number. The class enters the maths through each link's free speed (100 / 70 km/h) and per-lane capacity (2,000 / 1,200). On the map each class is its own layer that can be toggled.</p>
+    <p lang="ko"><b>이유</b>: 고속도로와 국도를 따로 계산하면 서로 빈자리를 메우는 모습을 볼 수 없습니다. 하나의 망에 함께 두어야 "고속도로가 막히면 국도로 얼마나 빠지나"에 답할 수 있습니다. 결과로 보면 국도는 평소 주행거리의 9%를 맡고, 사고 때는 국도 1호선이 경부선의 우회로가 됩니다. "어느 지점이 나들목인가"도 이름이 아니라 "고속도로 구간이 닿는가"라는 규칙으로 정하고 SHACL로 검사합니다.</p>
+    <p lang="en"><b>Why</b>: computing the two classes separately hides how one fills the other's gaps. Only one network answers "how much spills onto national roads when an expressway jams?". National roads carry 9% of vehicle-km normally, and Route 1 becomes Gyeongbu's detour in the crash. Whether a node is an interchange is decided by a rule (does an expressway section touch it?), checked in SHACL, not by its name.</p>
+    <div class="impl"><div><b>CSV</b>routes.csv road_class, number · sections.csv free_kph</div><div><b>OWL</b><code>Expressway ⊔ NationalRoad ⊑ Route</code>, <code>Interchange</code> / <code>Intersection</code></div><div><b>SHACL</b><span lang="ko">IC는 고속도로에 닿을 것, 교차점은 닿지 않을 것</span><span lang="en">IC touches an expressway; intersection does not</span></div><div><b><span lang="ko">지도</span><span lang="en">Map</span></b><span lang="ko">등급별 층 + 토글 버튼</span><span lang="en">a layer per class + toggles</span></div></div>
   </div></article>
 </section>
 
 <section id="impl">
   <h2><span lang="ko">③ 구현과 검증</span><span lang="en">③ Implementation and checks</span></h2>
-<pre><code>examples/highway/data/*.csv ──▶ build_highway.py ──┬─▶ highway-ontology.ttl  (OWL + GeoSPARQL, <span lang="ko">트리플 약 6,800개</span><span lang="en">~6,800 triples</span>)
+<pre><code>examples/highway/data/*.csv ──▶ build_highway.py ──┬─▶ highway-ontology.ttl  (OWL + GeoSPARQL, <span lang="ko">트리플 약 13,000개</span><span lang="en">~13,000 triples</span>)
   nodes · routes ·              ├ <span lang="ko">중력모형 수요</span><span lang="en">gravity demand</span>       ├─▶ assets/data/highway.json (<span lang="ko">이 지도</span><span lang="en">this map</span>)
-  sections · scenarios          ├ <span lang="ko">시간대별 이용자 균형</span><span lang="en">hourly equilibrium</span>  └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: SHACL 6 + SPARQL 8
+  sections · scenarios          ├ <span lang="ko">시간대별 이용자 균형</span><span lang="en">hourly equilibrium</span>  └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: SHACL 8 + SPARQL 10
                                 └ <span lang="ko">지도 윤곽</span><span lang="en">outline</span>: Natural Earth (twin.json)</code></pre>
   <h3><span lang="ko">예시: 노드 하나와 방향 링크 하나</span><span lang="en">Example: one node and one link</span></h3>
 <pre><code>hw:N_DAEJEON a hw:Interchange, hw:Junction ;              # <span lang="ko">다중 분류</span><span lang="en">multiple typing</span>
@@ -356,32 +376,34 @@ hw:INC_INCIDENT a hw:Incident ; hw:affectsLink hw:S04F ; hw:startHour 16 ; hw:en
   <div class="tbl"><table>
     <tr><th><span lang="ko">질문</span><span lang="en">Question</span></th><th><span lang="ko">답</span><span lang="en">Answer</span></th></tr>
     <tr><td><span lang="ko">경부선 구간을 순서대로?</span><span lang="en">Gyeongbu sections in order?</span></td><td><span lang="ko">서울–수원·신갈 → 수원·신갈–천안 → … → 경주–부산 (8구간)</span><span lang="en">Seoul–Suwon → Suwon–Cheonan → … → Gyeongju–Busan (8)</span></td></tr>
-    <tr><td><span lang="ko">노선이 3개 이상 만나는 분기점?</span><span lang="en">Junctions with 3+ routes?</span></td><td><span lang="ko">서울 5, 대구 4, 대전·부산·여주·청주·포항 3</span><span lang="en">Seoul 5, Daegu 4, Daejeon · Busan · Yeoju · Cheongju · Pohang 3</span></td></tr>
-    <tr><td><span lang="ko">기본 시나리오 첨두에 LOS F인 링크?</span><span lang="en">Base links at LOS F at peak?</span></td><td><span lang="ko">경부선 수원·신갈↔천안 양방향 (v/c 1.17~1.18)</span><span lang="en">Gyeongbu Suwon↔Cheonan, both ways (v/c 1.17–1.18)</span></td></tr>
-    <tr><td><span lang="ko">사고 때 첨두 v/c가 가장 많이 오른 다른 링크?</span><span lang="en">Other link whose peak v/c rose most in the crash?</span></td><td><span lang="ko">중부선 여주→청주 (0.26→0.38), 중부내륙선 여주→충주 (0.99→1.11), 충주→김천 (0.88→1.00)</span><span lang="en">Jungbu Yeoju→Cheongju (0.26→0.38), Jungbu Inland Yeoju→Chungju (0.99→1.11), Chungju→Gimcheon (0.88→1.00)</span></td></tr>
-    <tr><td><span lang="ko">IC이면서 JC인 노드 수?</span><span lang="en">Nodes that are both IC and JC?</span></td><td>23</td></tr>
+    <tr><td><span lang="ko">노선이 5개 이상 만나는 분기점?</span><span lang="en">Junctions with 5+ routes?</span></td><td><span lang="ko">서울 8, 대구 6, 부산 5 (고속도로+국도)</span><span lang="en">Seoul 8, Daegu 6, Busan 5 (expressway + national)</span></td></tr>
+    <tr><td><span lang="ko">기본 시나리오 첨두에 LOS F인 링크?</span><span lang="en">Base links at LOS F at peak?</span></td><td><span lang="ko">경부선 수원·신갈↔천안, 호남선 논산↔전주, 중부내륙선 여주↔충주 (모두 양방향, v/c 1.02~1.17)</span><span lang="en">Gyeongbu Suwon↔Cheonan, Honam Nonsan↔Jeonju, Jungbu Inland Yeoju↔Chungju (both ways, v/c 1.02–1.17)</span></td></tr>
+    <tr><td><span lang="ko">사고 때 첨두 v/c가 가장 많이 오른 다른 링크?</span><span lang="en">Other link whose peak v/c rose most in the crash?</span></td><td><span lang="ko">중부내륙선 충주→김천 (0.84→0.94), 여주→충주 (1.02→1.11), 중부선 여주→청주 (0.31→0.38)</span><span lang="en">Jungbu Inland Chungju→Gimcheon (0.84→0.94), Yeoju→Chungju (1.02→1.11), Jungbu Yeoju→Cheongju (0.31→0.38)</span></td></tr>
+    <tr><td><span lang="ko">IC이면서 JC인 노드 수?</span><span lang="en">Nodes that are both IC and JC?</span></td><td>29</td></tr>
+    <tr><td><span lang="ko">고속도로에 닿지 않고 국도로만 가는 지점?</span><span lang="en">Points reached only by national roads?</span></td><td><span lang="ko">거창, 남원, 동해·삼척, 보령, 상주, 속초, 영주, 울진, 정읍, 제천, 홍성 (11곳)</span><span lang="en">11 towns, e.g. Geochang, Namwon, Sokcho, Uljin</span></td></tr>
+    <tr><td><span lang="ko">고속도로와 국도가 함께 지나는 도시 수?</span><span lang="en">Cities on both an expressway and a national road?</span></td><td>26</td></tr>
     <tr><td><span lang="ko">서울에서 닿지 않는 노드 수?</span><span lang="en">Nodes unreachable from Seoul?</span></td><td>0</td></tr>
   </table></div>
-  <p lang="ko">테스트 7개(<code>tests/test_highway.py</code>)는 보정 결과, 아침·저녁의 방향 차이, 사고 때 우회가 실제로 일어나는지를 확인하고, 일부러 망가뜨린 데이터를 SHACL이 잡아내는지도 봅니다.</p>
-  <p lang="en">Seven tests (<code>tests/test_highway.py</code>) check the calibration, the morning/evening direction pattern and that the crash really causes detours, and that SHACL catches deliberately broken data.</p>
+  <p lang="ko">테스트 9개(<code>tests/test_highway.py</code>)는 보정 결과, 아침·저녁의 방향 차이, 사고 때 우회가 실제로 일어나는지를 확인하고, 일부러 망가뜨린 데이터를 SHACL이 잡아내는지도 봅니다.</p>
+  <p lang="en">Nine tests (<code>tests/test_highway.py</code>) check the calibration, the morning/evening direction pattern and that the crash really causes detours, and that SHACL catches deliberately broken data.</p>
 </section>
 
 <section id="files">
   <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
   <div class="grid">
-    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/tree/main/examples/highway/data"><h4>examples/highway/data/</h4><p lang="ko">원본 CSV 4개</p><p lang="en">4 source CSVs</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/tree/main/examples/highway/data"><h4>examples/highway/data/</h4><p lang="ko">원본 CSV 4개 (고속도로·국도)</p><p lang="en">4 source CSVs (expressway + national)</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/highway/build_highway.py"><h4>build_highway.py</h4><p lang="ko">수요·배정·생성·검증</p><p lang="en">Demand, assignment, generation, checks</p></a>
     <a class="card" href="examples/highway/highway-ontology.ttl"><h4>highway-ontology.ttl</h4><p>OWL + GeoSPARQL</p></a>
-    <a class="card" href="shapes/highway-shapes.ttl"><h4>shapes/highway-shapes.ttl</h4><p lang="ko">SHACL 규칙 6개</p><p lang="en">6 SHACL rules</p></a>
+    <a class="card" href="shapes/highway-shapes.ttl"><h4>shapes/highway-shapes.ttl</h4><p lang="ko">SHACL 규칙 8개</p><p lang="en">8 SHACL rules</p></a>
   </div>
   <ul lang="ko">
-    <li><b>망이 성깁니다</b>: 실제 고속도로는 IC가 수백 곳이고 노선이 서로 겹치는 구간도 있습니다. 여기서는 도시 사이를 직선으로 이었습니다.</li>
+    <li><b>망이 성깁니다</b>: 실제 고속도로는 IC가 수백 곳이고, 국도는 훨씬 촘촘하며 시내 구간과 우회도로가 섞여 있습니다. 여기서는 도시 사이를 직선으로 이었고, 국도의 신호·교차로는 낮은 자유속도(70km/h)와 용량으로만 반영했습니다.</li>
     <li><b>정적 배정</b>: 시간대마다 따로 균형을 계산해, 앞 시간대에 쌓인 정체가 다음 시간대로 넘어가지 않습니다. 동적 배정(DTA)이나 미시 시뮬레이션은 아닙니다.</li>
     <li><b>서비스수준은 단순화</b>: 실제 기준은 밀도 등으로 정하지만, 여기서는 v/c 구간으로 나눴습니다.</li>
     <li><b>요일·계절·화물차 구분 없음</b>: 평일 하루, 승용차 환산 대수 하나로만 계산했습니다.</li>
   </ul>
   <ul lang="en">
-    <li><b>Coarse network</b>: real expressways have hundreds of interchanges and shared sections; here cities are joined by straight lines.</li>
+    <li><b>Coarse network</b>: real expressways have hundreds of interchanges, and national roads are far denser with urban stretches and bypasses. Cities are joined by straight lines, and signals are represented only by a lower free speed (70 km/h) and capacity.</li>
     <li><b>Static assignment</b>: each hour is solved separately, so queues do not carry over. Not dynamic assignment (DTA) or micro-simulation.</li>
     <li><b>Simplified LOS</b>: real criteria use density; here v/c bands are used.</li>
     <li><b>No day-of-week, season or truck split</b>: one weekday, one passenger-car-equivalent count.</li>
