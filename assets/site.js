@@ -38,6 +38,7 @@
     if (window.hljs) document.querySelectorAll('pre code[class*="language-"]').forEach(el => hljs.highlightElement(el));
     initEasy();
     initViewers();
+    initMenus();
   });
 
   // ---- 💡 쉬운 설명 켜기/끄기 (쉬운 설명이 있는 페이지에만 버튼 표시) ----
@@ -55,6 +56,30 @@
     btn.addEventListener('click', () => { const on = root.classList.contains('hide-easy'); store.set('easy', on ? 'on' : 'off'); apply(on); });
     document.addEventListener('langchange', () => apply(!root.classList.contains('hide-easy')));
     tools.prepend(btn);
+  }
+
+  // ---- nav 드롭다운 (온톨로지 설계실) ----
+  function initMenus() {
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      const menu = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!menu) return;
+      const header = btn.closest('header') || document.body;
+      const place = () => {
+        const b = btn.getBoundingClientRect(), h = header.getBoundingClientRect();
+        // header에 backdrop-filter가 있어 fixed 기준이 header가 됨
+        const w = menu.offsetWidth || 220;
+        const left = Math.max(8, Math.min(b.left, innerWidth - w - 8));
+        menu.style.left = (left - h.left) + 'px';
+        menu.style.top = (b.bottom - h.top + 4) + 'px';
+      };
+      const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+      const open = () => { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); place(); };
+      btn.addEventListener('click', e => { e.stopPropagation(); menu.hidden ? open() : close(); });
+      document.addEventListener('click', e => { if (!menu.contains(e.target)) close(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { close(); btn.focus(); } });
+      addEventListener('resize', () => { if (!menu.hidden) place(); });
+      btn.closest('nav')?.addEventListener('scroll', () => { if (!menu.hidden) place(); }, {passive: true});
+    });
   }
 
   // ---- 코드 뷰어: 같은 사이트의 파일을 불러와 표시 ----

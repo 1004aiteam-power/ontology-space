@@ -290,3 +290,18 @@ html.hide-easy .easy{display:none}
 .twin-map .hvdc{fill:none;stroke:var(--twin-line);stroke-width:2.6;stroke-dasharray:7 4;opacity:.9}
 .twin-map .hvdc.rev{stroke:#8b5cf6}
 .kvi.khv{height:3px;background:repeating-linear-gradient(90deg,var(--twin-line) 0 5px,transparent 5px 8px)}
+
+/* nav 드롭다운: 온톨로지 설계실 (메뉴는 site.js가 header 기준 위치로 띄움 → nav의 가로 스크롤에 잘리지 않음) */
+.menu-btn{font:inherit;font-size:15px;border:0;background:none;color:var(--muted);padding:6px 10px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.menu-btn:hover,.menu-btn[aria-expanded="true"]{background:var(--accent-soft);color:var(--accent)}
+.menu-btn.current{color:var(--text);font-weight:600;background:var(--code)}
+.menu-btn .caret{font-size:11px;margin-left:3px}
+.menu{position:fixed;z-index:20;min-width:220px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);padding:6px;display:flex;flex-direction:column;gap:2px}
+.menu[hidden]{display:none}
+nav .menu a{display:block;padding:8px 10px;border-radius:6px;font-size:14px;color:var(--text);white-space:normal;letter-spacing:0}
+nav .menu a small{display:block;color:var(--muted);font-size:12px}
+nav .menu a[aria-current="page"]{background:var(--code);font-weight:600}
+nav .menu hr{border:0;border-top:1px solid var(--line);margin:4px 2px}
+@media (max-width:520px){ .menu-btn{padding:4px 3px;font-size:13px;letter-spacing:-.2px} }
+@media (max-width:380px){ .menu-btn{font-size:12px;padding:4px 2px} }

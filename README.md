@@ -25,7 +25,7 @@
 | [shapes/](shapes/) | SHACL 규칙(`cim-shapes.ttl`)과 pycim 클래스 계층(`cim-classes.ttl`) |
 | [assets/physai/](assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터 |
 | [examples/twin/](examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `work.html` · `work-graph.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈 / 업무 온톨로지, 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈 / 온톨로지 설계실(업무 온톨로지 등), 한·영 전환) |
 
 웹사이트: https://1004aiteam-power.github.io/ontology-space/
 
