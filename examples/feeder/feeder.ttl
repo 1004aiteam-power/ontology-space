@@ -1,0 +1,1675 @@
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix ex:  <http://example.org/grid#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:_2b537813-bbb0-56dd-adec-144ea7139944 a cim:BaseVoltage ;
+    cim:IdentifiedObject.mRID "2b537813-bbb0-56dd-adec-144ea7139944" ;
+    cim:IdentifiedObject.name "22.9kV" ;
+    cim:BaseVoltage.nominalVoltage "22.9"^^xsd:float .
+
+ex:_5fd14ea3-be63-5cfc-897b-c963108778dc a cim:Substation ;
+    cim:IdentifiedObject.mRID "5fd14ea3-be63-5cfc-897b-c963108778dc" ;
+    cim:IdentifiedObject.name "A변전소" .
+
+ex:_121a21c3-1bb2-569d-af34-fb16af24dbf3 a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "121a21c3-1bb2-569d-af34-fb16af24dbf3" ;
+    cim:IdentifiedObject.name "A변전소 22.9kV" ;
+    cim:VoltageLevel.Substation ex:_5fd14ea3-be63-5cfc-897b-c963108778dc ;
+    cim:VoltageLevel.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 .
+
+ex:_d7da6d51-a744-54b5-8c22-036dd68090ba a cim:Substation ;
+    cim:IdentifiedObject.mRID "d7da6d51-a744-54b5-8c22-036dd68090ba" ;
+    cim:IdentifiedObject.name "C변전소" .
+
+ex:_93072593-98e9-5ba5-a3ac-456fd8cca84b a cim:VoltageLevel ;
+    cim:IdentifiedObject.mRID "93072593-98e9-5ba5-a3ac-456fd8cca84b" ;
+    cim:IdentifiedObject.name "C변전소 22.9kV" ;
+    cim:VoltageLevel.Substation ex:_d7da6d51-a744-54b5-8c22-036dd68090ba ;
+    cim:VoltageLevel.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 .
+
+ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 a cim:Line ;
+    cim:IdentifiedObject.mRID "02a352c3-c5ac-5dd9-9ded-b57aaadde634" ;
+    cim:IdentifiedObject.name "D/L #1" .
+
+ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 a cim:Line ;
+    cim:IdentifiedObject.mRID "3e6f9ab5-97e3-526c-9e89-abb7b2a8be49" ;
+    cim:IdentifiedObject.name "D/L #2" .
+
+ex:_34baac19-eef7-53a9-a8d3-d6d05615a09b a cim:Line ;
+    cim:IdentifiedObject.mRID "34baac19-eef7-53a9-a8d3-d6d05615a09b" ;
+    cim:IdentifiedObject.name "D/L #3" .
+
+ex:_c897e677-60f2-54df-b333-8b8e24fa7d6f a cim:Line ;
+    cim:IdentifiedObject.mRID "c897e677-60f2-54df-b333-8b8e24fa7d6f" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11" .
+
+ex:_f1d56bf5-cf7e-5ce2-8b82-40f33084b072 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "f1d56bf5-cf7e-5ce2-8b82-40f33084b072" ;
+    cim:IdentifiedObject.name "BUS_A" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_121a21c3-1bb2-569d-af34-fb16af24dbf3 .
+
+ex:_6bba2142-831c-5f63-ad3e-5e68bdfb27d1 a cim:BusbarSection ;
+    cim:IdentifiedObject.mRID "6bba2142-831c-5f63-ad3e-5e68bdfb27d1" ;
+    cim:IdentifiedObject.name "A변전소 22.9kV 모선" ;
+    cim:Equipment.EquipmentContainer ex:_121a21c3-1bb2-569d-af34-fb16af24dbf3 .
+
+ex:_806ceae1-6bd6-52d2-ad0a-32c43a1f7727 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "806ceae1-6bd6-52d2-ad0a-32c43a1f7727" ;
+    cim:IdentifiedObject.name "A변전소 22.9kV 모선 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_6bba2142-831c-5f63-ad3e-5e68bdfb27d1 ;
+    cim:Terminal.ConnectivityNode ex:_f1d56bf5-cf7e-5ce2-8b82-40f33084b072 .
+
+ex:_267e3623-7c4a-51c5-aa36-a2a3d4940c9f a cim:ExternalNetworkInjection ;
+    cim:IdentifiedObject.mRID "267e3623-7c4a-51c5-aa36-a2a3d4940c9f" ;
+    cim:IdentifiedObject.name "A변전소 M.Tr #1 (상위 계통 등가)" .
+
+ex:_f2d350b2-d427-5381-a7f9-a6566d71dc01 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "f2d350b2-d427-5381-a7f9-a6566d71dc01" ;
+    cim:IdentifiedObject.name "A변전소 M.Tr #1 (상위 계통 등가) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_267e3623-7c4a-51c5-aa36-a2a3d4940c9f ;
+    cim:Terminal.ConnectivityNode ex:_f1d56bf5-cf7e-5ce2-8b82-40f33084b072 .
+
+ex:_9467268c-e3d9-5c9e-931d-8b652227b3cc a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "9467268c-e3d9-5c9e-931d-8b652227b3cc" ;
+    cim:IdentifiedObject.name "BUS_C" ;
+    cim:ConnectivityNode.ConnectivityNodeContainer ex:_93072593-98e9-5ba5-a3ac-456fd8cca84b .
+
+ex:_4f52d2ff-28db-5785-b51b-c91c571316c9 a cim:ExternalNetworkInjection ;
+    cim:IdentifiedObject.mRID "4f52d2ff-28db-5785-b51b-c91c571316c9" ;
+    cim:IdentifiedObject.name "C변전소 22.9kV 모선 (등가)" .
+
+ex:_f686a1e1-2c7e-5d96-a628-2e09bb4d6faf a cim:Terminal ;
+    cim:IdentifiedObject.mRID "f686a1e1-2c7e-5d96-a628-2e09bb4d6faf" ;
+    cim:IdentifiedObject.name "C변전소 22.9kV 모선 (등가) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_4f52d2ff-28db-5785-b51b-c91c571316c9 ;
+    cim:Terminal.ConnectivityNode ex:_9467268c-e3d9-5c9e-931d-8b652227b3cc .
+
+ex:_481490d2-0712-5f2b-a263-bf2cde5bf557 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "481490d2-0712-5f2b-a263-bf2cde5bf557" ;
+    cim:IdentifiedObject.name "DL1_0" .
+
+ex:_76197268-4db3-5afd-92c8-080a54c4567a a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "76197268-4db3-5afd-92c8-080a54c4567a" ;
+    cim:IdentifiedObject.name "DL2_0" .
+
+ex:_078596e7-f607-5680-aa58-a9b22bd06c86 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "078596e7-f607-5680-aa58-a9b22bd06c86" ;
+    cim:IdentifiedObject.name "DL3_0" .
+
+ex:_a7ccccee-13fc-541f-8e72-65507cbb45f4 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "a7ccccee-13fc-541f-8e72-65507cbb45f4" ;
+    cim:IdentifiedObject.name "C11_0" .
+
+ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 a cim:Breaker ;
+    cim:IdentifiedObject.mRID "7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1" ;
+    cim:IdentifiedObject.name "D/L #1 CB" ;
+    cim:Equipment.EquipmentContainer ex:_121a21c3-1bb2-569d-af34-fb16af24dbf3 ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_20fd95c6-929f-5410-9b5b-63f080b89f21 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "20fd95c6-929f-5410-9b5b-63f080b89f21" ;
+    cim:IdentifiedObject.name "D/L #1 CB T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 ;
+    cim:Terminal.ConnectivityNode ex:_f1d56bf5-cf7e-5ce2-8b82-40f33084b072 .
+
+ex:_e40940c8-0ee4-5254-b737-482d91733ecd a cim:Terminal ;
+    cim:IdentifiedObject.mRID "e40940c8-0ee4-5254-b737-482d91733ecd" ;
+    cim:IdentifiedObject.name "D/L #1 CB T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 ;
+    cim:Terminal.ConnectivityNode ex:_481490d2-0712-5f2b-a263-bf2cde5bf557 .
+
+ex:_0ae2be00-fd95-5f57-82ce-54efd4d01e8a a cim:Breaker ;
+    cim:IdentifiedObject.mRID "0ae2be00-fd95-5f57-82ce-54efd4d01e8a" ;
+    cim:IdentifiedObject.name "D/L #2 CB" ;
+    cim:Equipment.EquipmentContainer ex:_121a21c3-1bb2-569d-af34-fb16af24dbf3 ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_8f87fa31-46eb-5144-b2b5-e6943972fb0f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "8f87fa31-46eb-5144-b2b5-e6943972fb0f" ;
+    cim:IdentifiedObject.name "D/L #2 CB T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_0ae2be00-fd95-5f57-82ce-54efd4d01e8a ;
+    cim:Terminal.ConnectivityNode ex:_f1d56bf5-cf7e-5ce2-8b82-40f33084b072 .
+
+ex:_cdc61805-72ff-54fc-a7bc-773fae8d0162 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "cdc61805-72ff-54fc-a7bc-773fae8d0162" ;
+    cim:IdentifiedObject.name "D/L #2 CB T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_0ae2be00-fd95-5f57-82ce-54efd4d01e8a ;
+    cim:Terminal.ConnectivityNode ex:_76197268-4db3-5afd-92c8-080a54c4567a .
+
+ex:_5f4e95c7-02db-5109-883c-6ca1bdb261e5 a cim:Breaker ;
+    cim:IdentifiedObject.mRID "5f4e95c7-02db-5109-883c-6ca1bdb261e5" ;
+    cim:IdentifiedObject.name "D/L #3 CB" ;
+    cim:Equipment.EquipmentContainer ex:_121a21c3-1bb2-569d-af34-fb16af24dbf3 ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_74e957ea-b813-5a73-bd48-a0381a8a2613 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "74e957ea-b813-5a73-bd48-a0381a8a2613" ;
+    cim:IdentifiedObject.name "D/L #3 CB T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_5f4e95c7-02db-5109-883c-6ca1bdb261e5 ;
+    cim:Terminal.ConnectivityNode ex:_f1d56bf5-cf7e-5ce2-8b82-40f33084b072 .
+
+ex:_562cfb02-fb1b-5ba4-9e5a-cfd372c1d210 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "562cfb02-fb1b-5ba4-9e5a-cfd372c1d210" ;
+    cim:IdentifiedObject.name "D/L #3 CB T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_5f4e95c7-02db-5109-883c-6ca1bdb261e5 ;
+    cim:Terminal.ConnectivityNode ex:_078596e7-f607-5680-aa58-a9b22bd06c86 .
+
+ex:_963b5169-d2f8-5246-a3e5-305eb5dd7a1d a cim:Breaker ;
+    cim:IdentifiedObject.mRID "963b5169-d2f8-5246-a3e5-305eb5dd7a1d" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 CB" ;
+    cim:Equipment.EquipmentContainer ex:_93072593-98e9-5ba5-a3ac-456fd8cca84b ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_9bd63b79-7723-5f35-b3c8-bac6cfe8e647 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "9bd63b79-7723-5f35-b3c8-bac6cfe8e647" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 CB T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_963b5169-d2f8-5246-a3e5-305eb5dd7a1d ;
+    cim:Terminal.ConnectivityNode ex:_9467268c-e3d9-5c9e-931d-8b652227b3cc .
+
+ex:_b63cc0ce-eaf5-5333-8dec-38d88675ff2c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "b63cc0ce-eaf5-5333-8dec-38d88675ff2c" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 CB T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_963b5169-d2f8-5246-a3e5-305eb5dd7a1d ;
+    cim:Terminal.ConnectivityNode ex:_a7ccccee-13fc-541f-8e72-65507cbb45f4 .
+
+ex:_4c79556e-5fc4-5fe1-93d6-3fc7bd9dcdf1 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "4c79556e-5fc4-5fe1-93d6-3fc7bd9dcdf1" ;
+    cim:IdentifiedObject.name "S1a" .
+
+ex:_21d8f6a4-9588-55c8-8822-5134af7213c0 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "21d8f6a4-9588-55c8-8822-5134af7213c0" ;
+    cim:IdentifiedObject.name "S1b" .
+
+ex:_b02afa8f-74af-5617-bd81-a9e93465f22b a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "b02afa8f-74af-5617-bd81-a9e93465f22b" ;
+    cim:IdentifiedObject.name "D/L #1 간선 1구간" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.8"^^xsd:float ;
+    cim:ACLineSegment.r "0.1456"^^xsd:float ;
+    cim:ACLineSegment.x "0.3128"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_a9702aac-76f6-578d-a797-8c6811aae512 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a9702aac-76f6-578d-a797-8c6811aae512" ;
+    cim:IdentifiedObject.name "D/L #1 간선 1구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_b02afa8f-74af-5617-bd81-a9e93465f22b ;
+    cim:Terminal.ConnectivityNode ex:_481490d2-0712-5f2b-a263-bf2cde5bf557 .
+
+ex:_91b9c28e-56cf-5488-a4c7-7055903bdeeb a cim:Terminal ;
+    cim:IdentifiedObject.mRID "91b9c28e-56cf-5488-a4c7-7055903bdeeb" ;
+    cim:IdentifiedObject.name "D/L #1 간선 1구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_b02afa8f-74af-5617-bd81-a9e93465f22b ;
+    cim:Terminal.ConnectivityNode ex:_4c79556e-5fc4-5fe1-93d6-3fc7bd9dcdf1 .
+
+ex:_40b2a5ec-630e-5204-a1fd-0b0bff7a8e0f a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "40b2a5ec-630e-5204-a1fd-0b0bff7a8e0f" ;
+    cim:IdentifiedObject.name "구간 개폐기 S1" ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_8a405ea5-e4ba-5335-a8e9-c1f77a97eedc a cim:Terminal ;
+    cim:IdentifiedObject.mRID "8a405ea5-e4ba-5335-a8e9-c1f77a97eedc" ;
+    cim:IdentifiedObject.name "구간 개폐기 S1 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_40b2a5ec-630e-5204-a1fd-0b0bff7a8e0f ;
+    cim:Terminal.ConnectivityNode ex:_4c79556e-5fc4-5fe1-93d6-3fc7bd9dcdf1 .
+
+ex:_9f7212eb-bff6-54a9-b8f4-2aed348dbc6a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "9f7212eb-bff6-54a9-b8f4-2aed348dbc6a" ;
+    cim:IdentifiedObject.name "구간 개폐기 S1 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_40b2a5ec-630e-5204-a1fd-0b0bff7a8e0f ;
+    cim:Terminal.ConnectivityNode ex:_21d8f6a4-9588-55c8-8822-5134af7213c0 .
+
+ex:_90e91f5e-f8a8-532f-a5bf-690d02556ceb a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "90e91f5e-f8a8-532f-a5bf-690d02556ceb" ;
+    cim:IdentifiedObject.name "L1" .
+
+ex:_038fb849-73e0-58e7-a556-cf14ed172526 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "038fb849-73e0-58e7-a556-cf14ed172526" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 (S1 뒤)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.55"^^xsd:float ;
+    cim:ACLineSegment.r "0.1001"^^xsd:float ;
+    cim:ACLineSegment.x "0.2151"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_4c5f25ec-deee-5947-b50a-461dc208ea20 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "4c5f25ec-deee-5947-b50a-461dc208ea20" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 (S1 뒤) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_038fb849-73e0-58e7-a556-cf14ed172526 ;
+    cim:Terminal.ConnectivityNode ex:_21d8f6a4-9588-55c8-8822-5134af7213c0 .
+
+ex:_9ba886e2-1f6f-5e31-8ed1-4fcded204786 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "9ba886e2-1f6f-5e31-8ed1-4fcded204786" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 (S1 뒤) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_038fb849-73e0-58e7-a556-cf14ed172526 ;
+    cim:Terminal.ConnectivityNode ex:_90e91f5e-f8a8-532f-a5bf-690d02556ceb .
+
+ex:_3ceb16aa-5688-52bc-9f3e-7e6178003a43 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "3ceb16aa-5688-52bc-9f3e-7e6178003a43" ;
+    cim:IdentifiedObject.name "간선 부하 1" ;
+    cim:EnergyConsumer.p "1.0"^^xsd:float ;
+    cim:EnergyConsumer.q "0.25"^^xsd:float .
+
+ex:_50b43eed-5e9b-5e64-b0f7-baed85e7b695 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "50b43eed-5e9b-5e64-b0f7-baed85e7b695" ;
+    cim:IdentifiedObject.name "간선 부하 1 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_3ceb16aa-5688-52bc-9f3e-7e6178003a43 ;
+    cim:Terminal.ConnectivityNode ex:_90e91f5e-f8a8-532f-a5bf-690d02556ceb .
+
+ex:_27284890-3662-5761-85a3-535224365a61 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "27284890-3662-5761-85a3-535224365a61" ;
+    cim:IdentifiedObject.name "BP1" .
+
+ex:_5687a140-fba4-5757-90ca-bf3bdd245c97 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "5687a140-fba4-5757-90ca-bf3bdd245c97" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 (분기점 BP1까지)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.67"^^xsd:float ;
+    cim:ACLineSegment.r "0.1219"^^xsd:float ;
+    cim:ACLineSegment.x "0.262"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_c121811f-4e72-5108-af41-70b4cee93f46 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c121811f-4e72-5108-af41-70b4cee93f46" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 (분기점 BP1까지) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_5687a140-fba4-5757-90ca-bf3bdd245c97 ;
+    cim:Terminal.ConnectivityNode ex:_90e91f5e-f8a8-532f-a5bf-690d02556ceb .
+
+ex:_538ab207-399c-5824-9463-bcd26d5590c3 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "538ab207-399c-5824-9463-bcd26d5590c3" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 (분기점 BP1까지) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_5687a140-fba4-5757-90ca-bf3bdd245c97 ;
+    cim:Terminal.ConnectivityNode ex:_27284890-3662-5761-85a3-535224365a61 .
+
+ex:_4e77e867-5885-542e-aa55-275c9b112f1e a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "4e77e867-5885-542e-aa55-275c9b112f1e" ;
+    cim:IdentifiedObject.name "S2a" .
+
+ex:_a5657e53-a2f9-5a55-8bdd-e83cd6eb8373 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "a5657e53-a2f9-5a55-8bdd-e83cd6eb8373" ;
+    cim:IdentifiedObject.name "S2b" .
+
+ex:_87c2b0f1-74d0-540d-a84c-c9816b8c1764 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "87c2b0f1-74d0-540d-a84c-c9816b8c1764" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.38"^^xsd:float ;
+    cim:ACLineSegment.r "0.0692"^^xsd:float ;
+    cim:ACLineSegment.x "0.1486"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_ef225940-bad3-57fb-ae24-2cf864a838e6 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ef225940-bad3-57fb-ae24-2cf864a838e6" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_87c2b0f1-74d0-540d-a84c-c9816b8c1764 ;
+    cim:Terminal.ConnectivityNode ex:_27284890-3662-5761-85a3-535224365a61 .
+
+ex:_80cea622-9d98-50aa-ba65-561ab3c04a8e a cim:Terminal ;
+    cim:IdentifiedObject.mRID "80cea622-9d98-50aa-ba65-561ab3c04a8e" ;
+    cim:IdentifiedObject.name "D/L #1 간선 2구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_87c2b0f1-74d0-540d-a84c-c9816b8c1764 ;
+    cim:Terminal.ConnectivityNode ex:_4e77e867-5885-542e-aa55-275c9b112f1e .
+
+ex:_00d0c91c-c1ba-5f91-b1ac-f0f34342941c a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "00d0c91c-c1ba-5f91-b1ac-f0f34342941c" ;
+    cim:IdentifiedObject.name "구간 개폐기 S2" ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_88586876-dbc4-52ed-8ead-e3d4b82a0206 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "88586876-dbc4-52ed-8ead-e3d4b82a0206" ;
+    cim:IdentifiedObject.name "구간 개폐기 S2 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_00d0c91c-c1ba-5f91-b1ac-f0f34342941c ;
+    cim:Terminal.ConnectivityNode ex:_4e77e867-5885-542e-aa55-275c9b112f1e .
+
+ex:_1728064b-820b-5631-9e4c-362025b08a7b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "1728064b-820b-5631-9e4c-362025b08a7b" ;
+    cim:IdentifiedObject.name "구간 개폐기 S2 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_00d0c91c-c1ba-5f91-b1ac-f0f34342941c ;
+    cim:Terminal.ConnectivityNode ex:_a5657e53-a2f9-5a55-8bdd-e83cd6eb8373 .
+
+ex:_984e7d36-7a10-564d-98fe-ae695780a6b6 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "984e7d36-7a10-564d-98fe-ae695780a6b6" ;
+    cim:IdentifiedObject.name "L2" .
+
+ex:_ff290900-dbc3-5419-9e59-adff05312363 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "ff290900-dbc3-5419-9e59-adff05312363" ;
+    cim:IdentifiedObject.name "D/L #1 간선 3구간 (S2 뒤)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.55"^^xsd:float ;
+    cim:ACLineSegment.r "0.1001"^^xsd:float ;
+    cim:ACLineSegment.x "0.2151"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_866376e9-e3d0-5b51-bda3-023af3a22934 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "866376e9-e3d0-5b51-bda3-023af3a22934" ;
+    cim:IdentifiedObject.name "D/L #1 간선 3구간 (S2 뒤) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_ff290900-dbc3-5419-9e59-adff05312363 ;
+    cim:Terminal.ConnectivityNode ex:_a5657e53-a2f9-5a55-8bdd-e83cd6eb8373 .
+
+ex:_debe3554-1312-5c7b-9d50-0c775a28bf2c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "debe3554-1312-5c7b-9d50-0c775a28bf2c" ;
+    cim:IdentifiedObject.name "D/L #1 간선 3구간 (S2 뒤) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_ff290900-dbc3-5419-9e59-adff05312363 ;
+    cim:Terminal.ConnectivityNode ex:_984e7d36-7a10-564d-98fe-ae695780a6b6 .
+
+ex:_cad13a58-2aca-57c1-ac79-397f43b8d87c a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "cad13a58-2aca-57c1-ac79-397f43b8d87c" ;
+    cim:IdentifiedObject.name "간선 부하 2" ;
+    cim:EnergyConsumer.p "0.8"^^xsd:float ;
+    cim:EnergyConsumer.q "0.2"^^xsd:float .
+
+ex:_b502ec61-773f-5eec-a437-2ce4cf9934db a cim:Terminal ;
+    cim:IdentifiedObject.mRID "b502ec61-773f-5eec-a437-2ce4cf9934db" ;
+    cim:IdentifiedObject.name "간선 부하 2 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_cad13a58-2aca-57c1-ac79-397f43b8d87c ;
+    cim:Terminal.ConnectivityNode ex:_984e7d36-7a10-564d-98fe-ae695780a6b6 .
+
+ex:_662db357-ffef-5ee9-8704-da23c0b77481 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "662db357-ffef-5ee9-8704-da23c0b77481" ;
+    cim:IdentifiedObject.name "S3a" .
+
+ex:_39f0349b-6ee8-5144-a269-62d4601074a2 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "39f0349b-6ee8-5144-a269-62d4601074a2" ;
+    cim:IdentifiedObject.name "S3b" .
+
+ex:_d7fe3d8f-801b-5118-88be-f291da8b0c48 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "d7fe3d8f-801b-5118-88be-f291da8b0c48" ;
+    cim:IdentifiedObject.name "D/L #1 간선 3구간" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.05"^^xsd:float ;
+    cim:ACLineSegment.r "0.1911"^^xsd:float ;
+    cim:ACLineSegment.x "0.4106"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_af5d3954-4fd4-526a-9088-4d4694c029da a cim:Terminal ;
+    cim:IdentifiedObject.mRID "af5d3954-4fd4-526a-9088-4d4694c029da" ;
+    cim:IdentifiedObject.name "D/L #1 간선 3구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_d7fe3d8f-801b-5118-88be-f291da8b0c48 ;
+    cim:Terminal.ConnectivityNode ex:_984e7d36-7a10-564d-98fe-ae695780a6b6 .
+
+ex:_3624e99e-7296-5885-a034-c83b33d5a25f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "3624e99e-7296-5885-a034-c83b33d5a25f" ;
+    cim:IdentifiedObject.name "D/L #1 간선 3구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_d7fe3d8f-801b-5118-88be-f291da8b0c48 ;
+    cim:Terminal.ConnectivityNode ex:_662db357-ffef-5ee9-8704-da23c0b77481 .
+
+ex:_448b614f-84c7-5b50-976c-8b5e2fa15cd1 a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "448b614f-84c7-5b50-976c-8b5e2fa15cd1" ;
+    cim:IdentifiedObject.name "구간 개폐기 S3" ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_091164be-d555-5eed-a539-6d80c4caf18a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "091164be-d555-5eed-a539-6d80c4caf18a" ;
+    cim:IdentifiedObject.name "구간 개폐기 S3 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_448b614f-84c7-5b50-976c-8b5e2fa15cd1 ;
+    cim:Terminal.ConnectivityNode ex:_662db357-ffef-5ee9-8704-da23c0b77481 .
+
+ex:_248d380e-2dba-5159-8e00-e3fce0b07092 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "248d380e-2dba-5159-8e00-e3fce0b07092" ;
+    cim:IdentifiedObject.name "구간 개폐기 S3 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_448b614f-84c7-5b50-976c-8b5e2fa15cd1 ;
+    cim:Terminal.ConnectivityNode ex:_39f0349b-6ee8-5144-a269-62d4601074a2 .
+
+ex:_3d442766-18c8-5d1f-95af-a65f2dcddecc a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "3d442766-18c8-5d1f-95af-a65f2dcddecc" ;
+    cim:IdentifiedObject.name "L3" .
+
+ex:_9c282b24-d1c5-5574-bd4d-c9e258158f71 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "9c282b24-d1c5-5574-bd4d-c9e258158f71" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 (S3 뒤)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.55"^^xsd:float ;
+    cim:ACLineSegment.r "0.1001"^^xsd:float ;
+    cim:ACLineSegment.x "0.2151"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_84ac1de9-3b65-5c36-85e5-b2d0ff88955b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "84ac1de9-3b65-5c36-85e5-b2d0ff88955b" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 (S3 뒤) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9c282b24-d1c5-5574-bd4d-c9e258158f71 ;
+    cim:Terminal.ConnectivityNode ex:_39f0349b-6ee8-5144-a269-62d4601074a2 .
+
+ex:_c78af313-2ff3-5115-84ab-510469f7dabc a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c78af313-2ff3-5115-84ab-510469f7dabc" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 (S3 뒤) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9c282b24-d1c5-5574-bd4d-c9e258158f71 ;
+    cim:Terminal.ConnectivityNode ex:_3d442766-18c8-5d1f-95af-a65f2dcddecc .
+
+ex:_ba11d3cc-8d77-507e-9246-23f058953bf1 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "ba11d3cc-8d77-507e-9246-23f058953bf1" ;
+    cim:IdentifiedObject.name "간선 부하 3" ;
+    cim:EnergyConsumer.p "0.9"^^xsd:float ;
+    cim:EnergyConsumer.q "0.225"^^xsd:float .
+
+ex:_5f8ac812-3a56-51bf-bf7a-a29b942a25cc a cim:Terminal ;
+    cim:IdentifiedObject.mRID "5f8ac812-3a56-51bf-bf7a-a29b942a25cc" ;
+    cim:IdentifiedObject.name "간선 부하 3 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_ba11d3cc-8d77-507e-9246-23f058953bf1 ;
+    cim:Terminal.ConnectivityNode ex:_3d442766-18c8-5d1f-95af-a65f2dcddecc .
+
+ex:_f4cdb1c1-e8a7-5595-8adb-ae11708ad06c a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "f4cdb1c1-e8a7-5595-8adb-ae11708ad06c" ;
+    cim:IdentifiedObject.name "BP2" .
+
+ex:_9deae0c4-be38-58c3-bd4c-bf0f60cba6db a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "9deae0c4-be38-58c3-bd4c-bf0f60cba6db" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 (분기점 BP2까지)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.67"^^xsd:float ;
+    cim:ACLineSegment.r "0.1219"^^xsd:float ;
+    cim:ACLineSegment.x "0.262"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_08ef8b71-abfc-537c-aceb-717b8a01379e a cim:Terminal ;
+    cim:IdentifiedObject.mRID "08ef8b71-abfc-537c-aceb-717b8a01379e" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 (분기점 BP2까지) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9deae0c4-be38-58c3-bd4c-bf0f60cba6db ;
+    cim:Terminal.ConnectivityNode ex:_3d442766-18c8-5d1f-95af-a65f2dcddecc .
+
+ex:_e49f121f-84f1-5991-b910-98e7c6586f84 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "e49f121f-84f1-5991-b910-98e7c6586f84" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 (분기점 BP2까지) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9deae0c4-be38-58c3-bd4c-bf0f60cba6db ;
+    cim:Terminal.ConnectivityNode ex:_f4cdb1c1-e8a7-5595-8adb-ae11708ad06c .
+
+ex:_5e1dda23-cc6d-512d-98a3-32df1bcd9ce9 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "5e1dda23-cc6d-512d-98a3-32df1bcd9ce9" ;
+    cim:IdentifiedObject.name "S4a" .
+
+ex:_47e13ea9-ce3e-5562-ad2a-24785ac21544 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "47e13ea9-ce3e-5562-ad2a-24785ac21544" ;
+    cim:IdentifiedObject.name "S4b" .
+
+ex:_c1b27492-fb93-5604-b9bd-477c21b5df69 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "c1b27492-fb93-5604-b9bd-477c21b5df69" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.38"^^xsd:float ;
+    cim:ACLineSegment.r "0.0692"^^xsd:float ;
+    cim:ACLineSegment.x "0.1486"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_9870d220-16a1-5f81-bfbd-ec20b061aba7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "9870d220-16a1-5f81-bfbd-ec20b061aba7" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c1b27492-fb93-5604-b9bd-477c21b5df69 ;
+    cim:Terminal.ConnectivityNode ex:_f4cdb1c1-e8a7-5595-8adb-ae11708ad06c .
+
+ex:_cc1f8e77-45b2-5cf0-aae0-f0dc96495b86 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "cc1f8e77-45b2-5cf0-aae0-f0dc96495b86" ;
+    cim:IdentifiedObject.name "D/L #1 간선 4구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c1b27492-fb93-5604-b9bd-477c21b5df69 ;
+    cim:Terminal.ConnectivityNode ex:_5e1dda23-cc6d-512d-98a3-32df1bcd9ce9 .
+
+ex:_32707372-2b8a-54b6-a755-4ab3e42abfec a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "32707372-2b8a-54b6-a755-4ab3e42abfec" ;
+    cim:IdentifiedObject.name "구간 개폐기 S4" ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_6eb1a492-407f-51f6-a394-bd9de72340a8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6eb1a492-407f-51f6-a394-bd9de72340a8" ;
+    cim:IdentifiedObject.name "구간 개폐기 S4 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_32707372-2b8a-54b6-a755-4ab3e42abfec ;
+    cim:Terminal.ConnectivityNode ex:_5e1dda23-cc6d-512d-98a3-32df1bcd9ce9 .
+
+ex:_ea17ac4e-33db-5006-a448-d592964eba4f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ea17ac4e-33db-5006-a448-d592964eba4f" ;
+    cim:IdentifiedObject.name "구간 개폐기 S4 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_32707372-2b8a-54b6-a755-4ab3e42abfec ;
+    cim:Terminal.ConnectivityNode ex:_47e13ea9-ce3e-5562-ad2a-24785ac21544 .
+
+ex:_7800fe41-d67d-5119-b1d3-0c7bac928eee a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "7800fe41-d67d-5119-b1d3-0c7bac928eee" ;
+    cim:IdentifiedObject.name "L4" .
+
+ex:_c73e0db7-37d7-56c9-9594-570319051856 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "c73e0db7-37d7-56c9-9594-570319051856" ;
+    cim:IdentifiedObject.name "D/L #1 간선 5구간 (S4 뒤)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.55"^^xsd:float ;
+    cim:ACLineSegment.r "0.1001"^^xsd:float ;
+    cim:ACLineSegment.x "0.2151"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_1a85b10c-d6b1-5e4e-a187-84ff1c1461ff a cim:Terminal ;
+    cim:IdentifiedObject.mRID "1a85b10c-d6b1-5e4e-a187-84ff1c1461ff" ;
+    cim:IdentifiedObject.name "D/L #1 간선 5구간 (S4 뒤) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c73e0db7-37d7-56c9-9594-570319051856 ;
+    cim:Terminal.ConnectivityNode ex:_47e13ea9-ce3e-5562-ad2a-24785ac21544 .
+
+ex:_74ba46bb-6324-50d2-a860-91901c78d4db a cim:Terminal ;
+    cim:IdentifiedObject.mRID "74ba46bb-6324-50d2-a860-91901c78d4db" ;
+    cim:IdentifiedObject.name "D/L #1 간선 5구간 (S4 뒤) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c73e0db7-37d7-56c9-9594-570319051856 ;
+    cim:Terminal.ConnectivityNode ex:_7800fe41-d67d-5119-b1d3-0c7bac928eee .
+
+ex:_ed1ff515-31a8-56a0-b804-e1d709a3cbad a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "ed1ff515-31a8-56a0-b804-e1d709a3cbad" ;
+    cim:IdentifiedObject.name "간선 부하 4" ;
+    cim:EnergyConsumer.p "0.7"^^xsd:float ;
+    cim:EnergyConsumer.q "0.175"^^xsd:float .
+
+ex:_cb277fd8-6e17-5a1b-8255-6904260040d9 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "cb277fd8-6e17-5a1b-8255-6904260040d9" ;
+    cim:IdentifiedObject.name "간선 부하 4 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_ed1ff515-31a8-56a0-b804-e1d709a3cbad ;
+    cim:Terminal.ConnectivityNode ex:_7800fe41-d67d-5119-b1d3-0c7bac928eee .
+
+ex:_72655ee4-ff39-5a62-b062-ab67220a22d5 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "72655ee4-ff39-5a62-b062-ab67220a22d5" ;
+    cim:IdentifiedObject.name "S5a" .
+
+ex:_b1df0436-c1b7-5ad8-b6d1-a310fcefa961 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "b1df0436-c1b7-5ad8-b6d1-a310fcefa961" ;
+    cim:IdentifiedObject.name "S5b" .
+
+ex:_642938fc-5f26-5793-8575-c958de71c653 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "642938fc-5f26-5793-8575-c958de71c653" ;
+    cim:IdentifiedObject.name "D/L #1 간선 5구간" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.05"^^xsd:float ;
+    cim:ACLineSegment.r "0.1911"^^xsd:float ;
+    cim:ACLineSegment.x "0.4106"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_63ccdd84-39be-5b36-9464-75e02bde8218 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "63ccdd84-39be-5b36-9464-75e02bde8218" ;
+    cim:IdentifiedObject.name "D/L #1 간선 5구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_642938fc-5f26-5793-8575-c958de71c653 ;
+    cim:Terminal.ConnectivityNode ex:_7800fe41-d67d-5119-b1d3-0c7bac928eee .
+
+ex:_36723d53-6d40-5d59-9962-29b89ae128d7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "36723d53-6d40-5d59-9962-29b89ae128d7" ;
+    cim:IdentifiedObject.name "D/L #1 간선 5구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_642938fc-5f26-5793-8575-c958de71c653 ;
+    cim:Terminal.ConnectivityNode ex:_72655ee4-ff39-5a62-b062-ab67220a22d5 .
+
+ex:_a1e1b903-48f9-5256-8862-92c891050074 a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "a1e1b903-48f9-5256-8862-92c891050074" ;
+    cim:IdentifiedObject.name "구간 개폐기 S5" ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_17e8cfb7-990a-55b4-ba1c-bef605d64185 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "17e8cfb7-990a-55b4-ba1c-bef605d64185" ;
+    cim:IdentifiedObject.name "구간 개폐기 S5 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_a1e1b903-48f9-5256-8862-92c891050074 ;
+    cim:Terminal.ConnectivityNode ex:_72655ee4-ff39-5a62-b062-ab67220a22d5 .
+
+ex:_396703c9-369d-5bd5-b328-4cf19bb76bca a cim:Terminal ;
+    cim:IdentifiedObject.mRID "396703c9-369d-5bd5-b328-4cf19bb76bca" ;
+    cim:IdentifiedObject.name "구간 개폐기 S5 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_a1e1b903-48f9-5256-8862-92c891050074 ;
+    cim:Terminal.ConnectivityNode ex:_b1df0436-c1b7-5ad8-b6d1-a310fcefa961 .
+
+ex:_9bde522b-54de-5118-b9f3-1d9bf46f81df a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "9bde522b-54de-5118-b9f3-1d9bf46f81df" ;
+    cim:IdentifiedObject.name "L5" .
+
+ex:_756664b6-b373-5677-98ab-854ba7714b9f a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "756664b6-b373-5677-98ab-854ba7714b9f" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 (S5 뒤)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.55"^^xsd:float ;
+    cim:ACLineSegment.r "0.1001"^^xsd:float ;
+    cim:ACLineSegment.x "0.2151"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_06a5f81b-b273-5892-8ec9-539af4b792c1 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "06a5f81b-b273-5892-8ec9-539af4b792c1" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 (S5 뒤) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_756664b6-b373-5677-98ab-854ba7714b9f ;
+    cim:Terminal.ConnectivityNode ex:_b1df0436-c1b7-5ad8-b6d1-a310fcefa961 .
+
+ex:_6439b3c9-edac-5c87-81f9-daf448b009d7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6439b3c9-edac-5c87-81f9-daf448b009d7" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 (S5 뒤) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_756664b6-b373-5677-98ab-854ba7714b9f ;
+    cim:Terminal.ConnectivityNode ex:_9bde522b-54de-5118-b9f3-1d9bf46f81df .
+
+ex:_f7feccb3-4087-5089-aa54-c49d410b6d8b a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "f7feccb3-4087-5089-aa54-c49d410b6d8b" ;
+    cim:IdentifiedObject.name "간선 부하 5" ;
+    cim:EnergyConsumer.p "0.8"^^xsd:float ;
+    cim:EnergyConsumer.q "0.2"^^xsd:float .
+
+ex:_60e25011-adaa-5a7b-9d43-41e118d724bc a cim:Terminal ;
+    cim:IdentifiedObject.mRID "60e25011-adaa-5a7b-9d43-41e118d724bc" ;
+    cim:IdentifiedObject.name "간선 부하 5 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f7feccb3-4087-5089-aa54-c49d410b6d8b ;
+    cim:Terminal.ConnectivityNode ex:_9bde522b-54de-5118-b9f3-1d9bf46f81df .
+
+ex:_46724e9b-aba8-5862-ae14-363adbe8d893 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "46724e9b-aba8-5862-ae14-363adbe8d893" ;
+    cim:IdentifiedObject.name "BP3" .
+
+ex:_0c3a543e-0dd4-52bd-be26-0ca879b25918 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "0c3a543e-0dd4-52bd-be26-0ca879b25918" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 (분기점 BP3까지)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.67"^^xsd:float ;
+    cim:ACLineSegment.r "0.1219"^^xsd:float ;
+    cim:ACLineSegment.x "0.262"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_3df03c19-b495-5904-9e8b-e8492ce0a85b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "3df03c19-b495-5904-9e8b-e8492ce0a85b" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 (분기점 BP3까지) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_0c3a543e-0dd4-52bd-be26-0ca879b25918 ;
+    cim:Terminal.ConnectivityNode ex:_9bde522b-54de-5118-b9f3-1d9bf46f81df .
+
+ex:_cab52525-1dd4-5e99-9514-e89abd7407f8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "cab52525-1dd4-5e99-9514-e89abd7407f8" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 (분기점 BP3까지) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_0c3a543e-0dd4-52bd-be26-0ca879b25918 ;
+    cim:Terminal.ConnectivityNode ex:_46724e9b-aba8-5862-ae14-363adbe8d893 .
+
+ex:_e4b3e6c8-41ee-5986-b10e-53d7da66be8a a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "e4b3e6c8-41ee-5986-b10e-53d7da66be8a" ;
+    cim:IdentifiedObject.name "S6a" .
+
+ex:_d88822d9-fd01-52e0-a90f-c2798638da95 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "d88822d9-fd01-52e0-a90f-c2798638da95" ;
+    cim:IdentifiedObject.name "S6b" .
+
+ex:_1797db4f-eb64-5cc4-ad65-1af3266732f5 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "1797db4f-eb64-5cc4-ad65-1af3266732f5" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.38"^^xsd:float ;
+    cim:ACLineSegment.r "0.0692"^^xsd:float ;
+    cim:ACLineSegment.x "0.1486"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_67c75784-a19e-5394-8858-dec664a7f1cf a cim:Terminal ;
+    cim:IdentifiedObject.mRID "67c75784-a19e-5394-8858-dec664a7f1cf" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_1797db4f-eb64-5cc4-ad65-1af3266732f5 ;
+    cim:Terminal.ConnectivityNode ex:_46724e9b-aba8-5862-ae14-363adbe8d893 .
+
+ex:_53c15754-14de-55ee-a00a-9f10d9424422 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "53c15754-14de-55ee-a00a-9f10d9424422" ;
+    cim:IdentifiedObject.name "D/L #1 간선 6구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_1797db4f-eb64-5cc4-ad65-1af3266732f5 ;
+    cim:Terminal.ConnectivityNode ex:_e4b3e6c8-41ee-5986-b10e-53d7da66be8a .
+
+ex:_9bd452c5-6254-52bb-b8cd-7a5b3a940e0e a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "9bd452c5-6254-52bb-b8cd-7a5b3a940e0e" ;
+    cim:IdentifiedObject.name "구간 개폐기 S6" ;
+    cim:Switch.normalOpen "false"^^xsd:boolean ;
+    cim:Switch.open "false"^^xsd:boolean .
+
+ex:_74d399ce-d91d-55a4-8521-f751061bff3c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "74d399ce-d91d-55a4-8521-f751061bff3c" ;
+    cim:IdentifiedObject.name "구간 개폐기 S6 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9bd452c5-6254-52bb-b8cd-7a5b3a940e0e ;
+    cim:Terminal.ConnectivityNode ex:_e4b3e6c8-41ee-5986-b10e-53d7da66be8a .
+
+ex:_ce36e7bb-4c60-550a-a4cf-1c0918f02b21 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ce36e7bb-4c60-550a-a4cf-1c0918f02b21" ;
+    cim:IdentifiedObject.name "구간 개폐기 S6 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9bd452c5-6254-52bb-b8cd-7a5b3a940e0e ;
+    cim:Terminal.ConnectivityNode ex:_d88822d9-fd01-52e0-a90f-c2798638da95 .
+
+ex:_f83323bd-a91f-5258-b981-bbd32a66a2dd a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "f83323bd-a91f-5258-b981-bbd32a66a2dd" ;
+    cim:IdentifiedObject.name "L6" .
+
+ex:_70827431-4eb1-579f-be69-d94dc0b47bc0 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "70827431-4eb1-579f-be69-d94dc0b47bc0" ;
+    cim:IdentifiedObject.name "D/L #1 간선 7구간 (S6 뒤)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.55"^^xsd:float ;
+    cim:ACLineSegment.r "0.1001"^^xsd:float ;
+    cim:ACLineSegment.x "0.2151"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_da55550e-bd0e-5df0-823e-04b950176234 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "da55550e-bd0e-5df0-823e-04b950176234" ;
+    cim:IdentifiedObject.name "D/L #1 간선 7구간 (S6 뒤) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_70827431-4eb1-579f-be69-d94dc0b47bc0 ;
+    cim:Terminal.ConnectivityNode ex:_d88822d9-fd01-52e0-a90f-c2798638da95 .
+
+ex:_36a0dd86-e316-5f3e-9fcf-c0be3196117c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "36a0dd86-e316-5f3e-9fcf-c0be3196117c" ;
+    cim:IdentifiedObject.name "D/L #1 간선 7구간 (S6 뒤) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_70827431-4eb1-579f-be69-d94dc0b47bc0 ;
+    cim:Terminal.ConnectivityNode ex:_f83323bd-a91f-5258-b981-bbd32a66a2dd .
+
+ex:_3e249999-b994-5287-81ed-e294ffcb1044 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "3e249999-b994-5287-81ed-e294ffcb1044" ;
+    cim:IdentifiedObject.name "간선 부하 6" ;
+    cim:EnergyConsumer.p "0.6"^^xsd:float ;
+    cim:EnergyConsumer.q "0.15"^^xsd:float .
+
+ex:_6db7b499-d5d4-5b5a-88b4-36cb51210d55 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6db7b499-d5d4-5b5a-88b4-36cb51210d55" ;
+    cim:IdentifiedObject.name "간선 부하 6 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_3e249999-b994-5287-81ed-e294ffcb1044 ;
+    cim:Terminal.ConnectivityNode ex:_f83323bd-a91f-5258-b981-bbd32a66a2dd .
+
+ex:_a9a6a1cb-bf81-5004-b8c2-60044c6d23d0 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "a9a6a1cb-bf81-5004-b8c2-60044c6d23d0" ;
+    cim:IdentifiedObject.name "MEND" .
+
+ex:_2e83624a-f6d7-54c6-8840-46b340bf095c a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "2e83624a-f6d7-54c6-8840-46b340bf095c" ;
+    cim:IdentifiedObject.name "D/L #1 간선 끝 구간" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.75"^^xsd:float ;
+    cim:ACLineSegment.r "0.1365"^^xsd:float ;
+    cim:ACLineSegment.x "0.2933"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_7131608d-802b-5e61-99d2-d3caba9af6e7 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "7131608d-802b-5e61-99d2-d3caba9af6e7" ;
+    cim:IdentifiedObject.name "D/L #1 간선 끝 구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_2e83624a-f6d7-54c6-8840-46b340bf095c ;
+    cim:Terminal.ConnectivityNode ex:_f83323bd-a91f-5258-b981-bbd32a66a2dd .
+
+ex:_fdf6138a-2eef-5fd7-8cbd-60dd42c8bf2e a cim:Terminal ;
+    cim:IdentifiedObject.mRID "fdf6138a-2eef-5fd7-8cbd-60dd42c8bf2e" ;
+    cim:IdentifiedObject.name "D/L #1 간선 끝 구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_2e83624a-f6d7-54c6-8840-46b340bf095c ;
+    cim:Terminal.ConnectivityNode ex:_a9a6a1cb-bf81-5004-b8c2-60044c6d23d0 .
+
+ex:_ae3da485-0c20-5896-85ab-f5dfcfb4d74b a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "ae3da485-0c20-5896-85ab-f5dfcfb4d74b" ;
+    cim:IdentifiedObject.name "B1_1" .
+
+ex:_8865ae1d-2c3c-5d8d-8168-e945fbb2eaa0 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "8865ae1d-2c3c-5d8d-8168-e945fbb2eaa0" ;
+    cim:IdentifiedObject.name "B1_2" .
+
+ex:_21a955f8-601e-5bd2-86f9-8e363166253b a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "21a955f8-601e-5bd2-86f9-8e363166253b" ;
+    cim:IdentifiedObject.name "T1a" .
+
+ex:_a96b670b-75c8-5b7f-a470-3dbf45e475a6 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "a96b670b-75c8-5b7f-a470-3dbf45e475a6" ;
+    cim:IdentifiedObject.name "T1b" .
+
+ex:_1cb9a768-3745-53bf-8dab-1742e3e9aaef a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "1cb9a768-3745-53bf-8dab-1742e3e9aaef" ;
+    cim:IdentifiedObject.name "분기선 1 (BP1)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.0"^^xsd:float ;
+    cim:ACLineSegment.r "0.182"^^xsd:float ;
+    cim:ACLineSegment.x "0.391"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_e2959895-2c15-59c1-91e3-c8646a57e2d2 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "e2959895-2c15-59c1-91e3-c8646a57e2d2" ;
+    cim:IdentifiedObject.name "분기선 1 (BP1) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_1cb9a768-3745-53bf-8dab-1742e3e9aaef ;
+    cim:Terminal.ConnectivityNode ex:_27284890-3662-5761-85a3-535224365a61 .
+
+ex:_72793910-5b04-582a-a825-a53db252e277 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "72793910-5b04-582a-a825-a53db252e277" ;
+    cim:IdentifiedObject.name "분기선 1 (BP1) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_1cb9a768-3745-53bf-8dab-1742e3e9aaef ;
+    cim:Terminal.ConnectivityNode ex:_ae3da485-0c20-5896-85ab-f5dfcfb4d74b .
+
+ex:_47e84b05-2353-5ed3-b126-b8c9505fdf30 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "47e84b05-2353-5ed3-b126-b8c9505fdf30" ;
+    cim:IdentifiedObject.name "분기선 1 (BP1)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.83"^^xsd:float ;
+    cim:ACLineSegment.r "0.1511"^^xsd:float ;
+    cim:ACLineSegment.x "0.3245"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_2ecbfa8d-5d2c-5795-9b46-ad8b495c3e3f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "2ecbfa8d-5d2c-5795-9b46-ad8b495c3e3f" ;
+    cim:IdentifiedObject.name "분기선 1 (BP1) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_47e84b05-2353-5ed3-b126-b8c9505fdf30 ;
+    cim:Terminal.ConnectivityNode ex:_ae3da485-0c20-5896-85ab-f5dfcfb4d74b .
+
+ex:_ec519c6f-09ab-5f54-a61c-d289284ff858 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ec519c6f-09ab-5f54-a61c-d289284ff858" ;
+    cim:IdentifiedObject.name "분기선 1 (BP1) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_47e84b05-2353-5ed3-b126-b8c9505fdf30 ;
+    cim:Terminal.ConnectivityNode ex:_8865ae1d-2c3c-5d8d-8168-e945fbb2eaa0 .
+
+ex:_89537841-927c-5d38-a7cf-079345b3bc4b a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "89537841-927c-5d38-a7cf-079345b3bc4b" ;
+    cim:IdentifiedObject.name "분기선 1 끝" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.53"^^xsd:float ;
+    cim:ACLineSegment.r "0.0965"^^xsd:float ;
+    cim:ACLineSegment.x "0.2072"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_350b941f-6f7d-5304-98c3-c2e7bb76f5f0 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "350b941f-6f7d-5304-98c3-c2e7bb76f5f0" ;
+    cim:IdentifiedObject.name "분기선 1 끝 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_89537841-927c-5d38-a7cf-079345b3bc4b ;
+    cim:Terminal.ConnectivityNode ex:_8865ae1d-2c3c-5d8d-8168-e945fbb2eaa0 .
+
+ex:_da0814e4-3cf4-57b6-9f6d-e7db56530168 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "da0814e4-3cf4-57b6-9f6d-e7db56530168" ;
+    cim:IdentifiedObject.name "분기선 1 끝 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_89537841-927c-5d38-a7cf-079345b3bc4b ;
+    cim:Terminal.ConnectivityNode ex:_21a955f8-601e-5bd2-86f9-8e363166253b .
+
+ex:_8f2dbf50-bbae-5c2e-834b-ed3ede5e80eb a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "8f2dbf50-bbae-5c2e-834b-ed3ede5e80eb" ;
+    cim:IdentifiedObject.name "분기선 1 부하 a" ;
+    cim:EnergyConsumer.p "1.0"^^xsd:float ;
+    cim:EnergyConsumer.q "0.25"^^xsd:float .
+
+ex:_dad47c4c-fedd-58c8-bc91-94ae9d4d65cd a cim:Terminal ;
+    cim:IdentifiedObject.mRID "dad47c4c-fedd-58c8-bc91-94ae9d4d65cd" ;
+    cim:IdentifiedObject.name "분기선 1 부하 a T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_8f2dbf50-bbae-5c2e-834b-ed3ede5e80eb ;
+    cim:Terminal.ConnectivityNode ex:_ae3da485-0c20-5896-85ab-f5dfcfb4d74b .
+
+ex:_318a202d-fd2c-537d-8824-cd29332c46c8 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "318a202d-fd2c-537d-8824-cd29332c46c8" ;
+    cim:IdentifiedObject.name "분기선 1 부하 b" ;
+    cim:EnergyConsumer.p "0.9"^^xsd:float ;
+    cim:EnergyConsumer.q "0.225"^^xsd:float .
+
+ex:_2f2e2f5a-e136-5301-bf34-3b8777ebc2b6 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "2f2e2f5a-e136-5301-bf34-3b8777ebc2b6" ;
+    cim:IdentifiedObject.name "분기선 1 부하 b T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_318a202d-fd2c-537d-8824-cd29332c46c8 ;
+    cim:Terminal.ConnectivityNode ex:_8865ae1d-2c3c-5d8d-8168-e945fbb2eaa0 .
+
+ex:_5e94fcaf-b92a-59b3-bb69-4fc8586deb66 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "5e94fcaf-b92a-59b3-bb69-4fc8586deb66" ;
+    cim:IdentifiedObject.name "B2_1" .
+
+ex:_2186e717-36c3-596f-8d61-358149bceffe a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "2186e717-36c3-596f-8d61-358149bceffe" ;
+    cim:IdentifiedObject.name "T2a" .
+
+ex:_db4976f2-01c3-5859-ad2b-44594ddac05f a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "db4976f2-01c3-5859-ad2b-44594ddac05f" ;
+    cim:IdentifiedObject.name "T2b" .
+
+ex:_38c14505-bf4d-52ed-9e19-1ed8986bac70 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "38c14505-bf4d-52ed-9e19-1ed8986bac70" ;
+    cim:IdentifiedObject.name "분기선 2 (BP2)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.92"^^xsd:float ;
+    cim:ACLineSegment.r "0.1674"^^xsd:float ;
+    cim:ACLineSegment.x "0.3597"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_33a0b0c4-4542-5b87-9995-fd18329a466d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "33a0b0c4-4542-5b87-9995-fd18329a466d" ;
+    cim:IdentifiedObject.name "분기선 2 (BP2) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_38c14505-bf4d-52ed-9e19-1ed8986bac70 ;
+    cim:Terminal.ConnectivityNode ex:_f4cdb1c1-e8a7-5595-8adb-ae11708ad06c .
+
+ex:_3e726bb5-bd2c-5c2e-93ff-96d6597ed1e5 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "3e726bb5-bd2c-5c2e-93ff-96d6597ed1e5" ;
+    cim:IdentifiedObject.name "분기선 2 (BP2) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_38c14505-bf4d-52ed-9e19-1ed8986bac70 ;
+    cim:Terminal.ConnectivityNode ex:_5e94fcaf-b92a-59b3-bb69-4fc8586deb66 .
+
+ex:_c8cfbc2d-15f4-5ce1-9862-3e1a8efb577d a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "c8cfbc2d-15f4-5ce1-9862-3e1a8efb577d" ;
+    cim:IdentifiedObject.name "분기선 2 끝" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.42"^^xsd:float ;
+    cim:ACLineSegment.r "0.2584"^^xsd:float ;
+    cim:ACLineSegment.x "0.5552"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_501f6fb8-8aee-5f6e-8798-50d86a8476f6 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "501f6fb8-8aee-5f6e-8798-50d86a8476f6" ;
+    cim:IdentifiedObject.name "분기선 2 끝 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c8cfbc2d-15f4-5ce1-9862-3e1a8efb577d ;
+    cim:Terminal.ConnectivityNode ex:_5e94fcaf-b92a-59b3-bb69-4fc8586deb66 .
+
+ex:_02c4f720-b061-5eb3-a26f-24b4f18378e0 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "02c4f720-b061-5eb3-a26f-24b4f18378e0" ;
+    cim:IdentifiedObject.name "분기선 2 끝 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c8cfbc2d-15f4-5ce1-9862-3e1a8efb577d ;
+    cim:Terminal.ConnectivityNode ex:_2186e717-36c3-596f-8d61-358149bceffe .
+
+ex:_596df0e5-b7d1-5426-9e12-c660a00639f4 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "596df0e5-b7d1-5426-9e12-c660a00639f4" ;
+    cim:IdentifiedObject.name "분기선 2 부하" ;
+    cim:EnergyConsumer.p "0.9"^^xsd:float ;
+    cim:EnergyConsumer.q "0.225"^^xsd:float .
+
+ex:_948f7397-02b2-58c9-b748-7ebca43c65a8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "948f7397-02b2-58c9-b748-7ebca43c65a8" ;
+    cim:IdentifiedObject.name "분기선 2 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_596df0e5-b7d1-5426-9e12-c660a00639f4 ;
+    cim:Terminal.ConnectivityNode ex:_5e94fcaf-b92a-59b3-bb69-4fc8586deb66 .
+
+ex:_708a08ab-7ffa-51b7-b2db-64a543de31ef a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "708a08ab-7ffa-51b7-b2db-64a543de31ef" ;
+    cim:IdentifiedObject.name "B3_1" .
+
+ex:_f2c46ae1-cac0-5204-a1be-f2f7e579bfbe a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "f2c46ae1-cac0-5204-a1be-f2f7e579bfbe" ;
+    cim:IdentifiedObject.name "T3a" .
+
+ex:_e9d7758b-4efc-592f-95b0-5f0e961322b6 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "e9d7758b-4efc-592f-95b0-5f0e961322b6" ;
+    cim:IdentifiedObject.name "T3b" .
+
+ex:_80c22f44-79e0-5c53-856f-1a9902a89075 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "80c22f44-79e0-5c53-856f-1a9902a89075" ;
+    cim:IdentifiedObject.name "분기선 3 (BP3)" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.17"^^xsd:float ;
+    cim:ACLineSegment.r "0.2129"^^xsd:float ;
+    cim:ACLineSegment.x "0.4575"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_9d6a5254-94d0-5763-abbe-6b829088da5b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "9d6a5254-94d0-5763-abbe-6b829088da5b" ;
+    cim:IdentifiedObject.name "분기선 3 (BP3) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_80c22f44-79e0-5c53-856f-1a9902a89075 ;
+    cim:Terminal.ConnectivityNode ex:_46724e9b-aba8-5862-ae14-363adbe8d893 .
+
+ex:_5de009dd-1c15-5c9d-b324-54eea0243119 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "5de009dd-1c15-5c9d-b324-54eea0243119" ;
+    cim:IdentifiedObject.name "분기선 3 (BP3) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_80c22f44-79e0-5c53-856f-1a9902a89075 ;
+    cim:Terminal.ConnectivityNode ex:_708a08ab-7ffa-51b7-b2db-64a543de31ef .
+
+ex:_cd56618a-5ee0-516d-8ea2-0f0fcc029365 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "cd56618a-5ee0-516d-8ea2-0f0fcc029365" ;
+    cim:IdentifiedObject.name "분기선 3 끝" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.2"^^xsd:float ;
+    cim:ACLineSegment.r "0.2184"^^xsd:float ;
+    cim:ACLineSegment.x "0.4692"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_a0cf2fc8-9973-5ca6-94ef-ee95cc0d25ea a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a0cf2fc8-9973-5ca6-94ef-ee95cc0d25ea" ;
+    cim:IdentifiedObject.name "분기선 3 끝 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_cd56618a-5ee0-516d-8ea2-0f0fcc029365 ;
+    cim:Terminal.ConnectivityNode ex:_708a08ab-7ffa-51b7-b2db-64a543de31ef .
+
+ex:_bd13f9b7-3947-5a50-98ab-e6975ee42c6a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "bd13f9b7-3947-5a50-98ab-e6975ee42c6a" ;
+    cim:IdentifiedObject.name "분기선 3 끝 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_cd56618a-5ee0-516d-8ea2-0f0fcc029365 ;
+    cim:Terminal.ConnectivityNode ex:_f2c46ae1-cac0-5204-a1be-f2f7e579bfbe .
+
+ex:_12865720-909a-5050-8782-1da7888cd7c6 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "12865720-909a-5050-8782-1da7888cd7c6" ;
+    cim:IdentifiedObject.name "분기선 3 부하" ;
+    cim:EnergyConsumer.p "0.9"^^xsd:float ;
+    cim:EnergyConsumer.q "0.225"^^xsd:float .
+
+ex:_361b429b-0ea5-5e97-874b-1a56cd038102 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "361b429b-0ea5-5e97-874b-1a56cd038102" ;
+    cim:IdentifiedObject.name "분기선 3 부하 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_12865720-909a-5050-8782-1da7888cd7c6 ;
+    cim:Terminal.ConnectivityNode ex:_708a08ab-7ffa-51b7-b2db-64a543de31ef .
+
+ex:_b0f1edb5-81c9-5664-8468-a6fe4d760a36 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "b0f1edb5-81c9-5664-8468-a6fe4d760a36" ;
+    cim:IdentifiedObject.name "DL2_A" .
+
+ex:_55357f0e-456a-599e-af0c-103a9e6c7186 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "55357f0e-456a-599e-af0c-103a9e6c7186" ;
+    cim:IdentifiedObject.name "DL2_B" .
+
+ex:_915fb4bc-ce36-5843-adde-c1986e228115 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "915fb4bc-ce36-5843-adde-c1986e228115" ;
+    cim:IdentifiedObject.name "DL2_E" .
+
+ex:_25be7a31-2a8c-545a-9fc8-aa7ae3c80eac a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "25be7a31-2a8c-545a-9fc8-aa7ae3c80eac" ;
+    cim:IdentifiedObject.name "D/L #2 선로" ;
+    cim:Equipment.EquipmentContainer ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "2.42"^^xsd:float ;
+    cim:ACLineSegment.r "0.4404"^^xsd:float ;
+    cim:ACLineSegment.x "0.9462"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_e6f89322-a527-57f7-8aa0-dc3f4b9e66fe a cim:Terminal ;
+    cim:IdentifiedObject.mRID "e6f89322-a527-57f7-8aa0-dc3f4b9e66fe" ;
+    cim:IdentifiedObject.name "D/L #2 선로 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_25be7a31-2a8c-545a-9fc8-aa7ae3c80eac ;
+    cim:Terminal.ConnectivityNode ex:_76197268-4db3-5afd-92c8-080a54c4567a .
+
+ex:_ef84b3ee-81f6-52e6-a32f-56ecd6348f65 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ef84b3ee-81f6-52e6-a32f-56ecd6348f65" ;
+    cim:IdentifiedObject.name "D/L #2 선로 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_25be7a31-2a8c-545a-9fc8-aa7ae3c80eac ;
+    cim:Terminal.ConnectivityNode ex:_b0f1edb5-81c9-5664-8468-a6fe4d760a36 .
+
+ex:_972b1652-7d1a-5add-8223-cda591fcd3f1 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "972b1652-7d1a-5add-8223-cda591fcd3f1" ;
+    cim:IdentifiedObject.name "D/L #2 선로" ;
+    cim:Equipment.EquipmentContainer ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "8.0"^^xsd:float ;
+    cim:ACLineSegment.r "1.456"^^xsd:float ;
+    cim:ACLineSegment.x "3.128"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_679971fb-539d-5bb4-bcb1-9cc3f8799b9a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "679971fb-539d-5bb4-bcb1-9cc3f8799b9a" ;
+    cim:IdentifiedObject.name "D/L #2 선로 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_972b1652-7d1a-5add-8223-cda591fcd3f1 ;
+    cim:Terminal.ConnectivityNode ex:_b0f1edb5-81c9-5664-8468-a6fe4d760a36 .
+
+ex:_ca50cf5c-41a9-5ee9-b648-41f0f956e974 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "ca50cf5c-41a9-5ee9-b648-41f0f956e974" ;
+    cim:IdentifiedObject.name "D/L #2 선로 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_972b1652-7d1a-5add-8223-cda591fcd3f1 ;
+    cim:Terminal.ConnectivityNode ex:_55357f0e-456a-599e-af0c-103a9e6c7186 .
+
+ex:_8a4b9ecb-02a1-5e9a-bc2e-8338f8f73a78 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "8a4b9ecb-02a1-5e9a-bc2e-8338f8f73a78" ;
+    cim:IdentifiedObject.name "D/L #2 선로 끝" ;
+    cim:Equipment.EquipmentContainer ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.58"^^xsd:float ;
+    cim:ACLineSegment.r "0.2876"^^xsd:float ;
+    cim:ACLineSegment.x "0.6178"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_14a1fab6-c689-5c97-8afc-b40d7cc14e97 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "14a1fab6-c689-5c97-8afc-b40d7cc14e97" ;
+    cim:IdentifiedObject.name "D/L #2 선로 끝 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_8a4b9ecb-02a1-5e9a-bc2e-8338f8f73a78 ;
+    cim:Terminal.ConnectivityNode ex:_55357f0e-456a-599e-af0c-103a9e6c7186 .
+
+ex:_2ac5f1c5-12de-518b-b9c3-b68d93f5f3c5 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "2ac5f1c5-12de-518b-b9c3-b68d93f5f3c5" ;
+    cim:IdentifiedObject.name "D/L #2 선로 끝 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_8a4b9ecb-02a1-5e9a-bc2e-8338f8f73a78 ;
+    cim:Terminal.ConnectivityNode ex:_915fb4bc-ce36-5843-adde-c1986e228115 .
+
+ex:_4d5d6857-5daa-57fe-8de9-7b436c8fc963 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "4d5d6857-5daa-57fe-8de9-7b436c8fc963" ;
+    cim:IdentifiedObject.name "D/L #2 부하 (모음)" ;
+    cim:EnergyConsumer.p "6.0"^^xsd:float ;
+    cim:EnergyConsumer.q "1.5"^^xsd:float .
+
+ex:_a42ace50-e7c7-590c-8dce-55caf38a5c60 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a42ace50-e7c7-590c-8dce-55caf38a5c60" ;
+    cim:IdentifiedObject.name "D/L #2 부하 (모음) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_4d5d6857-5daa-57fe-8de9-7b436c8fc963 ;
+    cim:Terminal.ConnectivityNode ex:_915fb4bc-ce36-5843-adde-c1986e228115 .
+
+ex:_d8417733-bb2a-53ef-95fc-6d2cf430a64f a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "d8417733-bb2a-53ef-95fc-6d2cf430a64f" ;
+    cim:IdentifiedObject.name "DL3_A" .
+
+ex:_cd683ef1-f96b-596a-832b-851de0c88ca3 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "cd683ef1-f96b-596a-832b-851de0c88ca3" ;
+    cim:IdentifiedObject.name "DL3_E" .
+
+ex:_a0fa5a4e-55f7-5e47-bb60-881316851652 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "a0fa5a4e-55f7-5e47-bb60-881316851652" ;
+    cim:IdentifiedObject.name "D/L #3 선로" ;
+    cim:Equipment.EquipmentContainer ex:_34baac19-eef7-53a9-a8d3-d6d05615a09b ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "6.42"^^xsd:float ;
+    cim:ACLineSegment.r "1.1684"^^xsd:float ;
+    cim:ACLineSegment.x "2.5102"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_d3d44252-39df-5f49-818a-9192eda75d3d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "d3d44252-39df-5f49-818a-9192eda75d3d" ;
+    cim:IdentifiedObject.name "D/L #3 선로 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_a0fa5a4e-55f7-5e47-bb60-881316851652 ;
+    cim:Terminal.ConnectivityNode ex:_078596e7-f607-5680-aa58-a9b22bd06c86 .
+
+ex:_fc5efbcc-782f-5ca1-a698-135a7e1b380a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "fc5efbcc-782f-5ca1-a698-135a7e1b380a" ;
+    cim:IdentifiedObject.name "D/L #3 선로 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_a0fa5a4e-55f7-5e47-bb60-881316851652 ;
+    cim:Terminal.ConnectivityNode ex:_d8417733-bb2a-53ef-95fc-6d2cf430a64f .
+
+ex:_cbc71078-07ca-5cad-8008-4a6969844fff a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "cbc71078-07ca-5cad-8008-4a6969844fff" ;
+    cim:IdentifiedObject.name "D/L #3 선로 끝" ;
+    cim:Equipment.EquipmentContainer ex:_34baac19-eef7-53a9-a8d3-d6d05615a09b ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "2.58"^^xsd:float ;
+    cim:ACLineSegment.r "0.4696"^^xsd:float ;
+    cim:ACLineSegment.x "1.0088"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_b2ee61d7-6410-5338-80df-ecbbd02159f8 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "b2ee61d7-6410-5338-80df-ecbbd02159f8" ;
+    cim:IdentifiedObject.name "D/L #3 선로 끝 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_cbc71078-07ca-5cad-8008-4a6969844fff ;
+    cim:Terminal.ConnectivityNode ex:_d8417733-bb2a-53ef-95fc-6d2cf430a64f .
+
+ex:_715a1142-ade3-5023-915e-2bd5e26b1be0 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "715a1142-ade3-5023-915e-2bd5e26b1be0" ;
+    cim:IdentifiedObject.name "D/L #3 선로 끝 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_cbc71078-07ca-5cad-8008-4a6969844fff ;
+    cim:Terminal.ConnectivityNode ex:_cd683ef1-f96b-596a-832b-851de0c88ca3 .
+
+ex:_f494f9b6-f13b-51e7-a10b-467807e24d4b a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "f494f9b6-f13b-51e7-a10b-467807e24d4b" ;
+    cim:IdentifiedObject.name "D/L #3 부하 (모음)" ;
+    cim:EnergyConsumer.p "5.0"^^xsd:float ;
+    cim:EnergyConsumer.q "1.25"^^xsd:float .
+
+ex:_f219fadc-4f98-503d-982f-c92f4ae5e480 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "f219fadc-4f98-503d-982f-c92f4ae5e480" ;
+    cim:IdentifiedObject.name "D/L #3 부하 (모음) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_f494f9b6-f13b-51e7-a10b-467807e24d4b ;
+    cim:Terminal.ConnectivityNode ex:_cd683ef1-f96b-596a-832b-851de0c88ca3 .
+
+ex:_18524e51-092d-538f-9121-f1146e4e5558 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "18524e51-092d-538f-9121-f1146e4e5558" ;
+    cim:IdentifiedObject.name "C11_A" .
+
+ex:_7ff23367-f5db-5308-8c7c-7f71179b5ac9 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "7ff23367-f5db-5308-8c7c-7f71179b5ac9" ;
+    cim:IdentifiedObject.name "C11_E" .
+
+ex:_c23ec9b9-b804-51a7-8c61-4ae97d140956 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "c23ec9b9-b804-51a7-8c61-4ae97d140956" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 선로" ;
+    cim:Equipment.EquipmentContainer ex:_c897e677-60f2-54df-b333-8b8e24fa7d6f ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.5"^^xsd:float ;
+    cim:ACLineSegment.r "0.091"^^xsd:float ;
+    cim:ACLineSegment.x "0.1955"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_f407d2b5-9872-5415-929b-5496d4025898 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "f407d2b5-9872-5415-929b-5496d4025898" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 선로 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c23ec9b9-b804-51a7-8c61-4ae97d140956 ;
+    cim:Terminal.ConnectivityNode ex:_a7ccccee-13fc-541f-8e72-65507cbb45f4 .
+
+ex:_8a925d1b-e453-5f8b-8aa7-0c70ab755ca3 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "8a925d1b-e453-5f8b-8aa7-0c70ab755ca3" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 선로 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_c23ec9b9-b804-51a7-8c61-4ae97d140956 ;
+    cim:Terminal.ConnectivityNode ex:_18524e51-092d-538f-9121-f1146e4e5558 .
+
+ex:_3ef6e231-b571-59d8-9561-b07e12677ed4 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "3ef6e231-b571-59d8-9561-b07e12677ed4" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 선로" ;
+    cim:Equipment.EquipmentContainer ex:_c897e677-60f2-54df-b333-8b8e24fa7d6f ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "1.83"^^xsd:float ;
+    cim:ACLineSegment.r "0.3331"^^xsd:float ;
+    cim:ACLineSegment.x "0.7155"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_121081a5-369b-5926-82d3-be84b6efe26b a cim:Terminal ;
+    cim:IdentifiedObject.mRID "121081a5-369b-5926-82d3-be84b6efe26b" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 선로 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_3ef6e231-b571-59d8-9561-b07e12677ed4 ;
+    cim:Terminal.ConnectivityNode ex:_18524e51-092d-538f-9121-f1146e4e5558 .
+
+ex:_80994a08-c7be-5fa1-810f-3ad1b4658c6f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "80994a08-c7be-5fa1-810f-3ad1b4658c6f" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 선로 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_3ef6e231-b571-59d8-9561-b07e12677ed4 ;
+    cim:Terminal.ConnectivityNode ex:_7ff23367-f5db-5308-8c7c-7f71179b5ac9 .
+
+ex:_04e00315-7bb8-5c32-a9c1-a4b44fec5c58 a cim:EnergyConsumer ;
+    cim:IdentifiedObject.mRID "04e00315-7bb8-5c32-a9c1-a4b44fec5c58" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 부하 (모음)" ;
+    cim:EnergyConsumer.p "4.0"^^xsd:float ;
+    cim:EnergyConsumer.q "1.0"^^xsd:float .
+
+ex:_4abd3faa-9a14-58f9-b529-f900b9967115 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "4abd3faa-9a14-58f9-b529-f900b9967115" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 부하 (모음) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_04e00315-7bb8-5c32-a9c1-a4b44fec5c58 ;
+    cim:Terminal.ConnectivityNode ex:_7ff23367-f5db-5308-8c7c-7f71179b5ac9 .
+
+ex:_26c00b57-4b9e-5bc0-82f7-2fa6c61d02fb a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "26c00b57-4b9e-5bc0-82f7-2fa6c61d02fb" ;
+    cim:IdentifiedObject.name "연계 개폐기 T1 (D/L #2)" ;
+    cim:Switch.normalOpen "true"^^xsd:boolean ;
+    cim:Switch.open "true"^^xsd:boolean .
+
+ex:_405c65fa-2112-5f61-974f-887471754e7e a cim:Terminal ;
+    cim:IdentifiedObject.mRID "405c65fa-2112-5f61-974f-887471754e7e" ;
+    cim:IdentifiedObject.name "연계 개폐기 T1 (D/L #2) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_26c00b57-4b9e-5bc0-82f7-2fa6c61d02fb ;
+    cim:Terminal.ConnectivityNode ex:_21a955f8-601e-5bd2-86f9-8e363166253b .
+
+ex:_4baf6da2-9486-518e-9ff9-95a065fb0a69 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "4baf6da2-9486-518e-9ff9-95a065fb0a69" ;
+    cim:IdentifiedObject.name "연계 개폐기 T1 (D/L #2) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_26c00b57-4b9e-5bc0-82f7-2fa6c61d02fb ;
+    cim:Terminal.ConnectivityNode ex:_a96b670b-75c8-5b7f-a470-3dbf45e475a6 .
+
+ex:_2dca9222-88b3-56f3-8beb-ff9e4f6c70e1 a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "2dca9222-88b3-56f3-8beb-ff9e4f6c70e1" ;
+    cim:IdentifiedObject.name "연계 개폐기 T2 (D/L #3)" ;
+    cim:Switch.normalOpen "true"^^xsd:boolean ;
+    cim:Switch.open "true"^^xsd:boolean .
+
+ex:_c750ccd9-a7d0-52d1-86cf-f42cbcbeb54c a cim:Terminal ;
+    cim:IdentifiedObject.mRID "c750ccd9-a7d0-52d1-86cf-f42cbcbeb54c" ;
+    cim:IdentifiedObject.name "연계 개폐기 T2 (D/L #3) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_2dca9222-88b3-56f3-8beb-ff9e4f6c70e1 ;
+    cim:Terminal.ConnectivityNode ex:_2186e717-36c3-596f-8d61-358149bceffe .
+
+ex:_9737489c-dbc5-5f5e-ba19-3bd29105f3ab a cim:Terminal ;
+    cim:IdentifiedObject.mRID "9737489c-dbc5-5f5e-ba19-3bd29105f3ab" ;
+    cim:IdentifiedObject.name "연계 개폐기 T2 (D/L #3) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_2dca9222-88b3-56f3-8beb-ff9e4f6c70e1 ;
+    cim:Terminal.ConnectivityNode ex:_db4976f2-01c3-5859-ad2b-44594ddac05f .
+
+ex:_91cb51cd-cf05-5690-81bf-7eac2b19b334 a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "91cb51cd-cf05-5690-81bf-7eac2b19b334" ;
+    cim:IdentifiedObject.name "연계 개폐기 T3 (D/L #2)" ;
+    cim:Switch.normalOpen "true"^^xsd:boolean ;
+    cim:Switch.open "true"^^xsd:boolean .
+
+ex:_33472fcb-a1d0-56e2-a330-ec6f10a0ff97 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "33472fcb-a1d0-56e2-a330-ec6f10a0ff97" ;
+    cim:IdentifiedObject.name "연계 개폐기 T3 (D/L #2) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_91cb51cd-cf05-5690-81bf-7eac2b19b334 ;
+    cim:Terminal.ConnectivityNode ex:_f2c46ae1-cac0-5204-a1be-f2f7e579bfbe .
+
+ex:_05cedd80-f8ba-5d25-a110-8637480a9b8d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "05cedd80-f8ba-5d25-a110-8637480a9b8d" ;
+    cim:IdentifiedObject.name "연계 개폐기 T3 (D/L #2) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_91cb51cd-cf05-5690-81bf-7eac2b19b334 ;
+    cim:Terminal.ConnectivityNode ex:_e9d7758b-4efc-592f-95b0-5f0e961322b6 .
+
+ex:_0561dcca-cd67-57b9-beac-86ed84a9bf74 a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "0561dcca-cd67-57b9-beac-86ed84a9bf74" ;
+    cim:IdentifiedObject.name "T4a" .
+
+ex:_e1a19910-1faa-5411-b29a-1a79b3ce3eec a cim:ConnectivityNode ;
+    cim:IdentifiedObject.mRID "e1a19910-1faa-5411-b29a-1a79b3ce3eec" ;
+    cim:IdentifiedObject.name "T4b" .
+
+ex:_604bcf96-d6de-5322-b795-23b28c1f72b9 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "604bcf96-d6de-5322-b795-23b28c1f72b9" ;
+    cim:IdentifiedObject.name "D/L #1 끝 → T4" ;
+    cim:Equipment.EquipmentContainer ex:_02a352c3-c5ac-5dd9-9ded-b57aaadde634 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.3"^^xsd:float ;
+    cim:ACLineSegment.r "0.0546"^^xsd:float ;
+    cim:ACLineSegment.x "0.1173"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_595d73e7-3fb6-58de-be4e-b3da3611fe1f a cim:Terminal ;
+    cim:IdentifiedObject.mRID "595d73e7-3fb6-58de-be4e-b3da3611fe1f" ;
+    cim:IdentifiedObject.name "D/L #1 끝 → T4 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_604bcf96-d6de-5322-b795-23b28c1f72b9 ;
+    cim:Terminal.ConnectivityNode ex:_a9a6a1cb-bf81-5004-b8c2-60044c6d23d0 .
+
+ex:_6122c355-2ed6-506a-b4de-1e2e8a9e7ba0 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "6122c355-2ed6-506a-b4de-1e2e8a9e7ba0" ;
+    cim:IdentifiedObject.name "D/L #1 끝 → T4 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_604bcf96-d6de-5322-b795-23b28c1f72b9 ;
+    cim:Terminal.ConnectivityNode ex:_0561dcca-cd67-57b9-beac-86ed84a9bf74 .
+
+ex:_99c026aa-750c-531f-ac78-bf95e93b3467 a cim:LoadBreakSwitch ;
+    cim:IdentifiedObject.mRID "99c026aa-750c-531f-ac78-bf95e93b3467" ;
+    cim:IdentifiedObject.name "연계 개폐기 T4 (C변전소)" ;
+    cim:Switch.normalOpen "true"^^xsd:boolean ;
+    cim:Switch.open "true"^^xsd:boolean .
+
+ex:_d30e87c6-5cf0-5803-8348-ba8ad675768a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "d30e87c6-5cf0-5803-8348-ba8ad675768a" ;
+    cim:IdentifiedObject.name "연계 개폐기 T4 (C변전소) T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_99c026aa-750c-531f-ac78-bf95e93b3467 ;
+    cim:Terminal.ConnectivityNode ex:_0561dcca-cd67-57b9-beac-86ed84a9bf74 .
+
+ex:_85cbf3db-c287-5b88-bc9b-4de3e247fbb0 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "85cbf3db-c287-5b88-bc9b-4de3e247fbb0" ;
+    cim:IdentifiedObject.name "연계 개폐기 T4 (C변전소) T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_99c026aa-750c-531f-ac78-bf95e93b3467 ;
+    cim:Terminal.ConnectivityNode ex:_e1a19910-1faa-5411-b29a-1a79b3ce3eec .
+
+ex:_381797a5-088d-5655-86ac-7f3ae06402d8 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "381797a5-088d-5655-86ac-7f3ae06402d8" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 연계 구간" ;
+    cim:Equipment.EquipmentContainer ex:_c897e677-60f2-54df-b333-8b8e24fa7d6f ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.25"^^xsd:float ;
+    cim:ACLineSegment.r "0.0455"^^xsd:float ;
+    cim:ACLineSegment.x "0.0978"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_4cde40c2-0ffc-5c66-b2c9-6b86a341216d a cim:Terminal ;
+    cim:IdentifiedObject.mRID "4cde40c2-0ffc-5c66-b2c9-6b86a341216d" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 연계 구간 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_381797a5-088d-5655-86ac-7f3ae06402d8 ;
+    cim:Terminal.ConnectivityNode ex:_e1a19910-1faa-5411-b29a-1a79b3ce3eec .
+
+ex:_a8063fce-c6e9-51c2-a623-5bfb1ca979fe a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a8063fce-c6e9-51c2-a623-5bfb1ca979fe" ;
+    cim:IdentifiedObject.name "C변전소 D/L #11 연계 구간 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_381797a5-088d-5655-86ac-7f3ae06402d8 ;
+    cim:Terminal.ConnectivityNode ex:_18524e51-092d-538f-9121-f1146e4e5558 .
+
+ex:_59539a82-9f8b-568c-aee4-efd580c10073 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "59539a82-9f8b-568c-aee4-efd580c10073" ;
+    cim:IdentifiedObject.name "T1 ↔ D/L #2" ;
+    cim:Equipment.EquipmentContainer ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.23"^^xsd:float ;
+    cim:ACLineSegment.r "0.0419"^^xsd:float ;
+    cim:ACLineSegment.x "0.0899"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_509e92da-1e19-5835-91ac-408ce1ac37f0 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "509e92da-1e19-5835-91ac-408ce1ac37f0" ;
+    cim:IdentifiedObject.name "T1 ↔ D/L #2 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_59539a82-9f8b-568c-aee4-efd580c10073 ;
+    cim:Terminal.ConnectivityNode ex:_a96b670b-75c8-5b7f-a470-3dbf45e475a6 .
+
+ex:_7630898f-8c02-5c45-9c7a-865b04698f18 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "7630898f-8c02-5c45-9c7a-865b04698f18" ;
+    cim:IdentifiedObject.name "T1 ↔ D/L #2 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_59539a82-9f8b-568c-aee4-efd580c10073 ;
+    cim:Terminal.ConnectivityNode ex:_b0f1edb5-81c9-5664-8468-a6fe4d760a36 .
+
+ex:_9b0dd49f-dc4d-5359-9e3b-e039b79c20f9 a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "9b0dd49f-dc4d-5359-9e3b-e039b79c20f9" ;
+    cim:IdentifiedObject.name "T2 ↔ D/L #3" ;
+    cim:Equipment.EquipmentContainer ex:_34baac19-eef7-53a9-a8d3-d6d05615a09b ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.27"^^xsd:float ;
+    cim:ACLineSegment.r "0.0491"^^xsd:float ;
+    cim:ACLineSegment.x "0.1056"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_a572a83f-1488-554b-ba73-0486c228abd2 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "a572a83f-1488-554b-ba73-0486c228abd2" ;
+    cim:IdentifiedObject.name "T2 ↔ D/L #3 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9b0dd49f-dc4d-5359-9e3b-e039b79c20f9 ;
+    cim:Terminal.ConnectivityNode ex:_db4976f2-01c3-5859-ad2b-44594ddac05f .
+
+ex:_647eae14-d3fd-53b9-8a11-00d4fe355a8a a cim:Terminal ;
+    cim:IdentifiedObject.mRID "647eae14-d3fd-53b9-8a11-00d4fe355a8a" ;
+    cim:IdentifiedObject.name "T2 ↔ D/L #3 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_9b0dd49f-dc4d-5359-9e3b-e039b79c20f9 ;
+    cim:Terminal.ConnectivityNode ex:_d8417733-bb2a-53ef-95fc-6d2cf430a64f .
+
+ex:_e6d2154c-e6cd-52a3-b7a2-90794efe16fa a cim:ACLineSegment ;
+    cim:IdentifiedObject.mRID "e6d2154c-e6cd-52a3-b7a2-90794efe16fa" ;
+    cim:IdentifiedObject.name "T3 ↔ D/L #2" ;
+    cim:Equipment.EquipmentContainer ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 ;
+    cim:ConductingEquipment.BaseVoltage ex:_2b537813-bbb0-56dd-adec-144ea7139944 ;
+    cim:Conductor.length "0.23"^^xsd:float ;
+    cim:ACLineSegment.r "0.0419"^^xsd:float ;
+    cim:ACLineSegment.x "0.0899"^^xsd:float ;
+    cim:ACLineSegment.bch "0.0"^^xsd:float .
+
+ex:_eeffae3c-cb16-5262-ae4e-3dec0615f704 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "eeffae3c-cb16-5262-ae4e-3dec0615f704" ;
+    cim:IdentifiedObject.name "T3 ↔ D/L #2 T1" ;
+    cim:ACDCTerminal.sequenceNumber "1"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_e6d2154c-e6cd-52a3-b7a2-90794efe16fa ;
+    cim:Terminal.ConnectivityNode ex:_e9d7758b-4efc-592f-95b0-5f0e961322b6 .
+
+ex:_2ee53f88-4bb5-500a-967a-55d34afbabf4 a cim:Terminal ;
+    cim:IdentifiedObject.mRID "2ee53f88-4bb5-500a-967a-55d34afbabf4" ;
+    cim:IdentifiedObject.name "T3 ↔ D/L #2 T2" ;
+    cim:ACDCTerminal.sequenceNumber "2"^^xsd:integer ;
+    cim:ACDCTerminal.connected "true"^^xsd:boolean ;
+    cim:Terminal.ConductingEquipment ex:_e6d2154c-e6cd-52a3-b7a2-90794efe16fa ;
+    cim:Terminal.ConnectivityNode ex:_55357f0e-456a-599e-af0c-103a9e6c7186 .

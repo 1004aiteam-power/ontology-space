@@ -1,0 +1,1152 @@
+{
+"virtual": true,
+"limitMW": 10.0,
+"pos": {
+"BUS_A": [
+40,
+270
+],
+"BUS_C": [
+975,
+270
+],
+"BUS_A3": [
+40,
+90
+],
+"BUS_A2": [
+40,
+450
+],
+"DL1_0": [
+100,
+270
+],
+"DL2_0": [
+100,
+450
+],
+"DL3_0": [
+100,
+90
+],
+"C11_0": [
+935,
+270
+],
+"S1a": [
+148,
+270
+],
+"S1b": [
+172,
+270
+],
+"L1": [
+205,
+270
+],
+"BP1": [
+245,
+270
+],
+"S2a": [
+268,
+270
+],
+"S2b": [
+292,
+270
+],
+"L2": [
+325,
+270
+],
+"S3a": [
+388,
+270
+],
+"S3b": [
+412,
+270
+],
+"L3": [
+445,
+270
+],
+"BP2": [
+485,
+270
+],
+"S4a": [
+508,
+270
+],
+"S4b": [
+532,
+270
+],
+"L4": [
+565,
+270
+],
+"S5a": [
+628,
+270
+],
+"S5b": [
+652,
+270
+],
+"L5": [
+685,
+270
+],
+"BP3": [
+725,
+270
+],
+"S6a": [
+748,
+270
+],
+"S6b": [
+772,
+270
+],
+"L6": [
+805,
+270
+],
+"MEND": [
+850,
+270
+],
+"B1_1": [
+245,
+330
+],
+"B1_2": [
+245,
+380
+],
+"T1a": [
+245,
+412
+],
+"T1b": [
+245,
+436
+],
+"B2_1": [
+485,
+215
+],
+"T2a": [
+485,
+130
+],
+"T2b": [
+485,
+106
+],
+"B3_1": [
+725,
+340
+],
+"T3a": [
+725,
+412
+],
+"T3b": [
+725,
+436
+],
+"DL2_A": [
+245,
+450
+],
+"DL2_B": [
+725,
+450
+],
+"DL2_E": [
+820,
+450
+],
+"DL3_A": [
+485,
+90
+],
+"DL3_E": [
+640,
+90
+],
+"C11_A": [
+905,
+270
+],
+"C11_E": [
+905,
+380
+],
+"T4a": [
+868,
+270
+],
+"T4b": [
+890,
+270
+]
+},
+"eq": [
+{
+"id": "SRC_A",
+"cls": "ExternalNetworkInjection",
+"t": [
+"BUS_A"
+],
+"ko": "A변전소 22.9kV 모선",
+"en": "Substation A 22.9 kV bus",
+"source": true
+},
+{
+"id": "SRC_C",
+"cls": "ExternalNetworkInjection",
+"t": [
+"BUS_C"
+],
+"ko": "C변전소 22.9kV 모선",
+"en": "Substation C 22.9 kV bus",
+"source": true
+},
+{
+"id": "CB_DL1",
+"cls": "Breaker",
+"t": [
+"BUS_A",
+"DL1_0"
+],
+"ko": "D/L #1 CB",
+"en": "Feeder #1 CB",
+"normalOpen": false,
+"kind": "breaker"
+},
+{
+"id": "CB_DL2",
+"cls": "Breaker",
+"t": [
+"BUS_A2",
+"DL2_0"
+],
+"ko": "D/L #2 CB",
+"en": "Feeder #2 CB",
+"normalOpen": false,
+"kind": "breaker"
+},
+{
+"id": "CB_DL3",
+"cls": "Breaker",
+"t": [
+"BUS_A3",
+"DL3_0"
+],
+"ko": "D/L #3 CB",
+"en": "Feeder #3 CB",
+"normalOpen": false,
+"kind": "breaker"
+},
+{
+"id": "CB_C11",
+"cls": "Breaker",
+"t": [
+"BUS_C",
+"C11_0"
+],
+"ko": "C변전소 D/L #11 CB",
+"en": "Sub. C feeder #11 CB",
+"normalOpen": false,
+"kind": "breaker"
+},
+{
+"id": "DL1_SEC1",
+"cls": "ACLineSegment",
+"t": [
+"DL1_0",
+"S1a"
+],
+"ko": "D/L #1 간선 1구간",
+"en": "Feeder #1 main, section 1",
+"km": 0.8,
+"line": "DL1"
+},
+{
+"id": "S1",
+"cls": "LoadBreakSwitch",
+"t": [
+"S1a",
+"S1b"
+],
+"ko": "구간 개폐기 S1",
+"en": "Sectionalizing switch S1",
+"normalOpen": false,
+"kind": "sectionalizer"
+},
+{
+"id": "DL1_SEC1_L",
+"cls": "ACLineSegment",
+"t": [
+"S1b",
+"L1"
+],
+"ko": "D/L #1 간선 2구간 (S1 뒤)",
+"en": "Feeder #1 main after S1",
+"km": 0.55,
+"line": "DL1"
+},
+{
+"id": "LD_M1",
+"cls": "EnergyConsumer",
+"t": [
+"L1"
+],
+"ko": "간선 부하 1",
+"en": "Main-line load 1",
+"p": 1.0,
+"at": [
+205,
+246
+]
+},
+{
+"id": "DL1_SEC1_BP1",
+"cls": "ACLineSegment",
+"t": [
+"L1",
+"BP1"
+],
+"ko": "D/L #1 간선 2구간 (분기점 BP1까지)",
+"en": "Feeder #1 main to BP1",
+"km": 0.67,
+"line": "DL1"
+},
+{
+"id": "DL1_SEC2",
+"cls": "ACLineSegment",
+"t": [
+"BP1",
+"S2a"
+],
+"ko": "D/L #1 간선 2구간",
+"en": "Feeder #1 main, section 2",
+"km": 0.38,
+"line": "DL1"
+},
+{
+"id": "S2",
+"cls": "LoadBreakSwitch",
+"t": [
+"S2a",
+"S2b"
+],
+"ko": "구간 개폐기 S2",
+"en": "Sectionalizing switch S2",
+"normalOpen": false,
+"kind": "sectionalizer"
+},
+{
+"id": "DL1_SEC2_L",
+"cls": "ACLineSegment",
+"t": [
+"S2b",
+"L2"
+],
+"ko": "D/L #1 간선 3구간 (S2 뒤)",
+"en": "Feeder #1 main after S2",
+"km": 0.55,
+"line": "DL1"
+},
+{
+"id": "LD_M2",
+"cls": "EnergyConsumer",
+"t": [
+"L2"
+],
+"ko": "간선 부하 2",
+"en": "Main-line load 2",
+"p": 0.8,
+"at": [
+325,
+294
+]
+},
+{
+"id": "DL1_SEC3",
+"cls": "ACLineSegment",
+"t": [
+"L2",
+"S3a"
+],
+"ko": "D/L #1 간선 3구간",
+"en": "Feeder #1 main, section 3",
+"km": 1.05,
+"line": "DL1"
+},
+{
+"id": "S3",
+"cls": "LoadBreakSwitch",
+"t": [
+"S3a",
+"S3b"
+],
+"ko": "구간 개폐기 S3",
+"en": "Sectionalizing switch S3",
+"normalOpen": false,
+"kind": "sectionalizer"
+},
+{
+"id": "DL1_SEC3_L",
+"cls": "ACLineSegment",
+"t": [
+"S3b",
+"L3"
+],
+"ko": "D/L #1 간선 4구간 (S3 뒤)",
+"en": "Feeder #1 main after S3",
+"km": 0.55,
+"line": "DL1"
+},
+{
+"id": "LD_M3",
+"cls": "EnergyConsumer",
+"t": [
+"L3"
+],
+"ko": "간선 부하 3",
+"en": "Main-line load 3",
+"p": 0.9,
+"at": [
+445,
+294
+]
+},
+{
+"id": "DL1_SEC3_BP2",
+"cls": "ACLineSegment",
+"t": [
+"L3",
+"BP2"
+],
+"ko": "D/L #1 간선 4구간 (분기점 BP2까지)",
+"en": "Feeder #1 main to BP2",
+"km": 0.67,
+"line": "DL1"
+},
+{
+"id": "DL1_SEC4",
+"cls": "ACLineSegment",
+"t": [
+"BP2",
+"S4a"
+],
+"ko": "D/L #1 간선 4구간",
+"en": "Feeder #1 main, section 4",
+"km": 0.38,
+"line": "DL1"
+},
+{
+"id": "S4",
+"cls": "LoadBreakSwitch",
+"t": [
+"S4a",
+"S4b"
+],
+"ko": "구간 개폐기 S4",
+"en": "Sectionalizing switch S4",
+"normalOpen": false,
+"kind": "sectionalizer"
+},
+{
+"id": "DL1_SEC4_L",
+"cls": "ACLineSegment",
+"t": [
+"S4b",
+"L4"
+],
+"ko": "D/L #1 간선 5구간 (S4 뒤)",
+"en": "Feeder #1 main after S4",
+"km": 0.55,
+"line": "DL1"
+},
+{
+"id": "LD_M4",
+"cls": "EnergyConsumer",
+"t": [
+"L4"
+],
+"ko": "간선 부하 4",
+"en": "Main-line load 4",
+"p": 0.7,
+"at": [
+565,
+294
+]
+},
+{
+"id": "DL1_SEC5",
+"cls": "ACLineSegment",
+"t": [
+"L4",
+"S5a"
+],
+"ko": "D/L #1 간선 5구간",
+"en": "Feeder #1 main, section 5",
+"km": 1.05,
+"line": "DL1"
+},
+{
+"id": "S5",
+"cls": "LoadBreakSwitch",
+"t": [
+"S5a",
+"S5b"
+],
+"ko": "구간 개폐기 S5",
+"en": "Sectionalizing switch S5",
+"normalOpen": false,
+"kind": "sectionalizer"
+},
+{
+"id": "DL1_SEC5_L",
+"cls": "ACLineSegment",
+"t": [
+"S5b",
+"L5"
+],
+"ko": "D/L #1 간선 6구간 (S5 뒤)",
+"en": "Feeder #1 main after S5",
+"km": 0.55,
+"line": "DL1"
+},
+{
+"id": "LD_M5",
+"cls": "EnergyConsumer",
+"t": [
+"L5"
+],
+"ko": "간선 부하 5",
+"en": "Main-line load 5",
+"p": 0.8,
+"at": [
+685,
+246
+]
+},
+{
+"id": "DL1_SEC5_BP3",
+"cls": "ACLineSegment",
+"t": [
+"L5",
+"BP3"
+],
+"ko": "D/L #1 간선 6구간 (분기점 BP3까지)",
+"en": "Feeder #1 main to BP3",
+"km": 0.67,
+"line": "DL1"
+},
+{
+"id": "DL1_SEC6",
+"cls": "ACLineSegment",
+"t": [
+"BP3",
+"S6a"
+],
+"ko": "D/L #1 간선 6구간",
+"en": "Feeder #1 main, section 6",
+"km": 0.38,
+"line": "DL1"
+},
+{
+"id": "S6",
+"cls": "LoadBreakSwitch",
+"t": [
+"S6a",
+"S6b"
+],
+"ko": "구간 개폐기 S6",
+"en": "Sectionalizing switch S6",
+"normalOpen": false,
+"kind": "sectionalizer"
+},
+{
+"id": "DL1_SEC6_L",
+"cls": "ACLineSegment",
+"t": [
+"S6b",
+"L6"
+],
+"ko": "D/L #1 간선 7구간 (S6 뒤)",
+"en": "Feeder #1 main after S6",
+"km": 0.55,
+"line": "DL1"
+},
+{
+"id": "LD_M6",
+"cls": "EnergyConsumer",
+"t": [
+"L6"
+],
+"ko": "간선 부하 6",
+"en": "Main-line load 6",
+"p": 0.6,
+"at": [
+805,
+294
+]
+},
+{
+"id": "DL1_SEC7_END",
+"cls": "ACLineSegment",
+"t": [
+"L6",
+"MEND"
+],
+"ko": "D/L #1 간선 끝 구간",
+"en": "Feeder #1 main, last stretch",
+"km": 0.75,
+"line": "DL1"
+},
+{
+"id": "BR1_1",
+"cls": "ACLineSegment",
+"t": [
+"BP1",
+"B1_1"
+],
+"ko": "분기선 1 (BP1)",
+"en": "Lateral 1 (BP1)",
+"km": 1.0,
+"line": "DL1"
+},
+{
+"id": "BR1_2",
+"cls": "ACLineSegment",
+"t": [
+"B1_1",
+"B1_2"
+],
+"ko": "분기선 1 (BP1)",
+"en": "Lateral 1 (BP1)",
+"km": 0.83,
+"line": "DL1"
+},
+{
+"id": "BR1_3",
+"cls": "ACLineSegment",
+"t": [
+"B1_2",
+"T1a"
+],
+"ko": "분기선 1 끝",
+"en": "Lateral 1 end",
+"km": 0.53,
+"line": "DL1"
+},
+{
+"id": "LD_B1a",
+"cls": "EnergyConsumer",
+"t": [
+"B1_1"
+],
+"ko": "분기선 1 부하 a",
+"en": "Lateral 1 load a",
+"p": 1.0,
+"at": [
+271,
+334
+]
+},
+{
+"id": "LD_B1b",
+"cls": "EnergyConsumer",
+"t": [
+"B1_2"
+],
+"ko": "분기선 1 부하 b",
+"en": "Lateral 1 load b",
+"p": 0.9,
+"at": [
+271,
+384
+]
+},
+{
+"id": "BR2_1",
+"cls": "ACLineSegment",
+"t": [
+"BP2",
+"B2_1"
+],
+"ko": "분기선 2 (BP2)",
+"en": "Lateral 2 (BP2)",
+"km": 0.92,
+"line": "DL1"
+},
+{
+"id": "BR2_2",
+"cls": "ACLineSegment",
+"t": [
+"B2_1",
+"T2a"
+],
+"ko": "분기선 2 끝",
+"en": "Lateral 2 end",
+"km": 1.42,
+"line": "DL1"
+},
+{
+"id": "LD_B2",
+"cls": "EnergyConsumer",
+"t": [
+"B2_1"
+],
+"ko": "분기선 2 부하",
+"en": "Lateral 2 load",
+"p": 0.9,
+"at": [
+511,
+219
+]
+},
+{
+"id": "BR3_1",
+"cls": "ACLineSegment",
+"t": [
+"BP3",
+"B3_1"
+],
+"ko": "분기선 3 (BP3)",
+"en": "Lateral 3 (BP3)",
+"km": 1.17,
+"line": "DL1"
+},
+{
+"id": "BR3_2",
+"cls": "ACLineSegment",
+"t": [
+"B3_1",
+"T3a"
+],
+"ko": "분기선 3 끝",
+"en": "Lateral 3 end",
+"km": 1.2,
+"line": "DL1"
+},
+{
+"id": "LD_B3",
+"cls": "EnergyConsumer",
+"t": [
+"B3_1"
+],
+"ko": "분기선 3 부하",
+"en": "Lateral 3 load",
+"p": 0.9,
+"at": [
+751,
+344
+]
+},
+{
+"id": "DL2_1",
+"cls": "ACLineSegment",
+"t": [
+"DL2_0",
+"DL2_A"
+],
+"ko": "D/L #2 선로",
+"en": "Feeder #2",
+"km": 2.42,
+"line": "DL2"
+},
+{
+"id": "DL2_2",
+"cls": "ACLineSegment",
+"t": [
+"DL2_A",
+"DL2_B"
+],
+"ko": "D/L #2 선로",
+"en": "Feeder #2",
+"km": 8.0,
+"line": "DL2"
+},
+{
+"id": "DL2_3",
+"cls": "ACLineSegment",
+"t": [
+"DL2_B",
+"DL2_E"
+],
+"ko": "D/L #2 선로 끝",
+"en": "Feeder #2 end",
+"km": 1.58,
+"line": "DL2"
+},
+{
+"id": "LD_DL2",
+"cls": "EnergyConsumer",
+"t": [
+"DL2_E"
+],
+"ko": "D/L #2 부하 (모음)",
+"en": "Feeder #2 load (lumped)",
+"p": 6.0,
+"at": [
+842,
+450
+]
+},
+{
+"id": "DL3_1",
+"cls": "ACLineSegment",
+"t": [
+"DL3_0",
+"DL3_A"
+],
+"ko": "D/L #3 선로",
+"en": "Feeder #3",
+"km": 6.42,
+"line": "DL3"
+},
+{
+"id": "DL3_2",
+"cls": "ACLineSegment",
+"t": [
+"DL3_A",
+"DL3_E"
+],
+"ko": "D/L #3 선로 끝",
+"en": "Feeder #3 end",
+"km": 2.58,
+"line": "DL3"
+},
+{
+"id": "LD_DL3",
+"cls": "EnergyConsumer",
+"t": [
+"DL3_E"
+],
+"ko": "D/L #3 부하 (모음)",
+"en": "Feeder #3 load (lumped)",
+"p": 5.0,
+"at": [
+662,
+90
+]
+},
+{
+"id": "C11_1",
+"cls": "ACLineSegment",
+"t": [
+"C11_0",
+"C11_A"
+],
+"ko": "C변전소 D/L #11 선로",
+"en": "Sub. C feeder #11",
+"km": 0.5,
+"line": "C11"
+},
+{
+"id": "C11_2",
+"cls": "ACLineSegment",
+"t": [
+"C11_A",
+"C11_E"
+],
+"ko": "C변전소 D/L #11 선로",
+"en": "Sub. C feeder #11",
+"km": 1.83,
+"line": "C11"
+},
+{
+"id": "LD_C11",
+"cls": "EnergyConsumer",
+"t": [
+"C11_E"
+],
+"ko": "C변전소 D/L #11 부하 (모음)",
+"en": "Sub. C feeder #11 load (lumped)",
+"p": 4.0,
+"at": [
+905,
+402
+]
+},
+{
+"id": "T1",
+"cls": "LoadBreakSwitch",
+"t": [
+"T1a",
+"T1b"
+],
+"ko": "연계 개폐기 T1 (D/L #2)",
+"en": "Tie switch T1 (to feeder #2)",
+"normalOpen": true,
+"kind": "tie"
+},
+{
+"id": "T2",
+"cls": "LoadBreakSwitch",
+"t": [
+"T2a",
+"T2b"
+],
+"ko": "연계 개폐기 T2 (D/L #3)",
+"en": "Tie switch T2 (to feeder #3)",
+"normalOpen": true,
+"kind": "tie"
+},
+{
+"id": "T3",
+"cls": "LoadBreakSwitch",
+"t": [
+"T3a",
+"T3b"
+],
+"ko": "연계 개폐기 T3 (D/L #2)",
+"en": "Tie switch T3 (to feeder #2)",
+"normalOpen": true,
+"kind": "tie"
+},
+{
+"id": "DL1_END_T4",
+"cls": "ACLineSegment",
+"t": [
+"MEND",
+"T4a"
+],
+"ko": "D/L #1 끝 → T4",
+"en": "Feeder #1 end to T4",
+"km": 0.3,
+"line": "DL1"
+},
+{
+"id": "T4",
+"cls": "LoadBreakSwitch",
+"t": [
+"T4a",
+"T4b"
+],
+"ko": "연계 개폐기 T4 (C변전소)",
+"en": "Tie switch T4 (to Sub. C)",
+"normalOpen": true,
+"kind": "tie"
+},
+{
+"id": "C11_T4",
+"cls": "ACLineSegment",
+"t": [
+"T4b",
+"C11_A"
+],
+"ko": "C변전소 D/L #11 연계 구간",
+"en": "Sub. C feeder #11 tie stretch",
+"km": 0.25,
+"line": "C11"
+},
+{
+"id": "T1_DL2",
+"cls": "ACLineSegment",
+"t": [
+"T1b",
+"DL2_A"
+],
+"ko": "T1 ↔ D/L #2",
+"en": "T1 to feeder #2",
+"km": 0.23,
+"line": "DL2"
+},
+{
+"id": "T2_DL3",
+"cls": "ACLineSegment",
+"t": [
+"T2b",
+"DL3_A"
+],
+"ko": "T2 ↔ D/L #3",
+"en": "T2 to feeder #3",
+"km": 0.27,
+"line": "DL3"
+},
+{
+"id": "T3_DL2",
+"cls": "ACLineSegment",
+"t": [
+"T3b",
+"DL2_B"
+],
+"ko": "T3 ↔ D/L #2",
+"en": "T3 to feeder #2",
+"km": 0.23,
+"line": "DL2"
+}
+],
+"feeders": {
+"DL1": {
+"cb": "CB_DL1",
+"ko": "D/L #1"
+},
+"DL2": {
+"cb": "CB_DL2",
+"ko": "D/L #2"
+},
+"DL3": {
+"cb": "CB_DL3",
+"ko": "D/L #3"
+},
+"C11": {
+"cb": "CB_C11",
+"ko": "C변전소 D/L #11"
+}
+},
+"alias": {
+"BUS_A3": "BUS_A",
+"BUS_A2": "BUS_A"
+},
+"scenarios": [
+{
+"id": "normal",
+"ko": "평상시",
+"en": "Normal",
+"open": [],
+"close": [],
+"check": {
+"dead": [],
+"dead_mw": 0,
+"loop": false,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"overload": []
+}
+},
+{
+"id": "fault3",
+"ko": "3~4구간 사이 고장: S3·S4 열고 T4로 복구",
+"en": "Fault between S3 and S4: open S3·S4, restore via T4",
+"open": [
+"S3",
+"S4"
+],
+"close": [
+"T4"
+],
+"fault": "DL1_SEC3_BP2",
+"check": {
+"dead": [
+"간선 부하 3",
+"분기선 2 부하"
+],
+"dead_mw": 1.8,
+"loop": false,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 7.0
+},
+"overload": []
+}
+},
+{
+"id": "cbtrip",
+"ko": "D/L #1 CB 트립 → T1으로 전체 절체 (과부하)",
+"en": "Feeder #1 CB trips → all to feeder #2 via T1 (overload)",
+"open": [
+"CB_DL1"
+],
+"close": [
+"T1"
+],
+"check": {
+"dead": [],
+"dead_mw": 0,
+"loop": false,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 14.5,
+"DL3": 5.0,
+"C11": 4.0
+},
+"overload": [
+"DL2"
+]
+}
+},
+{
+"id": "split",
+"ko": "D/L #1 CB 트립 → S2에서 나눠 T1·T4로 절체",
+"en": "Feeder #1 CB trips → split at S2, transfer via T1 and T4",
+"open": [
+"CB_DL1",
+"S2"
+],
+"close": [
+"T1",
+"T4"
+],
+"check": {
+"dead": [],
+"dead_mw": 0,
+"loop": false,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 8.9,
+"DL3": 5.0,
+"C11": 9.6
+},
+"overload": []
+}
+},
+{
+"id": "loop",
+"ko": "평상시에 T4를 닫으면? (루프 운전)",
+"en": "Close T4 in normal state? (loop)",
+"open": [],
+"close": [
+"T4"
+],
+"check": {
+"dead": [],
+"dead_mw": 0,
+"loop": true,
+"feederMW": {
+"DL1": 6.25,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 6.25
+},
+"overload": []
+}
+}
+],
+"mrid": {
+"CB_DL1": "7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1",
+"CB_DL2": "0ae2be00-fd95-5f57-82ce-54efd4d01e8a",
+"CB_DL3": "5f4e95c7-02db-5109-883c-6ca1bdb261e5",
+"CB_C11": "963b5169-d2f8-5246-a3e5-305eb5dd7a1d",
+"S1": "40b2a5ec-630e-5204-a1fd-0b0bff7a8e0f",
+"S2": "00d0c91c-c1ba-5f91-b1ac-f0f34342941c",
+"S3": "448b614f-84c7-5b50-976c-8b5e2fa15cd1",
+"S4": "32707372-2b8a-54b6-a755-4ab3e42abfec",
+"S5": "a1e1b903-48f9-5256-8862-92c891050074",
+"S6": "9bd452c5-6254-52bb-b8cd-7a5b3a940e0e",
+"T1": "26c00b57-4b9e-5bc0-82f7-2fa6c61d02fb",
+"T2": "2dca9222-88b3-56f3-8beb-ff9e4f6c70e1",
+"T3": "91cb51cd-cf05-5690-81bf-7eac2b19b334",
+"T4": "99c026aa-750c-531f-ac78-bf95e93b3467"
+}
+}

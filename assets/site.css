@@ -318,3 +318,47 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .uuid-out{font-size:14px;word-break:break-all}
 .uuid-ns{display:inline-flex;flex-direction:column;gap:1px}
 .uuid-ns small,.uuid-note{color:var(--muted);font-size:12.5px;margin:0}
+
+/* 전력망 페이지: 배전선로 상세 */
+:root{--fd-1:#2563eb;--fd-2:#15803d;--fd-3:#7c3aed;--fd-4:#c2410c}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--fd-1:#6ea8fe;--fd-2:#4ade80;--fd-3:#b794f6;--fd-4:#fb923c} }
+:root[data-theme="dark"]{--fd-1:#6ea8fe;--fd-2:#4ade80;--fd-3:#b794f6;--fd-4:#fb923c}
+.fd-wrap{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;align-items:start}
+@media (max-width:860px){.fd-wrap{grid-template-columns:minmax(0,1fr)}}
+.fd-map svg{min-width:640px}
+.fd-side{display:grid;gap:10px;min-width:0}
+.fd-side .panel{font-size:14px}
+.fd-bus{fill:var(--mv)}
+.fd-cap{fill:var(--muted);font-size:12px}
+.fd-ln{stroke:var(--mv);stroke-width:3.5;stroke-linecap:round}
+.fd-ln.dead{stroke:var(--dead) !important;stroke-dasharray:5 5}
+.fd-ln.loop{stroke:var(--hv) !important;stroke-dasharray:8 4}
+.fd-ln.faulted{stroke:var(--hv) !important;stroke-width:5}
+.fd-ln.sel{stroke-width:6}
+.fd-hit{stroke:transparent;stroke-width:12;cursor:pointer}
+.fd-sw{cursor:pointer}
+.fd-sw .fd-stub{stroke:var(--node);stroke-width:2}
+.fd-sw .sym{fill:var(--surface);stroke:var(--node);stroke-width:2}
+.fd-sw.tie .sym{stroke-dasharray:3 2}
+.fd-sw.open .sym{fill:var(--surface) !important}
+.fd-sw.moved .sym{stroke-width:3.5}
+.fd-sw.sel .sym{stroke:var(--warm)}
+.fd-sw:focus-visible{outline:none}.fd-sw:focus-visible .sym{stroke:var(--accent);stroke-width:4}
+.fd-lbl{fill:var(--text);font-size:13px;font-weight:600}
+.fd-ld{cursor:pointer}
+.fd-ld .sym{fill:var(--surface);stroke:var(--node);stroke-width:1.2}
+.fd-ld.dead .sym{fill:var(--dead) !important;opacity:.5}
+.fd-ld.dead .fd-mw{text-decoration:line-through;fill:var(--muted)}
+.fd-mw{fill:var(--muted);font-size:12px}
+.fd-fault{font-size:24px}
+.fd-scen button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
+.fd-scen button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+#fdStatus .bad{color:var(--hv);font-weight:600}#fdStatus .ok{color:var(--ok);font-weight:600}
+.fd-bar{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin:4px 0 10px;font-size:13px}
+.fd-bar i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.fd-bar b{font-variant-numeric:tabular-nums}
+.fd-bar .track{grid-column:1/-1;height:7px;background:var(--code);border-radius:4px;overflow:hidden}
+.fd-bar .track div{height:100%}
+.fd-bar.over b{color:var(--hv)}
+.fd-info{color:var(--muted);font-size:13px}
+.fd-info b{color:var(--text)}

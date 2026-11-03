@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
+<script src="assets/feeder.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -224,6 +225,51 @@ SELECT DISTINCT ?a ?b WHERE {
   ?e2 cim:IdentifiedObject.name ?b .
 }</code></pre>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">"<b>같은 멀티탭(ConnectivityNode)에 꽂혀 있는 설비 두 개를 모두 짝지어 보여 줘</b>"라는 질문입니다. 이것만으로 어떤 설비가 어떤 설비와 바로 이웃해 있는지 전체 연결 지도를 얻을 수 있습니다.</p><p lang="en">The question is "<b>pair up every two devices plugged into the same power strip (ConnectivityNode)</b>". That alone yields the full map of which equipment sits right next to which.</p></div>
+</section>
+
+<section id="feeder">
+  <h2><span lang="ko">배전선로로 들어가 보기: D/L #1</span><span lang="en">Inside a distribution feeder: D/L #1</span></h2>
+  <p class="sub" lang="ko">위 예제에서 "D/L #1 부하 8.5MW" 하나로 줄여 그렸던 배전선로를 펼쳤습니다. 간선은 <b>구간 개폐기 6대</b>로 7구간으로 나뉘고, <b>분기점 3곳</b>에서 분기선이 갈라집니다. 끝에는 이웃 선로와 이어지는 <b>연계 개폐기 4대</b>가 평상시 열린 채로 있습니다. <b>개폐기를 눌러 보세요.</b> 전기가 어디까지 가는지, 어느 선로가 공급하는지(색), 부하율과 루프 여부를 바로 다시 계산합니다.</p>
+  <p class="sub" lang="en">The feeder drawn above as a single "D/L #1 load 8.5 MW", opened up. The main line is split into seven sections by <b>six sectionalizing switches</b>, <b>three branch points</b> feed laterals, and <b>four tie switches</b> to neighbouring feeders sit normally open. <b>Click any switch</b>: energization, the supplying feeder (colour), loading and loops are recomputed at once.</p>
+  <div class="notice"><b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">This is virtual data</span></b>
+    <p lang="ko">선로 길이·임피던스·부하·선로 한도(10MW)는 학습용 가상 값입니다. 전압·전류 계산(조류계산)은 하지 않고, 연결 관계와 부하 합계만 계산합니다.</p>
+    <p lang="en">Lengths, impedances, loads and the 10 MW feeder limit are made up. No load flow is run; only connectivity and load sums are computed.</p></div>
+  <div class="ctrl fd-scen" id="fdScen"></div>
+  <div class="fd-wrap">
+    <div class="diagram fd-map" id="fdMap"></div>
+    <div class="fd-side">
+      <div class="panel" id="fdStatus" aria-live="polite"></div>
+      <div class="panel" id="fdBars"></div>
+      <div class="panel fd-info" id="fdInfo"></div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--fd-1)"></i>D/L #1</span><span><i style="background:var(--fd-2)"></i>D/L #2</span><span><i style="background:var(--fd-3)"></i>D/L #3</span><span><i style="background:var(--fd-4)"></i><span lang="ko">C변전소 D/L #11</span><span lang="en">Sub. C #11</span></span>
+    <span><i style="background:var(--dead)"></i><span lang="ko">정전</span><span lang="en">dead</span></span>
+    <span>● <span lang="ko">닫힘</span><span lang="en">closed</span> ○ <span lang="ko">열림</span><span lang="en">open</span> · <span lang="ko">점선 테두리 = 연계 개폐기(평상시 열림)</span><span lang="en">dashed ring = tie switch (normally open)</span> · ■ CB · ▼ <span lang="ko">부하</span><span lang="en">load</span> · ⚡ <span lang="ko">고장</span><span lang="en">fault</span></span>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">시나리오로 읽기</span><span lang="en">Reading the scenarios</span></b>
+    <ul lang="ko">
+      <li><b>고장 분리·복구</b>: 3~4구간 사이에 고장이 나면 S3와 S4를 열어 고장 구간을 떼어 냅니다. 그 뒤쪽은 T4를 닫아 C변전소에서 받습니다. 고장 구간에 붙은 간선 부하 3과 분기선 2(합계 1.8MW)만 정전으로 남습니다. 분기선 2에는 개폐기가 없어 따로 살릴 수 없기 때문입니다.</li>
+      <li><b>통째로 절체</b>: D/L #1 CB가 트립된 뒤 T1 하나로 전부 넘기면 D/L #2가 14.5MW가 되어 한도 10MW를 넘습니다.</li>
+      <li><b>나눠서 절체</b>: S2에서 선로를 나눠 앞쪽(2.9MW)은 T1로 D/L #2에, 뒤쪽(5.6MW)은 T4로 C변전소에 보내면 8.9MW와 9.6MW로 두 선로 모두 한도 안에 듭니다. S4에서 나누면 D/L #2가 11.5MW가 되어 넘칩니다. 어디서 나눌지가 곧 운영 판단입니다.</li>
+      <li><b>루프</b>: 평상시에 연계 개폐기를 닫으면 두 선로가 이어져 루프가 됩니다. 배전선로는 방사형으로 운전하므로 경고가 뜹니다.</li>
+    </ul>
+    <ul lang="en">
+      <li><b>Fault isolation and restoration</b>: for a fault between sections 3 and 4, open S3 and S4 to cut it out and close T4 so Sub. C feeds the rest. Only main load 3 and lateral 2 (1.8 MW) stay dead, because lateral 2 has no switch of its own.</li>
+      <li><b>Whole transfer</b>: after the D/L #1 breaker trips, moving everything through T1 puts 14.5 MW on D/L #2, over its 10 MW limit.</li>
+      <li><b>Split transfer</b>: split at S2, send the front part (2.9 MW) via T1 to D/L #2 and the rest (5.6 MW) via T4 to Sub. C: 8.9 and 9.6 MW, both within limits. Splitting at S4 instead overloads D/L #2 at 11.5 MW; where to split is the operator's call.</li>
+      <li><b>Loop</b>: closing a tie in the normal state ties two feeders together; distribution runs radially, so a warning appears.</li>
+    </ul></div>
+  <h3><span lang="ko">CIM으로는 이렇게</span><span lang="en">In CIM</span></h3>
+  <p lang="ko">구간 개폐기와 연계 개폐기는 같은 클래스(<code>cim:LoadBreakSwitch</code>)입니다. 차이는 <b>평상시 상태</b>인 <code>normalOpen</code>(EQ 프로파일)뿐이고, 지금 상태는 <code>open</code>(SSH 프로파일)으로 따로 둡니다. 개폐기를 누르면 <code>open</code>만 바뀌고 <code>normalOpen</code>은 그대로입니다. 그래서 "평상시와 달라진 개폐기"(그림에서 굵은 테두리)를 언제든 찾을 수 있습니다. 같은 모델을 pycim으로 만들어 RDF로 내보냈고, 위 시나리오 결과는 빌드할 때 pycim 토폴로지로 한 번 더 확인합니다.</p>
+  <p lang="en">Sectionalizing and tie switches are the same class (<code>cim:LoadBreakSwitch</code>); they differ only in their <b>normal state</b>, <code>normalOpen</code> (EQ profile), while the present state is <code>open</code> (SSH profile). Clicking changes only <code>open</code>, so switches "away from normal" (bold ring) can always be found. The same model is built with pycim and exported as RDF, and the scenario results are re-checked with pycim's topology at build time.</p>
+<pre><code>ex:_T4 a cim:LoadBreakSwitch ;                      # <span lang="ko">연계 개폐기</span><span lang="en">tie switch</span>
+    cim:IdentifiedObject.name "연계 개폐기 T4 (C변전소)" ;
+    cim:Switch.normalOpen true ;                    # <span lang="ko">평상시 열림 (EQ)</span><span lang="en">normally open (EQ)</span>
+    cim:Switch.open true .                          # <span lang="ko">지금 상태 (SSH) — 복구 시 false로</span><span lang="en">present state (SSH) — false when restoring</span></code></pre>
+  <p lang="ko">코드와 데이터: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py">build_feeder.py</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/feeder.ttl">feeder.ttl</a> (CIM RDF) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/feeder.js">feeder.js</a></p>
+  <p lang="en">Code and data: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py">build_feeder.py</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/feeder.ttl">feeder.ttl</a> (CIM RDF) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/feeder.js">feeder.js</a></p>
 </section>
 
 <section id="use">
