@@ -62,8 +62,25 @@ node tests/physai.test.mjs           # Physical AI 시뮬레이션 테스트
 
 ## 라이선스
 
-**© 2026 1004aiteam-power. All rights reserved.**
+© 2026 1004aiteam-power. 가져다 써도 좋지만, **아래 조건을 꼭 지켜 주세요.**
 
-저작권자의 허락 없이 이 저장소와 웹사이트의 내용(코드·문서·글·그림·데이터)을 복제·수정·배포·재게시하는 것을 금지합니다.
-외부에서 가져온 구성요소(Oxigraph, Cytoscape.js, cimpy 예제 데이터, Natural Earth 지도)는 각 원래 라이선스를 따릅니다.
-자세한 내용은 [LICENSE](LICENSE)를 보세요.
+| 대상 | 라이선스 | 지켜야 할 것 |
+|---|---|---|
+| 코드 (`pycim/`, `tests/`, `examples/**/*.py`, `shapes/`, `assets/*.js·css`, `assets/physai/`, `assets/twin/`) | [AGPL-3.0](LICENSE-CODE) | 저작권·라이선스 표시 유지, 수정·포함한 프로그램은 **전체 소스를 같은 조건으로 공개** (웹 서비스로 제공해도 공개) |
+| 문서·콘텐츠 (`docs/`, README, 웹페이지의 글·그림·디자인, 데이터 파일) | [CC BY-NC-SA 4.0](LICENSE-DOCS) | **출처 표시 필수**, 상업적 이용 금지, 수정한 결과물은 같은 조건으로만 공개 |
+| 외부 구성요소 (Oxigraph, Cytoscape.js, cimpy 예제 데이터, Natural Earth) | 각 원래 라이선스 | [LICENSE](LICENSE) 참고 |
+
+### 출처 표시 방법
+
+```
+출처: Ontology Space (1004aiteam-power), https://1004aiteam-power.github.io/ontology-space/ , CC BY-NC-SA 4.0
+```
+
+```
+Source: Ontology Space by 1004aiteam-power, https://1004aiteam-power.github.io/ontology-space/ , CC BY-NC-SA 4.0
+```
+
+수정했다면 "○○를 수정함"처럼 변경 사항도 함께 밝혀 주세요. 상업적 이용이나 다른 조건의 사용은 별도로 문의해 주세요.
+사용하신다면 GitHub 이슈로 알려 주시면 반갑겠습니다.
+
+자세한 내용: [LICENSE](LICENSE)

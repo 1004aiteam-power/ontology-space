@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """pycim: IEC CIM(Common Information Model)을 파이썬 클래스로 설계한 학습용 패키지."""
 from .base import CIMObject, IdentifiedObject
 from .core import (ACDCTerminal, BaseVoltage, Bay, ConductingEquipment, ConnectivityNode,

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """pycim으로 예제 변전소를 만들고, 정전 영향 분석과 RDF 내보내기를 해 본다.
 
 실행: python examples/build_sample_grid.py   (저장소 루트에서)

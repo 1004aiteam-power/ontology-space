@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 공통: 테마 전환, 한/영 전환, 코드 하이라이트, 코드 뷰어
 (function () {
   const root = document.documentElement;

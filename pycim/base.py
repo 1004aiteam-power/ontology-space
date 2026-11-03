@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """CIM 클래스의 공통 기반: IdentifiedObject와 CIM 이름 매핑 규칙.
 
 설계 원칙

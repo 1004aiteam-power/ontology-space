@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 실습 페이지: Oxigraph(WebAssembly)로 브라우저 안에서 SPARQL 실행 + Cytoscape로 지식 그래프 표시
 import init, { Store } from './vendor/oxigraph/web.js';
 

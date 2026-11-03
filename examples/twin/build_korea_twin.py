@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """가상 대한민국 전력망 디지털 트윈: CIM 모델 → pandapower 24시간 조류계산 → 웹 데이터.
 
 ⚠ 모든 데이터는 가상입니다.

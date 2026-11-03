@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 디지털 트윈: 가상 대한민국 전력망 24시간 상태를 지도 위에 재생
 // 데이터: assets/data/twin.json (examples/twin/build_korea_twin.py 가 pycim → pandapower 로 계산)
 const $ = (id) => document.getElementById(id);

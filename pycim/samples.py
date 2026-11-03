@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """예제 계통: B변전소 → 154kV 선로 → A변전소(154/22.9kV) → 배전선로 부하.
 
 mRID는 모두 stable_mrid(이름 기반 UUID v5)로 발급한다.

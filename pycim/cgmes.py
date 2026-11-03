@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """CGMES(RDF/XML) 파일 읽기 → pycim 객체.
 
 - CIM16(CGMES 2.4.15)과 CIM100(CGMES 3.0) 네임스페이스를 모두 읽는다.

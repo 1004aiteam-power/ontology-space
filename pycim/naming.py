@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """Name / NameType / NameTypeAuthority: 다른 시스템의 코드를 mRID에 연결하는 매핑 테이블.
 
 CIM은 하나의 객체가 여러 이름(코드)을 가질 수 있게 한다.

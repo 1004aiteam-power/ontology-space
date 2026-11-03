@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """SHACL로 데이터 품질 검증.
 
 규칙: shapes/cim-shapes.ttl, 클래스 계층: shapes/cim-classes.ttl

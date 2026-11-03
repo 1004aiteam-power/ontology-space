@@ -1,50 +1,66 @@
-Copyright (c) 2026 1004aiteam-power. All rights reserved.
+Ontology Space
+Copyright (c) 2026 1004aiteam-power
+https://github.com/1004aiteam-power/ontology-space
+https://1004aiteam-power.github.io/ontology-space/
 
-이 저장소와 웹사이트(https://1004aiteam-power.github.io/ontology-space/)의 모든 내용
-— 코드, 문서, 글, 그림, 데이터, 웹페이지 디자인 — 은 저작권법의 보호를 받습니다.
+이 저장소는 두 가지 라이선스로 공개됩니다. 가져다 써도 좋지만, 아래 조건을 반드시 지켜야 합니다.
+This repository is released under two licenses. You may use it, but you must follow the conditions below.
 
-저작권자의 사전 서면 허락 없이 다음 행위를 금지합니다.
-  - 전부 또는 일부의 복제, 복사, 다운로드 후 재게시 (불펌)
-  - 수정, 번역, 2차적 저작물 작성
-  - 배포, 재배포, 공중송신, 판매, 대여
-  - 상업적·비상업적 목적을 불문한 모든 이용
+======================================================================
+1. 코드 / Code  —  GNU Affero General Public License v3.0 (AGPL-3.0-only)
+   전문 / Full text: LICENSE-CODE
+======================================================================
+대상 / Applies to:
+  pycim/  tests/  examples/**/*.py  shapes/
+  assets/site.js  assets/site.css  assets/lab.js  assets/physai/  assets/twin/
 
-웹 브라우저로 페이지를 열람하는 것과, GitHub 이용약관이 정한 범위 안에서
-저장소를 보는 것만 허용됩니다. GitHub에서의 포크(fork)는 위 권리를 부여하지 않습니다.
+조건 / Conditions:
+  - 저작권 표시와 라이선스 고지를 그대로 유지해야 합니다.
+    Keep the copyright and license notices.
+  - 이 코드를 수정하거나 포함해 만든 프로그램을 배포하면, 그 프로그램 전체의 소스 코드를
+    같은 AGPL-3.0 조건으로 공개해야 합니다.
+    If you distribute a program that modifies or includes this code, you must release the
+    complete source of that program under the same AGPL-3.0 terms.
+  - 네트워크(웹 서비스)로만 제공해도 사용자에게 소스 코드를 공개해야 합니다.
+    Offering it to users over a network (e.g. as a web service) also requires releasing the source.
 
-이용 문의: GitHub 저장소 https://github.com/1004aiteam-power/ontology-space
+======================================================================
+2. 문서·콘텐츠 / Documentation & content  —  CC BY-NC-SA 4.0
+   전문 / Full text: LICENSE-DOCS
+   https://creativecommons.org/licenses/by-nc-sa/4.0/
+======================================================================
+대상 / Applies to:
+  docs/  README.md  웹페이지(*.html)의 글·그림·디자인 / text, figures and design of the web pages
+  assets/data/  examples/의 데이터 파일 (*.ttl, *.csv, *.dss, *.json) / data files in examples/
 
-----------------------------------------------------------------------
-English
+조건 / Conditions:
+  - BY  출처 표시 필수: 저작자(1004aiteam-power), 제목(Ontology Space), 링크, 라이선스, 변경 여부
+        Attribution required: author, title, link, license, and whether changes were made
+  - NC  비영리: 상업적 목적으로 이용할 수 없습니다 / NonCommercial use only
+  - SA  동일 조건 변경 허락: 수정·가공한 결과물은 같은 CC BY-NC-SA 4.0으로만 공개할 수 있습니다
+        ShareAlike: adaptations must be shared under the same license
 
-All content of this repository and website — code, documentation, text,
-images, data and web page design — is protected by copyright.
+출처 표시 예 / Attribution example:
+  출처: Ontology Space (1004aiteam-power), https://1004aiteam-power.github.io/ontology-space/ , CC BY-NC-SA 4.0
+  Source: Ontology Space by 1004aiteam-power, https://1004aiteam-power.github.io/ontology-space/ , CC BY-NC-SA 4.0
 
-Without the prior written permission of the copyright holder, you may NOT:
-  - copy, reproduce, or re-publish any part of it
-  - modify, translate, or create derivative works
-  - distribute, redistribute, transmit, sell, or lend it
-  - use it for any purpose, commercial or non-commercial
+상업적 이용이나 다른 조건의 사용은 저작권자의 별도 허락이 필요합니다.
+Commercial use or use under other terms requires separate permission from the copyright holder.
 
-You may only view the pages in a web browser and view the repository as
-permitted by GitHub's Terms of Service. Forking on GitHub grants none of
-the rights above.
-
-----------------------------------------------------------------------
-제3자 구성요소 / Third-party components
-
-다음 파일은 각 원저작자의 라이선스를 따르며, 위 제한이 적용되지 않습니다.
-The following files remain under their original licenses and are not
-covered by the restrictions above.
-
-  - assets/vendor/oxigraph/         Oxigraph — MIT OR Apache-2.0
-  - assets/vendor/cytoscape.min.js  Cytoscape.js — MIT
-  - examples/cgmes/CIGRE_MV/        cimpy sample data — Apache-2.0
-                                    (examples/cgmes/LICENSE-cimpy-Apache-2.0)
+======================================================================
+3. 제3자 구성요소 / Third-party components (원래 라이선스 유지 / original licenses)
+======================================================================
+  - assets/vendor/oxigraph/            Oxigraph — MIT OR Apache-2.0
+  - assets/vendor/cytoscape.min.js     Cytoscape.js — MIT
+  - examples/cgmes/CIGRE_MV/           cimpy sample data — Apache-2.0
+                                       (examples/cgmes/LICENSE-cimpy-Apache-2.0)
   - examples/twin/korea_outline.geojson
-                                    Natural Earth (public domain), via world-atlas (ISC)
+                                       Natural Earth (public domain), via world-atlas (ISC)
 
-이전 버전 안내 / Earlier versions
-2026-11-03 이전 커밋은 MIT License로 공개되었으며, 해당 버전에 한해 MIT 조건이 유지됩니다.
-Commits before 2026-11-03 were published under the MIT License; those
-versions remain available under MIT terms.
+======================================================================
+4. 이전 버전 / Earlier versions
+======================================================================
+  - 2026-11-03 이전 커밋은 MIT License로 공개되었습니다.
+    Commits before 2026-11-03 were published under the MIT License.
+  - 커밋 e4fb463는 All Rights Reserved로 공개되었습니다.
+    Commit e4fb463 was published as All Rights Reserved.

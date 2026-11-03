@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """mRID(Master Resource Identifier) 발급 규칙.
 
 CIM은 mRID를 "모델 관리 주체가 발급하는 식별자"로 정의하고, 전역 유일성을 위해

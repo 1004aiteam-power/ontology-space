@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // NEAT (NeuroEvolution of Augmenting Topologies) — Stanley & Miikkulainen, 2002
 // 브라우저용 최소 구현: 혁신 번호(historical marking), 종 분화(speciation), 구조 확장(complexification)
 //

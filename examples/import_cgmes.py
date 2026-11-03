@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """CGMES 파일 읽기 → 조류계산 → SV 내보내기 → 원본 결과와 비교.
 
 데이터: examples/cgmes/CIGRE_MV (CIGRE 중압 배전 벤치마크, NEPLAN에서 내보낸 CGMES 2.4.15)

@@ -3,6 +3,7 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 # pycim에서 자동 생성 (pycim.rdf.class_hierarchy_turtle)
+# SPDX-License-Identifier: AGPL-3.0-only
 
 cim:ACDCTerminal a owl:Class ; rdfs:subClassOf cim:IdentifiedObject .
 cim:ACLineSegment a owl:Class ; rdfs:subClassOf cim:Conductor .

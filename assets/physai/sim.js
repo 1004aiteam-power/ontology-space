@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 자율주행 시뮬레이션 코어 (화면 없이도 동작 → 테스트·빠른 학습 가능)
 //
 // 원본(pygame) 대비 개선

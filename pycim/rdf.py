@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """CIM 객체 → RDF Turtle 직렬화 (외부 라이브러리 없이)."""
 from __future__ import annotations
 
@@ -55,7 +57,8 @@ def class_hierarchy_turtle() -> str:
     lines = [f"@prefix cim:  <{CIM_NS}> .",
              "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .",
              "@prefix owl:  <http://www.w3.org/2002/07/owl#> .", "",
-             "# pycim에서 자동 생성 (pycim.rdf.class_hierarchy_turtle)", ""]
+             "# pycim에서 자동 생성 (pycim.rdf.class_hierarchy_turtle)",
+             "# SPDX-License-Identifier: AGPL-3.0-only", ""]
     for name, cls in sorted(_all_classes().items()):
         if cls is CIMObject:
             continue

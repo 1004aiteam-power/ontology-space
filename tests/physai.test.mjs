@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // Physical AI 시뮬레이션 테스트 — 실행: node tests/physai.test.mjs
 import assert from 'node:assert/strict';
 import { Population } from '../assets/physai/neat.js';

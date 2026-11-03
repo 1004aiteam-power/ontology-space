@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """Wires 패키지: 선로, 변압기, 개폐기, 모선, 부하, 전원."""
 from __future__ import annotations
 
