@@ -5,7 +5,8 @@ from .core import (ACDCTerminal, BaseVoltage, Bay, ConductingEquipment, Connecti
                    PowerSystemResource, Substation, Terminal, TopologicalNode, VoltageLevel)
 from .wires import (ACLineSegment, Breaker, BusbarSection, Conductor, ConformLoad, Connector,
                     Disconnector, EnergyConnection, EnergyConsumer, ExternalNetworkInjection,
-                    LoadBreakSwitch, NonConformLoad, PowerTransformer, PowerTransformerEnd,
+                    LoadBreakSwitch, NonConformLoad, PowerElectronicsConnection, PowerTransformer,
+                    PowerTransformerEnd,
                     ProtectedSwitch, RegulatingCondEq, RotatingMachine, Switch, SynchronousMachine,
                     TransformerEnd)
 from .model import Model

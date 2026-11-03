@@ -90,6 +90,15 @@ class ExternalNetworkInjection(RegulatingCondEq):
 
 
 @cim
+class PowerElectronicsConnection(RegulatingCondEq):
+    """인버터로 계통에 연결되는 설비 (태양광, ESS 등)."""
+
+    p: float = 0.0        # MW
+    q: float = 0.0        # MVAr
+    rated_s: float = 0.0  # MVA
+
+
+@cim
 class RotatingMachine(RegulatingCondEq):
     rated_s: float = 0.0  # MVA
     p: float = 0.0

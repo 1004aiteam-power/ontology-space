@@ -252,3 +252,32 @@ def test_shacl_validation():
     conforms, report, _ = ok(rdflib.Graph().parse(root / "examples" / "broken-sample.ttl"))
     SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
     assert not conforms and len(list(report.subjects(rdflib.RDF.type, SH.ValidationResult))) == 8
+
+
+# ---- 디지털 트윈 (가상 대한민국 전력망) ------------------------------------------------
+def test_twin_data_is_sane():
+    import json
+    root = Path(__file__).resolve().parent.parent
+    d = json.loads((root / "assets" / "data" / "twin.json").read_text(encoding="utf-8"))
+    assert d["meta"]["virtual"] is True
+    S = d["series"]
+    assert all(len(S[k]) == 24 for k in ("load", "solar", "nuclear", "coal", "lng", "losses"))
+    for h in range(24):                                   # 발전 = 수요 + 손실 (반올림 오차 이내)
+        gen = S["nuclear"][h] + S["coal"][h] + S["lng"][h] + S["solar"][h]
+        assert abs(gen - S["load"][h] - S["losses"][h]) < 10
+    volts = [v for series in S["stationV"].values() for v in series]
+    assert 0.95 <= min(volts) and max(volts) <= 1.05     # OLTC·발전기 전압 제어로 정상 범위
+    assert max(S["maxLoading"]) < 110
+    assert S["solar"][12] > 0 and S["solar"][0] == 0
+    ids = {s["id"] for s in d["stations"]}
+    assert all(l["a"] in ids and l["b"] in ids for l in d["lines"])
+
+
+def test_twin_cim_model_loads():
+    rdflib = pytest.importorskip("rdflib")
+    root = Path(__file__).resolve().parent.parent
+    g = rdflib.Graph().parse(root / "examples" / "twin" / "korea_virtual_grid.ttl")
+    CIM = rdflib.Namespace("http://iec.ch/TC57/CIM100#")
+    count = lambda c: len(list(g.subjects(rdflib.RDF.type, CIM[c])))
+    assert count("Substation") == 42 and count("ACLineSegment") == 57
+    assert count("PowerElectronicsConnection") > 0

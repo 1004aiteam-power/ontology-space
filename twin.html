@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 디지털 트윈</title>
+<meta name="title-ko" content="Ontology Space · 디지털 트윈">
+<meta name="title-en" content="Ontology Space · Digital Twin">
+<meta name="description" content="가상 데이터로 만든 대한민국 전력망 디지털 트윈: 24시간 부하·태양광에 따른 전압과 선로 상태">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+<script src="assets/twin/twin.js" defer></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <a href="physical-ai.html"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a>
+    <a href="twin.html" aria-current="page"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">DIGITAL TWIN</div>
+  <h1><span lang="ko">가상 대한민국 전력망<br>디지털 트윈</span><span lang="en">A digital twin of a<br>virtual Korean power grid</span></h1>
+  <div class="notice">
+    <b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">This is virtual data</span></b>
+    <p lang="ko">이 페이지의 발전소·변전소·선로·용량·부하·태양광 곡선은 모두 <b>학습용으로 만든 가상 데이터</b>이며, 실제 한국전력 계통이나 특정 설비와 무관합니다. 지도 위 위치는 지역 감각을 위해 도시 근처에 대략 배치한 것이고, 실제 설비의 이름·위치·연결을 나타내지 않습니다.</p>
+    <p lang="en">All power plants, substations, lines, capacities, loads and solar curves on this page are <b>virtual data made for learning</b>. They do not represent KEPCO's real grid or any actual facility. Positions are placed roughly near cities only to give a sense of geography.</p>
+  </div>
+  <p class="lead" lang="ko">현실을 그대로 본뜬 가상 세계 — <a href="physical-ai.html">피지컬 AI 페이지</a>에서 말한 <b>‘매트릭스’</b>를 전력망에 적용한 예입니다. 하루 24시간 동안 수요와 태양광 발전이 바뀔 때, 전국의 전압과 선로 상태가 어떻게 변하는지 지도 위에서 재생합니다.</p>
+  <p class="lead" lang="en">A virtual world modelled on reality — the <b>“Matrix”</b> from the <a href="physical-ai.html">Physical AI page</a>, applied to a power grid. Play a full day and watch how voltages and line loadings across the country change as demand and solar output move.</p>
+</div>
+
+<section id="twin" style="padding-top:20px">
+  <div class="twin-ctrl ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="speedBtn"></button>
+    <span class="clock" id="clock">14:00</span>
+    <input type="range" id="slider" min="0" max="23.99" step="0.01" value="14" aria-label="time of day">
+  </div>
+  <div class="ctrl twin-ctrl hours">
+    <span class="meta"><span lang="ko">바로 가기</span><span lang="en">Jump to</span>:</span>
+    <button data-hour="4"><span lang="ko">04시 · 최저 수요</span><span lang="en">04:00 · lowest demand</span></button>
+    <button data-hour="12"><span lang="ko">12시 · 태양광 최대</span><span lang="en">12:00 · solar peak</span></button>
+    <button data-hour="14"><span lang="ko">14시 · 최대 수요</span><span lang="en">14:00 · peak demand</span></button>
+    <button data-hour="19"><span lang="ko">19시 · 해 진 뒤</span><span lang="en">19:00 · after sunset</span></button>
+  </div>
+  <div class="twin-wrap">
+    <div class="twin-map-box">
+      <div id="map" class="twin-map"><div id="tip" class="twin-tip" hidden></div></div>
+      <div class="ctrl twin-ctrl layers-row">
+        <label><input type="checkbox" id="kv765" checked> <i class="kvi k765"></i>765kV</label>
+        <label><input type="checkbox" id="kv345" checked> <i class="kvi k345"></i>345kV</label>
+        <label><input type="checkbox" id="kv154" checked> <i class="kvi k154"></i>154kV</label>
+        <label><input type="checkbox" id="showPlants" checked> <span lang="ko">발전소</span><span lang="en">Plants</span></label>
+        <label><input type="checkbox" id="showStations" checked> <span lang="ko">변전소</span><span lang="en">Substations</span></label>
+        <label><input type="checkbox" id="showLabels" checked> <span lang="ko">지명</span><span lang="en">Names</span></label>
+        <label><input type="checkbox" id="showFlow" checked> <span lang="ko">흐름 방향</span><span lang="en">Flow direction</span></label>
+        <label><input type="checkbox" id="colorMode" checked> <span lang="ko">상태 색 (주의·위험)</span><span lang="en">Status colours</span></label>
+      </div>
+      <div class="legend twin-legend">
+        <span><i class="sw" style="background:var(--twin-line)"></i><span lang="ko">선로 (굵기 = 전압 등급)</span><span lang="en">Line (width = voltage class)</span></span>
+        <span><i class="sw" style="background:#f59e0b"></i><span lang="ko">⚠ 주의: 부하율 80% 이상 · 전압 0.97 pu 미만</span><span lang="en">⚠ Caution: loading ≥ 80% · voltage &lt; 0.97 pu</span></span>
+        <span><i class="sw" style="background:#dc2626"></i><span lang="ko">⛔ 위험: 부하율 100% 이상 · 전압 0.95 pu 미만</span><span lang="en">⛔ Critical: loading ≥ 100% · voltage &lt; 0.95 pu</span></span>
+        <span><i class="dot"></i><span lang="ko">변전소 (크기 = 부하)</span><span lang="en">Substation (size = load)</span></span>
+        <span><i class="ringi"></i><span lang="ko">발전소 (바깥 원 = 용량, 안쪽 = 현재 출력)</span><span lang="en">Plant (ring = capacity, fill = output)</span></span>
+        <span class="types"><i class="pt" style="--c:#2a78d6"></i><span lang="ko">원전</span><span lang="en">Nuclear</span>
+          <i class="pt" style="--c:#eb6834"></i><span lang="ko">석탄</span><span lang="en">Coal</span>
+          <i class="pt" style="--c:#1baf7a"></i>LNG
+          <i class="pt" style="--c:#eda100"></i><span lang="ko">태양광</span><span lang="en">Solar</span></span>
+        <span>· · → <span lang="ko">전력이 흐르는 방향</span><span lang="en">direction of power flow</span></span>
+      </div>
+    </div>
+    <div class="twin-side">
+      <div id="kpi" class="kpi"></div>
+      <div class="panel">
+        <b><span lang="ko">지금 발전 구성</span><span lang="en">Generation mix now</span></b>
+        <div id="mix"></div>
+      </div>
+    </div>
+  </div>
+
+  <h3><span lang="ko">24시간 발전 구성과 수요</span><span lang="en">Generation mix and demand over 24 hours</span></h3>
+  <div class="panel chart-box">
+    <div class="chart-legend">
+      <span><i style="background:#2a78d6"></i><span lang="ko">원전</span><span lang="en">Nuclear</span></span>
+      <span><i style="background:#eb6834"></i><span lang="ko">석탄</span><span lang="en">Coal</span></span>
+      <span><i style="background:#1baf7a"></i>LNG</span>
+      <span><i style="background:#eda100"></i><span lang="ko">태양광</span><span lang="en">Solar</span></span>
+      <span><i style="background:transparent;border-top:2px dashed var(--text);height:0"></i><span lang="ko">수요</span><span lang="en">Demand</span></span>
+      <span><i style="background:var(--text);width:2px;height:12px"></i><span lang="ko">현재 시각</span><span lang="en">Current time</span></span>
+    </div>
+    <canvas id="mixChart" style="width:100%;height:240px;display:block" aria-label="generation mix chart"></canvas>
+    <div id="chartTip" hidden></div>
+    <p class="meta" lang="ko">차트를 누르면 그 시각으로 이동합니다. 발전 합계가 수요보다 조금 큰 만큼이 송전 손실입니다.</p>
+    <p class="meta" lang="en">Click the chart to jump to that hour. Generation exceeds demand by the transmission losses.</p>
+    <details><summary><span lang="ko">표로 보기 (24시간)</span><span lang="en">View as table (24 hours)</span></summary><div class="tbl"><table id="twinTable"></table></div></details>
+  </div>
+</section>
+
+<section id="story">
+  <h2><span lang="ko">무엇을 볼 수 있나</span><span lang="en">What to look for</span></h2>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">🌙 새벽 4시</span><span lang="en">🌙 04:00</span></h4><p lang="ko">수요가 가장 낮습니다. 원전과 석탄이 바탕을 깔고 LNG는 거의 쉽니다. 전압이 조금 높아집니다.</p><p lang="en">Lowest demand: nuclear and coal carry the base, LNG nearly idle, voltages drift slightly high.</p></div>
+    <div class="card"><h4><span lang="ko">☀️ 정오</span><span lang="en">☀️ Noon</span></h4><p lang="ko">태양광이 최대입니다. 호남의 태양광 전력이 북쪽으로 몰리며 <b>호남 선로가 혼잡(주의·위험)</b>해집니다. 실제로도 재생에너지가 많은 지역의 송전 제약은 중요한 과제입니다.</p><p lang="en">Solar peaks. Honam's solar power rushes north and <b>Honam lines congest (caution/critical)</b> — a real-world challenge in regions rich in renewables.</p></div>
+    <div class="card"><h4><span lang="ko">🏙️ 오후 2시</span><span lang="en">🏙️ 14:00</span></h4><p lang="ko">수요가 최대입니다. 수도권으로 향하는 765kV·345kV 간선의 흐름이 가장 굵어지고, 먼 지방의 전압이 가장 낮아집니다.</p><p lang="en">Peak demand: flows into the capital region on 765/345 kV corridors are heaviest; distant buses see the lowest voltages.</p></div>
+    <div class="card"><h4><span lang="ko">🌆 저녁 7시</span><span lang="en">🌆 19:00</span></h4><p lang="ko">해가 지면 태양광이 사라지고 수요는 여전히 높아, <b>LNG가 빠르게 출력을 올려</b> 빈자리를 메웁니다.</p><p lang="en">Solar vanishes while demand stays high, so <b>LNG ramps up quickly</b> to fill the gap.</p></div>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
+    <p lang="ko">디지털 트윈은 <b>실제 전력망의 쌍둥이를 컴퓨터 안에 만든 것</b>입니다. 쌍둥이에게 "오후 2시에 에어컨을 많이 켜면?", "정오에 해가 쨍쨍하면?"을 먼저 시험해 보면, 실제 전력망에서 어느 선로가 막히고 어디 전압이 떨어질지 미리 알 수 있습니다. 내비게이션이 실제 도로를 본뜬 지도 위에서 막히는 길을 미리 알려 주는 것과 같습니다.</p>
+    <p lang="en">A digital twin is <b>a twin of the real grid built inside a computer</b>. Ask the twin "what if everyone runs air-conditioning at 2 pm?" or "what if the sun blazes at noon?" first, and you learn in advance which lines will jam and where voltage will sag — just as a navigation app warns about traffic on a map modelled on real roads.</p></div>
+</section>
+
+<section id="how">
+  <h2><span lang="ko">어떻게 만들었나</span><span lang="en">How it is built</span></h2>
+<pre><code>가상 설비 목록 ──▶ pycim CIM 모델 ──▶ pandapower ──▶ 24시간 조류계산 ──▶ twin.json ──▶ 이 지도
+ (이름·위치·용량)   Substation 42 · VoltageLevel 68      (시간마다 부하·태양광·
+                    ACLineSegment 57 · PowerTransformer 26  발전 배분을 바꿔 계산)
+                    SynchronousMachine 12 · 태양광 38 · 부하 34</code></pre>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">가정 (모두 가상)</span><span lang="en">Assumption (all virtual)</span></th><th><span lang="ko">값</span><span lang="en">Value</span></th></tr>
+    <tr><td><span lang="ko">전국 최대 수요</span><span lang="en">National peak demand</span></td><td><span lang="ko">48 GW (실제 규모보다 작게 단순화)</span><span lang="en">48 GW (smaller than reality, simplified)</span></td></tr>
+    <tr><td><span lang="ko">발전 설비</span><span lang="en">Generation</span></td><td><span lang="ko">원전 16 GW · 석탄 14.5 GW · LNG 18 GW · 대규모 태양광 5.6 GW · 분산 태양광 4 GW</span><span lang="en">Nuclear 16 GW · coal 14.5 GW · LNG 18 GW · utility solar 5.6 GW · distributed solar 4 GW</span></td></tr>
+    <tr><td><span lang="ko">급전 규칙</span><span lang="en">Dispatch rule</span></td><td><span lang="ko">원전 95% 일정 → 석탄 → LNG 순으로 부족분을 용량 비례 배분, 수도권 LNG가 기준 발전기(손실 보충)</span><span lang="en">Nuclear flat at 95% → coal → LNG share the remainder by capacity; capital-region LNG is the slack (covers losses)</span></td></tr>
+    <tr><td><span lang="ko">선로</span><span lang="en">Lines</span></td><td><span lang="ko">전압 계급별 대표 정수(2회선 1루트), 길이 = 직선 거리 × 1.2</span><span lang="en">Typical per-class parameters (one double-circuit route), length = straight distance × 1.2</span></td></tr>
+    <tr><td><span lang="ko">전압 제어</span><span lang="en">Voltage control</span></td><td><span lang="ko">화력·원전은 전압 유지 발전기, 345/154kV 변압기 탭을 시간마다 자동 조절(OLTC), 부하 역률 0.97</span><span lang="en">Thermal and nuclear units hold voltage, 345/154 kV transformer taps adjust every hour (OLTC), load power factor 0.97</span></td></tr>
+    <tr><td><span lang="ko">생략한 것</span><span lang="en">Left out</span></td><td><span lang="ko">제주 계통과 HVDC, 양수·ESS, 고장·예비력, 실제 설비 데이터</span><span lang="en">Jeju system and HVDC, pumped hydro/ESS, contingencies/reserves, any real facility data</span></td></tr>
+  </table></div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
+    <p lang="ko">먼저 가상의 설비 목록을 <a href="project.html">pycim</a>으로 <b>전력 설비 공용 사전(CIM) 형식의 장부</b>로 만들고, 그 장부를 계산 프로그램(pandapower)에 넘겨 <b>하루 24시간을 한 시간씩 계산</b>했습니다. 계산 결과를 지도에 칠한 것이 이 화면입니다. 같은 장부는 <a href="lab.html">실습 페이지</a>에서 질문(SPARQL)하고 그래프로 볼 수도 있습니다.</p>
+    <p lang="en">The virtual equipment list was first turned into a <b>ledger in the shared power-equipment dictionary (CIM)</b> with <a href="project.html">pycim</a>, then handed to a calculator (pandapower) to <b>compute the day hour by hour</b>. Colouring the map with those results gives this view. The same ledger can be queried (SPARQL) and drawn as a graph on the <a href="lab.html">Lab page</a>.</p></div>
+  <p lang="ko">코드와 데이터: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/twin/build_korea_twin.py">build_korea_twin.py</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/twin/korea_virtual_grid.ttl">korea_virtual_grid.ttl</a> (CIM RDF) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/twin/twin.js">twin.js</a> · 지도 윤곽: Natural Earth (퍼블릭 도메인, world-atlas 경유)</p>
+  <p lang="en">Code and data: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/twin/build_korea_twin.py">build_korea_twin.py</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/twin/korea_virtual_grid.ttl">korea_virtual_grid.ttl</a> (CIM RDF) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/twin/twin.js">twin.js</a> · Map outline: Natural Earth (public domain, via world-atlas)</p>
+  <div class="pager"><a href="physical-ai.html"><span lang="ko">← 이전: 피지컬 AI</span><span lang="en">← Prev: Physical AI</span></a><span></span></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE">MIT License</a></div></footer>
+</body>
+</html>

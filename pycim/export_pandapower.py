@@ -8,6 +8,7 @@
   PowerTransformer(2권선)   → trafo  (권선단 r, x → vk%, vkr%)
   EnergyConsumer            → load
   RotatingMachine           → sgen
+  PowerElectronicsConnection → sgen (태양광·ESS 등 인버터 연결 설비)
 """
 from __future__ import annotations
 
@@ -16,8 +17,8 @@ import math
 from .core import ConductingEquipment, ConnectivityNode
 from .model import Model
 from .topology import nominal_voltages
-from .wires import (ACLineSegment, EnergyConsumer, ExternalNetworkInjection, PowerTransformer,
-                    RotatingMachine, Switch)
+from .wires import (ACLineSegment, EnergyConsumer, ExternalNetworkInjection, PowerElectronicsConnection,
+                    PowerTransformer, RotatingMachine, Switch)
 
 
 def transformer_percent(eq: PowerTransformer) -> tuple[float, float]:
@@ -70,7 +71,7 @@ def to_pandapower(model: Model, f_hz: float = 60.0, slack_vm_pu: float | None = 
                 vk_percent=vk, vkr_percent=vkr, pfe_kw=0.0, i0_percent=0.0, name=eq.name))
         elif isinstance(eq, EnergyConsumer):
             elements[eq] = ("load", pp.create_load(net, b(eq), p_mw=eq.p, q_mvar=eq.q, name=eq.name))
-        elif isinstance(eq, RotatingMachine):
+        elif isinstance(eq, (RotatingMachine, PowerElectronicsConnection)):
             elements[eq] = ("sgen", pp.create_sgen(net, b(eq), p_mw=eq.p, q_mvar=eq.q, name=eq.name))
     return net, bus
 

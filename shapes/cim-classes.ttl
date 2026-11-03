@@ -29,6 +29,7 @@ cim:Name a owl:Class .
 cim:NameType a owl:Class .
 cim:NameTypeAuthority a owl:Class .
 cim:NonConformLoad a owl:Class ; rdfs:subClassOf cim:EnergyConsumer ; rdfs:comment "부하 곡선을 따르지 않는 부하 (대형 산업 부하 등)."@ko .
+cim:PowerElectronicsConnection a owl:Class ; rdfs:subClassOf cim:RegulatingCondEq ; rdfs:comment "인버터로 계통에 연결되는 설비 (태양광, ESS 등)."@ko .
 cim:PowerSystemResource a owl:Class ; rdfs:subClassOf cim:IdentifiedObject ; rdfs:comment "전력계통 자원: 설비와 컨테이너의 공통 상위 클래스."@ko .
 cim:PowerTransformer a owl:Class ; rdfs:subClassOf cim:ConductingEquipment .
 cim:PowerTransformerEnd a owl:Class ; rdfs:subClassOf cim:TransformerEnd ; rdfs:comment "변압기 권선단. 정격과 임피던스는 PowerTransformer가 아니라 End에 둔다."@ko .

@@ -24,6 +24,14 @@
   "violations": []
  },
  {
+  "dataset": "korea_virtual_grid.ttl",
+  "ko": "가상 대한민국 전력망 (디지털 트윈)",
+  "en": "Virtual Korean grid (digital twin)",
+  "triples": 4108,
+  "conforms": true,
+  "violations": []
+ },
+ {
   "dataset": "broken-sample.ttl",
   "ko": "일부러 규칙을 어긴 데이터",
   "en": "Data that breaks the rules on purpose",
@@ -34,28 +42,19 @@
     "focus": "LN",
     "name": "D/L #2 간선",
     "class": "ACLineSegment",
-    "path": "cim:Conductor.length",
-    "value": "-3.2",
-    "ko": "선로 길이는 0보다 커야 합니다",
-    "en": "length must be > 0"
-   },
-   {
-    "focus": "LN",
-    "name": "D/L #2 간선",
-    "class": "ACLineSegment",
     "path": "^cim:Terminal.ConductingEquipment",
     "value": "",
     "ko": "선로·개폐기·2권선 변압기는 Terminal이 정확히 2개여야 합니다",
     "en": "must have exactly 2 terminals"
    },
    {
-    "focus": "CB",
-    "name": "D/L #2 CB",
-    "class": "Breaker",
-    "path": "cim:Switch.open",
-    "value": "no",
-    "ko": "open은 true/false 1개입니다",
-    "en": "open must be one boolean"
+    "focus": "LN",
+    "name": "D/L #2 간선",
+    "class": "ACLineSegment",
+    "path": "cim:Conductor.length",
+    "value": "-3.2",
+    "ko": "선로 길이는 0보다 커야 합니다",
+    "en": "length must be > 0"
    },
    {
     "focus": "CB",
@@ -65,6 +64,15 @@
     "value": "CB-001",
     "ko": "mRID는 정확히 1개, UUID 형식이어야 합니다",
     "en": "mRID must be exactly one UUID"
+   },
+   {
+    "focus": "CB",
+    "name": "D/L #2 CB",
+    "class": "Breaker",
+    "path": "cim:Switch.open",
+    "value": "no",
+    "ko": "open은 true/false 1개입니다",
+    "en": "open must be one boolean"
    },
    {
     "focus": "N1",

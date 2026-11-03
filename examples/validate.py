@@ -61,6 +61,10 @@ def datasets():
     if cigre.exists():
         yield "CIGRE MV (CGMES → pycim)", "CGMES 파일을 pycim으로 읽어 다시 내보낸 데이터", "CGMES files read by pycim and re-exported", \
             rdflib.Graph().parse(cigre)
+    korea = ROOT / "examples" / "twin" / "korea_virtual_grid.ttl"
+    if korea.exists():
+        yield "korea_virtual_grid.ttl", "가상 대한민국 전력망 (디지털 트윈)", "Virtual Korean grid (digital twin)", \
+            rdflib.Graph().parse(korea)
     yield "broken-sample.ttl", "일부러 규칙을 어긴 데이터", "Data that breaks the rules on purpose", \
         rdflib.Graph().parse(ROOT / "examples" / "broken-sample.ttl")
 
