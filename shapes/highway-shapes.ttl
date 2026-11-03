@@ -99,3 +99,19 @@ hs:NationalRoadShape a sh:NodeShape ;
     sh:targetClass hw:NationalRoad ;
     sh:property [ sh:path hw:routeNumber ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ;
                   sh:message "국도에는 노선 번호가 1개 있어야 합니다 / a national road needs one route number"@ko ] .
+
+# ---- 9. 표준 대응 기록: 관계 값은 정해진 것만, '확인'이면 출처 URL이 있어야 한다 ----------
+hs:MappingShape a sh:NodeShape ;
+    sh:targetClass <https://1004aiteam-power.github.io/ontology-space/highway-std#Mapping> ;
+    sh:property [ sh:path <https://1004aiteam-power.github.io/ontology-space/highway-std#relation> ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( "exact" "close" "broad" "narrow" "related" "none" ) ] ;
+    sh:property [ sh:path <https://1004aiteam-power.github.io/ontology-space/highway-std#verified> ; sh:minCount 1 ; sh:datatype xsd:boolean ] ;
+    sh:sparql [
+        sh:message "원문 확인(verified)으로 표시했는데 출처 URL이 없습니다 / marked verified but has no source URL"@ko ;
+        sh:prefixes hs:prefixes ;
+        sh:select """
+            SELECT $this WHERE {
+              $this <https://1004aiteam-power.github.io/ontology-space/highway-std#verified> true .
+              FILTER NOT EXISTS { $this <http://purl.org/dc/terms/source> ?u }
+            }""" ;
+    ] .

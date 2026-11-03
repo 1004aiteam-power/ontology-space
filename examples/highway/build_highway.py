@@ -370,11 +370,93 @@ for (i, j), v in sorted(daily_demand(k).items()):
 TTL = "\n".join(lines) + "\n"
 (HERE / "highway-ontology.ttl").write_text(TTL, encoding="utf-8")
 
+# ---------------------------------------------------------------- 표준 정렬 (SKOS) + 표준 형식 내보내기
+# 원본: data/alignment.csv. 표준 용어는 우리 쪽 SKOS 개념(hwx:)으로 두고 출처 URL을 붙인다.
+# 공식 OWL IRI를 확인하지 못한 표준의 IRI를 지어내지 않기 위해서다.
+alignment = read("alignment.csv")
+SKOS_REL = {"exact": "skos:exactMatch", "close": "skos:closeMatch", "broad": "skos:broadMatch",
+            "narrow": "skos:narrowMatch", "related": "skos:relatedMatch", "none": None}
+SCHEMES = {"INSPIRE": ("INSPIRE 교통망 - 도로 (Transport Networks, Road)", "INSPIRE Transport Networks – Road"),
+           "KR_NODELINK": ("국가 표준 노드·링크 (국토교통부)", "Korean standard node-link (MOLIT)"),
+           "GeoSPARQL": ("OGC GeoSPARQL", "OGC GeoSPARQL")}
+
+
+def std_iri(m: dict) -> str:
+    if m["standard"] == "GeoSPARQL":
+        return m["std_term"]                                  # geo:Feature 는 실제 표준 IRI
+    return f"hwx:{m['map_id']}_term"
+
+
+AL = ["""@prefix hw:   <https://1004aiteam-power.github.io/ontology-space/highway#> .
+@prefix hwx:  <https://1004aiteam-power.github.io/ontology-space/highway-std#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# 가상 고속도로·국도 온톨로지 ↔ 국제·국내 표준 정렬. 생성: build_highway.py (원본 data/alignment.csv)
+# owl:equivalentClass 대신 SKOS 대응 관계를 쓴다: 표준과 뜻이 '가깝다'와 '같다'를 구분하고,
+# 표준의 의미를 우리 추론에 그대로 끌어오지 않기 위해서다.
+hwx:Mapping a rdfs:Class ; rdfs:label "표준 대응 기록"@ko .
+"""]
+for sid, (ko_, en_) in SCHEMES.items():
+    if sid != "GeoSPARQL":
+        AL.append(f"hwx:{sid} a skos:ConceptScheme ; skos:prefLabel {lit(ko_)}, {en(en_)} .")
+for m in alignment:
+    if m["standard"] != "GeoSPARQL" and m["relation"] != "none":
+        AL.append(f"{std_iri(m)} a skos:Concept ; skos:inScheme hwx:{m['standard']} ; skos:prefLabel {lit(m['std_term'])}"
+                  + (f" ; dct:source <{m['source']}>" if m["source"] else "") + " .")
+    rel = SKOS_REL[m["relation"]]
+    if rel:
+        AL.append(f"{m['our_term']} {rel} {std_iri(m)} .")
+    p = [f"hwx:{m['map_id']} a hwx:Mapping", f"hwx:subject {m['our_term']}", f'hwx:standard hwx:{m["standard"]}',
+         f"hwx:standardTerm {lit(m['std_term'])}", f'hwx:relation "{m["relation"]}"', f"rdfs:comment {lit(m['note_ko'])}, {en(m['note_en'])}",
+         f'hwx:verified {"true" if m["verified"] == "Y" else "false"}']
+    if m["source"]:
+        p.append(f"dct:source <{m['source']}>")
+    AL.append(" ; ".join(p) + " .")
+ALIGN_TTL = "\n".join(AL) + "\n"
+(HERE / "highway-alignment.ttl").write_text(ALIGN_TTL, encoding="utf-8")
+
+# 표준노드링크 필드 이름을 따른 예시 내보내기. ID 체계와 ROAD_RANK 코드값은 원문 미확인 (가정값).
+RANK_ASSUMED = {"EXPRESSWAY": "101", "NATIONAL": "103"}
+EXP = HERE / "export"
+EXP.mkdir(exist_ok=True)
+with open(EXP / "std_link.csv", "w", newline="", encoding="utf-8-sig") as f:
+    w = csv.writer(f)
+    w.writerow(["LINK_ID", "F_NODE", "T_NODE", "LANES", "ROAD_RANK", "ROAD_NO", "ROAD_NAME", "MAX_SPD", "LENGTH"])
+    for lk in links:
+        r = R[lk["route"]]
+        w.writerow([lk["link_id"], lk["frm"], lk["to"], lk["lanes"], RANK_ASSUMED[lk["cls"]], r["number"], r["ko"],
+                    int(lk["kph"]), round(lk["km"] * 1000)])
+with open(EXP / "std_node.csv", "w", newline="", encoding="utf-8-sig") as f:
+    w = csv.writer(f)
+    w.writerow(["NODE_ID", "NODE_NAME", "NODE_TYPE", "LON", "LAT"])
+    for n in nodes:
+        nid = n["node_id"]
+        ntype = ("IC" if on_expressway[nid] else "교차점") + ("·JC" if len(node_routes[nid]) >= 2 else "")
+        w.writerow([nid, n["ko"], ntype, n["lon"], n["lat"]])
+(EXP / "README.md").write_text("""# 표준노드링크 형식 내보내기 (예시)
+
+`build_highway.py`가 만든 파일입니다. 국토교통부 표준노드링크의 필드 이름(F_NODE, T_NODE, LANES, ROAD_RANK 등)을 따랐지만,
+아래 값은 **원문 지침을 확인하지 못한 가정**입니다.
+
+- LINK_ID / NODE_ID: 이 사례의 코드(S04F, DAEJEON 등)를 그대로 썼습니다. 실제 표준의 ID 자릿수·권역 코드 체계가 아닙니다.
+- ROAD_RANK: 고속도로 101, 국도 103으로 두었습니다. 원문 코드표로 확인해야 합니다.
+- NODE_TYPE: 실제 코드값 대신 IC / 교차점 / ·JC 글자로 적었습니다.
+- MAX_SPD: 법정 제한속도가 아니라 교통 모형의 자유속도입니다.
+- LENGTH: 미터. 직선거리 × 굴곡 계수로 만든 가상 값입니다.
+
+⚠ 모든 데이터는 가상입니다.
+""", encoding="utf-8")
+
 # ---------------------------------------------------------------- 검증: SHACL + SPARQL
 import rdflib  # noqa: E402
 from pyshacl import validate  # noqa: E402
 
 g = rdflib.Graph().parse(data=TTL, format="turtle")
+g.parse(data=ALIGN_TTL, format="turtle")
 conforms, rep, _ = validate(g, shacl_graph=rdflib.Graph().parse(ROOT / "shapes" / "highway-shapes.ttl"), advanced=True)
 SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
 shacl = sorted(dict(focus=str(rep.value(r, SH.focusNode)).split("#")[-1], severity=str(rep.value(r, SH.resultSeverity)).split("#")[-1],
@@ -408,6 +490,10 @@ CQ = [
      "SELECT ?n WHERE { ?x a hw:Intersection ; rdfs:label ?n . FILTER(LANG(?n) = 'ko') } ORDER BY ?n"),
     ("고속도로와 국도가 함께 지나는 도시는 몇 곳인가?",
      "SELECT (COUNT(DISTINCT ?n) AS ?k) WHERE { ?s1 hw:endpoint ?n ; hw:onRoute ?r1 . ?r1 a hw:Expressway . ?s2 hw:endpoint ?n ; hw:onRoute ?r2 . ?r2 a hw:NationalRoad . }"),
+    ("표준과 대응시키지 않은 핵심 클래스는? (Route·Section·Link·Node·Expressway·NationalRoad·Interchange 중)",
+     "PREFIX hwx: <https://1004aiteam-power.github.io/ontology-space/highway-std#> SELECT ?c WHERE { VALUES ?c { hw:Route hw:Section hw:Link hw:Node hw:Expressway hw:NationalRoad hw:Interchange } FILTER NOT EXISTS { ?m hwx:subject ?c } }"),
+    ("표준별 대응 수와 원문 확인 수는?",
+     "PREFIX hwx: <https://1004aiteam-power.github.io/ontology-space/highway-std#> SELECT ?s (COUNT(?m) AS ?n) (SUM(IF(?v, 1, 0)) AS ?ok) WHERE { ?m hwx:standard ?s ; hwx:verified ?v } GROUP BY ?s ORDER BY ?s"),
     ("서울에서 모든 노드에 닿을 수 있나? (닿지 않는 노드 수)",
      "SELECT (COUNT(?n) AS ?k) WHERE { ?n a hw:Node . FILTER NOT EXISTS { hw:N_SEOUL hw:adjacentTo* ?n } }"),
 ]
@@ -423,7 +509,7 @@ web = dict(
                 routes=node_routes[n["node_id"]]) for n in nodes],
     routes=routes, sections=[dict(id=s["section_id"], route=s["route_id"], a=s["a"], b=s["b"], km=s["km"], lanes=int(s["lanes"])) for s in sections],
     links=[dict(id=lk["link_id"], section=lk["section"], route=lk["route"], cls=lk["cls"], frm=lk["frm"], to=lk["to"], lanes=lk["lanes"], km=lk["km"]) for lk in links],
-    scenarios=scenarios, results=results, odWatch=[f"{o}-{d_}" for o, d_ in OD_WATCH], cq=cq_out, shacl=shacl,
+    scenarios=scenarios, results=results, alignment=alignment, odWatch=[f"{o}-{d_}" for o, d_ in OD_WATCH], cq=cq_out, shacl=shacl,
 )
 (ROOT / "assets" / "data" / "highway.json").write_text(json.dumps(web, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 

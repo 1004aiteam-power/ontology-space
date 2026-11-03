@@ -89,3 +89,26 @@ def test_shacl_catches_fake_junction(B):
     g.add((HW.N_ULJIN, rdflib.RDF.type, HW.Junction))             # 노선 1개(국도 7호선)뿐인 노드를 JC로
     ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
     assert not ok
+
+
+def test_alignment_covers_core_classes(B):
+    cq = {c["q"]: c["rows"] for c in B["cq_out"]}
+    assert next(v for k, v in cq.items() if k.startswith("표준과 대응시키지 않은")) == []
+    for m in B["alignment"]:
+        assert m["relation"] in B["SKOS_REL"]
+        assert m["verified"] == "N" or m["source"]           # '확인'이면 출처가 있어야 한다
+
+
+def test_shacl_catches_unsourced_verified_mapping(B):
+    g = rdflib.Graph().parse(data=B["TTL"], format="turtle").parse(data=B["ALIGN_TTL"], format="turtle")
+    HWX = rdflib.Namespace("https://1004aiteam-power.github.io/ontology-space/highway-std#")
+    g.set((HWX.M02, HWX.verified, rdflib.Literal(True)))      # 출처 없는 기록을 '확인'으로
+    ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
+    assert not ok
+
+
+def test_standard_export(B):
+    import csv
+    rows = list(csv.DictReader(open(ROOT / "examples" / "highway" / "export" / "std_link.csv", encoding="utf-8-sig")))
+    assert len(rows) == len(B["links"])
+    assert {"F_NODE", "T_NODE", "LANES", "ROAD_RANK"} <= set(rows[0])

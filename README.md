@@ -16,6 +16,7 @@
 | [shapes/asset-shapes.ttl](shapes/asset-shapes.ttl) | 자산관리 SHACL 규칙 (빈 설비 자리, 설치 기간 겹침, 근거 없는 작업지시) |
 | [examples/highway/](examples/highway/) | 가상 전국 고속도로·국도 온톨로지(OWL + GeoSPARQL)와 24시간 차량 흐름: 원본 CSV → `build_highway.py` (중력모형 수요 · 시간대별 이용자 균형 배정) (⚠ 가상 데이터) |
 | [shapes/highway-shapes.ttl](shapes/highway-shapes.ttl) | 도로망 SHACL 규칙 (구간·링크 방향, 분기점, 도로 등급, 연결성, 서비스수준) |
+| [examples/highway/highway-alignment.ttl](examples/highway/highway-alignment.ttl) | 도로 온톨로지 ↔ INSPIRE 교통망 · 국토교통부 표준노드링크 · GeoSPARQL 대응 (SKOS, 항목별 원문 확인 여부 표시) |
 | [examples/power-grid-sample.ttl](examples/power-grid-sample.ttl) | CIM 스타일의 간단한 전력망 예제 (Turtle) |
 | [examples/queries.md](examples/queries.md) | 예제 데이터에 대한 SPARQL 질의 모음 |
 | [pycim/](pycim/) | CIM 파이썬 클래스 패키지 |

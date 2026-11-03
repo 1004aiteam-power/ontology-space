@@ -1,0 +1,69 @@
+@prefix hw:   <https://1004aiteam-power.github.io/ontology-space/highway#> .
+@prefix hwx:  <https://1004aiteam-power.github.io/ontology-space/highway-std#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# 가상 고속도로·국도 온톨로지 ↔ 국제·국내 표준 정렬. 생성: build_highway.py (원본 data/alignment.csv)
+# owl:equivalentClass 대신 SKOS 대응 관계를 쓴다: 표준과 뜻이 '가깝다'와 '같다'를 구분하고,
+# 표준의 의미를 우리 추론에 그대로 끌어오지 않기 위해서다.
+hwx:Mapping a rdfs:Class ; rdfs:label "표준 대응 기록"@ko .
+
+hwx:INSPIRE a skos:ConceptScheme ; skos:prefLabel "INSPIRE 교통망 - 도로 (Transport Networks, Road)"@ko, "INSPIRE Transport Networks – Road"@en .
+hwx:KR_NODELINK a skos:ConceptScheme ; skos:prefLabel "국가 표준 노드·링크 (국토교통부)"@ko, "Korean standard node-link (MOLIT)"@en .
+hwx:M01_term a skos:Concept ; skos:inScheme hwx:INSPIRE ; skos:prefLabel "RoadLink"@ko ; dct:source <https://docs.os.uk/os-downloads/products/transport-network-portfolio/os-mastermap-highways-network-roads/os-mastermap-highways-network-roads-technical-specification/feature-types/roadlink.md> .
+hw:Section skos:closeMatch hwx:M01_term .
+hwx:M01 a hwx:Mapping ; hwx:subject hw:Section ; hwx:standard hwx:INSPIRE ; hwx:standardTerm "RoadLink"@ko ; hwx:relation "close" ; rdfs:comment "INSPIRE RoadLink는 두 지점 사이 도로의 형상과 연결을 나타내는 선형 객체다. 우리 Section(방향 없는 물리 구간)과 같은 수준이다."@ko, "INSPIRE RoadLink is the linear object for a road's geometry and connectivity between two points; same level as our undirected Section."@en ; hwx:verified true ; dct:source <https://docs.os.uk/os-downloads/products/transport-network-portfolio/os-mastermap-highways-network-roads/os-mastermap-highways-network-roads-technical-specification/feature-types/roadlink.md> .
+hwx:M02_term a skos:Concept ; skos:inScheme hwx:INSPIRE ; skos:prefLabel "RoadLink + 방향 속성"@ko .
+hw:Link skos:relatedMatch hwx:M02_term .
+hwx:M02 a hwx:Mapping ; hwx:subject hw:Link ; hwx:standard hwx:INSPIRE ; hwx:standardTerm "RoadLink + 방향 속성"@ko ; hwx:relation "related" ; rdfs:comment "INSPIRE에는 방향별 링크 클래스가 없다고 보고 링크에 붙는 방향 속성으로 대응시켰다. 원문에서 방향 표현 방식을 다시 확인해야 한다."@ko, "INSPIRE appears to have no per-direction link class; mapped to a link plus direction attributes. The exact direction mechanism needs checking against the source."@en ; hwx:verified false .
+hwx:M03_term a skos:Concept ; skos:inScheme hwx:INSPIRE ; skos:prefLabel "RoadNode"@ko ; dct:source <https://objektkatalog.geonorge.no/Pakke/Index/EAPK_1BDF3565_AA23_4f66_9E25_ADE317608DBA> .
+hw:Node skos:closeMatch hwx:M03_term .
+hwx:M03 a hwx:Mapping ; hwx:subject hw:Node ; hwx:standard hwx:INSPIRE ; hwx:standardTerm "RoadNode"@ko ; hwx:relation "close" ; rdfs:comment "RoadNode는 도로 링크 사이의 연결이나 로터리·휴게소 같은 중요한 지점을 나타내는 점 객체다."@ko, "RoadNode is a point object for connectivity between road links or a significant feature such as a roundabout or service station."@en ; hwx:verified true ; dct:source <https://objektkatalog.geonorge.no/Pakke/Index/EAPK_1BDF3565_AA23_4f66_9E25_ADE317608DBA> .
+hwx:M04_term a skos:Concept ; skos:inScheme hwx:INSPIRE ; skos:prefLabel "Road"@ko .
+hw:Route skos:closeMatch hwx:M04_term .
+hwx:M04 a hwx:Mapping ; hwx:subject hw:Route ; hwx:standard hwx:INSPIRE ; hwx:standardTerm "Road"@ko ; hwx:relation "close" ; rdfs:comment "INSPIRE Road는 도로 요소를 묶은 노선 단위로 알려져 있다. 노선 코드 속성 이름은 원문 확인이 필요하다."@ko, "INSPIRE Road is understood as the route-level collection of road elements; its route-code attribute names need checking."@en ; hwx:verified false .
+hwx:M05_term a skos:Concept ; skos:inScheme hwx:INSPIRE ; skos:prefLabel "NumberOfLanes"@ko ; dct:source <https://inspire.ec.europa.eu/schemas/tn-ro/4.0/RoadTransportNetwork.xsd> .
+hw:lanes skos:closeMatch hwx:M05_term .
+hwx:M05 a hwx:Mapping ; hwx:subject hw:lanes ; hwx:standard hwx:INSPIRE ; hwx:standardTerm "NumberOfLanes"@ko ; hwx:relation "close" ; rdfs:comment "INSPIRE는 차로 수를 도로 요소에 붙는 속성 객체로 둔다. 우리는 방향 링크의 단순 정수 속성이다."@ko, "INSPIRE models lane count as a property object on a road element; ours is a plain integer on the directional link."@en ; hwx:verified true ; dct:source <https://inspire.ec.europa.eu/schemas/tn-ro/4.0/RoadTransportNetwork.xsd> .
+hwx:M06_term a skos:Concept ; skos:inScheme hwx:INSPIRE ; skos:prefLabel "FunctionalRoadClass = mainRoad"@ko ; dct:source <https://inspire.ec.europa.eu/schemas/tn-ro/4.0/RoadTransportNetwork.xsd> .
+hw:Expressway skos:relatedMatch hwx:M06_term .
+hwx:M06 a hwx:Mapping ; hwx:subject hw:Expressway ; hwx:standard hwx:INSPIRE ; hwx:standardTerm "FunctionalRoadClass = mainRoad"@ko ; hwx:relation "related" ; rdfs:comment "INSPIRE 기능 등급(mainRoad~ninthClass)은 망에서의 중요도이고 우리 등급은 도로법상의 분류다. 같은 축이 아니라 관련으로만 둔다."@ko, "INSPIRE functional class (mainRoad…ninthClass) ranks importance in the network; ours is the legal class under the Road Act. Different axes, so only related."@en ; hwx:verified true ; dct:source <https://inspire.ec.europa.eu/schemas/tn-ro/4.0/RoadTransportNetwork.xsd> .
+hwx:M07_term a skos:Concept ; skos:inScheme hwx:INSPIRE ; skos:prefLabel "FormOfWay = motorway"@ko .
+hw:Expressway skos:closeMatch hwx:M07_term .
+hwx:M07 a hwx:Mapping ; hwx:subject hw:Expressway ; hwx:standard hwx:INSPIRE ; hwx:standardTerm "FormOfWay = motorway"@ko ; hwx:relation "close" ; rdfs:comment "도로 형태(FormOfWay)의 자동차전용 값이 고속도로에 가장 가깝다. 값 이름은 원문 확인이 필요하다."@ko, "The motorway value of FormOfWay is closest to an expressway; the value name needs checking."@en ; hwx:verified false .
+hw:Section skos:broadMatch geo:Feature .
+hwx:M08 a hwx:Mapping ; hwx:subject hw:Section ; hwx:standard hwx:GeoSPARQL ; hwx:standardTerm "geo:Feature"@ko ; hwx:relation "broad" ; rdfs:comment "구간과 노드는 geo:Feature의 하위 클래스이고 위치는 geo:asWKT로 적는다."@ko, "Sections and nodes subclass geo:Feature; geometry is geo:asWKT."@en ; hwx:verified true ; dct:source <https://www.ogc.org/standards/geosparql> .
+hwx:M09_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "표준링크 (LINK_ID · F_NODE → T_NODE)"@ko .
+hw:Link skos:closeMatch hwx:M09_term .
+hwx:M09 a hwx:Mapping ; hwx:subject hw:Link ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "표준링크 (LINK_ID · F_NODE → T_NODE)"@ko ; hwx:relation "close" ; rdfs:comment "표준노드링크의 링크는 시작 노드(F_NODE)와 종료 노드(T_NODE)를 가진다. 방향별로 링크를 따로 두는지는 원문 지침 확인이 필요하다."@ko, "A standard node-link link has a from node (F_NODE) and to node (T_NODE); whether each direction is a separate link needs checking in the guideline."@en ; hwx:verified false .
+hwx:M10_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "F_NODE"@ko ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hw:fromNode skos:exactMatch hwx:M10_term .
+hwx:M10 a hwx:Mapping ; hwx:subject hw:fromNode ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "F_NODE"@ko ; hwx:relation "exact" ; rdfs:comment "시작 노드 ID 필드."@ko, "From-node ID field."@en ; hwx:verified true ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hwx:M11_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "T_NODE"@ko ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hw:toNode skos:exactMatch hwx:M11_term .
+hwx:M11 a hwx:Mapping ; hwx:subject hw:toNode ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "T_NODE"@ko ; hwx:relation "exact" ; rdfs:comment "종료 노드 ID 필드."@ko, "To-node ID field."@en ; hwx:verified true ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hwx:M12_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "표준노드 (NODE_ID)"@ko .
+hw:Node skos:closeMatch hwx:M12_term .
+hwx:M12 a hwx:Mapping ; hwx:subject hw:Node ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "표준노드 (NODE_ID)"@ko ; hwx:relation "close" ; rdfs:comment "표준노드링크의 노드. ID 체계(자릿수·권역 코드)는 원문 확인이 필요하다."@ko, "A standard node-link node; the ID scheme (digits and region code) needs checking."@en ; hwx:verified false .
+hwx:M13_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "LANES"@ko ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hw:lanes skos:exactMatch hwx:M13_term .
+hwx:M13 a hwx:Mapping ; hwx:subject hw:lanes ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "LANES"@ko ; hwx:relation "exact" ; rdfs:comment "차로수 필드."@ko, "Number-of-lanes field."@en ; hwx:verified true ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hwx:M14_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "ROAD_RANK = 고속국도"@ko .
+hw:Expressway skos:closeMatch hwx:M14_term .
+hwx:M14 a hwx:Mapping ; hwx:subject hw:Expressway ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "ROAD_RANK = 고속국도"@ko ; hwx:relation "close" ; rdfs:comment "도로등급 필드(3자리)의 고속국도 값. 코드값(예: 101)은 원문 코드표 확인이 필요하다."@ko, "The expressway value of the 3-character road-rank field; the code value (e.g. 101) needs checking."@en ; hwx:verified false .
+hwx:M15_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "ROAD_RANK = 일반국도"@ko .
+hw:NationalRoad skos:closeMatch hwx:M15_term .
+hwx:M15 a hwx:Mapping ; hwx:subject hw:NationalRoad ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "ROAD_RANK = 일반국도"@ko ; hwx:relation "close" ; rdfs:comment "도로등급 필드의 일반국도 값. 코드값(예: 103)은 원문 코드표 확인이 필요하다."@ko, "The national-road value of the road-rank field; the code value (e.g. 103) needs checking."@en ; hwx:verified false .
+hwx:M16_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "ROAD_NO"@ko ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hw:routeNumber skos:exactMatch hwx:M16_term .
+hwx:M16 a hwx:Mapping ; hwx:subject hw:routeNumber ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "ROAD_NO"@ko ; hwx:relation "exact" ; rdfs:comment "도로번호 항목. 필드 이름 ROAD_NO는 원문 확인이 필요하다."@ko, "Road-number item; the field name ROAD_NO needs checking."@en ; hwx:verified false ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hwx:M17_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "최고제한속도 (MAX_SPD)"@ko ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hw:freeSpeedKph skos:relatedMatch hwx:M17_term .
+hwx:M17 a hwx:Mapping ; hwx:subject hw:freeSpeedKph ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "최고제한속도 (MAX_SPD)"@ko ; hwx:relation "related" ; rdfs:comment "표준의 최고제한속도는 법정 속도이고 우리 자유속도는 교통 모형의 가정이다. 개념이 달라 관련으로만 둔다."@ko, "The standard's maximum speed limit is legal; our free-flow speed is a model assumption. Different concepts."@en ; hwx:verified true ; dct:source <https://www.data.go.kr/biz/dcat/metadata/15148440.do> .
+hwx:M18 a hwx:Mapping ; hwx:subject hw:Section ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "(대응 없음)"@ko ; hwx:relation "none" ; rdfs:comment "표준노드링크에는 방향 없는 물리 구간 단위가 따로 없는 것으로 보인다. 같은 구간의 두 링크를 묶는 것이 우리 설계의 추가분이다."@ko, "The standard node-link scheme appears to have no undirected section unit; grouping a section's two links is our own addition."@en ; hwx:verified false .
+hwx:M19_term a skos:Concept ; skos:inScheme hwx:KR_NODELINK ; skos:prefLabel "NODE_TYPE (노드 유형)"@ko .
+hw:Interchange skos:relatedMatch hwx:M19_term .
+hwx:M19 a hwx:Mapping ; hwx:subject hw:Interchange ; hwx:standard hwx:KR_NODELINK ; hwx:standardTerm "NODE_TYPE (노드 유형)"@ko ; hwx:relation "related" ; rdfs:comment "노드 유형 코드로 IC·JC 등을 구분하는 것으로 알려져 있으나 코드값은 원문 확인이 필요하다."@ko, "Node-type codes are understood to distinguish IC/JC etc.; code values need checking."@en ; hwx:verified false .
