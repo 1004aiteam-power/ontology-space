@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
+<script src="assets/uuid.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
@@ -96,6 +97,96 @@ m.add(Breaker(mrid=cb.mrid))       # ValueError: 중복 mRID</code></pre>
   <p lang="ko">RDF로 내보낼 때는 <code>to_turtle(m, iri_style="urn")</code>으로 <code>urn:uuid:…</code> 형식의 IRI를 쓸 수 있습니다 (기본값은 CGMES 2.4.15식 <code>_uuid</code>). 예제 계통(<code>samples.py</code>)은 모든 mRID를 v5로 발급해 몇 번을 만들어도 같은 ID가 나옵니다.</p>
   <p lang="en">For RDF, <code>to_turtle(m, iri_style="urn")</code> emits <code>urn:uuid:…</code> IRIs (default: CGMES 2.4.15-style <code>_uuid</code>). The sample grid (<code>samples.py</code>) issues all mRIDs as v5, so it is identical on every build.</p>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">설비 번호를 만드는 <b>번호표 발급기 세 가지</b>입니다. 새 설비는 제비뽑기(<code>new_mrid</code>), 기존 시스템에서 옮겨 오는 설비는 옛 코드로 찍는 도장(<code>stable_mrid</code>, 몇 번을 옮겨도 같은 번호), 단자 같은 부속품은 본체 번호에서 이어 붙이기(<code>child_mrid</code>)입니다. 형식이 틀렸거나 이미 있는 번호는 받아 주지 않습니다.</p><p lang="en"><b>Three ticket machines</b> for equipment numbers: a lottery draw for new equipment (<code>new_mrid</code>), a stamp made from the old code for migrated equipment (<code>stable_mrid</code>, same number every time), and numbers derived from the parent for parts like terminals (<code>child_mrid</code>). Badly formed or duplicate numbers are refused.</p></div>
+</section>
+
+<section id="uuid">
+  <h2><span lang="ko">UUID 자세히: v4, v5, 그리고 시간으로 만드는 ID</span><span lang="en">UUIDs in depth: v4, v5 and time-based IDs</span></h2>
+  <p class="sub" lang="ko">mRID에 쓰는 UUID가 어떻게 생겼고, 버전마다 무엇이 다른지 정리했습니다. 아래 상자에서 브라우저로 직접 만들어 볼 수 있습니다.</p>
+  <p class="sub" lang="en">What the UUIDs behind mRIDs look like and how the versions differ. Try generating them in your browser below.</p>
+
+  <h3><span lang="ko">생김새</span><span lang="en">Anatomy</span></h3>
+  <p lang="ko">UUID는 128비트 숫자를 16진수 32글자로 적고, 하이픈으로 <code>8-4-4-4-12</code>로 나눈 것입니다. 13번째 글자가 <b>버전</b>, 17번째 글자가 <b>variant</b>(RFC 표준 UUID면 8·9·a·b 중 하나)입니다.</p>
+  <p lang="en">A UUID is a 128-bit number written as 32 hex digits split <code>8-4-4-4-12</code>. The 13th digit is the <b>version</b>; the 17th is the <b>variant</b> (8, 9, a or b for RFC UUIDs).</p>
+<pre><code>705b3ffd-05e8-<mark class="uv">5</mark>f57-<mark class="uvar">b</mark>8db-92e61964052e      ← <span lang="ko">예제 변전소 M.Tr #1의 mRID</span><span lang="en">mRID of M.Tr #1 in the sample grid</span>
+              ↑    ↑
+              │    └ variant (8·9·a·b)
+              └ <span lang="ko">버전</span><span lang="en">version</span> (4 = <span lang="ko">무작위</span><span lang="en">random</span>, 5 = <span lang="ko">이름 기반</span><span lang="en">name-based</span>, 7 = <span lang="ko">시간 + 무작위</span><span lang="en">time + random</span>)</code></pre>
+
+  <div class="tbl"><table>
+    <tr><th></th><th><span lang="ko">v4 무작위</span><span lang="en">v4 random</span></th><th><span lang="ko">v5 이름 기반</span><span lang="en">v5 name-based</span></th><th><span lang="ko">v7 시간 + 무작위</span><span lang="en">v7 time + random</span></th></tr>
+    <tr><td><b><span lang="ko">만드는 법</span><span lang="en">How</span></b></td><td><span lang="ko">122비트를 난수로 채움</span><span lang="en">122 random bits</span></td><td><span lang="ko">SHA-1(네임스페이스 UUID + 이름)을 잘라 씀</span><span lang="en">Truncated SHA-1(namespace UUID + name)</span></td><td><span lang="ko">앞 48비트 = 유닉스 시각(밀리초), 나머지 = 난수</span><span lang="en">First 48 bits = Unix time (ms), rest random</span></td></tr>
+    <tr><td><b><span lang="ko">같은 입력이면</span><span lang="en">Same input →</span></b></td><td><span lang="ko">매번 다름</span><span lang="en">different every time</span></td><td><span lang="ko">항상 같음</span><span lang="en">always the same</span></td><td><span lang="ko">매번 다름 (시간순으로 정렬됨)</span><span lang="en">different, but sorts by time</span></td></tr>
+    <tr><td><b><span lang="ko">좋은 점</span><span lang="en">Good for</span></b></td><td><span lang="ko">조정 없이 어디서나 발급</span><span lang="en">issuing anywhere without coordination</span></td><td><span lang="ko">다시 만들어도 ID가 유지됨 (기존 코드 → mRID)</span><span lang="en">stable across rebuilds (legacy code → mRID)</span></td><td><span lang="ko">DB 인덱스에 순서대로 쌓임</span><span lang="en">database indexes stay ordered</span></td></tr>
+    <tr><td><b><span lang="ko">주의</span><span lang="en">Watch out</span></b></td><td><span lang="ko">다시 만들면 ID가 바뀜</span><span lang="en">rebuilding changes the ID</span></td><td><span lang="ko">이름 규칙이 바뀌면 ID도 바뀜</span><span lang="en">a new naming rule means new IDs</span></td><td><span lang="ko">ID에서 만든 시각이 드러남</span><span lang="en">reveals creation time</span></td></tr>
+    <tr><td><b>pycim</b></td><td><code>new_mrid()</code></td><td><code>stable_mrid()</code>, <code>child_mrid()</code></td><td><span lang="ko">쓰지 않음</span><span lang="en">not used</span></td></tr>
+  </table></div>
+
+  <div class="uuid-lab" id="uuidLab">
+    <div class="uuid-row"><button type="button" data-uuid="v4">v4</button><code id="uOut4" class="uuid-out"></code></div>
+    <div class="uuid-row"><button type="button" data-uuid="v5">v5</button>
+      <select id="uNs" aria-label="namespace"><option value="pycim" selected>pycim namespace</option><option value="url">NameSpace_URL</option></select>
+      <input id="uName" value="sample-grid/SS-A/MTR-1" aria-label="name" spellcheck="false">
+      <code id="uOut5" class="uuid-out"></code></div>
+    <div class="uuid-row"><button type="button" data-uuid="v7">v7</button><code id="uOut7" class="uuid-out"></code><small id="uOut7t" class="uuid-note"></small></div>
+    <div class="uuid-row"><button type="button" data-uuid="ns"><span lang="ko">지금 (ns)</span><span lang="en">Now (ns)</span></button>
+      <span class="uuid-ns"><small>Date.now() × 10⁶</small><code id="uNsWall"></code></span>
+      <span class="uuid-ns"><small>performance.timeOrigin + now()</small><code id="uNsHi"></code></span></div>
+    <p class="uuid-note" lang="ko">v5 기본값(pycim 네임스페이스 + <code>sample-grid/SS-A/MTR-1</code>)은 Python으로 만든 예제 변압기의 mRID <code>705b3ffd-…</code>와 같은 값이 나옵니다. 이름을 한 글자만 바꿔도 전혀 다른 ID가 됩니다.</p>
+    <p class="uuid-note" lang="en">The v5 default (pycim namespace + <code>sample-grid/SS-A/MTR-1</code>) yields the same mRID as the Python-built sample transformer, <code>705b3ffd-…</code>. Change one character and the ID is entirely different.</p>
+  </div>
+
+  <h3><span lang="ko">난수를 만드는 몇 가지 방법</span><span lang="en">Ways to generate random numbers</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">종류</span><span lang="en">Kind</span></th><th><span lang="ko">예</span><span lang="en">Examples</span></th><th><span lang="ko">특징</span><span lang="en">Notes</span></th></tr>
+    <tr><td><b><span lang="ko">운영체제 암호용 난수</span><span lang="en">OS cryptographic RNG</span></b></td><td><code>secrets.token_hex()</code>, <code>os.urandom()</code>, <code>/dev/urandom</code>, <span lang="ko">브라우저</span><span lang="en">browser</span> <code>crypto.getRandomValues()</code></td><td><span lang="ko">예측할 수 없음. UUID v4, 비밀번호, 토큰에 씁니다. Python <code>uuid4()</code>도 이것을 씁니다.</span><span lang="en">Unpredictable. Use for UUID v4, passwords, tokens; Python's <code>uuid4()</code> uses it.</span></td></tr>
+    <tr><td><b><span lang="ko">하드웨어 난수</span><span lang="en">Hardware RNG</span></b></td><td><span lang="ko">CPU의 RDRAND/RDSEED, TPM 칩</span><span lang="en">CPU RDRAND/RDSEED, TPM chips</span></td><td><span lang="ko">회로의 열잡음 같은 물리 현상에서 뽑습니다. 보통 직접 쓰지 않고 운영체제가 섞어서 위의 암호용 난수로 내줍니다.</span><span lang="en">Drawn from physical noise in circuits; usually mixed in by the OS rather than used directly.</span></td></tr>
+    <tr><td><b><span lang="ko">의사 난수 (씨앗 고정)</span><span lang="en">Pseudo-random (seeded)</span></b></td><td><code>random.seed(42)</code> (Mersenne Twister), <code>numpy.random.default_rng(42)</code> (PCG64)</td><td><span lang="ko">씨앗이 같으면 같은 수열이 나와 실험을 되풀이할 수 있습니다. 예측할 수 있으므로 ID·보안용으로는 쓰면 안 됩니다. 예: <code>random.seed(42)</code> 뒤 첫 <code>random()</code>은 항상 0.6394…</span><span lang="en">Same seed, same sequence: good for reproducible experiments, never for IDs or security. After <code>random.seed(42)</code> the first <code>random()</code> is always 0.6394…</span></td></tr>
+    <tr><td><b><span lang="ko">물리 난수 서비스</span><span lang="en">Physical randomness services</span></b></td><td><span lang="ko">대기 잡음·양자 현상을 측정하는 공개 서비스</span><span lang="en">public services measuring atmospheric or quantum noise</span></td><td><span lang="ko">추첨처럼 "조작하지 않았다"를 보여야 할 때 씁니다. 네트워크가 필요하고 느립니다.</span><span lang="en">For draws that must be visibly fair; needs a network and is slow.</span></td></tr>
+  </table></div>
+<pre><code>import secrets, os, random, uuid
+secrets.token_hex(8)      # '36d7648f6267a1ec'   <span lang="ko">암호용, 매번 다름</span><span lang="en">cryptographic, different each time</span>
+os.urandom(4).hex()       # '5a8bfda2'
+uuid.uuid4()              # <span lang="ko">내부에서 os.urandom 사용</span><span lang="en">uses os.urandom internally</span>
+random.seed(42); random.random()   # 0.6394267984578837   <span lang="ko">항상 같음 (재현용)</span><span lang="en">always the same (reproducible)</span></code></pre>
+
+  <h3><span lang="ko">현재 시각을 나노초로: 쓸 수 있지만 ID로는 부족합니다</span><span lang="en">Current time in nanoseconds: useful, but not enough for an ID</span></h3>
+  <p lang="ko">네, 있습니다. Python의 <code>time.time_ns()</code>는 1970-01-01 UTC부터 지난 시간을 나노초 정수로 돌려줍니다. 예를 들어 이 페이지를 만들 때의 값은 <code>1793748581701337119</code>였습니다(19자리, 2026-11-03).</p>
+  <p lang="en">Yes. Python's <code>time.time_ns()</code> returns nanoseconds since 1970-01-01 UTC as an integer, e.g. <code>1793748581701337119</code> (19 digits) when this page was written (2026-11-03).</p>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">함수</span><span lang="en">Function</span></th><th><span lang="ko">무엇을 재나</span><span lang="en">Measures</span></th><th><span lang="ko">쓰임</span><span lang="en">Use</span></th></tr>
+    <tr><td><code>time.time_ns()</code></td><td><span lang="ko">벽시계 시각 (유닉스 시각, ns)</span><span lang="en">wall-clock time (Unix, ns)</span></td><td><span lang="ko">기록 시각. NTP 보정으로 뒤로 갈 수도 있습니다.</span><span lang="en">timestamps; can jump back on NTP correction</span></td></tr>
+    <tr><td><code>time.monotonic_ns()</code>, <code>perf_counter_ns()</code></td><td><span lang="ko">기준점이 정해지지 않은 단조 증가 시계</span><span lang="en">monotonic clock with an arbitrary origin</span></td><td><span lang="ko">걸린 시간 재기. 날짜로 바꿀 수 없습니다.</span><span lang="en">durations; not convertible to a date</span></td></tr>
+    <tr><td><span lang="ko">브라우저</span><span lang="en">Browser</span> <code>Date.now()</code> / <code>performance.now()</code></td><td><span lang="ko">밀리초 / 소수 밀리초</span><span lang="en">ms / fractional ms</span></td><td><span lang="ko">보안상 정밀도를 일부러 낮춥니다. 위 상자의 ns 값 끝자리가 0이거나 거친 이유입니다.</span><span lang="en">precision is deliberately reduced for security, which is why the ns values above end in zeros or coarse digits</span></td></tr>
+  </table></div>
+  <p lang="ko"><b>ID로 쓰기에 부족한 이유</b>는 세 가지입니다.</p>
+  <ul lang="ko">
+    <li><b>단위와 정밀도는 다릅니다.</b> ns 단위로 찍혀도 실제 시계 해상도는 운영체제·하드웨어에 따라 더 거칠 수 있습니다.</li>
+    <li><b>같은 순간이 겹칩니다.</b> 여러 서버나 스레드가 같은 값을 받을 수 있습니다.</li>
+    <li><b>시계는 뒤로 가기도 합니다.</b> 시각 보정이 일어나면 같은 값이 다시 나올 수 있습니다.</li>
+  </ul>
+  <p lang="en"><b>Why it is not enough as an ID</b>:</p>
+  <ul lang="en">
+    <li><b>Unit is not precision.</b> Real clock resolution may be coarser than the ns unit, depending on OS and hardware.</li>
+    <li><b>Instants collide.</b> Several servers or threads can read the same value.</li>
+    <li><b>Clocks go backwards.</b> After a correction, a value can repeat.</li>
+  </ul>
+  <p lang="ko">그래서 시간 기반 ID는 시각에 무작위 비트나 순번을 붙입니다.</p>
+  <ul lang="ko">
+    <li><b>UUID v1</b>: 1582년부터 센 100ns 단위 시각에 MAC 주소를 붙입니다. 장비 주소가 드러나 요즘은 피합니다.</li>
+    <li><b>UUID v7</b>(RFC 9562, 2024): 유닉스 밀리초에 난수를 붙입니다. Python은 3.14부터 <code>uuid.uuid7()</code>을 지원합니다.</li>
+    <li><b>ULID</b>: v7과 비슷한 구조를 26글자로 짧게 적습니다.</li>
+    <li><b>Snowflake</b>: 밀리초에 장비 번호와 순번을 붙인 64비트 정수입니다.</li>
+  </ul>
+  <p lang="en">So time-based IDs add random bits or a counter:</p>
+  <ul lang="en">
+    <li><b>UUID v1</b>: 100 ns ticks since 1582 plus the MAC address; avoided now because it leaks the device address.</li>
+    <li><b>UUID v7</b> (RFC 9562, 2024): Unix ms plus random bits; Python has <code>uuid.uuid7()</code> from 3.14.</li>
+    <li><b>ULID</b>: a v7-like layout written in 26 characters.</li>
+    <li><b>Snowflake</b>: a 64-bit integer of ms, machine number and sequence.</li>
+  </ul>
+  <div class="easy"><b>💡 <span lang="ko">mRID에는 무엇을?</span><span lang="en">Which one for mRIDs?</span></b>
+    <p lang="ko">새로 생긴 설비는 <b>v4</b>로 발급합니다. 기존 시스템 코드가 있으면 <b>v5</b>로 그 코드에서 만들어, 다시 만들어도 같은 ID가 나오게 합니다. mRID는 "언제 만들었나"를 담을 필요가 없고 바뀌지 않는 것이 가장 중요하므로, 시각을 드러내는 v7이나 나노초 시각은 쓰지 않았습니다. 다만 DB 정렬이 중요한 기록(측정값, 이벤트 로그)에는 v7이 잘 맞습니다.</p>
+    <p lang="en">New equipment gets a <b>v4</b>; equipment with a legacy code gets a <b>v5</b> derived from it, so rebuilds keep the ID. An mRID needs no creation time and must never change, so v7 and raw ns timestamps are not used. For time-ordered records (measurements, event logs) v7 fits well.</p></div>
 </section>
 
 <section id="convert">

@@ -305,3 +305,16 @@ nav .menu a[aria-current="page"]{background:var(--code);font-weight:600}
 nav .menu hr{border:0;border-top:1px solid var(--line);margin:4px 2px}
 @media (max-width:520px){ .menu-btn{padding:4px 3px;font-size:13px;letter-spacing:-.2px} }
 @media (max-width:380px){ .menu-btn{font-size:12px;padding:4px 2px} }
+
+/* 프로젝트 페이지: UUID 실습 상자 */
+mark.uv{background:color-mix(in srgb,var(--accent) 22%,transparent);color:inherit;border-radius:3px;padding:0 1px;font-weight:700}
+mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inherit;border-radius:3px;padding:0 1px;font-weight:700}
+.uuid-lab{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:16px 0;display:grid;gap:10px}
+.uuid-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.uuid-row button{border:1px solid var(--line);background:var(--code);color:var(--text);border-radius:6px;padding:4px 12px;cursor:pointer;font-weight:600;min-width:52px}
+.uuid-row button:hover{border-color:var(--accent);color:var(--accent)}
+.uuid-row select,.uuid-row input{font:13px ui-monospace,Menlo,Consolas,monospace;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);max-width:100%}
+.uuid-row input{flex:1;min-width:180px}
+.uuid-out{font-size:14px;word-break:break-all}
+.uuid-ns{display:inline-flex;flex-direction:column;gap:1px}
+.uuid-ns small,.uuid-note{color:var(--muted);font-size:12.5px;margin:0}
