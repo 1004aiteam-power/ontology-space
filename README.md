@@ -11,6 +11,7 @@
 | [docs/03-python-cim-design.md](docs/03-python-cim-design.md) | **프로젝트**: CIM을 파이썬 클래스로 설계 (`pycim`) |
 | [docs/04-physical-ai.md](docs/04-physical-ai.md) | Physical AI 개념·관련 기술과 NEAT 자율주행 시뮬레이션 |
 | [docs/05-digital-twin.md](docs/05-digital-twin.md) | 가상 대한민국 전력망 디지털 트윈 (⚠ 가상 데이터) |
+| [examples/work/](examples/work/) | 업무 온톨로지: 가상의 AI추진부 업무 149개를 분류한 엑셀 원본, OWL, Neo4j 스크립트 (⚠ 가상 부서) |
 | [examples/power-grid-sample.ttl](examples/power-grid-sample.ttl) | CIM 스타일의 간단한 전력망 예제 (Turtle) |
 | [examples/queries.md](examples/queries.md) | 예제 데이터에 대한 SPARQL 질의 모음 |
 | [pycim/](pycim/) | CIM 파이썬 클래스 패키지 |
@@ -24,7 +25,7 @@
 | [shapes/](shapes/) | SHACL 규칙(`cim-shapes.ttl`)과 pycim 클래스 계층(`cim-classes.ttl`) |
 | [assets/physai/](assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터 |
 | [examples/twin/](examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈, 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `work.html` · `work-graph.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈 / 업무 온톨로지, 한·영 전환) |
 
 웹사이트: https://1004aiteam-power.github.io/ontology-space/
 

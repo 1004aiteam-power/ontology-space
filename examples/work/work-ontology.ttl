@@ -1,0 +1,2516 @@
+@prefix aipd: <https://example.org/ai-promotion-dept/ontology#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+
+<https://example.org/ai-promotion-dept/ontology> a owl:Ontology ;
+    rdfs:label "AI추진부 업무 온톨로지"@ko ;
+    owl:versionInfo "0.2" ;
+    dct:created "2026-11-03"^^xsd:date ;
+    rdfs:comment "가상의 AI추진부 업무를 9개 대분류, 43개 중분류, 149개 단위업무로 분류하고 역할·산출물·리스크·업무 간 선행/환류 관계를 정의한다."@ko .
+
+### 클래스
+aipd:Task a owl:Class ; rdfs:label "단위업무"@ko .
+aipd:Domain a owl:Class ; rdfs:label "대분류"@ko .
+aipd:SubDomain a owl:Class ; rdfs:label "중분류"@ko .
+aipd:Role a owl:Class ; rdfs:label "역할"@ko .
+aipd:InternalRole a owl:Class ; rdfs:subClassOf aipd:Role ; rdfs:label "부서 내부 역할"@ko .
+aipd:ExternalParty a owl:Class ; rdfs:subClassOf aipd:Role ; rdfs:label "협업 외부 조직"@ko ; owl:disjointWith aipd:InternalRole .
+aipd:Artifact a owl:Class ; rdfs:label "산출물"@ko .
+aipd:Risk a owl:Class ; rdfs:label "리스크"@ko .
+aipd:LifecycleStage a owl:Class ; rdfs:label "생애주기 단계"@ko .
+aipd:TaskNature a owl:Class ; rdfs:label "업무 성격"@ko .
+aipd:Task owl:disjointWith aipd:Domain, aipd:SubDomain, aipd:Role, aipd:Artifact, aipd:Risk .
+
+### 객체 속성
+aipd:belongsTo a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:SubDomain ; rdfs:label "소속 중분류"@ko .
+aipd:partOf a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain aipd:SubDomain ; rdfs:range aipd:Domain ; rdfs:label "소속 대분류"@ko .
+aipd:ownedBy a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:InternalRole ; rdfs:label "주관 역할"@ko .
+aipd:collaboratesWith a owl:ObjectProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:Role ; rdfs:label "협업 역할"@ko .
+aipd:produces a owl:ObjectProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:Artifact ; owl:inverseOf aipd:producedBy ; rdfs:label "산출"@ko .
+aipd:producedBy a owl:ObjectProperty ; rdfs:label "산출 업무"@ko .
+aipd:hasRisk a owl:ObjectProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:Risk ; rdfs:label "관련 리스크"@ko .
+aipd:inStage a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:LifecycleStage ; rdfs:label "생애주기"@ko .
+aipd:hasNature a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:TaskNature ; rdfs:label "업무 성격"@ko .
+aipd:precedesTransitive a owl:ObjectProperty, owl:TransitiveProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:Task ; rdfs:label "선행(전이)"@ko ;
+    rdfs:comment "precedes의 전이 폐포. 추론기를 돌리면 간접 선행 업무가 모두 도출된다."@ko .
+aipd:precedes a owl:ObjectProperty, owl:AsymmetricProperty, owl:IrreflexiveProperty ; rdfs:subPropertyOf aipd:precedesTransitive ;
+    rdfs:domain aipd:Task ; rdfs:range aipd:Task ; owl:inverseOf aipd:dependsOn ; rdfs:label "직접 선행"@ko ;
+    rdfs:comment "주어 업무가 끝나야 목적어 업무를 시작할 수 있다. 순환이 없어야 한다."@ko .
+aipd:dependsOn a owl:ObjectProperty ; rdfs:label "선행 필요"@ko .
+aipd:feedsBackTo a owl:ObjectProperty ; rdfs:domain aipd:Task ; rdfs:range aipd:Task ; rdfs:label "환류"@ko ;
+    rdfs:comment "주어 업무의 결과가 목적어 업무의 다음 회차 입력이 된다. 순서를 강제하지 않으므로 순환을 허용한다."@ko .
+
+### 데이터 속성
+aipd:code a owl:DatatypeProperty ; rdfs:range xsd:string ; rdfs:label "코드"@ko .
+aipd:cycle a owl:DatatypeProperty ; rdfs:domain aipd:Task ; rdfs:range xsd:string ; rdfs:label "주기"@ko .
+aipd:condition a owl:DatatypeProperty ; rdfs:domain aipd:Task ; rdfs:range xsd:string ; rdfs:label "적용 조건"@ko .
+aipd:kpi a owl:DatatypeProperty ; rdfs:domain aipd:Task ; rdfs:range xsd:string ; rdfs:label "KPI"@ko .
+aipd:note a owl:DatatypeProperty ; rdfs:domain aipd:Task ; rdfs:range xsd:string ; rdfs:label "비고"@ko .
+aipd:feedbackReason a owl:AnnotationProperty ; rdfs:label "환류 사유"@ko .
+
+### 생애주기·업무 성격
+aipd:Stage_Plan a aipd:LifecycleStage ; rdfs:label "기획"@ko .
+aipd:Stage_Initiate a aipd:LifecycleStage ; rdfs:label "착수"@ko .
+aipd:Stage_Execute a aipd:LifecycleStage ; rdfs:label "실행"@ko .
+aipd:Stage_Review a aipd:LifecycleStage ; rdfs:label "점검"@ko .
+aipd:Stage_Close a aipd:LifecycleStage ; rdfs:label "종료"@ko .
+aipd:Stage_Operate a aipd:LifecycleStage ; rdfs:label "운영"@ko .
+aipd:Nature_Recurring a aipd:TaskNature ; rdfs:label "정기"@ko .
+aipd:Nature_ProjectBased a aipd:TaskNature ; rdfs:label "과제성"@ko .
+aipd:Nature_AdHoc a aipd:TaskNature ; rdfs:label "수시"@ko .
+
+### 대분류·중분류
+aipd:Domain_ST a aipd:Domain ; aipd:code "ST" ; rdfs:label "전략·기획"@ko ; rdfs:comment "StrategyPlanning"@en .
+aipd:Domain_BD a aipd:Domain ; aipd:code "BD" ; rdfs:label "사업개발·확산"@ko ; rdfs:comment "BusinessDevelopment"@en .
+aipd:Domain_TD a aipd:Domain ; aipd:code "TD" ; rdfs:label "AI 기술개발"@ko ; rdfs:comment "AITechDevelopment"@en .
+aipd:Domain_DM a aipd:Domain ; aipd:code "DM" ; rdfs:label "데이터 관리"@ko ; rdfs:comment "DataManagement"@en .
+aipd:Domain_PM a aipd:Domain ; aipd:code "PM" ; rdfs:label "과제·프로젝트 관리"@ko ; rdfs:comment "ProjectManagement"@en .
+aipd:Domain_GV a aipd:Domain ; aipd:code "GV" ; rdfs:label "AI 거버넌스·리스크"@ko ; rdfs:comment "AIGovernanceRisk"@en .
+aipd:Domain_OC a aipd:Domain ; aipd:code "OC" ; rdfs:label "조직·역량"@ko ; rdfs:comment "OrgCapability"@en .
+aipd:Domain_MS a aipd:Domain ; aipd:code "MS" ; rdfs:label "경영지원"@ko ; rdfs:comment "ManagementSupport"@en .
+aipd:Domain_OP a aipd:Domain ; aipd:code "OP" ; rdfs:label "운영·유지보수"@ko ; rdfs:comment "Operations"@en .
+aipd:Sub_ST_1 a aipd:SubDomain ; aipd:code "ST-1" ; rdfs:label "환경분석"@ko ; aipd:partOf aipd:Domain_ST .
+aipd:Sub_ST_2 a aipd:SubDomain ; aipd:code "ST-2" ; rdfs:label "비전·중장기전략"@ko ; aipd:partOf aipd:Domain_ST .
+aipd:Sub_ST_3 a aipd:SubDomain ; aipd:code "ST-3" ; rdfs:label "연간 사업계획"@ko ; aipd:partOf aipd:Domain_ST .
+aipd:Sub_ST_4 a aipd:SubDomain ; aipd:code "ST-4" ; rdfs:label "성과관리(부서 단위)"@ko ; aipd:partOf aipd:Domain_ST .
+aipd:Sub_BD_1 a aipd:SubDomain ; aipd:code "BD-1" ; rdfs:label "수요발굴"@ko ; aipd:partOf aipd:Domain_BD .
+aipd:Sub_BD_2 a aipd:SubDomain ; aipd:code "BD-2" ; rdfs:label "PoC·파일럿"@ko ; aipd:partOf aipd:Domain_BD .
+aipd:Sub_BD_3 a aipd:SubDomain ; aipd:code "BD-3" ; rdfs:label "사업화·확산"@ko ; aipd:partOf aipd:Domain_BD .
+aipd:Sub_BD_4 a aipd:SubDomain ; aipd:code "BD-4" ; rdfs:label "대외협력"@ko ; aipd:partOf aipd:Domain_BD .
+aipd:Sub_BD_5 a aipd:SubDomain ; aipd:code "BD-5" ; rdfs:label "홍보"@ko ; aipd:partOf aipd:Domain_BD .
+aipd:Sub_TD_1 a aipd:SubDomain ; aipd:code "TD-1" ; rdfs:label "아키텍처·플랫폼"@ko ; aipd:partOf aipd:Domain_TD .
+aipd:Sub_TD_2 a aipd:SubDomain ; aipd:code "TD-2" ; rdfs:label "모델 개발"@ko ; aipd:partOf aipd:Domain_TD .
+aipd:Sub_TD_3 a aipd:SubDomain ; aipd:code "TD-3" ; rdfs:label "생성형 AI"@ko ; aipd:partOf aipd:Domain_TD .
+aipd:Sub_TD_4 a aipd:SubDomain ; aipd:code "TD-4" ; rdfs:label "MLOps(구축)"@ko ; aipd:partOf aipd:Domain_TD .
+aipd:Sub_TD_5 a aipd:SubDomain ; aipd:code "TD-5" ; rdfs:label "연구"@ko ; aipd:partOf aipd:Domain_TD .
+aipd:Sub_DM_1 a aipd:SubDomain ; aipd:code "DM-1" ; rdfs:label "데이터 확보"@ko ; aipd:partOf aipd:Domain_DM .
+aipd:Sub_DM_2 a aipd:SubDomain ; aipd:code "DM-2" ; rdfs:label "데이터 처리"@ko ; aipd:partOf aipd:Domain_DM .
+aipd:Sub_DM_3 a aipd:SubDomain ; aipd:code "DM-3" ; rdfs:label "데이터 품질"@ko ; aipd:partOf aipd:Domain_DM .
+aipd:Sub_DM_4 a aipd:SubDomain ; aipd:code "DM-4" ; rdfs:label "데이터 거버넌스(운영)"@ko ; aipd:partOf aipd:Domain_DM .
+aipd:Sub_PM_1 a aipd:SubDomain ; aipd:code "PM-1" ; rdfs:label "착수"@ko ; aipd:partOf aipd:Domain_PM .
+aipd:Sub_PM_2 a aipd:SubDomain ; aipd:code "PM-2" ; rdfs:label "계획"@ko ; aipd:partOf aipd:Domain_PM .
+aipd:Sub_PM_3 a aipd:SubDomain ; aipd:code "PM-3" ; rdfs:label "실행·통제"@ko ; aipd:partOf aipd:Domain_PM .
+aipd:Sub_PM_4 a aipd:SubDomain ; aipd:code "PM-4" ; rdfs:label "종료"@ko ; aipd:partOf aipd:Domain_PM .
+aipd:Sub_PM_5 a aipd:SubDomain ; aipd:code "PM-5" ; rdfs:label "포트폴리오(과제 단위)"@ko ; aipd:partOf aipd:Domain_PM .
+aipd:Sub_GV_1 a aipd:SubDomain ; aipd:code "GV-1" ; rdfs:label "정책·규정"@ko ; aipd:partOf aipd:Domain_GV .
+aipd:Sub_GV_2 a aipd:SubDomain ; aipd:code "GV-2" ; rdfs:label "법규 준수"@ko ; aipd:partOf aipd:Domain_GV .
+aipd:Sub_GV_3 a aipd:SubDomain ; aipd:code "GV-3" ; rdfs:label "리스크 관리"@ko ; aipd:partOf aipd:Domain_GV .
+aipd:Sub_GV_4 a aipd:SubDomain ; aipd:code "GV-4" ; rdfs:label "보안(정책·통제)"@ko ; aipd:partOf aipd:Domain_GV .
+aipd:Sub_GV_5 a aipd:SubDomain ; aipd:code "GV-5" ; rdfs:label "검증·감사"@ko ; aipd:partOf aipd:Domain_GV .
+aipd:Sub_OC_1 a aipd:SubDomain ; aipd:code "OC-1" ; rdfs:label "조직설계"@ko ; aipd:partOf aipd:Domain_OC .
+aipd:Sub_OC_2 a aipd:SubDomain ; aipd:code "OC-2" ; rdfs:label "인력관리"@ko ; aipd:partOf aipd:Domain_OC .
+aipd:Sub_OC_3 a aipd:SubDomain ; aipd:code "OC-3" ; rdfs:label "교육"@ko ; aipd:partOf aipd:Domain_OC .
+aipd:Sub_OC_4 a aipd:SubDomain ; aipd:code "OC-4" ; rdfs:label "변화관리"@ko ; aipd:partOf aipd:Domain_OC .
+aipd:Sub_OC_5 a aipd:SubDomain ; aipd:code "OC-5" ; rdfs:label "지식관리"@ko ; aipd:partOf aipd:Domain_OC .
+aipd:Sub_MS_1 a aipd:SubDomain ; aipd:code "MS-1" ; rdfs:label "예산·재무"@ko ; aipd:partOf aipd:Domain_MS .
+aipd:Sub_MS_2 a aipd:SubDomain ; aipd:code "MS-2" ; rdfs:label "구매·계약"@ko ; aipd:partOf aipd:Domain_MS .
+aipd:Sub_MS_3 a aipd:SubDomain ; aipd:code "MS-3" ; rdfs:label "벤더관리"@ko ; aipd:partOf aipd:Domain_MS .
+aipd:Sub_MS_4 a aipd:SubDomain ; aipd:code "MS-4" ; rdfs:label "회의·보고"@ko ; aipd:partOf aipd:Domain_MS .
+aipd:Sub_MS_5 a aipd:SubDomain ; aipd:code "MS-5" ; rdfs:label "문서·행정"@ko ; aipd:partOf aipd:Domain_MS .
+aipd:Sub_OP_1 a aipd:SubDomain ; aipd:code "OP-1" ; rdfs:label "서비스 운영"@ko ; aipd:partOf aipd:Domain_OP .
+aipd:Sub_OP_2 a aipd:SubDomain ; aipd:code "OP-2" ; rdfs:label "모니터링"@ko ; aipd:partOf aipd:Domain_OP .
+aipd:Sub_OP_3 a aipd:SubDomain ; aipd:code "OP-3" ; rdfs:label "장애·변경(운영)"@ko ; aipd:partOf aipd:Domain_OP .
+aipd:Sub_OP_4 a aipd:SubDomain ; aipd:code "OP-4" ; rdfs:label "사용자 지원"@ko ; aipd:partOf aipd:Domain_OP .
+aipd:Sub_OP_5 a aipd:SubDomain ; aipd:code "OP-5" ; rdfs:label "폐기"@ko ; aipd:partOf aipd:Domain_OP .
+
+### 역할
+aipd:Role_01 a aipd:InternalRole ; rdfs:label "부서장"@ko .
+aipd:Role_02 a aipd:InternalRole ; rdfs:label "전략기획"@ko .
+aipd:Role_03 a aipd:InternalRole ; rdfs:label "PM"@ko .
+aipd:Role_04 a aipd:InternalRole ; rdfs:label "AI엔지니어"@ko .
+aipd:Role_05 a aipd:InternalRole ; rdfs:label "데이터엔지니어"@ko .
+aipd:Role_06 a aipd:InternalRole ; rdfs:label "거버넌스"@ko .
+aipd:Role_07 a aipd:InternalRole ; rdfs:label "경영지원"@ko .
+aipd:Role_08 a aipd:InternalRole ; rdfs:label "운영"@ko .
+aipd:Role_09 a aipd:ExternalParty ; rdfs:label "법무"@ko .
+aipd:Role_10 a aipd:ExternalParty ; rdfs:label "보안팀"@ko .
+aipd:Role_11 a aipd:ExternalParty ; rdfs:label "외주"@ko .
+aipd:Role_12 a aipd:ExternalParty ; rdfs:label "인사팀"@ko .
+aipd:Role_13 a aipd:ExternalParty ; rdfs:label "현업"@ko .
+aipd:Role_14 a aipd:ExternalParty ; rdfs:label "홍보팀"@ko .
+
+### 리스크
+aipd:Risk_001 a aipd:Risk ; rdfs:label "2차 피해"@ko .
+aipd:Risk_002 a aipd:Risk ; rdfs:label "개인정보"@ko .
+aipd:Risk_003 a aipd:Risk ; rdfs:label "개인정보 침해"@ko .
+aipd:Risk_004 a aipd:Risk ; rdfs:label "공정성 시비"@ko .
+aipd:Risk_005 a aipd:Risk ; rdfs:label "과다 보존"@ko .
+aipd:Risk_006 a aipd:Risk ; rdfs:label "과적합"@ko .
+aipd:Risk_007 a aipd:Risk ; rdfs:label "권한 남용"@ko .
+aipd:Risk_008 a aipd:Risk ; rdfs:label "규정 공백"@ko .
+aipd:Risk_009 a aipd:Risk ; rdfs:label "규제 위반"@ko .
+aipd:Risk_010 a aipd:Risk ; rdfs:label "기밀 유출"@ko .
+aipd:Risk_011 a aipd:Risk ; rdfs:label "기술 유출"@ko .
+aipd:Risk_012 a aipd:Risk ; rdfs:label "대외비 노출"@ko .
+aipd:Risk_013 a aipd:Risk ; rdfs:label "데이터 누수"@ko .
+aipd:Risk_014 a aipd:Risk ; rdfs:label "데이터 부족"@ko .
+aipd:Risk_015 a aipd:Risk ; rdfs:label "도입 실패"@ko .
+aipd:Risk_016 a aipd:Risk ; rdfs:label "라이선스"@ko .
+aipd:Risk_017 a aipd:Risk ; rdfs:label "라이선스 위반"@ko .
+aipd:Risk_018 a aipd:Risk ; rdfs:label "라이선스·데이터 유출"@ko .
+aipd:Risk_019 a aipd:Risk ; rdfs:label "매몰비용"@ko .
+aipd:Risk_020 a aipd:Risk ; rdfs:label "미등록 AI(Shadow AI)"@ko .
+aipd:Risk_021 a aipd:Risk ; rdfs:label "배포 장애"@ko .
+aipd:Risk_022 a aipd:Risk ; rdfs:label "범위 확장"@ko .
+aipd:Risk_023 a aipd:Risk ; rdfs:label "벤더 종속"@ko .
+aipd:Risk_024 a aipd:Risk ; rdfs:label "변경 장애"@ko .
+aipd:Risk_025 a aipd:Risk ; rdfs:label "부적합 판정"@ko .
+aipd:Risk_026 a aipd:Risk ; rdfs:label "불리한 조항"@ko .
+aipd:Risk_027 a aipd:Risk ; rdfs:label "불법파견"@ko .
+aipd:Risk_028 a aipd:Risk ; rdfs:label "비용 초과"@ko .
+aipd:Risk_029 a aipd:Risk ; rdfs:label "비용 폭증"@ko .
+aipd:Risk_030 a aipd:Risk ; rdfs:label "사업비 정산"@ko .
+aipd:Risk_031 a aipd:Risk ; rdfs:label "사용자 혼란"@ko .
+aipd:Risk_032 a aipd:Risk ; rdfs:label "산출물 유실"@ko .
+aipd:Risk_033 a aipd:Risk ; rdfs:label "서비스 중단"@ko .
+aipd:Risk_034 a aipd:Risk ; rdfs:label "설명 부족"@ko .
+aipd:Risk_035 a aipd:Risk ; rdfs:label "설명 불가"@ko .
+aipd:Risk_036 a aipd:Risk ; rdfs:label "성능 역행"@ko .
+aipd:Risk_037 a aipd:Risk ; rdfs:label "성능 저하"@ko .
+aipd:Risk_038 a aipd:Risk ; rdfs:label "예산 초과·불용"@ko .
+aipd:Risk_039 a aipd:Risk ; rdfs:label "오작동·권한 남용"@ko .
+aipd:Risk_040 a aipd:Risk ; rdfs:label "운영 공백"@ko .
+aipd:Risk_041 a aipd:Risk ; rdfs:label "이직"@ko .
+aipd:Risk_042 a aipd:Risk ; rdfs:label "인재 확보 실패"@ko .
+aipd:Risk_043 a aipd:Risk ; rdfs:label "일정 지연"@ko .
+aipd:Risk_044 a aipd:Risk ; rdfs:label "자산 유실"@ko .
+aipd:Risk_045 a aipd:Risk ; rdfs:label "재식별"@ko .
+aipd:Risk_046 a aipd:Risk ; rdfs:label "재현 불가"@ko .
+aipd:Risk_047 a aipd:Risk ; rdfs:label "저작권"@ko .
+aipd:Risk_048 a aipd:Risk ; rdfs:label "저작권 분쟁"@ko .
+aipd:Risk_049 a aipd:Risk ; rdfs:label "전환 장애"@ko .
+aipd:Risk_050 a aipd:Risk ; rdfs:label "차별"@ko .
+aipd:Risk_051 a aipd:Risk ; rdfs:label "추적성 상실"@ko .
+aipd:Risk_052 a aipd:Risk ; rdfs:label "편향"@ko .
+aipd:Risk_053 a aipd:Risk ; rdfs:label "평판"@ko .
+aipd:Risk_054 a aipd:Risk ; rdfs:label "품질 편차"@ko .
+aipd:Risk_055 a aipd:Risk ; rdfs:label "프롬프트 인젝션"@ko .
+aipd:Risk_056 a aipd:Risk ; rdfs:label "프롬프트 인젝션·데이터 유출"@ko .
+aipd:Risk_057 a aipd:Risk ; rdfs:label "학습데이터 개인정보"@ko .
+aipd:Risk_058 a aipd:Risk ; rdfs:label "핵심인력 부족"@ko .
+aipd:Risk_059 a aipd:Risk ; rdfs:label "현업 이탈"@ko .
+aipd:Risk_060 a aipd:Risk ; rdfs:label "환각"@ko .
+aipd:Risk_061 a aipd:Risk ; rdfs:label "효과 과대추정"@ko .
+aipd:Risk_062 a aipd:Risk ; rdfs:label "효과 미실현"@ko .
+
+### 단위업무
+aipd:Task_BD_1_1 a aipd:Task ;
+    aipd:code "BD-1-1" ;
+    rdfs:label "현업 인터뷰·워크숍"@ko ;
+    aipd:belongsTo aipd:Sub_BD_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_1_1 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "워크숍 개최 수"@ko .
+aipd:Art_BD_1_1 a aipd:Artifact ; rdfs:label "인터뷰 기록"@ko .
+aipd:Task_BD_1_2 a aipd:Task ;
+    aipd:code "BD-1-2" ;
+    rdfs:label "유스케이스 정의"@ko ;
+    aipd:belongsTo aipd:Sub_BD_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_1_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "정의 유스케이스 수"@ko ;
+    aipd:dependsOn aipd:Task_BD_1_1 .
+aipd:Art_BD_1_2 a aipd:Artifact ; rdfs:label "유스케이스 정의서"@ko .
+aipd:Task_BD_1_3 a aipd:Task ;
+    aipd:code "BD-1-3" ;
+    rdfs:label "비즈니스 케이스(ROI) 작성"@ko ;
+    aipd:belongsTo aipd:Sub_BD_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_1_3 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "예상 ROI"@ko ;
+    aipd:hasRisk aipd:Risk_061 ;
+    aipd:dependsOn aipd:Task_BD_1_2 .
+aipd:Art_BD_1_3 a aipd:Artifact ; rdfs:label "비즈니스 케이스"@ko .
+aipd:Task_BD_2_1 a aipd:Task ;
+    aipd:code "BD-2-1" ;
+    rdfs:label "PoC 계획"@ko ;
+    aipd:belongsTo aipd:Sub_BD_2 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_BD_2_1 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "계획 승인"@ko ;
+    aipd:dependsOn aipd:Task_ST_3_3 .
+aipd:Art_BD_2_1 a aipd:Artifact ; rdfs:label "PoC 계획서"@ko .
+aipd:Task_BD_2_2 a aipd:Task ;
+    aipd:code "BD-2-2" ;
+    rdfs:label "PoC 수행"@ko ;
+    aipd:belongsTo aipd:Sub_BD_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_BD_2_2 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "기한 준수율"@ko ;
+    aipd:hasRisk aipd:Risk_014 ;
+    aipd:dependsOn aipd:Task_BD_2_1, aipd:Task_DM_1_2 .
+aipd:Art_BD_2_2 a aipd:Artifact ; rdfs:label "프로토타입"@ko .
+aipd:Task_BD_2_3 a aipd:Task ;
+    aipd:code "BD-2-3" ;
+    rdfs:label "PoC 결과 평가·Go/No-go"@ko ;
+    aipd:belongsTo aipd:Sub_BD_2 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_BD_2_3 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "본사업 전환율"@ko ;
+    aipd:dependsOn aipd:Task_BD_2_2 .
+aipd:Art_BD_2_3 a aipd:Artifact ; rdfs:label "PoC 평가보고서"@ko .
+aipd:Task_BD_2_4 a aipd:Task ;
+    aipd:code "BD-2-4" ;
+    rdfs:label "파일럿 운영"@ko ;
+    aipd:belongsTo aipd:Sub_BD_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "Go 판정 과제"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_BD_2_4 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "사용자 만족도"@ko ;
+    aipd:hasRisk aipd:Risk_059 ;
+    aipd:dependsOn aipd:Task_BD_2_3 .
+aipd:Art_BD_2_4 a aipd:Artifact ; rdfs:label "파일럿 결과보고서"@ko .
+aipd:Task_BD_2_5 a aipd:Task ;
+    aipd:code "BD-2-5" ;
+    rdfs:label "PoC 종료·자산화"@ko ;
+    aipd:belongsTo aipd:Sub_BD_2 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_BD_2_5 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "자산 재사용률"@ko ;
+    aipd:dependsOn aipd:Task_BD_2_3 ;
+    aipd:note "v0.2 추가: No-go 과제도 데이터·코드·교훈을 남기도록 종료 절차 보완"@ko .
+aipd:Art_BD_2_5 a aipd:Artifact ; rdfs:label "PoC 종료보고서·재사용 자산 목록"@ko .
+aipd:Task_BD_3_1 a aipd:Task ;
+    aipd:code "BD-3-1" ;
+    rdfs:label "확산 계획 수립"@ko ;
+    aipd:belongsTo aipd:Sub_BD_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_3_1 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "대상 부서 수"@ko ;
+    aipd:dependsOn aipd:Task_BD_2_4 .
+aipd:Art_BD_3_1 a aipd:Artifact ; rdfs:label "확산 계획서"@ko .
+aipd:Task_BD_3_2 a aipd:Task ;
+    aipd:code "BD-3-2" ;
+    rdfs:label "현업 이관·적용"@ko ;
+    aipd:belongsTo aipd:Sub_BD_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_BD_3_2 ;
+    aipd:collaboratesWith aipd:Role_08 ;
+    aipd:kpi "이관 완료율"@ko ;
+    aipd:hasRisk aipd:Risk_040 ;
+    aipd:dependsOn aipd:Task_BD_3_1, aipd:Task_OP_1_2 .
+aipd:Art_BD_3_2 a aipd:Artifact ; rdfs:label "이관 확인서"@ko .
+aipd:Task_BD_3_3 a aipd:Task ;
+    aipd:code "BD-3-3" ;
+    rdfs:label "전사 확산 지원"@ko ;
+    aipd:belongsTo aipd:Sub_BD_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_3_3 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "활성 사용자 수"@ko ;
+    aipd:dependsOn aipd:Task_BD_3_2 .
+aipd:Art_BD_3_3 a aipd:Artifact ; rdfs:label "확산 현황판"@ko .
+aipd:Task_BD_3_4 a aipd:Task ;
+    aipd:code "BD-3-4" ;
+    rdfs:label "사내 아이디어 공모"@ko ;
+    aipd:belongsTo aipd:Sub_BD_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_3_4 ;
+    aipd:kpi "응모 건수"@ko .
+aipd:Art_BD_3_4 a aipd:Artifact ; rdfs:label "공모 결과"@ko .
+aipd:Task_BD_4_1 a aipd:Task ;
+    aipd:code "BD-4-1" ;
+    rdfs:label "산학연 협력"@ko ;
+    aipd:belongsTo aipd:Sub_BD_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_4_1 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "협력 과제 수"@ko ;
+    aipd:hasRisk aipd:Risk_011 ;
+    aipd:dependsOn aipd:Task_ST_2_2 .
+aipd:Art_BD_4_1 a aipd:Artifact ; rdfs:label "협약서(MOU)"@ko .
+aipd:Task_BD_4_2 a aipd:Task ;
+    aipd:code "BD-4-2" ;
+    rdfs:label "스타트업·파트너 발굴"@ko ;
+    aipd:belongsTo aipd:Sub_BD_4 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_4_2 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "협업 건수"@ko ;
+    aipd:dependsOn aipd:Task_ST_2_2 .
+aipd:Art_BD_4_2 a aipd:Artifact ; rdfs:label "파트너 리스트"@ko .
+aipd:Task_BD_4_3 a aipd:Task ;
+    aipd:code "BD-4-3" ;
+    rdfs:label "정부과제 수주"@ko ;
+    aipd:belongsTo aipd:Sub_BD_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "정부 공모 시"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_4_3 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "수주 금액"@ko ;
+    aipd:hasRisk aipd:Risk_030 ;
+    aipd:dependsOn aipd:Task_ST_3_1 .
+aipd:Art_BD_4_3 a aipd:Artifact ; rdfs:label "사업 제안서"@ko .
+aipd:Task_BD_4_4 a aipd:Task ;
+    aipd:code "BD-4-4" ;
+    rdfs:label "컨퍼런스·세미나 대응"@ko ;
+    aipd:belongsTo aipd:Sub_BD_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_4_4 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "참가·발표 건수"@ko ;
+    aipd:hasRisk aipd:Risk_012 ;
+    aipd:dependsOn aipd:Task_GV_1_2 .
+aipd:Art_BD_4_4 a aipd:Artifact ; rdfs:label "발표자료"@ko .
+aipd:Task_BD_5_1 a aipd:Task ;
+    aipd:code "BD-5-1" ;
+    rdfs:label "사내 홍보"@ko ;
+    aipd:belongsTo aipd:Sub_BD_5 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_5_1 ;
+    aipd:kpi "조회수"@ko ;
+    aipd:dependsOn aipd:Task_OC_4_1 .
+aipd:Art_BD_5_1 a aipd:Artifact ; rdfs:label "뉴스레터"@ko .
+aipd:Task_BD_5_2 a aipd:Task ;
+    aipd:code "BD-5-2" ;
+    rdfs:label "보도자료 작성"@ko ;
+    aipd:belongsTo aipd:Sub_BD_5 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_5_2 ;
+    aipd:collaboratesWith aipd:Role_14 ;
+    aipd:kpi "보도 건수"@ko ;
+    aipd:hasRisk aipd:Risk_053 ;
+    aipd:dependsOn aipd:Task_BD_5_3 .
+aipd:Art_BD_5_2 a aipd:Artifact ; rdfs:label "보도자료"@ko .
+aipd:Task_BD_5_3 a aipd:Task ;
+    aipd:code "BD-5-3" ;
+    rdfs:label "성공사례집 발간"@ko ;
+    aipd:belongsTo aipd:Sub_BD_5 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_BD_5_3 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "수록 사례 수"@ko ;
+    aipd:dependsOn aipd:Task_PM_4_2 .
+aipd:Art_BD_5_3 a aipd:Artifact ; rdfs:label "성공사례집"@ko .
+aipd:Task_DM_1_1 a aipd:Task ;
+    aipd:code "DM-1-1" ;
+    rdfs:label "데이터 수요 파악"@ko ;
+    aipd:belongsTo aipd:Sub_DM_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_1_1 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "수요 충족률"@ko ;
+    aipd:dependsOn aipd:Task_TD_2_1 .
+aipd:Art_DM_1_1 a aipd:Artifact ; rdfs:label "데이터 요구 목록"@ko .
+aipd:Task_DM_1_2 a aipd:Task ;
+    aipd:code "DM-1-2" ;
+    rdfs:label "내부 데이터 수집"@ko ;
+    aipd:belongsTo aipd:Sub_DM_1 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_1_2 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "수집 리드타임"@ko ;
+    aipd:hasRisk aipd:Risk_002 ;
+    aipd:dependsOn aipd:Task_DM_1_1, aipd:Task_DM_4_2 .
+aipd:Art_DM_1_2 a aipd:Artifact ; rdfs:label "수집 데이터셋"@ko .
+aipd:Task_DM_1_3 a aipd:Task ;
+    aipd:code "DM-1-3" ;
+    rdfs:label "외부 데이터 구매·제휴"@ko ;
+    aipd:belongsTo aipd:Sub_DM_1 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "내부 데이터 부족 시"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_1_3 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "확보 데이터 수"@ko ;
+    aipd:hasRisk aipd:Risk_047 ;
+    aipd:dependsOn aipd:Task_DM_1_1, aipd:Task_MS_2_3 .
+aipd:Art_DM_1_3 a aipd:Artifact ; rdfs:label "데이터 구매계약"@ko .
+aipd:Task_DM_1_4 a aipd:Task ;
+    aipd:code "DM-1-4" ;
+    rdfs:label "데이터 라벨링"@ko ;
+    aipd:belongsTo aipd:Sub_DM_1 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_1_4 ;
+    aipd:collaboratesWith aipd:Role_11 ;
+    aipd:kpi "라벨 정확도"@ko ;
+    aipd:hasRisk aipd:Risk_054 ;
+    aipd:dependsOn aipd:Task_DM_1_2 .
+aipd:Art_DM_1_4 a aipd:Artifact ; rdfs:label "라벨링 데이터셋"@ko .
+aipd:Task_DM_2_1 a aipd:Task ;
+    aipd:code "DM-2-1" ;
+    rdfs:label "정제·전처리"@ko ;
+    aipd:belongsTo aipd:Sub_DM_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_2_1 ;
+    aipd:kpi "결측·오류율"@ko ;
+    aipd:dependsOn aipd:Task_DM_1_2 .
+aipd:Art_DM_2_1 a aipd:Artifact ; rdfs:label "정제 데이터셋"@ko .
+aipd:Task_DM_2_2 a aipd:Task ;
+    aipd:code "DM-2-2" ;
+    rdfs:label "피처 엔지니어링"@ko ;
+    aipd:belongsTo aipd:Sub_DM_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_2_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "피처 재사용률"@ko ;
+    aipd:hasRisk aipd:Risk_013 ;
+    aipd:dependsOn aipd:Task_DM_2_1 .
+aipd:Art_DM_2_2 a aipd:Artifact ; rdfs:label "피처 정의서"@ko .
+aipd:Task_DM_2_3 a aipd:Task ;
+    aipd:code "DM-2-3" ;
+    rdfs:label "합성데이터 생성"@ko ;
+    aipd:belongsTo aipd:Sub_DM_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "실데이터 사용 제한 시"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_2_3 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "유용성 점수"@ko ;
+    aipd:hasRisk aipd:Risk_045 ;
+    aipd:dependsOn aipd:Task_DM_2_1 .
+aipd:Art_DM_2_3 a aipd:Artifact ; rdfs:label "합성 데이터셋"@ko .
+aipd:Task_DM_3_1 a aipd:Task ;
+    aipd:code "DM-3-1" ;
+    rdfs:label "데이터 품질 기준 수립"@ko ;
+    aipd:belongsTo aipd:Sub_DM_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_3_1 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "기준 적용률"@ko ;
+    aipd:dependsOn aipd:Task_DM_4_3 .
+aipd:Art_DM_3_1 a aipd:Artifact ; rdfs:label "품질 기준서"@ko .
+aipd:Task_DM_3_2 a aipd:Task ;
+    aipd:code "DM-3-2" ;
+    rdfs:label "데이터 품질 점검"@ko ;
+    aipd:belongsTo aipd:Sub_DM_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_3_2 ;
+    aipd:kpi "품질 지수"@ko ;
+    aipd:dependsOn aipd:Task_DM_3_1 .
+aipd:Art_DM_3_2 a aipd:Artifact ; rdfs:label "품질 점검 결과"@ko .
+aipd:Task_DM_3_3 a aipd:Task ;
+    aipd:code "DM-3-3" ;
+    rdfs:label "데이터 이슈 관리"@ko ;
+    aipd:belongsTo aipd:Sub_DM_3 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_3_3 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "이슈 해결 기간"@ko ;
+    aipd:dependsOn aipd:Task_DM_3_2 .
+aipd:Art_DM_3_3 a aipd:Artifact ; rdfs:label "이슈 관리대장"@ko .
+aipd:Task_DM_4_1 a aipd:Task ;
+    aipd:code "DM-4-1" ;
+    rdfs:label "카탈로그·메타데이터 관리"@ko ;
+    aipd:belongsTo aipd:Sub_DM_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_4_1 ;
+    aipd:kpi "등록률"@ko .
+aipd:Art_DM_4_1 a aipd:Artifact ; rdfs:label "데이터 카탈로그"@ko .
+aipd:Task_DM_4_2 a aipd:Task ;
+    aipd:code "DM-4-2" ;
+    rdfs:label "데이터 접근권한 부여·관리"@ko ;
+    aipd:belongsTo aipd:Sub_DM_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_4_2 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "처리 기간"@ko ;
+    aipd:hasRisk aipd:Risk_007 ;
+    aipd:dependsOn aipd:Task_GV_4_2 ;
+    aipd:note "경계②: 권한 부여·회수 실무는 DM, 정책·점검은 GV-4-2"@ko .
+aipd:Art_DM_4_2 a aipd:Artifact ; rdfs:label "권한 관리대장"@ko .
+aipd:Task_DM_4_3 a aipd:Task ;
+    aipd:code "DM-4-3" ;
+    rdfs:label "데이터 표준 관리"@ko ;
+    aipd:belongsTo aipd:Sub_DM_4 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_4_3 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "표준 준수율"@ko .
+aipd:Art_DM_4_3 a aipd:Artifact ; rdfs:label "데이터 표준 정의서"@ko .
+aipd:Task_DM_4_4 a aipd:Task ;
+    aipd:code "DM-4-4" ;
+    rdfs:label "데이터 보존·폐기"@ko ;
+    aipd:belongsTo aipd:Sub_DM_4 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_05 ;
+    aipd:produces aipd:Art_DM_4_4 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "기한 내 폐기율"@ko ;
+    aipd:hasRisk aipd:Risk_005 ;
+    aipd:dependsOn aipd:Task_DM_4_1 .
+aipd:Art_DM_4_4 a aipd:Artifact ; rdfs:label "폐기 확인서"@ko .
+aipd:Task_GV_1_1 a aipd:Task ;
+    aipd:code "GV-1-1" ;
+    rdfs:label "AI 윤리원칙 수립"@ko ;
+    aipd:belongsTo aipd:Sub_GV_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "2~3년"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_1_1 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "전사 공표"@ko .
+aipd:Art_GV_1_1 a aipd:Artifact ; rdfs:label "AI 윤리원칙"@ko .
+aipd:Task_GV_1_2 a aipd:Task ;
+    aipd:code "GV-1-2" ;
+    rdfs:label "AI 사용 가이드라인"@ko ;
+    aipd:belongsTo aipd:Sub_GV_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_1_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "임직원 인지율"@ko ;
+    aipd:dependsOn aipd:Task_GV_1_1 .
+aipd:Art_GV_1_2 a aipd:Artifact ; rdfs:label "사용 가이드라인"@ko .
+aipd:Task_GV_1_3 a aipd:Task ;
+    aipd:code "GV-1-3" ;
+    rdfs:label "내부 규정 제·개정"@ko ;
+    aipd:belongsTo aipd:Sub_GV_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_1_3 ;
+    aipd:collaboratesWith aipd:Role_09 ;
+    aipd:kpi "개정 적시율"@ko ;
+    aipd:hasRisk aipd:Risk_008 ;
+    aipd:dependsOn aipd:Task_GV_2_1 .
+aipd:Art_GV_1_3 a aipd:Artifact ; rdfs:label "규정 개정안"@ko .
+aipd:Task_GV_2_1 a aipd:Task ;
+    aipd:code "GV-2-1" ;
+    rdfs:label "AI 법규 모니터링"@ko ;
+    aipd:belongsTo aipd:Sub_GV_2 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_2_1 ;
+    aipd:collaboratesWith aipd:Role_09 ;
+    aipd:kpi "대응 누락 건수"@ko ;
+    aipd:hasRisk aipd:Risk_009 .
+aipd:Art_GV_2_1 a aipd:Artifact ; rdfs:label "법규 동향 리포트"@ko .
+aipd:Task_GV_2_2 a aipd:Task ;
+    aipd:code "GV-2-2" ;
+    rdfs:label "개인정보 영향평가"@ko ;
+    aipd:belongsTo aipd:Sub_GV_2 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "개인정보 처리 시"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_2_2 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "평가 수행률"@ko ;
+    aipd:hasRisk aipd:Risk_003 ;
+    aipd:dependsOn aipd:Task_DM_1_1 .
+aipd:Art_GV_2_2 a aipd:Artifact ; rdfs:label "영향평가서"@ko .
+aipd:Task_GV_2_3 a aipd:Task ;
+    aipd:code "GV-2-3" ;
+    rdfs:label "저작권·라이선스 검토"@ko ;
+    aipd:belongsTo aipd:Sub_GV_2 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "외부 모델·데이터 사용 시"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_2_3 ;
+    aipd:collaboratesWith aipd:Role_09 ;
+    aipd:kpi "검토 수행률"@ko ;
+    aipd:hasRisk aipd:Risk_048 ;
+    aipd:dependsOn aipd:Task_TD_3_1, aipd:Task_DM_1_3 .
+aipd:Art_GV_2_3 a aipd:Artifact ; rdfs:label "검토 의견서"@ko .
+aipd:Task_GV_3_1 a aipd:Task ;
+    aipd:code "GV-3-1" ;
+    rdfs:label "AI 리스크 식별·등급 분류"@ko ;
+    aipd:belongsTo aipd:Sub_GV_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_3_1 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "분류 완료율"@ko ;
+    aipd:dependsOn aipd:Task_BD_1_2 .
+aipd:Art_GV_3_1 a aipd:Artifact ; rdfs:label "리스크 등급표"@ko .
+aipd:Task_GV_3_2 a aipd:Task ;
+    aipd:code "GV-3-2" ;
+    rdfs:label "편향·공정성 점검"@ko ;
+    aipd:belongsTo aipd:Sub_GV_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "사람 대상 판단·추천 AI"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_3_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "편향 지표"@ko ;
+    aipd:hasRisk aipd:Risk_050 ;
+    aipd:dependsOn aipd:Task_TD_2_3 .
+aipd:Art_GV_3_2 a aipd:Artifact ; rdfs:label "공정성 점검 결과"@ko .
+aipd:Task_GV_3_3 a aipd:Task ;
+    aipd:code "GV-3-3" ;
+    rdfs:label "설명가능성 검토"@ko ;
+    aipd:belongsTo aipd:Sub_GV_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "고위험 AI"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_3_3 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "고위험 과제 검토율"@ko ;
+    aipd:hasRisk aipd:Risk_035 ;
+    aipd:dependsOn aipd:Task_TD_2_3 .
+aipd:Art_GV_3_3 a aipd:Artifact ; rdfs:label "설명가능성 검토서"@ko .
+aipd:Task_GV_3_4 a aipd:Task ;
+    aipd:code "GV-3-4" ;
+    rdfs:label "리스크 대응"@ko ;
+    aipd:belongsTo aipd:Sub_GV_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_3_4 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "조치 완료율"@ko ;
+    aipd:dependsOn aipd:Task_GV_3_1 .
+aipd:Art_GV_3_4 a aipd:Artifact ; rdfs:label "대응 조치 결과"@ko .
+aipd:Task_GV_3_5 a aipd:Task ;
+    aipd:code "GV-3-5" ;
+    rdfs:label "AI 서비스 인벤토리 관리"@ko ;
+    aipd:belongsTo aipd:Sub_GV_3 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_3_5 ;
+    aipd:collaboratesWith aipd:Role_08 ;
+    aipd:kpi "등록 누락 건수"@ko ;
+    aipd:hasRisk aipd:Risk_020 ;
+    aipd:dependsOn aipd:Task_GV_3_1, aipd:Task_OP_1_1 ;
+    aipd:note "v0.2 추가: 전사 AI 사용 현황과 위험등급을 한곳에서 관리. 규제 대응의 기준 목록"@ko .
+aipd:Art_GV_3_5 a aipd:Artifact ; rdfs:label "AI 인벤토리(목록·위험등급)"@ko .
+aipd:Task_GV_4_1 a aipd:Task ;
+    aipd:code "GV-4-1" ;
+    rdfs:label "AI 보안 점검"@ko ;
+    aipd:belongsTo aipd:Sub_GV_4 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_4_1 ;
+    aipd:collaboratesWith aipd:Role_10 ;
+    aipd:kpi "취약점 조치율"@ko ;
+    aipd:hasRisk aipd:Risk_056 ;
+    aipd:dependsOn aipd:Task_TD_4_2 .
+aipd:Art_GV_4_1 a aipd:Artifact ; rdfs:label "보안 점검 보고서"@ko .
+aipd:Task_GV_4_2 a aipd:Task ;
+    aipd:code "GV-4-2" ;
+    rdfs:label "접근통제 정책 수립·점검"@ko ;
+    aipd:belongsTo aipd:Sub_GV_4 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_4_2 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "부적정 권한 수"@ko ;
+    aipd:hasRisk aipd:Risk_007 ;
+    aipd:dependsOn aipd:Task_GV_1_3 ;
+    aipd:note "경계②: 정책 수립과 사후 점검만 담당, 실무 권한 처리는 DM-4-2"@ko .
+aipd:Art_GV_4_2 a aipd:Artifact ; rdfs:label "접근통제 정책·점검 결과"@ko .
+aipd:Task_GV_4_3 a aipd:Task ;
+    aipd:code "GV-4-3" ;
+    rdfs:label "보안사고 대응"@ko ;
+    aipd:belongsTo aipd:Sub_GV_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_4_3 ;
+    aipd:collaboratesWith aipd:Role_08 ;
+    aipd:kpi "대응 시간"@ko ;
+    aipd:hasRisk aipd:Risk_001 ;
+    aipd:dependsOn aipd:Task_GV_4_1 .
+aipd:Art_GV_4_3 a aipd:Artifact ; rdfs:label "사고 보고서"@ko .
+aipd:Task_GV_5_1 a aipd:Task ;
+    aipd:code "GV-5-1" ;
+    rdfs:label "독립 모델 검증"@ko ;
+    aipd:belongsTo aipd:Sub_GV_5 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "고위험 AI"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_5_1 ;
+    aipd:kpi "고위험 모델 검증률"@ko ;
+    aipd:dependsOn aipd:Task_TD_2_4 .
+aipd:Art_GV_5_1 a aipd:Artifact ; rdfs:label "모델 검증 보고서"@ko .
+aipd:Task_GV_5_2 a aipd:Task ;
+    aipd:code "GV-5-2" ;
+    rdfs:label "내부감사 대응"@ko ;
+    aipd:belongsTo aipd:Sub_GV_5 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_5_2 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "지적사항 수"@ko ;
+    aipd:dependsOn aipd:Task_GV_1_3 .
+aipd:Art_GV_5_2 a aipd:Artifact ; rdfs:label "감사 대응자료"@ko .
+aipd:Task_GV_5_3 a aipd:Task ;
+    aipd:code "GV-5-3" ;
+    rdfs:label "인증(ISO/IEC 42001) 대응"@ko ;
+    aipd:belongsTo aipd:Sub_GV_5 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "3년"@ko ;
+    aipd:condition "인증 추진 시"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_GV_5_3 ;
+    aipd:collaboratesWith aipd:Role_01, aipd:Role_02, aipd:Role_03, aipd:Role_04, aipd:Role_05, aipd:Role_07, aipd:Role_08 ;
+    aipd:kpi "인증 취득·유지"@ko ;
+    aipd:hasRisk aipd:Risk_025 ;
+    aipd:dependsOn aipd:Task_GV_1_3 .
+aipd:Art_GV_5_3 a aipd:Artifact ; rdfs:label "인증서"@ko .
+aipd:Task_MS_1_1 a aipd:Task ;
+    aipd:code "MS-1-1" ;
+    rdfs:label "예산 집행 관리"@ko ;
+    aipd:belongsTo aipd:Sub_MS_1 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_1_1 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "집행률"@ko ;
+    aipd:hasRisk aipd:Risk_038 ;
+    aipd:dependsOn aipd:Task_ST_3_4 .
+aipd:Art_MS_1_1 a aipd:Artifact ; rdfs:label "예산 집행 현황"@ko .
+aipd:Task_MS_1_2 a aipd:Task ;
+    aipd:code "MS-1-2" ;
+    rdfs:label "비용 정산"@ko ;
+    aipd:belongsTo aipd:Sub_MS_1 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_1_2 ;
+    aipd:kpi "정산 적시율"@ko ;
+    aipd:dependsOn aipd:Task_MS_1_1 .
+aipd:Art_MS_1_2 a aipd:Artifact ; rdfs:label "정산서"@ko .
+aipd:Task_MS_1_3 a aipd:Task ;
+    aipd:code "MS-1-3" ;
+    rdfs:label "투자효과 분석"@ko ;
+    aipd:belongsTo aipd:Sub_MS_1 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_1_3 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "실현 ROI"@ko ;
+    aipd:dependsOn aipd:Task_BD_1_3, aipd:Task_ST_4_2 .
+aipd:Art_MS_1_3 a aipd:Artifact ; rdfs:label "ROI 분석 보고서"@ko .
+aipd:Task_MS_2_1 a aipd:Task ;
+    aipd:code "MS-2-1" ;
+    rdfs:label "구매 요청"@ko ;
+    aipd:belongsTo aipd:Sub_MS_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_2_1 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "처리 기간"@ko ;
+    aipd:dependsOn aipd:Task_PM_2_3, aipd:Task_MS_5_2 .
+aipd:Art_MS_2_1 a aipd:Artifact ; rdfs:label "구매요청서"@ko .
+aipd:Task_MS_2_2 a aipd:Task ;
+    aipd:code "MS-2-2" ;
+    rdfs:label "벤더 선정(RFP·평가)"@ko ;
+    aipd:belongsTo aipd:Sub_MS_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_2_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "선정 기간"@ko ;
+    aipd:hasRisk aipd:Risk_004 ;
+    aipd:dependsOn aipd:Task_MS_2_1, aipd:Task_BD_4_2 .
+aipd:Art_MS_2_2 a aipd:Artifact ; rdfs:label "RFP·평가표"@ko .
+aipd:Task_MS_2_3 a aipd:Task ;
+    aipd:code "MS-2-3" ;
+    rdfs:label "계약 체결"@ko ;
+    aipd:belongsTo aipd:Sub_MS_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_2_3 ;
+    aipd:collaboratesWith aipd:Role_09 ;
+    aipd:kpi "기한 내 체결"@ko ;
+    aipd:hasRisk aipd:Risk_026 ;
+    aipd:dependsOn aipd:Task_MS_2_2 .
+aipd:Art_MS_2_3 a aipd:Artifact ; rdfs:label "계약서"@ko .
+aipd:Task_MS_2_4 a aipd:Task ;
+    aipd:code "MS-2-4" ;
+    rdfs:label "SW 라이선스 관리"@ko ;
+    aipd:belongsTo aipd:Sub_MS_2 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_2_4 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "미사용 라이선스 비율"@ko ;
+    aipd:hasRisk aipd:Risk_017 ;
+    aipd:dependsOn aipd:Task_MS_2_3 .
+aipd:Art_MS_2_4 a aipd:Artifact ; rdfs:label "라이선스 대장"@ko .
+aipd:Task_MS_3_1 a aipd:Task ;
+    aipd:code "MS-3-1" ;
+    rdfs:label "벤더 성과 평가"@ko ;
+    aipd:belongsTo aipd:Sub_MS_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_3_1 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "평가 점수"@ko ;
+    aipd:dependsOn aipd:Task_MS_2_3 .
+aipd:Art_MS_3_1 a aipd:Artifact ; rdfs:label "벤더 평가표"@ko .
+aipd:Task_MS_3_2 a aipd:Task ;
+    aipd:code "MS-3-2" ;
+    rdfs:label "SLA 관리"@ko ;
+    aipd:belongsTo aipd:Sub_MS_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_3_2 ;
+    aipd:collaboratesWith aipd:Role_08 ;
+    aipd:kpi "SLA 준수율"@ko ;
+    aipd:hasRisk aipd:Risk_033 ;
+    aipd:dependsOn aipd:Task_MS_2_3 .
+aipd:Art_MS_3_2 a aipd:Artifact ; rdfs:label "SLA 보고서"@ko .
+aipd:Task_MS_3_3 a aipd:Task ;
+    aipd:code "MS-3-3" ;
+    rdfs:label "외주 인력 관리"@ko ;
+    aipd:belongsTo aipd:Sub_MS_3 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_3_3 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:hasRisk aipd:Risk_027 ;
+    aipd:dependsOn aipd:Task_MS_2_3 .
+aipd:Art_MS_3_3 a aipd:Artifact ; rdfs:label "외주 인력 현황"@ko .
+aipd:Task_MS_4_1 a aipd:Task ;
+    aipd:code "MS-4-1" ;
+    rdfs:label "경영진 보고"@ko ;
+    aipd:belongsTo aipd:Sub_MS_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_MS_4_1 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:dependsOn aipd:Task_ST_4_1 .
+aipd:Art_MS_4_1 a aipd:Artifact ; rdfs:label "경영진 보고자료"@ko .
+aipd:Task_MS_4_2 a aipd:Task ;
+    aipd:code "MS-4-2" ;
+    rdfs:label "부서 회의 운영"@ko ;
+    aipd:belongsTo aipd:Sub_MS_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "주"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_4_2 ;
+    aipd:dependsOn aipd:Task_OC_1_1 .
+aipd:Art_MS_4_2 a aipd:Artifact ; rdfs:label "회의록"@ko .
+aipd:Task_MS_4_3 a aipd:Task ;
+    aipd:code "MS-4-3" ;
+    rdfs:label "AI위원회 운영"@ko ;
+    aipd:belongsTo aipd:Sub_MS_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_06 ;
+    aipd:produces aipd:Art_MS_4_3 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "안건 처리율"@ko ;
+    aipd:dependsOn aipd:Task_GV_3_1 .
+aipd:Art_MS_4_3 a aipd:Artifact ; rdfs:label "위원회 의결서"@ko .
+aipd:Task_MS_5_1 a aipd:Task ;
+    aipd:code "MS-5-1" ;
+    rdfs:label "문서 관리"@ko ;
+    aipd:belongsTo aipd:Sub_MS_5 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_5_1 ;
+    aipd:collaboratesWith aipd:Role_01, aipd:Role_02, aipd:Role_03, aipd:Role_04, aipd:Role_05, aipd:Role_06, aipd:Role_08 ;
+    aipd:kpi "표준 준수율"@ko ;
+    aipd:hasRisk aipd:Risk_010 .
+aipd:Art_MS_5_1 a aipd:Artifact ; rdfs:label "문서 관리대장"@ko .
+aipd:Task_MS_5_2 a aipd:Task ;
+    aipd:code "MS-5-2" ;
+    rdfs:label "결재·공문 처리"@ko ;
+    aipd:belongsTo aipd:Sub_MS_5 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_5_2 ;
+    aipd:kpi "처리 기간"@ko .
+aipd:Art_MS_5_2 a aipd:Artifact ; rdfs:label "결재 문서"@ko .
+aipd:Task_MS_5_3 a aipd:Task ;
+    aipd:code "MS-5-3" ;
+    rdfs:label "자산 관리"@ko ;
+    aipd:belongsTo aipd:Sub_MS_5 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_MS_5_3 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "실사 일치율"@ko ;
+    aipd:hasRisk aipd:Risk_044 ;
+    aipd:dependsOn aipd:Task_TD_1_3 .
+aipd:Art_MS_5_3 a aipd:Artifact ; rdfs:label "자산 대장"@ko .
+aipd:Task_OC_1_1 a aipd:Task ;
+    aipd:code "OC-1-1" ;
+    rdfs:label "조직·R&R 설계"@ko ;
+    aipd:belongsTo aipd:Sub_OC_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_OC_1_1 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:dependsOn aipd:Task_ST_2_2 .
+aipd:Art_OC_1_1 a aipd:Artifact ; rdfs:label "조직도·R&R표"@ko .
+aipd:Task_OC_1_2 a aipd:Task ;
+    aipd:code "OC-1-2" ;
+    rdfs:label "직무 정의"@ko ;
+    aipd:belongsTo aipd:Sub_OC_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_OC_1_2 ;
+    aipd:collaboratesWith aipd:Role_12 ;
+    aipd:dependsOn aipd:Task_OC_1_1 .
+aipd:Art_OC_1_2 a aipd:Artifact ; rdfs:label "직무기술서"@ko .
+aipd:Task_OC_1_3 a aipd:Task ;
+    aipd:code "OC-1-3" ;
+    rdfs:label "협업체계 설계"@ko ;
+    aipd:belongsTo aipd:Sub_OC_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_OC_1_3 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "협업 과제 수"@ko ;
+    aipd:dependsOn aipd:Task_OC_1_1 .
+aipd:Art_OC_1_3 a aipd:Artifact ; rdfs:label "협업체계 정의서"@ko .
+aipd:Task_OC_2_1 a aipd:Task ;
+    aipd:code "OC-2-1" ;
+    rdfs:label "채용 계획·수행"@ko ;
+    aipd:belongsTo aipd:Sub_OC_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연·수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_OC_2_1 ;
+    aipd:collaboratesWith aipd:Role_12 ;
+    aipd:kpi "충원율"@ko ;
+    aipd:hasRisk aipd:Risk_042 ;
+    aipd:dependsOn aipd:Task_OC_1_2 .
+aipd:Art_OC_2_1 a aipd:Artifact ; rdfs:label "채용 계획서"@ko .
+aipd:Task_OC_2_2 a aipd:Task ;
+    aipd:code "OC-2-2" ;
+    rdfs:label "평가·보상 협의"@ko ;
+    aipd:belongsTo aipd:Sub_OC_2 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_OC_2_2 ;
+    aipd:collaboratesWith aipd:Role_12 ;
+    aipd:kpi "핵심인재 유지율"@ko ;
+    aipd:hasRisk aipd:Risk_041 ;
+    aipd:dependsOn aipd:Task_ST_4_2 .
+aipd:Art_OC_2_2 a aipd:Artifact ; rdfs:label "평가 결과"@ko .
+aipd:Task_OC_2_3 a aipd:Task ;
+    aipd:code "OC-2-3" ;
+    rdfs:label "온보딩"@ko ;
+    aipd:belongsTo aipd:Sub_OC_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_OC_2_3 ;
+    aipd:collaboratesWith aipd:Role_02, aipd:Role_03, aipd:Role_04, aipd:Role_05, aipd:Role_06, aipd:Role_07, aipd:Role_08 ;
+    aipd:kpi "적응 기간"@ko ;
+    aipd:dependsOn aipd:Task_OC_2_1 .
+aipd:Art_OC_2_3 a aipd:Artifact ; rdfs:label "온보딩 체크리스트"@ko .
+aipd:Task_OC_3_1 a aipd:Task ;
+    aipd:code "OC-3-1" ;
+    rdfs:label "교육체계 수립"@ko ;
+    aipd:belongsTo aipd:Sub_OC_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_OC_3_1 ;
+    aipd:collaboratesWith aipd:Role_12 ;
+    aipd:dependsOn aipd:Task_ST_2_2 .
+aipd:Art_OC_3_1 a aipd:Artifact ; rdfs:label "교육 로드맵"@ko .
+aipd:Task_OC_3_2 a aipd:Task ;
+    aipd:code "OC-3-2" ;
+    rdfs:label "전사 AI 리터러시 교육"@ko ;
+    aipd:belongsTo aipd:Sub_OC_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_OC_3_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "수료 인원"@ko ;
+    aipd:dependsOn aipd:Task_OC_3_1 .
+aipd:Art_OC_3_2 a aipd:Artifact ; rdfs:label "교육 과정·자료"@ko .
+aipd:Task_OC_3_3 a aipd:Task ;
+    aipd:code "OC-3-3" ;
+    rdfs:label "전문가 심화교육"@ko ;
+    aipd:belongsTo aipd:Sub_OC_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_OC_3_3 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "인당 교육시간"@ko ;
+    aipd:dependsOn aipd:Task_OC_3_1 .
+aipd:Art_OC_3_3 a aipd:Artifact ; rdfs:label "교육 이수 기록"@ko .
+aipd:Task_OC_3_4 a aipd:Task ;
+    aipd:code "OC-3-4" ;
+    rdfs:label "교육 효과 측정"@ko ;
+    aipd:belongsTo aipd:Sub_OC_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_OC_3_4 ;
+    aipd:kpi "만족도·활용도"@ko ;
+    aipd:dependsOn aipd:Task_OC_3_2 .
+aipd:Art_OC_3_4 a aipd:Artifact ; rdfs:label "효과 측정 보고서"@ko .
+aipd:Task_OC_4_1 a aipd:Task ;
+    aipd:code "OC-4-1" ;
+    rdfs:label "AI 활용 문화 확산"@ko ;
+    aipd:belongsTo aipd:Sub_OC_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_OC_4_1 ;
+    aipd:kpi "임직원 AI 활용률"@ko .
+aipd:Art_OC_4_1 a aipd:Artifact ; rdfs:label "캠페인 계획"@ko .
+aipd:Task_OC_4_2 a aipd:Task ;
+    aipd:code "OC-4-2" ;
+    rdfs:label "챔피언 네트워크 운영"@ko ;
+    aipd:belongsTo aipd:Sub_OC_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_OC_4_2 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "활동 챔피언 수"@ko ;
+    aipd:dependsOn aipd:Task_OC_4_1 .
+aipd:Art_OC_4_2 a aipd:Artifact ; rdfs:label "챔피언 활동 기록"@ko .
+aipd:Task_OC_4_3 a aipd:Task ;
+    aipd:code "OC-4-3" ;
+    rdfs:label "현업 저항 관리"@ko ;
+    aipd:belongsTo aipd:Sub_OC_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_OC_4_3 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "현업 수용도"@ko ;
+    aipd:hasRisk aipd:Risk_015 ;
+    aipd:dependsOn aipd:Task_BD_3_2 .
+aipd:Art_OC_4_3 a aipd:Artifact ; rdfs:label "변화관리 계획"@ko .
+aipd:Task_OC_5_1 a aipd:Task ;
+    aipd:code "OC-5-1" ;
+    rdfs:label "지식베이스 구축·운영"@ko ;
+    aipd:belongsTo aipd:Sub_OC_5 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_OC_5_1 ;
+    aipd:collaboratesWith aipd:Role_01, aipd:Role_03, aipd:Role_04, aipd:Role_05, aipd:Role_06, aipd:Role_07, aipd:Role_08 ;
+    aipd:kpi "등록·조회 수"@ko ;
+    aipd:dependsOn aipd:Task_PM_4_2 .
+aipd:Art_OC_5_1 a aipd:Artifact ; rdfs:label "지식베이스"@ko .
+aipd:Task_OC_5_2 a aipd:Task ;
+    aipd:code "OC-5-2" ;
+    rdfs:label "사내 커뮤니티 운영"@ko ;
+    aipd:belongsTo aipd:Sub_OC_5 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_OC_5_2 ;
+    aipd:kpi "활성 회원 수"@ko ;
+    aipd:dependsOn aipd:Task_OC_5_1 .
+aipd:Art_OC_5_2 a aipd:Artifact ; rdfs:label "사내 커뮤니티"@ko .
+aipd:Task_OP_1_1 a aipd:Task ;
+    aipd:code "OP-1-1" ;
+    rdfs:label "서비스 오픈·전환"@ko ;
+    aipd:belongsTo aipd:Sub_OP_1 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_1_1 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "무장애 오픈"@ko ;
+    aipd:hasRisk aipd:Risk_049 ;
+    aipd:dependsOn aipd:Task_TD_4_2 .
+aipd:Art_OP_1_1 a aipd:Artifact ; rdfs:label "오픈 체크리스트"@ko .
+aipd:Task_OP_1_2 a aipd:Task ;
+    aipd:code "OP-1-2" ;
+    rdfs:label "운영 매뉴얼 작성"@ko ;
+    aipd:belongsTo aipd:Sub_OP_1 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_1_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "작성 완료율"@ko ;
+    aipd:dependsOn aipd:Task_OP_1_1 .
+aipd:Art_OP_1_2 a aipd:Artifact ; rdfs:label "운영 매뉴얼"@ko .
+aipd:Task_OP_1_3 a aipd:Task ;
+    aipd:code "OP-1-3" ;
+    rdfs:label "사용자 계정 관리"@ko ;
+    aipd:belongsTo aipd:Sub_OP_1 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_1_3 ;
+    aipd:kpi "처리 기간"@ko ;
+    aipd:hasRisk aipd:Risk_007 ;
+    aipd:dependsOn aipd:Task_OP_1_1 .
+aipd:Art_OP_1_3 a aipd:Artifact ; rdfs:label "계정 관리대장"@ko .
+aipd:Task_OP_2_1 a aipd:Task ;
+    aipd:code "OP-2-1" ;
+    rdfs:label "모델 성능 모니터링"@ko ;
+    aipd:belongsTo aipd:Sub_OP_2 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "일"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_2_1 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "성능 기준 유지율"@ko ;
+    aipd:hasRisk aipd:Risk_037 ;
+    aipd:dependsOn aipd:Task_TD_4_2 .
+aipd:Art_OP_2_1 a aipd:Artifact ; rdfs:label "성능 대시보드"@ko .
+aipd:Task_OP_2_2 a aipd:Task ;
+    aipd:code "OP-2-2" ;
+    rdfs:label "드리프트 탐지"@ko ;
+    aipd:belongsTo aipd:Sub_OP_2 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "주"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_2_2 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "탐지 리드타임"@ko ;
+    aipd:dependsOn aipd:Task_OP_2_1 .
+aipd:Art_OP_2_2 a aipd:Artifact ; rdfs:label "드리프트 리포트"@ko .
+aipd:Task_OP_2_3 a aipd:Task ;
+    aipd:code "OP-2-3" ;
+    rdfs:label "비용(토큰·GPU) 모니터링"@ko ;
+    aipd:belongsTo aipd:Sub_OP_2 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_2_3 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "처리 건당 비용"@ko ;
+    aipd:hasRisk aipd:Risk_029 ;
+    aipd:dependsOn aipd:Task_OP_1_1 .
+aipd:Art_OP_2_3 a aipd:Artifact ; rdfs:label "비용 리포트"@ko .
+aipd:Task_OP_2_4 a aipd:Task ;
+    aipd:code "OP-2-4" ;
+    rdfs:label "인프라 모니터링"@ko ;
+    aipd:belongsTo aipd:Sub_OP_2 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_2_4 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "가용률"@ko ;
+    aipd:dependsOn aipd:Task_TD_1_3 .
+aipd:Art_OP_2_4 a aipd:Artifact ; rdfs:label "인프라 대시보드"@ko .
+aipd:Task_OP_3_1 a aipd:Task ;
+    aipd:code "OP-3-1" ;
+    rdfs:label "장애 대응"@ko ;
+    aipd:belongsTo aipd:Sub_OP_3 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_3_1 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "MTTR"@ko ;
+    aipd:hasRisk aipd:Risk_033 ;
+    aipd:dependsOn aipd:Task_OP_2_4 .
+aipd:Art_OP_3_1 a aipd:Artifact ; rdfs:label "장애 보고서"@ko .
+aipd:Task_OP_3_2 a aipd:Task ;
+    aipd:code "OP-3-2" ;
+    rdfs:label "변경 관리"@ko ;
+    aipd:belongsTo aipd:Sub_OP_3 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_3_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "변경 성공률"@ko ;
+    aipd:hasRisk aipd:Risk_024 ;
+    aipd:dependsOn aipd:Task_OP_1_2 .
+aipd:Art_OP_3_2 a aipd:Artifact ; rdfs:label "변경 요청서"@ko .
+aipd:Task_OP_3_3 a aipd:Task ;
+    aipd:code "OP-3-3" ;
+    rdfs:label "재학습·모델 교체"@ko ;
+    aipd:belongsTo aipd:Sub_OP_3 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_3_3 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "재학습 후 성능"@ko ;
+    aipd:hasRisk aipd:Risk_036 ;
+    aipd:dependsOn aipd:Task_OP_2_2, aipd:Task_TD_4_1, aipd:Task_OP_3_2 ;
+    aipd:note "경계③: TD-4-1 파이프라인을 활용한 운영 중 반복 실행"@ko .
+aipd:Art_OP_3_3 a aipd:Artifact ; rdfs:label "재학습 기록"@ko .
+aipd:Task_OP_4_1 a aipd:Task ;
+    aipd:code "OP-4-1" ;
+    rdfs:label "헬프데스크"@ko ;
+    aipd:belongsTo aipd:Sub_OP_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_4_1 ;
+    aipd:kpi "응답 시간"@ko ;
+    aipd:dependsOn aipd:Task_OP_1_1 .
+aipd:Art_OP_4_1 a aipd:Artifact ; rdfs:label "문의 처리대장"@ko .
+aipd:Task_OP_4_2 a aipd:Task ;
+    aipd:code "OP-4-2" ;
+    rdfs:label "피드백 수집·반영"@ko ;
+    aipd:belongsTo aipd:Sub_OP_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_4_2 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "반영률"@ko ;
+    aipd:dependsOn aipd:Task_OP_4_1 .
+aipd:Art_OP_4_2 a aipd:Artifact ; rdfs:label "개선 요청 목록"@ko .
+aipd:Task_OP_4_3 a aipd:Task ;
+    aipd:code "OP-4-3" ;
+    rdfs:label "만족도 조사"@ko ;
+    aipd:belongsTo aipd:Sub_OP_4 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_4_3 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "만족도 점수"@ko ;
+    aipd:dependsOn aipd:Task_OP_4_1 .
+aipd:Art_OP_4_3 a aipd:Artifact ; rdfs:label "만족도 조사 결과"@ko .
+aipd:Task_OP_5_1 a aipd:Task ;
+    aipd:code "OP-5-1" ;
+    rdfs:label "서비스 종료"@ko ;
+    aipd:belongsTo aipd:Sub_OP_5 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "서비스 종료 결정 시"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_5_1 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "계획 대비 종료"@ko ;
+    aipd:hasRisk aipd:Risk_031 ;
+    aipd:dependsOn aipd:Task_PM_5_3 .
+aipd:Art_OP_5_1 a aipd:Artifact ; rdfs:label "종료 계획·공지"@ko .
+aipd:Task_OP_5_2 a aipd:Task ;
+    aipd:code "OP-5-2" ;
+    rdfs:label "모델 폐기·아카이빙"@ko ;
+    aipd:belongsTo aipd:Sub_OP_5 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "서비스 종료 결정 시"@ko ;
+    aipd:ownedBy aipd:Role_08 ;
+    aipd:produces aipd:Art_OP_5_2 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "폐기 완료율"@ko ;
+    aipd:hasRisk aipd:Risk_046 ;
+    aipd:dependsOn aipd:Task_OP_5_1 .
+aipd:Art_OP_5_2 a aipd:Artifact ; rdfs:label "폐기 기록"@ko .
+aipd:Task_PM_1_1 a aipd:Task ;
+    aipd:code "PM-1-1" ;
+    rdfs:label "과제 정의서(차터) 작성"@ko ;
+    aipd:belongsTo aipd:Sub_PM_1 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_1_1 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "승인 리드타임"@ko ;
+    aipd:dependsOn aipd:Task_ST_3_3, aipd:Task_BD_4_3 .
+aipd:Art_PM_1_1 a aipd:Artifact ; rdfs:label "과제 차터"@ko .
+aipd:Task_PM_1_2 a aipd:Task ;
+    aipd:code "PM-1-2" ;
+    rdfs:label "이해관계자 식별"@ko ;
+    aipd:belongsTo aipd:Sub_PM_1 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_1_2 ;
+    aipd:dependsOn aipd:Task_PM_1_1 .
+aipd:Art_PM_1_2 a aipd:Artifact ; rdfs:label "이해관계자 맵"@ko .
+aipd:Task_PM_1_3 a aipd:Task ;
+    aipd:code "PM-1-3" ;
+    rdfs:label "팀 구성"@ko ;
+    aipd:belongsTo aipd:Sub_PM_1 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_1_3 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "적기 투입률"@ko ;
+    aipd:hasRisk aipd:Risk_058 ;
+    aipd:dependsOn aipd:Task_PM_1_1 .
+aipd:Art_PM_1_3 a aipd:Artifact ; rdfs:label "팀 구성표(R&R)"@ko .
+aipd:Task_PM_1_4 a aipd:Task ;
+    aipd:code "PM-1-4" ;
+    rdfs:label "킥오프"@ko ;
+    aipd:belongsTo aipd:Sub_PM_1 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_1_4 ;
+    aipd:collaboratesWith aipd:Role_01, aipd:Role_02, aipd:Role_04, aipd:Role_05, aipd:Role_06, aipd:Role_07, aipd:Role_08 ;
+    aipd:kpi "개최 여부"@ko ;
+    aipd:dependsOn aipd:Task_PM_1_3 .
+aipd:Art_PM_1_4 a aipd:Artifact ; rdfs:label "킥오프 자료"@ko .
+aipd:Task_PM_2_1 a aipd:Task ;
+    aipd:code "PM-2-1" ;
+    rdfs:label "WBS·일정 수립"@ko ;
+    aipd:belongsTo aipd:Sub_PM_2 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_2_1 ;
+    aipd:kpi "일정 준수율"@ko ;
+    aipd:hasRisk aipd:Risk_043 ;
+    aipd:dependsOn aipd:Task_PM_1_4 .
+aipd:Art_PM_2_1 a aipd:Artifact ; rdfs:label "WBS·일정표"@ko .
+aipd:Task_PM_2_2 a aipd:Task ;
+    aipd:code "PM-2-2" ;
+    rdfs:label "범위 정의"@ko ;
+    aipd:belongsTo aipd:Sub_PM_2 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_2_2 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "범위 변경 건수"@ko ;
+    aipd:hasRisk aipd:Risk_022 ;
+    aipd:dependsOn aipd:Task_PM_1_4 .
+aipd:Art_PM_2_2 a aipd:Artifact ; rdfs:label "범위 기술서"@ko .
+aipd:Task_PM_2_3 a aipd:Task ;
+    aipd:code "PM-2-3" ;
+    rdfs:label "자원 계획"@ko ;
+    aipd:belongsTo aipd:Sub_PM_2 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_2_3 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "예산 대비 집행률"@ko ;
+    aipd:dependsOn aipd:Task_PM_2_1 .
+aipd:Art_PM_2_3 a aipd:Artifact ; rdfs:label "자원 계획서"@ko .
+aipd:Task_PM_2_4 a aipd:Task ;
+    aipd:code "PM-2-4" ;
+    rdfs:label "위험 계획"@ko ;
+    aipd:belongsTo aipd:Sub_PM_2 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_2_4 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "식별 위험 수"@ko ;
+    aipd:dependsOn aipd:Task_PM_2_2, aipd:Task_GV_3_1 .
+aipd:Art_PM_2_4 a aipd:Artifact ; rdfs:label "위험 관리대장"@ko .
+aipd:Task_PM_3_1 a aipd:Task ;
+    aipd:code "PM-3-1" ;
+    rdfs:label "진척 관리"@ko ;
+    aipd:belongsTo aipd:Sub_PM_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "주"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_3_1 ;
+    aipd:kpi "진척률(SPI)"@ko ;
+    aipd:dependsOn aipd:Task_PM_2_1 .
+aipd:Art_PM_3_1 a aipd:Artifact ; rdfs:label "진척 현황표"@ko .
+aipd:Task_PM_3_2 a aipd:Task ;
+    aipd:code "PM-3-2" ;
+    rdfs:label "이슈·변경 관리"@ko ;
+    aipd:belongsTo aipd:Sub_PM_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_3_2 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "이슈 해결 기간"@ko ;
+    aipd:dependsOn aipd:Task_PM_3_1 .
+aipd:Art_PM_3_2 a aipd:Artifact ; rdfs:label "이슈·변경 대장"@ko .
+aipd:Task_PM_3_3 a aipd:Task ;
+    aipd:code "PM-3-3" ;
+    rdfs:label "품질 관리"@ko ;
+    aipd:belongsTo aipd:Sub_PM_3 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_3_3 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "결함 수"@ko ;
+    aipd:dependsOn aipd:Task_PM_2_2 .
+aipd:Art_PM_3_3 a aipd:Artifact ; rdfs:label "품질 점검표"@ko .
+aipd:Task_PM_3_4 a aipd:Task ;
+    aipd:code "PM-3-4" ;
+    rdfs:label "정기 보고"@ko ;
+    aipd:belongsTo aipd:Sub_PM_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "주·월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_3_4 ;
+    aipd:kpi "보고 적시율"@ko ;
+    aipd:dependsOn aipd:Task_PM_3_1 .
+aipd:Art_PM_3_4 a aipd:Artifact ; rdfs:label "주간·월간 보고서"@ko .
+aipd:Task_PM_4_1 a aipd:Task ;
+    aipd:code "PM-4-1" ;
+    rdfs:label "결과 검수"@ko ;
+    aipd:belongsTo aipd:Sub_PM_4 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_4_1 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "검수 통과율"@ko ;
+    aipd:dependsOn aipd:Task_PM_3_3 .
+aipd:Art_PM_4_1 a aipd:Artifact ; rdfs:label "검수 확인서"@ko .
+aipd:Task_PM_4_2 a aipd:Task ;
+    aipd:code "PM-4-2" ;
+    rdfs:label "교훈(Lessons Learned) 정리"@ko ;
+    aipd:belongsTo aipd:Sub_PM_4 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_4_2 ;
+    aipd:collaboratesWith aipd:Role_01, aipd:Role_02, aipd:Role_04, aipd:Role_05, aipd:Role_06, aipd:Role_07, aipd:Role_08 ;
+    aipd:kpi "등록 건수"@ko ;
+    aipd:dependsOn aipd:Task_PM_4_1 .
+aipd:Art_PM_4_2 a aipd:Artifact ; rdfs:label "교훈 기록"@ko .
+aipd:Task_PM_4_3 a aipd:Task ;
+    aipd:code "PM-4-3" ;
+    rdfs:label "산출물 이관·아카이빙"@ko ;
+    aipd:belongsTo aipd:Sub_PM_4 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_4_3 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "이관 완료율"@ko ;
+    aipd:hasRisk aipd:Risk_032 ;
+    aipd:dependsOn aipd:Task_PM_4_1, aipd:Task_MS_5_1 .
+aipd:Art_PM_4_3 a aipd:Artifact ; rdfs:label "산출물 목록"@ko .
+aipd:Task_PM_4_4 a aipd:Task ;
+    aipd:code "PM-4-4" ;
+    rdfs:label "사후 효과 검증(Benefit Realization)"@ko ;
+    aipd:belongsTo aipd:Sub_PM_4 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_4_4 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "계획 대비 실현 효과"@ko ;
+    aipd:hasRisk aipd:Risk_062 ;
+    aipd:dependsOn aipd:Task_BD_3_2, aipd:Task_OP_2_1 ;
+    aipd:note "v0.2 추가: 도입 후 실제 효과를 측정해 투자효과 분석과 성과평가로 환류"@ko .
+aipd:Art_PM_4_4 a aipd:Artifact ; rdfs:label "효과 검증 보고서"@ko .
+aipd:Task_PM_5_1 a aipd:Task ;
+    aipd:code "PM-5-1" ;
+    rdfs:label "과제 포트폴리오 현황 관리"@ko ;
+    aipd:belongsTo aipd:Sub_PM_5 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_03 ;
+    aipd:produces aipd:Art_PM_5_1 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "정상 진행 과제 비율"@ko ;
+    aipd:dependsOn aipd:Task_PM_3_4 ;
+    aipd:note "경계①: 개별 과제 상태 관리. 결과를 ST-4로 전달"@ko .
+aipd:Art_PM_5_1 a aipd:Artifact ; rdfs:label "포트폴리오 현황판"@ko .
+aipd:Task_PM_5_2 a aipd:Task ;
+    aipd:code "PM-5-2" ;
+    rdfs:label "과제 간 자원 배분 조정"@ko ;
+    aipd:belongsTo aipd:Sub_PM_5 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_PM_5_2 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "인력 가동률"@ko ;
+    aipd:dependsOn aipd:Task_PM_5_1 ;
+    aipd:note "경계①"@ko .
+aipd:Art_PM_5_2 a aipd:Artifact ; rdfs:label "자원 조정안"@ko .
+aipd:Task_PM_5_3 a aipd:Task ;
+    aipd:code "PM-5-3" ;
+    rdfs:label "과제 중단·통합 결정"@ko ;
+    aipd:belongsTo aipd:Sub_PM_5 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "성과 미달·환경 변화 시"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_PM_5_3 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:hasRisk aipd:Risk_019 ;
+    aipd:dependsOn aipd:Task_PM_5_1 .
+aipd:Art_PM_5_3 a aipd:Artifact ; rdfs:label "의사결정 기록"@ko .
+aipd:Task_ST_1_1 a aipd:Task ;
+    aipd:code "ST-1-1" ;
+    rdfs:label "AI 동향 조사"@ko ;
+    aipd:belongsTo aipd:Sub_ST_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_1_1 ;
+    aipd:collaboratesWith aipd:Role_04 ;
+    aipd:kpi "리포트 발간 건수"@ko .
+aipd:Art_ST_1_1 a aipd:Artifact ; rdfs:label "동향 리포트"@ko .
+aipd:Task_ST_1_2 a aipd:Task ;
+    aipd:code "ST-1-2" ;
+    rdfs:label "경쟁사 벤치마킹"@ko ;
+    aipd:belongsTo aipd:Sub_ST_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_1_2 ;
+    aipd:kpi "벤치마킹 대상 수"@ko ;
+    aipd:dependsOn aipd:Task_ST_1_1 .
+aipd:Art_ST_1_2 a aipd:Artifact ; rdfs:label "벤치마킹 보고서"@ko .
+aipd:Task_ST_1_3 a aipd:Task ;
+    aipd:code "ST-1-3" ;
+    rdfs:label "기술 성숙도 평가"@ko ;
+    aipd:belongsTo aipd:Sub_ST_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_ST_1_3 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "평가 기술 수"@ko ;
+    aipd:dependsOn aipd:Task_ST_1_1 .
+aipd:Art_ST_1_3 a aipd:Artifact ; rdfs:label "기술 성숙도 맵"@ko .
+aipd:Task_ST_1_4 a aipd:Task ;
+    aipd:code "ST-1-4" ;
+    rdfs:label "현업 AI 수요 진단"@ko ;
+    aipd:belongsTo aipd:Sub_ST_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_1_4 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "수요 접수 건수"@ko .
+aipd:Art_ST_1_4 a aipd:Artifact ; rdfs:label "수요 진단서"@ko .
+aipd:Task_ST_2_1 a aipd:Task ;
+    aipd:code "ST-2-1" ;
+    rdfs:label "AI 비전 수립"@ko ;
+    aipd:belongsTo aipd:Sub_ST_2 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "3년"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_ST_2_1 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "경영진 승인"@ko ;
+    aipd:dependsOn aipd:Task_ST_1_4 .
+aipd:Art_ST_2_1 a aipd:Artifact ; rdfs:label "비전·미션 선언문"@ko .
+aipd:Task_ST_2_2 a aipd:Task ;
+    aipd:code "ST-2-2" ;
+    rdfs:label "중장기 로드맵 수립"@ko ;
+    aipd:belongsTo aipd:Sub_ST_2 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연(롤링)"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_2_2 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "로드맵 이행률"@ko ;
+    aipd:dependsOn aipd:Task_ST_2_1, aipd:Task_ST_1_3 .
+aipd:Art_ST_2_2 a aipd:Artifact ; rdfs:label "중장기 로드맵"@ko .
+aipd:Task_ST_2_3 a aipd:Task ;
+    aipd:code "ST-2-3" ;
+    rdfs:label "목표·KPI 체계 설계"@ko ;
+    aipd:belongsTo aipd:Sub_ST_2 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_2_3 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "KPI 확정 여부"@ko ;
+    aipd:dependsOn aipd:Task_ST_2_2 .
+aipd:Art_ST_2_3 a aipd:Artifact ; rdfs:label "KPI 정의서"@ko .
+aipd:Task_ST_2_4 a aipd:Task ;
+    aipd:code "ST-2-4" ;
+    rdfs:label "전사 전략 정합성 검토"@ko ;
+    aipd:belongsTo aipd:Sub_ST_2 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_ST_2_4 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "지적사항 수"@ko ;
+    aipd:dependsOn aipd:Task_ST_2_2 .
+aipd:Art_ST_2_4 a aipd:Artifact ; rdfs:label "정합성 검토서"@ko .
+aipd:Task_ST_3_1 a aipd:Task ;
+    aipd:code "ST-3-1" ;
+    rdfs:label "연간 사업계획 수립"@ko ;
+    aipd:belongsTo aipd:Sub_ST_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_3_1 ;
+    aipd:collaboratesWith aipd:Role_01, aipd:Role_03, aipd:Role_04, aipd:Role_05, aipd:Role_06, aipd:Role_07, aipd:Role_08 ;
+    aipd:kpi "기한 내 승인"@ko ;
+    aipd:dependsOn aipd:Task_ST_2_3 .
+aipd:Art_ST_3_1 a aipd:Artifact ; rdfs:label "연간 사업계획서"@ko .
+aipd:Task_ST_3_2 a aipd:Task ;
+    aipd:code "ST-3-2" ;
+    rdfs:label "과제 후보 발굴(과제풀 관리)"@ko ;
+    aipd:belongsTo aipd:Sub_ST_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_3_2 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "신규 후보 과제 수"@ko ;
+    aipd:dependsOn aipd:Task_ST_1_4, aipd:Task_BD_1_2, aipd:Task_BD_3_4 .
+aipd:Art_ST_3_2 a aipd:Artifact ; rdfs:label "과제풀 리스트"@ko .
+aipd:Task_ST_3_3 a aipd:Task ;
+    aipd:code "ST-3-3" ;
+    rdfs:label "과제 우선순위 평가"@ko ;
+    aipd:belongsTo aipd:Sub_ST_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_3_3 ;
+    aipd:collaboratesWith aipd:Role_01 ;
+    aipd:kpi "평가 완료율"@ko ;
+    aipd:dependsOn aipd:Task_ST_3_2, aipd:Task_BD_1_3 .
+aipd:Art_ST_3_3 a aipd:Artifact ; rdfs:label "우선순위 평가표"@ko .
+aipd:Task_ST_3_4 a aipd:Task ;
+    aipd:code "ST-3-4" ;
+    rdfs:label "예산 편성안 작성"@ko ;
+    aipd:belongsTo aipd:Sub_ST_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_07 ;
+    aipd:produces aipd:Art_ST_3_4 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "예산 확보율"@ko ;
+    aipd:dependsOn aipd:Task_ST_3_3 .
+aipd:Art_ST_3_4 a aipd:Artifact ; rdfs:label "예산 편성안"@ko .
+aipd:Task_ST_4_1 a aipd:Task ;
+    aipd:code "ST-4-1" ;
+    rdfs:label "분기 성과 점검(부서)"@ko ;
+    aipd:belongsTo aipd:Sub_ST_4 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "분기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_02 ;
+    aipd:produces aipd:Art_ST_4_1 ;
+    aipd:collaboratesWith aipd:Role_03 ;
+    aipd:kpi "부서 KPI 달성률"@ko ;
+    aipd:dependsOn aipd:Task_PM_5_1 ;
+    aipd:note "경계①: PM-5 과제 현황을 입력으로 받아 부서 KPI 관점에서 평가"@ko .
+aipd:Art_ST_4_1 a aipd:Artifact ; rdfs:label "분기 성과 보고서"@ko .
+aipd:Task_ST_4_2 a aipd:Task ;
+    aipd:code "ST-4-2" ;
+    rdfs:label "연간 성과 평가(부서)"@ko ;
+    aipd:belongsTo aipd:Sub_ST_4 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_ST_4_2 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "부서 KPI 달성률"@ko ;
+    aipd:dependsOn aipd:Task_ST_4_1 ;
+    aipd:note "경계①"@ko .
+aipd:Art_ST_4_2 a aipd:Artifact ; rdfs:label "연간 성과 평가서"@ko .
+aipd:Task_ST_4_3 a aipd:Task ;
+    aipd:code "ST-4-3" ;
+    rdfs:label "전략 조정·환류"@ko ;
+    aipd:belongsTo aipd:Sub_ST_4 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_01 ;
+    aipd:produces aipd:Art_ST_4_3 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "조정 반영률"@ko ;
+    aipd:dependsOn aipd:Task_ST_4_2 .
+aipd:Art_ST_4_3 a aipd:Artifact ; rdfs:label "전략 조정안"@ko .
+aipd:Task_TD_1_1 a aipd:Task ;
+    aipd:code "TD-1-1" ;
+    rdfs:label "플랫폼 아키텍처 설계"@ko ;
+    aipd:belongsTo aipd:Sub_TD_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_1_1 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "설계 승인"@ko ;
+    aipd:hasRisk aipd:Risk_023 ;
+    aipd:dependsOn aipd:Task_ST_2_2 .
+aipd:Art_TD_1_1 a aipd:Artifact ; rdfs:label "아키텍처 설계서"@ko .
+aipd:Task_TD_1_2 a aipd:Task ;
+    aipd:code "TD-1-2" ;
+    rdfs:label "기술스택 선정"@ko ;
+    aipd:belongsTo aipd:Sub_TD_1 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "연"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_1_2 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "표준 준수율"@ko ;
+    aipd:hasRisk aipd:Risk_016 ;
+    aipd:dependsOn aipd:Task_TD_1_1 .
+aipd:Art_TD_1_2 a aipd:Artifact ; rdfs:label "기술스택 표준"@ko .
+aipd:Task_TD_1_3 a aipd:Task ;
+    aipd:code "TD-1-3" ;
+    rdfs:label "인프라(GPU·클라우드) 구축"@ko ;
+    aipd:belongsTo aipd:Sub_TD_1 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_1_3 ;
+    aipd:collaboratesWith aipd:Role_07 ;
+    aipd:kpi "가용률"@ko ;
+    aipd:hasRisk aipd:Risk_028 ;
+    aipd:dependsOn aipd:Task_TD_1_2, aipd:Task_MS_2_3 .
+aipd:Art_TD_1_3 a aipd:Artifact ; rdfs:label "인프라 구성도"@ko .
+aipd:Task_TD_2_1 a aipd:Task ;
+    aipd:code "TD-2-1" ;
+    rdfs:label "문제·데이터 요구 정의"@ko ;
+    aipd:belongsTo aipd:Sub_TD_2 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_2_1 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "요구 확정"@ko ;
+    aipd:dependsOn aipd:Task_BD_1_2 .
+aipd:Art_TD_2_1 a aipd:Artifact ; rdfs:label "요구정의서"@ko .
+aipd:Task_TD_2_2 a aipd:Task ;
+    aipd:code "TD-2-2" ;
+    rdfs:label "모델 학습·튜닝"@ko ;
+    aipd:belongsTo aipd:Sub_TD_2 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_2_2 ;
+    aipd:kpi "목표 성능 달성"@ko ;
+    aipd:hasRisk aipd:Risk_006 ;
+    aipd:dependsOn aipd:Task_TD_2_1, aipd:Task_DM_2_1, aipd:Task_TD_4_4 .
+aipd:Art_TD_2_2 a aipd:Artifact ; rdfs:label "학습된 모델"@ko .
+aipd:Task_TD_2_3 a aipd:Task ;
+    aipd:code "TD-2-3" ;
+    rdfs:label "모델 평가"@ko ;
+    aipd:belongsTo aipd:Sub_TD_2 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_2_3 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "정확도·F1 등"@ko ;
+    aipd:hasRisk aipd:Risk_052 ;
+    aipd:dependsOn aipd:Task_TD_2_2 .
+aipd:Art_TD_2_3 a aipd:Artifact ; rdfs:label "모델 평가 보고서"@ko .
+aipd:Task_TD_2_4 a aipd:Task ;
+    aipd:code "TD-2-4" ;
+    rdfs:label "모델 문서화(Model Card)"@ko ;
+    aipd:belongsTo aipd:Sub_TD_2 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_2_4 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "문서화율"@ko ;
+    aipd:hasRisk aipd:Risk_034 ;
+    aipd:dependsOn aipd:Task_TD_2_3 .
+aipd:Art_TD_2_4 a aipd:Artifact ; rdfs:label "Model Card"@ko .
+aipd:Task_TD_3_1 a aipd:Task ;
+    aipd:code "TD-3-1" ;
+    rdfs:label "LLM 선정·평가"@ko ;
+    aipd:belongsTo aipd:Sub_TD_3 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "반기"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_3_1 ;
+    aipd:collaboratesWith aipd:Role_06 ;
+    aipd:kpi "평가 모델 수"@ko ;
+    aipd:hasRisk aipd:Risk_018 ;
+    aipd:dependsOn aipd:Task_TD_5_2 .
+aipd:Art_TD_3_1 a aipd:Artifact ; rdfs:label "LLM 평가표"@ko .
+aipd:Task_TD_3_2 a aipd:Task ;
+    aipd:code "TD-3-2" ;
+    rdfs:label "프롬프트 엔지니어링"@ko ;
+    aipd:belongsTo aipd:Sub_TD_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_3_2 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "응답 품질 점수"@ko ;
+    aipd:hasRisk aipd:Risk_055 ;
+    aipd:dependsOn aipd:Task_TD_3_1 .
+aipd:Art_TD_3_2 a aipd:Artifact ; rdfs:label "프롬프트 라이브러리"@ko .
+aipd:Task_TD_3_3 a aipd:Task ;
+    aipd:code "TD-3-3" ;
+    rdfs:label "RAG 구축"@ko ;
+    aipd:belongsTo aipd:Sub_TD_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_3_3 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "검색 정확도"@ko ;
+    aipd:hasRisk aipd:Risk_060 ;
+    aipd:dependsOn aipd:Task_TD_3_1, aipd:Task_DM_2_1 .
+aipd:Art_TD_3_3 a aipd:Artifact ; rdfs:label "RAG 시스템"@ko .
+aipd:Task_TD_3_4 a aipd:Task ;
+    aipd:code "TD-3-4" ;
+    rdfs:label "AI 에이전트 개발"@ko ;
+    aipd:belongsTo aipd:Sub_TD_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "다단계 자동화 필요 시"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_3_4 ;
+    aipd:collaboratesWith aipd:Role_13 ;
+    aipd:kpi "업무 자동화율"@ko ;
+    aipd:hasRisk aipd:Risk_039 ;
+    aipd:dependsOn aipd:Task_TD_3_2 .
+aipd:Art_TD_3_4 a aipd:Artifact ; rdfs:label "AI 에이전트"@ko .
+aipd:Task_TD_3_5 a aipd:Task ;
+    aipd:code "TD-3-5" ;
+    rdfs:label "파인튜닝"@ko ;
+    aipd:belongsTo aipd:Sub_TD_3 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "범용 모델 성능 부족 시"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_3_5 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "성능 개선폭"@ko ;
+    aipd:hasRisk aipd:Risk_057 ;
+    aipd:dependsOn aipd:Task_TD_3_1, aipd:Task_DM_1_4 .
+aipd:Art_TD_3_5 a aipd:Artifact ; rdfs:label "파인튜닝 모델"@ko .
+aipd:Task_TD_4_1 a aipd:Task ;
+    aipd:code "TD-4-1" ;
+    rdfs:label "ML 파이프라인 구축"@ko ;
+    aipd:belongsTo aipd:Sub_TD_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_4_1 ;
+    aipd:collaboratesWith aipd:Role_05 ;
+    aipd:kpi "자동화 단계 비율"@ko ;
+    aipd:dependsOn aipd:Task_TD_1_3 ;
+    aipd:note "경계③: 구축은 TD, 운영 중 반복 실행은 OP-3-3"@ko .
+aipd:Art_TD_4_1 a aipd:Artifact ; rdfs:label "ML 파이프라인"@ko .
+aipd:Task_TD_4_2 a aipd:Task ;
+    aipd:code "TD-4-2" ;
+    rdfs:label "모델 최초 배포"@ko ;
+    aipd:belongsTo aipd:Sub_TD_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_ProjectBased ;
+    aipd:cycle "과제별"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_4_2 ;
+    aipd:collaboratesWith aipd:Role_08 ;
+    aipd:kpi "배포 리드타임"@ko ;
+    aipd:hasRisk aipd:Risk_021 ;
+    aipd:dependsOn aipd:Task_TD_2_3, aipd:Task_TD_4_1 ;
+    aipd:note "경계③: 최초 배포까지 TD, 이후 운영 이관"@ko .
+aipd:Art_TD_4_2 a aipd:Artifact ; rdfs:label "배포 기록"@ko .
+aipd:Task_TD_4_3 a aipd:Task ;
+    aipd:code "TD-4-3" ;
+    rdfs:label "모델 레지스트리·버전관리"@ko ;
+    aipd:belongsTo aipd:Sub_TD_4 ;
+    aipd:inStage aipd:Stage_Operate ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_4_3 ;
+    aipd:kpi "등록률"@ko ;
+    aipd:hasRisk aipd:Risk_051 ;
+    aipd:dependsOn aipd:Task_TD_4_1 .
+aipd:Art_TD_4_3 a aipd:Artifact ; rdfs:label "모델 레지스트리"@ko .
+aipd:Task_TD_4_4 a aipd:Task ;
+    aipd:code "TD-4-4" ;
+    rdfs:label "실험관리"@ko ;
+    aipd:belongsTo aipd:Sub_TD_4 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "상시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_4_4 ;
+    aipd:kpi "재현 가능률"@ko ;
+    aipd:dependsOn aipd:Task_TD_1_3 .
+aipd:Art_TD_4_4 a aipd:Artifact ; rdfs:label "실험 로그"@ko .
+aipd:Task_TD_5_1 a aipd:Task ;
+    aipd:code "TD-5-1" ;
+    rdfs:label "신기술 리서치"@ko ;
+    aipd:belongsTo aipd:Sub_TD_5 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:hasNature aipd:Nature_Recurring ;
+    aipd:cycle "월"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_5_1 ;
+    aipd:collaboratesWith aipd:Role_02 ;
+    aipd:kpi "리서치 건수"@ko ;
+    aipd:dependsOn aipd:Task_ST_1_1, aipd:Task_BD_4_1 .
+aipd:Art_TD_5_1 a aipd:Artifact ; rdfs:label "리서치 노트"@ko .
+aipd:Task_TD_5_2 a aipd:Task ;
+    aipd:code "TD-5-2" ;
+    rdfs:label "벤치마크 검증"@ko ;
+    aipd:belongsTo aipd:Sub_TD_5 ;
+    aipd:inStage aipd:Stage_Review ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_5_2 ;
+    aipd:kpi "검증 건수"@ko ;
+    aipd:dependsOn aipd:Task_TD_5_1 .
+aipd:Art_TD_5_2 a aipd:Artifact ; rdfs:label "벤치마크 결과"@ko .
+aipd:Task_TD_5_3 a aipd:Task ;
+    aipd:code "TD-5-3" ;
+    rdfs:label "특허·논문"@ko ;
+    aipd:belongsTo aipd:Sub_TD_5 ;
+    aipd:inStage aipd:Stage_Close ;
+    aipd:hasNature aipd:Nature_AdHoc ;
+    aipd:cycle "수시"@ko ;
+    aipd:condition "항상"@ko ;
+    aipd:ownedBy aipd:Role_04 ;
+    aipd:produces aipd:Art_TD_5_3 ;
+    aipd:collaboratesWith aipd:Role_09 ;
+    aipd:kpi "출원·게재 건수"@ko ;
+    aipd:dependsOn aipd:Task_TD_5_2 .
+aipd:Art_TD_5_3 a aipd:Artifact ; rdfs:label "특허 출원서·논문"@ko .
+
+### 업무 간 관계 (선행은 dependsOn의 역으로 명시)
+aipd:Task_BD_1_1 aipd:precedes aipd:Task_BD_1_2 .
+aipd:Task_BD_1_2 aipd:precedes aipd:Task_BD_1_3 .
+aipd:Task_ST_3_3 aipd:precedes aipd:Task_BD_2_1 .
+aipd:Task_BD_2_1 aipd:precedes aipd:Task_BD_2_2 .
+aipd:Task_DM_1_2 aipd:precedes aipd:Task_BD_2_2 .
+aipd:Task_BD_2_2 aipd:precedes aipd:Task_BD_2_3 .
+aipd:Task_BD_2_3 aipd:precedes aipd:Task_BD_2_4 .
+aipd:Task_BD_2_3 aipd:precedes aipd:Task_BD_2_5 .
+aipd:Task_BD_2_4 aipd:precedes aipd:Task_BD_3_1 .
+aipd:Task_BD_3_1 aipd:precedes aipd:Task_BD_3_2 .
+aipd:Task_OP_1_2 aipd:precedes aipd:Task_BD_3_2 .
+aipd:Task_BD_3_2 aipd:precedes aipd:Task_BD_3_3 .
+aipd:Task_ST_2_2 aipd:precedes aipd:Task_BD_4_1 .
+aipd:Task_ST_2_2 aipd:precedes aipd:Task_BD_4_2 .
+aipd:Task_ST_3_1 aipd:precedes aipd:Task_BD_4_3 .
+aipd:Task_GV_1_2 aipd:precedes aipd:Task_BD_4_4 .
+aipd:Task_OC_4_1 aipd:precedes aipd:Task_BD_5_1 .
+aipd:Task_BD_5_3 aipd:precedes aipd:Task_BD_5_2 .
+aipd:Task_PM_4_2 aipd:precedes aipd:Task_BD_5_3 .
+aipd:Task_TD_2_1 aipd:precedes aipd:Task_DM_1_1 .
+aipd:Task_DM_1_1 aipd:precedes aipd:Task_DM_1_2 .
+aipd:Task_DM_4_2 aipd:precedes aipd:Task_DM_1_2 .
+aipd:Task_DM_1_1 aipd:precedes aipd:Task_DM_1_3 .
+aipd:Task_MS_2_3 aipd:precedes aipd:Task_DM_1_3 .
+aipd:Task_DM_1_2 aipd:precedes aipd:Task_DM_1_4 .
+aipd:Task_DM_1_2 aipd:precedes aipd:Task_DM_2_1 .
+aipd:Task_DM_2_1 aipd:precedes aipd:Task_DM_2_2 .
+aipd:Task_DM_2_1 aipd:precedes aipd:Task_DM_2_3 .
+aipd:Task_DM_4_3 aipd:precedes aipd:Task_DM_3_1 .
+aipd:Task_DM_3_1 aipd:precedes aipd:Task_DM_3_2 .
+aipd:Task_DM_3_2 aipd:precedes aipd:Task_DM_3_3 .
+aipd:Task_GV_4_2 aipd:precedes aipd:Task_DM_4_2 .
+aipd:Task_DM_4_1 aipd:precedes aipd:Task_DM_4_4 .
+aipd:Task_GV_1_1 aipd:precedes aipd:Task_GV_1_2 .
+aipd:Task_GV_2_1 aipd:precedes aipd:Task_GV_1_3 .
+aipd:Task_DM_1_1 aipd:precedes aipd:Task_GV_2_2 .
+aipd:Task_TD_3_1 aipd:precedes aipd:Task_GV_2_3 .
+aipd:Task_DM_1_3 aipd:precedes aipd:Task_GV_2_3 .
+aipd:Task_BD_1_2 aipd:precedes aipd:Task_GV_3_1 .
+aipd:Task_TD_2_3 aipd:precedes aipd:Task_GV_3_2 .
+aipd:Task_TD_2_3 aipd:precedes aipd:Task_GV_3_3 .
+aipd:Task_GV_3_1 aipd:precedes aipd:Task_GV_3_4 .
+aipd:Task_GV_3_1 aipd:precedes aipd:Task_GV_3_5 .
+aipd:Task_OP_1_1 aipd:precedes aipd:Task_GV_3_5 .
+aipd:Task_TD_4_2 aipd:precedes aipd:Task_GV_4_1 .
+aipd:Task_GV_1_3 aipd:precedes aipd:Task_GV_4_2 .
+aipd:Task_GV_4_1 aipd:precedes aipd:Task_GV_4_3 .
+aipd:Task_TD_2_4 aipd:precedes aipd:Task_GV_5_1 .
+aipd:Task_GV_1_3 aipd:precedes aipd:Task_GV_5_2 .
+aipd:Task_GV_1_3 aipd:precedes aipd:Task_GV_5_3 .
+aipd:Task_ST_3_4 aipd:precedes aipd:Task_MS_1_1 .
+aipd:Task_MS_1_1 aipd:precedes aipd:Task_MS_1_2 .
+aipd:Task_BD_1_3 aipd:precedes aipd:Task_MS_1_3 .
+aipd:Task_ST_4_2 aipd:precedes aipd:Task_MS_1_3 .
+aipd:Task_PM_2_3 aipd:precedes aipd:Task_MS_2_1 .
+aipd:Task_MS_5_2 aipd:precedes aipd:Task_MS_2_1 .
+aipd:Task_MS_2_1 aipd:precedes aipd:Task_MS_2_2 .
+aipd:Task_BD_4_2 aipd:precedes aipd:Task_MS_2_2 .
+aipd:Task_MS_2_2 aipd:precedes aipd:Task_MS_2_3 .
+aipd:Task_MS_2_3 aipd:precedes aipd:Task_MS_2_4 .
+aipd:Task_MS_2_3 aipd:precedes aipd:Task_MS_3_1 .
+aipd:Task_MS_2_3 aipd:precedes aipd:Task_MS_3_2 .
+aipd:Task_MS_2_3 aipd:precedes aipd:Task_MS_3_3 .
+aipd:Task_ST_4_1 aipd:precedes aipd:Task_MS_4_1 .
+aipd:Task_OC_1_1 aipd:precedes aipd:Task_MS_4_2 .
+aipd:Task_GV_3_1 aipd:precedes aipd:Task_MS_4_3 .
+aipd:Task_TD_1_3 aipd:precedes aipd:Task_MS_5_3 .
+aipd:Task_ST_2_2 aipd:precedes aipd:Task_OC_1_1 .
+aipd:Task_OC_1_1 aipd:precedes aipd:Task_OC_1_2 .
+aipd:Task_OC_1_1 aipd:precedes aipd:Task_OC_1_3 .
+aipd:Task_OC_1_2 aipd:precedes aipd:Task_OC_2_1 .
+aipd:Task_ST_4_2 aipd:precedes aipd:Task_OC_2_2 .
+aipd:Task_OC_2_1 aipd:precedes aipd:Task_OC_2_3 .
+aipd:Task_ST_2_2 aipd:precedes aipd:Task_OC_3_1 .
+aipd:Task_OC_3_1 aipd:precedes aipd:Task_OC_3_2 .
+aipd:Task_OC_3_1 aipd:precedes aipd:Task_OC_3_3 .
+aipd:Task_OC_3_2 aipd:precedes aipd:Task_OC_3_4 .
+aipd:Task_OC_4_1 aipd:precedes aipd:Task_OC_4_2 .
+aipd:Task_BD_3_2 aipd:precedes aipd:Task_OC_4_3 .
+aipd:Task_PM_4_2 aipd:precedes aipd:Task_OC_5_1 .
+aipd:Task_OC_5_1 aipd:precedes aipd:Task_OC_5_2 .
+aipd:Task_TD_4_2 aipd:precedes aipd:Task_OP_1_1 .
+aipd:Task_OP_1_1 aipd:precedes aipd:Task_OP_1_2 .
+aipd:Task_OP_1_1 aipd:precedes aipd:Task_OP_1_3 .
+aipd:Task_TD_4_2 aipd:precedes aipd:Task_OP_2_1 .
+aipd:Task_OP_2_1 aipd:precedes aipd:Task_OP_2_2 .
+aipd:Task_OP_1_1 aipd:precedes aipd:Task_OP_2_3 .
+aipd:Task_TD_1_3 aipd:precedes aipd:Task_OP_2_4 .
+aipd:Task_OP_2_4 aipd:precedes aipd:Task_OP_3_1 .
+aipd:Task_OP_1_2 aipd:precedes aipd:Task_OP_3_2 .
+aipd:Task_OP_2_2 aipd:precedes aipd:Task_OP_3_3 .
+aipd:Task_TD_4_1 aipd:precedes aipd:Task_OP_3_3 .
+aipd:Task_OP_3_2 aipd:precedes aipd:Task_OP_3_3 .
+aipd:Task_OP_1_1 aipd:precedes aipd:Task_OP_4_1 .
+aipd:Task_OP_4_1 aipd:precedes aipd:Task_OP_4_2 .
+aipd:Task_OP_4_1 aipd:precedes aipd:Task_OP_4_3 .
+aipd:Task_PM_5_3 aipd:precedes aipd:Task_OP_5_1 .
+aipd:Task_OP_5_1 aipd:precedes aipd:Task_OP_5_2 .
+aipd:Task_ST_3_3 aipd:precedes aipd:Task_PM_1_1 .
+aipd:Task_BD_4_3 aipd:precedes aipd:Task_PM_1_1 .
+aipd:Task_PM_1_1 aipd:precedes aipd:Task_PM_1_2 .
+aipd:Task_PM_1_1 aipd:precedes aipd:Task_PM_1_3 .
+aipd:Task_PM_1_3 aipd:precedes aipd:Task_PM_1_4 .
+aipd:Task_PM_1_4 aipd:precedes aipd:Task_PM_2_1 .
+aipd:Task_PM_1_4 aipd:precedes aipd:Task_PM_2_2 .
+aipd:Task_PM_2_1 aipd:precedes aipd:Task_PM_2_3 .
+aipd:Task_PM_2_2 aipd:precedes aipd:Task_PM_2_4 .
+aipd:Task_GV_3_1 aipd:precedes aipd:Task_PM_2_4 .
+aipd:Task_PM_2_1 aipd:precedes aipd:Task_PM_3_1 .
+aipd:Task_PM_3_1 aipd:precedes aipd:Task_PM_3_2 .
+aipd:Task_PM_2_2 aipd:precedes aipd:Task_PM_3_3 .
+aipd:Task_PM_3_1 aipd:precedes aipd:Task_PM_3_4 .
+aipd:Task_PM_3_3 aipd:precedes aipd:Task_PM_4_1 .
+aipd:Task_PM_4_1 aipd:precedes aipd:Task_PM_4_2 .
+aipd:Task_PM_4_1 aipd:precedes aipd:Task_PM_4_3 .
+aipd:Task_MS_5_1 aipd:precedes aipd:Task_PM_4_3 .
+aipd:Task_BD_3_2 aipd:precedes aipd:Task_PM_4_4 .
+aipd:Task_OP_2_1 aipd:precedes aipd:Task_PM_4_4 .
+aipd:Task_PM_3_4 aipd:precedes aipd:Task_PM_5_1 .
+aipd:Task_PM_5_1 aipd:precedes aipd:Task_PM_5_2 .
+aipd:Task_PM_5_1 aipd:precedes aipd:Task_PM_5_3 .
+aipd:Task_ST_1_1 aipd:precedes aipd:Task_ST_1_2 .
+aipd:Task_ST_1_1 aipd:precedes aipd:Task_ST_1_3 .
+aipd:Task_ST_1_4 aipd:precedes aipd:Task_ST_2_1 .
+aipd:Task_ST_2_1 aipd:precedes aipd:Task_ST_2_2 .
+aipd:Task_ST_1_3 aipd:precedes aipd:Task_ST_2_2 .
+aipd:Task_ST_2_2 aipd:precedes aipd:Task_ST_2_3 .
+aipd:Task_ST_2_2 aipd:precedes aipd:Task_ST_2_4 .
+aipd:Task_ST_2_3 aipd:precedes aipd:Task_ST_3_1 .
+aipd:Task_ST_1_4 aipd:precedes aipd:Task_ST_3_2 .
+aipd:Task_BD_1_2 aipd:precedes aipd:Task_ST_3_2 .
+aipd:Task_BD_3_4 aipd:precedes aipd:Task_ST_3_2 .
+aipd:Task_ST_3_2 aipd:precedes aipd:Task_ST_3_3 .
+aipd:Task_BD_1_3 aipd:precedes aipd:Task_ST_3_3 .
+aipd:Task_ST_3_3 aipd:precedes aipd:Task_ST_3_4 .
+aipd:Task_PM_5_1 aipd:precedes aipd:Task_ST_4_1 .
+aipd:Task_ST_4_1 aipd:precedes aipd:Task_ST_4_2 .
+aipd:Task_ST_4_2 aipd:precedes aipd:Task_ST_4_3 .
+aipd:Task_ST_2_2 aipd:precedes aipd:Task_TD_1_1 .
+aipd:Task_TD_1_1 aipd:precedes aipd:Task_TD_1_2 .
+aipd:Task_TD_1_2 aipd:precedes aipd:Task_TD_1_3 .
+aipd:Task_MS_2_3 aipd:precedes aipd:Task_TD_1_3 .
+aipd:Task_BD_1_2 aipd:precedes aipd:Task_TD_2_1 .
+aipd:Task_TD_2_1 aipd:precedes aipd:Task_TD_2_2 .
+aipd:Task_DM_2_1 aipd:precedes aipd:Task_TD_2_2 .
+aipd:Task_TD_4_4 aipd:precedes aipd:Task_TD_2_2 .
+aipd:Task_TD_2_2 aipd:precedes aipd:Task_TD_2_3 .
+aipd:Task_TD_2_3 aipd:precedes aipd:Task_TD_2_4 .
+aipd:Task_TD_5_2 aipd:precedes aipd:Task_TD_3_1 .
+aipd:Task_TD_3_1 aipd:precedes aipd:Task_TD_3_2 .
+aipd:Task_TD_3_1 aipd:precedes aipd:Task_TD_3_3 .
+aipd:Task_DM_2_1 aipd:precedes aipd:Task_TD_3_3 .
+aipd:Task_TD_3_2 aipd:precedes aipd:Task_TD_3_4 .
+aipd:Task_TD_3_1 aipd:precedes aipd:Task_TD_3_5 .
+aipd:Task_DM_1_4 aipd:precedes aipd:Task_TD_3_5 .
+aipd:Task_TD_1_3 aipd:precedes aipd:Task_TD_4_1 .
+aipd:Task_TD_2_3 aipd:precedes aipd:Task_TD_4_2 .
+aipd:Task_TD_4_1 aipd:precedes aipd:Task_TD_4_2 .
+aipd:Task_TD_4_1 aipd:precedes aipd:Task_TD_4_3 .
+aipd:Task_TD_1_3 aipd:precedes aipd:Task_TD_4_4 .
+aipd:Task_ST_1_1 aipd:precedes aipd:Task_TD_5_1 .
+aipd:Task_BD_4_1 aipd:precedes aipd:Task_TD_5_1 .
+aipd:Task_TD_5_1 aipd:precedes aipd:Task_TD_5_2 .
+aipd:Task_TD_5_2 aipd:precedes aipd:Task_TD_5_3 .
+
+### 환류 (사유는 reification 대신 OWL 공리 주석으로 기록)
+aipd:Task_OP_2_1 aipd:feedsBackTo aipd:Task_ST_4_1 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_OP_2_1 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_ST_4_1 ; aipd:feedbackReason "운영 성능 지표가 부서 성과 점검 입력"@ko .
+aipd:Task_OP_4_3 aipd:feedsBackTo aipd:Task_ST_4_1 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_OP_4_3 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_ST_4_1 ; aipd:feedbackReason "사용자 만족도가 성과 점검 입력"@ko .
+aipd:Task_OP_2_3 aipd:feedsBackTo aipd:Task_MS_1_3 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_OP_2_3 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_MS_1_3 ; aipd:feedbackReason "실제 운영비가 투자효과 분석 입력"@ko .
+aipd:Task_PM_4_4 aipd:feedsBackTo aipd:Task_MS_1_3 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_PM_4_4 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_MS_1_3 ; aipd:feedbackReason "실현 효과가 ROI 분석 입력"@ko .
+aipd:Task_MS_1_3 aipd:feedsBackTo aipd:Task_ST_3_3 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_MS_1_3 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_ST_3_3 ; aipd:feedbackReason "ROI 결과가 다음 우선순위 평가에 반영"@ko .
+aipd:Task_ST_4_3 aipd:feedsBackTo aipd:Task_ST_2_2 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_ST_4_3 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_ST_2_2 ; aipd:feedbackReason "전략 조정이 로드맵 롤링에 반영"@ko .
+aipd:Task_PM_4_2 aipd:feedsBackTo aipd:Task_PM_2_4 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_PM_4_2 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_PM_2_4 ; aipd:feedbackReason "교훈이 다음 과제 위험 계획에 반영"@ko .
+aipd:Task_OP_4_2 aipd:feedsBackTo aipd:Task_ST_3_2 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_OP_4_2 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_ST_3_2 ; aipd:feedbackReason "개선 요청이 신규 과제 후보가 됨"@ko .
+aipd:Task_GV_4_3 aipd:feedsBackTo aipd:Task_GV_1_3 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_GV_4_3 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_GV_1_3 ; aipd:feedbackReason "보안사고 원인이 규정 개정으로 이어짐"@ko .
+aipd:Task_GV_5_2 aipd:feedsBackTo aipd:Task_GV_3_4 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_GV_5_2 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_GV_3_4 ; aipd:feedbackReason "감사 지적이 리스크 대응 과제가 됨"@ko .
+aipd:Task_OC_3_4 aipd:feedsBackTo aipd:Task_OC_3_1 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_OC_3_4 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_OC_3_1 ; aipd:feedbackReason "교육 효과가 다음 교육체계에 반영"@ko .
+aipd:Task_MS_3_1 aipd:feedsBackTo aipd:Task_MS_2_2 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_MS_3_1 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_MS_2_2 ; aipd:feedbackReason "벤더 평가가 다음 선정에 반영"@ko .
+aipd:Task_OP_3_1 aipd:feedsBackTo aipd:Task_GV_3_4 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_OP_3_1 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_GV_3_4 ; aipd:feedbackReason "반복 장애가 리스크 대응 대상이 됨"@ko .
+aipd:Task_BD_2_5 aipd:feedsBackTo aipd:Task_ST_3_2 .
+[] a owl:Axiom ; owl:annotatedSource aipd:Task_BD_2_5 ; owl:annotatedProperty aipd:feedsBackTo ; owl:annotatedTarget aipd:Task_ST_3_2 ; aipd:feedbackReason "보류 PoC가 과제 풀로 복귀"@ko .
