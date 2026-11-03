@@ -62,4 +62,8 @@ node tests/physai.test.mjs           # Physical AI 시뮬레이션 테스트
 
 ## 라이선스
 
-[MIT License](LICENSE) © 2026 1004aiteam-power
+**© 2026 1004aiteam-power. All rights reserved.**
+
+저작권자의 허락 없이 이 저장소와 웹사이트의 내용(코드·문서·글·그림·데이터)을 복제·수정·배포·재게시하는 것을 금지합니다.
+외부에서 가져온 구성요소(Oxigraph, Cytoscape.js, cimpy 예제 데이터, Natural Earth 지도)는 각 원래 라이선스를 따릅니다.
+자세한 내용은 [LICENSE](LICENSE)를 보세요.

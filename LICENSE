@@ -1,21 +1,50 @@
-MIT License
+Copyright (c) 2026 1004aiteam-power. All rights reserved.
 
-Copyright (c) 2026 1004aiteam-power
+이 저장소와 웹사이트(https://1004aiteam-power.github.io/ontology-space/)의 모든 내용
+— 코드, 문서, 글, 그림, 데이터, 웹페이지 디자인 — 은 저작권법의 보호를 받습니다.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+저작권자의 사전 서면 허락 없이 다음 행위를 금지합니다.
+  - 전부 또는 일부의 복제, 복사, 다운로드 후 재게시 (불펌)
+  - 수정, 번역, 2차적 저작물 작성
+  - 배포, 재배포, 공중송신, 판매, 대여
+  - 상업적·비상업적 목적을 불문한 모든 이용
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+웹 브라우저로 페이지를 열람하는 것과, GitHub 이용약관이 정한 범위 안에서
+저장소를 보는 것만 허용됩니다. GitHub에서의 포크(fork)는 위 권리를 부여하지 않습니다.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+이용 문의: GitHub 저장소 https://github.com/1004aiteam-power/ontology-space
+
+----------------------------------------------------------------------
+English
+
+All content of this repository and website — code, documentation, text,
+images, data and web page design — is protected by copyright.
+
+Without the prior written permission of the copyright holder, you may NOT:
+  - copy, reproduce, or re-publish any part of it
+  - modify, translate, or create derivative works
+  - distribute, redistribute, transmit, sell, or lend it
+  - use it for any purpose, commercial or non-commercial
+
+You may only view the pages in a web browser and view the repository as
+permitted by GitHub's Terms of Service. Forking on GitHub grants none of
+the rights above.
+
+----------------------------------------------------------------------
+제3자 구성요소 / Third-party components
+
+다음 파일은 각 원저작자의 라이선스를 따르며, 위 제한이 적용되지 않습니다.
+The following files remain under their original licenses and are not
+covered by the restrictions above.
+
+  - assets/vendor/oxigraph/         Oxigraph — MIT OR Apache-2.0
+  - assets/vendor/cytoscape.min.js  Cytoscape.js — MIT
+  - examples/cgmes/CIGRE_MV/        cimpy sample data — Apache-2.0
+                                    (examples/cgmes/LICENSE-cimpy-Apache-2.0)
+  - examples/twin/korea_outline.geojson
+                                    Natural Earth (public domain), via world-atlas (ISC)
+
+이전 버전 안내 / Earlier versions
+2026-11-03 이전 커밋은 MIT License로 공개되었으며, 해당 버전에 한해 MIT 조건이 유지됩니다.
+Commits before 2026-11-03 were published under the MIT License; those
+versions remain available under MIT terms.
