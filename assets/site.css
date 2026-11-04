@@ -417,9 +417,12 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .manifesto .sig{display:block;margin-top:10px;font-size:14px;font-weight:400;color:var(--muted);text-align:right}
 /* NEAT Snake (neat-snake.html) */
 .snake-wrap{grid-template-columns:1fr}
-@media (min-width:900px){ .snake-wrap{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start} }
-.snake-main{display:flex;flex-direction:column;gap:6px}
-#board{width:100%;max-width:640px;display:block;border-radius:12px;border:1px solid var(--line);margin:0 auto}
+@media (min-width:1000px){ .snake-wrap{grid-template-columns:auto minmax(280px,1fr);align-items:start} }
+.snake-main{display:flex;flex-direction:column;gap:6px;min-width:0}
+#board{width:min(100%,calc(100vh - 120px));min-width:min(100%,520px);display:block;border-radius:12px;border:1px solid var(--line);margin:0 auto}
+@media (min-width:1000px){ #board{width:min(800px,calc(100vh - 120px),calc(100vw - 380px))} .snake-main .meta{max-width:min(800px,calc(100vh - 120px))} }
+.snake-side{display:grid;gap:12px;align-content:start}
+.snake-side #net{height:340px}
+.snake-side #stats{grid-template-columns:repeat(2,1fr)}
 #popBoard{cursor:pointer}
-@media (min-width:760px){ .snake-side{grid-template-columns:1fr auto} }
 .ctrl button:disabled{opacity:.5;cursor:default}

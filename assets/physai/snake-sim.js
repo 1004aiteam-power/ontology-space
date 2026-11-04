@@ -9,8 +9,8 @@
 //  - 적합도: 먹이 × 100 + 생존 걸음 × 0.1, 먹이 없이 STARVE 걸음이면 굶어 죽음 (제자리 돌기 방지)
 //  - 먹이 위치는 시드 난수 → 같은 세대의 모든 개체가 같은 판(시드)으로 겨룬다
 
-export const GRID = { w: 20, h: 20 };
-export const SNAKE = { startLen: 3, starve: 100, maxSteps: 5000 };
+export const GRID = { w: 60, h: 60 };
+export const SNAKE = { startLen: 3, starve: 240, maxSteps: 20000 };   // starve: 먹이까지 가장 먼 거리(약 2×60)의 2배
 export const FIT = { food: 100, step: 0.1 };
 export const N_INPUTS = 7, N_OUTPUTS = 3;
 export const ACTIONS = ['straight', 'left', 'right'];

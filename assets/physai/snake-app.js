@@ -39,18 +39,17 @@ function fit(canvas, aspect) {
 // ---- 게임판 그리기 ------------------------------------------------------------------
 function drawBoard(ctx, s, x0, y0, size, opt = {}) {
   const c = size / GRID.w;
-  ctx.fillStyle = dark() ? '#161a1f' : '#f4f6f3';
-  ctx.fillRect(x0, y0, size, size);
+  if (!opt.transparent) { ctx.fillStyle = dark() ? '#161a1f' : '#f4f6f3'; ctx.fillRect(x0, y0, size, size); }
   if (opt.grid) {
     ctx.strokeStyle = dark() ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.05)'; ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let i = 1; i < GRID.w; i++) { ctx.moveTo(x0 + i * c, y0); ctx.lineTo(x0 + i * c, y0 + size); ctx.moveTo(x0, y0 + i * c); ctx.lineTo(x0 + size, y0 + i * c); }
+    for (let i = 5; i < GRID.w; i += 5) { ctx.moveTo(x0 + i * c, y0); ctx.lineTo(x0 + i * c, y0 + size); ctx.moveTo(x0, y0 + i * c); ctx.lineTo(x0 + size, y0 + i * c); }
     ctx.stroke();
   }
   if (!s) return;
   if (s.food) {
     ctx.fillStyle = FOOD;
-    ctx.beginPath(); ctx.arc(x0 + (s.food.x + 0.5) * c, y0 + (s.food.y + 0.5) * c, c * 0.38, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(x0 + (s.food.x + 0.5) * c, y0 + (s.food.y + 0.5) * c, Math.max(c * 0.45, opt.eyes ? 5 : 0), 0, 7); ctx.fill();
   }
   const color = opt.color || '#199e70';
   const pad = Math.max(0.5, c * 0.08);
@@ -87,14 +86,36 @@ function drawSensors(ctx, s, x0, y0, size) {
   });
 }
 
+// 큰 판: 게임 중인 모든 뱀을 한 판에 겹쳐 그림 (각자 자기 게임을 하므로 서로 부딪히지 않음)
+// 먹이는 그 뱀의 종 색 작은 점, 큰 화면 대표(선두 또는 클릭한 뱀)는 맨 위에 진하게 + 빨간 먹이·눈·센서
 function drawMain() {
   const { ctx, cw } = fit($('board'), 1);
-  const s = mode === 'replay' ? replay : current()?.game;
-  const color = mode === 'replay' ? '#199e70' : speciesColor(trainer.speciesOf.get(current()?.genome) ?? 0);
-  drawBoard(ctx, s, 0, 0, cw, { grid: true, eyes: true, color });
-  if (s) drawSensors(ctx, s, 0, 0, cw);
-  drawHud(ctx, cw, s);
-  drawNetInset(ctx, cw, s);
+  const focus = mode === 'replay' ? replay : current()?.game;
+  drawBoard(ctx, null, 0, 0, cw, { grid: true });
+  if (mode === 'train') {
+    const c = cw / GRID.w, sp = trainer.speciesOf;
+    for (const a of trainer.agents) {
+      const g = a.game;
+      if (!g || g === focus) continue;
+      const color = speciesColor(sp.get(a.genome) ?? 0);
+      if (g.food) { ctx.fillStyle = color; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.arc((g.food.x + 0.5) * c, (g.food.y + 0.5) * c, c * 0.22, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = color;
+      for (const p of g.body) ctx.fillRect(p.x * c + 1, p.y * c + 1, c - 2, c - 2);
+      ctx.globalAlpha = 0.9;                            // 머리는 조금 진하게
+      ctx.fillRect(g.head.x * c + 1, g.head.y * c + 1, c - 2, c - 2);
+    }
+    ctx.globalAlpha = 1;
+  }
+  if (focus) {
+    const color = mode === 'replay' ? '#199e70' : speciesColor(trainer.speciesOf.get(current()?.genome) ?? 0);
+    const c = cw / GRID.w;
+    ctx.fillStyle = 'rgba(250,204,21,.35)';            // 대표 뱀 강조 (노란 후광)
+    for (const p of focus.body) ctx.fillRect(p.x * c - 2, p.y * c - 2, c + 4, c + 4);
+    drawBoard(ctx, focus, 0, 0, cw, { eyes: true, color, transparent: true });
+    drawSensors(ctx, focus, 0, 0, cw);
+  }
+  drawHud(ctx, cw, focus);
 }
 
 function drawHud(ctx, cw, s) {
@@ -107,7 +128,7 @@ function drawHud(ctx, cw, s) {
     const a = current();
     if (!a) text = t({ ko: `세대 ${trainer.pop.generation + 1} 종료`, en: `Generation ${trainer.pop.generation + 1} done` });
     else {
-      const who = followed ? t({ ko: '선택한 개체', en: 'Selected' }) : t({ ko: '선두', en: 'Leader' });
+      const who = (followed ? t({ ko: '노란 뱀 = 선택한 개체', en: 'yellow = selected' }) : t({ ko: '노란 뱀 = 선두', en: 'yellow = leader' })) + t({ ko: ` · ${trainer.alive}마리 게임 중`, en: ` · ${trainer.alive} playing` });
       text = narrow
         ? t({ ko: `세대 ${trainer.pop.generation + 1} · 먹이 ${s.score} · 판 ${a.trial + 1}/${trainer.opts.trials}`, en: `Gen ${trainer.pop.generation + 1} · food ${s.score} · game ${a.trial + 1}/${trainer.opts.trials}` })
         : t({ ko: `세대 ${trainer.pop.generation + 1} · ${who} · 판 ${a.trial + 1}/${trainer.opts.trials} · 먹이 ${s.score} · 배고픔 ${s.hunger}/${SNAKE.starve}`,
@@ -134,7 +155,7 @@ let miniLayout = null;
 function drawPopulation() {
   const canvas = $('popBoard');
   const agents = trainer.agents, sp = trainer.speciesOf;
-  const w = canvas.clientWidth, cols = Math.max(6, Math.floor(w / 46)), cell = w / cols;
+  const w = canvas.clientWidth, cols = Math.max(8, Math.floor(w / 72)), cell = w / cols;
   const rows = Math.ceil(agents.length / cols);
   canvas.style.height = rows * cell + 'px';
   const { ctx, cw, ch } = fit(canvas);
@@ -227,18 +248,6 @@ function drawNet() {
   drawNetGraph(ctx, s.genome, s.genome.network(), { x: 0, y: 0, w: cw, h: ch }, false, s.lastAction);
   $('netInfo').textContent = t({ ko: `은닉 노드 ${s.genome.hidden}개 · 활성 연결 ${s.genome.enabledConns}개 — 파랑 = 양(+) 가중치, 주황 = 음(−) 가중치, 점선 = 꺼진 연결, 노란 테두리 = 이번 걸음에 고른 행동`,
                                  en: `${s.genome.hidden} hidden nodes · ${s.genome.enabledConns} active links — blue = positive weight, orange = negative, dashed = disabled, yellow ring = the action just chosen` });
-}
-
-function drawNetInset(ctx, cw, s) {
-  if (!s?.genome) return;
-  const w = cw < 420 ? Math.max(110, cw * 0.36) : Math.max(150, Math.min(210, cw * 0.32)), h = w * 0.66, m = 8;
-  const x = cw - w - m, y = cw - h - m;
-  ctx.fillStyle = dark() ? 'rgba(18,20,23,.85)' : 'rgba(255,255,255,.9)';
-  ctx.strokeStyle = css('--line'); ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.roundRect(x, y, w, h, 10); ctx.fill(); ctx.stroke();
-  ctx.font = '600 10px system-ui, sans-serif'; ctx.fillStyle = css('--muted'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.fillText(t({ ko: `신경망 · 은닉 ${s.genome.hidden} · 연결 ${s.genome.enabledConns}`, en: `Network · ${s.genome.hidden} hidden · ${s.genome.enabledConns} links` }), x + 8, y + 6);
-  drawNetGraph(ctx, s.genome, s.genome.network(), { x: x + 2, y: y + 16, w: w - 4, h: h - 18 }, true, s.lastAction);
 }
 
 // ---- 학습 곡선: 세대별 한 판 최고 먹이 수 / 평균 먹이 수 ---------------------------------
