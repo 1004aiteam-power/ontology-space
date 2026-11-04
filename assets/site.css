@@ -457,3 +457,4 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .legend-line i.sed{background:rgba(150,110,60,.35);border:1px dashed rgba(130,95,50,.7)}
 .formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;line-height:1.8;margin:0 0 10px}
 .eco-chart.tiny{height:130px}
+.eco-sub{margin:22px 0 10px;font-size:16px}
