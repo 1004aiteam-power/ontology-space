@@ -11,7 +11,7 @@
   const lvText = (l) => T(l, LV[l][1]);
   const fmt = (n) => Math.round(n).toLocaleString();
 
-  let D, sel = { kind: 'chain', id: 'TR_1' }, phase = 'after', mode = 'auto', hour = 18;
+  let D, sel = { kind: 'chain', id: 'TR_1' }, phase = 'normal', mode = 'auto', hour = 18;
   const POS = {};
 
   // ---- 그래프 배치 -------------------------------------------------------------------------------
@@ -35,6 +35,10 @@
   // 선택에 따라 각 구간·부하·연계의 상태를 정한다
   function state() {
     const st = { dead: new Set(), supply: {}, used: new Set(), opened: new Set(), affectedChain: new Set(), fault: null };
+    if (phase === 'normal') {                                        // 평상시: D/L #1 이 모든 구간을 공급하고, 연계 개폐기 T1~T4 는 모두 열림
+      D.zones.forEach(z => (st.supply[z.id] = 'DL1'));
+      return st;
+    }
     if (sel.kind === 'chain') {
       const i = D.chain.findIndex(n => n.id === sel.id);
       D.chain.forEach((n, j) => { if (j >= i) st.affectedChain.add(n.id); });
@@ -102,7 +106,7 @@
         <rect x="${p.x}" y="${p.y}" width="6" height="${p.h}" rx="3" class="lv ${lv}"/>
         <text x="${p.x + 14}" y="${p.y + 20}" class="t1">${esc(n.ko)}</text>
         <text x="${p.x + 14}" y="${p.y + 40}" class="t2">${a ? `${a.id} · ${T('위험도', 'risk')} ${a.base.risk}` : T('자산 미등록', 'no asset recorded')}</text>
-        ${isSel ? `<text x="${p.x + p.w - 10}" y="${p.y + 20}" text-anchor="end" class="fx">⚡</text>` : ''}</g>`;
+        ${isSel && phase !== 'normal' ? `<text x="${p.x + p.w - 10}" y="${p.y + 20}" text-anchor="end" class="fx">⚡</text>` : ''}</g>`;
     }
     // 노드: 구간
     for (const z of D.zones) {
@@ -111,7 +115,7 @@
         <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="8" style="${sup ? `stroke:${FCOL[sup]};stroke-width:2.5` : ''}"/>
         <text x="${p.x + 10}" y="${p.y + 19}" class="t1">${z.id} <tspan class="t2">${T(z.up + ' 뒤', 'after ' + z.up)}</tspan></text>
         <text x="${p.x + 10}" y="${p.y + 37}" class="t2">${fmt(z.cust)}${T('호', ' cust.')} · ${z.mw} MW${sup ? ` · <tspan style="fill:${FCOL[sup]};font-weight:600">${sup === 'C11' ? 'C #11' : sup.replace('DL', 'D/L #')}</tspan>` : ''}</text>
-        ${isSel ? `<text x="${p.x + p.w - 10}" y="${p.y + 19}" text-anchor="end" class="fx">⚡</text>` : ''}</g>`;
+        ${isSel && phase !== 'normal' ? `<text x="${p.x + p.w - 10}" y="${p.y + 19}" text-anchor="end" class="fx">⚡</text>` : ''}</g>`;
     }
     // 노드: 부하
     for (const l of D.loads) {
@@ -130,8 +134,9 @@
         <text x="${p.x + 10}" y="${p.y + 37}" class="t2${over ? ' warn' : ''}">${mw.toFixed(1)} / ${D.limitMW} MW</text></g>`;
     }
     $('imGraph').innerHTML = s + '</svg>';
-    $('imGraph').querySelectorAll('[data-chain]').forEach(g => bind(g, () => { sel = { kind: 'chain', id: g.dataset.chain }; render(); }));
-    $('imGraph').querySelectorAll('[data-zone]').forEach(g => bind(g, () => { sel = { kind: 'zone', id: g.dataset.zone }; render(); }));
+    const pick = (v) => { sel = v; if (phase === 'normal') phase = 'before'; render(); };   // 평상시에 누르면 그 설비에 고장을 낸다
+    $('imGraph').querySelectorAll('[data-chain]').forEach(g => bind(g, () => pick({ kind: 'chain', id: g.dataset.chain })));
+    $('imGraph').querySelectorAll('[data-zone]').forEach(g => bind(g, () => pick({ kind: 'zone', id: g.dataset.zone })));
     return st;
   }
   function bind(g, fn) { g.addEventListener('click', fn); g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }); }
@@ -158,6 +163,17 @@
     const crit = D.loads.filter(l => l.critical && st.dead.has(l.id));
     const nowMW = deadMW * D.curve[hour];
     let h = '';
+    if (phase === 'normal') {
+      const nb = Object.entries(D.neighbours);
+      box.innerHTML = `<h3>${T('평상시', 'Normal state')}</h3>
+        <div class="im-big ok">${fmt(D.dl1Cust)}<small>${T('호 공급 중', ' customers supplied')}</small></div>
+        <div class="muted">D/L #1 ${D.dl1MW} MW ${T('(피크 기준)', '(peak)')} · ${hour}${T('시', ' h')} ${(D.dl1MW * D.curve[hour]).toFixed(1)} MW</div>
+        <div class="im-ops"><b>${T('개폐 상태', 'Switch states')}</b>: CB_DL1 · S1~S6 ${T('닫힘', 'closed')} ●, ${T('연계 개폐기', 'tie switches')} T1~T4 ${T('열림', 'open')} ○<br>
+        <span class="muted">${T('배전선로는 방사형으로 운전하므로 연계 개폐기는 평상시 열어 둡니다. 고장이 나면 닫아서 이웃 선로에서 받습니다.', 'Distribution runs radially, so ties stay open in normal operation and close only to pick up load after a failure.')}</span></div>
+        <div class="im-ops"><b>${T('이웃 선로 여유', 'Neighbour headroom')}</b><br>${nb.map(([k, v]) => `${esc(k === 'C11' ? T('C변전소 #11', 'Sub. C #11') : v.ko)}: ${v.mw.toFixed(1)} / ${D.limitMW} MW (${T('여유', 'spare')} ${(D.limitMW - v.mw).toFixed(1)})`).join('<br>')}</div>
+        <p class="muted" style="margin-top:10px">${T('왼쪽 자산이나 가운데 구간을 누르면 그곳에 고장을 냅니다.', 'Click an asset on the left or a zone in the middle to fail it.')}</p>`;
+      return;
+    }
     if (sel.kind === 'chain') {
       const n = D.chain.find(x => x.id === sel.id), a = n.asset, s = D.sourceLoss;
       h += `<h3>⚡ ${esc(n.ko)} <small><code>cim:${n.cls}</code></small></h3>`;

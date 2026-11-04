@@ -119,9 +119,10 @@ td small{color:var(--muted)}
 
 <section id="trace" style="padding-top:12px">
   <h2><span lang="ko">고장을 내고 따라가 보기</span><span lang="en">Fail something and follow it</span></h2>
-  <p lang="ko">왼쪽 열의 <b>자산(기능 위치)</b>이나 가운데 열의 <b>배전선로 구간</b>을 누르세요. 빨간 선이 전기가 끊기는 경로, 빨간 점선 상자가 정전되는 곳입니다. "절체 후"를 누르면 연계 개폐기로 이웃 선로에서 받은 뒤의 모습이 됩니다.</p>
-  <p lang="en">Click an <b>asset (functional location)</b> on the left or a <b>feeder zone</b> in the middle. Red lines are where power is cut and red dashed boxes are what goes dark. "After transfer" shows the state once tie switches hand the load to neighbouring feeders.</p>
+  <p lang="ko">왼쪽 열의 <b>자산(기능 위치)</b>이나 가운데 열의 <b>배전선로 구간</b>을 누르세요. 빨간 선이 전기가 끊기는 경로, 빨간 점선 상자가 정전되는 곳입니다. "평상시"에는 D/L #1이 모든 구간에 전기를 보내고 연계 개폐기 T1~T4는 모두 열려 있습니다. "절체 후"를 누르면 연계 개폐기로 이웃 선로에서 받은 뒤의 모습이 됩니다.</p>
+  <p lang="en">Click an <b>asset (functional location)</b> on the left or a <b>feeder zone</b> in the middle. Red lines are where power is cut and red dashed boxes are what goes dark. In "Normal", feeder #1 supplies every zone and tie switches T1–T4 are all open. "After transfer" shows the state once tie switches hand the load to neighbouring feeders.</p>
   <div class="ctrl">
+    <button type="button" data-im-phase="normal"><span lang="ko">평상시</span><span lang="en">Normal</span></button>
     <button type="button" data-im-phase="before"><span lang="ko">고장 직후</span><span lang="en">Right after the failure</span></button>
     <button type="button" data-im-phase="after"><span lang="ko">절체 후</span><span lang="en">After transfer</span></button>
     <span class="seg-sep"></span>
