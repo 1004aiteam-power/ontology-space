@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/eco/eco-app.js?v=20261104f"></script>
+<script type="module" src="assets/eco/eco-app.js?v=20261104g"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -92,7 +92,7 @@
     <p class="meta legend-line">
       <span><i class="dot" style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">herbivore</span></span>
       <span><i class="dot" style="background:#d95926"></i><span lang="ko">육식 세포 (벌린 입 = 진행 방향, 가운데 점 = 소화 중)</span><span lang="en">carnivore (open mouth = heading, dark dot = digesting)</span></span>
-      <span><i class="dot ring"></i><span lang="ko">포낭 (휴면 중인 육식 · 깨어나면 그 자리에서 움직임)</span><span lang="en">cyst (dormant carnivore · wakes up in place)</span></span>
+      <span><i class="dot fade"></i><span lang="ko">빛이 바래며 사라짐 = 굶어 죽은 육식</span><span lang="en">fading out = a carnivore that starved</span></span>
       <span><i class="sq" style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">food</span></span>
       <span><i class="dot sed"></i><span lang="ko">피난처 (침전물)</span><span lang="en">refuge (sediment)</span></span>
     </p>
@@ -153,7 +153,7 @@
     <line x1="390" y1="300" x2="390" y2="210" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ah)"/>
     <!-- 굶주림 -->
     <text x="700" y="234" text-anchor="middle" class="muted" lang="ko">먹을 게 없으면 굶어 줄어듦</text><text x="700" y="234" text-anchor="middle" class="muted" lang="en">starve without prey</text>
-    <text x="700" y="250" text-anchor="middle" class="muted" lang="ko">(포낭으로 버팀)</text><text x="700" y="250" text-anchor="middle" class="muted" lang="en">(survive as cysts)</text>
+    <text x="700" y="250" text-anchor="middle" class="muted" lang="ko">(약 1,600틱 뒤 소멸)</text><text x="700" y="250" text-anchor="middle" class="muted" lang="en">(gone in ~1,600 ticks)</text>
   </svg>
   </div>
 
@@ -162,7 +162,7 @@
     <div class="card"><h4><span lang="ko">① 초식이 많다</span><span lang="en">① Many herbivores</span></h4><p lang="ko">먹잇감이 넘쳐 육식이 배불리 먹고 분열하기 시작합니다. 먹이는 초식에게 많이 먹혀 줄어듭니다.</p><p lang="en">Prey is everywhere, so carnivores eat well and start dividing. Food is grazed down.</p></div>
     <div class="card"><h4><span lang="ko">② 육식이 늘어난다</span><span lang="en">② Carnivores rise</span></h4><p lang="ko">육식이 분열하려면 초식을 3~4마리 먹어야 해서 <b>조금 늦게</b> 따라 늘어납니다.</p><p lang="en">A carnivore must eat 3–4 herbivores to divide, so it rises <b>a little later</b>.</p></div>
     <div class="card"><h4><span lang="ko">③ 초식이 줄어든다</span><span lang="en">③ Herbivores crash</span></h4><p lang="ko">늘어난 육식에게 잡아먹혀 초식이 급히 줄어듭니다. 피난처 안의 초식만 남습니다. 먹이는 다시 자라납니다.</p><p lang="en">The many carnivores eat them down; only those in refuges survive. Food grows back.</p></div>
-    <div class="card"><h4><span lang="ko">④ 육식이 굶는다</span><span lang="en">④ Carnivores starve</span></h4><p lang="ko">먹을 초식이 없어 육식이 포낭으로 버티다 줄어듭니다. 그러면 피난처의 초식이 다시 퍼져 ①로 돌아갑니다.</p><p lang="en">With no prey, carnivores encyst and die off. Refuge herbivores spread out again — back to ①.</p></div>
+    <div class="card"><h4><span lang="ko">④ 육식이 굶는다</span><span lang="en">④ Carnivores starve</span></h4><p lang="ko">먹을 초식이 없어 육식이 에너지를 다 쓰고 하나둘 소멸합니다. 그러면 피난처의 초식이 다시 퍼져 ①로 돌아갑니다.</p><p lang="en">With no prey, carnivores run out of energy and die one by one. Refuge herbivores spread out again — back to ①.</p></div>
   </div>
   <p lang="ko"><b>핵심은 시간차입니다.</b> 육식은 초식이 늘어난 <b>뒤에</b> 늘고, 초식이 줄어든 <b>뒤에</b> 줄어듭니다. 이 지연 때문에 두 그래프가 같은 모양이면서 조금씩 어긋나 보입니다. 위쪽 시계열 그래프에서 초록 봉우리 다음에 빨간 봉우리가 오는지 확인해 보세요.</p>
   <p lang="en"><b>The key is the delay.</b> Carnivores rise <b>after</b> herbivores rise and fall <b>after</b> they fall, so the two curves have similar shapes but are shifted. In the chart above, look for a red peak following each green one.</p>
@@ -175,9 +175,9 @@
     <tr><td><span lang="ko">계절 → 먹이</span><span lang="en">Seasons → food</span></td><td><span lang="ko">1년 = 6,000틱 (봄·여름·가을·겨울 각 1,500틱). 먹이 상한과 자라는 속도 = 기본값 × 계절 배율 (여름 한가운데 100% ↔ 겨울 한가운데 20%)</span><span lang="en">One year = 6,000 ticks (1,500 per season). Food cap and growth = default × a seasonal factor (100% mid-summer ↔ 20% mid-winter)</span></td><td><span lang="ko">여름에 먹이가 넘쳐 <b>가을에 초식이 번성</b>하고, 겨울에 먹이가 줄어 초식이 굶음 → 계절 주기 위에 포식자–피식자 주기가 겹침</span><span lang="en">Summer food surplus → <b>herbivore boom in autumn</b>; winter shortage starves them — the seasonal rhythm overlays the predator–prey cycle</span></td></tr>
     <tr><td><span lang="ko">초식 → 육식</span><span lang="en">Herbivores → carnivores</span></td><td><span lang="ko">잡아먹으면 에너지 = 초식 에너지 × 0.6 + 20 (보통 50~80). 육식은 280에서 분열, 먹은 뒤 150틱 동안 소화</span><span lang="en">Eating gives 0.6 × prey energy + 20 (usually 50–80). Divides at 280; digests for 150 ticks after a meal</span></td><td><span lang="ko">분열까지 3~4마리 + 소화 시간이 필요 → 육식은 초식보다 <b>늦게</b> 늘어남 (주기의 원인)</span><span lang="en">Needs 3–4 prey plus digestion time to divide — carnivores rise <b>later</b> (the source of the cycle)</span></td></tr>
     <tr><td><span lang="ko">육식 → 초식</span><span lang="en">Carnivores → herbivores</span></td><td><span lang="ko">육식은 가장 가까운 초식을 쫓고 가까우면 돌진. 초식은 육식을 보면 도망</span><span lang="en">Carnivores chase the nearest herbivore and lunge; herbivores flee when they see one</span></td><td><span lang="ko">육식이 많을수록 초식이 빨리 줄어듦</span><span lang="en">More carnivores, faster herbivore decline</span></td></tr>
-    <tr><td><span lang="ko">에너지 소모</span><span lang="en">Energy use</span></td><td><span lang="ko">틱마다 기본 0.05 + 속도² × 비용 + 감지 거리 × 비용. 0이 되면 죽음</span><span lang="en">Each tick: 0.05 + speed² × cost + sensing range × cost. Zero means death</span></td><td><span lang="ko">먹지 못하면 줄어듦. 초식은 먹이 1개로 약 80틱, 육식은 초식 1마리로 약 250틱 버팀</span><span lang="en">No food, no survival: one food lasts a herbivore ~80 ticks; one prey lasts a carnivore ~250</span></td></tr>
+    <tr><td><span lang="ko">에너지 소모</span><span lang="en">Energy use</span></td><td><span lang="ko">틱마다 기본 0.05 + 속도² × 비용 + 감지 거리 × 비용. 0이 되면 죽음</span><span lang="en">Each tick: 0.05 + speed² × cost + sensing range × cost. Zero means death</span></td><td><span lang="ko">먹지 못하면 줄어듦. 초식은 먹이 1개로 약 80틱, 육식은 초식 1마리로 약 350틱 버팀</span><span lang="en">No food, no survival: one food lasts a herbivore ~80 ticks; one prey lasts a carnivore ~350</span></td></tr>
     <tr><td><span lang="ko">피난처</span><span lang="en">Refuges</span></td><td><span lang="ko">육식은 피난처 안의 초식을 보지도 잡지도 못함</span><span lang="en">Carnivores cannot see or catch herbivores inside</span></td><td><span lang="ko">초식이 0이 되지 않게 지켜 줌 → 육식이 줄면 여기서 다시 퍼짐</span><span lang="en">Keeps herbivores from hitting zero, so they can spread again</span></td></tr>
-    <tr><td><span lang="ko">포낭</span><span lang="en">Cysts</span></td><td><span lang="ko">에너지 50 아래 + 먹잇감 없음 → 멈추고 틱당 0.01만 소모</span><span lang="en">Energy below 50 and no prey → stop and use only 0.01 per tick</span></td><td><span lang="ko">육식이 0이 되지 않게 버팀 → 초식이 돌아오면 깨어나 다시 늘어남</span><span lang="en">Keeps carnivores from hitting zero, ready to wake when prey returns</span></td></tr>
+    <tr><td><span lang="ko">굶주림</span><span lang="en">Starvation</span></td><td><span lang="ko">먹잇감이 안 보이면 육식은 속도 30%로 천천히 떠돌며 에너지를 아끼지만, 멈추지는 않음. 에너지 0 → 소멸</span><span lang="en">With no prey in sight a carnivore drifts at 30% speed to save energy, but never stops. Energy 0 → it dies</span></td><td><span lang="ko">초식이 사라지면 육식도 약 1,600틱 안에 줄어듦 → 육식이 줄어야 초식이 다시 늘 수 있음</span><span lang="en">Once prey is gone, carnivores die off within ~1,600 ticks — which lets herbivores recover</span></td></tr>
   </table></div>
   <p class="meta" lang="ko">에너지 숫자는 기본값 기준의 대략적인 값입니다. 속도와 감지 거리가 진화하면서 조금씩 달라집니다.</p>
   <p class="meta" lang="en">Energy figures are rough values at the defaults; they shift as speed and sensing range evolve.</p>
@@ -188,7 +188,7 @@
     <tr><td><span lang="ko">먹이</span><span lang="en">Food</span></td><td><span lang="ko">빈 곳에 조금씩 자라고, 많아질수록 덜 자람. <b>계절</b>에 따라 상한이 여름 700개 ↔ 겨울 140개로 바뀌고, 겨울에 상한을 넘는 먹이는 시듦. 피난처에는 계절과 관계없이 조금씩 자람</span><span lang="en">Grows a little each tick, slower as it fills up. With <b>seasons</b> the cap swings from 700 in summer to 140 in winter, and food above the cap withers. Refuges get a small steady supply in every season</span></td></tr>
     <tr><td><span lang="ko">초식 세포</span><span lang="en">Herbivore</span></td><td><span lang="ko">가장 가까운 먹이로 가서 먹음. 육식이 가까이 보이면 반대로 도망. 피난처 안에서는 천천히 움직이고 대체로 밖으로 나가지 않음</span><span lang="en">Heads for the nearest food; flees when a carnivore is close. Inside a refuge it slows down and mostly stays</span></td></tr>
     <tr><td><span lang="ko">육식 세포</span><span lang="en">Carnivore</span></td><td><span lang="ko">가장 가까운 초식을 쫓고, 아주 가까우면 순간 돌진. 먹은 뒤에는 한동안 소화하며 쉼. 피난처 안의 초식은 보지도 잡지도 못함</span><span lang="en">Chases the nearest herbivore and lunges when close; rests to digest after a meal. Cannot see or catch prey inside a refuge</span></td></tr>
-    <tr><td><span lang="ko">포낭</span><span lang="en">Cyst</span></td><td><span lang="ko">배고픈데 먹잇감이 없으면 육식 세포가 껍질을 만들고 멈춰 에너지를 거의 안 씀. 먹잇감이 가까이 오면 깨어남</span><span lang="en">A hungry carnivore with no prey in sight encysts: it stops and uses almost no energy, waking when prey comes near</span></td></tr>
+    <tr><td><span lang="ko">굶주림</span><span lang="en">Starvation</span></td><td><span lang="ko">먹잇감을 못 찾은 육식은 천천히 떠돌며 버티다가, 에너지가 바닥나면 빛이 바래며 사라짐</span><span lang="en">A carnivore that finds no prey drifts slowly, then fades away when its energy runs out</span></td></tr>
     <tr><td><span lang="ko">에너지</span><span lang="en">Energy</span></td><td><span lang="ko">기본 소모 + 속도² + 감지 거리에 비례해 줄어듦. 기준을 넘으면 둘로 분열, 0이면 죽음</span><span lang="en">Drains with a base cost + speed² + sensing range. Above a threshold the cell divides; at 0 it dies</span></td></tr>
     <tr><td><span lang="ko">진화</span><span lang="en">Evolution</span></td><td><span lang="ko">분열한 자식은 부모의 속도·감지 거리를 물려받되 “돌연변이 크기”만큼 무작위로 조금 다름</span><span lang="en">Children inherit their parent's speed and sensing range, randomly changed by the “mutation size”</span></td></tr>
   </table></div>
@@ -198,11 +198,11 @@
   <p lang="en">The Russian ecologist <b>Georgii Gause</b> put the predatory protist <b>Didinium</b> and its prey <b>Paramecium</b> in a test tube together. Instead of coexisting, both went extinct: Didinium ate every Paramecium, then starved. Coexistence happened only under two conditions.</p>
   <div class="grid">
     <div class="card"><h4><span lang="ko">① 피난처</span><span lang="en">① Refuges</span></h4><p lang="ko">바닥에 침전물을 깔아 짚신벌레가 숨을 수 있게 하자, 살아남은 짚신벌레가 다시 번식했습니다. → 시나리오 “피난처 있음”</p><p lang="en">With sediment on the bottom for Paramecium to hide in, survivors repopulated the tube. → scenario “With refuges”</p></div>
-    <div class="card"><h4><span lang="ko">② 이주</span><span lang="en">② Immigration</span></h4><p lang="ko">며칠마다 두 종을 조금씩 새로 넣어 주자, 번성과 멸종 직전을 오가는 주기가 이어졌습니다. 이 시뮬레이션에서는 <b>초식만</b> 바깥에서 들어오고, 육식은 포낭으로 버티다 깨어나 분열로만 늘어납니다. → 시나리오 “피난처 없음 + 초식 이주”</p><p lang="en">Adding a few of each species every few days kept a boom-and-bust cycle going. Here <b>only herbivores</b> arrive from outside; carnivores survive as cysts and grow only by dividing. → scenario “No refuges + herbivore immigration”</p></div>
-    <div class="card"><h4><span lang="ko">③ 아무것도 없으면</span><span lang="en">③ Neither</span></h4><p lang="ko">초식이 수천 틱 안에 사라지고 육식은 포낭으로 버티다 결국 사라집니다. → 시나리오 “피난처 없음”</p><p lang="en">Herbivores vanish within a few thousand ticks; carnivores hang on as cysts, then die out. → scenario “No refuges”</p></div>
+    <div class="card"><h4><span lang="ko">② 이주</span><span lang="en">② Immigration</span></h4><p lang="ko">며칠마다 두 종을 조금씩 새로 넣어 주자, 번성과 멸종 직전을 오가는 주기가 이어졌습니다. 이 시뮬레이션에서는 <b>초식만</b> 바깥에서 들어오고, 육식은 들어온 초식을 잡아먹으며 분열로만 늘어납니다. → 시나리오 “피난처 없음 + 초식 이주”</p><p lang="en">Adding a few of each species every few days kept a boom-and-bust cycle going. Here <b>only herbivores</b> arrive from outside; carnivores feed on the newcomers and grow only by dividing. → scenario “No refuges + herbivore immigration”</p></div>
+    <div class="card"><h4><span lang="ko">③ 아무것도 없으면</span><span lang="en">③ Neither</span></h4><p lang="ko">초식이 수천 틱 안에 사라지고, 먹이를 잃은 육식도 굶어 차례로 사라집니다. → 시나리오 “피난처 없음”</p><p lang="en">Herbivores vanish within a few thousand ticks, then the carnivores starve one by one. → scenario “No refuges”</p></div>
   </div>
-  <p class="meta" lang="ko">이 시뮬레이션을 만들면서도 똑같은 일이 일어났습니다. 수치를 아무리 조정해도 피난처 없이는 한쪽이 멸종했고, 피난처를 넣고 나서야 4만 틱 동안 공존했습니다.</p>
-  <p class="meta" lang="en">The same thing happened while building this simulation: no amount of parameter tuning gave lasting coexistence without refuges; with refuges it ran for 40,000 ticks.</p>
+  <p class="meta" lang="ko">이 시뮬레이션을 만들면서도 똑같은 일이 일어났습니다. 수치를 아무리 조정해도 피난처 없이는 한쪽이 멸종했고, 피난처를 넣고 나서야 12만 틱 동안 공존했습니다.</p>
+  <p class="meta" lang="en">The same thing happened while building this simulation: no amount of parameter tuning gave lasting coexistence without refuges; with refuges it ran for 120,000 ticks.</p>
 
   <h3><span lang="ko">수식으로 보면: 로트카–볼테라 방정식</span><span lang="en">The equations: Lotka–Volterra</span></h3>
   <div class="panel">

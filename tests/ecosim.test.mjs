@@ -88,9 +88,9 @@ console.log('✓ seeded runs are reproducible');
 }
 console.log('✓ carnivores appear only by division (no spontaneous spawning, no carnivore immigration)');
 
-// 7) 계절: 여름 한가운데 배율 1, 겨울 한가운데 1 − amp, 먹이가 계절 따라 크게 오르내림
+// 7) 계절: 여름 한가운데 배율 1, 겨울 한가운데 1 − amp, 먹이 공급이 계절 따라 크게 오르내림 (세포 없는 접시로 확인)
 {
-  const e = new Ecosystem({ seed: 4 });
+  const e = new Ecosystem({ seed: 4, herb: { init: 0 }, carn: { init: 0 } });
   const Y = e.cfg.season.year;
   assert.ok(Math.abs(e.seasonFactor(Y * 0.375) - 1) < 1e-9);
   assert.ok(Math.abs(e.seasonFactor(Y * 0.875) - (1 - e.cfg.season.amp)) < 1e-9);
@@ -98,6 +98,22 @@ console.log('✓ carnivores appear only by division (no spontaneous spawning, no
   const summer = [], winter = [];
   for (let t = 0; t < Y * 3; t++) { e.step(); const s = e.season(); if (s === 1) summer.push(e.food.length); if (s === 3) winter.push(e.food.length); }
   const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
-  assert.ok(avg(summer) > avg(winter) * 1.5, `summer food ${avg(summer).toFixed(0)} vs winter ${avg(winter).toFixed(0)}`);
+  assert.ok(avg(summer) > avg(winter) * 2, `summer food ${avg(summer).toFixed(0)} vs winter ${avg(winter).toFixed(0)}`);
   console.log(`✓ seasons: average food summer ${avg(summer).toFixed(0)} vs winter ${avg(winter).toFixed(0)}`);
+}
+
+// 8) 먹지 못한 육식은 멈추지 않고 굶어 소멸한다
+{
+  const e = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0 }, refuge: { on: false }, season: { on: false } });
+  const c = e.spawn('carn', 300, 300); c.energy = 130; c.age = 0;
+  let t = 0, moved = 0, last = { x: c.x, y: c.y };
+  while (e.counts().carn > 0 && t < 5000) {
+    e.step(); t++;
+    if (c.x !== last.x || c.y !== last.y) moved++;
+    last = { x: c.x, y: c.y };
+  }
+  assert.equal(e.counts().carn, 0, 'starving carnivore dies');
+  assert.ok(moved >= t - 1, 'it keeps moving until it dies (no dormancy)');
+  assert.ok(e.events.some(v => v.type === 'die' && v.cause === 'starve'), 'cause is starvation');
+  console.log(`✓ a carnivore with no prey keeps moving and starves to death after ${t} ticks`);
 }

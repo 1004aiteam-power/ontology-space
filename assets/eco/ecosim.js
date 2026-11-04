@@ -20,14 +20,12 @@ export const DEFAULTS = {
   },
   carn: {
     init: 14, speed: 2.0, sense: 85, radius: 6,
-    metab: 0.05, moveCost: 0.03, senseCost: 0.0006,
+    metab: 0.02, moveCost: 0.025, senseCost: 0.0006,
     split: 280, birth: 130, maxAge: 6000, turn: 0.3,
     gain: 0.6, bonus: 20,                                       // 잡아먹으면 = gain × 먹이 세포 에너지 + bonus
     digest: 150,                                                // 소화 시간: 먹은 뒤 이 틱 동안 사냥하지 않고 천천히 떠돎
     lunge: 22, lungeBoost: 1.7,                                 // 먹잇감이 lunge 안이면 순간 속도 × lungeBoost
-    idle: 0.5,                                                  // 먹잇감이 안 보이면 속도 × idle 로 천천히
-    cystBelow: 50, cystCost: 0.01                               // 포낭: 에너지가 cystBelow 아래인데 먹잇감이 없으면 멈추고 거의 에너지를 안 씀.
-                                                                //       감지 거리 안에 먹잇감이 오면 깨어남 (실제 원생동물의 휴면 전략)
+    idle: 0.3                                                   // 먹잇감이 안 보이면 속도 × idle 로 천천히 (에너지 절약). 그래도 못 먹으면 굶어 죽음
   },
   herb2: { fear: 0.6 },                                         // 초식은 감지 거리 × fear 안의 육식만 알아채고 도망
   mutation: 0.06,                                              // 분열 때 형질 변화 폭 (표준편차, 비율)
@@ -122,7 +120,7 @@ export class Ecosystem {
     const c = {
       id: this.nextId++, kind, x, y, a: this.rand() * TAU,
       speed: k.speed * (0.9 + 0.2 * this.rand()), sense: k.sense * (0.9 + 0.2 * this.rand()),
-      energy: k.birth * (0.8 + 0.4 * this.rand()), age: (this.rand() * k.maxAge * 0.5) | 0, gen: 0, dead: false, full: 0, cyst: false
+      energy: k.birth * (0.8 + 0.4 * this.rand()), age: (this.rand() * k.maxAge * 0.5) | 0, gen: 0, dead: false, full: 0
     };
     this.cells.push(c);
     return c;
@@ -137,7 +135,7 @@ export class Ecosystem {
       id: this.nextId++, kind: c.kind, x: c.x, y: c.y, a: this.rand() * TAU,
       speed: clamp(c.speed * (1 + this.gauss() * m), L.speed[0], L.speed[1]),
       sense: clamp(c.sense * (1 + this.gauss() * m), L.sense[0], L.sense[1]),
-      energy: c.energy / 2, age: 0, gen: c.gen + 1, dead: false, full: 0, cyst: false
+      energy: c.energy / 2, age: 0, gen: c.gen + 1, dead: false, full: 0
     };
     c.energy /= 2; c.age = 0;
     this.cells.push(child);
@@ -203,14 +201,6 @@ export class Ecosystem {
         }
       }
       let v = c.safe ? c.speed * cfg.refuge.slow : c.speed;
-      if (c.cyst) {                                            // 포낭: 움직이지 않고 먹잇감이 오기를 기다림 (나이도 멈춤)
-        if (this.herbGrid.nearest(c.x, c.y, c.sense, hidden)) { c.cyst = false; this.events.push({ type: 'wake', x: c.x, y: c.y, kind: c.kind }); }
-        else {
-          c.energy -= k.cystCost;
-          if (c.energy <= 0) { c.dead = true; this.events.push({ type: 'die', x: c.x, y: c.y, kind: c.kind, cause: 'cyst' }); }
-          continue;
-        }
-      }
       if (c.kind === 'carn') {
         if (c.full > 0) { c.full--; v *= 0.5; }                // 소화 중: 사냥 안 함, 느리게
         else {
@@ -219,8 +209,7 @@ export class Ecosystem {
             this.steer(c, prey.x, prey.y, false, k.turn);
             const dx = wrapD(prey.x - c.x, WORLD.w), dy = wrapD(prey.y - c.y, WORLD.h);
             if (dx * dx + dy * dy < k.lunge * k.lunge) v *= k.lungeBoost;   // 돌진
-          } else if (c.energy < k.cystBelow) { c.cyst = true; this.events.push({ type: 'cyst', x: c.x, y: c.y, kind: c.kind }); continue; }
-          else v *= k.idle;
+          } else v *= k.idle;
         }
       }
       const nx = (c.x + Math.cos(c.a) * v + WORLD.w) % WORLD.w, ny = (c.y + Math.sin(c.a) * v + WORLD.h) % WORLD.h;
@@ -263,9 +252,9 @@ export class Ecosystem {
   season(t = this.t) { return this.cfg.season.on ? Math.floor(((t % this.cfg.season.year) / this.cfg.season.year) * 4) : -1; }   // 0 봄 1 여름 2 가을 3 겨울
 
   counts() {
-    let herb = 0, carn = 0, cyst = 0;
-    for (const c of this.cells) { c.kind === 'herb' ? herb++ : carn++; if (c.cyst) cyst++; }
-    return { food: this.food.length, herb, carn, cyst };
+    let herb = 0, carn = 0;
+    for (const c of this.cells) c.kind === 'herb' ? herb++ : carn++;
+    return { food: this.food.length, herb, carn };
   }
   // 종별 평균 형질
   traits(kind) {

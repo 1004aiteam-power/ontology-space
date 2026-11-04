@@ -459,3 +459,4 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .eco-chart.tiny{height:130px}
 .eco-sub{margin:22px 0 10px;font-size:16px}
 .season-key i.sk{width:16px;height:10px;border-radius:2px;background:linear-gradient(90deg,rgba(25,158,112,.25) 25%,rgba(201,133,0,.3) 25% 50%,rgba(217,89,38,.25) 50% 75%,rgba(57,135,229,.3) 75%)}
+.legend-line i.fade{background:radial-gradient(circle,rgba(217,89,38,.6) 40%,transparent 41%);border:1px solid var(--muted)}

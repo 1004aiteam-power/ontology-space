@@ -65,11 +65,6 @@ function drawDish() {
     if (c.kind === 'herb') {
       ctx.fillStyle = COL.herb; ctx.beginPath(); ctx.arc(c.x, c.y, 4, 0, 7); ctx.fill();
       ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(c.x - 1, c.y - 1, 1.3, 0, 7); ctx.fill();   // 핵
-    } else if (c.cyst) {
-      // 포낭: 회색 껍질 안에 웅크린 육식 (깨어나면 이 자리에서 다시 움직임)
-      ctx.fillStyle = dark() ? '#3a4148' : '#d5d9dd'; ctx.beginPath(); ctx.arc(c.x, c.y, 6.5, 0, 7); ctx.fill();
-      ctx.strokeStyle = dark() ? '#9aa3ab' : '#6b737b'; ctx.lineWidth = 1.6; ctx.stroke();
-      ctx.fillStyle = COL.carn; ctx.globalAlpha = 0.75; ctx.beginPath(); ctx.arc(c.x, c.y, 3.4, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
     } else {
       // 입이 진행 방향으로 벌어진 원
       ctx.fillStyle = COL.carn; ctx.beginPath();
@@ -79,13 +74,13 @@ function drawDish() {
   }
   // 효과: 분열 = 퍼지는 고리, 포식 = 붉은 번쩍임
   for (const e of effects) {
-    const p = 1 - e.life / 18;
+    const p = 1 - e.life / (e.type === 'die' ? 40 : 18);
     ctx.globalAlpha = Math.max(0, 1 - p);
     if (e.type === 'split') { ctx.globalAlpha *= 0.6; ctx.strokeStyle = COL[e.kind]; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(e.x, e.y, 5 + p * 12, 0, 7); ctx.stroke(); }
     else if (e.type === 'eat') { ctx.fillStyle = COL.carn; ctx.beginPath(); ctx.arc(e.x, e.y, 3 + p * 9, 0, 7); ctx.fill(); }
-    else if (e.type === 'wake') {                       // 포낭이 터지며 깨어남: 회색 조각이 퍼짐
-      ctx.strokeStyle = dark() ? '#9aa3ab' : '#6b737b'; ctx.lineWidth = 2; ctx.setLineDash([3, 4]);
-      ctx.beginPath(); ctx.arc(e.x, e.y, 7 + p * 10, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    else if (e.type === 'die' && e.kind === 'carn') {   // 굶어 죽은 육식: 빛이 바래며 줄어들어 사라짐
+      ctx.globalAlpha *= 0.8; ctx.fillStyle = COL.carn; ctx.beginPath(); ctx.arc(e.x, e.y, 6.5 * (1 - p), 0, 7); ctx.fill();
+      ctx.globalAlpha /= 0.8; ctx.strokeStyle = dark() ? '#9aa3ab' : '#6b737b'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(e.x, e.y, 6.5 + p * 4, 0, 7); ctx.stroke();
     }
     else if (e.type === 'arrive') { ctx.strokeStyle = css('--text'); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(e.x, e.y, 14 - p * 9, 0, 7); ctx.stroke(); }
   }
@@ -96,7 +91,7 @@ function drawDish() {
   const sn = eco.season() >= 0 ? t(SEASON_NAME[eco.season()]) + ' · ' : '';
   const text = sn + (narrow
     ? t({ ko: `${eco.t.toLocaleString()}틱 · 초식 ${c.herb} · 육식 ${c.carn}`, en: `t ${eco.t.toLocaleString()} · herb ${c.herb} · carn ${c.carn}` })
-    : t({ ko: `${eco.t.toLocaleString()}틱 · 먹이 ${c.food} · 초식 ${c.herb} · 육식 ${c.carn} (포낭 ${c.cyst})`, en: `t ${eco.t.toLocaleString()} · food ${c.food} · herbivores ${c.herb} · carnivores ${c.carn} (cysts ${c.cyst})` }));
+    : t({ ko: `${eco.t.toLocaleString()}틱 · 먹이 ${c.food} · 초식 ${c.herb} · 육식 ${c.carn}`, en: `t ${eco.t.toLocaleString()} · food ${c.food} · herbivores ${c.herb} · carnivores ${c.carn}` }));
   ctx.font = `600 ${narrow ? 11 : 13}px system-ui, sans-serif`;
   const w = ctx.measureText(text).width + 20;
   ctx.fillStyle = dark() ? 'rgba(18,20,23,.82)' : 'rgba(255,255,255,.9)';
@@ -208,7 +203,7 @@ function stats() {
   const cells = [
     [t(NAME.food), c.food, COL.food],
     [t(NAME.herb), `${c.herb}${ext(c.herb)}`, COL.herb, eco.cfg.refuge.on ? t({ ko: `피난처 안 ${safe}`, en: `${safe} in refuges` }) : ''],
-    [t(NAME.carn), `${c.carn}${ext(c.carn)}`, COL.carn, t({ ko: `포낭 ${c.cyst}`, en: `${c.cyst} cysts` })],
+    [t(NAME.carn), `${c.carn}${ext(c.carn)}`, COL.carn, t({ ko: `소화 중 ${eco.cells.filter(x => x.full > 0).length}`, en: `${eco.cells.filter(x => x.full > 0).length} digesting` })],
     [t({ ko: '초식 평균 속도 · 감지', en: 'Herb speed · sense' }), `${f2(h.speed)} · ${f0(h.sense)}`, null, t({ ko: `최대 ${h.maxGen}세대`, en: `gen ${h.maxGen}` })],
     [t({ ko: '육식 평균 속도 · 감지', en: 'Carn speed · sense' }), `${f2(k.speed)} · ${f0(k.sense)}`, null, t({ ko: `최대 ${k.maxGen}세대`, en: `gen ${k.maxGen}` })],
     [t({ ko: '계절 · 경과 시간', en: 'Season · elapsed' }), `${eco.season() >= 0 ? t(SEASON_NAME[eco.season()]) + ' · ' : ''}${eco.t.toLocaleString()}${t({ ko: '틱', en: '' })}`, null,
@@ -236,7 +231,7 @@ function frame(now) {
 function tick() {
   eco.step();
   if (SPEEDS[speedIdx] === 'max' || effects.length > 300) return;     // 빠를 때는 효과 생략
-  for (const e of eco.events) if (e.type === 'split' || e.type === 'eat' || e.type === 'arrive' || e.type === 'wake') effects.push({ ...e, life: 18 });
+  for (const e of eco.events) if (e.type === 'split' || e.type === 'eat' || e.type === 'arrive' || (e.type === 'die' && e.kind === 'carn')) effects.push({ ...e, life: e.type === 'die' ? 40 : 18 });
 }
 
 // ---- 조작부 ----------------------------------------------------------------------
