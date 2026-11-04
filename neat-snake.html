@@ -86,8 +86,8 @@
         <button id="replayAgainBtn" class="primary">↻ <span lang="ko">다시 보기</span><span lang="en">Replay again</span></button>
         <button id="replayBackBtn"><span lang="ko">학습으로 돌아가기</span><span lang="en">Back to training</span></button>
       </div>
-      <p class="meta" lang="ko">60×60 판에 <b>게임 중인 뱀을 모두 겹쳐</b> 그립니다. 뱀마다 자기 게임을 하므로 서로 부딪히지 않고, 색은 종, 같은 색 작은 점은 그 뱀의 먹이입니다. <b>노란 테두리 뱀</b>이 지금 가장 잘하는 뱀(또는 아래에서 고른 뱀)이고, 빨간 점이 그 뱀의 먹이, 머리 주변 <b>✕</b>는 신경망이 “위험”으로 느끼는 칸입니다.</p>
-      <p class="meta" lang="en">All snakes still playing are <b>drawn on one 60×60 board</b>. Each plays its own game, so they never collide; colour = species and a small dot of the same colour is that snake's food. The <b>yellow-outlined snake</b> is the best one right now (or the one you picked below); the red dot is its food and <b>✕</b> marks cells its network senses as deadly.</p>
+      <p class="meta" lang="ko">60×60 판에 게임 중인 뱀 중 <b>상위 3마리를 겹쳐</b> 그립니다(학습은 150마리 전체로 합니다). 뱀마다 자기 게임을 하므로 서로 부딪히지 않고, 색은 종, 같은 색 점은 그 뱀의 먹이입니다. <b>노란 테두리 뱀</b>이 지금 가장 잘하는 뱀(또는 아래에서 고른 뱀)이고, 빨간 점이 그 뱀의 먹이, 머리 주변 <b>✕</b>는 신경망이 “위험”으로 느끼는 칸입니다.</p>
+      <p class="meta" lang="en">The <b>top 3 snakes</b> still playing are drawn together on one 60×60 board (training still uses all 150). Each plays its own game, so they never collide; colour = species and a dot of the same colour is that snake's food. The <b>yellow-outlined snake</b> is the best one right now (or the one you picked below); the red dot is its food and <b>✕</b> marks cells its network senses as deadly.</p>
     </div>
     <div class="snake-side">
       <div class="panel">
@@ -121,7 +121,7 @@
   <div class="tbl"><table>
     <tr><th><span lang="ko">구분</span><span lang="en">Part</span></th><th><span lang="ko">내용</span><span lang="en">Details</span></th></tr>
     <tr><td><span lang="ko">입력 7개</span><span lang="en">7 inputs</span></td><td><span lang="ko">위험(앞·왼쪽·오른쪽 칸이 벽이나 몸인가) 3개 + 먹이 방향(앞·뒤·왼쪽·오른쪽) 4개. 모두 0 또는 1, <b>머리가 향한 방향 기준</b></span><span lang="en">Danger (is the cell ahead / left / right a wall or body) ×3 + food direction (ahead / behind / left / right) ×4. All 0 or 1, <b>relative to the heading</b></span></td></tr>
-    <tr><td><span lang="ko">출력 3개</span><span lang="en">3 outputs</span></td><td><span lang="ko">직진 · 좌회전 · 우회전 중 값이 가장 큰 것을 고름 (자기 몸 쪽으로 180° 꺾는 행동은 아예 없음)</span><span lang="en">Straight · left · right — the largest wins (a 180° turn into its own body is simply not an option)</span></td></tr>
+    <tr><td><span lang="ko">출력 3개</span><span lang="en">3 outputs</span></td><td><span lang="ko">좌회전 · 직진 · 우회전 중 값이 가장 큰 것을 고름 (자기 몸 쪽으로 180° 꺾는 행동은 아예 없음)</span><span lang="en">Left · straight · right — the largest wins (a 180° turn into its own body is simply not an option)</span></td></tr>
     <tr><td><span lang="ko">끝나는 조건</span><span lang="en">Game over</span></td><td><span lang="ko">벽·몸에 부딪힘, 먹이 없이 240걸음(굶주림) — 제자리를 빙빙 돌며 버티는 전략을 막습니다</span><span lang="en">Hitting a wall or itself, or 240 steps without food (starvation) — stops the “circle forever” strategy</span></td></tr>
     <tr><td><span lang="ko">공정한 비교</span><span lang="en">Fair comparison</span></td><td><span lang="ko">같은 세대는 모두 같은 시드(먹이 순서)로 경기, 세대마다 시드가 바뀌어 특정 판을 외우지 못함</span><span lang="en">Everyone in a generation plays the same seeds (food order); seeds change every generation so no board can be memorised</span></td></tr>
   </table></div>

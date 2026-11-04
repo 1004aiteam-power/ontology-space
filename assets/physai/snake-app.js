@@ -87,19 +87,27 @@ function drawSensors(ctx, s, x0, y0, size) {
 }
 
 // 큰 판: 게임 중인 모든 뱀을 한 판에 겹쳐 그림 (각자 자기 게임을 하므로 서로 부딪히지 않음)
-// 먹이는 그 뱀의 종 색 작은 점, 큰 화면 대표(선두 또는 클릭한 뱀)는 맨 위에 진하게 + 빨간 먹이·눈·센서
+// 먹이는 그 뱀의 종 색 점, 큰 화면 대표(선두 또는 클릭한 뱀)는 맨 위에 진하게 + 빨간 먹이·눈·센서
+const SHOW_N = 3;           // 큰 판에 그리는 뱀 수 (학습은 개체군 전체로)
+// 큰 판에 보여줄 뱀: 대표 + 나머지는 점수 순 상위
+function shownAgents() {
+  const focus = current();
+  const score = a => a.scores.reduce((x, y) => x + y, 0) + a.game.score + a.game.steps * 1e-6;
+  const rest = trainer.agents.filter(a => a.game && a !== focus).sort((a, b) => score(b) - score(a));
+  return (focus ? [focus] : []).concat(rest).slice(0, SHOW_N);
+}
 function drawMain() {
   const { ctx, cw } = fit($('board'), 1);
   const focus = mode === 'replay' ? replay : current()?.game;
   drawBoard(ctx, null, 0, 0, cw, { grid: true });
   if (mode === 'train') {
     const c = cw / GRID.w, sp = trainer.speciesOf;
-    for (const a of trainer.agents) {
+    for (const a of shownAgents()) {
       const g = a.game;
       if (!g || g === focus) continue;
       const color = speciesColor(sp.get(a.genome) ?? 0);
-      if (g.food) { ctx.fillStyle = color; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.arc((g.food.x + 0.5) * c, (g.food.y + 0.5) * c, c * 0.22, 0, 7); ctx.fill(); }
-      ctx.globalAlpha = 0.5;
+      if (g.food) { ctx.fillStyle = color; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.arc((g.food.x + 0.5) * c, (g.food.y + 0.5) * c, c * 0.4, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 0.75;
       ctx.fillStyle = color;
       for (const p of g.body) ctx.fillRect(p.x * c + 1, p.y * c + 1, c - 2, c - 2);
       ctx.globalAlpha = 0.9;                            // 머리는 조금 진하게
@@ -128,7 +136,7 @@ function drawHud(ctx, cw, s) {
     const a = current();
     if (!a) text = t({ ko: `세대 ${trainer.pop.generation + 1} 종료`, en: `Generation ${trainer.pop.generation + 1} done` });
     else {
-      const who = (followed ? t({ ko: '노란 뱀 = 선택한 개체', en: 'yellow = selected' }) : t({ ko: '노란 뱀 = 선두', en: 'yellow = leader' })) + t({ ko: ` · ${trainer.alive}마리 게임 중`, en: ` · ${trainer.alive} playing` });
+      const who = (followed ? t({ ko: '노란 뱀 = 선택한 개체', en: 'yellow = selected' }) : t({ ko: '노란 뱀 = 선두', en: 'yellow = leader' })) + t({ ko: ` · 상위 ${Math.min(SHOW_N, trainer.alive)}마리 표시 (${trainer.alive}마리 게임 중)`, en: ` · top ${Math.min(SHOW_N, trainer.alive)} shown (${trainer.alive} playing)` });
       text = narrow
         ? t({ ko: `세대 ${trainer.pop.generation + 1} · 먹이 ${s.score} · 판 ${a.trial + 1}/${trainer.opts.trials}`, en: `Gen ${trainer.pop.generation + 1} · food ${s.score} · game ${a.trial + 1}/${trainer.opts.trials}` })
         : t({ ko: `세대 ${trainer.pop.generation + 1} · ${who} · 판 ${a.trial + 1}/${trainer.opts.trials} · 먹이 ${s.score} · 배고픔 ${s.hunger}/${SNAKE.starve}`,
@@ -199,6 +207,8 @@ function drawNetGraph(ctx, genome, net, box, mini = false, chosen = -1) {
   const cols = new Map();
   for (const n of genome.nodes.values()) { const d = depth.get(n.id); if (!cols.has(d)) cols.set(d, []); cols.get(d).push(n.id); }
   const padL = mini ? 10 : 104, padR = mini ? 36 : 104, padV = mini ? 8 : 16, pos = new Map();
+  const OUT_ORDER = [1, 0, 2];                         // 화면 위에서부터 좌회전 · 직진 · 우회전
+  cols.get(maxD).sort((a, b) => OUT_ORDER.indexOf(a - nIn) - OUT_ORDER.indexOf(b - nIn));
   for (const [d, ids] of cols) ids.forEach((id, i) => pos.set(id, {
     x: box.x + padL + (box.w - padL - padR) * d / maxD,
     y: box.y + padV + (box.h - 2 * padV) * (ids.length === 1 ? 0.5 : i / (ids.length - 1))
