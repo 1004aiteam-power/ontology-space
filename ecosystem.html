@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/eco/eco-app.js?v=20261104d"></script>
+<script type="module" src="assets/eco/eco-app.js?v=20261104e"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -90,7 +90,7 @@
     <p class="meta legend-line">
       <span><i class="dot" style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">herbivore</span></span>
       <span><i class="dot" style="background:#d95926"></i><span lang="ko">육식 세포 (벌린 입 = 진행 방향, 가운데 점 = 소화 중)</span><span lang="en">carnivore (open mouth = heading, dark dot = digesting)</span></span>
-      <span><i class="dot ring"></i><span lang="ko">포낭 (휴면 중인 육식)</span><span lang="en">cyst (dormant carnivore)</span></span>
+      <span><i class="dot ring"></i><span lang="ko">포낭 (휴면 중인 육식 · 깨어나면 그 자리에서 움직임)</span><span lang="en">cyst (dormant carnivore · wakes up in place)</span></span>
       <span><i class="sq" style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">food</span></span>
       <span><i class="dot sed"></i><span lang="ko">피난처 (침전물)</span><span lang="en">refuge (sediment)</span></span>
     </p>
@@ -198,7 +198,7 @@
   <p lang="en">The Russian ecologist <b>Georgii Gause</b> put the predatory protist <b>Didinium</b> and its prey <b>Paramecium</b> in a test tube together. Instead of coexisting, both went extinct: Didinium ate every Paramecium, then starved. Coexistence happened only under two conditions.</p>
   <div class="grid">
     <div class="card"><h4><span lang="ko">① 피난처</span><span lang="en">① Refuges</span></h4><p lang="ko">바닥에 침전물을 깔아 짚신벌레가 숨을 수 있게 하자, 살아남은 짚신벌레가 다시 번식했습니다. → 시나리오 “피난처 있음”</p><p lang="en">With sediment on the bottom for Paramecium to hide in, survivors repopulated the tube. → scenario “With refuges”</p></div>
-    <div class="card"><h4><span lang="ko">② 이주</span><span lang="en">② Immigration</span></h4><p lang="ko">며칠마다 두 종을 조금씩 새로 넣어 주자, 번성과 멸종 직전을 오가는 주기가 이어졌습니다. → 시나리오 “피난처 없음 + 이주”</p><p lang="en">Adding a few of each species every few days kept a boom-and-bust cycle going. → scenario “No refuges + immigration”</p></div>
+    <div class="card"><h4><span lang="ko">② 이주</span><span lang="en">② Immigration</span></h4><p lang="ko">며칠마다 두 종을 조금씩 새로 넣어 주자, 번성과 멸종 직전을 오가는 주기가 이어졌습니다. 이 시뮬레이션에서는 <b>초식만</b> 바깥에서 들어오고, 육식은 포낭으로 버티다 깨어나 분열로만 늘어납니다. → 시나리오 “피난처 없음 + 초식 이주”</p><p lang="en">Adding a few of each species every few days kept a boom-and-bust cycle going. Here <b>only herbivores</b> arrive from outside; carnivores survive as cysts and grow only by dividing. → scenario “No refuges + herbivore immigration”</p></div>
     <div class="card"><h4><span lang="ko">③ 아무것도 없으면</span><span lang="en">③ Neither</span></h4><p lang="ko">초식이 수천 틱 안에 사라지고 육식은 포낭으로 버티다 결국 사라집니다. → 시나리오 “피난처 없음”</p><p lang="en">Herbivores vanish within a few thousand ticks; carnivores hang on as cysts, then die out. → scenario “No refuges”</p></div>
   </div>
   <p class="meta" lang="ko">이 시뮬레이션을 만들면서도 똑같은 일이 일어났습니다. 수치를 아무리 조정해도 피난처 없이는 한쪽이 멸종했고, 피난처를 넣고 나서야 4만 틱 동안 공존했습니다.</p>

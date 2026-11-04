@@ -70,3 +70,20 @@ console.log('✓ seeded runs are reproducible');
   assert.ok(n.counts().herb === 0, 'without refuges the prey is wiped out');
   console.log(`✓ Gause: coexist with refuges (15000 ticks), prey extinct at tick ${t} without`);
 }
+
+// 6) 육식은 무에서 생기지 않는다: 시작 이후 새로 나타난 육식은 모두 분열로 생긴 것
+{
+  for (const opts of [{ seed: 2 }, { seed: 3, refuge: { on: false }, immigration: { herb: 0.01 } }]) {
+    const e = new Ecosystem(opts);
+    const known = new Set(e.cells.filter(c => c.kind === 'carn').map(c => c.id));
+    for (let t = 0; t < 8000; t++) {
+      e.step();
+      const splits = e.events.filter(v => v.type === 'split' && v.kind === 'carn').length;
+      const fresh = e.cells.filter(c => c.kind === 'carn' && !known.has(c.id));
+      assert.equal(fresh.length, splits, `tick ${e.t}: ${fresh.length} new carnivores but ${splits} divisions`);
+      assert.ok(fresh.every(c => c.gen > 0), 'new carnivores are children');
+      for (const c of fresh) known.add(c.id);
+    }
+  }
+}
+console.log('✓ carnivores appear only by division (no spontaneous spawning, no carnivore immigration)');

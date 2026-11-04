@@ -17,7 +17,7 @@ const NAME = {
 const SCENARIOS = {
   refuge: { label: { ko: '피난처 있음 (기본 · 공존)', en: 'With refuges (default · coexist)' }, opts: {} },
   none: { label: { ko: '피난처 없음 (가우스 실험 1)', en: 'No refuges (Gause experiment 1)' }, opts: { refuge: { on: false } } },
-  immig: { label: { ko: '피난처 없음 + 이주 (가우스 실험 2)', en: 'No refuges + immigration (Gause 2)' }, opts: { refuge: { on: false }, immigration: { herb: 0.01, carn: 0.002 } } }
+  immig: { label: { ko: '피난처 없음 + 초식 이주 (가우스 실험 2)', en: 'No refuges + herbivore immigration (Gause 2)' }, opts: { refuge: { on: false }, immigration: { herb: 0.01 } } }
 };
 const SPEEDS = [1, 4, 16, 'max'];
 
@@ -65,9 +65,10 @@ function drawDish() {
       ctx.fillStyle = COL.herb; ctx.beginPath(); ctx.arc(c.x, c.y, 4, 0, 7); ctx.fill();
       ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(c.x - 1, c.y - 1, 1.3, 0, 7); ctx.fill();   // 핵
     } else if (c.cyst) {
-      ctx.strokeStyle = dark() ? '#9aa3ab' : '#7b838b'; ctx.lineWidth = 1.5; ctx.setLineDash([2, 2]);
-      ctx.beginPath(); ctx.arc(c.x, c.y, 5, 0, 7); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = COL.carn; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.arc(c.x, c.y, 3, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      // 포낭: 회색 껍질 안에 웅크린 육식 (깨어나면 이 자리에서 다시 움직임)
+      ctx.fillStyle = dark() ? '#3a4148' : '#d5d9dd'; ctx.beginPath(); ctx.arc(c.x, c.y, 6.5, 0, 7); ctx.fill();
+      ctx.strokeStyle = dark() ? '#9aa3ab' : '#6b737b'; ctx.lineWidth = 1.6; ctx.stroke();
+      ctx.fillStyle = COL.carn; ctx.globalAlpha = 0.75; ctx.beginPath(); ctx.arc(c.x, c.y, 3.4, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
     } else {
       // 입이 진행 방향으로 벌어진 원
       ctx.fillStyle = COL.carn; ctx.beginPath();
@@ -81,6 +82,10 @@ function drawDish() {
     ctx.globalAlpha = Math.max(0, 1 - p);
     if (e.type === 'split') { ctx.globalAlpha *= 0.6; ctx.strokeStyle = COL[e.kind]; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(e.x, e.y, 5 + p * 12, 0, 7); ctx.stroke(); }
     else if (e.type === 'eat') { ctx.fillStyle = COL.carn; ctx.beginPath(); ctx.arc(e.x, e.y, 3 + p * 9, 0, 7); ctx.fill(); }
+    else if (e.type === 'wake') {                       // 포낭이 터지며 깨어남: 회색 조각이 퍼짐
+      ctx.strokeStyle = dark() ? '#9aa3ab' : '#6b737b'; ctx.lineWidth = 2; ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.arc(e.x, e.y, 7 + p * 10, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    }
     else if (e.type === 'arrive') { ctx.strokeStyle = css('--text'); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(e.x, e.y, 14 - p * 9, 0, 7); ctx.stroke(); }
   }
   ctx.globalAlpha = 1;
@@ -211,7 +216,7 @@ function frame(now) {
 function tick() {
   eco.step();
   if (SPEEDS[speedIdx] === 'max' || effects.length > 300) return;     // 빠를 때는 효과 생략
-  for (const e of eco.events) if (e.type === 'split' || e.type === 'eat' || e.type === 'arrive') effects.push({ ...e, life: 18 });
+  for (const e of eco.events) if (e.type === 'split' || e.type === 'eat' || e.type === 'arrive' || e.type === 'wake') effects.push({ ...e, life: 18 });
 }
 
 // ---- 조작부 ----------------------------------------------------------------------

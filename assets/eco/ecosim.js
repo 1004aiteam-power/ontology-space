@@ -35,8 +35,9 @@ export const DEFAULTS = {
   // 피난처: 육식이 사냥할 수 없는 구역 (가우스 실험의 침전물). 초식은 안에 있으면 보이지도 잡히지도 않음
   //  stay: 가장자리에서 안에 머무를 확률, slow: 안에서의 속도 배율, food: 안에서 틱당 추가로 자라는 먹이 (침전물의 박테리아)
   refuge: { on: true, stay: 0.995, slow: 0.5, food: 0.25, zones: [{ x: 170, y: 150, r: 55 }, { x: 760, y: 220, r: 55 }, { x: 450, y: 500, r: 55 }] },
-  // 이주: 틱마다 이 확률로 바깥에서 한 마리씩 들어옴 (가우스의 두 번째 공존 조건)
-  immigration: { herb: 0, carn: 0 },
+  // 이주: 틱마다 이 확률로 바깥에서 초식이 한 마리씩 들어옴 (가우스의 두 번째 공존 조건)
+  // 육식은 이주로 생기지 않는다 — 처음 넣은 개체와 그 분열로만 늘어남 (사용자가 직접 넣는 경우 제외)
+  immigration: { herb: 0 },
   maxCells: 3000
 };
 
@@ -167,7 +168,7 @@ export class Ecosystem {
     }
 
     // 이주
-    for (const kind of ['herb', 'carn']) if (this.rand() < cfg.immigration[kind]) this.events.push({ type: 'arrive', ...this.spawn(kind) });
+    if (this.rand() < (cfg.immigration.herb || 0)) this.events.push({ type: 'arrive', ...this.spawn('herb') });
     // 2) 격자 다시 만들기
     this.foodGrid.clear(); this.herbGrid.clear();
     for (const f of this.food) this.foodGrid.add(f);
