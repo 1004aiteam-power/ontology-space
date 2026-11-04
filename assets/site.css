@@ -428,7 +428,12 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .ctrl button:disabled{opacity:.5;cursor:default}
 /* 단세포 생태계 (ecosystem.html) */
 .eco-wrap{grid-template-columns:1fr}
-@media (min-width:900px){ .eco-wrap{grid-template-columns:minmax(0,4fr) minmax(0,1fr);align-items:end} }   /* 접시 80% + 오른쪽 아래 작은 시계열 */
+/* 접시는 브라우저 폭의 절반 (3:2 비율로 화면 높이에도 들어오게) · 가운데 정렬, 작은 시계열은 오른쪽 여백 아래쪽 */
+@media (min-width:960px){
+  .eco-wrap{width:calc(100vw - 32px);grid-template-columns:minmax(0,1fr) min(50vw, calc((100vh - 90px) * 1.5)) minmax(0,1fr);align-items:end}
+  .eco-wrap #dish{grid-column:2}
+  .eco-wrap .eco-mini{grid-column:3;width:min(300px,100%)}
+}
 #dish{width:100%;display:block;border-radius:12px;border:1px solid var(--line);cursor:crosshair}
 .eco-mini{padding:10px}
 .eco-mini b{font-size:13px}
