@@ -12,6 +12,18 @@
 <script src="assets/site.js"></script>
 <script src="assets/impact.js?v=8" defer></script>
 <style>
+.n3 .bus{fill:var(--mv)}
+.n3 .main{stroke:var(--fd-1);stroke-width:4}
+.n3 .lat{stroke:var(--fd-1);stroke-width:3}
+.n3 .sec{fill:color-mix(in srgb,var(--fd-1) 7%,transparent);stroke:var(--fd-1);stroke-width:1;stroke-dasharray:4 3}
+.n3 .cl{fill:var(--text);stroke:var(--surface);stroke-width:1.5}
+.n3 .op{fill:var(--surface);stroke:var(--text);stroke-width:2}
+.n3 .nb{stroke-width:4} .n3 .nb.b{stroke:var(--fd-2)} .n3 .nb.c{stroke:var(--fd-3)} .n3 .nb.d{stroke:var(--fd-4)}
+.n3 .nbt{font-size:13px;font-weight:700} .n3 .nbt.b{fill:var(--fd-2)} .n3 .nbt.c{fill:var(--fd-3)} .n3 .nbt.d{fill:var(--fd-4)}
+.n3 .lb{fill:var(--text);font-size:13px;font-weight:700}
+.n3 .sn{fill:var(--fd-1);font-size:12px;font-weight:600}
+.n3 .cap{fill:var(--muted);font-size:12px}
+#n3 .muted{color:var(--muted);font-size:14px}
 .thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
 .im-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
 .im-wrap{width:min(1200px,100vw - 32px);position:relative;left:50%;transform:translateX(-50%)}
@@ -178,6 +190,99 @@ td small{color:var(--muted)}
     </ul></div>
   <h3><span lang="ko">자산별 위험도: 설비만 볼 때 vs 배전선로까지 볼 때</span><span lang="en">Risk per asset: equipment only vs with the feeder</span></h3>
   <div class="tbl"><table><thead><tr><th><span lang="ko">기능 위치 · 자산</span><span lang="en">Location · asset</span></th><th>PoF</th><th><span lang="ko">복구(시간)</span><span lang="en">Repair (h)</span></th><th><span lang="ko">자산관리</span><span lang="en">Asset view</span></th><th><span lang="ko">+ 예비품</span><span lang="en">+ spare</span></th><th><span lang="ko">+ 연계 절체 (자동 / 수동)</span><span lang="en">+ tie transfer (auto / manual)</span></th></tr></thead><tbody id="imTable"></tbody></table></div>
+</section>
+
+<section id="n3">
+  <h2><span lang="ko">배전선로는 왜 "3분할 3연계"로 짜는가</span><span lang="en">Why feeders are built "3 sections, 3 ties"</span></h2>
+  <p lang="ko">22.9kV 배전선로는 일반적으로 <b>3분할 3연계</b>를 기본으로 계통을 구성합니다. 선로 하나를 구간 개폐기로 <b>세 구간</b>으로 나누고(3분할), 각 구간을 <b>서로 다른 이웃 선로 세 개</b>와 평상시 열려 있는 연계 개폐기로 이어 두는(3연계) 방식입니다. 목적은 두 가지입니다. 고장이 나도 <b>정전 구간을 좁히고</b>, 고장 구간을 뺀 나머지에는 <b>빨리 전기를 다시 보내는 것</b>입니다.</p>
+  <p lang="en">22.9 kV distribution feeders are generally built on a <b>3-section, 3-tie</b> basis. Sectionalizing switches split each feeder into <b>three sections</b>, and each section is linked through a normally-open tie switch to <b>a different neighbouring feeder</b>. The aim is twofold: when a fault occurs, <b>keep the dark area small</b>, and <b>restore everything but the faulted section quickly</b>.</p>
+  <div class="diagram">
+    <svg class="n3" viewBox="0 0 760 250" role="img" aria-label="3-section 3-tie feeder schematic" style="min-width:640px;width:100%">
+      <rect x="20" y="70" width="10" height="70" rx="2" class="bus"/>
+      <text x="25" y="160" text-anchor="middle" class="cap"><tspan lang="ko">변전소</tspan><tspan lang="en">Substation</tspan></text>
+      <line x1="30" y1="105" x2="690" y2="105" class="main"/>
+      <rect x="52" y="97" width="16" height="16" rx="2" class="cl"/><text x="60" y="88" text-anchor="middle" class="lb">CB</text>
+      <circle cx="270" cy="105" r="8" class="cl"/><text x="270" y="88" text-anchor="middle" class="lb">S1</text>
+      <circle cx="490" cy="105" r="8" class="cl"/><text x="490" y="88" text-anchor="middle" class="lb">S2</text>
+      <rect x="80" y="62" width="180" height="86" rx="10" class="sec"/><text x="170" y="76" text-anchor="middle" class="sn"><tspan lang="ko">구간 ① (부하 약 1/3)</tspan><tspan lang="en">Section ① (~1/3 of load)</tspan></text>
+      <rect x="280" y="62" width="200" height="86" rx="10" class="sec"/><text x="380" y="76" text-anchor="middle" class="sn"><tspan lang="ko">구간 ② (약 1/3)</tspan><tspan lang="en">Section ② (~1/3)</tspan></text>
+      <rect x="500" y="62" width="190" height="86" rx="10" class="sec"/><text x="595" y="76" text-anchor="middle" class="sn"><tspan lang="ko">구간 ③ (약 1/3)</tspan><tspan lang="en">Section ③ (~1/3)</tspan></text>
+      <line x1="170" y1="105" x2="170" y2="190" class="lat"/><circle cx="170" cy="190" r="8" class="op"/><text x="182" y="194" class="lb">T1</text>
+      <line x1="170" y1="198" x2="170" y2="225" class="nb b"/><text x="170" y="242" text-anchor="middle" class="nbt b"><tspan lang="ko">이웃 선로 B</tspan><tspan lang="en">Feeder B</tspan></text>
+      <line x1="380" y1="105" x2="380" y2="190" class="lat"/><circle cx="380" cy="190" r="8" class="op"/><text x="392" y="194" class="lb">T2</text>
+      <line x1="380" y1="198" x2="380" y2="225" class="nb c"/><text x="380" y="242" text-anchor="middle" class="nbt c"><tspan lang="ko">이웃 선로 C</tspan><tspan lang="en">Feeder C</tspan></text>
+      <circle cx="690" cy="105" r="8" class="op"/><text x="690" y="88" text-anchor="middle" class="lb">T3</text>
+      <line x1="698" y1="105" x2="740" y2="105" class="nb d"/><text x="745" y="128" text-anchor="end" class="nbt d"><tspan lang="ko">이웃 선로 D</tspan><tspan lang="en">Feeder D</tspan></text>
+      <text x="20" y="22" class="cap">● <tspan lang="ko">구간 개폐기 (평상시 닫힘)</tspan><tspan lang="en">sectionalizing switch (normally closed)</tspan>   ○ <tspan lang="ko">연계 개폐기 (평상시 열림)</tspan><tspan lang="en">tie switch (normally open)</tspan></text>
+    </svg>
+  </div>
+  <h3><span lang="ko">구간마다 고장이 나면</span><span lang="en">A fault in each section</span></h3>
+  <div class="tbl"><table><thead><tr><th><span lang="ko">고장 위치</span><span lang="en">Fault in</span></th><th><span lang="ko">고장 구간 분리</span><span lang="en">Isolate</span></th><th><span lang="ko">앞쪽 (변전소 쪽)</span><span lang="en">Upstream</span></th><th><span lang="ko">뒤쪽</span><span lang="en">Downstream</span></th><th><span lang="ko">수리 때까지 정전</span><span lang="en">Dark until repair</span></th></tr></thead><tbody>
+    <tr><td><span lang="ko">구간 ①</span><span lang="en">Section ①</span></td><td><span lang="ko">CB 트립 상태 유지, S1 열기</span><span lang="en">CB stays open, open S1</span></td><td>–</td><td><span lang="ko">②는 T2로 C에서, ③은 T3으로 D에서 (S2를 열어 나눔)</span><span lang="en">② from C via T2, ③ from D via T3 (open S2 to split)</span></td><td><span lang="ko">①만 (약 1/3)</span><span lang="en">① only (~1/3)</span></td></tr>
+    <tr><td><span lang="ko">구간 ②</span><span lang="en">Section ②</span></td><td><span lang="ko">S1 · S2 열기</span><span lang="en">open S1 · S2</span></td><td><span lang="ko">CB 다시 닫아 ① 복구</span><span lang="en">re-close CB for ①</span></td><td><span lang="ko">③은 T3으로 D에서</span><span lang="en">③ from D via T3</span></td><td><span lang="ko">②만</span><span lang="en">② only</span></td></tr>
+    <tr><td><span lang="ko">구간 ③</span><span lang="en">Section ③</span></td><td><span lang="ko">S2 열기</span><span lang="en">open S2</span></td><td><span lang="ko">CB 다시 닫아 ①·② 복구</span><span lang="en">re-close CB for ① · ②</span></td><td>–</td><td><span lang="ko">③만</span><span lang="en">③ only</span></td></tr>
+    <tr><td><span lang="ko">변전소 쪽 (주변압기 등)</span><span lang="en">Substation side (transformer…)</span></td><td><span lang="ko">CB 열기</span><span lang="en">open CB</span></td><td>–</td><td><span lang="ko">S1 · S2를 열고 ①→B, ②→C, ③→D로 나눠 보냄</span><span lang="en">open S1 · S2 and send ①→B, ②→C, ③→D</span></td><td><span lang="ko">없음</span><span lang="en">none</span></td></tr>
+  </tbody></table></div>
+  <h3><span lang="ko">왜 "3"인가: 세 가지 원리</span><span lang="en">Why three: three principles</span></h3>
+  <ol lang="ko">
+    <li><b>정전 범위를 1/3로 좁힌다.</b> 구간 개폐기가 없으면 선로 어디에서 고장이 나도 CB가 선로 전체를 끊습니다. 세 구간으로 나눠 두면 수리 때까지 정전으로 남는 곳은 고장 난 한 구간, 대략 선로의 1/3입니다.</li>
+    <li><b>건전 구간은 몇 분 안에 다시 살린다.</b> 고장 구간보다 앞쪽은 CB를 다시 닫아 원래 선로에서, 뒤쪽은 연계 개폐기를 닫아 이웃 선로에서 받습니다. 원격으로 조작하는 자동화 개폐기와 고장 표시기(FRTU)가 있으면 이 과정이 현장 출동 없이 몇 분 안에 끝납니다.</li>
+    <li><b>이웃 선로가 받을 짐을 나눈다.</b> 연계가 하나뿐이면 고장 선로의 부하를 이웃 한 곳이 통째로 받아야 해서 쉽게 과부하가 됩니다. 세 구간을 서로 다른 세 선로에 하나씩 넘기면 이웃 선로마다 고장 선로 부하의 약 1/3만 더 받으면 됩니다. 그래서 각 선로는 평상시에 최대 허용량까지 쓰지 않고, 이웃의 1/3을 받을 수 있을 만큼 여유를 남겨 운전합니다. "평상시에 비워 둔 여유"가 곧 고장 때의 복구 능력입니다.</li>
+  </ol>
+  <ol lang="en">
+    <li><b>Shrink the outage to a third.</b> Without sectionalizing switches the breaker cuts the whole feeder wherever the fault is. With three sections, only the faulted one — roughly a third of the feeder — stays dark until repair.</li>
+    <li><b>Bring healthy sections back within minutes.</b> Upstream of the fault the breaker re-closes; downstream, a tie switch picks the load up from a neighbour. With remotely operated automated switches and fault indicators (FRTU), this takes minutes with no crew on site.</li>
+    <li><b>Share the burden among neighbours.</b> With a single tie one neighbour must take the whole faulted feeder and easily overloads. Sending three sections to three different feeders means each neighbour takes only about a third extra. So feeders are run below their maximum, keeping enough headroom to absorb a third of a neighbour. Headroom left free in normal operation is the restoration capacity in a fault.</li>
+  </ol>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
+    <p lang="ko">아파트 한 동의 수도를 층별 밸브로 세 덩어리로 나누고, 덩어리마다 옆 동 세 곳과 비상 연결관을 하나씩 만들어 둔 것과 같습니다. 한 덩어리에서 물이 새면 그 덩어리만 잠그고, 나머지는 원래 관이나 옆 동 관에서 물을 받습니다. 옆 동은 각자 한 덩어리 몫만 더 보내면 되니 수압이 크게 떨어지지 않습니다.</p>
+    <p lang="en">Think of one apartment block's water split by floor valves into three parts, each with an emergency link to a different neighbouring block. A leak in one part closes only that part; the rest is fed from the original main or a neighbour, and each neighbour only has to supply one part's worth, so pressure holds up.</p></div>
+  <h3><span lang="ko">이 페이지의 D/L #1과 견주면</span><span lang="en">Compared with feeder #1 on this page</span></h3>
+  <ul lang="ko">
+    <li>D/L #1은 구간 개폐기 6대로 <b>7구간</b>(Z1~Z7)으로 나눴고, 연계 개폐기 4대가 <b>서로 다른 이웃 선로 3개</b>(D/L #2, D/L #3, C변전소 #11)와 이어집니다. 3연계를 지키면서 3분할보다 더 촘촘히 나눈 형태입니다. 구간이 잘수록 고장 때 끊기는 범위가 작아집니다(Z5 지락 고장 때 수리까지 남는 정전은 260호, 전체의 14%).</li>
+    <li>대신 모든 구간에 연계가 있는 것은 아닙니다. Z1·Z3·Z5에는 연계 개폐기가 없어서, 이 구간은 앞쪽(CB) 또는 뒤쪽 구간을 거쳐서만 받을 수 있습니다.</li>
+    <li>주변압기 고장(①)에서 선로 전체를 넘길 때 T1 하나로만 보내면 D/L #2가 14.5MW로 한도 10MW를 넘습니다(<a href="grid.html#feeder">전력망 페이지의 "통째로 절체" 시나리오</a>). S2에서 나눠 T1·T4 두 곳으로 보내야 8.9MW와 9.6MW로 한도 안에 듭니다. 연계를 여러 선로로 나눠 두는 이유가 바로 이것입니다.</li>
+    <li>절체 뒤 이웃 선로의 여유는 0.4MW뿐입니다. 세 이웃에 1/3씩 나누지 못하고 두 선로가 나눠 받아, C변전소 #11이 D/L #1 부하의 약 3분의 2(5.6MW)를 떠안았기 때문입니다. 3분할 3연계 설계에서는 이런 상황을 피하려고 구간마다 부하를 고르게 나누고 선로 운전 용량을 함께 관리합니다.</li>
+  </ul>
+  <ul lang="en">
+    <li>Feeder #1 has six sectionalizing switches making <b>seven zones</b> (Z1–Z7), and four tie switches reaching <b>three different neighbours</b> (feeder #2, feeder #3, Sub. C #11): three ties, but split finer than three sections. Smaller sections mean a smaller outage (a ground fault in Z5 leaves 260 customers, 14%, dark until repair).</li>
+    <li>Not every zone has its own tie: Z1, Z3 and Z5 can only be fed through the breaker or a neighbouring zone.</li>
+    <li>When the whole feeder must move (failure ①), sending it all through T1 puts feeder #2 at 14.5 MW, over the 10 MW limit (the <a href="grid.html#feeder">"whole transfer" scenario on the power grid page</a>). Splitting at S2 and using T1 and T4 gives 8.9 and 9.6 MW, both within limits — exactly why ties are spread across several feeders.</li>
+    <li>After the transfer the neighbours have only 0.4 MW left: the load was split between two feeders instead of three thirds, so Sub. C #11 took about two thirds of feeder #1 (5.6 MW). A 3-section, 3-tie design balances section loads and manages feeder operating capacity together to avoid this.</li>
+  </ul>
+  <h3><span lang="ko">분할과 연계를 늘리면: 신뢰도와 투자비</span><span lang="en">More sections and ties: reliability versus cost</span></h3>
+  <p lang="ko"><b>분할과 연계가 많을수록 공급 신뢰도는 향상되지만, 이를 위한 투자비도 상승합니다.</b> 그래서 "많을수록 좋다"가 아니라, 신뢰도와 비용 사이에서 알맞은 수를 고르는 문제입니다.</p>
+  <p lang="en"><b>More sections and ties improve supply reliability, but they also raise the investment needed.</b> So it is not "the more the better" but a choice of the right number between reliability and cost.</p>
+  <div class="grid two">
+    <div class="panel"><h4 style="margin-top:0"><span lang="ko">늘리면 좋아지는 것 (신뢰도)</span><span lang="en">What improves (reliability)</span></h4>
+      <ul lang="ko" style="margin:0">
+        <li>구간이 잘수록 고장 때 <b>수리까지 끊기는 범위가 작아집니다</b>.</li>
+        <li>연계가 많을수록 <b>넘길 곳이 늘어</b> 이웃 선로 하나가 받는 짐이 줄고, 이웃 선로가 함께 문제일 때도 다른 길이 남습니다.</li>
+        <li>결과적으로 고객 1호당 정전 시간(SAIDI)과 정전 횟수가 줄어듭니다.</li>
+      </ul>
+      <ul lang="en" style="margin:0">
+        <li>Smaller sections mean <b>less left dark until repair</b>.</li>
+        <li>More ties mean <b>more places to send load</b>, a smaller burden on each neighbour, and another path even when a neighbour is in trouble.</li>
+        <li>Outage minutes per customer (SAIDI) and outage counts go down.</li>
+      </ul></div>
+    <div class="panel"><h4 style="margin-top:0"><span lang="ko">늘리면 커지는 것 (투자비)</span><span lang="en">What grows (cost)</span></h4>
+      <ul lang="ko" style="margin:0">
+        <li><b>개폐기</b>: 구간·연계마다 개폐기가 필요하고, 원격 조작하려면 자동화 개폐기와 단말장치(FRTU)·통신망이 더 듭니다.</li>
+        <li><b>연계 선로</b>: 이웃 선로까지 이어 줄 선로를 새로 건설해야 합니다. 도심 지중 구간이면 비용이 특히 큽니다.</li>
+        <li><b>비워 두는 여유</b>: 이웃의 부하를 받으려면 각 선로를 한도보다 낮게 운전해야 하므로, 같은 부하에 더 많은 선로·설비가 필요합니다.</li>
+        <li><b>운영·유지보수</b>: 점검할 설비와 관리할 개폐 상태가 늘어납니다.</li>
+      </ul>
+      <ul lang="en" style="margin:0">
+        <li><b>Switches</b>: each section and tie needs one; remote operation adds automated switches, terminal units (FRTU) and communications.</li>
+        <li><b>Tie lines</b>: new lines must be built to reach the neighbour, especially costly underground in cities.</li>
+        <li><b>Reserved headroom</b>: feeders run below their limit to absorb neighbours, so the same load needs more feeders and equipment.</li>
+        <li><b>Operation and maintenance</b>: more equipment to inspect and more switch states to manage.</li>
+      </ul></div>
+  </div>
+  <p lang="ko">그래서 부하가 몰려 있고 정전 피해가 큰 곳(도심, 병원·산업단지 등 중요 고객이 있는 곳)은 더 잘게 나누고 연계를 늘리며, 부하가 적은 곳은 기본 구성에 가깝게 둡니다. 이 페이지의 D/L #1에서 병원이 있는 분기선 2에 개폐기를 하나 더 다는 것도 같은 판단입니다. 개폐기 하나의 비용과, 그 개폐기가 줄여 줄 정전 고객·시간을 견줘서 정합니다.</p>
+  <p lang="en">So dense, high-impact areas (city centres, hospitals, industrial parks) get finer sections and more ties, while light-load areas stay close to the basic layout. Adding one more switch on lateral 2, which feeds the hospital on feeder #1, is the same decision: weigh the cost of the switch against the customers and minutes of outage it would save.</p>
+  <p class="muted" lang="ko">※ 구간 수, 연계 수, 선로 운전 용량의 실제 기준은 전력회사의 배전 설계 기준과 지역 여건에 따라 정해집니다. 이 페이지의 수치(한도 10MW 등)는 학습용 가상 값입니다.</p>
+  <p class="muted" lang="en">※ Actual section counts, tie counts and operating capacities follow the utility's distribution design standards and local conditions. The figures on this page (such as the 10 MW limit) are made up for learning.</p>
 </section>
 
 <section id="ontology">
