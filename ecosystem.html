@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Cell Ecosystem</title>
+<meta name="title-ko" content="Ontology Space · 단세포 생태계">
+<meta name="title-en" content="Ontology Space · Cell Ecosystem">
+<meta name="description" content="초식·육식 단세포 생물의 개체수가 서로 엇갈려 늘고 주는 포식자–피식자 시뮬레이션 (진화 포함)">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script type="module" src="assets/eco/eco-app.js?v=20261104a"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+      <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+      <div class="menu" id="simMenu" hidden>
+        <a href="ecosystem.html" aria-current="page"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      </div>
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">시뮬레이션 · 취미 실험실</span><span lang="en">SIMULATION · HOBBY LAB</span></div>
+  <h1><span lang="ko">먹고 먹히는<br>단세포 생태계</span><span lang="en">Eat or be eaten:<br>a single-cell ecosystem</span></h1>
+  <p class="lead" lang="ko">배양 접시 속에서 <b>초식 세포</b>는 영양 입자를 먹고, <b>육식 세포</b>는 초식 세포를 잡아먹습니다. 에너지가 쌓이면 둘로 분열하고, 바닥나면 죽습니다. 그러다 보면 두 개체수가 <b>서로 엇갈리며 늘고 주는 주기</b>가 저절로 생깁니다. 분열할 때마다 속도와 감지 거리가 조금씩 바뀌어서 <b>진화</b>도 함께 일어납니다.</p>
+  <p class="lead" lang="en">In a culture dish, <b>herbivore cells</b> eat nutrient particles and <b>carnivore cells</b> eat herbivores. Cells divide when they store enough energy and die when they run out. Soon the two populations <b>rise and fall out of step</b> on their own. Each division slightly changes speed and sensing range, so the cells also <b>evolve</b>.</p>
+  <p class="meta" lang="ko">이 페이지는 만든 이의 취미로 만든 실험실입니다. 온톨로지·전력 내용과는 관계가 없습니다.</p>
+  <p class="meta" lang="en">A hobby page by the author of this site — unrelated to the ontology and power-grid material.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">배양 접시</span><span lang="en">The culture dish</span></h2>
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="speedBtn"></button>
+    <select id="scenario" aria-label="scenario"></select>
+    <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+  </div>
+  <div class="ctrl">
+    <span class="meta"><span lang="ko">접시를 눌러 넣기:</span><span lang="en">Click the dish to add:</span></span>
+    <button data-add="herb" class="add-btn"><i style="background:#199e70"></i><span lang="ko">초식 3마리</span><span lang="en">3 herbivores</span></button>
+    <button data-add="carn" class="add-btn"><i style="background:#d95926"></i><span lang="ko">육식 3마리</span><span lang="en">3 carnivores</span></button>
+    <button data-add="food" class="add-btn"><i style="background:#c98500"></i><span lang="ko">먹이 한 줌</span><span lang="en">A pinch of food</span></button>
+    <label class="speed-ctl"><span lang="ko">먹이 자라는 속도</span><span lang="en">Food growth</span>
+      <input type="range" id="regrow" min="0.5" max="4" step="0.1" value="2.2" aria-label="food growth"><output id="regrowOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">돌연변이 크기</span><span lang="en">Mutation size</span>
+      <input type="range" id="mutation" min="0" max="0.15" step="0.01" value="0.06" aria-label="mutation"><output id="mutationOut"></output></label>
+  </div>
+
+  <div class="sim-wrap eco-wrap">
+    <div>
+      <canvas id="dish" aria-label="culture dish"></canvas>
+      <p class="meta legend-line">
+        <span><i class="dot" style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">herbivore</span></span>
+        <span><i class="dot" style="background:#d95926"></i><span lang="ko">육식 세포 (벌린 입 = 진행 방향, 가운데 점 = 소화 중)</span><span lang="en">carnivore (open mouth = heading, dark dot = digesting)</span></span>
+        <span><i class="dot ring"></i><span lang="ko">포낭 (휴면 중인 육식)</span><span lang="en">cyst (dormant carnivore)</span></span>
+        <span><i class="sq" style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">food</span></span>
+        <span><i class="dot sed"></i><span lang="ko">피난처 (침전물)</span><span lang="en">refuge (sediment)</span></span>
+      </p>
+    </div>
+    <div class="eco-side">
+      <div id="ecoStats"></div>
+      <div class="panel">
+        <b><span lang="ko">위상 그래프 — 초식 수 × 육식 수</span><span lang="en">Phase plot — herbivores × carnivores</span></b>
+        <p class="meta" lang="ko">주기가 있으면 점이 고리를 그리며 돕니다. 최근일수록 진한 선입니다.</p>
+        <p class="meta" lang="en">If the populations cycle, the dot travels around a loop. Recent history is darker.</p>
+        <canvas id="phase" aria-label="phase plot"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <h3><span lang="ko">개체수 변화 (최근 15,000틱)</span><span lang="en">Population over time (last 15,000 ticks)</span></h3>
+  <p class="meta" lang="ko">초식이 늘면 → 먹을 것이 많아진 육식이 늘고 → 초식이 줄면 → 굶은 육식이 줄고 → 다시 초식이 늘어나는 순서로 돕니다. 한 주기가 대략 1만 틱이라 배속 16× 이상으로 보면 잘 보입니다.</p>
+  <p class="meta" lang="en">Herbivores rise → well-fed carnivores rise → herbivores fall → starving carnivores fall → herbivores rise again. One cycle takes roughly 10,000 ticks, so watch at 16× or faster.</p>
+  <div class="panel chart-box">
+    <div class="chart-legend"><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
+    <canvas id="popChart" class="eco-chart" aria-label="population chart"></canvas>
+    <div id="popChartTip" class="eco-tip" hidden></div>
+    <b><span lang="ko">먹이 양</span><span lang="en">Food available</span></b>
+    <canvas id="foodChart" class="eco-chart tiny" aria-label="food chart"></canvas>
+    <div id="foodChartTip" class="eco-tip" hidden></div>
+    <details><summary><span lang="ko">표로 보기 (500틱마다, 최근 30개)</span><span lang="en">View as table (every 500 ticks, last 30)</span></summary><div class="tbl"><table id="histTable"></table></div></details>
+  </div>
+
+  <h3><span lang="ko">진화: 평균 형질의 변화</span><span lang="en">Evolution: average traits</span></h3>
+  <div class="grid two">
+    <div class="panel chart-box"><b><span lang="ko">평균 속도</span><span lang="en">Average speed</span></b>
+      <canvas id="speedChart" class="eco-chart small" aria-label="average speed"></canvas><div id="speedChartTip" class="eco-tip" hidden></div></div>
+    <div class="panel chart-box"><b><span lang="ko">평균 감지 거리</span><span lang="en">Average sensing range</span></b>
+      <canvas id="senseChart" class="eco-chart small" aria-label="average sensing range"></canvas><div id="senseChartTip" class="eco-tip" hidden></div></div>
+  </div>
+  <p class="meta" lang="ko">빠를수록, 멀리 볼수록 에너지를 더 씁니다. 초식은 속도 2.0, 육식은 4.0이 생물학적 상한입니다.</p>
+  <p class="meta" lang="en">Faster and farther-sighted cells burn more energy. Herbivore speed is capped at 2.0, carnivore at 4.0.</p>
+
+  <h3><span lang="ko">규칙</span><span lang="en">Rules</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">무엇</span><span lang="en">What</span></th><th><span lang="ko">동작</span><span lang="en">Behaviour</span></th></tr>
+    <tr><td><span lang="ko">먹이</span><span lang="en">Food</span></td><td><span lang="ko">빈 곳에 조금씩 자라고, 많아질수록 덜 자람 (상한 700개). 피난처에는 조금 더 자람</span><span lang="en">Grows a little each tick, slower as it fills up (max 700). Grows a bit more in refuges</span></td></tr>
+    <tr><td><span lang="ko">초식 세포</span><span lang="en">Herbivore</span></td><td><span lang="ko">가장 가까운 먹이로 가서 먹음. 육식이 가까이 보이면 반대로 도망. 피난처 안에서는 천천히 움직이고 대체로 밖으로 나가지 않음</span><span lang="en">Heads for the nearest food; flees when a carnivore is close. Inside a refuge it slows down and mostly stays</span></td></tr>
+    <tr><td><span lang="ko">육식 세포</span><span lang="en">Carnivore</span></td><td><span lang="ko">가장 가까운 초식을 쫓고, 아주 가까우면 순간 돌진. 먹은 뒤에는 한동안 소화하며 쉼. 피난처 안의 초식은 보지도 잡지도 못함</span><span lang="en">Chases the nearest herbivore and lunges when close; rests to digest after a meal. Cannot see or catch prey inside a refuge</span></td></tr>
+    <tr><td><span lang="ko">포낭</span><span lang="en">Cyst</span></td><td><span lang="ko">배고픈데 먹잇감이 없으면 육식 세포가 껍질을 만들고 멈춰 에너지를 거의 안 씀. 먹잇감이 가까이 오면 깨어남</span><span lang="en">A hungry carnivore with no prey in sight encysts: it stops and uses almost no energy, waking when prey comes near</span></td></tr>
+    <tr><td><span lang="ko">에너지</span><span lang="en">Energy</span></td><td><span lang="ko">기본 소모 + 속도² + 감지 거리에 비례해 줄어듦. 기준을 넘으면 둘로 분열, 0이면 죽음</span><span lang="en">Drains with a base cost + speed² + sensing range. Above a threshold the cell divides; at 0 it dies</span></td></tr>
+    <tr><td><span lang="ko">진화</span><span lang="en">Evolution</span></td><td><span lang="ko">분열한 자식은 부모의 속도·감지 거리를 물려받되 “돌연변이 크기”만큼 무작위로 조금 다름</span><span lang="en">Children inherit their parent's speed and sensing range, randomly changed by the “mutation size”</span></td></tr>
+  </table></div>
+
+  <h3><span lang="ko">가우스의 실험 (1934)</span><span lang="en">Gause's experiments (1934)</span></h3>
+  <p lang="ko">러시아의 생태학자 <b>게오르기 가우스</b>는 육식 원생동물 <b>디디늄</b>과 그 먹이인 <b>짚신벌레</b>를 시험관에 함께 넣었습니다. 결과는 공존이 아니라 멸종이었습니다. 디디늄이 짚신벌레를 모두 잡아먹고, 먹이가 사라진 디디늄도 굶어 죽었습니다. 공존은 두 조건에서만 가능했습니다.</p>
+  <p lang="en">The Russian ecologist <b>Georgii Gause</b> put the predatory protist <b>Didinium</b> and its prey <b>Paramecium</b> in a test tube together. Instead of coexisting, both went extinct: Didinium ate every Paramecium, then starved. Coexistence happened only under two conditions.</p>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">① 피난처</span><span lang="en">① Refuges</span></h4><p lang="ko">바닥에 침전물을 깔아 짚신벌레가 숨을 수 있게 하자, 살아남은 짚신벌레가 다시 번식했습니다. → 시나리오 “피난처 있음”</p><p lang="en">With sediment on the bottom for Paramecium to hide in, survivors repopulated the tube. → scenario “With refuges”</p></div>
+    <div class="card"><h4><span lang="ko">② 이주</span><span lang="en">② Immigration</span></h4><p lang="ko">며칠마다 두 종을 조금씩 새로 넣어 주자, 번성과 멸종 직전을 오가는 주기가 이어졌습니다. → 시나리오 “피난처 없음 + 이주”</p><p lang="en">Adding a few of each species every few days kept a boom-and-bust cycle going. → scenario “No refuges + immigration”</p></div>
+    <div class="card"><h4><span lang="ko">③ 아무것도 없으면</span><span lang="en">③ Neither</span></h4><p lang="ko">초식이 수천 틱 안에 사라지고 육식은 포낭으로 버티다 결국 사라집니다. → 시나리오 “피난처 없음”</p><p lang="en">Herbivores vanish within a few thousand ticks; carnivores hang on as cysts, then die out. → scenario “No refuges”</p></div>
+  </div>
+  <p class="meta" lang="ko">이 시뮬레이션을 만들면서도 똑같은 일이 일어났습니다. 수치를 아무리 조정해도 피난처 없이는 한쪽이 멸종했고, 피난처를 넣고 나서야 4만 틱 동안 공존했습니다.</p>
+  <p class="meta" lang="en">The same thing happened while building this simulation: no amount of parameter tuning gave lasting coexistence without refuges; with refuges it ran for 40,000 ticks.</p>
+
+  <h3><span lang="ko">수식으로 보면: 로트카–볼테라 방정식</span><span lang="en">The equations: Lotka–Volterra</span></h3>
+  <div class="panel">
+    <p class="formula">dH/dt = a·H − b·H·C<br>dC/dt = c·b·H·C − d·C</p>
+    <p lang="ko"><b>H</b> = 초식 수, <b>C</b> = 육식 수. 초식은 스스로 늘고(a), 육식을 만날수록 줄어듭니다(b). 육식은 먹은 만큼 늘고(c), 가만히 있으면 줄어듭니다(d). 이 두 식만으로 개체수가 엇갈려 도는 주기가 나옵니다.</p>
+    <p lang="en"><b>H</b> = herbivores, <b>C</b> = carnivores. Prey grow on their own (a) and shrink as they meet predators (b); predators grow with what they eat (c) and shrink otherwise (d). These two lines alone produce the out-of-step cycles.</p>
+    <p lang="ko">이 페이지는 수식을 풀지 않고 <b>세포 하나하나</b>를 움직이는 개체 기반 모델입니다. 그래서 수식에는 없는 일이 생깁니다. 개체 수가 정수라 운 나쁘게 0이 될 수 있고(멸종), 공간이 있어 피난처가 의미를 가지며, 개체마다 형질이 달라 진화가 일어납니다.</p>
+    <p lang="en">This page does not solve the equations; it moves <b>every cell individually</b> (an agent-based model). That adds things the equations lack: counts are whole numbers and can hit zero by bad luck (extinction), space makes refuges matter, and individual differences allow evolution.</p>
+  </div>
+
+  <h3><span lang="ko">해 볼 만한 실험</span><span lang="en">Things to try</span></h3>
+  <ul lang="ko">
+    <li><b>부영양화의 역설</b>: “먹이 자라는 속도”를 최대로 올려 보세요. 먹이가 많으면 좋을 것 같지만 주기의 폭이 커져 오히려 멸종하기 쉬워집니다.</li>
+    <li><b>구조 작전</b>: 피난처 없음으로 두고, 초식이 거의 사라질 때 “초식 3마리”로 접시를 눌러 살려 보세요.</li>
+    <li><b>진화 끄기</b>: “돌연변이 크기”를 0으로 하면 형질 그래프가 평평해집니다. 켰을 때와 결과를 비교해 보세요.</li>
+    <li><b>위상 그래프</b>: 오래 돌리면 점이 같은 고리를 반복해서 도는지, 점점 커지거나 작아지는지 보세요.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Paradox of enrichment</b>: push “Food growth” to the maximum. More food sounds good, but the cycles swing wider and extinction becomes more likely.</li>
+    <li><b>Rescue mission</b>: with no refuges, click the dish with “3 herbivores” just before they vanish.</li>
+    <li><b>Turn evolution off</b>: set “Mutation size” to 0 and the trait charts go flat. Compare with evolution on.</li>
+    <li><b>Phase plot</b>: run it for a while — does the dot repeat the same loop, or spiral outward or inward?</li>
+  </ul>
+  <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/eco/ecosim.js">ecosim.js</a> (<span lang="ko">시뮬레이션 규칙</span><span lang="en">simulation rules</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/eco/eco-app.js">eco-app.js</a> (<span lang="ko">화면</span><span lang="en">UI</span>)</p>
+</section>
+
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li>G. F. Gause, <i>The Struggle for Existence</i>, 1934</li>
+    <li>A. J. Lotka, <i>Elements of Physical Biology</i>, 1925 · V. Volterra, 1926</li>
+    <li>M. L. Rosenzweig, “Paradox of Enrichment”, <i>Science</i>, 1971</li>
+  </ul>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
