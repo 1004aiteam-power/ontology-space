@@ -428,9 +428,14 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .ctrl button:disabled{opacity:.5;cursor:default}
 /* 단세포 생태계 (ecosystem.html) */
 .eco-wrap{grid-template-columns:1fr}
-@media (min-width:900px){ .eco-side{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start} }   /* 접시는 폭 전체, 통계·위상 그래프는 아래에 나란히 */
+@media (min-width:900px){ .eco-wrap{grid-template-columns:minmax(0,4fr) minmax(0,1fr);align-items:end} }   /* 접시 80% + 오른쪽 아래 작은 시계열 */
 #dish{width:100%;display:block;border-radius:12px;border:1px solid var(--line);cursor:crosshair}
-.eco-side{display:grid;gap:12px;align-content:start}
+.eco-mini{padding:10px}
+.eco-mini b{font-size:13px}
+.eco-mini .chart-legend{font-size:11.5px;gap:4px 10px;margin:2px 0 0}
+.eco-chart.mini{height:170px}
+.eco-below{margin-top:8px}
+@media (min-width:700px){ #ecoStats{grid-template-columns:repeat(3,1fr) !important} }
 #ecoStats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 #ecoStats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 #ecoStats span{display:block;font-size:12px;color:var(--muted)}

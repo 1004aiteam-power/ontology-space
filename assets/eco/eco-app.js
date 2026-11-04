@@ -99,10 +99,10 @@ function drawDish() {
 
 // ---- 선 그래프 (개체수 · 형질): 십자선 + 툴팁, 선 끝 직접 라벨 -------------------------------
 function niceStep(max) { const r = max / 4, p = 10 ** Math.floor(Math.log10(r)); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= r); }
-function lineChart(id, rows, series, fmt = (v) => Math.round(v)) {
+function lineChart(id, rows, series, fmt = (v) => Math.round(v), compact = false) {   // compact: 작은 차트 (직접 라벨 없음, 범례로 구분)
   const canvas = $(id), { ctx, cw, ch } = fit(canvas);
   ctx.clearRect(0, 0, cw, ch);
-  const pad = { l: 42, r: 92, t: 10, b: 24 }, W = cw - pad.l - pad.r, H = ch - pad.t - pad.b;
+  const pad = compact ? { l: 30, r: 8, t: 8, b: 20 } : { l: 42, r: 92, t: 10, b: 24 }, W = cw - pad.l - pad.r, H = ch - pad.t - pad.b;
   const vals = rows.flatMap(r => series.map(s => r[s.key])).filter(Number.isFinite);
   const ymax = Math.max(1e-6, ...vals) * 1.1;
   const t0 = rows[0]?.t ?? 0, t1 = Math.max(t0 + 1, rows.at(-1)?.t ?? 1);
@@ -130,6 +130,7 @@ function lineChart(id, rows, series, fmt = (v) => Math.round(v)) {
     const last = [...rows].reverse().find(r => Number.isFinite(r[s.key]));
     if (last) ends.push({ s, y: Y(last[s.key]), x: X(last.t), v: last[s.key] });
   }
+  if (compact) ends.length = 0;                        // 작은 차트는 끝점 라벨 생략
   // 직접 라벨: 겹치지 않게 아래로 밀기
   ends.sort((a, b) => a.y - b.y);
   for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].ly = (ends[i - 1].ly ?? ends[i - 1].y) + 14;
@@ -166,7 +167,7 @@ function drawCharts() {
   lineChart('foodChart', rows, [{ key: 'food', color: COL.food, label: NAME.food }]);
   lineChart('speedChart', rows, [{ key: 'hSpeed', color: COL.herb, label: NAME.herb }, { key: 'cSpeed', color: COL.carn, label: NAME.carn }], v => v.toFixed(2));
   lineChart('senseChart', rows, [{ key: 'hSense', color: COL.herb, label: NAME.herb }, { key: 'cSense', color: COL.carn, label: NAME.carn }]);
-  lineChart('liveChart', eco.history.slice(-300), POP_SERIES);   // 실시간: 최근 3,000틱
+  lineChart('liveChart', eco.history.slice(-300), POP_SERIES, undefined, true);   // 접시 옆 작은 차트: 최근 3,000틱
 }
 
 function updateTable() {

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/eco/eco-app.js?v=20261104c"></script>
+<script type="module" src="assets/eco/eco-app.js?v=20261104d"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -78,25 +78,23 @@
   </div>
 
   <div class="sim-wrap eco-wrap">
-    <div>
-      <canvas id="dish" aria-label="culture dish"></canvas>
-      <p class="meta legend-line">
-        <span><i class="dot" style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">herbivore</span></span>
-        <span><i class="dot" style="background:#d95926"></i><span lang="ko">육식 세포 (벌린 입 = 진행 방향, 가운데 점 = 소화 중)</span><span lang="en">carnivore (open mouth = heading, dark dot = digesting)</span></span>
-        <span><i class="dot ring"></i><span lang="ko">포낭 (휴면 중인 육식)</span><span lang="en">cyst (dormant carnivore)</span></span>
-        <span><i class="sq" style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">food</span></span>
-        <span><i class="dot sed"></i><span lang="ko">피난처 (침전물)</span><span lang="en">refuge (sediment)</span></span>
-      </p>
-    </div>
-    <div class="eco-side">
-      <div id="ecoStats"></div>
-      <div class="panel chart-box">
-        <b><span lang="ko">개체수 (실시간 · 최근 3,000틱)</span><span lang="en">Population (live · last 3,000 ticks)</span></b>
+    <canvas id="dish" aria-label="culture dish"></canvas>
+      <div class="panel chart-box eco-mini">
+        <b><span lang="ko">개체수 · 최근 3,000틱</span><span lang="en">Population · last 3,000 ticks</span></b>
         <div class="chart-legend"><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
-        <canvas id="liveChart" class="eco-chart small" aria-label="live population chart"></canvas>
+        <canvas id="liveChart" class="eco-chart mini" aria-label="live population chart"></canvas>
         <div id="liveChartTip" class="eco-tip" hidden></div>
       </div>
-    </div>
+  </div>
+  <div class="sim-wrap eco-below">
+    <p class="meta legend-line">
+      <span><i class="dot" style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">herbivore</span></span>
+      <span><i class="dot" style="background:#d95926"></i><span lang="ko">육식 세포 (벌린 입 = 진행 방향, 가운데 점 = 소화 중)</span><span lang="en">carnivore (open mouth = heading, dark dot = digesting)</span></span>
+      <span><i class="dot ring"></i><span lang="ko">포낭 (휴면 중인 육식)</span><span lang="en">cyst (dormant carnivore)</span></span>
+      <span><i class="sq" style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">food</span></span>
+      <span><i class="dot sed"></i><span lang="ko">피난처 (침전물)</span><span lang="en">refuge (sediment)</span></span>
+    </p>
+    <div id="ecoStats"></div>
   </div>
 
   <h3><span lang="ko">개체수 변화 (최근 15,000틱)</span><span lang="en">Population over time (last 15,000 ticks)</span></h3>
