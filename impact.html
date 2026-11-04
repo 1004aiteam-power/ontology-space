@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script src="assets/impact.js" defer></script>
+<script src="assets/impact.js?v=7" defer></script>
 <style>
 .thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
 .im-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
@@ -70,6 +70,13 @@ table.im-rt tr.now th,table.im-rt tr.now td{background:var(--accent-soft)}
 .im-play[aria-pressed="true"]{background:var(--warm) !important;color:#fff !important}
 .im-speed input{width:90px}
 .im-speed b{font-variant-numeric:tabular-nums;min-width:38px;display:inline-block}
+.im-swg .sym{fill:var(--surface);stroke:var(--text);stroke-width:2}
+.im-swg.closed .sym{fill:var(--text)}
+.im-swg.op .sym{stroke:var(--warm);stroke-width:3}
+.im-swg .ring{fill:none;stroke:var(--warm);stroke-width:2.5;transform-box:fill-box;transform-origin:center;animation:imRing 1s ease-out infinite}
+.im-swg .ring.r2{animation-delay:.5s}
+@keyframes imRing{from{transform:scale(1);opacity:.9}to{transform:scale(2.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.im-swg .ring{animation:none;opacity:.8}}
 .im-sw.op{fill:var(--warm);font-weight:700;font-size:13px}
 .im-steps{list-style:none;margin:10px 0 0;padding:0;font-size:13px}
 .im-steps li{border-left:3px solid var(--line);padding:3px 0 3px 9px;margin:0 0 4px;color:var(--muted)}

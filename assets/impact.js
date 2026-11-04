@@ -125,6 +125,16 @@
     return st;
   }
 
+  // 개폐기 기호. 닫힘 = 채운 ●(차단기 ■, 공급 선로 색), 열림 = 빈 ○. 조작 중인 개폐기는 주황 고리가 퍼진다.
+  function swSym(x, y, id, open, kind, color, st) {
+    const op = st.op === id, r = 7;
+    let h = `<g class="im-swg${open ? ' open' : ' closed'}${op ? ' op' : ''}">`;
+    if (op) h += `<circle cx="${x}" cy="${y}" r="${r + 2}" class="ring"/><circle cx="${x}" cy="${y}" r="${r + 2}" class="ring r2"/>`;
+    h += kind === 'cb' ? `<rect x="${x - r}" y="${y - r}" width="${2 * r}" height="${2 * r}" rx="2" class="sym" style="${!open && color ? `fill:${color}` : ''}"/>`
+                       : `<circle cx="${x}" cy="${y}" r="${r}" class="sym" style="${!open && color ? `fill:${color}` : ''}"/>`;
+    return h + '</g>';
+  }
+
   function draw() {
     const { W, H } = layout.cache || (layout.cache = layout());
     const st = state();
@@ -142,20 +152,25 @@
     }
     const cb = POS[D.chain[D.chain.length - 1].id], z1 = POS.Z1;
     s += `<path d="${curve(mid(cb, 'r'), mid(z1, 'l'))}" class="im-e${st.affectedChain.size ? ' hot' : ''}${st.opened.has('CB_DL1') ? ' cut' : ''}" marker-end="url(#imA)"/>
-      <text x="${(cb.x + cb.w + z1.x) / 2 - 30}" y="${(cb.y + cb.h / 2 + z1.y + z1.h / 2) / 2 - 8}" class="im-sw${st.op === 'CB_DL1' ? ' op' : ''}">≡ CB_DL1${st.opened.has('CB_DL1') ? ' ○' : ''}</text>`;
+      <text x="${(cb.x + cb.w + z1.x) / 2 - 30}" y="${(cb.y + cb.h / 2 + z1.y + z1.h / 2) / 2 - 14}" class="im-sw${st.op === 'CB_DL1' ? ' op' : ''}">≡ CB_DL1</text>`;
+    { const [x1, y1] = mid(cb, 'r'), [x2, y2] = mid(z1, 'l');
+      s += swSym((x1 + x2) / 2, (y1 + y2) / 2, 'CB_DL1', st.opened.has('CB_DL1'), 'cb', st.supply.Z1 === 'DL1' ? FCOL.DL1 : null, st); }
     D.zones.forEach((z, i) => {
       const a = POS[z.id];
       for (const d of z.down) {
         const nx = D.zones.find(y => y.up === d), b = POS[nx.id], open = st.opened.has(d);
         s += `<path d="M${a.x + 20},${a.y + a.h}V${b.y}" class="im-e${open ? ' cut' : ''}" marker-end="url(#imA)"/>
-          <text x="${a.x + 26}" y="${(a.y + a.h + b.y) / 2 + 4}" class="im-sw${st.op === d ? ' op' : ''}">${d}${open ? ' ○' : ''}</text>`;
+          <text x="${a.x + 32}" y="${(a.y + a.h + b.y) / 2 + 4}" class="im-sw${st.op === d ? ' op' : ''}">${d}</text>`;
+        s += swSym(a.x + 20, (a.y + a.h + b.y) / 2, d, open, 'sw', st.supply[z.id] && st.supply[z.id] === st.supply[nx.id] ? FCOL[st.supply[z.id]] : null, st);
       }
       for (const l of z.loads) s += `<path d="${curve(mid(a, 'r'), mid(POS[l], 'l'))}" class="im-e${st.dead.has(l) ? ' hot' : ''}"/>`;
       for (const t of z.ties) {
         const f = D.tieFeeder[t], b = POS[f], used = st.used.has(t);
-        const p1 = [a.x + a.w, a.y + 8], p2 = mid(b, 'l');
+        const p1 = [a.x + a.w + 23, a.y + 8], p2 = mid(b, 'l');
+        s += `<path d="M${a.x + a.w},${a.y + 8}H${a.x + a.w + 9}" class="im-tie${used ? ' used' : ''}" style="${used ? `stroke:${FCOL[f]}` : ''}"/>`;
         s += `<path d="${curve(p1, p2)}" class="im-tie${used ? ' used' : ''}" style="${used ? `stroke:${FCOL[f]}` : ''}"/>
-          <text x="${a.x + a.w + 8}" y="${a.y + 4}" class="im-sw${used ? ' on' : ''}${st.op === t ? ' op' : ''}">${t}${used ? ' ●' : ' ○'}</text>`;
+          <text x="${a.x + a.w + 8}" y="${a.y - 2}" class="im-sw${used ? ' on' : ''}${st.op === t ? ' op' : ''}">${t}</text>`;
+        s += swSym(a.x + a.w + 16, a.y + 8, t, !used, 'sw', used ? FCOL[f] : null, st);
       }
     });
     // 노드: 자산·기능 위치
@@ -324,7 +339,7 @@
 
   async function main() {
     if (!$('imGraph')) return;
-    try { D = await (await fetch('assets/data/impact.json')).json(); } catch (e) { $('imGraph').textContent = 'impact.json?'; return; }
+    try { D = await (await fetch('assets/data/impact.json?v=7')).json(); } catch (e) { $('imGraph').textContent = 'impact.json?'; return; }
     document.querySelectorAll('[data-im-phase]').forEach(b => b.addEventListener('click', () => { phase = b.dataset.imPhase; render(); }));
     document.querySelectorAll('[data-im-mode]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.imMode; render(); }));
     document.querySelectorAll('[data-im-phase]').forEach(b => b.addEventListener('click', () => { stopAnim(true); }, true));
