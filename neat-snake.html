@@ -51,6 +51,108 @@
   <p class="lead" lang="en">A second example using the same NEAT implementation (<code>neat.js</code>) as the <a href="physical-ai.html#lab">NEAT self-driving simulation</a>. The cars learned a continuous <b>steering</b> value; here the network <b>picks one of three actions</b>. Snakes that first charge into walls start chasing food within a few generations, and later learn to avoid their own bodies.</p>
 </div>
 
+<section id="guide">
+  <div class="badge">GUIDE</div>
+  <h2><span lang="ko">처음 보는 분을 위한 안내</span><span lang="en">New here? Start with this</span></h2>
+  <p lang="ko">한 줄 요약: <b>뱀에게 조종법을 가르쳐 주지 않고, 잘한 뱀끼리 자손을 낳게 해서 점점 잘하게 만드는 실험</b>입니다.</p>
+  <p lang="en">In one line: <b>nobody teaches the snakes how to play — the better ones have children, and the population gets better over time.</b></p>
+
+  <h3><span lang="ko">1. 뱀의 뇌 = 작은 신경망</span><span lang="en">1. The snake's brain is a small neural network</span></h3>
+  <p lang="ko">뱀은 매 걸음 아래 7가지를 보고 세 행동 중 하나를 고릅니다. 처음에는 연결 세기(가중치)가 무작위라 벽으로 돌진하거나 엉뚱하게 움직입니다.</p>
+  <p lang="en">At every step the snake looks at these 7 things and picks one of three moves. At first the connection strengths (weights) are random, so it charges into walls or wanders.</p>
+  <div class="diagram">
+  <svg viewBox="0 0 680 300" role="img" aria-label="snake brain: 7 inputs to 3 actions">
+    <text x="160" y="22" text-anchor="end" style="font-weight:600" lang="ko">보는 것 (입력 7개)</text><text x="160" y="22" text-anchor="end" style="font-weight:600" lang="en">What it sees (7 inputs)</text>
+    <text x="500" y="22" style="font-weight:600" lang="ko">고르는 것 (출력 3개)</text><text x="500" y="22" style="font-weight:600" lang="en">What it picks (3 outputs)</text>
+    <g stroke="var(--line)" stroke-width="1">
+      <line x1="180" y1="48" x2="480" y2="88"/>
+      <line x1="180" y1="48" x2="480" y2="148"/>
+      <line x1="180" y1="48" x2="480" y2="208"/>
+      <line x1="180" y1="80" x2="480" y2="88"/>
+      <line x1="180" y1="80" x2="480" y2="148"/>
+      <line x1="180" y1="80" x2="480" y2="208"/>
+      <line x1="180" y1="112" x2="480" y2="88"/>
+      <line x1="180" y1="112" x2="480" y2="148"/>
+      <line x1="180" y1="112" x2="480" y2="208"/>
+      <line x1="180" y1="144" x2="480" y2="88"/>
+      <line x1="180" y1="144" x2="480" y2="148"/>
+      <line x1="180" y1="144" x2="480" y2="208"/>
+      <line x1="180" y1="176" x2="480" y2="88"/>
+      <line x1="180" y1="176" x2="480" y2="148"/>
+      <line x1="180" y1="176" x2="480" y2="208"/>
+      <line x1="180" y1="208" x2="480" y2="88"/>
+      <line x1="180" y1="208" x2="480" y2="148"/>
+      <line x1="180" y1="208" x2="480" y2="208"/>
+      <line x1="180" y1="240" x2="480" y2="88"/>
+      <line x1="180" y1="240" x2="480" y2="148"/>
+      <line x1="180" y1="240" x2="480" y2="208"/>
+    </g>
+    <line x1="180" y1="208" x2="480" y2="88" stroke="var(--accent)" stroke-width="4"/>
+    <line x1="180" y1="48" x2="480" y2="148" stroke="var(--warm)" stroke-width="4"/>
+    <circle cx="180" cy="48" r="7" fill="var(--surface)" stroke="var(--warm)" stroke-width="2"/><text x="164" y="52" text-anchor="end" lang="ko">위험: 앞 칸</text><text x="164" y="52" text-anchor="end" lang="en">danger ahead</text>
+    <circle cx="180" cy="80" r="7" fill="var(--surface)" stroke="var(--warm)" stroke-width="2"/><text x="164" y="84" text-anchor="end" lang="ko">위험: 왼쪽 칸</text><text x="164" y="84" text-anchor="end" lang="en">danger left</text>
+    <circle cx="180" cy="112" r="7" fill="var(--surface)" stroke="var(--warm)" stroke-width="2"/><text x="164" y="116" text-anchor="end" lang="ko">위험: 오른쪽 칸</text><text x="164" y="116" text-anchor="end" lang="en">danger right</text>
+    <circle cx="180" cy="144" r="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="164" y="148" text-anchor="end" lang="ko">먹이가 앞에</text><text x="164" y="148" text-anchor="end" lang="en">food ahead</text>
+    <circle cx="180" cy="176" r="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="164" y="180" text-anchor="end" lang="ko">먹이가 뒤에</text><text x="164" y="180" text-anchor="end" lang="en">food behind</text>
+    <circle cx="180" cy="208" r="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="164" y="212" text-anchor="end" lang="ko">먹이가 왼쪽에</text><text x="164" y="212" text-anchor="end" lang="en">food on the left</text>
+    <circle cx="180" cy="240" r="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/><text x="164" y="244" text-anchor="end" lang="ko">먹이가 오른쪽에</text><text x="164" y="244" text-anchor="end" lang="en">food on the right</text>
+    <circle cx="480" cy="88" r="10" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/><text x="500" y="93" style="font-size:15px;font-weight:600" lang="ko">좌회전</text><text x="500" y="93" style="font-size:15px;font-weight:600" lang="en">Turn left</text>
+    <circle cx="480" cy="148" r="10" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/><text x="500" y="153" style="font-size:15px;font-weight:600" lang="ko">직진</text><text x="500" y="153" style="font-size:15px;font-weight:600" lang="en">Straight</text>
+    <circle cx="480" cy="208" r="10" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/><text x="500" y="213" style="font-size:15px;font-weight:600" lang="ko">우회전</text><text x="500" y="213" style="font-size:15px;font-weight:600" lang="en">Turn right</text>
+    <text x="500" y="250" class="muted" lang="ko">셋 중 값이 가장 큰 행동을 고름</text><text x="500" y="250" class="muted" lang="en">the largest of the three wins</text>
+    <g class="muted"><line x1="20" y1="284" x2="44" y2="284" stroke="var(--accent)" stroke-width="4"/><text x="52" y="288" class="muted" lang="ko">예) 먹이가 왼쪽에 있으면 → 좌회전 쪽으로 (+)</text><text x="52" y="288" class="muted" lang="en">e.g. food on the left → push towards “turn left” (+)</text>
+    <line x1="340" y1="284" x2="364" y2="284" stroke="var(--warm)" stroke-width="4"/><text x="372" y="288" class="muted" lang="ko">예) 앞이 위험하면 → 직진하지 마 (−)</text><text x="372" y="288" class="muted" lang="en">e.g. danger ahead → don’t go straight (−)</text></g>
+  </svg>
+  </div>
+
+  <h3><span lang="ko">2. 진화로 배우기 — 한 바퀴 = 한 세대</span><span lang="en">2. Learning by evolution — one loop = one generation</span></h3>
+  <div class="diagram">
+  <svg viewBox="0 0 760 210" role="img" aria-label="evolution cycle">
+    <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+    <rect x="20" y="20" width="150" height="96" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+    <text x="95" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="ko">① 게임하기</text><text x="95" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="en">① Play</text>
+    <text x="95" y="76" text-anchor="middle" lang="ko">150마리가 각자</text><text x="95" y="76" text-anchor="middle" lang="en">150 snakes, each</text>
+    <text x="95" y="98" text-anchor="middle" lang="ko">3판씩 게임</text><text x="95" y="98" text-anchor="middle" lang="en">plays 3 games</text>
+    <line x1="174" y1="68" x2="206" y2="68" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr)"/>
+    <rect x="210" y="20" width="150" height="96" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+    <text x="285" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="ko">② 점수 매기기</text><text x="285" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="en">② Score</text>
+    <text x="285" y="76" text-anchor="middle" lang="ko">먹이 1개 = 100점</text><text x="285" y="76" text-anchor="middle" lang="en">1 food = 100 points</text>
+    <text x="285" y="98" text-anchor="middle" lang="ko">오래 버티면 조금 더</text><text x="285" y="98" text-anchor="middle" lang="en">a little for surviving</text>
+    <line x1="364" y1="68" x2="396" y2="68" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr)"/>
+    <rect x="400" y="20" width="150" height="96" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+    <text x="475" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="ko">③ 부모 고르기</text><text x="475" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="en">③ Pick parents</text>
+    <text x="475" y="76" text-anchor="middle" lang="ko">종마다 점수 높은</text><text x="475" y="76" text-anchor="middle" lang="en">in each species the</text>
+    <text x="475" y="98" text-anchor="middle" lang="ko">뱀을 부모로</text><text x="475" y="98" text-anchor="middle" lang="en">top scorers breed</text>
+    <line x1="554" y1="68" x2="586" y2="68" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr)"/>
+    <rect x="590" y="20" width="150" height="96" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+    <text x="665" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="ko">④ 자손 만들기</text><text x="665" y="48" text-anchor="middle" style="font-weight:700;font-size:15px" lang="en">④ Make children</text>
+    <text x="665" y="76" text-anchor="middle" lang="ko">뇌 섞기 (교차)</text><text x="665" y="76" text-anchor="middle" lang="en">mix brains (crossover)</text>
+    <text x="665" y="98" text-anchor="middle" lang="ko">조금 바꾸기 (변이)</text><text x="665" y="98" text-anchor="middle" lang="en">tweak a bit (mutation)</text>
+    <path d="M665 120 V170 H95 V122" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arr)"/>
+    <text x="380" y="194" text-anchor="middle" class="muted" lang="ko">다음 세대 150마리로 ①부터 다시 — 세대가 지날수록 먹이를 더 많이 먹게 됨</text><text x="380" y="194" text-anchor="middle" class="muted" lang="en">The next 150 start again at ① — each generation eats more food</text>
+  </svg>
+  </div>
+  <p lang="ko">이렇게 반복하면 “먹이가 왼쪽에 있으면 좌회전”, “앞이 위험하면 꺾기” 같은 규칙이 <b>누가 알려 주지 않아도</b> 저절로 생깁니다.</p>
+  <p lang="en">Repeat this and rules like “food on the left → turn left” and “danger ahead → turn” appear <b>without anyone writing them</b>.</p>
+
+  <h3><span lang="ko">3. NEAT만의 두 가지 특징</span><span lang="en">3. Two things that make NEAT special</span></h3>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">뇌의 구조가 자란다</span><span lang="en">The brain's structure grows</span></h4><p lang="ko">보통 신경망은 모양이 정해져 있고 가중치만 바뀝니다. NEAT는 필요하면 <b>새 연결이나 새 노드(은닉 노드)</b>를 추가합니다. 오른쪽 신경망 그림에서 가운데에 작은 점이 생기면 그것이 새 노드입니다.</p><p lang="en">A normal network has a fixed shape and only its weights change. NEAT can <b>add new links and new (hidden) nodes</b> when they help. A small dot appearing in the middle of the network panel is a new node.</p></div>
+    <div class="card"><h4><span lang="ko">종(species)으로 새 구조를 보호</span><span lang="en">Species protect new ideas</span></h4><p lang="ko">뇌가 비슷한 뱀끼리 <b>종</b>으로 묶어 종 안에서 경쟁시킵니다. 막 새 구조가 생긴 뱀은 처음엔 서툴러서 바로 밀려나기 쉬운데, 종이 그런 뱀이 다듬어질 시간을 벌어 줍니다. 아래 작은 판들의 테두리 색이 종입니다.</p><p lang="en">Snakes with similar brains are grouped into <b>species</b> and mostly compete within them. A brand-new structure is clumsy at first; its species gives it time to improve before it is wiped out. The border colours of the small boards are species.</p></div>
+  </div>
+
+  <h3><span lang="ko">4. 아래 실습 화면 보는 법</span><span lang="en">4. How to read the lab below</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">화면</span><span lang="en">On screen</span></th><th><span lang="ko">의미</span><span lang="en">Meaning</span></th></tr>
+    <tr><td><span lang="ko">큰 판의 노란 뱀</span><span lang="en">Yellow snake on the big board</span></td><td><span lang="ko">지금 가장 잘하는 뱀. 빨간 점이 먹이, 머리 옆 ✕는 “위험하다”고 느끼는 칸</span><span lang="en">The best snake right now. Red dot = its food, ✕ = cells it senses as deadly</span></td></tr>
+    <tr><td><span lang="ko">오른쪽 신경망</span><span lang="en">Network panel</span></td><td><span lang="ko">그 뱀의 뇌. 파란 선 = “그쪽으로 가라”(+), 주황 선 = “가지 마라”(−), 노란 동그라미 = 방금 고른 행동</span><span lang="en">That snake's brain. Blue = “go that way” (+), orange = “don't” (−), yellow ring = the move just chosen</span></td></tr>
+    <tr><td><span lang="ko">개체군 작은 판</span><span lang="en">Population boards</span></td><td><span lang="ko">150마리 각각의 게임. 테두리 색 = 종, 흐린 판의 숫자 = 끝난 뱀의 평균 먹이 수</span><span lang="en">Each of the 150 games. Border = species, number on a faded board = average food of a finished snake</span></td></tr>
+    <tr><td><span lang="ko">학습 곡선</span><span lang="en">Learning curve</span></td><td><span lang="ko">세대마다 먹은 먹이 수. 올라가면 진화가 잘 되고 있다는 뜻</span><span lang="en">Food eaten per generation — rising means evolution is working</span></td></tr>
+  </table></div>
+  <p lang="ko"><b>자율주행 예제와의 차이:</b> <a href="physical-ai.html#lab">자율주행</a> 차는 핸들을 얼마나 꺾을지(연속값)를 배웠고, 스네이크는 세 가지 중 <b>하나를 고르는 것</b>을 배웁니다. 이제 아래에서 <b>▶ 학습 시작</b>을 눌러 보세요.</p>
+  <p lang="en"><b>Compared with self-driving:</b> the <a href="physical-ai.html#lab">cars</a> learned how much to steer (a continuous value); the snakes learn to <b>pick one of three moves</b>. Now press <b>▶ Train</b> below.</p>
+</section>
+
 <section id="lab">
   <div class="badge">LAB</div>
   <h2><span lang="ko">NEAT 스네이크 시뮬레이션</span><span lang="en">NEAT Snake simulation</span></h2>
