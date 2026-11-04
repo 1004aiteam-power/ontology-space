@@ -407,3 +407,10 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .fl-cmi > div{margin:4px 0;font-variant-numeric:tabular-nums}
 .fl-cmi .sw{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:8px}
 .fl-cmi .muted{color:var(--muted)}
+
+/* 소개 페이지: 만든 이의 생각 */
+.opinion{max-width:780px}
+.opinion blockquote{margin:18px 0 22px;padding:6px 0 6px 22px;border-left:4px solid var(--warm)}
+.opinion .quote{font-size:clamp(20px,3vw,27px);font-weight:700;line-height:1.5;margin:0;color:var(--text)}
+.opinion p{font-size:17px}
+.opinion .sig{color:var(--muted);font-size:14px;text-align:right;margin-top:18px}
