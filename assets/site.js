@@ -58,8 +58,9 @@
     tools.prepend(btn);
   }
 
-  // ---- nav 드롭다운 (온톨로지 설계실) ----
+  // ---- nav 드롭다운 (피지컬 AI · 온톨로지 설계실) ----
   function initMenus() {
+    const closers = [];
     document.querySelectorAll('.menu-btn').forEach(btn => {
       const menu = document.getElementById(btn.getAttribute('aria-controls'));
       if (!menu) return;
@@ -73,7 +74,8 @@
         menu.style.top = (b.bottom - h.top + 4) + 'px';
       };
       const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
-      const open = () => { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); place(); };
+      closers.push(close);
+      const open = () => { closers.forEach(c => c()); menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); place(); };   // 한 번에 하나만 열림
       btn.addEventListener('click', e => { e.stopPropagation(); menu.hidden ? open() : close(); });
       document.addEventListener('click', e => { if (!menu.contains(e.target)) close(); });
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { close(); btn.focus(); } });
