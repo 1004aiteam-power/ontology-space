@@ -95,6 +95,7 @@ export class Ecosystem {
     this.food = []; this.cells = [];
     this.nextId = 1;
     this.events = [];          // 화면 효과용: { type: 'split'|'eat'|'die', x, y, kind }
+    this.deaths = { herb: { starve: 0, age: 0, eaten: 0 }, carn: { starve: 0, age: 0 } };   // 누적 사망 원인
     this.history = [];         // 일정 간격 기록 { t, food, herb, carn, hSpeed, hSense, cSpeed, cSense }
     this.foodGrid = new Grid(32); this.herbGrid = new Grid(40);
     for (let i = 0; i < this.cfg.food.init; i++) this.addFood();
@@ -224,7 +225,7 @@ export class Ecosystem {
         const prey = this.herbGrid.nearest(c.x, c.y, k.radius + cfg.herb.radius, hidden);
         if (prey) {
           c.full = k.digest;
-          prey.dead = true;
+          prey.dead = true; this.deaths.herb.eaten++;
           c.energy += k.gain * prey.energy + k.bonus;
           this.events.push({ type: 'eat', x: prey.x, y: prey.y, kind: 'carn' });
         }
@@ -233,7 +234,9 @@ export class Ecosystem {
       c.age++;
       if (c.energy <= 0 || c.age > k.maxAge) {
         c.dead = true;
-        this.events.push({ type: 'die', x: c.x, y: c.y, kind: c.kind, cause: c.energy <= 0 ? 'starve' : 'age' });
+        const cause = c.energy <= 0 ? 'starve' : 'age';
+        this.deaths[c.kind][cause]++;
+        this.events.push({ type: 'die', x: c.x, y: c.y, kind: c.kind, cause });
       } else if (c.energy >= k.split && cells.length < cfg.maxCells) this.divide(c);
     }
     // 4) 정리

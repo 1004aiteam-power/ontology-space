@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 단세포 생태계 페이지: 배양 접시 · 개체수 그래프 · 형질 진화
-import { Ecosystem, WORLD } from './ecosim.js?v=20261104h';
+import { Ecosystem, WORLD } from './ecosim.js?v=20261104i';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (window.t ? window.t(o) : o.ko);
@@ -20,6 +20,7 @@ const SCENARIOS = {
   immig: { label: { ko: '피난처 없음 + 초식 이주 (가우스 실험 2)', en: 'No refuges + herbivore immigration (Gause 2)' }, opts: { refuge: { on: false }, immigration: { herb: 0.01 } } }
 };
 const SPEEDS = [1, 4, 16, 'max'];
+const DIE_LIFE = 120;        // 죽음 표시 프레임 수 (약 2초)
 
 let eco, running = false, speedIdx = 0, addMode = 'herb';
 let effects = [];           // { x, y, kind, type, life }
@@ -66,21 +67,26 @@ function drawDish() {
       ctx.fillStyle = COL.herb; ctx.beginPath(); ctx.arc(c.x, c.y, 4, 0, 7); ctx.fill();
       ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(c.x - 1, c.y - 1, 1.3, 0, 7); ctx.fill();   // 핵
     } else {
-      // 입이 진행 방향으로 벌어진 원
+      // 입이 진행 방향으로 벌어진 원. 배고플수록(에너지가 적을수록) 옅고 작아짐 → 굶어 가는 모습이 보임
+      const full = Math.max(0.12, Math.min(1, c.energy / eco.cfg.carn.birth)), R = 4 + 2.5 * full;
+      ctx.globalAlpha = 0.3 + 0.7 * full;
       ctx.fillStyle = COL.carn; ctx.beginPath();
-      ctx.moveTo(c.x, c.y); ctx.arc(c.x, c.y, 6.5, c.a + 0.45, c.a - 0.45 + Math.PI * 2); ctx.closePath(); ctx.fill();
+      ctx.moveTo(c.x, c.y); ctx.arc(c.x, c.y, R, c.a + 0.45, c.a - 0.45 + Math.PI * 2); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
       if (c.full > 0) { ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.arc(c.x - Math.cos(c.a) * 2, c.y - Math.sin(c.a) * 2, 2.2, 0, 7); ctx.fill(); }   // 소화 중
     }
   }
   // 효과: 분열 = 퍼지는 고리, 포식 = 붉은 번쩍임
   for (const e of effects) {
-    const p = 1 - e.life / (e.type === 'die' ? 40 : 18);
+    const p = 1 - e.life / (e.type === 'die' ? DIE_LIFE : 18);
     ctx.globalAlpha = Math.max(0, 1 - p);
     if (e.type === 'split') { ctx.globalAlpha *= 0.6; ctx.strokeStyle = COL[e.kind]; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(e.x, e.y, 5 + p * 12, 0, 7); ctx.stroke(); }
     else if (e.type === 'eat') { ctx.fillStyle = COL.carn; ctx.beginPath(); ctx.arc(e.x, e.y, 3 + p * 9, 0, 7); ctx.fill(); }
-    else if (e.type === 'die' && e.kind === 'carn') {   // 굶어 죽은 육식: 빛이 바래며 줄어들어 사라짐
-      ctx.globalAlpha *= 0.8; ctx.fillStyle = COL.carn; ctx.beginPath(); ctx.arc(e.x, e.y, 6.5 * (1 - p), 0, 7); ctx.fill();
-      ctx.globalAlpha /= 0.8; ctx.strokeStyle = dark() ? '#9aa3ab' : '#6b737b'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(e.x, e.y, 6.5 + p * 4, 0, 7); ctx.stroke();
+    else if (e.type === 'die' && e.kind === 'carn') {   // 죽은 육식: 회색 ✕ + 퍼지는 고리 (약 2초)
+      const g = dark() ? '#c3c9cf' : '#5b636b';
+      ctx.strokeStyle = g; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(e.x - 5, e.y - 5); ctx.lineTo(e.x + 5, e.y + 5); ctx.moveTo(e.x + 5, e.y - 5); ctx.lineTo(e.x - 5, e.y + 5); ctx.stroke();
+      ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(e.x, e.y, 7 + p * 16, 0, 7); ctx.stroke();
     }
     else if (e.type === 'arrive') { ctx.strokeStyle = css('--text'); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(e.x, e.y, 14 - p * 9, 0, 7); ctx.stroke(); }
   }
@@ -203,7 +209,7 @@ function stats() {
   const cells = [
     [t(NAME.food), c.food, COL.food],
     [t(NAME.herb), `${c.herb}${ext(c.herb)}`, COL.herb, eco.cfg.refuge.on ? t({ ko: `피난처 안 ${safe}`, en: `${safe} in refuges` }) : ''],
-    [t(NAME.carn), `${c.carn}${ext(c.carn)}`, COL.carn, t({ ko: `소화 중 ${eco.cells.filter(x => x.full > 0).length}`, en: `${eco.cells.filter(x => x.full > 0).length} digesting` })],
+    [t(NAME.carn), `${c.carn}${ext(c.carn)}`, COL.carn, t({ ko: `지금까지 굶어 죽음 ${eco.deaths.carn.starve} · 수명 ${eco.deaths.carn.age}`, en: `died: ${eco.deaths.carn.starve} starved · ${eco.deaths.carn.age} old age` })],
     [t({ ko: '초식 평균 속도 · 감지', en: 'Herb speed · sense' }), `${f2(h.speed)} · ${f0(h.sense)}`, null, t({ ko: `최대 ${h.maxGen}세대`, en: `gen ${h.maxGen}` })],
     [t({ ko: '육식 평균 속도 · 감지', en: 'Carn speed · sense' }), `${f2(k.speed)} · ${f0(k.sense)}`, null, t({ ko: `최대 ${k.maxGen}세대`, en: `gen ${k.maxGen}` })],
     [t({ ko: '계절 · 경과 시간', en: 'Season · elapsed' }), `${eco.season() >= 0 ? t(SEASON_NAME[eco.season()]) + ' · ' : ''}${eco.t.toLocaleString()}${t({ ko: '틱', en: '' })}`, null,
@@ -231,7 +237,7 @@ function frame(now) {
 function tick() {
   eco.step();
   if (SPEEDS[speedIdx] === 'max' || effects.length > 300) return;     // 빠를 때는 효과 생략
-  for (const e of eco.events) if (e.type === 'split' || e.type === 'eat' || e.type === 'arrive' || (e.type === 'die' && e.kind === 'carn')) effects.push({ ...e, life: e.type === 'die' ? 40 : 18 });
+  for (const e of eco.events) if (e.type === 'split' || e.type === 'eat' || e.type === 'arrive' || (e.type === 'die' && e.kind === 'carn')) effects.push({ ...e, life: e.type === 'die' ? DIE_LIFE : 18 });
 }
 
 // ---- 조작부 ----------------------------------------------------------------------
