@@ -21,7 +21,7 @@ const SCENARIOS = {
 };
 const SPEEDS = [1, 4, 16, 'max'];
 
-let eco, running = false, speedIdx = 2, addMode = 'herb';
+let eco, running = false, speedIdx = 0, addMode = 'herb';
 let effects = [];           // { x, y, kind, type, life }
 const hover = {};           // 차트별 마우스 위치
 
