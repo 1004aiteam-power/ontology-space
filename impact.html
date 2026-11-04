@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script src="assets/impact.js?v=7" defer></script>
+<script src="assets/impact.js?v=8" defer></script>
 <style>
 .thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
 .im-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
@@ -141,7 +141,8 @@ td small{color:var(--muted)}
   <p lang="en">Click an <b>asset (functional location)</b> on the left or a <b>feeder zone</b> in the middle. Red lines are where power is cut and red dashed boxes are what goes dark. In "Normal", feeder #1 supplies every zone and tie switches T1–T4 are all open. "After transfer" shows the state once tie switches hand the load to neighbouring feeders.</p>
   <div class="ctrl">
     <button type="button" data-im-phase="normal"><span lang="ko">평상시</span><span lang="en">Normal</span></button>
-    <button type="button" data-im-phase="before"><span lang="ko">고장 직후</span><span lang="en">Right after the failure</span></button>
+    <button type="button" data-im-scen="chain:TR_1"><span lang="ko">고장 직후 ① 주변압기 고장</span><span lang="en">Failure ① main transformer</span></button>
+    <button type="button" data-im-scen="zone:Z5"><span lang="ko">고장 직후 ② Z5 지락 고장</span><span lang="en">Failure ② ground fault in Z5</span></button>
     <button type="button" data-im-phase="after"><span lang="ko">절체 후</span><span lang="en">After transfer</span></button>
     <span class="seg-sep"></span>
     <button type="button" data-im-mode="auto"><span lang="ko">배전자동화</span><span lang="en">Automated</span></button>

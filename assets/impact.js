@@ -60,7 +60,7 @@
         for (const [k, o] of stp.ops) {
           act(k, o);
           const [ko, en] = opText(k, o);
-          if (stp.id === 'trip') push('fault', `고장 발생: ${sel.id} → D/L #1 CB 트립`, `Fault in ${sel.id} → feeder #1 CB trips`, k, true);
+          if (stp.id === 'trip') push('fault', `고장 발생: ${sel.id} 지락 고장 → D/L #1 CB 트립`, `Ground fault in ${sel.id} → feeder #1 CB trips`, k, true);
           else if (stp.id === 'isolate') push('isolate', `고장 구간 차단: ${ko}`, `Isolate the faulted zone: ${en}`, k, true);
           else if (stp.id === 'upstream') push('upstream', `앞쪽 복구: ${ko} (변전소 쪽 다시 공급)`, `Restore upstream: ${en}`, k, true);
           else push('transfer', `다른 D/L에서 공급: ${ko} → ${D.neighbours[D.tieFeeder[k]].ko}`, `Supply from another feeder: ${en} → ${D.neighbours[D.tieFeeder[k]].ko}`, k, true);
@@ -279,7 +279,7 @@
       }
     } else {
       const z = D.zones.find(x => x.id === sel.id), zf = D.zoneFault[sel.id];
-      h += `<h3>⚡ D/L #1 ${z.id} <small>${T(z.up + ' ~ ' + (z.down[0] || '끝'), z.up + ' – ' + (z.down[0] || 'end'))}</small></h3>
+      h += `<h3>⚡ D/L #1 ${z.id} ${T('지락 고장', 'ground fault')} <small>${T(z.up + ' ~ ' + (z.down[0] || '끝'), z.up + ' – ' + (z.down[0] || 'end'))}</small></h3>
         <p class="muted">${T('배전선로 구간 고장은 고장 복구 시뮬레이션과 같은 계획을 씁니다.', 'A feeder-zone fault uses the same plan as the fault-restoration simulation.')} <a href="grid.html#flisr">${T('재생해 보기 →', 'Replay it →')}</a></p>
         <div class="im-big ${deadCust ? 'bad' : 'ok'}">${fmt(deadCust)}<small>${T('호 정전', ' customers out')}</small></div>
         <div class="muted">${deadMW.toFixed(1)} MW · ${phase === 'after' ? T('수리 때까지 남는 정전', 'left until repair') : T('CB 트립 직후', 'right after the trip')}</div>
@@ -307,7 +307,8 @@
   function render() {
     const st = draw();
     side(st);
-    document.querySelectorAll('[data-im-phase]').forEach(b => b.setAttribute('aria-pressed', b.dataset.imPhase === phase));
+    document.querySelectorAll('[data-im-phase]').forEach(b => b.setAttribute('aria-pressed', !anim && b.dataset.imPhase === phase));
+    document.querySelectorAll('[data-im-scen]').forEach(b => b.setAttribute('aria-pressed', !anim && phase === 'before' && b.dataset.imScen === sel.kind + ':' + sel.id));
     document.querySelectorAll('[data-im-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.imMode === mode));
     const pb = $('imPlay');
     pb.setAttribute('aria-pressed', !!anim);
@@ -339,10 +340,16 @@
 
   async function main() {
     if (!$('imGraph')) return;
-    try { D = await (await fetch('assets/data/impact.json?v=7')).json(); } catch (e) { $('imGraph').textContent = 'impact.json?'; return; }
+    try { D = await (await fetch('assets/data/impact.json?v=8')).json(); } catch (e) { $('imGraph').textContent = 'impact.json?'; return; }
     document.querySelectorAll('[data-im-phase]').forEach(b => b.addEventListener('click', () => { phase = b.dataset.imPhase; render(); }));
     document.querySelectorAll('[data-im-mode]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.imMode; render(); }));
     document.querySelectorAll('[data-im-phase]').forEach(b => b.addEventListener('click', () => { stopAnim(true); }, true));
+    // 고장 직후 ①: 주변압기 고장 (전원 상실) / ②: Z5 지락 고장 (배전선로 구간 고장)
+    document.querySelectorAll('[data-im-scen]').forEach(b => b.addEventListener('click', () => {
+      stopAnim(true);
+      const [kind, id] = b.dataset.imScen.split(':');
+      sel = { kind, id }; phase = 'before'; render();
+    }));
     $('imPlay').addEventListener('click', () => (anim && anim.timer ? stopAnim() : playAnim()));
     $('imSpeed').addEventListener('input', e => {
       stepSec = +e.target.value;
