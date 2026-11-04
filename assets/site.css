@@ -414,3 +414,4 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .opinion .quote{font-size:clamp(20px,3vw,27px);font-weight:700;line-height:1.5;margin:0;color:var(--text)}
 .opinion p{font-size:17px}
 .opinion .sig{color:var(--muted);font-size:14px;text-align:right;margin-top:18px}
+.manifesto .sig{display:block;margin-top:10px;font-size:14px;font-weight:400;color:var(--muted);text-align:right}
