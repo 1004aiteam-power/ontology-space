@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 고속도로 × 전력망: 전기차 충전</title>
+<meta name="title-ko" content="Ontology Space · 고속도로 × 전력망: 전기차 충전">
+<meta name="title-en" content="Ontology Space · Roads × Grid: EV Charging">
+<meta name="description" content="고속도로 교통 온톨로지와 전력망 온톨로지를 휴게소 충전소로 잇는다: 24시간 교통량 → 충전 수요 → 배전선로 → 변전소 (가상 데이터)">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script src="assets/ev.js" defer></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
+.ev-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.ev-facts > div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.ev-facts b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.ev-facts span{color:var(--muted);font-size:13px}
+.ev-facts .bad b{color:var(--hv)}
+.ev-wrap{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.ev-wrap{grid-template-columns:minmax(0,1fr)}}
+.ev-map svg{max-height:74vh}
+.ev-road{stroke:var(--twin-line);stroke-width:1.6;opacity:.35;stroke-linecap:round}
+.ev-st{fill:var(--surface);stroke:var(--twin-line);stroke-width:1.6}
+.ev-st.sel{fill:var(--accent);stroke:var(--accent)}
+.ev-st-lbl{fill:var(--muted);font-size:10px}
+.ev-tie{stroke:var(--twin-line);stroke-width:1;stroke-dasharray:3 3;opacity:.6}
+.ev-tie.sel{stroke:var(--accent);stroke-width:2;opacity:1}
+.ev-ra{cursor:pointer}
+.ev-ra:focus-visible{outline:none}.ev-ra:focus-visible .ev-dot{stroke:var(--accent);stroke-width:3}
+.ev-dot{stroke:var(--surface);stroke-width:1.5;opacity:.92}
+.ev-dot.ok{fill:var(--ok)} .ev-dot.warn{fill:#d97706} .ev-dot.over{fill:var(--hv)}
+.ev-ra.sel .ev-dot{stroke:var(--text);stroke-width:2.5}
+.ev-q{fill:none;stroke:var(--warm);stroke-width:2;stroke-dasharray:3 2}
+.ev-side h3{margin:0 0 8px;font-size:17px}
+.ev-path{font-size:13px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)}
+.ev-path small{display:block;color:var(--muted);font-size:11px}
+.ev-path .arr{color:var(--muted);padding:2px 0 2px 10px;font-size:12px}
+.ev-path code{font-size:12px}
+table.ev-now{min-width:0;margin-top:10px;font-size:14px}
+table.ev-now th{width:44%;font-weight:500;background:none;color:var(--muted)}
+table.ev-now td{font-variant-numeric:tabular-nums}
+tr.bad td,tr.bad th,td.bad{color:var(--hv)}
+.ev-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:14px}
+.ev-charts h4{margin:0 0 4px;font-size:14px}
+.ev-charts svg{width:100%;height:auto;display:block}
+.ev-grid{stroke:var(--line)} .ev-ax{fill:var(--muted);font-size:10px;font-variant-numeric:tabular-nums}
+.ev-a-served{fill:var(--accent);opacity:.18} .ev-l-served{fill:none;stroke:var(--accent);stroke-width:2}
+.ev-l-demand{fill:none;stroke:var(--warm);stroke-width:1.6;stroke-dasharray:4 3}
+.ev-l-cap{fill:none;stroke:var(--muted);stroke-width:1}
+.ev-a-base{fill:var(--dead);opacity:.3} .ev-a-ev{fill:var(--accent);opacity:.45} .ev-l-tot{fill:none;stroke:var(--text);stroke-width:1.2}
+.ev-limit{stroke:var(--hv);stroke-width:1.4;stroke-dasharray:6 3}
+.ev-hr{stroke:var(--text);stroke-dasharray:2 3}
+.ev-qbar{display:flex;align-items:flex-end;gap:2px;height:36px;margin:6px 0 0 38px;border-bottom:1px solid var(--line)}
+.ev-qbar i{flex:1;background:var(--warm);opacity:.5;min-height:1px}
+.ev-qbar i.cur{opacity:1}
+.ev-key{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted);margin-top:4px}
+.ev-key i{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:5px}
+.ev-ctrl input[type=range]{width:160px}
+.ev-ctrl .v{font-variant-numeric:tabular-nums;font-weight:700;min-width:40px}
+.ev-ctrl button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+.seg-sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+#evTableWrap tr{cursor:pointer}
+#evTableWrap tr.sel td{background:var(--accent-soft)}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+td small{color:var(--muted)}
+.bridge text{font-size:13px;fill:var(--text)}
+.bridge .cls{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+.bridge .hw{stroke:#0e7490} .bridge .ev{stroke:var(--warm);stroke-width:2} .bridge .cim{stroke:var(--accent)}
+.bridge .e{stroke:var(--muted);stroke-width:1.3;fill:none;marker-end:url(#arr)}
+.bridge .p{fill:var(--muted);font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.bridge .grp{font-size:12px;font-weight:700;letter-spacing:.04em}
+.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:20px 0;border-top:1px solid var(--line)}
+.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
+.decision h3{margin:0 0 6px}
+.decision p{margin:6px 0}
+#evCq details{border-top:1px solid var(--line);padding:4px 0}
+#evCq summary{color:var(--text);font-size:15px}
+#evCq .tbl{margin:6px 0 12px}
+#evCq table{min-width:0;font-size:13px}
+@media (max-width:560px){.decision{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <a href="physical-ai.html"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a>
+    <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html" aria-current="page"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">ROAD ONTOLOGY × GRID ONTOLOGY</div>
+  <h1><span lang="ko">고속도로 × 전력망:<br>휴게소 전기차 충전</span><span lang="en">Roads × Grid:<br>EV charging at rest areas</span></h1>
+  <p class="thesis" lang="ko">휴게소 충전소는 교통 쪽에서 보면 <b>들르는 곳</b>이고,<br>전력망 쪽에서 보면 <b>부하</b>입니다. 두 온톨로지는 여기서 만납니다.</p>
+  <p class="thesis" lang="en">From the road side a rest-area charger is <b>a place to stop</b>;<br>from the grid side it is <b>a load</b>. The two ontologies meet there.</p>
+  <p class="lead" lang="ko"><a href="highway.html">고속도로 온톨로지</a>의 시간대별 교통량에서 휴게소마다 충전 수요를 계산하고, 그 전기가 어느 배전선로와 <a href="twin.html">디지털 트윈</a>의 어느 154kV 변전소에서 오는지 따라갑니다. 전기차 비율과 충전기 수를 바꿔 가며 충전 대기와 배전선로 한도를 함께 보세요.</p>
+  <p class="lead" lang="en">From the hourly traffic of the <a href="highway.html">road ontology</a>, each rest area's charging demand is computed and traced to its feeder and to a 154 kV substation of the <a href="twin.html">digital twin</a>. Change the EV share and the number of chargers and watch queues and feeder limits together.</p>
+  <div class="notice"><b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">This is virtual data</span></b>
+    <p lang="ko">휴게소 이름·위치, 충전기 수, 전기차 비율, 충전 정차 비율(3%), 1회 충전량(30kWh), 배전선로의 다른 부하와 한도(10MW)는 모두 학습용으로 만든 값입니다. 휴게소는 가장 가까운 154kV 변전소에서 전기를 받는다고 가정했습니다. 실제 휴게소·충전소·전력 설비 정보가 아닙니다.</p>
+    <p lang="en">Rest-area names and positions, charger counts, EV share, stop rate (3%), energy per session (30 kWh), other feeder load and the 10 MW limit are all made up. Each rest area is assumed to be fed from the nearest 154 kV substation. Not real rest-area, charger or grid information.</p></div>
+</div>
+
+<section id="sim" style="padding-top:12px">
+  <h2><span lang="ko">24시간 충전 수요와 배전선로</span><span lang="en">24 hours of charging and feeder load</span></h2>
+  <div class="ctrl ev-ctrl">
+    <span class="muted"><span lang="ko">시나리오</span><span lang="en">Scenario</span></span>
+    <button type="button" data-ev-preset="today"><span lang="ko">① 오늘 (전기차 10%)</span><span lang="en">① Today (EV 10%)</span></button>
+    <button type="button" data-ev-preset="ev30"><span lang="ko">② 전기차 30%</span><span lang="en">② EV 30%</span></button>
+    <button type="button" data-ev-preset="ev30x3"><span lang="ko">③ + 충전기 3배</span><span lang="en">③ + 3× chargers</span></button>
+    <button type="button" data-ev-preset="ev30x3smart"><span lang="ko">④ + 충전 제어</span><span lang="en">④ + managed charging</span></button>
+  </div>
+  <div class="ctrl ev-ctrl">
+    <label><span lang="ko">전기차 비율</span><span lang="en">EV share</span> <input type="range" id="evShare" min="0" max="50" step="1" value="10"> <span class="v" id="evShareV">10%</span></label>
+    <span class="seg-sep"></span>
+    <span><span lang="ko">충전기</span><span lang="en">Chargers</span></span>
+    <button type="button" data-ev-scale="1">×1</button><button type="button" data-ev-scale="2">×2</button><button type="button" data-ev-scale="3">×3</button>
+    <span class="seg-sep"></span>
+    <label><input type="checkbox" id="evSmart"> <span lang="ko">충전 제어 (선로 여유 안에서만)</span><span lang="en">Managed charging (within feeder headroom)</span></label>
+    <span class="seg-sep"></span>
+    <button type="button" data-ev-traffic="BASE"><span lang="ko">평일 교통</span><span lang="en">Weekday traffic</span></button>
+    <button type="button" data-ev-traffic="INCIDENT"><span lang="ko">경부선 사고</span><span lang="en">Gyeongbu crash</span></button>
+  </div>
+  <div class="ctrl">
+    <button class="primary" id="evPlay" type="button">▶</button>
+    <b id="evClock" class="hw-clock" style="font-variant-numeric:tabular-nums;font-size:18px;min-width:56px">17:00</b>
+    <input type="range" id="evHour" min="0" max="23" step="1" value="17" aria-label="hour" style="flex:1;min-width:160px">
+  </div>
+  <div class="ev-facts" id="evFacts" aria-live="polite"></div>
+  <div class="ev-wrap">
+    <div>
+      <div id="evMap" class="twin-map ev-map"></div>
+      <div class="legend">
+        <span>● <span lang="ko">휴게소 (크기 = 지금 충전 전력, 색 = 배전선로 부하율</span><span lang="en">rest area (size = charging power now, colour = feeder loading</span>: <b style="color:var(--ok)">~85%</b> · <b style="color:#d97706">~100%</b> · <b style="color:var(--hv)"><span lang="ko">초과</span><span lang="en">over</span></b>)</span>
+        <span>◌ <span lang="ko">주황 점선 고리 = 충전 대기</span><span lang="en">orange dashed ring = queue</span></span>
+        <span>■ <span lang="ko">디지털 트윈 154kV 변전소</span><span lang="en">digital twin 154 kV substation</span></span>
+      </div>
+    </div>
+    <div class="ev-side panel" id="evSide" aria-live="polite"></div>
+  </div>
+  <div class="ev-charts">
+    <div><h4><span lang="ko">충전: 수요와 공급 (MW)</span><span lang="en">Charging: demand and supply (MW)</span></h4><div id="evChartA"></div>
+      <div class="ev-qbar" id="evQueue" aria-hidden="true"></div>
+      <div class="ev-key"><span><i style="background:var(--warm)"></i><span lang="ko">수요</span><span lang="en">demand</span></span><span><i style="background:var(--accent)"></i><span lang="ko">공급</span><span lang="en">served</span></span><span><i style="background:var(--muted);height:1px"></i><span lang="ko">충전기 용량</span><span lang="en">charger capacity</span></span><span><span lang="ko">막대 = 대기 차량</span><span lang="en">bars = queued cars</span> (<span id="evQueueMax"></span>)</span></div></div>
+    <div><h4><span lang="ko">배전선로 부하 (MW)</span><span lang="en">Feeder load (MW)</span></h4><div id="evChartB"></div>
+      <div class="ev-key"><span><i style="background:var(--dead)"></i><span lang="ko">선로의 다른 부하 (디지털 트윈 부하 곡선)</span><span lang="en">other load on the feeder (twin load curve)</span></span><span><i style="background:var(--accent)"></i><span lang="ko">충전</span><span lang="en">charging</span></span><span><i style="background:var(--hv)"></i><span lang="ko">한도 10MW</span><span lang="en">10 MW limit</span></span></div></div>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">시나리오를 차례로 눌러 보세요</span><span lang="en">Click the scenarios in order</span></b>
+    <ul lang="ko">
+      <li><b>① 오늘</b>: 충전기는 넉넉하고 배전선로도 여유가 있습니다. 충전 첨두는 교통 첨두를 따라 <b>아침 7시(상행)와 저녁 17시(하행)</b>에 옵니다.</li>
+      <li><b>② 전기차 30%</b>: 전기가 모자란 게 아니라 <b>충전기가 모자랍니다</b>. 저녁에 수원–천안 휴게소에서 100대 넘게 기다립니다.</li>
+      <li><b>③ 충전기 3배</b>: 대기는 사라지지만, 이번에는 <b>배전선로</b>가 문제입니다. 다른 부하가 큰 수원–천안(하행) 선로가 저녁에 10MW를 넘습니다. 교통 문제를 풀었더니 전력 문제가 생긴 것입니다.</li>
+      <li><b>④ 충전 제어</b>: 선로 여유만큼만 충전하면 한도는 지키고, 대신 짧은 대기가 다시 생깁니다. 이것이 교통과 전력을 한 모델에서 같이 봐야 하는 이유입니다.</li>
+    </ul>
+    <ul lang="en">
+      <li><b>① Today</b>: plenty of chargers and feeder headroom. Charging peaks follow traffic: <b>7 h northbound, 17 h southbound</b>.</li>
+      <li><b>② EV 30%</b>: what runs short is <b>chargers, not power</b>; over 100 cars queue at Suwon–Cheonan in the evening.</li>
+      <li><b>③ 3× chargers</b>: queues vanish, but now the <b>feeder</b> is the problem: the Suwon–Cheonan southbound feeder, already busy, passes 10 MW in the evening. Fixing the road problem created a grid problem.</li>
+      <li><b>④ Managed charging</b>: charging only within the feeder's headroom keeps the limit at the cost of a short queue. This is why traffic and power belong in one model.</li>
+    </ul></div>
+  <h3><span lang="ko">휴게소별 하루</span><span lang="en">Each rest area over the day</span></h3>
+  <div class="tbl" id="evTableWrap"><table><thead><tr><th><span lang="ko">휴게소</span><span lang="en">Rest area</span></th><th><span lang="ko">변전소</span><span lang="en">Substation</span></th><th><span lang="ko">충전 횟수/일</span><span lang="en">Sessions/day</span></th><th><span lang="ko">충전 첨두 MW</span><span lang="en">Charging peak MW</span></th><th><span lang="ko">최대 대기(대)</span><span lang="en">Max queue</span></th><th><span lang="ko">선로 첨두 MW</span><span lang="en">Feeder peak MW</span></th></tr></thead><tbody id="evTable"></tbody></table></div>
+  <h3><span lang="ko">변전소에서 보면</span><span lang="en">Seen from the substation</span></h3>
+  <p lang="ko">같은 충전 전력도 154kV 변전소 전체 부하에 견주면 1%도 되지 않습니다. 그러나 휴게소를 먹이는 <b>22.9kV 배전선로 하나</b>에서는 큰 몫을 차지합니다. 충전 인프라의 병목은 변전소보다 <b>배전선로</b>에서 먼저 나타납니다.</p>
+  <p lang="en">The same charging power is well under 1% of a 154 kV substation's load, but a large share of the <b>single 22.9 kV feeder</b> that serves the rest area. The bottleneck shows up on the <b>feeder</b> long before the substation.</p>
+  <div class="tbl"><table><thead><tr><th><span lang="ko">변전소 (디지털 트윈)</span><span lang="en">Substation (digital twin)</span></th><th><span lang="ko">휴게소</span><span lang="en">Rest areas</span></th><th><span lang="ko">충전 MW</span><span lang="en">Charging MW</span></th><th><span lang="ko">변전소 부하 MW</span><span lang="en">Substation load MW</span></th><th><span lang="ko">변전소 대비</span><span lang="en">Share of substation</span></th><th><span lang="ko">배전선로 대비 (최대)</span><span lang="en">Share of feeder (max)</span></th></tr></thead><tbody id="evStations"></tbody></table></div>
+</section>
+
+<section id="bridge">
+  <h2><span lang="ko">두 온톨로지를 잇는 다리</span><span lang="en">The bridge between two ontologies</span></h2>
+  <p lang="ko">새로 만든 클래스는 넷뿐입니다(휴게소·충전소·충전기·충전 첨두). 나머지는 이미 있는 두 온톨로지의 것을 그대로 가리킵니다. 교통 쪽 끝은 고속도로 온톨로지의 <b>방향 링크</b>(<code>hw:Link</code>), 전력 쪽 끝은 CIM의 <b>배전선로</b>(<code>cim:Feeder</code>)와 디지털 트윈의 <b>변전소</b>(<code>cim:Substation</code>)입니다.</p>
+  <p lang="en">Only four classes are new (rest area, charging station, charger, charging peak). Everything else points at the two existing ontologies: on the road side the <b>directional link</b> (<code>hw:Link</code>) of the road ontology, on the grid side the CIM <b>feeder</b> (<code>cim:Feeder</code>) and the digital twin's <b>substation</b> (<code>cim:Substation</code>).</p>
+  <div class="diagram">
+    <svg class="bridge" viewBox="0 0 900 250" role="img" aria-label="ontology bridge diagram" style="min-width:720px;width:100%">
+      <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--muted)"/></marker></defs>
+      <text x="80" y="24" class="grp" fill="#0e7490" text-anchor="middle">hw: <tspan lang="ko">교통</tspan></text>
+      <text x="450" y="24" class="grp" fill="var(--warm)" text-anchor="middle">ev: <tspan>(new)</tspan></text>
+      <text x="790" y="24" class="grp" fill="var(--accent)" text-anchor="middle">cim: <tspan lang="ko">전력망 · 디지털 트윈</tspan></text>
+      <rect x="20" y="40" width="120" height="36" rx="6" class="cls hw"/><text x="80" y="63" text-anchor="middle">hw:Route</text>
+      <rect x="20" y="110" width="120" height="36" rx="6" class="cls hw"/><text x="80" y="133" text-anchor="middle">hw:Section</text>
+      <rect x="20" y="180" width="120" height="36" rx="6" class="cls hw"/><text x="80" y="203" text-anchor="middle">hw:Link</text>
+      <path d="M80,110V78" class="e"/><text x="86" y="98" class="p">hw:onRoute</text>
+      <path d="M80,180V148" class="e"/><text x="86" y="168" class="p">hw:ofSection</text>
+      <rect x="250" y="180" width="130" height="36" rx="6" class="cls ev"/><text x="315" y="203" text-anchor="middle">ev:RestArea</text>
+      <path d="M250,198H142" class="e"/><text x="160" y="192" class="p">ev:onLink</text>
+      <rect x="430" y="110" width="160" height="36" rx="6" class="cls ev"/><text x="510" y="133" text-anchor="middle">ev:ChargingStation</text>
+      <path d="M340,180L440,148" class="e"/><text x="300" y="160" class="p">ev:hasChargingStation</text>
+      <rect x="430" y="180" width="160" height="36" rx="6" class="cls ev"/><text x="510" y="203" text-anchor="middle">ev:Charger</text>
+      <path d="M510,146V178" class="e"/><text x="516" y="168" class="p">ev:hasCharger</text>
+      <rect x="690" y="40" width="200" height="36" rx="6" class="cls cim"/><text x="790" y="63" text-anchor="middle">cim:EnergyConsumer</text>
+      <path d="M590,118L690,70" class="e" stroke-dasharray="5 3"/><text x="612" y="84" class="p">rdfs:subClassOf</text>
+      <rect x="690" y="110" width="200" height="36" rx="6" class="cls cim"/><text x="790" y="133" text-anchor="middle">cim:Feeder (22.9kV)</text>
+      <path d="M592,128H688" class="e"/><text x="596" y="122" class="p" style="font-size:10px">cim:Equipment.EquipmentContainer</text>
+      <rect x="690" y="180" width="200" height="36" rx="6" class="cls cim"/><text x="790" y="203" text-anchor="middle">cim:Substation (154kV)</text>
+      <path d="M790,146V178" class="e"/><text x="640" y="236" class="p">cim:Feeder.NormalEnergizingSubstation</text>
+    </svg>
+  </div>
+<pre><code>ev:RA01 a ev:RestArea ;
+    ev:onLink hw:S03F ;                                   # <span lang="ko">고속도로 온톨로지의 방향 링크 (경부선 수원→천안)</span><span lang="en">road ontology's directional link (Gyeongbu Suwon→Cheonan)</span>
+    ev:hasChargingStation ev:CS_RA01 .
+ev:CS_RA01 a ev:ChargingStation ;                         # <span lang="ko">⊂ cim:EnergyConsumer — 전력망에서는 부하</span><span lang="en">⊂ cim:EnergyConsumer — a load on the grid</span>
+    ev:installedKW 1600 ;
+    cim:Equipment.EquipmentContainer ev:FD_RA01 .
+ev:FD_RA01 a cim:Feeder ;
+    cim:Feeder.NormalEnergizingSubstation tw:_…         # <span lang="ko">디지털 트윈의 '수도권 남부' 변전소 (mRID 그대로)</span><span lang="en">the twin's 'Capital South' substation (same mRID)</span></code></pre>
+  <h3><span lang="ko">세 그래프를 합쳐 묻기 (SPARQL)</span><span lang="en">Asking across three graphs (SPARQL)</span></h3>
+  <p lang="ko">빌드할 때 <code>ev-ontology.ttl</code>, <code>highway-ontology.ttl</code>, <code>korea_virtual_grid.ttl</code>을 한 그래프에 불러와 아래 질문을 실행했습니다. 첫 질문은 경로 하나로 교통(<code>hw:onRoute</code>)에서 전력(<code>cim:Feeder.NormalEnergizingSubstation</code>)까지 건너갑니다.</p>
+  <p lang="en">At build time <code>ev-ontology.ttl</code>, <code>highway-ontology.ttl</code> and <code>korea_virtual_grid.ttl</code> are loaded into one graph and these questions run. The first one crosses from traffic (<code>hw:onRoute</code>) to power (<code>cim:Feeder.NormalEnergizingSubstation</code>) in a single path.</p>
+  <div id="evCq"></div>
+</section>
+
+<section id="design">
+  <h2><span lang="ko">설계 결정</span><span lang="en">Design decisions</span></h2>
+  <div class="decision"><div class="no">D1</div><div><h3><span lang="ko">충전소는 cim:EnergyConsumer의 하위 클래스</span><span lang="en">A charging station is a subclass of cim:EnergyConsumer</span></h3>
+    <p lang="ko">전력망 도구는 충전소를 특별히 알 필요 없이 "부하"로 다룰 수 있고, 교통 쪽에서는 휴게소 시설로 다룹니다. 별도 클래스를 만들고 <code>owl:sameAs</code>로 잇는 방법도 있지만, 같은 물건을 두 개체로 쪼개면 속성이 어느 쪽에 붙는지 헷갈립니다.</p>
+    <p lang="en">Grid tools can treat it as an ordinary load without knowing about EVs, while the road side treats it as a rest-area facility. Two classes joined by <code>owl:sameAs</code> would also work, but splitting one thing into two individuals blurs where each property belongs.</p></div></div>
+  <div class="decision"><div class="no">D2</div><div><h3><span lang="ko">휴게소는 구간이 아니라 방향 링크에 붙인다</span><span lang="en">Rest areas hang on a directional link, not a section</span></h3>
+    <p lang="ko">상행과 하행 휴게소는 서로 다른 차가 들릅니다. 교통량이 링크(한 방향)에 붙어 있으므로, 수요를 계산하려면 휴게소도 링크에 붙어야 합니다. 그래서 같은 구간의 상·하행 휴게소는 첨두 시각이 다릅니다(7시 vs 17시).</p>
+    <p lang="en">Northbound and southbound rest areas serve different cars. Traffic is attached to links (one direction), so demand can only be computed if rest areas are too, which is why the two sides of one section peak at different hours (7 h vs 17 h).</p></div></div>
+  <div class="decision"><div class="no">D3</div><div><h3><span lang="ko">변전소 IRI를 새로 만들지 않고 디지털 트윈의 mRID를 그대로 쓴다</span><span lang="en">Reuse the twin's substation mRIDs instead of minting new IRIs</span></h3>
+    <p lang="ko">디지털 트윈은 <code>stable_mrid("kr-twin", 변전소 ID)</code>로 mRID를 만듭니다. 같은 함수로 같은 IRI를 얻으므로 매핑 표 없이 두 그래프가 바로 이어집니다. ID 규칙을 지켜 두면 나중에 온톨로지끼리 잇는 비용이 줄어듭니다.</p>
+    <p lang="en">The twin builds mRIDs with <code>stable_mrid("kr-twin", station id)</code>; calling the same function gives the same IRI, so the graphs join with no mapping table. A disciplined ID rule makes later cross-ontology links cheap.</p></div></div>
+  <div class="decision"><div class="no">D4</div><div><h3><span lang="ko">24시간 값은 온톨로지 밖에, 첨두만 안에</span><span lang="en">Hourly values outside the ontology, only the peak inside</span></h3>
+    <p lang="ko">고속도로 온톨로지와 같은 원칙입니다. 시계열은 JSON(또는 시계열 DB)에 두고, 질문에 자주 쓰는 첨두 시각과 값만 <code>ev:ChargingPeak</code>로 온톨로지에 넣었습니다.</p>
+    <p lang="en">Same rule as the road ontology: time series stay in JSON (or a time-series store) and only the frequently-queried peak hour and value go into the ontology as <code>ev:ChargingPeak</code>.</p></div></div>
+</section>
+
+<section id="files">
+  <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
+  <div class="grid">
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/ev/data/rest_areas.csv"><h4>examples/ev/data/rest_areas.csv</h4><p lang="ko">휴게소 15곳 (가상)</p><p lang="en">15 rest areas (virtual)</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/ev/build_ev.py"><h4>build_ev.py</h4><p lang="ko">수요 계산 · TTL 생성 · 세 그래프 SPARQL</p><p lang="en">Demand · TTL · SPARQL across three graphs</p></a>
+    <a class="card" href="examples/ev/ev-ontology.ttl"><h4>ev-ontology.ttl</h4><p>OWL · hw: · cim:</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/ev.js"><h4>assets/ev.js</h4><p lang="ko">같은 식으로 웹에서 다시 계산</p><p lang="en">Same formula, recomputed in the page</p></a>
+  </div>
+  <ul lang="ko">
+    <li><b>정차 비율이 고정</b>: 실제로는 남은 주행거리, 이동 거리, 시간대, 휴게소 간격에 따라 달라집니다.</li>
+    <li><b>시간 단위 계산</b>: 한 시간 동안의 평균 전력이라 몇 분 단위의 급격한 첨두는 보이지 않습니다. 충전기 한 대가 한 시간에 한 대씩만 충전한다는 제약도 단순화했습니다.</li>
+    <li><b>가장 가까운 변전소</b>: 실제 공급 변전소는 배전망 구성에 따라 정해집니다.</li>
+    <li><b>교통량과 충전이 서로 영향을 주지 않음</b>: 대기가 길어도 차가 다음 휴게소로 가는 효과는 넣지 않았습니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Fixed stop rate</b>: in reality it depends on state of charge, trip length, time of day and rest-area spacing.</li>
+    <li><b>Hourly steps</b>: hour-average power hides minute-scale peaks; charger turnover is simplified.</li>
+    <li><b>Nearest substation</b>: the actual supplying substation depends on the distribution network.</li>
+    <li><b>No feedback</b>: long queues do not push drivers to the next rest area.</li>
+  </ul>
+  <div class="pager"><a href="highway.html"><span lang="ko">← 이전: 고속도로·국도 교통</span><span lang="en">← Prev: Road Traffic</span></a><a href="impact.html"><span lang="ko">다음: 설비 고장 영향 분석 →</span><span lang="en">Next: Failure Impact Analysis →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

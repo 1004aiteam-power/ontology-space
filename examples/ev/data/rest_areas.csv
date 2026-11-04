@@ -1,0 +1,16 @@
+ra_id,ko,en,link,pos,chargers,kw,feeder_base_mw
+RA01,경부 수원–천안 휴게소(하행),Gyeongbu Suwon–Cheonan (southbound),S03F,0.45,8,200,8.0
+RA02,경부 수원–천안 휴게소(상행),Gyeongbu Suwon–Cheonan (northbound),S03R,0.55,8,200,7.0
+RA03,경부 청주–대전 휴게소(하행),Gyeongbu Cheongju–Daejeon (southbound),S05F,0.5,6,200,6.8
+RA15,경부 천안–청주 휴게소(하행),Gyeongbu Cheonan–Cheongju (southbound),S04F,0.5,6,200,5.5
+RA04,경부 청주–대전 휴게소(상행),Gyeongbu Cheongju–Daejeon (northbound),S05R,0.5,6,200,5.0
+RA05,경부 김천–대구 휴게소(하행),Gyeongbu Gimcheon–Daegu (southbound),S07F,0.5,6,200,5.0
+RA06,서해안 서울–평택 휴게소(하행),Seohaean Seoul–Pyeongtaek (southbound),S10F,0.6,6,200,6.5
+RA07,영동 여주–원주 휴게소(강릉 방향),Yeongdong Yeoju–Wonju (eastbound),S16F,0.5,6,200,4.5
+RA08,영동 원주–강릉 휴게소(강릉 방향),Yeongdong Wonju–Gangneung (eastbound),S17F,0.55,4,200,3.5
+RA09,중부 서울–여주 휴게소(하행),Jungbu Seoul–Yeoju (southbound),S18F,0.4,6,200,7.2
+RA10,중부내륙 여주–충주 휴게소(하행),Jungbu Naeryuk Yeoju–Chungju (southbound),S20F,0.5,4,200,4.0
+RA11,중부내륙 김천–창원 휴게소(하행),Jungbu Naeryuk Gimcheon–Changwon (southbound),S22F,0.5,4,200,4.0
+RA12,호남 논산–전주 휴게소(하행),Honam Nonsan–Jeonju (southbound),S24F,0.5,4,200,4.5
+RA13,남해 창원–부산 휴게소(부산 방향),Namhae Changwon–Busan (eastbound),S31F,0.5,6,200,7.6
+RA14,동해 부산–울산 휴게소(울산 방향),Donghae Busan–Ulsan (northbound),S37F,0.5,4,200,5.5

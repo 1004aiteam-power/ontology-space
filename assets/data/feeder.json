@@ -316,7 +316,11 @@
 "at": [
 205,
 246
-]
+],
+"cust": 420,
+"area": "가람동 주택가",
+"areaEn": "Garam-dong homes",
+"critical": false
 },
 {
 "id": "DL1_SEC1_BP1",
@@ -378,7 +382,11 @@
 "at": [
 325,
 294
-]
+],
+"cust": 180,
+"area": "나래동 상가",
+"areaEn": "Narae-dong shops",
+"critical": false
 },
 {
 "id": "DL1_SEC3",
@@ -428,7 +436,11 @@
 "at": [
 445,
 294
-]
+],
+"cust": 510,
+"area": "다솜 아파트",
+"areaEn": "Dasom apartments",
+"critical": false
 },
 {
 "id": "DL1_SEC3_BP2",
@@ -490,7 +502,11 @@
 "at": [
 565,
 294
-]
+],
+"cust": 260,
+"area": "라온동 주택·초등학교",
+"areaEn": "Raon-dong homes & school",
+"critical": false
 },
 {
 "id": "DL1_SEC5",
@@ -540,7 +556,11 @@
 "at": [
 685,
 246
-]
+],
+"cust": 150,
+"area": "마루 전통시장",
+"areaEn": "Maru market",
+"critical": false
 },
 {
 "id": "DL1_SEC5_BP3",
@@ -602,7 +622,11 @@
 "at": [
 805,
 294
-]
+],
+"cust": 230,
+"area": "바다마을",
+"areaEn": "Bada village",
+"critical": false
 },
 {
 "id": "DL1_SEC7_END",
@@ -664,7 +688,11 @@
 "at": [
 271,
 334
-]
+],
+"cust": 12,
+"area": "사랑 산업단지 1",
+"areaEn": "Sarang industrial park 1",
+"critical": false
 },
 {
 "id": "LD_B1b",
@@ -678,7 +706,11 @@
 "at": [
 271,
 384
-]
+],
+"cust": 9,
+"area": "사랑 산업단지 2",
+"areaEn": "Sarang industrial park 2",
+"critical": false
 },
 {
 "id": "BR2_1",
@@ -716,7 +748,11 @@
 "at": [
 511,
 219
-]
+],
+"cust": 3,
+"area": "아라 병원",
+"areaEn": "Ara hospital",
+"critical": true
 },
 {
 "id": "BR3_1",
@@ -754,7 +790,11 @@
 "at": [
 751,
 344
-]
+],
+"cust": 140,
+"area": "자람 농공단지",
+"areaEn": "Jaram agro-industrial park",
+"critical": false
 },
 {
 "id": "DL2_1",
@@ -804,7 +844,11 @@
 "at": [
 842,
 450
-]
+],
+"cust": 2100,
+"area": "D/L #2 공급 지역",
+"areaEn": "Feeder #2 area",
+"critical": false
 },
 {
 "id": "DL3_1",
@@ -842,7 +886,11 @@
 "at": [
 662,
 90
-]
+],
+"cust": 1800,
+"area": "D/L #3 공급 지역",
+"areaEn": "Feeder #3 area",
+"critical": false
 },
 {
 "id": "C11_1",
@@ -880,7 +928,11 @@
 "at": [
 905,
 402
-]
+],
+"cust": 1500,
+"area": "C변전소 D/L #11 공급 지역",
+"areaEn": "Sub. C #11 area",
+"critical": false
 },
 {
 "id": "T1",
@@ -1133,6 +1185,4705 @@
 }
 }
 ],
+"flisr": {
+"DL1_SEC1": {
+"zone": [
+"DL1_SEC1"
+],
+"boundary": [
+"CB_DL1",
+"S1"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"S2",
+true
+],
+[
+"T1",
+false
+],
+[
+"T4",
+false
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"S2",
+"T2",
+"T3"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 8.9,
+"DL3": 5.0,
+"C11": 9.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T1",
+true
+],
+[
+"T4",
+true
+],
+[
+"CB_DL1",
+false
+],
+[
+"S1",
+false
+],
+[
+"S2",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 5742,
+"manual": 143550
+}
+},
+"DL1_SEC1_L": {
+"zone": [
+"BR1_1",
+"BR1_2",
+"BR1_3",
+"DL1_SEC1_BP1",
+"DL1_SEC1_L",
+"DL1_SEC2",
+"LD_B1a",
+"LD_B1b",
+"LD_M1"
+],
+"boundary": [
+"S1",
+"S2",
+"T1"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S1",
+true
+],
+[
+"S2",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M1",
+"LD_B1a",
+"LD_B1b"
+],
+"deadCust": 441,
+"deadMW": 2.9,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 9.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S1",
+false
+],
+[
+"S2",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 110259,
+"manual": 216315
+}
+},
+"DL1_SEC1_BP1": {
+"zone": [
+"BR1_1",
+"BR1_2",
+"BR1_3",
+"DL1_SEC1_BP1",
+"DL1_SEC1_L",
+"DL1_SEC2",
+"LD_B1a",
+"LD_B1b",
+"LD_M1"
+],
+"boundary": [
+"S1",
+"S2",
+"T1"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S1",
+true
+],
+[
+"S2",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M1",
+"LD_B1a",
+"LD_B1b"
+],
+"deadCust": 441,
+"deadMW": 2.9,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 9.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S1",
+false
+],
+[
+"S2",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 110259,
+"manual": 216315
+}
+},
+"DL1_SEC2": {
+"zone": [
+"BR1_1",
+"BR1_2",
+"BR1_3",
+"DL1_SEC1_BP1",
+"DL1_SEC1_L",
+"DL1_SEC2",
+"LD_B1a",
+"LD_B1b",
+"LD_M1"
+],
+"boundary": [
+"S1",
+"S2",
+"T1"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S1",
+true
+],
+[
+"S2",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M1",
+"LD_B1a",
+"LD_B1b"
+],
+"deadCust": 441,
+"deadMW": 2.9,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 9.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S1",
+false
+],
+[
+"S2",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 110259,
+"manual": 216315
+}
+},
+"DL1_SEC2_L": {
+"zone": [
+"DL1_SEC2_L",
+"DL1_SEC3",
+"LD_M2"
+],
+"boundary": [
+"S2",
+"S3"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S2",
+true
+],
+[
+"S3",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S2",
+"S3",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S2",
+"S3",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1473,
+"deadMW": 5.6,
+"feederMW": {
+"DL1": 2.9,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S2",
+"S3",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M2"
+],
+"deadCust": 180,
+"deadMW": 0.8,
+"feederMW": {
+"DL1": 2.9,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 8.8
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S2",
+false
+],
+[
+"S3",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 47961,
+"manual": 164430
+}
+},
+"DL1_SEC3": {
+"zone": [
+"DL1_SEC2_L",
+"DL1_SEC3",
+"LD_M2"
+],
+"boundary": [
+"S2",
+"S3"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S2",
+true
+],
+[
+"S3",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S2",
+"S3",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S2",
+"S3",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1473,
+"deadMW": 5.6,
+"feederMW": {
+"DL1": 2.9,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S2",
+"S3",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M2"
+],
+"deadCust": 180,
+"deadMW": 0.8,
+"feederMW": {
+"DL1": 2.9,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 8.8
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S2",
+false
+],
+[
+"S3",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 47961,
+"manual": 164430
+}
+},
+"DL1_SEC3_L": {
+"zone": [
+"BR2_1",
+"BR2_2",
+"DL1_SEC3_BP2",
+"DL1_SEC3_L",
+"DL1_SEC4",
+"LD_B2",
+"LD_M3"
+],
+"boundary": [
+"S3",
+"S4",
+"T2"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S3",
+true
+],
+[
+"S4",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1293,
+"deadMW": 4.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M3",
+"LD_B2"
+],
+"deadCust": 513,
+"deadMW": 1.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 7.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S3",
+false
+],
+[
+"S4",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 126702,
+"manual": 215775
+}
+},
+"DL1_SEC3_BP2": {
+"zone": [
+"BR2_1",
+"BR2_2",
+"DL1_SEC3_BP2",
+"DL1_SEC3_L",
+"DL1_SEC4",
+"LD_B2",
+"LD_M3"
+],
+"boundary": [
+"S3",
+"S4",
+"T2"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S3",
+true
+],
+[
+"S4",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1293,
+"deadMW": 4.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M3",
+"LD_B2"
+],
+"deadCust": 513,
+"deadMW": 1.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 7.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S3",
+false
+],
+[
+"S4",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 126702,
+"manual": 215775
+}
+},
+"DL1_SEC4": {
+"zone": [
+"BR2_1",
+"BR2_2",
+"DL1_SEC3_BP2",
+"DL1_SEC3_L",
+"DL1_SEC4",
+"LD_B2",
+"LD_M3"
+],
+"boundary": [
+"S3",
+"S4",
+"T2"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S3",
+true
+],
+[
+"S4",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1293,
+"deadMW": 4.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M3",
+"LD_B2"
+],
+"deadCust": 513,
+"deadMW": 1.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 7.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S3",
+false
+],
+[
+"S4",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 126702,
+"manual": 215775
+}
+},
+"DL1_SEC4_L": {
+"zone": [
+"DL1_SEC4_L",
+"DL1_SEC5",
+"LD_M4"
+],
+"boundary": [
+"S4",
+"S5"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S4",
+true
+],
+[
+"S5",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S4",
+"S5",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S4",
+"S5",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B3"
+],
+"deadCust": 780,
+"deadMW": 3.0,
+"feederMW": {
+"DL1": 5.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S4",
+"S5",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M4"
+],
+"deadCust": 260,
+"deadMW": 0.7,
+"feederMW": {
+"DL1": 5.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 6.3
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S4",
+false
+],
+[
+"S5",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 66228,
+"manual": 163770
+}
+},
+"DL1_SEC5": {
+"zone": [
+"DL1_SEC4_L",
+"DL1_SEC5",
+"LD_M4"
+],
+"boundary": [
+"S4",
+"S5"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S4",
+true
+],
+[
+"S5",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S4",
+"S5",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S4",
+"S5",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B3"
+],
+"deadCust": 780,
+"deadMW": 3.0,
+"feederMW": {
+"DL1": 5.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S4",
+"S5",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M4"
+],
+"deadCust": 260,
+"deadMW": 0.7,
+"feederMW": {
+"DL1": 5.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 6.3
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S4",
+false
+],
+[
+"S5",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 66228,
+"manual": 163770
+}
+},
+"DL1_SEC5_L": {
+"zone": [
+"BR3_1",
+"BR3_2",
+"DL1_SEC5_BP3",
+"DL1_SEC5_L",
+"DL1_SEC6",
+"LD_B3",
+"LD_M5"
+],
+"boundary": [
+"S5",
+"S6",
+"T3"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S5",
+true
+],
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M5",
+"LD_M6",
+"LD_B3"
+],
+"deadCust": 520,
+"deadMW": 2.3,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M5",
+"LD_B3"
+],
+"deadCust": 290,
+"deadMW": 1.7,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S5",
+false
+],
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 73078,
+"manual": 163520
+}
+},
+"DL1_SEC5_BP3": {
+"zone": [
+"BR3_1",
+"BR3_2",
+"DL1_SEC5_BP3",
+"DL1_SEC5_L",
+"DL1_SEC6",
+"LD_B3",
+"LD_M5"
+],
+"boundary": [
+"S5",
+"S6",
+"T3"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S5",
+true
+],
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M5",
+"LD_M6",
+"LD_B3"
+],
+"deadCust": 520,
+"deadMW": 2.3,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M5",
+"LD_B3"
+],
+"deadCust": 290,
+"deadMW": 1.7,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S5",
+false
+],
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 73078,
+"manual": 163520
+}
+},
+"DL1_SEC6": {
+"zone": [
+"BR3_1",
+"BR3_2",
+"DL1_SEC5_BP3",
+"DL1_SEC5_L",
+"DL1_SEC6",
+"LD_B3",
+"LD_M5"
+],
+"boundary": [
+"S5",
+"S6",
+"T3"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S5",
+true
+],
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M5",
+"LD_M6",
+"LD_B3"
+],
+"deadCust": 520,
+"deadMW": 2.3,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M5",
+"LD_B3"
+],
+"deadCust": 290,
+"deadMW": 1.7,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S5",
+false
+],
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 73078,
+"manual": 163520
+}
+},
+"DL1_SEC6_L": {
+"zone": [
+"DL1_END_T4",
+"DL1_SEC6_L",
+"DL1_SEC7_END",
+"LD_M6"
+],
+"boundary": [
+"S6",
+"T4"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M6"
+],
+"deadCust": 230,
+"deadMW": 0.6,
+"feederMW": {
+"DL1": 7.9,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 58568,
+"manual": 147820
+}
+},
+"DL1_SEC7_END": {
+"zone": [
+"DL1_END_T4",
+"DL1_SEC6_L",
+"DL1_SEC7_END",
+"LD_M6"
+],
+"boundary": [
+"S6",
+"T4"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M6"
+],
+"deadCust": 230,
+"deadMW": 0.6,
+"feederMW": {
+"DL1": 7.9,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 58568,
+"manual": 147820
+}
+},
+"BR1_1": {
+"zone": [
+"BR1_1",
+"BR1_2",
+"BR1_3",
+"DL1_SEC1_BP1",
+"DL1_SEC1_L",
+"DL1_SEC2",
+"LD_B1a",
+"LD_B1b",
+"LD_M1"
+],
+"boundary": [
+"S1",
+"S2",
+"T1"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S1",
+true
+],
+[
+"S2",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M1",
+"LD_B1a",
+"LD_B1b"
+],
+"deadCust": 441,
+"deadMW": 2.9,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 9.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S1",
+false
+],
+[
+"S2",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 110259,
+"manual": 216315
+}
+},
+"BR1_2": {
+"zone": [
+"BR1_1",
+"BR1_2",
+"BR1_3",
+"DL1_SEC1_BP1",
+"DL1_SEC1_L",
+"DL1_SEC2",
+"LD_B1a",
+"LD_B1b",
+"LD_M1"
+],
+"boundary": [
+"S1",
+"S2",
+"T1"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S1",
+true
+],
+[
+"S2",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M1",
+"LD_B1a",
+"LD_B1b"
+],
+"deadCust": 441,
+"deadMW": 2.9,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 9.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S1",
+false
+],
+[
+"S2",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 110259,
+"manual": 216315
+}
+},
+"BR1_3": {
+"zone": [
+"BR1_1",
+"BR1_2",
+"BR1_3",
+"DL1_SEC1_BP1",
+"DL1_SEC1_L",
+"DL1_SEC2",
+"LD_B1a",
+"LD_B1b",
+"LD_M1"
+],
+"boundary": [
+"S1",
+"S2",
+"T1"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S1",
+true
+],
+[
+"S2",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S1",
+"S2",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M1",
+"LD_B1a",
+"LD_B1b"
+],
+"deadCust": 441,
+"deadMW": 2.9,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 9.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S1",
+false
+],
+[
+"S2",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 110259,
+"manual": 216315
+}
+},
+"BR2_1": {
+"zone": [
+"BR2_1",
+"BR2_2",
+"DL1_SEC3_BP2",
+"DL1_SEC3_L",
+"DL1_SEC4",
+"LD_B2",
+"LD_M3"
+],
+"boundary": [
+"S3",
+"S4",
+"T2"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S3",
+true
+],
+[
+"S4",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1293,
+"deadMW": 4.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M3",
+"LD_B2"
+],
+"deadCust": 513,
+"deadMW": 1.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 7.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S3",
+false
+],
+[
+"S4",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 126702,
+"manual": 215775
+}
+},
+"BR2_2": {
+"zone": [
+"BR2_1",
+"BR2_2",
+"DL1_SEC3_BP2",
+"DL1_SEC3_L",
+"DL1_SEC4",
+"LD_B2",
+"LD_M3"
+],
+"boundary": [
+"S3",
+"S4",
+"T2"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S3",
+true
+],
+[
+"S4",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1293,
+"deadMW": 4.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S3",
+"S4",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M3",
+"LD_B2"
+],
+"deadCust": 513,
+"deadMW": 1.8,
+"feederMW": {
+"DL1": 3.7,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 7.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S3",
+false
+],
+[
+"S4",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 126702,
+"manual": 215775
+}
+},
+"BR3_1": {
+"zone": [
+"BR3_1",
+"BR3_2",
+"DL1_SEC5_BP3",
+"DL1_SEC5_L",
+"DL1_SEC6",
+"LD_B3",
+"LD_M5"
+],
+"boundary": [
+"S5",
+"S6",
+"T3"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S5",
+true
+],
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M5",
+"LD_M6",
+"LD_B3"
+],
+"deadCust": 520,
+"deadMW": 2.3,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M5",
+"LD_B3"
+],
+"deadCust": 290,
+"deadMW": 1.7,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S5",
+false
+],
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 73078,
+"manual": 163520
+}
+},
+"BR3_2": {
+"zone": [
+"BR3_1",
+"BR3_2",
+"DL1_SEC5_BP3",
+"DL1_SEC5_L",
+"DL1_SEC6",
+"LD_B3",
+"LD_M5"
+],
+"boundary": [
+"S5",
+"S6",
+"T3"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S5",
+true
+],
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M5",
+"LD_M6",
+"LD_B3"
+],
+"deadCust": 520,
+"deadMW": 2.3,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "transfer",
+"ops": [
+[
+"T4",
+false
+]
+],
+"open": [
+"S5",
+"S6",
+"T1",
+"T2",
+"T3"
+],
+"dead": [
+"LD_M5",
+"LD_B3"
+],
+"deadCust": 290,
+"deadMW": 1.7,
+"feederMW": {
+"DL1": 6.2,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.6
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"T4",
+true
+],
+[
+"S5",
+false
+],
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 73078,
+"manual": 163520
+}
+},
+"DL1_END_T4": {
+"zone": [
+"DL1_END_T4",
+"DL1_SEC6_L",
+"DL1_SEC7_END",
+"LD_M6"
+],
+"boundary": [
+"S6",
+"T4"
+],
+"steps": [
+{
+"id": "trip",
+"ops": [
+[
+"CB_DL1",
+true
+]
+],
+"open": [
+"CB_DL1",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "isolate",
+"ops": [
+[
+"S6",
+true
+]
+],
+"open": [
+"CB_DL1",
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M1",
+"LD_M2",
+"LD_M3",
+"LD_M4",
+"LD_M5",
+"LD_M6",
+"LD_B1a",
+"LD_B1b",
+"LD_B2",
+"LD_B3"
+],
+"deadCust": 1914,
+"deadMW": 8.5,
+"feederMW": {
+"DL1": 0.0,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "upstream",
+"ops": [
+[
+"CB_DL1",
+false
+]
+],
+"open": [
+"S6",
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [
+"LD_M6"
+],
+"deadCust": 230,
+"deadMW": 0.6,
+"feederMW": {
+"DL1": 7.9,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+},
+{
+"id": "repair",
+"ops": [
+[
+"S6",
+false
+]
+],
+"open": [
+"T1",
+"T2",
+"T3",
+"T4"
+],
+"dead": [],
+"deadCust": 0,
+"deadMW": 0,
+"feederMW": {
+"DL1": 8.5,
+"DL2": 6.0,
+"DL3": 5.0,
+"C11": 4.0
+},
+"loop": false,
+"overload": []
+}
+],
+"cmi": {
+"auto": 58568,
+"manual": 147820
+}
+}
+},
+"flisrTimes": {
+"auto": {
+"trip": 0,
+"isolate": 1,
+"upstream": 2,
+"transfer": 3,
+"repair": 240
+},
+"manual": {
+"trip": 0,
+"isolate": 50,
+"upstream": 55,
+"transfer": 75,
+"repair": 240
+}
+},
+"dl1Cust": 1914,
 "mrid": {
 "CB_DL1": "7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1",
 "CB_DL2": "0ae2be00-fd95-5f57-82ce-54efd4d01e8a",

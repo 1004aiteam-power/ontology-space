@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 설비 고장 영향 분석</title>
+<meta name="title-ko" content="Ontology Space · 설비 고장 영향 분석">
+<meta name="title-en" content="Ontology Space · Failure Impact Analysis">
+<meta name="description" content="자산관리 온톨로지와 배전선로 모델을 이어, 위험도 높은 설비가 고장 나면 어느 구간·지역·고객이 영향을 받고 연계 절체로 위험도가 어떻게 바뀌는지 그래프로 따라간다 (가상 데이터)">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script src="assets/impact.js" defer></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
+.im-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.im-wrap{width:min(1200px,100vw - 32px);position:relative;left:50%;transform:translateX(-50%)}
+@media (min-width:1100px){.im-wrap{grid-template-columns:minmax(0,1fr) 340px;align-items:start}}
+#imGraph svg{width:100%;height:auto;display:block}
+.im-col{fill:var(--muted);font-size:12px;font-weight:700;letter-spacing:.03em}
+.im-n rect{fill:var(--surface);stroke:var(--line);stroke-width:1.4}
+.im-n .t1{fill:var(--text);font-size:13px;font-weight:600}
+.im-n .t2,.im-n tspan.t2{fill:var(--muted);font-size:11.5px;font-weight:400}
+.im-n .t2.warn{fill:var(--hv);font-weight:700}
+.im-n .crit{fill:var(--hv);font-weight:700}
+.im-n .fx{font-size:16px}
+.im-n.chain,.im-n.zone{cursor:pointer}
+.im-n.chain:focus-visible,.im-n.zone:focus-visible{outline:none}
+.im-n:focus-visible rect{stroke:var(--accent);stroke-width:3}
+.im-n.chain.hot rect:first-child{stroke:var(--hv);stroke-width:2}
+.im-n.sel rect:first-child{stroke-width:3.5 !important}
+.im-n .lv.hi{fill:var(--hv)} .im-n .lv.mid{fill:#d97706} .im-n .lv.lo{fill:var(--ok)} .im-n .lv.gap{fill:var(--dead)}
+.im-n.dead rect{stroke:var(--hv) !important;stroke-dasharray:5 3;fill:color-mix(in srgb,var(--hv) 7%,var(--surface))}
+.im-n.load.dead .t1{fill:var(--hv)}
+.im-e{fill:none;stroke:var(--muted);stroke-width:1.3;opacity:.7}
+.im-e.hot{stroke:var(--hv);opacity:1;stroke-width:1.8}
+.im-e.cut{stroke-dasharray:3 4;opacity:.5}
+.im-tie{fill:none;stroke:var(--dead);stroke-width:1.2;stroke-dasharray:4 4}
+.im-tie.used{stroke-width:3;stroke-dasharray:none}
+.im-sw{fill:var(--muted);font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.im-sw.on{fill:var(--text);font-weight:700}
+#imSide h3{margin:0 0 6px;font-size:17px}
+#imSide h3 small{font-weight:400}
+#imSide h4{margin:14px 0 6px;font-size:14px}
+#imSide .muted{color:var(--muted);font-size:13px}
+.im-gap{font-size:13px;background:var(--code);border-radius:8px;padding:8px 10px}
+.im-big{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:6px}
+.im-big small{font-size:14px;margin-left:4px}
+.im-big.bad{color:var(--hv)} .im-big.ok{color:var(--ok)}
+.im-alert{color:var(--hv);font-size:13px;margin-top:4px;font-weight:600}
+.im-ops{font-size:13px;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.im-ops .warn{color:var(--hv)}
+.im-risk{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px;align-items:start}
+.im-mx{width:110px;height:auto}
+.im-mx .ax{fill:var(--muted);font-size:9px}
+.im-mx .d0{fill:none;stroke:var(--text);stroke-width:2;stroke-dasharray:3 2}
+.im-mx .d1{fill:var(--accent);stroke:var(--surface);stroke-width:1.5}
+.im-mx .mv{stroke:var(--text);stroke-width:1.4;fill:none}
+.mx-cell{stroke:var(--surface);stroke-width:2}
+.mx-lo{fill:color-mix(in srgb,var(--ok) 16%,var(--surface))}
+.mx-mid{fill:color-mix(in srgb,#eab308 24%,var(--surface))}
+.mx-hi{fill:color-mix(in srgb,var(--hv) 24%,var(--surface))}
+table.im-rt{min-width:0;font-size:12px}
+table.im-rt th,table.im-rt td{padding:4px 6px}
+table.im-rt tbody th{font-weight:500;background:none}
+table.im-rt tr.now th,table.im-rt tr.now td{background:var(--accent-soft)}
+.lv-t{font-weight:700;white-space:nowrap}
+.lv-t.hi{color:var(--hv)} .lv-t.mid{color:#b45309} .lv-t.lo{color:var(--ok)}
+.ctrl button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+.seg-sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+td small{color:var(--muted)}
+#imCq details{border-top:1px solid var(--line);padding:4px 0}
+#imCq summary{color:var(--text);font-size:15px}
+#imCq table{min-width:0;font-size:13px}
+.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:20px 0;border-top:1px solid var(--line)}
+.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
+.decision h3{margin:0 0 6px}
+.decision p{margin:6px 0}
+@media (max-width:560px){.decision{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <a href="physical-ai.html"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a>
+    <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html" aria-current="page"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">ASSET ONTOLOGY × GRID MODEL</div>
+  <h1><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span></h1>
+  <p class="thesis" lang="ko">"위험도 높음"이라는 판정은 설비만 봐서는 내릴 수 없습니다.<br>그 설비 <b>뒤에 무엇이 매달려 있는지</b>, <b>다른 길이 있는지</b>를 알아야 합니다.</p>
+  <p class="thesis" lang="en">"High risk" cannot be judged from the equipment alone.<br>You need to know <b>what hangs behind it</b> and <b>whether there is another way in</b>.</p>
+  <p class="lead" lang="ko"><a href="asset.html">자산관리 온톨로지</a>의 자산과 기능 위치에서 출발해, <a href="grid.html#feeder">D/L #1 배전선로 모델</a>의 구간·지역·고객까지 그래프를 따라갑니다. 그다음 연계 개폐기로 이웃 선로에 넘겼을 때 정전이 얼마나 줄고, 그래서 위험도가 어떻게 바뀌는지 계산합니다.</p>
+  <p class="lead" lang="en">Starting from the assets and functional locations of the <a href="asset.html">asset ontology</a>, the graph is followed into the zones, areas and customers of the <a href="grid.html#feeder">feeder #1 model</a>. Then it computes how much a tie-switch transfer to neighbouring feeders shortens the outage, and how that changes the risk.</p>
+  <div class="notice"><b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">This is virtual data</span></b>
+    <p lang="ko">자산·진단·위험도, 고객 수와 지역 이름, 절체 시간(자동 3분, 수동 75분)은 학습용 가상 값입니다. D/L #2·#3은 고장 난 M.Tr #1이 아닌 다른 주변압기에서 나간다고 가정했습니다. 24시간 부하 곡선은 디지털 트윈의 것을 씁니다.</p>
+    <p lang="en">Assets, diagnoses, risk, customer counts, area names and switching times (auto 3 min, manual 75 min) are made up. Feeders #2 and #3 are assumed to come from a different main transformer than M.Tr #1. The 24-hour load curve is the digital twin's.</p></div>
+</div>
+
+<section id="graph" style="padding-top:12px">
+  <h2><span lang="ko">고장을 내고 따라가 보기</span><span lang="en">Fail something and follow it</span></h2>
+  <p lang="ko">왼쪽 열의 <b>자산(기능 위치)</b>이나 가운데 열의 <b>배전선로 구간</b>을 누르세요. 빨간 선이 전기가 끊기는 경로, 빨간 점선 상자가 정전되는 곳입니다. "절체 후"를 누르면 연계 개폐기로 이웃 선로에서 받은 뒤의 모습이 됩니다.</p>
+  <p lang="en">Click an <b>asset (functional location)</b> on the left or a <b>feeder zone</b> in the middle. Red lines are where power is cut and red dashed boxes are what goes dark. "After transfer" shows the state once tie switches hand the load to neighbouring feeders.</p>
+  <div class="ctrl">
+    <button type="button" data-im-phase="before"><span lang="ko">고장 직후</span><span lang="en">Right after the failure</span></button>
+    <button type="button" data-im-phase="after"><span lang="ko">절체 후</span><span lang="en">After transfer</span></button>
+    <span class="seg-sep"></span>
+    <button type="button" data-im-mode="auto"><span lang="ko">배전자동화</span><span lang="en">Automated</span></button>
+    <button type="button" data-im-mode="manual"><span lang="ko">현장 수동 조작</span><span lang="en">Manual</span></button>
+    <span class="seg-sep"></span>
+    <label><span lang="ko">고장 시각</span><span lang="en">Failure hour</span> <input type="range" id="imHour" min="0" max="23" value="18"> <b id="imHourV" style="font-variant-numeric:tabular-nums">18:00</b></label>
+  </div>
+  <div class="im-wrap">
+    <div class="diagram" id="imGraph"></div>
+    <div class="panel" id="imSide" aria-live="polite"></div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--hv)"></i><span lang="ko">끊기는 경로 · 정전</span><span lang="en">cut path · outage</span></span>
+    <span><i style="background:var(--fd-2)"></i>D/L #2</span><span><i style="background:var(--fd-3)"></i>D/L #3</span><span><i style="background:var(--fd-4)"></i><span lang="ko">C변전소 #11</span><span lang="en">Sub. C #11</span></span>
+    <span><span lang="ko">왼쪽 띠 색 = 자산관리 위험도 · ○ 열림 ● 닫힘 · ✚ 중요 고객</span><span lang="en">left stripe = asset risk level · ○ open ● closed · ✚ critical customer</span></span>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">무엇이 보이나요</span><span lang="en">What to notice</span></b>
+    <ul lang="ko">
+      <li><b>M.Tr #1 본체</b>는 자산관리 페이지에서 위험도 15(높음)였습니다. 고치는 데 90일이 걸리고, 그동안 8.5MW가 끊긴다고 보았기 때문입니다.</li>
+      <li>배전선로 모델을 붙여 보면 S2에서 나눠 T1·T4로 넘기면 <b>몇 분 만에 1,914호 모두 다시 전기를 받습니다</b>. 고장 영향(CoF)이 5에서 1로 내려가고 위험도는 3(낮음)이 됩니다.</li>
+      <li>대신 이웃 선로의 여유가 <b>0.4MW</b>만 남습니다. 90일 동안 이웃 선로에 또 고장이 나면 넘길 곳이 없습니다. 위험이 사라진 게 아니라 <b>옮겨 간 것</b>입니다.</li>
+      <li><b>154kV 모선, 22.9kV 모선</b>은 자산이 등록되지 않아 위험도를 매길 수 없습니다. 영향은 계산되는데 확률을 모르는, 데이터의 빈자리입니다.</li>
+      <li><b>Z4(분기선 2)</b>를 눌러 보세요. 병원이 있는 분기선에는 개폐기가 없어서, 그 구간 고장은 수리 때까지 병원을 살릴 수 없습니다.</li>
+    </ul>
+    <ul lang="en">
+      <li><b>The M.Tr #1 body</b> was rated risk 15 (high) on the asset page: 90 days to repair with 8.5 MW cut the whole time.</li>
+      <li>With the feeder model attached, splitting at S2 and transferring via T1 and T4 <b>restores all 1,914 customers within minutes</b>. CoF drops from 5 to 1 and the risk to 3 (low).</li>
+      <li>But only <b>0.4 MW</b> of headroom is left on the neighbours. Another fault there during those 90 days has nowhere to go. The risk has not disappeared, it has <b>moved</b>.</li>
+      <li>The <b>154 kV and 22.9 kV buses</b> have no asset recorded, so no risk can be rated: the impact is known but the probability is not — a gap in the data.</li>
+      <li>Click <b>Z4 (lateral 2)</b>. The lateral feeding the hospital has no switch, so a fault in that zone keeps the hospital dark until repair.</li>
+    </ul></div>
+  <h3><span lang="ko">자산별 위험도: 설비만 볼 때 vs 배전선로까지 볼 때</span><span lang="en">Risk per asset: equipment only vs with the feeder</span></h3>
+  <div class="tbl"><table><thead><tr><th><span lang="ko">기능 위치 · 자산</span><span lang="en">Location · asset</span></th><th>PoF</th><th><span lang="ko">복구(시간)</span><span lang="en">Repair (h)</span></th><th><span lang="ko">자산관리</span><span lang="en">Asset view</span></th><th><span lang="ko">+ 예비품</span><span lang="en">+ spare</span></th><th><span lang="ko">+ 연계 절체 (자동 / 수동)</span><span lang="en">+ tie transfer (auto / manual)</span></th></tr></thead><tbody id="imTable"></tbody></table></div>
+</section>
+
+<section id="ontology">
+  <h2><span lang="ko">두 모델을 잇는 방법</span><span lang="en">How the two models are joined</span></h2>
+  <p lang="ko">자산관리 온톨로지는 차단기를 기능 위치 <code>ex:CB_22_1</code>로, 배전선로 모델은 같은 차단기를 mRID IRI(<code>ex:_7fb1…</code>)로 부릅니다. 같은 물건을 두 모델이 다른 이름으로 부르는 것은 흔한 일입니다. 둘을 <code>skos:exactMatch</code>로 잇고, 평상시 개폐 상태에서 전원 → 부하 방향으로 계산한 <code>im:feeds</code>(전이 속성)를 덧붙였습니다. 그러면 "이 자산이 고장 나면 누가 영향을 받나"가 SPARQL 경로 질의 <code>im:feeds+</code> 한 줄이 됩니다.</p>
+  <p lang="en">The asset ontology calls the breaker by its functional location <code>ex:CB_22_1</code>; the feeder model calls the same breaker by its mRID IRI (<code>ex:_7fb1…</code>). Two models naming one thing differently is normal. They are joined by <code>skos:exactMatch</code>, and an <code>im:feeds</code> relation (transitive), computed source → load in the normal switching state, is added. "Who is affected if this asset fails" then becomes one SPARQL path, <code>im:feeds+</code>.</p>
+<pre><code>ex:CB_22_1 skos:exactMatch ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 .   # <span lang="ko">자산관리 ↔ 배전선로 모델</span><span lang="en">asset ontology ↔ feeder model</span>
+ex:TR_1 im:feeds ex:BUS_22 .  ex:BUS_22 im:feeds ex:CB_22_1 .  …
+im:Z4 a im:FeederZone ; im:feeds ex:_…LD_M3, ex:_…LD_B2 ; im:tieTo ex:_…T2 .
+ex:_…LD_B2 im:area "아라 병원"@ko ; im:customers 3 ; im:critical true .</code></pre>
+  <h3><span lang="ko">세 그래프를 합쳐 묻기</span><span lang="en">Asking across the graphs</span></h3>
+  <p lang="ko">빌드할 때 <code>asset-ontology.ttl</code> · <code>feeder.ttl</code> · <code>impact-links.ttl</code>을 한 그래프에 불러 실행한 결과입니다.</p>
+  <p lang="en">Results of running these at build time on <code>asset-ontology.ttl</code> · <code>feeder.ttl</code> · <code>impact-links.ttl</code> loaded into one graph.</p>
+  <div id="imCq"></div>
+</section>
+
+<section id="design">
+  <h2><span lang="ko">설계 결정</span><span lang="en">Design decisions</span></h2>
+  <div class="decision"><div class="no">D1</div><div><h3><span lang="ko">owl:sameAs가 아니라 skos:exactMatch</span><span lang="en">skos:exactMatch, not owl:sameAs</span></h3>
+    <p lang="ko"><code>owl:sameAs</code>를 쓰면 추론기가 두 IRI의 속성을 전부 합칩니다. 자산관리의 "기능 위치"와 배전선로 모델의 "차단기 설비"는 같은 것을 가리키지만 관점이 다르므로, 속성까지 섞이지 않게 약한 연결을 골랐습니다.</p>
+    <p lang="en"><code>owl:sameAs</code> makes a reasoner merge every property of both IRIs. The asset ontology's functional location and the feeder model's breaker point at the same thing from different viewpoints, so a weaker link that keeps their properties apart was chosen.</p></div></div>
+  <div class="decision"><div class="no">D2</div><div><h3><span lang="ko">im:feeds는 원본이 아니라 파생 관계</span><span lang="en">im:feeds is derived, not source data</span></h3>
+    <p lang="ko">원본 연결은 CIM의 <code>Terminal</code>–<code>ConnectivityNode</code>이고 방향이 없습니다. 방향은 개폐 상태와 전원 위치에 따라 바뀝니다(절체하면 반대로 흐름). 그래서 <code>im:feeds</code>는 "평상시 상태에서" 계산한 결과로만 두고, 빌드할 때마다 다시 만듭니다.</p>
+    <p lang="en">The source connectivity is CIM <code>Terminal</code>–<code>ConnectivityNode</code>, which has no direction. Direction depends on switch states and sources (it reverses after a transfer). So <code>im:feeds</code> is kept only as a result computed for the normal state and regenerated on every build.</p></div></div>
+  <div class="decision"><div class="no">D3</div><div><h3><span lang="ko">위험도는 자산 속성이 아니라 자산 + 계통의 속성</span><span lang="en">Risk belongs to asset + network, not the asset alone</span></h3>
+    <p lang="ko">같은 변압기라도 뒤에 연계 선로가 있으면 위험도가 낮고, 없으면 높습니다. 그래서 위험도를 자산 데이터에 고정값으로 적지 않고, 계통 모델이 바뀔 때마다 다시 계산하는 값으로 둡니다. 이웃 선로의 남은 여유도 함께 보여 줘서, 위험이 다른 곳으로 옮겨 가는 것을 놓치지 않게 했습니다.</p>
+    <p lang="en">The same transformer is low risk with a backup feeder behind it and high risk without one. So risk is not stored as a fixed asset attribute but recomputed whenever the network model changes, and the neighbours' remaining headroom is shown so the risk that moves elsewhere is not missed.</p></div></div>
+</section>
+
+<section id="files">
+  <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
+  <div class="grid">
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/impact/build_impact.py"><h4>build_impact.py</h4><p lang="ko">영향 추적 · 위험도 재계산 · SPARQL</p><p lang="en">Tracing · risk re-rating · SPARQL</p></a>
+    <a class="card" href="examples/impact/impact-links.ttl"><h4>impact-links.ttl</h4><p lang="ko">두 모델을 잇는 트리플</p><p lang="en">Triples joining the two models</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py"><h4>build_feeder.py</h4><p lang="ko">배전선로 모델 · 절체 탐색 (best_transfer)</p><p lang="en">Feeder model · transfer search (best_transfer)</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/impact.js"><h4>assets/impact.js</h4><p lang="ko">그래프 그림</p><p lang="en">Graph view</p></a>
+  </div>
+  <ul lang="ko">
+    <li><b>조류계산 없음</b>: 연결과 부하 합계만 봅니다. 절체 뒤 선로 끝 전압이 떨어지는지는 확인하지 않았습니다.</li>
+    <li><b>부하는 피크 기준</b>: 절체 가능 여부는 피크 부하로 판단했습니다. 고장 시각 슬라이더는 그 시각에 끊기는 전력(MW)만 바꿉니다.</li>
+    <li><b>고장은 한 번에 하나</b>: 복구 기간 중 두 번째 고장(N-2)은 계산하지 않고 남은 여유로만 보여 줍니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>No load flow</b>: only connectivity and load sums; voltage at the far end after a transfer is not checked.</li>
+    <li><b>Peak loads</b>: transfer feasibility is judged at peak; the hour slider only changes the MW cut at that hour.</li>
+    <li><b>One failure at a time</b>: a second failure during repair (N-2) is not computed, only shown as remaining headroom.</li>
+  </ul>
+  <div class="pager"><a href="ev.html"><span lang="ko">← 이전: 고속도로 × 전력망</span><span lang="en">← Prev: Roads × Grid</span></a><a href="studio.html"><span lang="ko">설계실로 →</span><span lang="en">Back to the studio →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

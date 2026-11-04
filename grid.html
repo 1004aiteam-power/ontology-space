@@ -11,6 +11,7 @@
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
 <script src="assets/feeder.js" defer></script>
+<script src="assets/flisr.js" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -29,6 +30,9 @@
       <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
       <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
       <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
     </div>
   </nav>
   <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
@@ -270,6 +274,72 @@ SELECT DISTINCT ?a ?b WHERE {
     cim:Switch.open true .                          # <span lang="ko">지금 상태 (SSH) — 복구 시 false로</span><span lang="en">present state (SSH) — false when restoring</span></code></pre>
   <p lang="ko">코드와 데이터: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py">build_feeder.py</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/feeder.ttl">feeder.ttl</a> (CIM RDF) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/feeder.js">feeder.js</a></p>
   <p lang="en">Code and data: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py">build_feeder.py</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/feeder.ttl">feeder.ttl</a> (CIM RDF) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/feeder.js">feeder.js</a></p>
+</section>
+
+<section id="flisr">
+  <h2><span lang="ko">고장 복구 시뮬레이션 (FLISR)</span><span lang="en">Fault restoration simulation (FLISR)</span></h2>
+  <p class="sub" lang="ko">위 D/L #1에서 <b>선로(파란 선) 아무 곳이나 눌러 고장을 내 보세요.</b> 배전 운영자가 하는 순서대로 재생합니다. ① CB가 트립되어 선로 전체가 정전되고, ② 고장 구간 양쪽 개폐기를 열어 떼어 냅니다. ③ CB를 다시 닫아 앞쪽을 살리고, ④ 뒤쪽은 연계 개폐기로 이웃 선로에 넘깁니다. 각 단계마다 정전 고객 수가 어떻게 줄어드는지, 배전자동화와 현장 수동 조작이 얼마나 다른지 함께 보여 줍니다.</p>
+  <p class="sub" lang="en"><b>Click any line (blue) of feeder #1 to put a fault there.</b> The page replays what a distribution operator does: ① the breaker trips and the whole feeder goes dark, ② the switches on both sides of the faulted section open, ③ the breaker re-closes to restore the front part, and ④ tie switches hand the rest to neighbouring feeders. Each step shows how the number of customers without power falls, and how automated and manual switching compare.</p>
+  <div class="notice"><b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">This is virtual data</span></b>
+    <p lang="ko">고객 수, 지역 이름, 단계별 소요 시간(자동 1~3분, 수동 50~75분, 수리 240분)은 학습용 가상 값입니다.</p>
+    <p lang="en">Customer counts, area names and step times (automated 1–3 min, manual 50–75 min, repair 240 min) are made up for learning.</p></div>
+  <div class="ctrl">
+    <button type="button" id="flPrev" aria-label="previous">◀</button><button type="button" id="flPlay" class="primary" aria-label="play">▶</button><button type="button" id="flNext" aria-label="next">▶▏</button>
+    <span class="seg-sep"></span>
+    <button type="button" data-fl-mode="auto" aria-pressed="true" class="fl-mode"><span lang="ko">배전자동화</span><span lang="en">Automated</span></button>
+    <button type="button" data-fl-mode="manual" aria-pressed="false" class="fl-mode"><span lang="ko">현장 수동 조작</span><span lang="en">Manual</span></button>
+    <span class="seg-sep"></span>
+    <span class="muted fl-try"><span lang="ko">바로 해 보기:</span><span lang="en">Try:</span></span>
+    <button type="button" data-fl-seg="DL1_SEC1"><span lang="ko">1구간 (CB 바로 뒤)</span><span lang="en">Section 1 (right after CB)</span></button>
+    <button type="button" data-fl-seg="BR2_1"><span lang="ko">분기선 2 (병원)</span><span lang="en">Lateral 2 (hospital)</span></button>
+    <button type="button" data-fl-seg="DL1_SEC7_END"><span lang="ko">선로 끝</span><span lang="en">Feeder end</span></button>
+  </div>
+  <div class="fd-wrap fl-wrap">
+    <div class="diagram fd-map" id="flMap"></div>
+    <div class="fd-side">
+      <div class="panel" id="flNow" aria-live="polite"></div>
+      <div class="panel" id="flSteps"></div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--fd-1)"></i>D/L #1</span><span><i style="background:var(--fd-2)"></i>D/L #2</span><span><i style="background:var(--fd-3)"></i>D/L #3</span><span><i style="background:var(--fd-4)"></i><span lang="ko">C변전소 D/L #11</span><span lang="en">Sub. C #11</span></span>
+    <span><i style="background:var(--dead)"></i><span lang="ko">정전</span><span lang="en">dead</span></span>
+    <span><span lang="ko">점선 상자 = 고장 구간 · 주황 고리 = 이번 단계에 조작한 개폐기 · 숫자 = 고객 호수 · ✚ 중요 고객(병원)</span><span lang="en">dashed box = faulted zone · orange ring = switch operated in this step · numbers = customers · ✚ critical customer (hospital)</span></span>
+  </div>
+  <div class="grid two fl-bottom">
+    <div><h3><span lang="ko">정전 고객 수의 변화</span><span lang="en">Customers out over time</span></h3><div id="flChart" class="fl-chart"></div></div>
+    <div><h3><span lang="ko">고객 정전 시간 (CMI)</span><span lang="en">Customer minutes interrupted (CMI)</span></h3><div id="flCmi" class="fl-cmi"></div>
+      <p class="muted" lang="ko">CMI = 정전 고객 수 × 정전 시간(분)의 합. 이것을 전체 고객 수로 나누면 1호당 평균 정전 시간이 되고, 1년 동안 모으면 배전 신뢰도 지표 SAIDI가 됩니다.</p>
+      <p class="muted" lang="en">CMI is the sum of customers out × minutes. Divided by all customers it gives average minutes per customer; summed over a year it is the reliability index SAIDI.</p></div>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b>
+    <ul lang="ko">
+      <li>수도관이 한 군데 터지면, 먼저 <b>본관 밸브를 잠그고</b>(트립), 터진 곳 <b>앞뒤 밸브만 잠근 뒤</b>(분리), 본관을 다시 열고(상위 복구), 뒤쪽 동네는 <b>옆 동네 수도관과 이어 주는 것</b>(절체)과 같습니다.</li>
+      <li>옆 선로도 감당할 수 있는 양이 정해져 있습니다. 한 선로에 다 넘기면 넘치므로, <b>나눠서</b> 두 선로에 보내기도 합니다(1구간 고장을 눌러 보세요).</li>
+      <li>개폐기가 없는 분기선은 따로 떼어 낼 수 없어서, 그 분기선에 고장이 나면 붙어 있는 간선 구간까지 수리 때까지 정전입니다(분기선 2 · 병원).</li>
+      <li>복구 순서는 같은데 <b>사람이 가서 조작하느냐, 원격으로 조작하느냐</b>에 따라 정전 시간이 크게 달라집니다.</li>
+    </ul>
+    <ul lang="en">
+      <li>When a water main bursts you <b>shut the main valve</b> (trip), <b>close only the valves either side of the leak</b> (isolate), reopen the main (restore upstream) and <b>connect the far streets to the neighbouring main</b> (transfer).</li>
+      <li>Neighbouring feeders have limits too. If one cannot take everything, the load is <b>split</b> between two (try a fault in section 1).</li>
+      <li>A lateral without its own switch cannot be cut out separately, so a fault there keeps its main-line section dark until repair (lateral 2, the hospital).</li>
+      <li>The order is the same either way; <b>whether someone drives out or a switch is operated remotely</b> is what changes the outage minutes.</li>
+    </ul></div>
+  <h3><span lang="ko">온톨로지에서 복구 순서를 찾는 법</span><span lang="en">Finding the restoration order in the ontology</span></h3>
+  <ol lang="ko">
+    <li><b>고장 구간</b>: 고장 난 <code>cim:ACLineSegment</code>에서 <code>Terminal</code>–<code>ConnectivityNode</code>를 따라가되, <code>cim:Switch</code>를 만나면 멈춥니다. 모은 설비가 고장 구간, 멈춘 개폐기가 경계입니다.</li>
+    <li><b>분리</b>: 경계 개폐기 중 <code>cim:Switch.open false</code>인 것을 <code>true</code>로 바꿉니다.</li>
+    <li><b>절체 후보</b>: <code>normalOpen true</code>이면서 고장 구간에 닿지 않은 개폐기(연계 개폐기)와, 정전 구역 안의 닫힌 구간 개폐기(나눌 곳)를 조합합니다.</li>
+    <li><b>고르기</b>: 루프가 없고 모든 선로가 한도 안인 조합 중에서 살리는 고객이 가장 많고, 조작이 가장 적고, 여유가 가장 큰 것을 고릅니다.</li>
+  </ol>
+  <ol lang="en">
+    <li><b>Faulted zone</b>: from the faulted <code>cim:ACLineSegment</code>, follow <code>Terminal</code>–<code>ConnectivityNode</code> and stop at every <code>cim:Switch</code>. What is collected is the zone; the switches where it stopped are its boundary.</li>
+    <li><b>Isolate</b>: set boundary switches with <code>cim:Switch.open false</code> to <code>true</code>.</li>
+    <li><b>Transfer candidates</b>: combine switches with <code>normalOpen true</code> that do not touch the zone (ties) with closed sectionalizers inside the dark area (split points).</li>
+    <li><b>Choose</b>: among loop-free combinations that keep every feeder within its limit, take the one that restores the most customers, with the fewest operations and the most headroom.</li>
+  </ol>
+  <p lang="ko">이 계산은 빌드할 때 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py">build_feeder.py</a>의 <code>flisr_plan()</code>이 D/L #1의 모든 구간(24개)에 대해 한 번씩 해 두고, 웹(<a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/flisr.js">flisr.js</a>)은 결과를 재생합니다.</p>
+  <p lang="en">At build time <code>flisr_plan()</code> in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py">build_feeder.py</a> runs this for all 24 sections of feeder #1; the page (<a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/flisr.js">flisr.js</a>) replays the result.</p>
 </section>
 
 <section id="use">

@@ -15,6 +15,8 @@
 | [examples/asset/](examples/asset/) | 전력설비 자산관리 온톨로지: 원본 CSV → `build_asset_ontology.py` → OWL · SHACL 검증 · Neo4j (⚠ 가상 데이터) |
 | [shapes/asset-shapes.ttl](shapes/asset-shapes.ttl) | 자산관리 SHACL 규칙 (빈 설비 자리, 설치 기간 겹침, 근거 없는 작업지시) |
 | [examples/highway/](examples/highway/) | 가상 전국 고속도로·국도 온톨로지(OWL + GeoSPARQL)와 24시간 차량 흐름: 원본 CSV → `build_highway.py` (중력모형 수요 · 시간대별 이용자 균형 배정) (⚠ 가상 데이터) |
+| [examples/ev/](examples/ev/) | 고속도로 × 전력망: 휴게소 전기차 충전 온톨로지. 24시간 교통량 → 충전 수요 → 22.9kV 배전선로 → 디지털 트윈 154kV 변전소, 세 그래프를 합친 SPARQL (⚠ 가상 데이터) |
+| [examples/impact/](examples/impact/) | 설비 고장 영향 분석: 자산관리 온톨로지 ↔ 배전선로 모델(`skos:exactMatch`, `im:feeds`), 연계 절체를 반영한 위험도 재계산 (⚠ 가상 데이터) |
 | [shapes/highway-shapes.ttl](shapes/highway-shapes.ttl) | 도로망 SHACL 규칙 (구간·링크 방향, 분기점, 도로 등급, 연결성, 서비스수준) |
 | [examples/highway/highway-alignment.ttl](examples/highway/highway-alignment.ttl) | 도로 온톨로지 ↔ INSPIRE 교통망 · 국토교통부 표준노드링크 · GeoSPARQL 대응 (SKOS, 항목별 원문 확인 여부 표시) |
 | [examples/power-grid-sample.ttl](examples/power-grid-sample.ttl) | CIM 스타일의 간단한 전력망 예제 (Turtle) |
@@ -30,8 +32,8 @@
 | [shapes/](shapes/) | SHACL 규칙(`cim-shapes.ttl`)과 pycim 클래스 계층(`cim-classes.ttl`) |
 | [assets/physai/](assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터 |
 | [examples/twin/](examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
-| [examples/feeder/](examples/feeder/) | A변전소 D/L #1 배전선로 상세: 구간 개폐기 6 · 연계 개폐기 4 · 분기점 3, pycim 모델 → CIM RDF · 웹 그림 데이터 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망 / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통), 한·영 전환) |
+| [examples/feeder/](examples/feeder/) | A변전소 D/L #1 배전선로 상세: 구간 개폐기 6 · 연계 개폐기 4 · 분기점 3, pycim 모델 → CIM RDF · 웹 그림 데이터 · 모든 구간의 고장 복구(FLISR) 계획 (⚠ 가상 데이터) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석), 한·영 전환) |
 
 웹사이트: https://1004aiteam-power.github.io/ontology-space/
 
@@ -67,6 +69,14 @@ python examples/asset/build_asset_ontology.py   # 전력설비 자산관리: 위
 
 ```bash
 python examples/highway/build_highway.py   # 가상 고속도로: 수요 배정 24시간 계산 · OWL 생성 · SHACL 검증
+```
+
+```bash
+python examples/ev/build_ev.py   # 고속도로 × 전력망: 휴게소 충전 수요 · 배전선로 부하 · 세 그래프 SPARQL
+```
+
+```bash
+python examples/impact/build_impact.py   # 설비 고장 영향 분석: 자산 → 구간 · 고객, 연계 절체 반영 위험도
 ```
 
 ```bash

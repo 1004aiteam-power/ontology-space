@@ -1,0 +1,175 @@
+# ⚠ 가상 데이터: 휴게소 이름·충전기 수·전기차 비율·배전선로 부하는 모두 지어낸 값입니다.
+@prefix ev:   <https://1004aiteam-power.github.io/ontology-space/ev#> .
+@prefix hw:   <https://1004aiteam-power.github.io/ontology-space/highway#> .
+@prefix tw:   <http://example.org/kr-twin#> .
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://1004aiteam-power.github.io/ontology-space/ev> a owl:Ontology ;
+    rdfs:label "고속도로 휴게소 전기차 충전 온톨로지"@ko ; owl:versionInfo "0.1" ;
+    owl:imports <https://1004aiteam-power.github.io/ontology-space/highway> ;
+    rdfs:comment "교통 온톨로지(hw:)의 방향 링크와 전력망(CIM, 디지털 트윈)의 변전소를 휴게소 충전소로 잇는다. 모든 값은 가상."@ko .
+
+### 클래스
+ev:RestArea a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "휴게소"@ko, "Rest area"@en ;
+    rdfs:comment "한 방향 링크 위의 휴게 시설. INSPIRE에서는 RoadNode(service station)에 해당한다."@ko .
+ev:ChargingStation a owl:Class ; rdfs:subClassOf cim:EnergyConsumer ; rdfs:label "충전소"@ko, "Charging station"@en ;
+    rdfs:comment "전력망 쪽에서 보면 충전소는 부하(EnergyConsumer)다. 교통 쪽에서는 휴게소의 시설이다. 두 관점이 이 클래스에서 만난다."@ko .
+ev:Charger a owl:Class ; rdfs:label "충전기"@ko, "Charger"@en .
+ev:ChargingPeak a owl:Class ; rdfs:label "충전 첨두"@ko ; rdfs:comment "기본 가정에서 하루 중 충전 전력이 가장 큰 시각과 그 값. 24시간 전체는 ev.json에 있다."@ko .
+
+### 속성 (교통 ↔ 전력의 다리)
+ev:onLink a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain ev:RestArea ; rdfs:range hw:Link ; rdfs:label "놓인 방향 링크"@ko .
+ev:positionOnLink a owl:DatatypeProperty ; rdfs:domain ev:RestArea ; rdfs:range xsd:decimal ; rdfs:label "링크 위 위치(0=시점, 1=종점)"@ko .
+ev:hasChargingStation a owl:ObjectProperty ; rdfs:domain ev:RestArea ; rdfs:range ev:ChargingStation .
+ev:hasCharger a owl:ObjectProperty ; rdfs:domain ev:ChargingStation ; rdfs:range ev:Charger .
+ev:chargerCount a owl:DatatypeProperty ; rdfs:domain ev:Charger ; rdfs:range xsd:integer .
+ev:ratedKW a owl:DatatypeProperty ; rdfs:domain ev:Charger ; rdfs:range xsd:decimal ; rdfs:label "1대 정격 출력(kW)"@ko .
+ev:installedKW a owl:DatatypeProperty ; rdfs:domain ev:ChargingStation ; rdfs:range xsd:decimal ; rdfs:label "설치 용량(kW)"@ko .
+ev:feederBasePeakMW a owl:DatatypeProperty ; rdfs:domain cim:Feeder ; rdfs:range xsd:decimal ; rdfs:label "선로의 다른 부하 첨두(MW)"@ko .
+ev:feederLimitMW a owl:DatatypeProperty ; rdfs:domain cim:Feeder ; rdfs:range xsd:decimal .
+ev:distanceKm a owl:DatatypeProperty ; rdfs:domain cim:Feeder ; rdfs:range xsd:decimal ; rdfs:label "변전소까지 직선 거리(km)"@ko .
+ev:peakOf a owl:ObjectProperty ; rdfs:domain ev:ChargingPeak ; rdfs:range ev:ChargingStation .
+ev:hour a owl:DatatypeProperty ; rdfs:range xsd:integer .
+ev:mw a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+ev:sessionsPerDay a owl:DatatypeProperty ; rdfs:domain ev:ChargingStation ; rdfs:range xsd:integer .
+
+### 개체
+ev:RA01 a ev:RestArea ; rdfs:label "경부 수원–천안 휴게소(하행)"@ko, "Gyeongbu Suwon–Cheonan (southbound)"@en ; ev:onLink hw:S03F ; ev:positionOnLink 0.45 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.132 37.064)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA01 .
+ev:CS_RA01 a ev:ChargingStation ; rdfs:label "경부 수원–천안 휴게소(하행) 충전소"@ko ; ev:installedKW 1600 ; ev:sessionsPerDay 359 ;
+    ev:hasCharger ev:CH_RA01 ; cim:Equipment.EquipmentContainer ev:FD_RA01 .
+ev:CH_RA01 a ev:Charger ; ev:chargerCount 8 ; ev:ratedKW 200 .
+ev:FD_RA01 a cim:Feeder ; cim:IdentifiedObject.name "경부 수원–천안 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 8.0 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6c618424-29c2-5322-b2e9-9452db2d2d4b ; ev:distanceKm 8.0 .
+ev:PK_RA01 a ev:ChargingPeak ; ev:peakOf ev:CS_RA01 ; ev:hour 17 ; ev:mw 0.8392 .
+
+ev:RA02 a ev:RestArea ; rdfs:label "경부 수원–천안 휴게소(상행)"@ko, "Gyeongbu Suwon–Cheonan (northbound)"@en ; ev:onLink hw:S03R ; ev:positionOnLink 0.55 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.132 37.064)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA02 .
+ev:CS_RA02 a ev:ChargingStation ; rdfs:label "경부 수원–천안 휴게소(상행) 충전소"@ko ; ev:installedKW 1600 ; ev:sessionsPerDay 364 ;
+    ev:hasCharger ev:CH_RA02 ; cim:Equipment.EquipmentContainer ev:FD_RA02 .
+ev:CH_RA02 a ev:Charger ; ev:chargerCount 8 ; ev:ratedKW 200 .
+ev:FD_RA02 a cim:Feeder ; cim:IdentifiedObject.name "경부 수원–천안 휴게소(상행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 7.0 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6c618424-29c2-5322-b2e9-9452db2d2d4b ; ev:distanceKm 8.0 .
+ev:PK_RA02 a ev:ChargingPeak ; ev:peakOf ev:CS_RA02 ; ev:hour 7 ; ev:mw 0.8362 .
+
+ev:RA03 a ev:RestArea ; rdfs:label "경부 청주–대전 휴게소(하행)"@ko, "Gyeongbu Cheongju–Daejeon (southbound)"@en ; ev:onLink hw:S05F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.435 36.505)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA03 .
+ev:CS_RA03 a ev:ChargingStation ; rdfs:label "경부 청주–대전 휴게소(하행) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 287 ;
+    ev:hasCharger ev:CH_RA03 ; cim:Equipment.EquipmentContainer ev:FD_RA03 .
+ev:CH_RA03 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA03 a cim:Feeder ; cim:IdentifiedObject.name "경부 청주–대전 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 6.8 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_664be852-59d6-5691-8cb1-fab2c4581a29 ; ev:distanceKm 15.8 .
+ev:PK_RA03 a ev:ChargingPeak ; ev:peakOf ev:CS_RA03 ; ev:hour 17 ; ev:mw 0.6213 .
+
+ev:RA15 a ev:RestArea ; rdfs:label "경부 천안–청주 휴게소(하행)"@ko, "Gyeongbu Cheonan–Cheongju (southbound)"@en ; ev:onLink hw:S04F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.31 36.72)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA15 .
+ev:CS_RA15 a ev:ChargingStation ; rdfs:label "경부 천안–청주 휴게소(하행) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 285 ;
+    ev:hasCharger ev:CH_RA15 ; cim:Equipment.EquipmentContainer ev:FD_RA15 .
+ev:CH_RA15 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA15 a cim:Feeder ; cim:IdentifiedObject.name "경부 천안–청주 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 5.5 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_e6329736-d75f-5f6e-bd66-f74de409885d ; ev:distanceKm 17.4 .
+ev:PK_RA15 a ev:ChargingPeak ; ev:peakOf ev:CS_RA15 ; ev:hour 17 ; ev:mw 0.5653 .
+
+ev:RA04 a ev:RestArea ; rdfs:label "경부 청주–대전 휴게소(상행)"@ko, "Gyeongbu Cheongju–Daejeon (northbound)"@en ; ev:onLink hw:S05R ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.435 36.505)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA04 .
+ev:CS_RA04 a ev:ChargingStation ; rdfs:label "경부 청주–대전 휴게소(상행) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 288 ;
+    ev:hasCharger ev:CH_RA04 ; cim:Equipment.EquipmentContainer ev:FD_RA04 .
+ev:CH_RA04 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA04 a cim:Feeder ; cim:IdentifiedObject.name "경부 청주–대전 휴게소(상행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 5.0 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_664be852-59d6-5691-8cb1-fab2c4581a29 ; ev:distanceKm 15.8 .
+ev:PK_RA04 a ev:ChargingPeak ; ev:peakOf ev:CS_RA04 ; ev:hour 7 ; ev:mw 0.6091 .
+
+ev:RA05 a ev:RestArea ; rdfs:label "경부 김천–대구 휴게소(하행)"@ko, "Gyeongbu Gimcheon–Daegu (southbound)"@en ; ev:onLink hw:S07F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.34 36.005)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA05 .
+ev:CS_RA05 a ev:ChargingStation ; rdfs:label "경부 김천–대구 휴게소(하행) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 152 ;
+    ev:hasCharger ev:CH_RA05 ; cim:Equipment.EquipmentContainer ev:FD_RA05 .
+ev:CH_RA05 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA05 a cim:Feeder ; cim:IdentifiedObject.name "경부 김천–대구 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 5.0 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_fe9fa182-0b72-5c61-90a7-f18032245f80 ; ev:distanceKm 12.8 .
+ev:PK_RA05 a ev:ChargingPeak ; ev:peakOf ev:CS_RA05 ; ev:hour 17 ; ev:mw 0.3444 .
+
+ev:RA06 a ev:RestArea ; rdfs:label "서해안 서울–평택 휴게소(하행)"@ko, "Seohaean Seoul–Pyeongtaek (southbound)"@en ; ev:onLink hw:S10F ; ev:positionOnLink 0.6 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.05 37.194)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA06 .
+ev:CS_RA06 a ev:ChargingStation ; rdfs:label "서해안 서울–평택 휴게소(하행) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 101 ;
+    ev:hasCharger ev:CH_RA06 ; cim:Equipment.EquipmentContainer ev:FD_RA06 .
+ev:CH_RA06 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA06 a cim:Feeder ; cim:IdentifiedObject.name "서해안 서울–평택 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 6.5 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_b651f232-e21d-56d0-a31f-e4ec3ce6d8f6 ; ev:distanceKm 9.9 .
+ev:PK_RA06 a ev:ChargingPeak ; ev:peakOf ev:CS_RA06 ; ev:hour 17 ; ev:mw 0.2903 .
+
+ev:RA07 a ev:RestArea ; rdfs:label "영동 여주–원주 휴게소(강릉 방향)"@ko, "Yeongdong Yeoju–Wonju (eastbound)"@en ; ev:onLink hw:S16F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.785 37.32)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA07 .
+ev:CS_RA07 a ev:ChargingStation ; rdfs:label "영동 여주–원주 휴게소(강릉 방향) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 156 ;
+    ev:hasCharger ev:CH_RA07 ; cim:Equipment.EquipmentContainer ev:FD_RA07 .
+ev:CH_RA07 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA07 a cim:Feeder ; cim:IdentifiedObject.name "영동 여주–원주 휴게소(강릉 방향) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 4.5 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_188067c0-271d-5a41-ba3a-c8592621ed61 ; ev:distanceKm 12.1 .
+ev:PK_RA07 a ev:ChargingPeak ; ev:peakOf ev:CS_RA07 ; ev:hour 17 ; ev:mw 0.4005 .
+
+ev:RA08 a ev:RestArea ; rdfs:label "영동 원주–강릉 휴게소(강릉 방향)"@ko, "Yeongdong Wonju–Gangneung (eastbound)"@en ; ev:onLink hw:S17F ; ev:positionOnLink 0.55 ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.452 37.566)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA08 .
+ev:CS_RA08 a ev:ChargingStation ; rdfs:label "영동 원주–강릉 휴게소(강릉 방향) 충전소"@ko ; ev:installedKW 800 ; ev:sessionsPerDay 42 ;
+    ev:hasCharger ev:CH_RA08 ; cim:Equipment.EquipmentContainer ev:FD_RA08 .
+ev:CH_RA08 a ev:Charger ; ev:chargerCount 4 ; ev:ratedKW 200 .
+ev:FD_RA08 a cim:Feeder ; cim:IdentifiedObject.name "영동 원주–강릉 휴게소(강릉 방향) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 3.5 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_d6d225ca-9606-5ec0-9754-0cf31657d262 ; ev:distanceKm 30.4 .
+ev:PK_RA08 a ev:ChargingPeak ; ev:peakOf ev:CS_RA08 ; ev:hour 17 ; ev:mw 0.0991 .
+
+ev:RA09 a ev:RestArea ; rdfs:label "중부 서울–여주 휴게소(하행)"@ko, "Jungbu Seoul–Yeoju (southbound)"@en ; ev:onLink hw:S18F ; ev:positionOnLink 0.4 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.286 37.42)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA09 .
+ev:CS_RA09 a ev:ChargingStation ; rdfs:label "중부 서울–여주 휴게소(하행) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 185 ;
+    ev:hasCharger ev:CH_RA09 ; cim:Equipment.EquipmentContainer ev:FD_RA09 .
+ev:CH_RA09 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA09 a cim:Feeder ; cim:IdentifiedObject.name "중부 서울–여주 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 7.2 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_ead091cb-ad73-50f6-8088-45168a46166f ; ev:distanceKm 17.0 .
+ev:PK_RA09 a ev:ChargingPeak ; ev:peakOf ev:CS_RA09 ; ev:hour 17 ; ev:mw 0.4955 .
+
+ev:RA10 a ev:RestArea ; rdfs:label "중부내륙 여주–충주 휴게소(하행)"@ko, "Jungbu Naeryuk Yeoju–Chungju (southbound)"@en ; ev:onLink hw:S20F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.785 37.14)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA10 .
+ev:CS_RA10 a ev:ChargingStation ; rdfs:label "중부내륙 여주–충주 휴게소(하행) 충전소"@ko ; ev:installedKW 800 ; ev:sessionsPerDay 128 ;
+    ev:hasCharger ev:CH_RA10 ; cim:Equipment.EquipmentContainer ev:FD_RA10 .
+ev:CH_RA10 a ev:Charger ; ev:chargerCount 4 ; ev:ratedKW 200 .
+ev:FD_RA10 a cim:Feeder ; cim:IdentifiedObject.name "중부내륙 여주–충주 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 4.0 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_b00e4147-8660-5c8c-b146-db3f9b7d4bdf ; ev:distanceKm 21.1 .
+ev:PK_RA10 a ev:ChargingPeak ; ev:peakOf ev:CS_RA10 ; ev:hour 17 ; ev:mw 0.3665 .
+
+ev:RA11 a ev:RestArea ; rdfs:label "중부내륙 김천–창원 휴게소(하행)"@ko, "Jungbu Naeryuk Gimcheon–Changwon (southbound)"@en ; ev:onLink hw:S22F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.38 35.685)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA11 .
+ev:CS_RA11 a ev:ChargingStation ; rdfs:label "중부내륙 김천–창원 휴게소(하행) 충전소"@ko ; ev:installedKW 800 ; ev:sessionsPerDay 126 ;
+    ev:hasCharger ev:CH_RA11 ; cim:Equipment.EquipmentContainer ev:FD_RA11 .
+ev:CH_RA11 a ev:Charger ; ev:chargerCount 4 ; ev:ratedKW 200 .
+ev:FD_RA11 a cim:Feeder ; cim:IdentifiedObject.name "중부내륙 김천–창원 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 4.0 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_c97867d1-a99e-5e7c-aa99-bef6bbfa1579 ; ev:distanceKm 15.4 .
+ev:PK_RA11 a ev:ChargingPeak ; ev:peakOf ev:CS_RA11 ; ev:hour 17 ; ev:mw 0.299 .
+
+ev:RA12 a ev:RestArea ; rdfs:label "호남 논산–전주 휴게소(하행)"@ko, "Honam Nonsan–Jeonju (southbound)"@en ; ev:onLink hw:S24F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(127.115 36.01)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA12 .
+ev:CS_RA12 a ev:ChargingStation ; rdfs:label "호남 논산–전주 휴게소(하행) 충전소"@ko ; ev:installedKW 800 ; ev:sessionsPerDay 165 ;
+    ev:hasCharger ev:CH_RA12 ; cim:Equipment.EquipmentContainer ev:FD_RA12 .
+ev:CH_RA12 a ev:Charger ; ev:chargerCount 4 ; ev:ratedKW 200 .
+ev:FD_RA12 a cim:Feeder ; cim:IdentifiedObject.name "호남 논산–전주 휴게소(하행) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 4.5 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_2dc2d0c5-8a46-5e72-89f3-98604795fe47 ; ev:distanceKm 21.4 .
+ev:PK_RA12 a ev:ChargingPeak ; ev:peakOf ev:CS_RA12 ; ev:hour 17 ; ev:mw 0.383 .
+
+ev:RA13 a ev:RestArea ; rdfs:label "남해 창원–부산 휴게소(부산 방향)"@ko, "Namhae Changwon–Busan (eastbound)"@en ; ev:onLink hw:S31F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(128.855 35.22)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA13 .
+ev:CS_RA13 a ev:ChargingStation ; rdfs:label "남해 창원–부산 휴게소(부산 방향) 충전소"@ko ; ev:installedKW 1200 ; ev:sessionsPerDay 201 ;
+    ev:hasCharger ev:CH_RA13 ; cim:Equipment.EquipmentContainer ev:FD_RA13 .
+ev:CH_RA13 a ev:Charger ; ev:chargerCount 6 ; ev:ratedKW 200 .
+ev:FD_RA13 a cim:Feeder ; cim:IdentifiedObject.name "남해 창원–부산 휴게소(부산 방향) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 7.6 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_f29cb51f-d3be-503b-a450-b433470867d8 ; ev:distanceKm 3.4 .
+ev:PK_RA13 a ev:ChargingPeak ; ev:peakOf ev:CS_RA13 ; ev:hour 17 ; ev:mw 0.4568 .
+
+ev:RA14 a ev:RestArea ; rdfs:label "동해 부산–울산 휴게소(울산 방향)"@ko, "Donghae Busan–Ulsan (northbound)"@en ; ev:onLink hw:S37F ; ev:positionOnLink 0.5 ;
+    geo:hasGeometry [ geo:asWKT "POINT(129.175 35.375)"^^geo:wktLiteral ] ; ev:hasChargingStation ev:CS_RA14 .
+ev:CS_RA14 a ev:ChargingStation ; rdfs:label "동해 부산–울산 휴게소(울산 방향) 충전소"@ko ; ev:installedKW 800 ; ev:sessionsPerDay 97 ;
+    ev:hasCharger ev:CH_RA14 ; cim:Equipment.EquipmentContainer ev:FD_RA14 .
+ev:CH_RA14 a ev:Charger ; ev:chargerCount 4 ; ev:ratedKW 200 .
+ev:FD_RA14 a cim:Feeder ; cim:IdentifiedObject.name "동해 부산–울산 휴게소(울산 방향) 공급 D/L (22.9kV, 가상)" ; ev:feederBasePeakMW 5.5 ; ev:feederLimitMW 10.0 ;
+    cim:Feeder.NormalEnergizingSubstation tw:_7b09b969-fc2b-51fa-a67a-691c5c05dbac ; ev:distanceKm 22.0 .
+ev:PK_RA14 a ev:ChargingPeak ; ev:peakOf ev:CS_RA14 ; ev:hour 17 ; ev:mw 0.2122 .

@@ -41,3 +41,26 @@ def test_rdf_has_switch_states(B):
     ttl = B["TTL"]
     assert ttl.count("cim:LoadBreakSwitch") == 10
     assert "Switch.normalOpen" in ttl
+
+
+def test_flisr_every_dl1_section(B):
+    # D/L #1 의 모든 구간에 대해 복구 계획이 있고, 수리 후에는 평상시로 돌아간다
+    assert set(B["FLISR"]) == set(B["DL1_SEGS"])
+    for sid, p in B["FLISR"].items():
+        ss = p["steps"]
+        assert ss[0]["id"] == "trip" and ss[0]["deadCust"] == sum(e["cust"] for e in B["LOADS"] if e["id"].startswith(("LD_M", "LD_B")))
+        assert ss[-1]["id"] == "repair" and ss[-1]["deadCust"] == 0 and not ss[-1]["loop"]
+        assert all(not s["loop"] and not s["overload"] for s in ss)            # 어느 단계에서도 루프·과부하 없음
+        assert [s["deadCust"] for s in ss] == sorted((s["deadCust"] for s in ss), reverse=True)   # 정전은 줄기만 한다
+        before_repair = ss[-2]["dead"]
+        assert set(before_repair) <= set(p["zone"])                              # 수리 전까지 남는 정전은 고장 구간 안의 부하뿐
+        assert p["cmi"]["auto"] < p["cmi"]["manual"]
+
+
+def test_flisr_split_and_unswitched_lateral(B):
+    p = B["FLISR"]["DL1_SEC1"]                                                  # CB 바로 뒤 고장: 한 선로로는 다 못 받아 S2에서 나눈다
+    tr = next(s for s in p["steps"] if s["id"] == "transfer")
+    assert ["S2", True] in tr["ops"] and {"T1", "T4"} <= {k for k, v in tr["ops"] if v is False}
+    assert tr["deadCust"] == 0
+    p = B["FLISR"]["BR2_1"]                                                     # 개폐기 없는 분기선 2 고장: 병원과 간선 3구간이 수리 때까지 정전
+    assert {"LD_B2", "LD_M3"} <= set(p["steps"][-2]["dead"])

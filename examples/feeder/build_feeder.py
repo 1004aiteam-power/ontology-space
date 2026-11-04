@@ -152,6 +152,28 @@ node("C11_A", 905, 270); node("C11_E", 905, 380)
 seg("C11_1", "C11_0", "C11_A", "C11", "C변전소 D/L #11 선로", "Sub. C feeder #11"); seg("C11_2", "C11_A", "C11_E", "C11", "C변전소 D/L #11 선로", "Sub. C feeder #11")
 load("LD_C11", "C11_E", 4.0, "C변전소 D/L #11 부하 (모음)", "Sub. C feeder #11 load (lumped)", dx=0, dy=22)
 
+# ---- 부하가 있는 지역과 고객 수 (가상) --------------------------------------------------------
+# 고장 복구·영향 분석에서 "몇 집이 정전인가"를 세기 위한 값. 지명은 지어낸 것이다.
+AREA = {  # 부하 id: (고객 호수, 지역 ko, 지역 en, 중요 고객 여부)
+    "LD_M1": (420, "가람동 주택가", "Garam-dong homes", False),
+    "LD_M2": (180, "나래동 상가", "Narae-dong shops", False),
+    "LD_M3": (510, "다솜 아파트", "Dasom apartments", False),
+    "LD_M4": (260, "라온동 주택·초등학교", "Raon-dong homes & school", False),
+    "LD_M5": (150, "마루 전통시장", "Maru market", False),
+    "LD_M6": (230, "바다마을", "Bada village", False),
+    "LD_B1a": (12, "사랑 산업단지 1", "Sarang industrial park 1", False),
+    "LD_B1b": (9, "사랑 산업단지 2", "Sarang industrial park 2", False),
+    "LD_B2": (3, "아라 병원", "Ara hospital", True),
+    "LD_B3": (140, "자람 농공단지", "Jaram agro-industrial park", False),
+    "LD_DL2": (2100, "D/L #2 공급 지역", "Feeder #2 area", False),
+    "LD_DL3": (1800, "D/L #3 공급 지역", "Feeder #3 area", False),
+    "LD_C11": (1500, "C변전소 D/L #11 공급 지역", "Sub. C #11 area", False),
+}
+for _e in EQ:
+    if _e["id"] in AREA:
+        _c, _ko, _en, _crit = AREA[_e["id"]]
+        _e.update(cust=_c, area=_ko, areaEn=_en, critical=_crit)
+
 # ---- 연계 개폐기 4대 (평상시 열림) ----------------------------------------------------
 switch("T1", "T1a", "T1b", LoadBreakSwitch, True, "tie", "연계 개폐기 T1 (D/L #2)", "Tie switch T1 (to feeder #2)")
 switch("T2", "T2a", "T2b", LoadBreakSwitch, True, "tie", "연계 개폐기 T2 (D/L #3)", "Tie switch T2 (to feeder #3)")
@@ -213,13 +235,27 @@ SCENARIOS = [
          open=["CB_DL1", "S2"], close=["T1", "T4"]),
     dict(id="loop", ko="평상시에 T4를 닫으면? (루프 운전)", en="Close T4 in normal state? (loop)", open=[], close=["T4"]),
 ]
+AT: dict[str, list] = {}                          # 접속 노드 → 닿아 있는 설비
+for _e in EQ:
+    for _t in _e["t"]:
+        AT.setdefault(POS_ALIAS.get(_t, _t), []).append(_e)
+
+
 def feeder_mw(open_ids: set[str], close_ids: set[str], fault: str | None = None) -> dict[str, float]:
     """웹 그림과 같은 규칙으로 선로별 공급 부하(MW)를 센다: 인출 CB에서 닫힌 설비를 따라가되 다른 CB·전원·고장 구간은 건너지 않는다."""
     is_open = {e["id"]: (e["normalOpen"] or e["id"] in open_ids) and e["id"] not in close_ids for e in EQ if e.get("kind")}
-    at: dict[str, list] = {}
+    reach = trace(is_open, fault)
+    mw = {k: 0.0 for k in FEEDERS}
     for e in EQ:
-        for t in e["t"]:
-            at.setdefault(POS_ALIAS.get(t, t), []).append(e)
+        if e["cls"] == "EnergyConsumer" and reach.get(e["id"]):
+            for f in reach[e["id"]]:
+                mw[f] += e["p"] / len(reach[e["id"]])
+    return {k: round(v, 2) for k, v in mw.items()}
+
+
+def trace(is_open: dict[str, bool], fault: str | None = None) -> dict[str, set]:
+    """설비 id → 그 설비까지 닿는 선로(인출 CB) 집합. feeder.js · flisr.js 의 trace() 와 같은 규칙."""
+    at = AT
     reach: dict[str, set] = {}
     for fid, (cb, _) in FEEDERS.items():
         if is_open[cb]:
@@ -238,12 +274,7 @@ def feeder_mw(open_ids: set[str], close_ids: set[str], fault: str | None = None)
                 if e.get("kind") and is_open[e["id"]]:
                     continue
                 stack += [POS_ALIAS.get(t, t) for t in e["t"]]
-    mw = {k: 0.0 for k in FEEDERS}
-    for e in EQ:
-        if e["cls"] == "EnergyConsumer" and reach.get(e["id"]):
-            for f in reach[e["id"]]:
-                mw[f] += e["p"] / len(reach[e["id"]])
-    return {k: round(v, 2) for k, v in mw.items()}
+    return reach
 
 
 for sc in SCENARIOS:
@@ -251,12 +282,129 @@ for sc in SCENARIOS:
     sc["check"]["feederMW"] = feeder_mw(set(sc["open"]), set(sc["close"]), sc.get("fault"))
     sc["check"]["overload"] = sorted(k for k, v in sc["check"]["feederMW"].items() if v > FEEDER_LIMIT_MW)
 
+# ---- 고장 복구 (FLISR: Fault Location, Isolation and Service Restoration) --------------------------
+# D/L #1 의 어느 구간에 고장이 나도 같은 규칙으로 복구 순서를 만든다. 웹(flisr.js)은 이 결과를 재생만 한다.
+#   1 트립   : D/L #1 CB 가 고장 전류를 끊는다 → D/L #1 전체 정전
+#   2 분리   : 고장 구간을 둘러싼 닫힌 개폐기를 연다 (고장 구간 = 개폐기를 건너지 않고 이어진 설비 묶음)
+#   3 상위 복구: CB 를 다시 닫아 고장 구간 앞쪽(전원 쪽)을 살린다
+#   4 하위 절체: 고장 구간 뒤쪽을 연계 개폐기로 이웃 선로에 넘긴다. 한도(10MW)를 넘지 않고 루프가 없는
+#                조합 중 살리는 고객이 가장 많고, 조작이 가장 적고, 여유가 가장 큰 것을 고른다 (구간 개폐기 최대 2대를 더 열어 나눌 수 있다)
+#   5 수리 완료: 고장 구간을 고친 뒤 평상시 상태로 되돌린다
+SW = {e["id"]: e for e in EQ if e.get("kind")}
+LOADS = [e for e in EQ if e["cls"] == "EnergyConsumer"]
+DL1_SEGS = [e["id"] for e in EQ if e["cls"] == "ACLineSegment" and e["line"] == "DL1"]
+# 단계별 경과 시간(분, 가상): 배전자동화(원격 개폐기·고장 표시기) vs 현장 출동 수동 조작
+FLISR_TIMES = {"auto": {"trip": 0, "isolate": 1, "upstream": 2, "transfer": 3, "repair": 240},
+               "manual": {"trip": 0, "isolate": 50, "upstream": 55, "transfer": 75, "repair": 240}}
+
+
+def fault_zone(seg_id: str) -> tuple[set[str], set[str]]:
+    """고장 구간: 고장 난 선로에서 개폐기를 건너지 않고 이어진 선로·부하 묶음과 그 경계 개폐기."""
+    seg = next(e for e in EQ if e["id"] == seg_id)
+    zone, bnd, seen = {seg_id}, set(), set()
+    stack = [POS_ALIAS.get(t, t) for t in seg["t"]]
+    while stack:
+        n = stack.pop()
+        if n in seen:
+            continue
+        seen.add(n)
+        for e in AT.get(n, []):
+            if e.get("kind"):
+                bnd.add(e["id"])
+            elif e["cls"] in ("ACLineSegment", "EnergyConsumer") and e["id"] not in zone:
+                zone.add(e["id"])
+                stack += [POS_ALIAS.get(t, t) for t in e["t"]]
+    return zone, bnd
+
+
+def evaluate(is_open: dict[str, bool], fault: str | None) -> dict:
+    reach = trace(is_open, fault)
+    mw = {k: 0.0 for k in FEEDERS}
+    dead, loop = [], False
+    for e in LOADS:
+        s = reach.get(e["id"], set())
+        if not s:
+            dead.append(e["id"])
+        for f in s:
+            mw[f] += e["p"] / len(s)
+    for k, s in reach.items():
+        if len(s) > 1 and not (k in SW and is_open[k]):    # 열린 개폐기는 양쪽에서 닿아도 루프가 아니다
+            loop = True
+    return dict(open=sorted(k for k, v in is_open.items() if v), dead=dead,
+                deadCust=sum(next(x for x in LOADS if x["id"] == d)["cust"] for d in dead),
+                deadMW=round(sum(next(x for x in LOADS if x["id"] == d)["p"] for d in dead), 2),
+                feederMW={k: round(v, 2) for k, v in mw.items()}, loop=loop,
+                overload=sorted(k for k, v in mw.items() if v > FEEDER_LIMIT_MW + 1e-9))
+
+
+def best_transfer(st: dict[str, bool], fault: str | None = None, keep_open=frozenset()) -> list[tuple[str, bool]]:
+    """정전 구역을 이웃 선로로 넘기는 조작: 정전 구역 안의 닫힌 구간 개폐기(나눌 곳, 최대 2대)와
+    keep_open 에 없는 열린 연계 개폐기(받을 곳)를 조합해, 루프·과부하 없이 살리는 고객이 가장 많고
+    조작이 가장 적고 여유가 가장 큰 것을 고른다. 설비 고장 영향 분석(examples/impact)도 이 함수를 쓴다."""
+    from itertools import combinations
+    reach = trace(st, fault)
+    split_c = [k for k, e in SW.items() if e["kind"] == "sectionalizer" and not st[k] and k not in keep_open and not reach.get(k)]
+    tie_c = [k for k, e in SW.items() if e["kind"] == "tie" and st[k] and k not in keep_open]
+    best, best_key = [], None
+    for n in range(3):
+        for opens in combinations(split_c, n):
+            for r in range(1, len(tie_c) + 1):
+                for ties in combinations(tie_c, r):
+                    trial = dict(st, **{k: True for k in opens}, **{k: False for k in ties})
+                    ev = evaluate(trial, fault)
+                    if ev["loop"] or ev["overload"]:
+                        continue
+                    margin = min(FEEDER_LIMIT_MW - v for v in ev["feederMW"].values())
+                    key = (-ev["deadCust"], -(len(opens) + len(ties)), round(margin, 3))
+                    if best_key is None or key > best_key:
+                        best_key, best = key, [(k, True) for k in opens] + [(k, False) for k in ties]
+    return best
+
+
+def flisr_plan(seg_id: str) -> dict:
+    st = {k: e["normalOpen"] for k, e in SW.items()}
+    zone, bnd = fault_zone(seg_id)
+    steps = []
+
+    def step(sid, ops):
+        for k, v in ops:
+            st[k] = v
+        steps.append(dict(id=sid, ops=[[k, v] for k, v in ops], **evaluate(st, seg_id)))
+    step("trip", [("CB_DL1", True)])
+    step("isolate", [(k, True) for k in sorted(bnd) if not st[k]])
+    if "CB_DL1" not in bnd:
+        step("upstream", [("CB_DL1", False)])
+    best = best_transfer(st, seg_id, bnd)
+    before = steps[-1]["deadCust"]
+    if best and evaluate(dict(st, **dict(best)), seg_id)["deadCust"] < before:
+        step("transfer", best)
+    # 수리 완료: 평상시로 (절체에 쓴 연계 개폐기를 먼저 열고, 분리했던 개폐기를 닫는다)
+    back = [(k, True) for k, v in st.items() if v != SW[k]["normalOpen"] and SW[k]["normalOpen"]] + \
+           [(k, False) for k, v in st.items() if v != SW[k]["normalOpen"] and not SW[k]["normalOpen"]]
+    for k, v in back:
+        st[k] = v
+    steps.append(dict(id="repair", ops=[[k, v] for k, v in back], **evaluate(st, None)))
+    return dict(zone=sorted(zone), boundary=sorted(bnd), steps=steps)
+
+
+def cmi(plan: dict, mode: str) -> int:
+    """고객 정전 시간(Customer Minutes Interrupted): 단계 사이마다 정전 고객 수 × 지속 시간(분)."""
+    t = FLISR_TIMES[mode]
+    ss = plan["steps"]
+    return sum(a["deadCust"] * (t[b["id"]] - t[a["id"]]) for a, b in zip(ss, ss[1:]))
+
+
+FLISR = {sid: flisr_plan(sid) for sid in DL1_SEGS}
+for _p in FLISR.values():
+    _p["cmi"] = {mode: cmi(_p, mode) for mode in FLISR_TIMES}
+
 TTL = to_turtle(m)
 (Path(__file__).parent / "feeder.ttl").write_text(TTL, encoding="utf-8")
 
 web = dict(virtual=True, limitMW=FEEDER_LIMIT_MW, pos=POS, eq=EQ,
            feeders={k: dict(cb=cb, ko=name) for k, (cb, name) in FEEDERS.items()},
-           alias=POS_ALIAS, scenarios=SCENARIOS,
+           alias=POS_ALIAS, scenarios=SCENARIOS, flisr=FLISR, flisrTimes=FLISR_TIMES,
+           dl1Cust=sum(e["cust"] for e in LOADS if e["id"].startswith(("LD_M", "LD_B"))),
            mrid={e["id"]: next((o.mrid for o in m if getattr(o, "name", None) == e["ko"]), None) for e in EQ if e.get("kind")})
 (ROOT / "assets" / "data" / "feeder.json").write_text(json.dumps(web, ensure_ascii=False, indent=0), encoding="utf-8")
 
@@ -265,6 +413,10 @@ if __name__ == "__main__":
     print(f"객체 {len(m)}개 · 선로 구간 {sum(e['cls'] == 'ACLineSegment' for e in EQ)} · 개폐기 {len(sw)} "
           f"(구간 {sum(e['kind'] == 'sectionalizer' for e in sw)}, 연계 {sum(e['kind'] == 'tie' for e in sw)}) · "
           f"D/L #1 부하 {round(sum(e['p'] for e in EQ if e['id'].startswith(('LD_M', 'LD_B'))), 2)} MW")
+    for sid, p in FLISR.items():
+        tr = next((x for x in p["steps"] if x["id"] == "transfer"), None)
+        print(f"  고장 {sid:14s} 분리 {p['boundary']} · 절체 {tr['ops'] if tr else '-'} · "
+              f"수리 전 정전 {p['steps'][-2]['deadCust']}호 · CMI 자동 {p['cmi']['auto']:,} / 수동 {p['cmi']['manual']:,}")
     for sc in SCENARIOS:
         print(f"[{sc['id']}] {sc['ko']}: 정전 {sc['check']['dead_mw']} MW {sc['check']['dead']} · 루프 {sc['check']['loop']} · "
               f"선로 {sc['check']['feederMW']} · 과부하 {sc['check']['overload']}")

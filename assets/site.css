@@ -362,3 +362,48 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .fd-bar.over b{color:var(--hv)}
 .fd-info{color:var(--muted);font-size:13px}
 .fd-info b{color:var(--text)}
+
+/* 고장 복구(FLISR) 시뮬레이션 — grid.html#flisr */
+.fl-hit{cursor:crosshair}
+.fl-hit:focus-visible{outline:none;stroke:var(--accent);stroke-opacity:.35}
+.fl-zone{fill:none;stroke:var(--hv);stroke-width:1.5;stroke-dasharray:6 4}
+.fl-ring{fill:none;stroke:transparent;stroke-width:3}
+.fl-ring.on{stroke:var(--warm)}
+.fl-crit{fill:var(--hv);font-size:14px;font-weight:700}
+.fl-mode[aria-pressed="true"]{border-color:var(--accent) !important;color:var(--accent) !important;font-weight:600}
+.seg-sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+.fl-try{font-size:13px}
+.fl-big{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.fl-big small{font-size:14px;font-weight:600;margin-left:4px}
+.fl-big.bad{color:var(--hv)} .fl-big.ok{color:var(--ok)}
+#flNow .fl-alert{color:var(--hv);font-size:13px;margin-top:4px}
+#flNow .muted,#flSteps .muted{color:var(--muted);font-size:13px}
+.fl-feed{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;margin-top:6px;font-variant-numeric:tabular-nums}
+.fl-feed i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
+.fl-where{margin:0 0 6px;font-size:14px}
+.fl-list{list-style:none;margin:0;padding:0;font-size:13px}
+.fl-list li{border-left:3px solid var(--line);padding:2px 0 2px 8px;margin:0 0 4px}
+.fl-list li.done{border-left-color:var(--muted)}
+.fl-list li.cur{border-left-color:var(--warm)}
+.fl-list button{all:unset;cursor:pointer;display:grid;grid-template-columns:44px 1fr auto;gap:6px;width:100%;align-items:baseline}
+.fl-list button:focus-visible{outline:2px solid var(--accent)}
+.fl-list .tm{color:var(--muted);font-variant-numeric:tabular-nums}
+.fl-list .dc{color:var(--muted);font-variant-numeric:tabular-nums}
+.fl-list li.cur .dc{color:var(--text);font-weight:600}
+.fl-desc{color:var(--muted);margin:4px 0 6px;line-height:1.55}
+.fl-desc code{font-size:12px}
+.fl-bottom{margin-top:16px;align-items:start}
+.fl-chart svg{width:100%;height:auto;display:block}
+.fl-grid{stroke:var(--line)}
+.fl-ax{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.fl-step{fill:none;stroke-width:1.5;opacity:.55}
+.fl-step.cur{stroke-width:2.5;opacity:1}
+.fl-step.auto,.sw.auto{stroke:var(--accent);background:var(--accent)}
+.fl-step.manual,.sw.manual{stroke:var(--warm);background:var(--warm)}
+.fl-area{opacity:.06}
+.fl-area.auto{fill:var(--accent)} .fl-area.manual{fill:var(--warm)}
+.fl-area.cur{opacity:.16}
+.fl-now{stroke:var(--text);stroke-dasharray:3 3}
+.fl-cmi > div{margin:4px 0;font-variant-numeric:tabular-nums}
+.fl-cmi .sw{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:8px}
+.fl-cmi .muted{color:var(--muted)}

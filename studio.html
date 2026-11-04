@@ -28,6 +28,9 @@
       <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
       <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
       <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
     </div>
   </nav>
   <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
@@ -58,6 +61,14 @@
       <p lang="ko">가상 전국 고속도로·국도망을 도로 등급·노선·구간·방향 링크로 나누고, 하루 통행 수요를 배정해 24시간 차량 흐름을 지도에서 재생합니다. 도로 등급을 토글로 껐다 켜고, 사고 시나리오로 우회를 비교합니다.</p>
       <p lang="en">Virtual national expressways and national roads split into road classes, routes, sections and directional links; a day of demand is replayed on a map, with class toggles and a crash scenario to compare detours.</p>
       <span class="more"><span lang="ko">고속도로·국도 교통 →</span><span lang="en">Road traffic →</span></span></a>
+    <a class="card" href="ev.html"><span class="badge">v0.1</span><h4><span lang="ko">고속도로 × 전력망: 휴게소 전기차 충전</span><span lang="en">Roads × Grid: EV Charging at Rest Areas</span></h4>
+      <p lang="ko">교통 온톨로지의 방향 링크와 전력망의 배전선로·변전소를 휴게소 충전소 하나로 잇습니다. 24시간 교통량에서 충전 수요를 계산하고, 전기차 비율·충전기 수·충전 제어에 따라 대기와 배전선로 한도를 함께 봅니다.</p>
+      <p lang="en">Links the road ontology's directional links to the grid's feeders and substations through rest-area chargers. Charging demand comes from 24 h traffic; EV share, charger count and managed charging trade queues against feeder limits.</p>
+      <span class="more"><span lang="ko">전기차 충전 →</span><span lang="en">EV charging →</span></span></a>
+    <a class="card" href="impact.html"><span class="badge">v0.1</span><h4><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span></h4>
+      <p lang="ko">자산관리 온톨로지의 자산에서 배전선로 구간·지역·고객까지 그래프를 따라가고, 연계 개폐기 절체를 반영해 위험도를 다시 매깁니다. 위험이 이웃 선로로 옮겨 가는 것도 보여 줍니다.</p>
+      <p lang="en">Follows the graph from assets in the asset ontology to feeder zones, areas and customers, then re-rates risk with tie-switch transfers, showing how risk moves to neighbouring feeders.</p>
+      <span class="more"><span lang="ko">영향 분석 →</span><span lang="en">Impact analysis →</span></span></a>
   </div>
 </section>
 

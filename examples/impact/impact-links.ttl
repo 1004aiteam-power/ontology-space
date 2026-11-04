@@ -1,0 +1,57 @@
+# ⚠ 가상 데이터. 자산관리 온톨로지(asset-ontology.ttl)와 배전선로 모델(feeder.ttl)을 잇는 트리플.
+# im:feeds 는 평상시 개폐 상태에서 전원 → 부하 방향으로 계산해 넣은 '파생' 관계다 (원본은 Terminal–ConnectivityNode 연결).
+@prefix im:   <https://1004aiteam-power.github.io/ontology-space/impact#> .
+@prefix pam:  <https://1004aiteam-power.github.io/ontology-space/asset#> .
+@prefix ex:   <http://example.org/grid#> .
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+im:feeds a owl:ObjectProperty, owl:TransitiveProperty ; rdfs:label "전기를 보낸다 (평상시, 하류 방향)"@ko .
+im:FeederZone a owl:Class ; rdfs:label "배전선로 구간 (개폐기 사이)"@ko .
+im:tieTo a owl:ObjectProperty ; rdfs:domain im:FeederZone ; rdfs:range cim:LoadBreakSwitch ; rdfs:label "닿아 있는 연계 개폐기"@ko .
+im:toFeeder a owl:ObjectProperty ; rdfs:range cim:Line ; rdfs:label "연계 개폐기 건너편 선로"@ko .
+im:area a owl:DatatypeProperty ; rdfs:label "지역"@ko .
+im:customers a owl:DatatypeProperty ; rdfs:range xsd:integer ; rdfs:label "고객 호수"@ko .
+im:critical a owl:DatatypeProperty ; rdfs:range xsd:boolean ; rdfs:label "중요 고객"@ko .
+
+# 같은 차단기를 두 모델이 다른 IRI로 부른다: 자산관리 쪽 기능 위치 ↔ 배전선로 모델의 설비
+ex:CB_22_1 skos:exactMatch ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 .
+
+ex:ACLS_1 im:feeds ex:CB_154_1 .
+ex:CB_154_1 im:feeds ex:BUS_154 .
+ex:BUS_154 im:feeds ex:TR_1 .
+ex:TR_1 im:feeds ex:BUS_22 .
+ex:BUS_22 im:feeds ex:CB_22_1 .
+ex:CB_22_1 im:feeds ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 .
+ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 im:feeds im:Z1 .
+im:Z1 a im:FeederZone ; rdfs:label "D/L #1 Z1 (CB_DL1 뒤)"@ko ; im:feeds im:nothing .
+im:Z1 im:feeds ex:_40b2a5ec-630e-5204-a1fd-0b0bff7a8e0f . ex:_40b2a5ec-630e-5204-a1fd-0b0bff7a8e0f im:feeds im:Z2 .
+im:Z2 a im:FeederZone ; rdfs:label "D/L #1 Z2 (S1 뒤)"@ko ; im:feeds ex:_8f2dbf50-bbae-5c2e-834b-ed3ede5e80eb, ex:_318a202d-fd2c-537d-8824-cd29332c46c8, ex:_3ceb16aa-5688-52bc-9f3e-7e6178003a43 .
+im:Z2 im:feeds ex:_00d0c91c-c1ba-5f91-b1ac-f0f34342941c . ex:_00d0c91c-c1ba-5f91-b1ac-f0f34342941c im:feeds im:Z3 .
+im:Z2 im:tieTo ex:_26c00b57-4b9e-5bc0-82f7-2fa6c61d02fb . ex:_26c00b57-4b9e-5bc0-82f7-2fa6c61d02fb im:toFeeder ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 .
+im:Z3 a im:FeederZone ; rdfs:label "D/L #1 Z3 (S2 뒤)"@ko ; im:feeds ex:_cad13a58-2aca-57c1-ac79-397f43b8d87c .
+im:Z3 im:feeds ex:_448b614f-84c7-5b50-976c-8b5e2fa15cd1 . ex:_448b614f-84c7-5b50-976c-8b5e2fa15cd1 im:feeds im:Z4 .
+im:Z4 a im:FeederZone ; rdfs:label "D/L #1 Z4 (S3 뒤)"@ko ; im:feeds ex:_596df0e5-b7d1-5426-9e12-c660a00639f4, ex:_ba11d3cc-8d77-507e-9246-23f058953bf1 .
+im:Z4 im:feeds ex:_32707372-2b8a-54b6-a755-4ab3e42abfec . ex:_32707372-2b8a-54b6-a755-4ab3e42abfec im:feeds im:Z5 .
+im:Z4 im:tieTo ex:_2dca9222-88b3-56f3-8beb-ff9e4f6c70e1 . ex:_2dca9222-88b3-56f3-8beb-ff9e4f6c70e1 im:toFeeder ex:_34baac19-eef7-53a9-a8d3-d6d05615a09b .
+im:Z5 a im:FeederZone ; rdfs:label "D/L #1 Z5 (S4 뒤)"@ko ; im:feeds ex:_ed1ff515-31a8-56a0-b804-e1d709a3cbad .
+im:Z5 im:feeds ex:_a1e1b903-48f9-5256-8862-92c891050074 . ex:_a1e1b903-48f9-5256-8862-92c891050074 im:feeds im:Z6 .
+im:Z6 a im:FeederZone ; rdfs:label "D/L #1 Z6 (S5 뒤)"@ko ; im:feeds ex:_12865720-909a-5050-8782-1da7888cd7c6, ex:_f7feccb3-4087-5089-aa54-c49d410b6d8b .
+im:Z6 im:feeds ex:_9bd452c5-6254-52bb-b8cd-7a5b3a940e0e . ex:_9bd452c5-6254-52bb-b8cd-7a5b3a940e0e im:feeds im:Z7 .
+im:Z6 im:tieTo ex:_91cb51cd-cf05-5690-81bf-7eac2b19b334 . ex:_91cb51cd-cf05-5690-81bf-7eac2b19b334 im:toFeeder ex:_3e6f9ab5-97e3-526c-9e89-abb7b2a8be49 .
+im:Z7 a im:FeederZone ; rdfs:label "D/L #1 Z7 (S6 뒤)"@ko ; im:feeds ex:_3e249999-b994-5287-81ed-e294ffcb1044 .
+im:Z7 im:tieTo ex:_99c026aa-750c-531f-ac78-bf95e93b3467 . ex:_99c026aa-750c-531f-ac78-bf95e93b3467 im:toFeeder ex:_c897e677-60f2-54df-b333-8b8e24fa7d6f .
+ex:_3ceb16aa-5688-52bc-9f3e-7e6178003a43 a cim:EnergyConsumer ; im:area "가람동 주택가"@ko ; im:customers 420 ; im:critical false .
+ex:_cad13a58-2aca-57c1-ac79-397f43b8d87c a cim:EnergyConsumer ; im:area "나래동 상가"@ko ; im:customers 180 ; im:critical false .
+ex:_ba11d3cc-8d77-507e-9246-23f058953bf1 a cim:EnergyConsumer ; im:area "다솜 아파트"@ko ; im:customers 510 ; im:critical false .
+ex:_ed1ff515-31a8-56a0-b804-e1d709a3cbad a cim:EnergyConsumer ; im:area "라온동 주택·초등학교"@ko ; im:customers 260 ; im:critical false .
+ex:_f7feccb3-4087-5089-aa54-c49d410b6d8b a cim:EnergyConsumer ; im:area "마루 전통시장"@ko ; im:customers 150 ; im:critical false .
+ex:_3e249999-b994-5287-81ed-e294ffcb1044 a cim:EnergyConsumer ; im:area "바다마을"@ko ; im:customers 230 ; im:critical false .
+ex:_8f2dbf50-bbae-5c2e-834b-ed3ede5e80eb a cim:EnergyConsumer ; im:area "사랑 산업단지 1"@ko ; im:customers 12 ; im:critical false .
+ex:_318a202d-fd2c-537d-8824-cd29332c46c8 a cim:EnergyConsumer ; im:area "사랑 산업단지 2"@ko ; im:customers 9 ; im:critical false .
+ex:_596df0e5-b7d1-5426-9e12-c660a00639f4 a cim:EnergyConsumer ; im:area "아라 병원"@ko ; im:customers 3 ; im:critical true .
+ex:_12865720-909a-5050-8782-1da7888cd7c6 a cim:EnergyConsumer ; im:area "자람 농공단지"@ko ; im:customers 140 ; im:critical false .
+im:nothing a rdfs:Resource .
