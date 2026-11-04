@@ -44,6 +44,7 @@ function drawDish() {
   const k = cw / WORLD.w;
   ctx.save(); ctx.scale(k, k);
   ctx.fillStyle = dark() ? '#10171a' : '#eef4f1'; ctx.fillRect(0, 0, WORLD.w, WORLD.h);
+  if (eco.season() >= 0) { ctx.fillStyle = SEASON_TINT()[eco.season()]; ctx.fillRect(0, 0, WORLD.w, WORLD.h); }   // 계절 색
   // 피난처 (침전물): 갈색 원 + 알갱이
   if (eco.cfg.refuge.on) for (const z of eco.cfg.refuge.zones) {
     ctx.fillStyle = dark() ? 'rgba(150,110,60,.28)' : 'rgba(150,110,60,.2)';
@@ -92,9 +93,10 @@ function drawDish() {
   ctx.restore();
   // 왼쪽 위 안내
   const c = eco.counts(), narrow = cw < 520;
-  const text = narrow
+  const sn = eco.season() >= 0 ? t(SEASON_NAME[eco.season()]) + ' · ' : '';
+  const text = sn + (narrow
     ? t({ ko: `${eco.t.toLocaleString()}틱 · 초식 ${c.herb} · 육식 ${c.carn}`, en: `t ${eco.t.toLocaleString()} · herb ${c.herb} · carn ${c.carn}` })
-    : t({ ko: `${eco.t.toLocaleString()}틱 · 먹이 ${c.food} · 초식 ${c.herb} · 육식 ${c.carn} (포낭 ${c.cyst})`, en: `t ${eco.t.toLocaleString()} · food ${c.food} · herbivores ${c.herb} · carnivores ${c.carn} (cysts ${c.cyst})` });
+    : t({ ko: `${eco.t.toLocaleString()}틱 · 먹이 ${c.food} · 초식 ${c.herb} · 육식 ${c.carn} (포낭 ${c.cyst})`, en: `t ${eco.t.toLocaleString()} · food ${c.food} · herbivores ${c.herb} · carnivores ${c.carn} (cysts ${c.cyst})` }));
   ctx.font = `600 ${narrow ? 11 : 13}px system-ui, sans-serif`;
   const w = ctx.measureText(text).width + 20;
   ctx.fillStyle = dark() ? 'rgba(18,20,23,.82)' : 'rgba(255,255,255,.9)';
@@ -104,7 +106,7 @@ function drawDish() {
 
 // ---- 선 그래프 (개체수 · 형질): 십자선 + 툴팁, 선 끝 직접 라벨 -------------------------------
 function niceStep(max) { const r = max / 4, p = 10 ** Math.floor(Math.log10(r)); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= r); }
-function lineChart(id, rows, series, fmt = (v) => Math.round(v), compact = false) {   // compact: 작은 차트 (직접 라벨 없음, 범례로 구분)
+function lineChart(id, rows, series, fmt = (v) => Math.round(v), compact = false, seasons = false) {   // compact: 작은 차트 (직접 라벨 없음), seasons: 계절 띠
   const canvas = $(id), { ctx, cw, ch } = fit(canvas);
   ctx.clearRect(0, 0, cw, ch);
   const pad = compact ? { l: 30, r: 8, t: 8, b: 20 } : { l: 42, r: 92, t: 10, b: 24 }, W = cw - pad.l - pad.r, H = ch - pad.t - pad.b;
@@ -118,7 +120,8 @@ function lineChart(id, rows, series, fmt = (v) => Math.round(v), compact = false
     ctx.beginPath(); ctx.moveTo(pad.l, Y(v)); ctx.lineTo(pad.l + W, Y(v)); ctx.stroke();
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(fmt(v), pad.l - 6, Y(v));
   }
-  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  if (seasons && eco.cfg.season.on) drawSeasonBands(ctx, t0, t1, X, pad.t, H, compact);
+  ctx.fillStyle = css('--muted'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
   const xs = niceStep(t1 - t0);
   for (let v = Math.ceil(t0 / xs) * xs; v <= t1; v += xs) ctx.fillText(v.toLocaleString(), X(v), pad.t + H + 6);
   if (rows.length < 2) return;
@@ -161,18 +164,34 @@ function lineChart(id, rows, series, fmt = (v) => Math.round(v), compact = false
   tip.style.left = canvas.offsetLeft + Math.min(cw - 160, x + 10) + 'px'; tip.style.top = canvas.offsetTop + pad.t + 'px';
 }
 
+// 계절 띠: 봄 초록 · 여름 노랑 · 가을 주황 · 겨울 파랑 (아주 옅게) + 위쪽에 계절 이름
+const SEASON_NAME = [{ ko: '봄', en: 'Spring' }, { ko: '여름', en: 'Summer' }, { ko: '가을', en: 'Autumn' }, { ko: '겨울', en: 'Winter' }];
+const SEASON_TINT = () => dark()
+  ? ['rgba(25,158,112,.10)', 'rgba(201,133,0,.13)', 'rgba(217,89,38,.10)', 'rgba(57,135,229,.14)']
+  : ['rgba(25,158,112,.06)', 'rgba(201,133,0,.09)', 'rgba(217,89,38,.06)', 'rgba(57,135,229,.09)'];
+function drawSeasonBands(ctx, t0, t1, X, top, H, compact) {
+  const q = eco.cfg.season.year / 4, tint = SEASON_TINT();
+  ctx.save(); ctx.font = '10.5px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let k = Math.floor(t0 / q); k * q < t1; k++) {
+    const a = Math.max(t0, k * q), b = Math.min(t1, (k + 1) * q), xa = X(a), xb = X(b), sIdx = ((k % 4) + 4) % 4;
+    ctx.fillStyle = tint[sIdx]; ctx.fillRect(xa, top, xb - xa, H);
+    if (!compact && xb - xa > 34) { ctx.fillStyle = css('--muted'); ctx.fillText(t(SEASON_NAME[sIdx]), (xa + xb) / 2, top + 2); }
+  }
+  ctx.restore();
+}
+
 const POP_SERIES = [
+  { key: 'food', color: COL.food, label: NAME.food },
   { key: 'herb', color: COL.herb, label: NAME.herb },
   { key: 'carn', color: COL.carn, label: NAME.carn }
 ];
 const window_ = () => eco.history.slice(-1500);      // 최근 15,000틱
 function drawCharts() {
   const rows = window_();
-  lineChart('popChart', rows, POP_SERIES);
-  lineChart('foodChart', rows, [{ key: 'food', color: COL.food, label: NAME.food }]);
+  lineChart('popChart', rows, POP_SERIES, undefined, false, true);
   lineChart('speedChart', rows, [{ key: 'hSpeed', color: COL.herb, label: NAME.herb }, { key: 'cSpeed', color: COL.carn, label: NAME.carn }], v => v.toFixed(2));
   lineChart('senseChart', rows, [{ key: 'hSense', color: COL.herb, label: NAME.herb }, { key: 'cSense', color: COL.carn, label: NAME.carn }]);
-  lineChart('liveChart', eco.history.slice(-300), POP_SERIES, undefined, true);   // 접시 옆 작은 차트: 최근 3,000틱
+  lineChart('liveChart', eco.history.slice(-300), POP_SERIES, undefined, true, true);   // 접시 옆 작은 차트: 최근 3,000틱
 }
 
 function updateTable() {
@@ -192,7 +211,8 @@ function stats() {
     [t(NAME.carn), `${c.carn}${ext(c.carn)}`, COL.carn, t({ ko: `포낭 ${c.cyst}`, en: `${c.cyst} cysts` })],
     [t({ ko: '초식 평균 속도 · 감지', en: 'Herb speed · sense' }), `${f2(h.speed)} · ${f0(h.sense)}`, null, t({ ko: `최대 ${h.maxGen}세대`, en: `gen ${h.maxGen}` })],
     [t({ ko: '육식 평균 속도 · 감지', en: 'Carn speed · sense' }), `${f2(k.speed)} · ${f0(k.sense)}`, null, t({ ko: `최대 ${k.maxGen}세대`, en: `gen ${k.maxGen}` })],
-    [t({ ko: '경과 시간', en: 'Elapsed' }), `${eco.t.toLocaleString()}${t({ ko: '틱', en: '' })}`, null]
+    [t({ ko: '계절 · 경과 시간', en: 'Season · elapsed' }), `${eco.season() >= 0 ? t(SEASON_NAME[eco.season()]) + ' · ' : ''}${eco.t.toLocaleString()}${t({ ko: '틱', en: '' })}`, null,
+      eco.cfg.season.on ? t({ ko: `먹이 상한 ${Math.round(eco.cfg.food.max * eco.seasonFactor())} / ${eco.cfg.food.max}`, en: `food cap ${Math.round(eco.cfg.food.max * eco.seasonFactor())} / ${eco.cfg.food.max}` }) : '']
   ];
   $('ecoStats').innerHTML = cells.map(([name, v, col, sub]) =>
     `<div><span>${col ? `<i style="background:${col}"></i>` : ''}${name}</span><b>${v}</b>${sub ? `<small>${sub}</small>` : ''}</div>`).join('');
@@ -222,7 +242,8 @@ function tick() {
 // ---- 조작부 ----------------------------------------------------------------------
 function restart() {
   const sc = SCENARIOS[$('scenario').value] || SCENARIOS.refuge;
-  eco = new Ecosystem({ ...sc.opts, seed: (Math.random() * 1e9) | 0, food: { regrow: +$('regrow').value }, mutation: +$('mutation').value });
+  eco = new Ecosystem({ ...sc.opts, seed: (Math.random() * 1e9) | 0, food: { regrow: +$('regrow').value }, mutation: +$('mutation').value,
+    season: { on: +$('seasonAmp').value > 0, amp: +$('seasonAmp').value } });
   effects = []; drawCharts(); updateTable(); stats();
 }
 function label() {
@@ -234,6 +255,7 @@ function label() {
   sel.value = v;
   $('regrowOut').textContent = (+$('regrow').value).toFixed(1);
   $('mutationOut').textContent = Math.round(+$('mutation').value * 100) + '%';
+  $('seasonAmpOut').textContent = Math.round(+$('seasonAmp').value * 100) + '%';
   document.querySelectorAll('[data-add]').forEach(b => b.setAttribute('aria-pressed', b.dataset.add === addMode ? 'true' : 'false'));
 }
 function bind() {
@@ -243,6 +265,7 @@ function bind() {
   $('scenario').addEventListener('change', restart);
   $('regrow').addEventListener('input', () => { eco.cfg.food.regrow = +$('regrow').value; label(); });
   $('mutation').addEventListener('input', () => { eco.cfg.mutation = +$('mutation').value; label(); });
+  $('seasonAmp').addEventListener('input', () => { const v = +$('seasonAmp').value; eco.cfg.season.amp = v; eco.cfg.season.on = v > 0; label(); });
   document.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => { addMode = b.dataset.add; label(); }));
   // 접시를 누르면 그 자리에 넣기
   $('dish').addEventListener('click', e => {
@@ -252,7 +275,7 @@ function bind() {
     else for (let i = 0; i < 3; i++) eco.spawn(addMode, (x + (Math.random() - 0.5) * 16 + WORLD.w) % WORLD.w, (y + (Math.random() - 0.5) * 16 + WORLD.h) % WORLD.h);
     effects.push({ type: 'arrive', x, y, kind: addMode, life: 18 });
   });
-  for (const id of ['liveChart', 'popChart', 'foodChart', 'speedChart', 'senseChart']) {
+  for (const id of ['liveChart', 'popChart', 'speedChart', 'senseChart']) {
     $(id).addEventListener('mousemove', e => { hover[id] = e.clientX - $(id).getBoundingClientRect().left; drawCharts(); });
     $(id).addEventListener('mouseleave', () => { hover[id] = null; drawCharts(); });
   }

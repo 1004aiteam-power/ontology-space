@@ -87,3 +87,17 @@ console.log('✓ seeded runs are reproducible');
   }
 }
 console.log('✓ carnivores appear only by division (no spontaneous spawning, no carnivore immigration)');
+
+// 7) 계절: 여름 한가운데 배율 1, 겨울 한가운데 1 − amp, 먹이가 계절 따라 크게 오르내림
+{
+  const e = new Ecosystem({ seed: 4 });
+  const Y = e.cfg.season.year;
+  assert.ok(Math.abs(e.seasonFactor(Y * 0.375) - 1) < 1e-9);
+  assert.ok(Math.abs(e.seasonFactor(Y * 0.875) - (1 - e.cfg.season.amp)) < 1e-9);
+  assert.deepEqual([0, 0.3, 0.6, 0.9].map(p => e.season(Y * p)), [0, 1, 2, 3]);
+  const summer = [], winter = [];
+  for (let t = 0; t < Y * 3; t++) { e.step(); const s = e.season(); if (s === 1) summer.push(e.food.length); if (s === 3) winter.push(e.food.length); }
+  const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+  assert.ok(avg(summer) > avg(winter) * 1.5, `summer food ${avg(summer).toFixed(0)} vs winter ${avg(winter).toFixed(0)}`);
+  console.log(`✓ seasons: average food summer ${avg(summer).toFixed(0)} vs winter ${avg(winter).toFixed(0)}`);
+}

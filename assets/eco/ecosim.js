@@ -38,6 +38,10 @@ export const DEFAULTS = {
   // 이주: 틱마다 이 확률로 바깥에서 초식이 한 마리씩 들어옴 (가우스의 두 번째 공존 조건)
   // 육식은 이주로 생기지 않는다 — 처음 넣은 개체와 그 분열로만 늘어남 (사용자가 직접 넣는 경우 제외)
   immigration: { herb: 0 },
+  // 계절: 1년 = year 틱 (봄·여름·가을·겨울 각 1/4). 먹이의 상한과 자라는 속도가 계절 배율만큼 바뀜.
+  //  배율 = 1 − amp × (1 − cos(여름 한가운데부터의 각도)) / 2 → 여름 한가운데 1, 겨울 한가운데 1 − amp
+  //  상한보다 많은 먹이는 decay 비율로 시든다 (겨울에 먹이가 실제로 줄어듦)
+  season: { on: true, year: 6000, amp: 0.8, decay: 0.004 },
   maxCells: 3000
 };
 
@@ -156,9 +160,15 @@ export class Ecosystem {
     const cfg = this.cfg;
     this.t++;
     this.events.length = 0;
-    // 1) 먹이 자라기: 빈 자리 비율만큼 (로지스틱 성장)
+    // 1) 먹이 자라기: 빈 자리 비율만큼 (로지스틱 성장), 상한과 속도는 계절 배율만큼
     let alive = this.food.length;
-    const grow = cfg.food.regrow * Math.max(0, 1 - alive / cfg.food.max);
+    const sf = this.seasonFactor(), cap = cfg.food.max * sf;
+    const grow = cfg.food.regrow * sf * Math.max(0, 1 - alive / Math.max(1, cap));
+    if (alive > cap) {                                                 // 상한을 넘는 먹이는 시듦
+      const rot = (alive - cap) * cfg.season.decay;
+      let k = Math.floor(rot) + (this.rand() < rot % 1 ? 1 : 0);
+      while (k-- > 0 && this.food.length) this.food.splice((this.rand() * this.food.length) | 0, 1);
+    }
     let n = Math.floor(grow) + (this.rand() < grow % 1 ? 1 : 0);
     for (let i = 0; i < n; i++) this.addFood();
     if (cfg.refuge.on && this.rand() < cfg.refuge.food) {             // 피난처 안 추가 먹이
@@ -243,6 +253,15 @@ export class Ecosystem {
     if (this.t % 10 === 0) this.record();
   }
 
+  // 계절 배율 (0..1]과 계절 이름
+  seasonFactor(t = this.t) {
+    const S = this.cfg.season;
+    if (!S.on) return 1;
+    const p = (t % S.year) / S.year;
+    return 1 - S.amp * (1 - Math.cos(TAU * (p - 0.375))) / 2;      // 여름 한가운데(p = 0.375)에서 최대
+  }
+  season(t = this.t) { return this.cfg.season.on ? Math.floor(((t % this.cfg.season.year) / this.cfg.season.year) * 4) : -1; }   // 0 봄 1 여름 2 가을 3 겨울
+
   counts() {
     let herb = 0, carn = 0, cyst = 0;
     for (const c of this.cells) { c.kind === 'herb' ? herb++ : carn++; if (c.cyst) cyst++; }
@@ -256,7 +275,7 @@ export class Ecosystem {
   }
   record() {
     const h = this.traits('herb'), c = this.traits('carn');
-    this.history.push({ t: this.t, food: this.food.length, herb: h.n, carn: c.n, hSpeed: h.speed, hSense: h.sense, cSpeed: c.speed, cSense: c.sense });
+    this.history.push({ t: this.t, food: this.food.length, cap: Math.round(this.cfg.food.max * this.seasonFactor()), herb: h.n, carn: c.n, hSpeed: h.speed, hSense: h.sense, cSpeed: c.speed, cSense: c.sense });
     if (this.history.length > 6000) this.history.splice(0, this.history.length - 6000);
   }
 }

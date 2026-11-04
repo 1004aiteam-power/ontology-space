@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/eco/eco-app.js?v=20261104e"></script>
+<script type="module" src="assets/eco/eco-app.js?v=20261104f"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -75,13 +75,15 @@
       <input type="range" id="regrow" min="0.5" max="4" step="0.1" value="2.2" aria-label="food growth"><output id="regrowOut"></output></label>
     <label class="speed-ctl"><span lang="ko">돌연변이 크기</span><span lang="en">Mutation size</span>
       <input type="range" id="mutation" min="0" max="0.15" step="0.01" value="0.06" aria-label="mutation"><output id="mutationOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">계절 변화 크기</span><span lang="en">Seasonality</span>
+      <input type="range" id="seasonAmp" min="0" max="0.95" step="0.05" value="0.8" aria-label="seasonality"><output id="seasonAmpOut"></output></label>
   </div>
 
   <div class="sim-wrap eco-wrap">
     <canvas id="dish" aria-label="culture dish"></canvas>
       <div class="panel chart-box eco-mini">
         <b><span lang="ko">개체수 · 최근 3,000틱</span><span lang="en">Population · last 3,000 ticks</span></b>
-        <div class="chart-legend"><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
+        <div class="chart-legend"><span><i style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">Food</span></span><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
         <canvas id="liveChart" class="eco-chart mini" aria-label="live population chart"></canvas>
         <div id="liveChartTip" class="eco-tip" hidden></div>
       </div>
@@ -101,12 +103,9 @@
   <p class="meta" lang="ko">초식이 늘면 → 먹을 것이 많아진 육식이 늘고 → 초식이 줄면 → 굶은 육식이 줄고 → 다시 초식이 늘어나는 순서로 돕니다. 한 주기가 대략 1만 틱이라 배속 16× 이상으로 보면 잘 보입니다.</p>
   <p class="meta" lang="en">Herbivores rise → well-fed carnivores rise → herbivores fall → starving carnivores fall → herbivores rise again. One cycle takes roughly 10,000 ticks, so watch at 16× or faster.</p>
   <div class="panel chart-box">
-    <div class="chart-legend"><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
+    <div class="chart-legend"><span><i style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">Food</span></span><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span><span class="season-key"><i class="sk"></i><span lang="ko">배경 띠 = 계절 (봄 · 여름 · 가을 · 겨울)</span><span lang="en">background bands = seasons</span></span></div>
     <canvas id="popChart" class="eco-chart" aria-label="population chart"></canvas>
     <div id="popChartTip" class="eco-tip" hidden></div>
-    <b><span lang="ko">먹이 양</span><span lang="en">Food available</span></b>
-    <canvas id="foodChart" class="eco-chart tiny" aria-label="food chart"></canvas>
-    <div id="foodChartTip" class="eco-tip" hidden></div>
     <details><summary><span lang="ko">표로 보기 (500틱마다, 최근 30개)</span><span lang="en">View as table (every 500 ticks, last 30)</span></summary><div class="tbl"><table id="histTable"></table></div></details>
   </div>
 
@@ -173,6 +172,7 @@
     <tr><th><span lang="ko">관계</span><span lang="en">Link</span></th><th><span lang="ko">규칙 (기본값)</span><span lang="en">Rule (default)</span></th><th><span lang="ko">개체수에 미치는 영향</span><span lang="en">Effect on populations</span></th></tr>
     <tr><td><span lang="ko">먹이 → 초식</span><span lang="en">Food → herbivores</span></td><td><span lang="ko">먹이 1개 = 에너지 22. 초식은 에너지 110이 되면 둘로 분열 (자식은 55씩)</span><span lang="en">1 food = 22 energy. A herbivore divides at 110 (each child gets 55)</span></td><td><span lang="ko">먹이 3~4개를 더 먹으면 한 마리가 두 마리 → 먹이가 많을수록 초식이 빨리 늘어남</span><span lang="en">3–4 extra food items turn one cell into two — more food, faster growth</span></td></tr>
     <tr><td><span lang="ko">초식 → 먹이</span><span lang="en">Herbivores → food</span></td><td><span lang="ko">먹이는 최대 700개, 빈 자리 비율만큼 틱당 최대 2.2개 자람</span><span lang="en">Food caps at 700 and grows up to 2.2 per tick in proportion to empty space</span></td><td><span lang="ko">초식이 많으면 먹이가 바닥나 초식도 더 늘지 못함 (먹이가 초식 수의 상한을 정함)</span><span lang="en">Many herbivores strip the food, which caps their own numbers</span></td></tr>
+    <tr><td><span lang="ko">계절 → 먹이</span><span lang="en">Seasons → food</span></td><td><span lang="ko">1년 = 6,000틱 (봄·여름·가을·겨울 각 1,500틱). 먹이 상한과 자라는 속도 = 기본값 × 계절 배율 (여름 한가운데 100% ↔ 겨울 한가운데 20%)</span><span lang="en">One year = 6,000 ticks (1,500 per season). Food cap and growth = default × a seasonal factor (100% mid-summer ↔ 20% mid-winter)</span></td><td><span lang="ko">여름에 먹이가 넘쳐 <b>가을에 초식이 번성</b>하고, 겨울에 먹이가 줄어 초식이 굶음 → 계절 주기 위에 포식자–피식자 주기가 겹침</span><span lang="en">Summer food surplus → <b>herbivore boom in autumn</b>; winter shortage starves them — the seasonal rhythm overlays the predator–prey cycle</span></td></tr>
     <tr><td><span lang="ko">초식 → 육식</span><span lang="en">Herbivores → carnivores</span></td><td><span lang="ko">잡아먹으면 에너지 = 초식 에너지 × 0.6 + 20 (보통 50~80). 육식은 280에서 분열, 먹은 뒤 150틱 동안 소화</span><span lang="en">Eating gives 0.6 × prey energy + 20 (usually 50–80). Divides at 280; digests for 150 ticks after a meal</span></td><td><span lang="ko">분열까지 3~4마리 + 소화 시간이 필요 → 육식은 초식보다 <b>늦게</b> 늘어남 (주기의 원인)</span><span lang="en">Needs 3–4 prey plus digestion time to divide — carnivores rise <b>later</b> (the source of the cycle)</span></td></tr>
     <tr><td><span lang="ko">육식 → 초식</span><span lang="en">Carnivores → herbivores</span></td><td><span lang="ko">육식은 가장 가까운 초식을 쫓고 가까우면 돌진. 초식은 육식을 보면 도망</span><span lang="en">Carnivores chase the nearest herbivore and lunge; herbivores flee when they see one</span></td><td><span lang="ko">육식이 많을수록 초식이 빨리 줄어듦</span><span lang="en">More carnivores, faster herbivore decline</span></td></tr>
     <tr><td><span lang="ko">에너지 소모</span><span lang="en">Energy use</span></td><td><span lang="ko">틱마다 기본 0.05 + 속도² × 비용 + 감지 거리 × 비용. 0이 되면 죽음</span><span lang="en">Each tick: 0.05 + speed² × cost + sensing range × cost. Zero means death</span></td><td><span lang="ko">먹지 못하면 줄어듦. 초식은 먹이 1개로 약 80틱, 육식은 초식 1마리로 약 250틱 버팀</span><span lang="en">No food, no survival: one food lasts a herbivore ~80 ticks; one prey lasts a carnivore ~250</span></td></tr>
@@ -185,7 +185,7 @@
   <h3><span lang="ko">세포별 행동 규칙</span><span lang="en">Behaviour rules per cell</span></h3>
   <div class="tbl"><table>
     <tr><th><span lang="ko">무엇</span><span lang="en">What</span></th><th><span lang="ko">동작</span><span lang="en">Behaviour</span></th></tr>
-    <tr><td><span lang="ko">먹이</span><span lang="en">Food</span></td><td><span lang="ko">빈 곳에 조금씩 자라고, 많아질수록 덜 자람 (상한 700개). 피난처에는 조금 더 자람</span><span lang="en">Grows a little each tick, slower as it fills up (max 700). Grows a bit more in refuges</span></td></tr>
+    <tr><td><span lang="ko">먹이</span><span lang="en">Food</span></td><td><span lang="ko">빈 곳에 조금씩 자라고, 많아질수록 덜 자람. <b>계절</b>에 따라 상한이 여름 700개 ↔ 겨울 140개로 바뀌고, 겨울에 상한을 넘는 먹이는 시듦. 피난처에는 계절과 관계없이 조금씩 자람</span><span lang="en">Grows a little each tick, slower as it fills up. With <b>seasons</b> the cap swings from 700 in summer to 140 in winter, and food above the cap withers. Refuges get a small steady supply in every season</span></td></tr>
     <tr><td><span lang="ko">초식 세포</span><span lang="en">Herbivore</span></td><td><span lang="ko">가장 가까운 먹이로 가서 먹음. 육식이 가까이 보이면 반대로 도망. 피난처 안에서는 천천히 움직이고 대체로 밖으로 나가지 않음</span><span lang="en">Heads for the nearest food; flees when a carnivore is close. Inside a refuge it slows down and mostly stays</span></td></tr>
     <tr><td><span lang="ko">육식 세포</span><span lang="en">Carnivore</span></td><td><span lang="ko">가장 가까운 초식을 쫓고, 아주 가까우면 순간 돌진. 먹은 뒤에는 한동안 소화하며 쉼. 피난처 안의 초식은 보지도 잡지도 못함</span><span lang="en">Chases the nearest herbivore and lunges when close; rests to digest after a meal. Cannot see or catch prey inside a refuge</span></td></tr>
     <tr><td><span lang="ko">포낭</span><span lang="en">Cyst</span></td><td><span lang="ko">배고픈데 먹잇감이 없으면 육식 세포가 껍질을 만들고 멈춰 에너지를 거의 안 씀. 먹잇감이 가까이 오면 깨어남</span><span lang="en">A hungry carnivore with no prey in sight encysts: it stops and uses almost no energy, waking when prey comes near</span></td></tr>
@@ -217,11 +217,13 @@
   <ul lang="ko">
     <li><b>부영양화의 역설</b>: “먹이 자라는 속도”를 최대로 올려 보세요. 먹이가 많으면 좋을 것 같지만 주기의 폭이 커져 오히려 멸종하기 쉬워집니다.</li>
     <li><b>구조 작전</b>: 피난처 없음으로 두고, 초식이 거의 사라질 때 “초식 3마리”로 접시를 눌러 살려 보세요.</li>
+    <li><b>계절 끄기</b>: “계절 변화 크기”를 0으로 하면 먹이가 늘 일정해집니다. 계절이 있을 때와 초식·육식 그래프의 모양을 비교해 보세요.</li>
     <li><b>진화 끄기</b>: “돌연변이 크기”를 0으로 하면 형질 그래프가 평평해집니다. 켰을 때와 결과를 비교해 보세요.</li>
   </ul>
   <ul lang="en">
     <li><b>Paradox of enrichment</b>: push “Food growth” to the maximum. More food sounds good, but the cycles swing wider and extinction becomes more likely.</li>
     <li><b>Rescue mission</b>: with no refuges, click the dish with “3 herbivores” just before they vanish.</li>
+    <li><b>Turn seasons off</b>: set “Seasonality” to 0 and food stays steady. Compare the herbivore and carnivore curves with seasons on.</li>
     <li><b>Turn evolution off</b>: set “Mutation size” to 0 and the trait charts go flat. Compare with evolution on.</li>
   </ul>
   <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/eco/ecosim.js">ecosim.js</a> (<span lang="ko">시뮬레이션 규칙</span><span lang="en">simulation rules</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/eco/eco-app.js">eco-app.js</a> (<span lang="ko">화면</span><span lang="en">UI</span>)</p>
