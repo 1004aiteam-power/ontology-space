@@ -461,8 +461,14 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .season-key i.sk{width:16px;height:10px;border-radius:2px;background:linear-gradient(90deg,rgba(25,158,112,.25) 25%,rgba(201,133,0,.3) 25% 50%,rgba(217,89,38,.25) 50% 75%,rgba(57,135,229,.3) 75%)}
 .legend-line i.fade{background:radial-gradient(circle,rgba(217,89,38,.6) 40%,transparent 41%);border:1px solid var(--muted)}
 /* 교차로 신호 (intersection.html) */
-.tr-wrap{grid-template-columns:1fr;width:calc(100vw - 32px)}   /* 교차로 그림은 본문 폭 제한 없이 화면 폭 전체 (처음 대비 약 2배) */
-@media (min-width:960px){ .tr-side{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start} }   /* 그림은 폭 전체, 현시·통계는 아래에 나란히 */
+.tr-wrap{grid-template-columns:1fr;width:calc(100vw - 32px)}
+/* 교차로 그림은 브라우저 폭의 절반 (화면 높이에도 들어오게) · 가운데 정렬, 신호 현시·통계는 그 아래 나란히 */
+@media (min-width:960px){
+  .tr-wrap{justify-items:center}
+  .tr-wrap > div:first-child{width:min(50vw, calc(100vh - 90px))}
+  .tr-side{width:min(1200px,100%);grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
+  #trStats{grid-template-columns:repeat(3,1fr)}
+}
 #view{width:100%;display:block;border-radius:12px;border:1px solid var(--line);margin:0 auto}
 .tr-side{display:grid;gap:12px;align-content:start}
 .phase-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
@@ -475,7 +481,6 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .phase-bar .ph.on.yellow{border-color:#f5b301;box-shadow:0 0 0 1px #f5b301 inset}.phase-bar .ph.on.yellow i{background:#f5b301}
 .phase-bar .ph.on.allred{border-color:#ef4444;box-shadow:0 0 0 1px #ef4444 inset}.phase-bar .ph.on.allred i{background:#ef4444}
 #trStats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-@media (min-width:960px){ #trStats{grid-template-columns:repeat(3,1fr)} }
 #trStats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 #trStats span{display:block;font-size:12px;color:var(--muted)}
 #trStats b{font-variant-numeric:tabular-nums;font-size:16px}
