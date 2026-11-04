@@ -66,6 +66,17 @@ table.im-rt tbody th{font-weight:500;background:none}
 table.im-rt tr.now th,table.im-rt tr.now td{background:var(--accent-soft)}
 .lv-t{font-weight:700;white-space:nowrap}
 .lv-t.hi{color:var(--hv)} .lv-t.mid{color:#b45309} .lv-t.lo{color:var(--ok)}
+.im-play{border-color:var(--warm) !important;color:var(--warm) !important;font-weight:600}
+.im-play[aria-pressed="true"]{background:var(--warm) !important;color:#fff !important}
+.im-speed input{width:90px}
+.im-speed b{font-variant-numeric:tabular-nums;min-width:38px;display:inline-block}
+.im-sw.op{fill:var(--warm);font-weight:700;font-size:13px}
+.im-steps{list-style:none;margin:10px 0 0;padding:0;font-size:13px}
+.im-steps li{border-left:3px solid var(--line);padding:3px 0 3px 9px;margin:0 0 4px;color:var(--muted)}
+.im-steps li b{display:block;font-size:12px}
+.im-steps li.done{border-left-color:var(--muted)}
+.im-steps li.cur{border-left-color:var(--warm);color:var(--text);background:color-mix(in srgb,var(--warm) 8%,transparent)}
+.im-steps li.cur b{color:var(--warm)}
 .ctrl button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
 .seg-sep{width:1px;height:22px;background:var(--line);margin:0 4px}
 td.n{text-align:right;font-variant-numeric:tabular-nums}
@@ -128,6 +139,8 @@ td small{color:var(--muted)}
     <span class="seg-sep"></span>
     <button type="button" data-im-mode="auto"><span lang="ko">배전자동화</span><span lang="en">Automated</span></button>
     <button type="button" data-im-mode="manual"><span lang="ko">현장 수동 조작</span><span lang="en">Manual</span></button>
+    <button type="button" id="imPlay" class="im-play">▶ 개폐기 조작 과정 보기</button>
+    <label class="im-speed"><span lang="ko">한 동작</span><span lang="en">Per step</span> <input type="range" id="imSpeed" min="0.5" max="5" step="0.5" value="2" aria-label="seconds per step"> <b id="imSpeedV">2.0초</b></label>
     <span class="seg-sep"></span>
     <label><span lang="ko">고장 시각</span><span lang="en">Failure hour</span> <input type="range" id="imHour" min="0" max="23" value="18"> <b id="imHourV" style="font-variant-numeric:tabular-nums">18:00</b></label>
   </div>
