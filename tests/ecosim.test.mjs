@@ -117,3 +117,17 @@ console.log('✓ carnivores appear only by division (no spontaneous spawning, no
   assert.ok(e.events.some(v => v.type === 'die' && v.cause === 'starve'), 'cause is starvation');
   console.log(`✓ a carnivore with no prey keeps moving and starves to death after ${t} ticks`);
 }
+
+// 9) 수명: 육식이 초식보다 짧고, 분열하지 못하면 수명이 다해 죽는다
+{
+  assert.ok(DEFAULTS.carn.maxAge < DEFAULTS.herb.maxAge, 'carnivores live shorter than herbivores');
+  for (const kind of ['carn', 'herb']) {
+    const e = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0, split: 1e9 }, refuge: { on: false }, season: { on: false } });
+    const c = e.spawn(kind, 300, 300); c.age = 0; c.energy = 1e6; c.full = 0;
+    if (kind === 'herb') e.cfg.herb.split = 1e9;
+    let t = 0;
+    while (!c.dead && t < 20000) { e.step(); t++; }
+    assert.ok(c.dead && Math.abs(t - DEFAULTS[kind].maxAge) <= 2, `${kind} dies of old age at ${t}`);
+  }
+  console.log(`✓ lifespan: carnivore ${DEFAULTS.carn.maxAge} < herbivore ${DEFAULTS.herb.maxAge} ticks, and cells die of old age`);
+}

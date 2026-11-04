@@ -16,16 +16,16 @@ export const DEFAULTS = {
   herb: {
     init: 100, speed: 1.4, sense: 55, radius: 4,
     metab: 0.05, moveCost: 0.06, senseCost: 0.0006,           // 틱당 소모 = metab + moveCost·속도² + senseCost·감지거리
-    split: 110, birth: 55, maxAge: 2600, turn: 0.35
+    split: 110, birth: 55, maxAge: 7500, turn: 0.35            // maxAge(수명): 분열하지 못한 채 이만큼 지나면 죽음 — 육식보다 김
   },
   carn: {
     init: 14, speed: 2.0, sense: 85, radius: 6,
     metab: 0.02, moveCost: 0.025, senseCost: 0.0006,
-    split: 280, birth: 130, maxAge: 6000, turn: 0.3,
+    split: 280, birth: 130, maxAge: 6000, turn: 0.3,            // 수명은 초식(7500)보다 짧음
     gain: 0.6, bonus: 20,                                       // 잡아먹으면 = gain × 먹이 세포 에너지 + bonus
     digest: 150,                                                // 소화 시간: 먹은 뒤 이 틱 동안 사냥하지 않고 천천히 떠돎
     lunge: 22, lungeBoost: 1.7,                                 // 먹잇감이 lunge 안이면 순간 속도 × lungeBoost
-    idle: 0.3                                                   // 먹잇감이 안 보이면 속도 × idle 로 천천히 (에너지 절약). 그래도 못 먹으면 굶어 죽음
+    idle: 0.25                                                  // 먹잇감이 안 보이면 속도 × idle 로 천천히 (에너지 절약). 그래도 못 먹으면 굶어 죽음
   },
   herb2: { fear: 0.6 },                                         // 초식은 감지 거리 × fear 안의 육식만 알아채고 도망
   mutation: 0.06,                                              // 분열 때 형질 변화 폭 (표준편차, 비율)
