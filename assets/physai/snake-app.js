@@ -88,7 +88,8 @@ function drawSensors(ctx, s, x0, y0, size) {
 
 // 큰 판: 게임 중인 모든 뱀을 한 판에 겹쳐 그림 (각자 자기 게임을 하므로 서로 부딪히지 않음)
 // 먹이는 그 뱀의 종 색 점, 큰 화면 대표(선두 또는 클릭한 뱀)는 맨 위에 진하게 + 빨간 먹이·눈·센서
-const SHOW_N = 3;           // 큰 판에 그리는 뱀 수 (학습은 개체군 전체로)
+const SHOW_N = 1;           // 큰 판에 그리는 뱀 수 (학습은 개체군 전체로)
+const POP_SIZE = 150;
 // 큰 판에 보여줄 뱀: 대표 + 나머지는 점수 순 상위
 function shownAgents() {
   const focus = current();
@@ -136,7 +137,7 @@ function drawHud(ctx, cw, s) {
     const a = current();
     if (!a) text = t({ ko: `세대 ${trainer.pop.generation + 1} 종료`, en: `Generation ${trainer.pop.generation + 1} done` });
     else {
-      const who = (followed ? t({ ko: '노란 뱀 = 선택한 개체', en: 'yellow = selected' }) : t({ ko: '노란 뱀 = 선두', en: 'yellow = leader' })) + t({ ko: ` · 상위 ${Math.min(SHOW_N, trainer.alive)}마리 표시 (${trainer.alive}마리 게임 중)`, en: ` · top ${Math.min(SHOW_N, trainer.alive)} shown (${trainer.alive} playing)` });
+      const who = (followed ? t({ ko: '노란 뱀 = 선택한 개체', en: 'yellow = selected' }) : t({ ko: '노란 뱀 = 선두', en: 'yellow = leader' })) + t({ ko: ` · ${trainer.alive}마리 게임 중`, en: ` · ${trainer.alive} playing` });
       text = narrow
         ? t({ ko: `세대 ${trainer.pop.generation + 1} · 먹이 ${s.score} · 판 ${a.trial + 1}/${trainer.opts.trials}`, en: `Gen ${trainer.pop.generation + 1} · food ${s.score} · game ${a.trial + 1}/${trainer.opts.trials}` })
         : t({ ko: `세대 ${trainer.pop.generation + 1} · ${who} · 판 ${a.trial + 1}/${trainer.opts.trials} · 먹이 ${s.score} · 배고픔 ${s.hunger}/${SNAKE.starve}`,
@@ -346,7 +347,7 @@ function onRoundEnd() { miniLayout = null; drawChart(); updateTable(); $('replay
 
 // ---- 조작부 ----------------------------------------------------------------------
 function restart() {
-  trainer = new Trainer(Population, { popSize: +$('popSize').value, trials: +$('trials').value, seed: (Math.random() * 1e9) | 0 });
+  trainer = new Trainer(Population, { popSize: POP_SIZE, trials: +$('trials').value, seed: (Math.random() * 1e9) | 0 });
   followed = null; replay = null; mode = 'train'; miniLayout = null;
   $('replayEnd').hidden = true; $('replayBtn').disabled = true;
   drawChart(); updateTable(); label();
@@ -367,7 +368,6 @@ function label() {
   $('playBtn').innerHTML = mode === 'replay' ? t({ ko: '↩ 학습으로 돌아가기', en: '↩ Back to training' })
     : running ? t({ ko: '⏸ 일시정지', en: '⏸ Pause' }) : t({ ko: '▶ 학습 시작', en: '▶ Train' });
   $('speedBtn').textContent = t({ ko: '배속 ', en: 'Playback ' }) + (SPEEDS[speedIdx].sps === 'max' ? t({ ko: '최대', en: 'max' }) : SPEEDS[speedIdx].label);
-  $('popSize').querySelectorAll('option').forEach(o => o.textContent = t({ ko: `${o.value}마리`, en: `${o.value} snakes` }));
   $('trials').querySelectorAll('option').forEach(o => o.textContent = t({ ko: `개체당 ${o.value}판`, en: `${o.value} game${o.value > 1 ? 's' : ''} each` }));
 }
 
@@ -379,7 +379,6 @@ function bind() {
   $('replayAgainBtn').addEventListener('click', startReplay);
   $('replayBackBtn').addEventListener('click', endReplay);
   $('resetBtn').addEventListener('click', restart);
-  $('popSize').addEventListener('change', restart);
   $('trials').addEventListener('change', restart);
   $('saveBtn').addEventListener('click', () => {
     const g = trainer.bestGame?.genome || trainer.pop.best; if (!g) return;

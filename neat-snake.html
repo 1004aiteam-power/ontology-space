@@ -70,9 +70,6 @@
     <button id="speedBtn"></button>
     <button id="skipBtn"><span lang="ko">⏭ 이번 세대 바로 끝내기</span><span lang="en">⏭ Finish this generation</span></button>
     <button id="replayBtn" disabled><span lang="ko">★ 최고 기록 다시 보기</span><span lang="en">★ Replay the record</span></button>
-    <select id="popSize" aria-label="population size">
-      <option value="60">60</option><option value="100">100</option><option value="150" selected>150</option><option value="250">250</option>
-    </select>
     <select id="trials" aria-label="games per snake">
       <option value="1">1</option><option value="3" selected>3</option><option value="5">5</option>
     </select>
@@ -86,8 +83,8 @@
         <button id="replayAgainBtn" class="primary">↻ <span lang="ko">다시 보기</span><span lang="en">Replay again</span></button>
         <button id="replayBackBtn"><span lang="ko">학습으로 돌아가기</span><span lang="en">Back to training</span></button>
       </div>
-      <p class="meta" lang="ko">60×60 판에 게임 중인 뱀 중 <b>상위 3마리를 겹쳐</b> 그립니다(학습은 150마리 전체로 합니다). 뱀마다 자기 게임을 하므로 서로 부딪히지 않고, 색은 종, 같은 색 점은 그 뱀의 먹이입니다. <b>노란 테두리 뱀</b>이 지금 가장 잘하는 뱀(또는 아래에서 고른 뱀)이고, 빨간 점이 그 뱀의 먹이, 머리 주변 <b>✕</b>는 신경망이 “위험”으로 느끼는 칸입니다.</p>
-      <p class="meta" lang="en">The <b>top 3 snakes</b> still playing are drawn together on one 60×60 board (training still uses all 150). Each plays its own game, so they never collide; colour = species and a dot of the same colour is that snake's food. The <b>yellow-outlined snake</b> is the best one right now (or the one you picked below); the red dot is its food and <b>✕</b> marks cells its network senses as deadly.</p>
+      <p class="meta" lang="ko">60×60 판에 <b>한 마리</b>만 크게 보여 줍니다(학습은 150마리 전체로 합니다). <b>노란 테두리 뱀</b>이 지금 가장 잘하는 뱀(또는 아래에서 고른 뱀)이고, 빨간 점이 그 뱀의 먹이, 머리 주변 <b>✕</b>는 신경망이 “위험”으로 느끼는 칸입니다.</p>
+      <p class="meta" lang="en"><b>One snake</b> is shown on the 60×60 board (training still uses all 150). The <b>yellow-outlined snake</b> is the best one right now (or the one you picked below); the red dot is its food and <b>✕</b> marks cells its network senses as deadly.</p>
     </div>
     <div class="snake-side">
       <div class="panel">
