@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · NEAT Snake</title>
+<meta name="title-ko" content="Ontology Space · NEAT 스네이크">
+<meta name="title-en" content="Ontology Space · NEAT Snake">
+<meta name="description" content="NEAT 신경진화로 150마리 뱀이 동시에 Snake 게임을 배우는 과정을 브라우저에서 직접 실행합니다">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script type="module" src="assets/physai/snake-app.js"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <a href="physical-ai.html" aria-current="page"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">NEAT · SNAKE</div>
+  <h1><span lang="ko">150마리가 동시에 진화하며<br>Snake를 배웁니다</span><span lang="en">150 snakes evolve together<br>and learn to play Snake</span></h1>
+  <p class="lead" lang="ko"><a href="physical-ai.html#lab">NEAT 자율주행 시뮬레이션</a>과 같은 NEAT 구현(<code>neat.js</code>)을 그대로 쓰는 두 번째 예제입니다. 자율주행은 연속값으로 <b>조향</b>을 배웠다면, 여기서는 세 가지 행동 중 <b>하나를 고르는</b> 이산 선택을 배웁니다. 처음에는 벽으로 돌진하던 뱀들이 몇 세대 만에 먹이를 쫓고, 더 지나면 제 몸을 피하기 시작합니다.</p>
+  <p class="lead" lang="en">A second example using the same NEAT implementation (<code>neat.js</code>) as the <a href="physical-ai.html#lab">NEAT self-driving simulation</a>. The cars learned a continuous <b>steering</b> value; here the network <b>picks one of three actions</b>. Snakes that first charge into walls start chasing food within a few generations, and later learn to avoid their own bodies.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">NEAT 스네이크 시뮬레이션</span><span lang="en">NEAT Snake simulation</span></h2>
+  <ol class="steps" lang="ko">
+    <li><b>세대 1</b>: 서로 다른 신경망을 가진 뱀 150마리가 각자의 20×20 판에서 동시에 게임을 합니다.</li>
+    <li>개체마다 먹이 위치가 다른 판을 <b>3판</b> 하고, 평균 점수(적합도)로 평가합니다. 같은 세대는 모두 같은 판으로 겨룹니다.</li>
+    <li>점수가 높은 뱀들이 부모가 되어 다음 세대를 만듭니다(교차·변이). 이 과정을 반복합니다.</li>
+  </ol>
+  <ol class="steps" lang="en">
+    <li><b>Generation 1</b>: 150 snakes, each with its own neural network, play at once on their own 20×20 boards.</li>
+    <li>Each snake plays <b>3 games</b> with different food positions and is scored by its average (fitness). Everyone in a generation plays the same boards.</li>
+    <li>The best snakes breed the next generation (crossover and mutation), and the cycle repeats.</li>
+  </ol>
+
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="speedBtn"></button>
+    <button id="skipBtn"><span lang="ko">⏭ 이번 세대 바로 끝내기</span><span lang="en">⏭ Finish this generation</span></button>
+    <button id="replayBtn" disabled><span lang="ko">★ 최고 기록 다시 보기</span><span lang="en">★ Replay the record</span></button>
+    <select id="popSize" aria-label="population size">
+      <option value="60">60</option><option value="100">100</option><option value="150" selected>150</option><option value="250">250</option>
+    </select>
+    <select id="trials" aria-label="games per snake">
+      <option value="1">1</option><option value="3" selected>3</option><option value="5">5</option>
+    </select>
+    <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+  </div>
+
+  <div class="sim-wrap snake-wrap">
+    <div class="snake-main">
+      <canvas id="board" aria-label="snake board"></canvas>
+      <div id="replayEnd" class="success-bar" hidden>
+        <button id="replayAgainBtn" class="primary">↻ <span lang="ko">다시 보기</span><span lang="en">Replay again</span></button>
+        <button id="replayBackBtn"><span lang="ko">학습으로 돌아가기</span><span lang="en">Back to training</span></button>
+      </div>
+      <p class="meta" lang="ko">큰 화면 = 지금 가장 잘하는 뱀(또는 오른쪽에서 고른 뱀). 머리 주변의 <b>✕</b>는 신경망이 “위험”으로 느끼는 칸, 점선 칸은 안전한 칸입니다.</p>
+      <p class="meta" lang="en">Big board = the best snake right now (or the one you picked on the right). <b>✕</b> marks cells the network senses as deadly; dashed cells are safe.</p>
+    </div>
+    <div class="panel pop-panel">
+      <b><span lang="ko">개체군 — 작은 판 하나가 뱀 한 마리</span><span lang="en">Population — one small board per snake</span></b>
+      <span class="meta"><span lang="ko">테두리 색 = 종 · 노란 테두리 = 큰 화면에 보이는 뱀 · 흐린 판의 숫자 = 끝난 개체의 평균 먹이 수 · 판을 누르면 그 뱀을 크게 봅니다</span><span lang="en">Border colour = species · yellow = shown on the big board · number on a faded board = average food of a finished snake · click a board to follow it</span></span>
+      <canvas id="popBoard" aria-label="population"></canvas>
+      <div id="speciesLegend" class="species-legend"></div>
+    </div>
+  </div>
+  <div class="sim-wrap" style="margin-top:14px">
+    <div class="side snake-side">
+      <div id="stats"></div>
+      <button id="saveBtn" class="panel" style="cursor:pointer;color:var(--text)"><span lang="ko">⬇ 최고 기록 유전체 저장 (JSON)</span><span lang="en">⬇ Save the record genome (JSON)</span></button>
+    </div>
+  </div>
+
+  <h3><span lang="ko">큰 화면 뱀의 신경망 (실시간)</span><span lang="en">Network of the snake on the big board (live)</span></h3>
+  <div class="panel"><canvas id="net" aria-label="neural network"></canvas><p id="netInfo" class="meta"></p></div>
+
+  <h3><span lang="ko">학습 곡선</span><span lang="en">Learning curve</span></h3>
+  <div class="panel chart-box">
+    <div class="chart-legend"><span><i style="background:#2a78d6"></i><span lang="ko">세대 최고 (한 판 먹이 수)</span><span lang="en">Best (food in one game)</span></span><span><i style="background:#eb6834"></i><span lang="ko">세대 평균 먹이 수</span><span lang="en">Mean food per game</span></span></div>
+    <canvas id="chart" aria-label="food by generation"></canvas>
+    <div id="chartTip" hidden></div>
+    <p class="meta" lang="ko">적합도 = 먹이 × 100 + 생존 걸음 × 0.1 (판 평균). 차트는 이해하기 쉽도록 먹이 수로 보여줍니다.</p>
+    <p class="meta" lang="en">Fitness = food × 100 + steps survived × 0.1 (averaged over games). The chart shows food counts for readability.</p>
+    <details><summary><span lang="ko">표로 보기 (최근 30세대)</span><span lang="en">View as table (last 30 generations)</span></summary><div class="tbl"><table id="histTable"></table></div></details>
+  </div>
+
+  <h3><span lang="ko">뱀은 무엇을 보고, 무엇을 정하나</span><span lang="en">What the snake sees and decides</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">구분</span><span lang="en">Part</span></th><th><span lang="ko">내용</span><span lang="en">Details</span></th></tr>
+    <tr><td><span lang="ko">입력 7개</span><span lang="en">7 inputs</span></td><td><span lang="ko">위험(앞·왼쪽·오른쪽 칸이 벽이나 몸인가) 3개 + 먹이 방향(앞·뒤·왼쪽·오른쪽) 4개. 모두 0 또는 1, <b>머리가 향한 방향 기준</b></span><span lang="en">Danger (is the cell ahead / left / right a wall or body) ×3 + food direction (ahead / behind / left / right) ×4. All 0 or 1, <b>relative to the heading</b></span></td></tr>
+    <tr><td><span lang="ko">출력 3개</span><span lang="en">3 outputs</span></td><td><span lang="ko">직진 · 좌회전 · 우회전 중 값이 가장 큰 것을 고름 (자기 몸 쪽으로 180° 꺾는 행동은 아예 없음)</span><span lang="en">Straight · left · right — the largest wins (a 180° turn into its own body is simply not an option)</span></td></tr>
+    <tr><td><span lang="ko">끝나는 조건</span><span lang="en">Game over</span></td><td><span lang="ko">벽·몸에 부딪힘, 먹이 없이 100걸음(굶주림) — 제자리를 빙빙 돌며 버티는 전략을 막습니다</span><span lang="en">Hitting a wall or itself, or 100 steps without food (starvation) — stops the “circle forever” strategy</span></td></tr>
+    <tr><td><span lang="ko">공정한 비교</span><span lang="en">Fair comparison</span></td><td><span lang="ko">같은 세대는 모두 같은 시드(먹이 순서)로 경기, 세대마다 시드가 바뀌어 특정 판을 외우지 못함</span><span lang="en">Everyone in a generation plays the same seeds (food order); seeds change every generation so no board can be memorised</span></td></tr>
+  </table></div>
+
+  <blockquote lang="ko"><b>입력 설계가 학습을 좌우합니다:</b> 처음에는 먹이 방향을 화면 기준(위·아래·왼쪽·오른쪽)으로 주고 현재 방향을 따로 알려 줬습니다. 그러면 “오른쪽으로 가는 중인데 먹이가 위에 있으면 좌회전”처럼 <b>두 입력의 조합</b>을 배워야 해서, 은닉 노드가 생기기 전까지 여러 세대 동안 먹이 3개 수준에 머무는 경우가 많았습니다. 먹이 방향도 <b>머리 기준</b>으로 바꾸자 은닉 노드 없이도 첫 몇 세대 만에 먹이 20개를 넘깁니다. 좋은 센서 설계가 학습을 얼마나 쉽게 만드는지 보여 주는 예입니다.</blockquote>
+  <blockquote lang="en"><b>Input design decides how fast it learns:</b> the first version gave food direction in screen terms (up/down/left/right) plus the current heading. The network then had to learn <b>combinations</b> like “heading right and food above → turn left”, and often sat at about 3 food for many generations until hidden nodes appeared. With food direction <b>relative to the head</b>, it passes 20 food within the first few generations without any hidden node — a small lesson in how much good sensor design helps.</blockquote>
+
+  <h3><span lang="ko">직접 해 보기</span><span lang="en">Try it</span></h3>
+  <ul lang="ko">
+    <li>“개체당 1판”으로 바꾸면 한 판의 운에 좌우돼 학습 곡선이 훨씬 들쭉날쭉해집니다.</li>
+    <li>20세대 이상 지나면 뱀이 길어져 <b>제 몸에 갇혀 죽는</b> 경우가 늘어납니다. 입력이 바로 옆 칸만 보기 때문에, 몸 전체 모양을 모르는 이 신경망의 한계입니다.</li>
+    <li>“⬇ 유전체 저장”으로 받은 JSON에는 노드·연결·혁신 번호가 그대로 들어 있습니다.</li>
+  </ul>
+  <ul lang="en">
+    <li>Switch to “1 game each” and the curve becomes much noisier — one lucky board decides the parents.</li>
+    <li>After 20+ generations the snakes grow long and more often <b>trap themselves</b>. The inputs only look one cell away, so the network cannot know the shape of its whole body.</li>
+    <li>The JSON from “⬇ Save” contains the nodes, links and innovation numbers as they are.</li>
+  </ul>
+
+  <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/neat.js">neat.js</a> (NEAT, <span lang="ko">자율주행과 공용</span><span lang="en">shared with self-driving</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/snake-sim.js">snake-sim.js</a> (<span lang="ko">게임·센서·학습기</span><span lang="en">game · sensors · trainer</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/snake-app.js">snake-app.js</a> (<span lang="ko">화면</span><span lang="en">UI</span>)</p>
+  <div class="pager"><a href="physical-ai.html#lab"><span lang="ko">← NEAT 자율주행 시뮬레이션</span><span lang="en">← NEAT self-driving simulation</span></a><a href="twin.html"><span lang="ko">다음: 디지털 트윈 →</span><span lang="en">Next: Digital Twin →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

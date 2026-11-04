@@ -415,3 +415,11 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .opinion p{font-size:17px}
 .opinion .sig{color:var(--muted);font-size:14px;text-align:right;margin-top:18px}
 .manifesto .sig{display:block;margin-top:10px;font-size:14px;font-weight:400;color:var(--muted);text-align:right}
+/* NEAT Snake (neat-snake.html) */
+.snake-wrap{grid-template-columns:1fr}
+@media (min-width:900px){ .snake-wrap{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start} }
+.snake-main{display:flex;flex-direction:column;gap:6px}
+#board{width:100%;max-width:640px;display:block;border-radius:12px;border:1px solid var(--line);margin:0 auto}
+#popBoard{cursor:pointer}
+@media (min-width:760px){ .snake-side{grid-template-columns:1fr auto} }
+.ctrl button:disabled{opacity:.5;cursor:default}
