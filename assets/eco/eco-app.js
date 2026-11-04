@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
-// 단세포 생태계 페이지: 배양 접시 · 개체수 그래프 · 위상 그래프 · 형질 진화
+// 단세포 생태계 페이지: 배양 접시 · 개체수 그래프 · 형질 진화
 import { Ecosystem, WORLD } from './ecosim.js?v=20261104a';
 
 const $ = (id) => document.getElementById(id);
@@ -166,37 +166,7 @@ function drawCharts() {
   lineChart('foodChart', rows, [{ key: 'food', color: COL.food, label: NAME.food }]);
   lineChart('speedChart', rows, [{ key: 'hSpeed', color: COL.herb, label: NAME.herb }, { key: 'cSpeed', color: COL.carn, label: NAME.carn }], v => v.toFixed(2));
   lineChart('senseChart', rows, [{ key: 'hSense', color: COL.herb, label: NAME.herb }, { key: 'cSense', color: COL.carn, label: NAME.carn }]);
-  drawPhase(rows);
-}
-
-// 위상 그래프: 가로 = 초식 수, 세로 = 육식 수. 주기가 고리처럼 돈다
-function drawPhase(rows) {
-  const { ctx, cw, ch } = fit($('phase'));
-  ctx.clearRect(0, 0, cw, ch);
-  const pad = { l: 40, r: 12, t: 10, b: 30 }, W = cw - pad.l - pad.r, H = ch - pad.t - pad.b;
-  const xm = Math.max(10, ...rows.map(r => r.herb)) * 1.1, ym = Math.max(5, ...rows.map(r => r.carn)) * 1.1;
-  const X = v => pad.l + W * v / xm, Y = v => pad.t + H * (1 - v / ym);
-  ctx.font = '11px system-ui, sans-serif'; ctx.strokeStyle = css('--line'); ctx.fillStyle = css('--muted'); ctx.lineWidth = 1;
-  for (let v = 0, s = niceStep(ym); v <= ym; v += s) { ctx.beginPath(); ctx.moveTo(pad.l, Y(v)); ctx.lineTo(pad.l + W, Y(v)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(Math.round(v), pad.l - 6, Y(v)); }
-  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  for (let v = 0, s = niceStep(xm); v <= xm; v += s) ctx.fillText(Math.round(v), X(v), pad.t + H + 4);
-  ctx.fillStyle = css('--text');
-  ctx.fillText(t({ ko: '초식 세포 수 →', en: 'Herbivores →' }), pad.l + W / 2, pad.t + H + 16);
-  ctx.save(); ctx.translate(11, pad.t + H / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle';
-  ctx.fillText(t({ ko: '육식 세포 수 →', en: 'Carnivores →' }), 0, 0); ctx.restore();
-  if (rows.length < 2) return;
-  // 오래된 자취는 흐리게, 최근일수록 진하게
-  const acc = css('--accent');
-  ctx.strokeStyle = acc; ctx.lineWidth = 1.5; ctx.lineJoin = 'round';
-  const n = rows.length;
-  for (let i = 1; i < n; i++) {
-    ctx.globalAlpha = 0.08 + 0.85 * (i / n) ** 2;
-    ctx.beginPath(); ctx.moveTo(X(rows[i - 1].herb), Y(rows[i - 1].carn)); ctx.lineTo(X(rows[i].herb), Y(rows[i].carn)); ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-  const last = rows.at(-1);
-  ctx.fillStyle = acc; ctx.strokeStyle = css('--surface'); ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(X(last.herb), Y(last.carn), 6, 0, 7); ctx.fill(); ctx.stroke();
+  lineChart('liveChart', eco.history.slice(-300), POP_SERIES);   // 실시간: 최근 3,000틱
 }
 
 function updateTable() {
@@ -276,7 +246,7 @@ function bind() {
     else for (let i = 0; i < 3; i++) eco.spawn(addMode, (x + (Math.random() - 0.5) * 16 + WORLD.w) % WORLD.w, (y + (Math.random() - 0.5) * 16 + WORLD.h) % WORLD.h);
     effects.push({ type: 'arrive', x, y, kind: addMode, life: 18 });
   });
-  for (const id of ['popChart', 'foodChart', 'speedChart', 'senseChart']) {
+  for (const id of ['liveChart', 'popChart', 'foodChart', 'speedChart', 'senseChart']) {
     $(id).addEventListener('mousemove', e => { hover[id] = e.clientX - $(id).getBoundingClientRect().left; drawCharts(); });
     $(id).addEventListener('mouseleave', () => { hover[id] = null; drawCharts(); });
   }

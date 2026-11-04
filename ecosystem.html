@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/eco/eco-app.js?v=20261104b"></script>
+<script type="module" src="assets/eco/eco-app.js?v=20261104c"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -90,11 +90,11 @@
     </div>
     <div class="eco-side">
       <div id="ecoStats"></div>
-      <div class="panel">
-        <b><span lang="ko">위상 그래프 — 초식 수 × 육식 수</span><span lang="en">Phase plot — herbivores × carnivores</span></b>
-        <p class="meta" lang="ko">주기가 있으면 점이 고리를 그리며 돕니다. 최근일수록 진한 선입니다.</p>
-        <p class="meta" lang="en">If the populations cycle, the dot travels around a loop. Recent history is darker.</p>
-        <canvas id="phase" aria-label="phase plot"></canvas>
+      <div class="panel chart-box">
+        <b><span lang="ko">개체수 (실시간 · 최근 3,000틱)</span><span lang="en">Population (live · last 3,000 ticks)</span></b>
+        <div class="chart-legend"><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
+        <canvas id="liveChart" class="eco-chart small" aria-label="live population chart"></canvas>
+        <div id="liveChartTip" class="eco-tip" hidden></div>
       </div>
     </div>
   </div>
@@ -158,13 +158,11 @@
     <li><b>부영양화의 역설</b>: “먹이 자라는 속도”를 최대로 올려 보세요. 먹이가 많으면 좋을 것 같지만 주기의 폭이 커져 오히려 멸종하기 쉬워집니다.</li>
     <li><b>구조 작전</b>: 피난처 없음으로 두고, 초식이 거의 사라질 때 “초식 3마리”로 접시를 눌러 살려 보세요.</li>
     <li><b>진화 끄기</b>: “돌연변이 크기”를 0으로 하면 형질 그래프가 평평해집니다. 켰을 때와 결과를 비교해 보세요.</li>
-    <li><b>위상 그래프</b>: 오래 돌리면 점이 같은 고리를 반복해서 도는지, 점점 커지거나 작아지는지 보세요.</li>
   </ul>
   <ul lang="en">
     <li><b>Paradox of enrichment</b>: push “Food growth” to the maximum. More food sounds good, but the cycles swing wider and extinction becomes more likely.</li>
     <li><b>Rescue mission</b>: with no refuges, click the dish with “3 herbivores” just before they vanish.</li>
     <li><b>Turn evolution off</b>: set “Mutation size” to 0 and the trait charts go flat. Compare with evolution on.</li>
-    <li><b>Phase plot</b>: run it for a while — does the dot repeat the same loop, or spiral outward or inward?</li>
   </ul>
   <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/eco/ecosim.js">ecosim.js</a> (<span lang="ko">시뮬레이션 규칙</span><span lang="en">simulation rules</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/eco/eco-app.js">eco-app.js</a> (<span lang="ko">화면</span><span lang="en">UI</span>)</p>
 </section>
