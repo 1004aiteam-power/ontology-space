@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // NEAT Snake 페이지: 150마리가 동시에 진화하며 Snake를 배우는 과정을 브라우저에서 실행·시각화
-import { Population } from './neat.js';
-import { Trainer, Snake, GRID, SNAKE, stepSnake, sense, INPUT_LABELS, INPUT_LABELS_EN } from './snake-sim.js';
+import { Population } from './neat.js?v=20261104c';   // ?v= 바꾸면 브라우저 캐시를 무시하고 새로 받음 (neat-snake.html과 함께 올림)
+import { Trainer, Snake, GRID, SNAKE, stepSnake, sense, INPUT_LABELS, INPUT_LABELS_EN } from './snake-sim.js?v=20261104c';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (window.t ? window.t(o) : o.ko);
@@ -347,7 +347,7 @@ function onRoundEnd() { miniLayout = null; drawChart(); updateTable(); $('replay
 
 // ---- 조작부 ----------------------------------------------------------------------
 function restart() {
-  trainer = new Trainer(Population, { popSize: POP_SIZE, trials: +$('trials').value, seed: (Math.random() * 1e9) | 0 });
+  trainer = new Trainer(Population, { popSize: POP_SIZE, trials: +($('trials')?.value || 3), seed: (Math.random() * 1e9) | 0 });
   followed = null; replay = null; mode = 'train'; miniLayout = null;
   $('replayEnd').hidden = true; $('replayBtn').disabled = true;
   drawChart(); updateTable(); label();
@@ -368,24 +368,24 @@ function label() {
   $('playBtn').innerHTML = mode === 'replay' ? t({ ko: '↩ 학습으로 돌아가기', en: '↩ Back to training' })
     : running ? t({ ko: '⏸ 일시정지', en: '⏸ Pause' }) : t({ ko: '▶ 학습 시작', en: '▶ Train' });
   $('speedBtn').textContent = t({ ko: '배속 ', en: 'Playback ' }) + (SPEEDS[speedIdx].sps === 'max' ? t({ ko: '최대', en: 'max' }) : SPEEDS[speedIdx].label);
-  $('trials').querySelectorAll('option').forEach(o => o.textContent = t({ ko: `개체당 ${o.value}판`, en: `${o.value} game${o.value > 1 ? 's' : ''} each` }));
+  $('trials')?.querySelectorAll('option').forEach(o => o.textContent = t({ ko: `개체당 ${o.value}판`, en: `${o.value} game${o.value > 1 ? 's' : ''} each` }));
 }
 
 function bind() {
-  $('playBtn').addEventListener('click', () => { if (mode === 'replay') endReplay(); else running = !running; label(); });
-  $('speedBtn').addEventListener('click', () => { speedIdx = (speedIdx + 1) % SPEEDS.length; label(); });
-  $('skipBtn').addEventListener('click', skipGeneration);
-  $('replayBtn').addEventListener('click', startReplay);
-  $('replayAgainBtn').addEventListener('click', startReplay);
-  $('replayBackBtn').addEventListener('click', endReplay);
-  $('resetBtn').addEventListener('click', restart);
-  $('trials').addEventListener('change', restart);
-  $('saveBtn').addEventListener('click', () => {
+  $('playBtn')?.addEventListener('click', () => { if (mode === 'replay') endReplay(); else running = !running; label(); });
+  $('speedBtn')?.addEventListener('click', () => { speedIdx = (speedIdx + 1) % SPEEDS.length; label(); });
+  $('skipBtn')?.addEventListener('click', skipGeneration);
+  $('replayBtn')?.addEventListener('click', startReplay);
+  $('replayAgainBtn')?.addEventListener('click', startReplay);
+  $('replayBackBtn')?.addEventListener('click', endReplay);
+  $('resetBtn')?.addEventListener('click', restart);
+  $('trials')?.addEventListener('change', restart);
+  $('saveBtn')?.addEventListener('click', () => {
     const g = trainer.bestGame?.genome || trainer.pop.best; if (!g) return;
     const blob = new Blob([JSON.stringify({ format: 'neat-genome/1', inputs: INPUT_LABELS_EN, outputs: OUT_LABELS.en, generation: trainer.pop.generation, genome: g.toJSON() }, null, 1)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'snake-best-genome.json'; a.click(); URL.revokeObjectURL(a.href);
   });
-  $('popBoard').addEventListener('click', e => {      // 작은 판을 누르면 그 개체를 크게 보기
+  $('popBoard')?.addEventListener('click', e => {      // 작은 판을 누르면 그 개체를 크게 보기
     if (!miniLayout?.cell || mode !== 'train') return;
     const r = $('popBoard').getBoundingClientRect(), c = miniLayout.cell;
     const i = Math.floor((e.clientY - r.top) / c) * miniLayout.cols + Math.floor((e.clientX - r.left) / c);
