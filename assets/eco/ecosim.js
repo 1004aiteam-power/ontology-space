@@ -25,7 +25,10 @@ export const DEFAULTS = {
     gain: 0.6, bonus: 20,                                       // 잡아먹으면 = gain × 먹이 세포 에너지 + bonus
     digest: 150,                                                // 소화 시간: 먹은 뒤 이 틱 동안 사냥하지 않고 천천히 떠돎
     lunge: 22, lungeBoost: 1.7,                                 // 먹잇감이 lunge 안이면 순간 속도 × lungeBoost
-    idle: 0.25                                                  // 먹잇감이 안 보이면 속도 × idle 로 천천히 (에너지 절약). 그래도 못 먹으면 굶어 죽음
+    idle: 0.25,                                                 // 먹잇감이 안 보이면 속도 × idle 로 천천히 (에너지 절약). 그래도 못 먹으면 굶어 죽음
+    // 굶주림: 마지막으로 먹은 뒤 hungerGrace 틱이 지나면 틱당 hungerRate × (초과 틱 수) 만큼 에너지를 더 잃음
+    //  → 못 먹는 시간이 길수록 빨리 소모되어 굶은 육식이 더 빨리 소멸 (보통 식사 간격 ~200틱, 90%가 450틱 이내 → 600틱까지는 영향 없음)
+    hungerGrace: 600, hungerRate: 0.0003
   },
   herb2: { fear: 0.6 },                                         // 초식은 감지 거리 × fear 안의 육식만 알아채고 도망
   mutation: 0.06,                                              // 분열 때 형질 변화 폭 (표준편차, 비율)
@@ -121,7 +124,7 @@ export class Ecosystem {
     const c = {
       id: this.nextId++, kind, x, y, a: this.rand() * TAU,
       speed: k.speed * (0.9 + 0.2 * this.rand()), sense: k.sense * (0.9 + 0.2 * this.rand()),
-      energy: k.birth * (0.8 + 0.4 * this.rand()), age: (this.rand() * k.maxAge * 0.5) | 0, gen: 0, dead: false, full: 0
+      energy: k.birth * (0.8 + 0.4 * this.rand()), age: (this.rand() * k.maxAge * 0.5) | 0, gen: 0, dead: false, full: 0, hungry: 0
     };
     this.cells.push(c);
     return c;
@@ -136,7 +139,7 @@ export class Ecosystem {
       id: this.nextId++, kind: c.kind, x: c.x, y: c.y, a: this.rand() * TAU,
       speed: clamp(c.speed * (1 + this.gauss() * m), L.speed[0], L.speed[1]),
       sense: clamp(c.sense * (1 + this.gauss() * m), L.sense[0], L.sense[1]),
-      energy: c.energy / 2, age: 0, gen: c.gen + 1, dead: false, full: 0
+      energy: c.energy / 2, age: 0, gen: c.gen + 1, dead: false, full: 0, hungry: 0
     };
     c.energy /= 2; c.age = 0;
     this.cells.push(child);
@@ -224,13 +227,17 @@ export class Ecosystem {
       } else if (c.full === 0) {
         const prey = this.herbGrid.nearest(c.x, c.y, k.radius + cfg.herb.radius, hidden);
         if (prey) {
-          c.full = k.digest;
+          c.full = k.digest; c.hungry = 0;
           prey.dead = true; this.deaths.herb.eaten++;
           c.energy += k.gain * prey.energy + k.bonus;
           this.events.push({ type: 'eat', x: prey.x, y: prey.y, kind: 'carn' });
         }
       }
       c.energy -= this.cost(c, v);
+      if (c.kind === 'carn') {                                 // 굶주림: 오래 못 먹을수록 추가 소모가 커짐
+        c.hungry = (c.hungry || 0) + 1;
+        if (c.hungry > k.hungerGrace) c.energy -= k.hungerRate * (c.hungry - k.hungerGrace);
+      }
       c.age++;
       if (c.energy <= 0 || c.age > k.maxAge) {
         c.dead = true;

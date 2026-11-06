@@ -118,6 +118,25 @@ console.log('✓ carnivores appear only by division (no spontaneous spawning, no
   console.log(`✓ a carnivore with no prey keeps moving and starves to death after ${t} ticks`);
 }
 
+// 8-1) 굶주림: 오래 못 먹을수록 더 빨리 소모 → 굶주림 효과가 없을 때보다 빨리 소멸, 먹으면 굶주림이 초기화됨
+{
+  const starve = (carn) => {
+    const e = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0, ...carn }, refuge: { on: false }, season: { on: false } });
+    const c = e.spawn('carn', 300, 300); c.energy = 130; c.age = 0;
+    let t = 0; while (!c.dead && t < 5000) { e.step(); t++; }
+    return t;
+  };
+  const withHunger = starve({}), without = starve({ hungerRate: 0 });
+  assert.ok(withHunger < without * 0.75, `hunger speeds up starvation (${withHunger} vs ${without} ticks)`);
+
+  const e = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0 }, refuge: { on: false }, season: { on: false } });
+  const c = e.spawn('carn', 200, 200); c.energy = 200; c.hungry = 900;
+  const h = e.spawn('herb', 204, 200); h.energy = 50; h.speed = 0.01;
+  e.step();
+  assert.equal(c.hungry, 1, 'eating resets hunger');
+  console.log(`✓ hunger: a carnivore that cannot eat starves in ${withHunger} ticks (vs ${without} without hunger)`);
+}
+
 // 9) 수명: 육식이 초식보다 짧고, 분열하지 못하면 수명이 다해 죽는다
 {
   assert.ok(DEFAULTS.carn.maxAge < DEFAULTS.herb.maxAge, 'carnivores live shorter than herbivores');

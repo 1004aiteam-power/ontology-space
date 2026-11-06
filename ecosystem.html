@@ -154,7 +154,7 @@
     <line x1="390" y1="300" x2="390" y2="210" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ah)"/>
     <!-- 굶주림 -->
     <text x="700" y="234" text-anchor="middle" class="muted" lang="ko">먹을 게 없으면 굶어 줄어듦</text><text x="700" y="234" text-anchor="middle" class="muted" lang="en">starve without prey</text>
-    <text x="700" y="250" text-anchor="middle" class="muted" lang="ko">(약 1,700틱 뒤 소멸)</text><text x="700" y="250" text-anchor="middle" class="muted" lang="en">(gone in ~1,700 ticks)</text>
+    <text x="700" y="250" text-anchor="middle" class="muted" lang="ko">(약 1,100틱 뒤 소멸)</text><text x="700" y="250" text-anchor="middle" class="muted" lang="en">(gone in ~1,100 ticks)</text>
   </svg>
   </div>
 
@@ -179,7 +179,7 @@
     <tr><td><span lang="ko">에너지 소모</span><span lang="en">Energy use</span></td><td><span lang="ko">틱마다 기본 0.05 + 속도² × 비용 + 감지 거리 × 비용. 0이 되면 죽음</span><span lang="en">Each tick: 0.05 + speed² × cost + sensing range × cost. Zero means death</span></td><td><span lang="ko">먹지 못하면 줄어듦. 초식은 먹이 1개로 약 80틱, 육식은 초식 1마리로 약 350틱 버팀</span><span lang="en">No food, no survival: one food lasts a herbivore ~80 ticks; one prey lasts a carnivore ~350</span></td></tr>
     <tr><td><span lang="ko">피난처</span><span lang="en">Refuges</span></td><td><span lang="ko">육식은 피난처 안의 초식을 보지도 잡지도 못함</span><span lang="en">Carnivores cannot see or catch herbivores inside</span></td><td><span lang="ko">초식이 0이 되지 않게 지켜 줌 → 육식이 줄면 여기서 다시 퍼짐</span><span lang="en">Keeps herbivores from hitting zero, so they can spread again</span></td></tr>
     <tr><td><span lang="ko">수명</span><span lang="en">Lifespan</span></td><td><span lang="ko">분열하지 못한 채 육식은 6,000틱, 초식은 7,500틱이 지나면 죽음. 분열하면 두 세포 모두 새로 시작</span><span lang="en">Without dividing, a carnivore dies after 6,000 ticks and a herbivore after 7,500. Division restarts both cells</span></td><td><span lang="ko">육식이 <b>더 짧게</b> 삶 → 먹잇감이 적은 시기가 길어지면 육식이 먼저 줄어듦</span><span lang="en">Carnivores live <b>shorter</b>, so long lean spells thin them out first</span></td></tr>
-    <tr><td><span lang="ko">굶주림</span><span lang="en">Starvation</span></td><td><span lang="ko">먹잇감이 안 보이면 육식은 속도 25%로 천천히 떠돌며 에너지를 아끼지만, 멈추지는 않음. 에너지 0 → 소멸</span><span lang="en">With no prey in sight a carnivore drifts at 25% speed to save energy, but never stops. Energy 0 → it dies</span></td><td><span lang="ko">초식이 사라지면 육식도 약 1,700틱 안에 줄어듦 → 육식이 줄어야 초식이 다시 늘 수 있음</span><span lang="en">Once prey is gone, carnivores die off within ~1,700 ticks — which lets herbivores recover</span></td></tr>
+    <tr><td><span lang="ko">굶주림</span><span lang="en">Starvation</span></td><td><span lang="ko">먹잇감이 안 보이면 육식은 속도 25%로 천천히 떠돌며 에너지를 아끼지만, 멈추지는 않음. 마지막 식사 후 600틱이 지나면 굶은 시간에 비례해 에너지를 추가로 잃음. 에너지 0 → 소멸</span><span lang="en">With no prey in sight a carnivore drifts at 25% speed to save energy, but never stops. 600 ticks after its last meal it starts losing extra energy, growing with time since that meal. Energy 0 → it dies</span></td><td><span lang="ko">초식이 사라지면 육식도 약 1,100틱 안에 줄어듦 → 육식이 줄어야 초식이 다시 늘 수 있음</span><span lang="en">Once prey is gone, carnivores die off within ~1,100 ticks — which lets herbivores recover</span></td></tr>
   </table></div>
   <p class="meta" lang="ko">에너지 숫자는 기본값 기준의 대략적인 값입니다. 속도와 감지 거리가 진화하면서 조금씩 달라집니다.</p>
   <p class="meta" lang="en">Energy figures are rough values at the defaults; they shift as speed and sensing range evolve.</p>
