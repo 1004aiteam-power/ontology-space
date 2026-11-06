@@ -102,7 +102,9 @@ function drawBackground(dpr) {
   c.fillStyle = P.sea; c.fillRect(0, 0, V.cw, V.ch);
   if (!map) return;
   const land = view.z >= 3.2 ? map.land50 : map.land110;
-  for (const k of copies()) {
+  // 날짜변경선 너머로 이어 붙인 면(경도 > 180°)이 이웃 복사본에서 들어오므로 양옆 복사본도 그린다
+  const ks = copies(), all = [...new Set([...ks.map(k => k - 1), ...ks, ...ks.map(k => k + 1)])];
+  for (const k of all) {
     c.save();
     c.setTransform(dpr * V.Wp, 0, 0, dpr * V.Wp, dpr * sx(0, k), dpr * sy(0));
     c.lineWidth = 1 / V.Wp;
@@ -225,6 +227,11 @@ function draw() {
   const w = ctx.measureText(line).width + 20;
   ctx.fillStyle = 'rgba(15,20,28,.75)'; ctx.beginPath(); ctx.roundRect(8, 8, w, 26, 13); ctx.fill();
   ctx.fillStyle = '#f3f4f6'; ctx.fillText(line, 18, 21);
+  // 오른쪽 아래: 가상 데이터 표시 (지도만 캡처해도 남도록)
+  const note = t({ ko: '⚠ 가상 운항 데이터 · 실제 항공편 아님', en: '⚠ Simulated flights · not real traffic' });
+  ctx.font = '600 11px system-ui, sans-serif'; const nw = ctx.measureText(note).width + 16;
+  ctx.fillStyle = 'rgba(15,20,28,.75)'; ctx.beginPath(); ctx.roundRect(cw - nw - 8, ch - 30, nw, 22, 11); ctx.fill();
+  ctx.fillStyle = '#ffd36b'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(note, cw - nw, ch - 19);
   draw.count = { all: list.length, dom: list.filter(x => x.f.dom).length, view: new Set(shown.map(p => p.f.id)).size };
 }
 function drawRoute(ctx, f, s) {
