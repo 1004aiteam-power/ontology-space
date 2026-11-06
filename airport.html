@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Airport Runways</title>
+<meta name="title-ko" content="Ontology Space · 공항 이착륙">
+<meta name="title-en" content="Ontology Space · Airport Runways">
+<meta name="description" content="평행 활주로 2개에서 착륙과 이륙이 섞여 진행되는 가상 공항의 하루. 도착·출발 안내판과 입체감 있는 원근 시점">
+<link rel="stylesheet" href="assets/site.css?v=20261106a">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script type="module" src="assets/airport/airport-app.js?v=20261106a"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+      <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+      <div class="menu" id="simMenu" hidden>
+        <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+        <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+        <a href="airport.html" aria-current="page"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      </div>
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">시뮬레이션 · 공항</span><span lang="en">SIMULATION · AIRPORT</span></div>
+  <h1><span lang="ko">평행 활주로 2개,<br>가상 공항의 하루</span><span lang="en">Two parallel runways,<br>a day at a virtual airport</span></h1>
+  <p class="lead" lang="ko">아침 6시부터 밤 12시까지, 두 활주로가 모두 <b>착륙과 이륙을 함께</b> 처리합니다. 착륙기는 공중에서 차례를 기다리다 3° 각도로 내려오고, 이륙기는 활주로 앞에서 착륙기 사이 빈틈을 기다립니다. 비스듬히 내려다보는 시점에서 <b>땅 위 그림자와 항공기 사이의 거리</b>로 높이를 느낄 수 있습니다.</p>
+  <p class="lead" lang="en">From 6 am to midnight, both runways handle <b>landings and take-offs together</b>. Arrivals wait their turn in the air and descend on a 3° path; departures wait at the runway for a gap between arrivals. In the tilted view, the <b>distance between each aircraft and its shadow</b> shows its height.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">공항</span><span lang="en">The airport</span></h2>
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="speedBtn"></button>
+    <select id="camSel" aria-label="camera"></select>
+    <button id="labelsBtn"></button>
+    <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+  </div>
+  <div class="ctrl">
+    <label class="speed-ctl"><span lang="ko">교통량 (가장 붐빌 때)</span><span lang="en">Traffic (peak hour)</span>
+      <input type="range" id="peak" min="20" max="80" step="5" value="60" aria-label="peak traffic"><output id="peakOut"></output></label>
+    <select id="ops" aria-label="runway direction"></select>
+    <select id="vis" aria-label="visibility"></select>
+  </div>
+
+  <div class="sim-wrap ap-wrap">
+    <div>
+      <canvas id="apView" aria-label="airport view"></canvas>
+      <p class="meta legend-line">
+        <span><span lang="ko">드래그: 둘러보기 · 휠/두 손가락: 확대 · 오른쪽 버튼 또는 Shift+드래그: 이동 · 더블클릭: 시점 되돌리기 · 항공기 클릭: 선택</span><span lang="en">Drag: orbit · wheel/pinch: zoom · right-drag or Shift+drag: pan · double-click: reset view · click an aircraft: select</span></span>
+      </p>
+      <p class="meta legend-line">
+        <span><span lang="ko">꼬리 색 = 가상 항공사</span><span lang="en">tail colour = fictional airline</span></span>
+        <span><i class="sq" style="background:#2a78d6"></i><span lang="ko">누리항공</span><span lang="en">Nuri Air</span></span>
+        <span><i class="sq" style="background:#199e70"></i><span lang="ko">바다항공</span><span lang="en">Bada Air</span></span>
+        <span><i class="sq" style="background:#d95926"></i><span lang="ko">솔항공</span><span lang="en">Sol Air</span></span>
+        <span><i class="sq" style="background:#9085e9"></i><span lang="ko">한빛항공</span><span lang="en">Hanbit Air</span></span>
+        <span><i class="sq" style="background:#d4a106"></i><span lang="ko">구름항공</span><span lang="en">Gureum Air</span></span>
+        <span><span lang="ko">점선 = 땅까지의 높이</span><span lang="en">dashed line = height above ground</span></span>
+      </p>
+    </div>
+    <div class="ap-boards">
+      <div class="fids">
+        <h4><span lang="ko">도착</span><span lang="en">Arrivals</span></h4>
+        <div class="fids-scroll"><table>
+          <thead><tr><th><span lang="ko">예정</span><span lang="en">Sched</span></th><th><span lang="ko">착륙</span><span lang="en">Land</span></th><th><span lang="ko">편명</span><span lang="en">Flight</span></th><th><span lang="ko">출발지</span><span lang="en">From</span></th><th><span lang="ko">활주로</span><span lang="en">Rwy</span></th><th><span lang="ko">게이트</span><span lang="en">Gate</span></th><th><span lang="ko">상태</span><span lang="en">Status</span></th></tr></thead>
+          <tbody id="arrBody"></tbody>
+        </table></div>
+      </div>
+      <div class="fids">
+        <h4><span lang="ko">출발</span><span lang="en">Departures</span></h4>
+        <div class="fids-scroll"><table>
+          <thead><tr><th><span lang="ko">예정</span><span lang="en">Sched</span></th><th><span lang="ko">이륙</span><span lang="en">T/O</span></th><th><span lang="ko">편명</span><span lang="en">Flight</span></th><th><span lang="ko">목적지</span><span lang="en">To</span></th><th><span lang="ko">활주로</span><span lang="en">Rwy</span></th><th><span lang="ko">게이트</span><span lang="en">Gate</span></th><th><span lang="ko">상태</span><span lang="en">Status</span></th></tr></thead>
+          <tbody id="depBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+    <p class="meta" lang="ko">도착의 '착륙'은 예상 또는 실제 착륙 시각, 출발의 '예정'은 게이트 출발 시각이고 '이륙'은 예상 또는 실제 이륙 시각입니다. 주황 글씨 = 예정과 5분 이상 차이. 줄을 누르면 화면에서 그 항공기를 표시합니다. 항공사와 편명은 모두 가상입니다.</p>
+    <p class="meta" lang="en">'Land' is the estimated or actual landing time; for departures 'Sched' is off-block and 'T/O' the estimated or actual take-off. Orange = 5+ minutes off schedule. Click a row to highlight that aircraft. All airlines and flight numbers are fictional.</p>
+    <div id="apStats"></div>
+  </div>
+
+  <div class="grid two" style="margin-top:14px">
+    <div class="panel chart-box"><b><span lang="ko">시간대별 운항 수</span><span lang="en">Movements per hour</span></b>
+      <p class="meta chart-key"><span><i style="background:#2a78d6"></i><span lang="ko">북쪽 활주로</span><span lang="en">north runway</span></span><span><i style="background:#d95926"></i><span lang="ko">남쪽 활주로</span><span lang="en">south runway</span></span><span><i class="dash"></i><span lang="ko">일정상 운항 수</span><span lang="en">scheduled</span></span></p>
+      <canvas id="moveChart" class="tr-chart" aria-label="movements per hour"></canvas></div>
+    <div class="panel chart-box"><b><span lang="ko">기다리는 항공기</span><span lang="en">Aircraft waiting</span></b>
+      <p class="meta chart-key"><span><i style="background:#2a78d6"></i><span lang="ko">공중 대기 (착륙 순서 기다림)</span><span lang="en">holding (waiting to land)</span></span><span><i style="background:#d95926"></i><span lang="ko">이륙 대기 (활주로 앞)</span><span lang="en">departure queue</span></span></p>
+      <canvas id="queueChart" class="tr-chart" aria-label="waiting aircraft"></canvas></div>
+  </div>
+
+  <h3><span lang="ko">한 대의 착륙, 한 대의 이륙</span><span lang="en">One landing, one take-off</span></h3>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">착륙</span><span lang="en">Arrival</span></h4><p lang="ko">① 시단에서 18km 떨어진 곳의 <b>대기 선회</b>(반지름 2.5km)에서 차례를 기다림 → ② 간격이 확보되면 <b>3° 각도</b>로 내려옴 (시작 고도 약 960m) → ③ 시단 400m 앞에서 활주로가 비었는지 확인, 비어 있지 않으면 <b>복행</b>해 다시 대기 선회로 → ④ 착지 후 감속해 <b>고속 탈출 유도로</b>(3곳 중 하나)로 빠져나감 → ⑤ 유도로를 따라 빈 게이트로, 10분 머문 뒤 화면에서 사라짐</p><p lang="en">① Waits in a <b>holding orbit</b> (2.5 km radius) 18 km before the threshold → ② when spacing allows, descends on a <b>3° path</b> (from about 960 m) → ③ 400 m before the threshold the runway must be clear; if not, it <b>goes around</b> and rejoins the hold → ④ after touchdown it brakes and leaves by one of three <b>rapid-exit taxiways</b> → ⑤ taxis to a free gate, stays 10 minutes, then leaves the picture</p></div>
+    <div class="card"><h4><span lang="ko">이륙</span><span lang="en">Departure</span></h4><p lang="ko">① 출발 30분 전 게이트에 나타나 <b>탑승</b> → ② 출발 시각에 유도선이 비어 있으면 <b>푸시백</b> (뒤로 밀려나감) → ③ 엔진 시동 20초 뒤 유도로를 따라 활주로 끝의 <b>이륙 대기 지점</b>까지 → ④ 활주로가 비어 있고, 앞 이륙기와 간격이 되고, 다음 착륙기가 충분히 멀면 <b>활주로 진입</b> → ⑤ 이륙 활주, 이륙 속도에서 들어 올려 상승</p><p lang="en">① Appears at the gate 30 minutes before departure and <b>boards</b> → ② at departure time, if the apron lane is clear, it is <b>pushed back</b> → ③ after a 20 s engine start it taxis to the <b>holding point</b> at the runway end → ④ it <b>lines up</b> when the runway is clear, the previous departure is far enough ahead, and the next arrival is far enough out → ⑤ take-off roll, rotation and climb</p></div>
+  </div>
+
+  <h3><span lang="ko">안전 규칙 (코드가 지키는 것)</span><span lang="en">Safety rules (enforced in code)</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">규칙</span><span lang="en">Rule</span></th><th><span lang="ko">이 시뮬레이션의 값</span><span lang="en">Value here</span></th><th><span lang="ko">이유</span><span lang="en">Why</span></th></tr>
+    <tr><td><span lang="ko">활주로에는 한 대만</span><span lang="en">One aircraft per runway</span></td><td><span lang="ko">착륙기는 시단 통과부터 활주로를 벗어날 때까지, 이륙기는 진입부터 활주로 끝을 지날 때까지 활주로를 차지</span><span lang="en">An arrival owns the runway from the threshold until it has vacated; a departure from line-up until it passes the far end</span></td><td><span lang="ko">충돌 방지의 가장 기본</span><span lang="en">The most basic collision barrier</span></td></tr>
+    <tr><td><span lang="ko">착륙 간격 (후류)</span><span lang="en">Arrival spacing (wake)</span></td><td><span lang="ko">기본 3해리. 대형 뒤 대형 4 · 중형 5 · 소형 6해리, 중형 뒤 소형 5해리. 저시정이면 1.4배</span><span lang="en">3 NM by default; behind a heavy: heavy 4, medium 5, small 6 NM; small behind medium 5 NM. ×1.4 in low visibility</span></td><td><span lang="ko">큰 항공기 날개 끝에서 생기는 소용돌이(후류)가 뒤 항공기를 뒤집을 수 있음</span><span lang="en">Wingtip vortices from large aircraft can roll the follower</span></td></tr>
+    <tr><td><span lang="ko">이륙 간격</span><span lang="en">Departure spacing</span></td><td><span lang="ko">60초. 대형 뒤 중·소형, 중형 뒤 소형은 120초. 저시정이면 +30초</span><span lang="en">60 s; 120 s for medium/small behind heavy and small behind medium. +30 s in low visibility</span></td><td><span lang="ko">같은 후류 이유</span><span lang="en">Same wake reason</span></td></tr>
+    <tr><td><span lang="ko">혼합 운영</span><span lang="en">Mixed mode</span></td><td><span lang="ko">이륙기는 정렬부터 활주로 끝까지 걸리는 시간(기체별 약 85~100초) + 여유 12초 안에 착륙기가 결심 지점에 오지 않을 때만 진입. 이륙 대기가 있으면 착륙 간격을 최소 190초로 벌림</span><span lang="en">A departure lines up only if no arrival will reach minimums within its runway time (about 85–100 s by type) + 12 s. With departures waiting, arrivals are spaced at least 190 s apart</span></td><td><span lang="ko">착륙 두 대 사이에 이륙 한 대를 끼워 넣기 위함</span><span lang="en">To fit one departure between two arrivals</span></td></tr>
+    <tr><td><span lang="ko">복행</span><span lang="en">Go-around</span></td><td><span lang="ko">시단 400m 앞에서 활주로가 비어 있지 않으면 상승해 크게 돌아 대기 선회 맨 뒤로</span><span lang="en">If the runway is not clear 400 m before the threshold: climb, circle back and rejoin the end of the hold</span></td><td><span lang="ko">마지막 안전장치. 착륙기의 4%는 길게 미끄러져 뒤 착륙기의 복행 원인이 됨</span><span lang="en">The last safety net. 4% of arrivals roll long, which can force the next one around</span></td></tr>
+    <tr><td><span lang="ko">지상 간격</span><span lang="en">Ground spacing</span></td><td><span lang="ko">앞 항공기와 (두 기체 길이의 평균 + 25m) 이상. 푸시백은 유도선에 다가오는 항공기가 없을 때만, 서로 막히면 푸시백 중인 항공기가 먼저</span><span lang="en">At least (mean length of both + 25 m) to the aircraft ahead. Push-back only when no traffic is coming along the lane; in a stand-off the aircraft pushing back goes first</span></td><td><span lang="ko">지상 이동은 모두 한 방향 (들어오는 길과 나가는 길이 따로)이라 마주 오는 일이 없음</span><span lang="en">All ground routes are one-way (separate in and out routes), so nobody meets head-on</span></td></tr>
+  </table></div>
+  <p class="meta" lang="ko">개발 중 확인 (하루 전체, 시드 여러 개): 활주로 동시 점유 0회, 착륙·이륙 간격 위반 0회, 지상에서 겹침 0회. 기본 교통량(가장 붐빌 때 시간당 60편)에서 평균 지연은 착륙 6~16분, 이륙 7분 안팎이고 복행은 하루 0~2회. 시간당 70편을 넘으면 두 활주로의 처리 능력을 넘어서 공중 대기가 계속 늘어납니다.</p>
+  <p class="meta" lang="en">Checked during development (whole days, several seeds): zero runway incursions, zero spacing violations, zero ground overlaps. At the default traffic (60 per hour at the peak) average delay is 6–16 min for arrivals and about 7 min for departures, with 0–2 go-arounds a day. Above about 70 per hour the two runways cannot keep up and the holding stacks keep growing.</p>
+
+  <h3><span lang="ko">2D 화면에서 입체감 내기</span><span lang="en">Making 2D look 3D</span></h3>
+  <ul lang="ko">
+    <li><b>원근 투영</b>: 카메라가 지면을 비스듬히 내려다보고, 멀리 있는 것은 거리에 반비례해 작게 그립니다. 3D 라이브러리 없이 캔버스 2D로 점을 하나하나 투영합니다.</li>
+    <li><b>그림자</b>: 항공기 모양을 땅에 눌러 그린 그림자를 먼저 깔고, 기체는 그 위 실제 높이에 그립니다. 높아질수록 그림자가 멀어지고 옅어집니다.</li>
+    <li><b>먼 것부터 그리기</b>: 터미널·관제탑·탑승교·항공기를 카메라와의 거리순으로 정렬해 가까운 것이 먼 것을 가립니다.</li>
+    <li><b>기울기</b>: 선회할 때 날개가 기울고(뱅크), 이륙할 때 기수가 들립니다.</li>
+    <li><b>대기와 빛</b>: 멀수록 하늘색에 섞이고, 시각에 따라 낮·노을·밤으로 바뀌며 밤에는 활주로등·접근등·항공기 항법등이 켜집니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Perspective projection</b>: the camera looks down at an angle and things shrink with distance. No 3D library — every point is projected on a 2D canvas.</li>
+    <li><b>Shadows</b>: each aircraft's outline is first flattened onto the ground as a shadow, then the aircraft is drawn at its real height. The higher it flies, the farther and fainter the shadow.</li>
+    <li><b>Painter's order</b>: terminal, tower, jet bridges and aircraft are sorted by distance so near things hide far ones.</li>
+    <li><b>Attitude</b>: wings bank in turns and the nose lifts on take-off.</li>
+    <li><b>Air and light</b>: distant things fade into the sky colour; day turns to dusk and night, when runway, approach and navigation lights come on.</li>
+  </ul>
+
+  <h3><span lang="ko">해 볼 만한 실험</span><span lang="en">Things to try</span></h3>
+  <ul lang="ko">
+    <li><b>교통량</b>을 75편/시로 올려 보세요. 그래프에서 공중 대기가 계속 쌓이는 시점이 보입니다(처리 능력 초과).</li>
+    <li><b>저시정</b>으로 바꾸면 착륙 간격이 벌어져 같은 교통량에서도 지연이 몇 배로 늘어납니다.</li>
+    <li>시점을 <b>착륙 접근</b>으로 두고 착륙기가 3°로 내려오는 모습과 그림자가 활주로에서 만나는 순간을 보세요.</li>
+    <li>안내판에서 <b>이륙 대기</b>인 편을 누르고 <b>따라가기</b> 시점으로 바꾸면 착륙기 사이 빈틈에 활주로로 들어가는 모습을 볼 수 있습니다.</li>
+    <li>배속을 올려 <b>저녁 7시 이후</b>로 가면 활주로등과 접근등이 켜집니다.</li>
+  </ul>
+  <ul lang="en">
+    <li>Raise <b>traffic</b> to 75/h. The chart shows when the holding stacks start to pile up (over capacity).</li>
+    <li>Switch to <b>low visibility</b>: wider arrival spacing multiplies delays at the same traffic.</li>
+    <li>Use the <b>final approach</b> view to watch arrivals descend at 3° until they meet their shadow on the runway.</li>
+    <li>Click a flight that is <b>holding short</b> and switch to <b>follow</b>: watch it slip onto the runway between two arrivals.</li>
+    <li>Speed up past <b>7 pm</b> to see the runway and approach lights come on.</li>
+  </ul>
+  <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/airport/airport.js">airport.js</a> (<span lang="ko">활주로·간격 규칙·항공기 이동</span><span lang="en">runways · spacing rules · aircraft movement</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/airport/airport-app.js">airport-app.js</a> (<span lang="ko">원근 화면·안내판</span><span lang="en">perspective view · boards</span>)</p>
+  <p class="meta" lang="ko">⚠ 가상 공항입니다. 활주로 배치와 규칙은 실제 공항 운영을 단순화한 것이며 특정 공항을 나타내지 않습니다.</p>
+  <p class="meta" lang="en">⚠ A virtual airport. Layout and rules simplify real operations and do not represent any specific airport.</p>
+</section>
+
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li>ICAO Doc 4444, <i>Procedures for Air Navigation Services — Air Traffic Management</i> (<span lang="ko">후류 간격, 이륙 간격</span><span lang="en">wake turbulence and departure separation</span>)</li>
+    <li>ICAO Annex 14, <i>Aerodromes</i> (<span lang="ko">활주로 표지, 평행 활주로 간격</span><span lang="en">runway markings, parallel runway spacing</span>)</li>
+    <li>ICAO Doc 9643, <i>Manual on Simultaneous Operations on Parallel or Near-Parallel Instrument Runways</i></li>
+  </ul>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
