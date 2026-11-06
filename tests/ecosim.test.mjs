@@ -71,7 +71,7 @@ console.log('✓ seeded runs are reproducible');
   console.log(`✓ Gause: coexist with refuges (15000 ticks), prey extinct at tick ${t} without`);
 }
 
-// 6) 육식은 무에서 생기지 않는다: 시작 이후 새로 나타난 육식은 모두 분열로 생긴 것
+// 6) 육식은 무에서 생기지 않는다: 시작 이후 새로 나타난 육식은 분열로 생겼거나, 멸종 뒤 자연발생한 것
 {
   for (const opts of [{ seed: 2 }, { seed: 3, refuge: { on: false }, immigration: { herb: 0.01 } }]) {
     const e = new Ecosystem(opts);
@@ -79,14 +79,15 @@ console.log('✓ seeded runs are reproducible');
     for (let t = 0; t < 8000; t++) {
       e.step();
       const splits = e.events.filter(v => v.type === 'split' && v.kind === 'carn').length;
+      const respawns = e.events.filter(v => v.type === 'arrive' && v.kind === 'carn' && v.respawn).length;
       const fresh = e.cells.filter(c => c.kind === 'carn' && !known.has(c.id));
-      assert.equal(fresh.length, splits, `tick ${e.t}: ${fresh.length} new carnivores but ${splits} divisions`);
-      assert.ok(fresh.every(c => c.gen > 0), 'new carnivores are children');
+      assert.equal(fresh.length, splits + respawns, `tick ${e.t}: ${fresh.length} new carnivores but ${splits} divisions + ${respawns} respawns`);
+      assert.ok(fresh.filter(c => c.gen === 0).length === respawns, 'new carnivores are children, except respawns');
       for (const c of fresh) known.add(c.id);
     }
   }
 }
-console.log('✓ carnivores appear only by division (no spontaneous spawning, no carnivore immigration)');
+console.log('✓ carnivores appear only by division or by respawn after extinction (no carnivore immigration)');
 
 // 7) 계절: 여름 한가운데 배율 1, 겨울 한가운데 1 − amp, 먹이 공급이 계절 따라 크게 오르내림 (세포 없는 접시로 확인)
 {
@@ -141,7 +142,7 @@ console.log('✓ carnivores appear only by division (no spontaneous spawning, no
 {
   assert.ok(DEFAULTS.carn.maxAge < DEFAULTS.herb.maxAge, 'carnivores live shorter than herbivores');
   for (const kind of ['carn', 'herb']) {
-    const e = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0, split: 1e9 }, refuge: { on: false }, season: { on: false } });
+    const e = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0, split: 1e9 }, refuge: { on: false }, season: { on: false }, respawn: { carn: 0 } });
     const c = e.spawn(kind, 300, 300); c.age = 0; c.energy = 1e6; c.full = 0;
     if (kind === 'herb') e.cfg.herb.split = 1e9;
     let t = 0;
@@ -149,4 +150,23 @@ console.log('✓ carnivores appear only by division (no spontaneous spawning, no
     assert.ok(c.dead && Math.abs(t - DEFAULTS[kind].maxAge) <= 2, `${kind} dies of old age at ${t}`);
   }
   console.log(`✓ lifespan: carnivore ${DEFAULTS.carn.maxAge} < herbivore ${DEFAULTS.herb.maxAge} ticks, and cells die of old age`);
+}
+
+// 10) 자연발생: 육식이 0마리가 되면 respawn.carn 틱 뒤 한 마리가 생기고, 육식이 있는 동안에는 생기지 않음
+{
+  const W = DEFAULTS.respawn.carn;
+  const e = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0 }, refuge: { on: false }, season: { on: false } });
+  for (let t = 1; t < W; t++) { e.step(); assert.equal(e.counts().carn, 0, `no carnivore yet at tick ${t}`); }
+  e.step();
+  assert.equal(e.counts().carn, 1, `one carnivore appears after ${W} ticks`);
+  assert.equal(e.respawns.carn, 1);
+  assert.ok(e.events.some(v => v.type === 'arrive' && v.kind === 'carn' && v.respawn), 'respawn event');
+  const c = e.cells[0]; assert.equal(c.gen, 0); assert.equal(c.age, 0);
+  for (let t = 0; t < W; t++) { e.step(); if (!e.counts().carn) break; }
+  assert.equal(e.respawns.carn, 1, 'no extra respawn while a carnivore is alive');
+
+  const off = new Ecosystem({ food: { init: 0, regrow: 0 }, herb: { init: 0 }, carn: { init: 0 }, respawn: { carn: 0 } });
+  for (let t = 0; t < W * 2; t++) off.step();
+  assert.equal(off.counts().carn, 0, 'respawn.carn = 0 turns it off');
+  console.log(`✓ respawn: a carnivore appears ${W} ticks after extinction (off with respawn.carn = 0)`);
 }

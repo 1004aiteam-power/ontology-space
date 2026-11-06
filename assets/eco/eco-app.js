@@ -209,7 +209,8 @@ function stats() {
   const cells = [
     [t(NAME.food), c.food, COL.food],
     [t(NAME.herb), `${c.herb}${ext(c.herb)}`, COL.herb, eco.cfg.refuge.on ? t({ ko: `피난처 안 ${safe}`, en: `${safe} in refuges` }) : ''],
-    [t(NAME.carn), `${c.carn}${ext(c.carn)}`, COL.carn, t({ ko: `지금까지 굶어 죽음 ${eco.deaths.carn.starve} · 수명 ${eco.deaths.carn.age}`, en: `died: ${eco.deaths.carn.starve} starved · ${eco.deaths.carn.age} old age` })],
+    [t(NAME.carn), `${c.carn}${ext(c.carn)}`, COL.carn, t({ ko: `지금까지 굶어 죽음 ${eco.deaths.carn.starve} · 수명 ${eco.deaths.carn.age} · 자연발생 ${eco.respawns.carn}`, en: `died: ${eco.deaths.carn.starve} starved · ${eco.deaths.carn.age} old age · ${eco.respawns.carn} respawned` })
+      + (c.carn === 0 && eco.cfg.respawn.carn > 0 ? t({ ko: ` · ${eco.cfg.respawn.carn - eco.carnGone}틱 뒤 한 마리 자연발생`, en: ` · one respawns in ${eco.cfg.respawn.carn - eco.carnGone} ticks` }) : '')],
     [t({ ko: '초식 평균 속도 · 감지', en: 'Herb speed · sense' }), `${f2(h.speed)} · ${f0(h.sense)}`, null, t({ ko: `최대 ${h.maxGen}세대`, en: `gen ${h.maxGen}` })],
     [t({ ko: '육식 평균 속도 · 감지', en: 'Carn speed · sense' }), `${f2(k.speed)} · ${f0(k.sense)}`, null, t({ ko: `최대 ${k.maxGen}세대`, en: `gen ${k.maxGen}` })],
     [t({ ko: '계절 · 경과 시간', en: 'Season · elapsed' }), `${eco.season() >= 0 ? t(SEASON_NAME[eco.season()]) + ' · ' : ''}${eco.t.toLocaleString()}${t({ ko: '틱', en: '' })}`, null,

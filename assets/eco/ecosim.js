@@ -37,8 +37,10 @@ export const DEFAULTS = {
   //  stay: 가장자리에서 안에 머무를 확률, slow: 안에서의 속도 배율, food: 안에서 틱당 추가로 자라는 먹이 (침전물의 박테리아)
   refuge: { on: true, stay: 0.995, slow: 0.5, food: 0.25, zones: [{ x: 170, y: 150, r: 55 }, { x: 760, y: 220, r: 55 }, { x: 450, y: 500, r: 55 }] },
   // 이주: 틱마다 이 확률로 바깥에서 초식이 한 마리씩 들어옴 (가우스의 두 번째 공존 조건)
-  // 육식은 이주로 생기지 않는다 — 처음 넣은 개체와 그 분열로만 늘어남 (사용자가 직접 넣는 경우 제외)
+  // 육식은 이주로 생기지 않는다 — 처음 넣은 개체와 그 분열, 아래 자연발생으로만 늘어남 (사용자가 직접 넣는 경우 제외)
   immigration: { herb: 0 },
+  // 자연발생: 육식이 0마리가 된 뒤 carn 틱이 지나면 육식 한 마리가 새로 생김 (0 = 끔)
+  respawn: { carn: 1000 },
   // 계절: 1년 = year 틱 (봄·여름·가을·겨울 각 1/4). 먹이의 상한과 자라는 속도가 계절 배율만큼 바뀜.
   //  배율 = 1 − amp × (1 − cos(여름 한가운데부터의 각도)) / 2 → 여름 한가운데 1, 겨울 한가운데 1 − amp
   //  상한보다 많은 먹이는 decay 비율로 시든다 (겨울에 먹이가 실제로 줄어듦)
@@ -99,6 +101,8 @@ export class Ecosystem {
     this.nextId = 1;
     this.events = [];          // 화면 효과용: { type: 'split'|'eat'|'die', x, y, kind }
     this.deaths = { herb: { starve: 0, age: 0, eaten: 0 }, carn: { starve: 0, age: 0 } };   // 누적 사망 원인
+    this.respawns = { carn: 0 };   // 누적 자연발생 수
+    this.carnGone = 0;             // 육식이 0마리로 지난 틱 수
     this.history = [];         // 일정 간격 기록 { t, food, herb, carn, hSpeed, hSense, cSpeed, cSense }
     this.foodGrid = new Grid(32); this.herbGrid = new Grid(40);
     for (let i = 0; i < this.cfg.food.init; i++) this.addFood();
@@ -249,6 +253,15 @@ export class Ecosystem {
     // 4) 정리
     this.cells = this.cells.filter(c => !c.dead);
     this.food = this.food.filter(f => !f.dead);
+    // 5) 자연발생: 육식이 멸종한 뒤 일정 시간이 지나면 한 마리가 새로 생김
+    const wait = cfg.respawn.carn;
+    if (wait > 0 && !this.cells.some(c => c.kind === 'carn')) {
+      if (++this.carnGone >= wait) {
+        const c = this.spawn('carn'); c.age = 0;
+        this.carnGone = 0; this.respawns.carn++;
+        this.events.push({ type: 'arrive', x: c.x, y: c.y, kind: 'carn', respawn: true });
+      }
+    } else this.carnGone = 0;
     if (this.t % 10 === 0) this.record();
   }
 
