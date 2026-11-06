@@ -153,7 +153,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <a class="card" href="#concepts"><h4><span lang="ko">① 기본 개념</span><span lang="en">① Concepts</span></h4><p lang="ko">자리와 물건, 건전도와 위험도</p><p lang="en">Place vs thing, health vs risk</p></a>
     <a class="card" href="#risk"><h4><span lang="ko">② 위험도 지도</span><span lang="en">② Risk map</span></h4><p lang="ko">자산을 눌러 계산 과정 보기</p><p lang="en">Click an asset to see the calculation</p></a>
     <a class="card" href="#design"><h4><span lang="ko">③ 설계 결정 8가지</span><span lang="en">③ Eight decisions</span></h4><p lang="ko">무엇을 왜 그렇게 정했나</p><p lang="en">What was decided, and why</p></a>
-    <a class="card" href="#impl"><h4><span lang="ko">④ 구현과 검증</span><span lang="en">④ Build &amp; checks</span></h4><p lang="ko">CSV → OWL · SHACL · Neo4j</p><p lang="en">CSV → OWL · SHACL · Neo4j</p></a>
+    <a class="card" href="#impl"><h4><span lang="ko">④ 구현과 검증</span><span lang="en">④ Build &amp; checks</span></h4><p lang="ko">CSV → OWL · Neo4j</p><p lang="en">CSV → OWL · Neo4j</p></a>
   </div>
 </div>
 
@@ -291,7 +291,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <p lang="en">Functional locations (CIM equipment) and physical assets (pam:Asset) are different classes, linked by a dated <code>pam:Deployment</code>. The current location is also generated as a shortcut, <code>pam:installedAt</code>.</p>
     <p lang="ko"><b>이유</b>: 둘을 합치면 변압기를 바꾸는 순간 과거 진단이 새 변압기의 기록처럼 보이거나, 자리의 이력이 사라집니다. 주변압기 #1 자리에는 1998년 변압기(폐기)와 2015년 변압기가 차례로 있었고, 이 구조에서는 둘 다 남습니다.</p>
     <p lang="en"><b>Why</b>: merge them and swapping a transformer either makes old diagnoses look like the new unit's or erases the place's history. Bay TR_1 held a 1998 unit (retired) and then a 2015 unit; this structure keeps both.</p>
-    <div class="impl"><div><b>CSV</b>deployments.csv (valid_from, valid_to)</div><div><b>OWL</b><code>Deployment</code> · <code>atLocation</code> · <code>deployedAsset</code></div><div><b>SHACL</b><span lang="ko">같은 자리 기간 겹침 금지</span><span lang="en">No overlapping periods per place</span></div><div><b>Neo4j</b><code>[:INSTALLED_AT {from, to}]</code></div></div>
+    <div class="impl"><div><b>CSV</b>deployments.csv (valid_from, valid_to)</div><div><b>OWL</b><code>Deployment</code> · <code>atLocation</code> · <code>deployedAsset</code></div><div><b>Neo4j</b><code>[:INSTALLED_AT {from, to}]</code></div></div>
   </div></article>
 
   <article class="decision"><div class="no">D2</div><div>
@@ -347,13 +347,6 @@ PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 
     <p lang="en"><b>Why</b>: without "why was this done" you cannot judge whether maintenance worked. Questions like "cautions with unfinished work" rely on this link.</p>
   </div></article>
 
-  <article class="decision"><div class="no">D8</div><div>
-    <h3><span lang="ko">데이터 규칙은 SHACL로, 빈틈은 경고로</span><span lang="en">Data rules in SHACL; gaps as warnings</span></h3>
-    <p lang="ko">자리마다 현재 자산이 있는가, 같은 자리에 기간이 겹치지 않는가, 진단 방법이 점검 업무인가, 작업지시에 근거가 있는가를 SHACL 규칙 5개로 검사합니다. 모선 두 곳에 자산 기록이 없다는 것은 오류가 아니라 <b>경고</b>로 표시합니다.</p>
-    <p lang="en">Five SHACL rules check: a current asset per place, no overlapping periods, inspection-type methods, and a reason for every work order. The two busbars without asset records are flagged as <b>warnings</b>, not errors.</p>
-    <p lang="ko"><b>이유</b>: 현실 데이터는 늘 비어 있는 곳이 있습니다. 막아 버리면 아무것도 올릴 수 없으니, 보이게만 하고 채우는 일은 사람에게 맡깁니다.</p>
-    <p lang="en"><b>Why</b>: real data always has holes. Blocking them stops everything; making them visible lets people fill them.</p>
-  </div></article>
 </section>
 
 <section id="impl">
@@ -363,7 +356,7 @@ PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 
 <pre><code>examples/asset/data/*.csv ──▶ build_asset_ontology.py ──┬─▶ asset-ontology.ttl   (OWL, <span lang="ko">계산값 포함</span><span lang="en">with computed values</span>)
    assets · deployments ·      ├ pycim <span lang="ko">토폴로지</span><span lang="en">topology</span> (CoF)      ├─▶ neo4j/import.cypher
    components · tasks ·        ├ HI · PoF · <span lang="ko">위험도</span><span lang="en">risk</span>           ├─▶ assets/data/asset.json (<span lang="ko">이 페이지</span><span lang="en">this page</span>)
-   failure_modes · diagnoses · ├ <span lang="ko">점검 주기 확인</span><span lang="en">inspection cycles</span>        └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: SHACL + SPARQL
+   failure_modes · diagnoses · ├ <span lang="ko">점검 주기 확인</span><span lang="en">inspection cycles</span>        └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: SPARQL
    work_orders · locations     └ + examples/power-grid-sample.ttl (CIM)</code></pre>
 
   <div class="tbl"><table>
@@ -389,13 +382,6 @@ PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 
 pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation ex:TR_1 ;
     pam:validFrom "1998-06-01"^^xsd:date ; pam:validTo "2015-04-30"^^xsd:date .</code></pre>
 
-  <h3><span lang="ko">예시: SHACL 규칙 하나</span><span lang="en">Example: one SHACL rule</span></h3>
-<pre><code>as:LocationHasAssetShape a sh:NodeShape ;
-    sh:targetClass cim:PowerTransformer, cim:Breaker, cim:ACLineSegment, cim:BusbarSection ;
-    sh:severity sh:Warning ;
-    sh:sparql [ sh:select """SELECT $this WHERE {
-        FILTER NOT EXISTS { ?d pam:atLocation $this . FILTER NOT EXISTS { ?d pam:validTo ?to } } }""" ] .</code></pre>
-
   <h3><span lang="ko">역량 질문 결과</span><span lang="en">Competency questions</span></h3>
   <div class="tbl"><table>
     <tr><th><span lang="ko">질문</span><span lang="en">Question</span></th><th><span lang="ko">답</span><span lang="en">Answer</span></th></tr>
@@ -408,8 +394,8 @@ pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation 
     <tr><td><span lang="ko">EAM 번호 EQ-CB-2019-0123은 어느 자리에?</span><span lang="en">Where is EAM EQ-CB-2019-0123?</span></td><td><span lang="ko">154kV 선로 CB</span><span lang="en">154 kV line breaker</span></td></tr>
     <tr><td><span lang="ko">aipd:precedes로 본 정비 흐름의 단계 수는?</span><span lang="en">Workflow steps via aipd:precedes?</span></td><td>7</td></tr>
   </table></div>
-  <p lang="ko">테스트 7개(<code>tests/test_asset.py</code>)가 위 결과와 함께, SHACL이 기간 겹침을 실제로 잡아내는지도 확인합니다.</p>
-  <p lang="en">Seven tests (<code>tests/test_asset.py</code>) check these results and that SHACL really catches an overlapping deployment.</p>
+  <p lang="ko">테스트(<code>tests/test_asset.py</code>)가 위 결과를 확인합니다.</p>
+  <p lang="en">Tests (<code>tests/test_asset.py</code>) check these results.</p>
 </section>
 
 <section id="files">
@@ -418,7 +404,6 @@ pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation 
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/tree/main/examples/asset/data"><h4>examples/asset/data/</h4><p lang="ko">원본 CSV 8개</p><p lang="en">8 source CSVs</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/asset/build_asset_ontology.py"><h4>build_asset_ontology.py</h4><p lang="ko">계산·생성·검증</p><p lang="en">Compute, generate, check</p></a>
     <a class="card" href="examples/asset/asset-ontology.ttl"><h4>asset-ontology.ttl</h4><p>OWL</p></a>
-    <a class="card" href="shapes/asset-shapes.ttl"><h4>shapes/asset-shapes.ttl</h4><p lang="ko">SHACL 규칙 5개</p><p lang="en">5 SHACL rules</p></a>
     <a class="card" href="examples/asset/neo4j/import.cypher"><h4>neo4j/</h4><p lang="ko">적재 스크립트와 쿼리 8개</p><p lang="en">Load script and 8 queries</p></a>
   </div>
   <ul lang="ko">

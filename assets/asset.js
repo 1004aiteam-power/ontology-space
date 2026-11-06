@@ -75,7 +75,7 @@
   function drawLists() {
     const an = (id) => D.assets.find(a => a.asset_id === id)?.name || id;
     $('#overdue').innerHTML = D.overdue.map(o => `<li><span class="chip warn">${T(o.state, o.state === '기록 없음' ? 'No record' : 'Overdue')}</span> ${esc(an(o.asset))} · ${esc(name(o.task))}</li>`).join('');
-    $('#gaps').innerHTML = D.gaps.map(g => { const l = D.locations.find(x => x.location === g); return `<li><span class="chip warn">SHACL Warning</span> ${esc(l.name)} <small>(${T('고장 시 정전', 'outage if failed')} ${l.outageMW} MW)</small></li>`; }).join('');
+    $('#gaps').innerHTML = D.gaps.map(g => { const l = D.locations.find(x => x.location === g); return `<li><span class="chip warn">${T('경고', 'Warning')}</span> ${esc(l.name)} <small>(${T('고장 시 정전', 'outage if failed')} ${l.outageMW} MW)</small></li>`; }).join('');
   }
 
   function render() { drawMatrix(); drawPanel(); drawLists(); }

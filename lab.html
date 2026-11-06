@@ -6,7 +6,7 @@
 <title>Ontology Space · 실습</title>
 <meta name="title-ko" content="Ontology Space · 실습">
 <meta name="title-en" content="Ontology Space · Lab">
-<meta name="description" content="브라우저에서 SPARQL 질의, 지식 그래프 시각화, SHACL 검증 결과 보기">
+<meta name="description" content="브라우저에서 SPARQL 질의, 지식 그래프 시각화">
 <link rel="stylesheet" href="assets/site.css">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
@@ -88,34 +88,9 @@
   <div id="nodeInfo"></div>
 </section>
 
-<section id="shacl">
-  <h2><span lang="ko">SHACL 데이터 품질 검증</span><span lang="en">SHACL data-quality validation</span></h2>
-  <p class="sub" lang="ko">"선로 구간은 단자 2개", "mRID는 UUID" 같은 규칙을 SHACL로 정의하고, 데이터가 규칙을 지키는지 검사합니다. 아래 결과는 <code>examples/validate.py</code>(pyshacl)를 실행해 만든 보고서입니다.</p>
-  <p class="sub" lang="en">Rules such as "a line segment has two terminals" or "an mRID is a UUID" are written in SHACL, and the data is checked against them. The report below is produced by <code>examples/validate.py</code> (pyshacl).</p>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">데이터의 <b>맞춤법 검사기</b>이자 <b>서류 체크리스트</b>입니다. "선로는 양 끝이 있어야 한다", "번호(mRID)는 정해진 형식이어야 한다" 같은 규칙을 적어 두면, 수천 개의 설비 중 규칙을 어긴 곳을 자동으로 찾아 "어디가, 왜 틀렸는지" 알려 줍니다.</p><p lang="en">A <b>spell-checker</b> and <b>form checklist</b> for data. Write rules like "a line must have two ends" or "an mRID must have the proper format", and it scans thousands of devices to point out <b>where and why</b> a rule is broken.</p></div>
-  <h3><span lang="ko">규칙 예시</span><span lang="en">Example rule</span></h3>
-<pre><code># 선로·개폐기·2권선 변압기는 Terminal이 정확히 2개
-ps:TwoTerminalShape a sh:NodeShape ;
-    sh:targetClass cim:ACLineSegment, cim:Switch, cim:PowerTransformer ;
-    sh:property [
-        sh:path [ sh:inversePath cim:Terminal.ConductingEquipment ] ;
-        sh:minCount 2 ; sh:maxCount 2 ;
-    ] .
-
-# 모든 IdentifiedObject의 mRID는 UUID 형식
-ps:MRIDShape a sh:NodeShape ;
-    sh:targetClass cim:IdentifiedObject ;          # 하위 클래스 전체에 적용
-    sh:property [ sh:path cim:IdentifiedObject.mRID ; sh:minCount 1 ; sh:maxCount 1 ;
-                  sh:pattern "^[0-9a-fA-F]{8}-…$" ] .</code></pre>
-  <p lang="ko">전체 규칙(8종): <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/shapes/cim-shapes.ttl">shapes/cim-shapes.ttl</a> · 위반 예제: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/broken-sample.ttl">broken-sample.ttl</a> (위 SPARQL 실습에서도 불러올 수 있습니다)</p>
-  <p lang="en">All rules (8 groups): <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/shapes/cim-shapes.ttl">shapes/cim-shapes.ttl</a> · Broken sample: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/broken-sample.ttl">broken-sample.ttl</a> (also loadable in the playground above)</p>
-  <h3><span lang="ko">검증 결과</span><span lang="en">Results</span></h3>
-  <div id="shaclReport"></div>
-</section>
-
 <section>
   <div class="pager"><a href="project.html"><span lang="ko">← 이전: 프로젝트 pycim</span><span lang="en">← Prev: Project pycim</span></a><a href="physical-ai.html"><span lang="ko">다음: 피지컬 AI →</span><span lang="en">Next: Physical AI →</span></a></div>
-  <p class="meta"><span lang="ko">사용한 라이브러리</span><span lang="en">Libraries</span>: <a href="https://github.com/oxigraph/oxigraph">Oxigraph</a> (MIT/Apache-2.0) · <a href="https://js.cytoscape.org/">Cytoscape.js</a> (MIT) · <a href="https://github.com/RDFLib/pySHACL">pySHACL</a> (Apache-2.0)</p>
+  <p class="meta"><span lang="ko">사용한 라이브러리</span><span lang="en">Libraries</span>: <a href="https://github.com/oxigraph/oxigraph">Oxigraph</a> (MIT/Apache-2.0) · <a href="https://js.cytoscape.org/">Cytoscape.js</a> (MIT)</p>
 </section>
 </main>
 

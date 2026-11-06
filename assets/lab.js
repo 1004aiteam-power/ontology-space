@@ -17,8 +17,7 @@ const DATASETS = {
   full:   { file: 'examples/sample_grid_full.ttl', ko: '예제 변전소 – pycim 출력 (매핑 · TP · SV 포함)', en: 'Sample substation – pycim output (mapping · TP · SV)' },
   sample: { file: 'examples/power-grid-sample.ttl', ko: '예제 변전소 (손으로 작성한 TTL)', en: 'Sample substation (hand-written TTL)' },
   cigre:  { file: 'examples/cgmes/cigre_mv.ttl', ko: 'CIGRE MV 배전망 (CGMES → pycim)', en: 'CIGRE MV network (CGMES → pycim)' },
-  korea:  { file: 'examples/twin/korea_virtual_grid.ttl', ko: '가상 대한민국 전력망 (디지털 트윈, 가상 데이터)', en: 'Virtual Korean grid (digital twin, virtual data)' },
-  broken: { file: 'examples/broken-sample.ttl', ko: '규칙 위반 예제 (SHACL 실습용)', en: 'Rule-breaking sample (for SHACL)' }
+  korea:  { file: 'examples/twin/korea_virtual_grid.ttl', ko: '가상 대한민국 전력망 (디지털 트윈, 가상 데이터)', en: 'Virtual Korean grid (digital twin, virtual data)' }
 };
 
 const QUERIES = [
@@ -226,25 +225,6 @@ function showNode(iri) {
     inc.map(r => `<tr><td>← ${esc(short(r.get('p').value))}</td><td>${esc(short(r.get('s').value))}</td></tr>`).join('') + '</table></div>';
 }
 
-// ---- SHACL 보고서 ---------------------------------------------------------------
-async function shaclReport() {
-  const box = $('shaclReport');
-  let data;
-  try { data = JSON.parse(await fetchText('assets/data/shacl-report.json')); }
-  catch (e) { box.textContent = t({ ko: '보고서를 불러오지 못했습니다.', en: 'Could not load the report.' }); return; }
-  const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  const render = () => {
-    box.innerHTML = '<div class="grid">' + data.map(d => `<div class="card"><h4>${d.conforms ? '✅' : '❌'} ${esc(d.dataset)}</h4>
-      <p>${esc(t(d))}</p><div class="ex">${d.triples} triples · ${d.conforms ? t({ ko: '통과', en: 'conforms' }) : t({ ko: `위반 ${d.violations.length}건`, en: `${d.violations.length} violations` })}</div></div>`).join('') + '</div>' +
-      data.filter(d => !d.conforms).map(d => `<h3>${esc(d.dataset)}</h3><div class="tbl"><table>
-        <tr><th>${t({ ko: '대상', en: 'Focus' })}</th><th>${t({ ko: '클래스', en: 'Class' })}</th><th>${t({ ko: '속성', en: 'Path' })}</th><th>${t({ ko: '값', en: 'Value' })}</th><th>${t({ ko: '메시지', en: 'Message' })}</th></tr>` +
-        d.violations.map(v => `<tr><td>${esc(v.name || v.focus)}</td><td>${esc(v.class)}</td><td><code>${esc(v.path)}</code></td><td>${esc(v.value)}</td><td>${esc(t(v))}</td></tr>`).join('') +
-        '</table></div>').join('');
-  };
-  render();
-  document.addEventListener('langchange', render);
-}
-
 // ---- 초기화 ---------------------------------------------------------------------
 function fillControls() {
   const ds = $('dataset'), qs = $('presets');
@@ -257,7 +237,6 @@ function fillControls() {
 async function main() {
   fillControls();
   $('query').value = QUERIES[0].q;
-  shaclReport();
   document.addEventListener('langchange', () => {
     const checked = new Set([...document.querySelectorAll('#layers input:checked')].map(i => i.value));
     fillControls();
