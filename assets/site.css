@@ -567,3 +567,38 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .fl-altbar{display:inline-block;width:140px;height:8px;border-radius:4px;background:linear-gradient(90deg,#e87828,#ebc83c,#5ac882,#46a0e6,#8c6ee6)}
 .legend-line[hidden]{display:none}
 .fl-notice{max-width:760px;margin:14px 0 0;padding:10px 14px;border:1px solid var(--warm);border-left-width:4px;border-radius:8px;background:color-mix(in srgb,var(--warm) 8%,var(--surface));font-size:15px}
+
+/* 배전공사 안전 시뮬레이션 */
+.sf-wrap{grid-template-columns:1fr}
+@media (min-width:980px){ .sf-wrap{grid-template-columns:minmax(0,1fr) 340px;align-items:start} }
+#sfView{width:100%;display:block;border-radius:12px;border:1px solid var(--line);background:#cfe0ee;touch-action:none;cursor:grab}
+.sf-panel{display:grid;gap:10px;align-content:start}
+.sf-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.sf-card h4{margin:2px 0 8px;font-size:16px}
+.sf-card p{margin:6px 0;font-size:14px;color:var(--text)}
+.sf-card p b{color:var(--accent);margin-right:4px}
+.sf-eyebrow{font-size:12px;color:var(--muted);letter-spacing:.02em}
+.sf-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+.sf-rule{display:inline-block;font-size:11px;line-height:1.5;padding:0 6px;border-radius:999px;background:#163d73;color:#fff;margin-left:4px;white-space:nowrap}
+.sf-rule.big{font-size:12px;padding:2px 8px;margin:0;white-space:normal}
+.sf-steps{list-style:none;margin:0;padding:0;display:grid;gap:3px;max-height:420px;overflow:auto}
+.sf-steps li{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:8px;font-size:13.5px;cursor:pointer;border:1px solid transparent}
+.sf-steps.quiz li{cursor:default}
+.sf-steps li:hover{border-color:var(--line)}
+.sf-steps .sf-n{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--code);color:var(--muted)}
+.sf-steps .sf-t{flex:1}
+.sf-steps .sf-done{color:var(--muted)} .sf-steps .sf-done .sf-n{background:#2f9e44;color:#fff}
+.sf-steps .sf-now{background:var(--accent-soft);border-color:var(--accent)} .sf-steps .sf-now .sf-n{background:var(--accent);color:#fff}
+.sf-hidden{color:var(--muted);letter-spacing:.2em}
+.sf-quiz{border-color:var(--warm)}
+.sf-opts{display:grid;gap:6px}
+.sf-opts button{text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:8px;padding:9px 11px;cursor:pointer;font-size:14px;line-height:1.4}
+.sf-opts button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.sf-opts button.sf-bad{border-color:#e03131;color:#c92a2a;text-decoration:line-through;opacity:.75;cursor:not-allowed}
+.sf-why{background:color-mix(in srgb,#e03131 10%,transparent);border-left:3px solid #e03131;padding:8px 10px;border-radius:0 6px 6px 0}
+.sf-why b{color:#c92a2a !important}
+.sf-end button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:600;margin-top:6px}
+.sf-end ul{padding-left:18px;font-size:13.5px}
+.sf-roles{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0}
+.sf-roles i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.sf-rules td:first-child{font-weight:700;text-align:center}

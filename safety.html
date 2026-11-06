@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Distribution Work Safety</title>
+<meta name="title-ko" content="Ontology Space · 배전공사 안전 훈련">
+<meta name="title-en" content="Ontology Space · Distribution Work Safety">
+<meta name="description" content="가상 배전 공사현장(전주·맨홀)에서 작업자들이 안전수칙 11에 따라 안전조치를 단계별로 진행하는 교육용 입체 시뮬레이션과 순서 맞히기 훈련">
+<link rel="stylesheet" href="assets/site.css?v=20261106b">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script type="module" src="assets/safety/safety-app.js?v=20261106a"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <a href="grid.html"><span lang="ko">전력망</span><span lang="en">Power Grid</span></a>
+    <a href="project.html"><span lang="ko">프로젝트</span><span lang="en">Project</span></a>
+    <a href="lab.html"><span lang="ko">실습</span><span lang="en">Lab</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a>
+      <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+      <div class="menu" id="simMenu" hidden>
+        <a href="safety.html" aria-current="page"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·맨홀 현장 · 안전수칙 단계별 조치 · 입체 시점</small><small lang="en">Pole &amp; manhole sites · step-by-step safety rules · 3D-style view</small></a>
+        <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+        <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+        <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+        <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      </div>
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">시뮬레이션 · 배전공사 안전</span><span lang="en">SIMULATION · DISTRIBUTION WORK SAFETY</span></div>
+  <h1><span lang="ko">배전 공사현장,<br>안전조치를 순서대로</span><span lang="en">A distribution work site,<br>safety steps in order</span></h1>
+  <p class="lead" lang="ko">신입사원과 새로 현장을 맡은 담당자를 위한 교육용 시뮬레이션입니다. 가상 현장에서 작업자 5명이 <b>"생명을 지키는 안전수칙(Golden Rules) 11"</b>에 따라 TBM부터 철수까지 안전조치를 하나씩 진행합니다. <b>훈련 모드</b>에서는 다음에 할 조치를 직접 골라 보고, 틀리면 왜 위험한지 확인할 수 있습니다.</p>
+  <p class="lead" lang="en">A training simulation for new hires and newly assigned site supervisors. On a virtual site, a crew of five works through the <b>"Golden Rules 11"</b> life-saving rules one by one, from the toolbox talk to tear-down. In <b>training mode</b> you choose the next safety action yourself, and a wrong choice explains why it is unsafe.</p>
+</div>
+
+<section id="sim">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">현장</span><span lang="en">The site</span></h2>
+  <div class="ctrl">
+    <select id="scnSel" aria-label="scenario"></select>
+    <select id="modeSel" aria-label="mode"></select>
+  </div>
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="nextBtn"><span lang="ko">⏭ 다음 단계</span><span lang="en">⏭ Next step</span></button>
+    <button id="speedBtn"></button>
+    <select id="camSel" aria-label="camera"></select>
+    <button id="labelsBtn"></button>
+    <button id="powerBtn"></button>
+    <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+  </div>
+  <div class="sim-wrap sf-wrap">
+    <div>
+      <canvas id="sfView" aria-label="work site view"></canvas>
+      <p class="meta legend-line"><span lang="ko">드래그: 둘러보기 · 휠/두 손가락: 확대 · 오른쪽 버튼 또는 Shift+드래그: 이동 · 더블클릭: 시점 되돌리기</span><span lang="en">Drag: orbit · wheel/pinch: zoom · right-drag or Shift+drag: pan · double-click: reset view</span></p>
+    </div>
+    <div id="sfPanel" class="sf-panel" aria-live="polite"></div>
+  </div>
+
+  <h3><span lang="ko">생명을 지키는 안전수칙 11 — 시뮬레이션의 어디에서?</span><span lang="en">Golden Rules 11 — where in the simulation?</span></h3>
+  <p class="meta" lang="ko">단계를 누르면 그 장면으로 바로 이동합니다.</p><p class="meta" lang="en">Click a step to jump straight to it.</p>
+  <div class="tbl"><table class="sf-rules">
+    <tr><th>#</th><th><span lang="ko">수칙</span><span lang="en">Rule</span></th><th><span lang="ko">시뮬레이션에서</span><span lang="en">In the simulation</span></th></tr>
+    <tr><td>1</td><td><span lang="ko">개인 안전장구 착용</span><span lang="en">Wear personal protective equipment</span></td><td><a href="#sim" data-goto="pole:1"><span lang="ko">전주 2. 안전장구</span><span lang="en">Pole 2. PPE</span></a> · <a href="#sim" data-goto="manhole:1"><span lang="ko">맨홀 2. 안전장구·측정기</span><span lang="en">Manhole 2. PPE &amp; detector</span></a></td></tr>
+    <tr><td>2</td><td><span lang="ko">고임목 4개 이상 설치</span><span lang="en">Place 4 or more wheel chocks</span></td><td><a href="#sim" data-goto="pole:4"><span lang="ko">전주 5. 고임목</span><span lang="en">Pole 5. Chocks</span></a></td></tr>
+    <tr><td>3</td><td><span lang="ko">작업계획서·TBM 작성 필수, 공법 임의변경 금지</span><span lang="en">Work plan &amp; TBM required; no ad-hoc method changes</span></td><td><a href="#sim" data-goto="pole:0"><span lang="ko">전주 1. TBM</span><span lang="en">Pole 1. TBM</span></a> · <a href="#sim" data-goto="manhole:0"><span lang="ko">맨홀 1. 허가서·TBM</span><span lang="en">Manhole 1. Permit &amp; TBM</span></a></td></tr>
+    <tr><td>4</td><td><span lang="ko">작업차량 전도방지 조치</span><span lang="en">Prevent the work vehicle from tipping</span></td><td><a href="#sim" data-goto="pole:5"><span lang="ko">전주 6. 아웃트리거·받침판</span><span lang="en">Pole 6. Outriggers &amp; pads</span></a></td></tr>
+    <tr><td>5</td><td><span lang="ko">작업반경 출입금지, 후진 시 전담유도자 배치</span><span lang="en">Keep out of the work radius; dedicated guide when reversing</span></td><td><a href="#sim" data-goto="pole:2"><span lang="ko">전주 3. 작업구역</span><span lang="en">Pole 3. Work zone</span></a> · <a href="#sim" data-goto="pole:3"><span lang="ko">전주 4. 후진 유도</span><span lang="en">Pole 4. Reversing guide</span></a></td></tr>
+    <tr><td>6</td><td><span lang="ko">인양물 고정장치, 하부 출입금지</span><span lang="en">Secure lifted loads; nobody beneath</span></td><td><a href="#sim" data-goto="pole:11"><span lang="ko">전주 12. 인양</span><span lang="en">Pole 12. Lifting</span></a></td></tr>
+    <tr><td>7</td><td><span lang="ko">안전대 착용, 안전고리 체결</span><span lang="en">Harness on, lanyard clipped</span></td><td><a href="#sim" data-goto="pole:8"><span lang="ko">전주 9. 안전고리·버킷 상승</span><span lang="en">Pole 9. Clip in &amp; raise</span></a> · <a href="#sim" data-goto="manhole:7"><span lang="ko">맨홀 8. 구명줄</span><span lang="en">Manhole 8. Lifeline</span></a></td></tr>
+    <tr><td>8</td><td><span lang="ko">검전, 접지, 충전부 방호</span><span lang="en">Test, earth, cover live parts</span></td><td><a href="#sim" data-goto="pole:7"><span lang="ko">전주 8. 검전·접지</span><span lang="en">Pole 8. Test &amp; earth</span></a> · <a href="#sim" data-goto="pole:9"><span lang="ko">10. 작업개소 검전</span><span lang="en">10. Test at work point</span></a> · <a href="#sim" data-goto="pole:10"><span lang="ko">11. 충전부 방호</span><span lang="en">11. Cover live parts</span></a></td></tr>
+    <tr><td>9</td><td><span lang="ko">밀폐공간 작업 허가절차 준수</span><span lang="en">Confined-space permit procedure</span></td><td><a href="#sim" data-goto="manhole:4"><span lang="ko">맨홀 5. 가스 측정</span><span lang="en">Manhole 5. Gas test</span></a> · <a href="#sim" data-goto="manhole:5"><span lang="ko">6. 환기</span><span lang="en">6. Ventilate</span></a> · <a href="#sim" data-goto="manhole:6"><span lang="ko">7. 감시인·삼각대</span><span lang="en">7. Attendant &amp; tripod</span></a></td></tr>
+    <tr><td>10</td><td><span lang="ko">맨홀 내 작업 시 작업반경 출입금지</span><span lang="en">Keep out of the radius during manhole work</span></td><td><a href="#sim" data-goto="manhole:2"><span lang="ko">맨홀 3. 작업반경</span><span lang="en">Manhole 3. Work radius</span></a></td></tr>
+    <tr><td>11</td><td><span lang="ko">분야별 수칙</span><span lang="en">Field-specific rules</span></td><td><span lang="ko"><b>배전</b> COS 투개방 및 지상·가공기기(공사용 개폐기 포함) 조작 시 적정공구 사용 → <a href="#sim" data-goto="pole:6">전주 7. 개폐기 개방</a><br><b>토목</b> 단부·개구부 등 추락위험 장소에 추락방지(안전난간, 덮개 등) 방호 조치 → <a href="#sim" data-goto="manhole:3">맨홀 4. 개구부 방호</a><br><b>송전</b> 철탑 승탑 시 추락방지 와이어와 안전그네식 안전대 필수 사용 · <b>변전</b> 기자재 운반 시 저상용 운반장비 사용, 벨트슬링 하중 검토 · <b>건축</b> 비계 설치 장소에서 작업발판·추락방호망 설치 (이 시뮬레이션에는 없음)</span><span lang="en"><b>Distribution</b> use the proper tool to operate cut-outs and ground or overhead equipment (incl. construction switches) → <a href="#sim" data-goto="pole:6">Pole 7. Open the switch</a><br><b>Civil</b> guard edges and openings against falls (rails, covers) → <a href="#sim" data-goto="manhole:3">Manhole 4. Guard the opening</a><br><b>Transmission</b> fall-arrest wire and full-body harness on towers · <b>Substation</b> low-bed carriers, check belt-sling loads · <b>Building</b> working platforms and safety nets on scaffolds (not in this simulation)</span></td></tr>
+  </table></div>
+
+  <h3><span lang="ko">두 현장</span><span lang="en">Two sites</span></h3>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 가공 배전 애자·완금 교체 (정전 작업)</span><span lang="en">① Overhead line: insulators &amp; crossarm (de-energised)</span></h4><p lang="ko">0번 전주의 낡은 애자(<b>!</b> 표시)를 바꿉니다. 전원측 개폐기(-70)를 열어 고압선을 정전시키고, 한 경간 떨어진 -35 전주에서 검전·접지합니다. 아래 저압선은 35번 전주의 변압기에서 전기를 받아 <b>정전 구간에서도 살아 있으므로</b> 방호관으로 덮습니다. "전기 흐름 보기"를 켜면 충전(빨강)·정전(파랑)이 보입니다.</p><p lang="en">Replace the worn insulators (marked <b>!</b>) on pole 0. Opening the source-side switch (-70) de-energises the HV line; testing and earthing happen one span away at pole -35. The LV line below is fed by the transformer on pole 35, so it <b>stays live inside the outage</b> and gets covered. "Show power flow" colours live (red) and dead (blue) wires.</p></div>
+    <div class="card"><h4><span lang="ko">② 지중 배전 맨홀 작업 (밀폐공간)</span><span lang="en">② Underground: manhole (confined space)</span></h4><p lang="ko">맨홀 안 케이블 접속부를 점검합니다. 처음 측정에서 <b>산소 17.2%로 부족</b>하게 나오도록 만들어 두었습니다. 송풍기로 환기해 적정 공기(산소 18% 이상 23.5% 미만, 황화수소 10ppm 미만, 일산화탄소 30ppm 미만)가 된 것을 다시 확인한 뒤에만 들어갑니다. 감시인은 밖에서 자리를 지킵니다.</p><p lang="en">Inspect cable joints in a manhole. The first test is set up to read <b>O₂ 17.2 % — too low</b>. Only after ventilating and re-testing to safe air (O₂ 18–23.5 %, H₂S &lt; 10 ppm, CO &lt; 30 ppm) does anyone enter, and the attendant stays outside.</p></div>
+  </div>
+
+  <h3><span lang="ko">안전 규칙 (코드가 매 순간 확인)</span><span lang="en">Safety rules (checked every tick in code)</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">규칙</span><span lang="en">Rule</span></th><th><span lang="ko">확인 내용</span><span lang="en">Check</span></th></tr>
+    <tr><td><span lang="ko">버킷 상승</span><span lang="en">Raising the bucket</span></td><td><span lang="ko">고임목 4개 · 아웃트리거 완전 전개 · 작업자 탑승 및 안전고리 체결이 모두 되어야 붐이 올라감</span><span lang="en">4 chocks, outriggers fully out, worker aboard and clipped in — or the boom stays down</span></td></tr>
+    <tr><td><span lang="ko">차량 이동</span><span lang="en">Moving the truck</span></td><td><span lang="ko">버킷에 사람이 있거나 아웃트리거가 펼쳐진 채로 움직이지 않음. 후진은 유도자가 제자리에 있을 때만, 진행 경로에 사람이 없을 때만</span><span lang="en">Never with someone in the bucket or outriggers out; reversing only with the guide in place and nobody in the path</span></td></tr>
+    <tr><td><span lang="ko">접지</span><span lang="en">Earthing</span></td><td><span lang="ko">개폐기 개방 → 대지측 연결 → 검전 → 선로 측 클램프 순서. 송전은 접지 제거와 작업자 하강 뒤에만</span><span lang="en">Switch open → earth end → test → line clamps. Re-energise only after earths are off and the worker is down</span></td></tr>
+    <tr><td><span lang="ko">고압선 접근</span><span lang="en">Approaching HV</span></td><td><span lang="ko">작업자 손이 고압선 1.2m 안에 들어가려면 작업개소 검전과 3상 접지가 끝나 있어야 함. 교체 작업은 저압선 방호 뒤에</span><span lang="en">Hands within 1.2 m of HV only after the work-point test and 3-phase earth; replacement only after the LV is covered</span></td></tr>
+    <tr><td><span lang="ko">인양</span><span lang="en">Lifting</span></td><td><span lang="ko">자재가 매달려 있는 동안 지상의 누구도 훅 아래 낙하 반경(2.4m) 안에 없음</span><span lang="en">While a load hangs, nobody on the ground is within the 2.4 m drop radius under the hook</span></td></tr>
+    <tr><td><span lang="ko">맨홀</span><span lang="en">Manhole</span></td><td><span lang="ko">뚜껑이 열려 있으면 펜스와 작업구역 라바콘이 모두 있어야 함. 입조는 허가서 · 측정값 적정 · 환기 · 삼각대 · 구명줄 · 감시인(입구 2.5m 이내)이 모두 갖춰졌을 때만</span><span lang="en">An open lid needs the guard rail and every cone in place. Entry only with permit, safe readings, ventilation, tripod, lifeline and the attendant within 2.5 m</span></td></tr>
+    <tr><td><span lang="ko">시민</span><span lang="en">Public</span></td><td><span lang="ko">보행자는 작업구역 안으로 들어오지 않음 (보행 통로 확보)</span><span lang="en">Pedestrians never enter the work zone (walkway kept open)</span></td></tr>
+  </table></div>
+  <p class="meta" lang="ko">자동 테스트(<code>tests/safety.test.mjs</code>)로 두 시나리오를 처음부터 끝까지 돌려 위반 0회를 확인하고, 반대로 고임목·접지 단계를 빼면 위반이 잡히는지도 확인합니다. 화면 오른쪽 위에 ⚠ 숫자가 나타나면 위반이 생긴 것입니다.</p>
+  <p class="meta" lang="en">Automated tests (<code>tests/safety.test.mjs</code>) run both scenarios end to end with zero violations, and check that skipping the chock or earthing step is caught. A ⚠ count in the top-right corner of the view means a violation occurred.</p>
+
+  <h3><span lang="ko">교육에 이렇게 써 보세요</span><span lang="en">Using it for training</span></h3>
+  <ul lang="ko">
+    <li><b>처음 보는 사람</b>: "보기" 모드, 배속 2×로 전체를 한 번 봅니다. 시점은 "자동"으로 두면 단계마다 중요한 곳을 비춥니다.</li>
+    <li><b>복습</b>: "훈련" 모드로 바꿔 순서를 맞혀 봅니다. 끝나면 첫 시도 정답 수와 틀린 선택의 이유가 정리됩니다.</li>
+    <li><b>토론</b>: 틀린 보기는 현장에서 실제로 나오는 말("금방 끝나니까", "평지니까")로 만들었습니다. 각 보기에 "우리 현장에서는?"을 물어 보세요.</li>
+    <li><b>관찰</b>: 신호수가 차량 바로 뒤가 아닌 <b>옆쪽</b>에 서는 위치, 지상 작업자가 <b>유도 로프</b>로 낙하 반경 밖에서 자재를 잡는 모습, 접지선을 <b>대지측 먼저</b> 연결하고 <b>선로 측 먼저</b> 떼는 순서를 확대해서 보세요.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>First viewing</b>: Watch mode at 2×. Leave the view on "auto" so each step frames the important spot.</li>
+    <li><b>Review</b>: switch to Train mode and order the steps yourself. At the end you get your first-try score and the reasons behind each wrong pick.</li>
+    <li><b>Discussion</b>: the wrong options use phrases heard on real sites ("it'll be quick", "the road is flat"). Ask "what happens on our sites?" for each.</li>
+    <li><b>Look closely</b>: the guide standing <b>to the side</b>, not directly behind; the ground worker holding the <b>tag line</b> outside the drop radius; the earth lead going on <b>earth end first</b> and coming off <b>line end first</b>.</li>
+  </ul>
+
+  <h3><span lang="ko">2D 화면에서 입체감 내기</span><span lang="en">Making 2D look 3D</span></h3>
+  <ul lang="ko">
+    <li><b>원근 투영</b>: 3D 라이브러리 없이 캔버스 2D에 점을 하나씩 투영합니다. 멀수록 작아지고, 아주 먼 건물은 하늘색에 섞입니다.</li>
+    <li><b>면 명암</b>: 작업차·건물 같은 상자는 카메라에 보이는 면만 그리고, 해 방향에 따라 면마다 밝기를 다르게 칠합니다.</li>
+    <li><b>그림자와 높이</b>: 사람·차량·전주 아래 그림자를 먼저 깔고, 버킷·인양물은 실제 높이에 그려 땅과의 거리로 높이를 느끼게 합니다.</li>
+    <li><b>먼 것부터 그리기</b>: 사람·차량·붐·전선 토막을 카메라와의 거리순으로 정렬해 가까운 것이 먼 것을 가립니다.</li>
+    <li><b>사람</b>: 작업자는 항상 카메라를 향하는 그림(빌보드)으로, 걷기·숙이기·신호봉·조작봉 같은 동작을 팔다리 각도로 표현합니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Perspective</b>: no 3D library — each point is projected onto a 2D canvas. Things shrink with distance; far buildings fade into the sky.</li>
+    <li><b>Face shading</b>: boxes (truck, buildings) draw only camera-facing faces, each shaded by the sun direction.</li>
+    <li><b>Shadows and height</b>: shadows go down first; the bucket and loads are drawn at their real height so the gap to the ground reads as height.</li>
+    <li><b>Painter's order</b>: people, vehicles, boom parts and wire pieces are sorted by distance so near things hide far ones.</li>
+    <li><b>People</b>: workers are camera-facing figures whose limb angles show walking, bending, signalling and stick work.</li>
+  </ul>
+  <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/safety/safety.js">safety.js</a> (<span lang="ko">현장·단계·안전 규칙</span><span lang="en">site · steps · safety rules</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/safety/safety-app.js">safety-app.js</a> (<span lang="ko">원근 화면·훈련</span><span lang="en">perspective view · training</span>)</p>
+  <p class="meta" lang="ko">⚠ 교육용으로 단순화한 가상 현장입니다. 단계 구성은 한국전력 안전혁신단의 "Golden-Rules 11" 포스터 내용을 참고해 만들었으며 공식 교육 자료가 아닙니다. 실제 작업은 소속 기관의 작업기준·안전수칙과 작업책임자의 지시를 따르세요. 작업 시간(특히 환기)은 화면에서 줄여서 보여 줍니다.</p>
+  <p class="meta" lang="en">⚠ A simplified virtual site for training. The steps are based on the "Golden-Rules 11" poster by KEPCO's Safety Innovation Group; this is not official training material. Real work follows your organisation's standards and the supervisor's instructions. Durations (especially ventilation) are compressed on screen.</p>
+</section>
+
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li><span lang="ko">한국전력공사 안전혁신단, 「Golden-Rules 11 — 당신의 생명을 지키는 법칙」 포스터</span><span lang="en">KEPCO Safety Innovation Group, "Golden-Rules 11 — rules that protect your life" poster</span></li>
+    <li><span lang="ko">산업안전보건기준에 관한 규칙 제618조 (정의: 적정공기 — 산소 18% 이상 23.5% 미만, 탄산가스 1.5% 미만, 일산화탄소 30ppm 미만, 황화수소 10ppm 미만), 제619조~제626조 (밀폐공간 작업 프로그램, 환기, 감시인 등)</span><span lang="en">Korean Occupational Safety and Health Standards Rules, Art. 618 (safe air: O₂ 18–23.5 %, CO₂ &lt; 1.5 %, CO &lt; 30 ppm, H₂S &lt; 10 ppm) and Arts. 619–626 (confined-space programme, ventilation, attendant)</span></li>
+  </ul>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
