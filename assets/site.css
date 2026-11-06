@@ -148,6 +148,8 @@ textarea#query{width:100%;min-height:200px;font:13px/1.5 ui-monospace,Menlo,Cons
 .fs-btn{position:absolute;top:10px;right:10px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 85%,transparent);
   color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px}
 .sim-stage:fullscreen{background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:16px}
+/* NEAT 자율주행 화면 크기: 단세포 생태계 접시와 같은 규칙 — 넓은 화면에서 브라우저 폭의 절반, 화면 높이 안에 (10:7), 가운데 */
+@media (min-width:960px){ .sim-stage:not(:fullscreen){width:min(50vw,calc((100vh - 90px) * 10 / 7));justify-self:center} }
 .sim-stage:fullscreen #sim{max-height:calc(100vh - 90px);width:auto;max-width:100%;aspect-ratio:10/7;margin:0 auto;height:auto !important}
 .side{display:grid;gap:12px;grid-template-columns:1fr}
 @media (min-width:760px){ .side{grid-template-columns:1.4fr 1fr auto;align-items:start} }
@@ -417,10 +419,11 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .manifesto .sig{display:block;margin-top:10px;font-size:14px;font-weight:400;color:var(--muted);text-align:right}
 /* NEAT Snake (neat-snake.html) */
 .snake-wrap{grid-template-columns:1fr}
-@media (min-width:1000px){ .snake-wrap{grid-template-columns:auto minmax(280px,1fr);align-items:start} }
+@media (min-width:1000px){ .snake-wrap{width:calc(100vw - 32px);grid-template-columns:minmax(0,1fr) auto minmax(280px,1fr);align-items:start} .snake-main{grid-column:2} .snake-side{grid-column:3} }   /* 판은 가운데, 옆 패널은 오른쪽 여백 (생태계 화면과 같은 배치) */
 .snake-main{display:flex;flex-direction:column;gap:6px;min-width:0}
 #board{width:min(100%,calc(100vh - 120px));min-width:min(100%,520px);display:block;border-radius:12px;border:1px solid var(--line);margin:0 auto}
-@media (min-width:1000px){ #board{width:min(800px,calc(100vh - 120px),calc(100vw - 380px))} .snake-main .meta{max-width:min(800px,calc(100vh - 120px))} }
+/* 판 크기: 단세포 생태계 접시와 같은 규칙 — 넓은 화면에서 브라우저 폭의 절반, 화면 높이 안에 (1:1) */
+@media (min-width:960px){ #board{width:min(50vw,calc(100vh - 90px))} .snake-main .meta{max-width:min(50vw,calc(100vh - 90px))} }
 .snake-side{display:grid;gap:12px;align-content:start}
 .snake-side #net{height:340px}
 .snake-side #stats{grid-template-columns:repeat(2,1fr)}
