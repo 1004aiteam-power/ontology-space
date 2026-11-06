@@ -220,6 +220,27 @@ CQ = [
   ?c rdfs:label ?cs ; cim:Equipment.EquipmentContainer ?f . ?f cim:IdentifiedObject.name ?feeder ; cim:Feeder.NormalEnergizingSubstation/cim:IdentifiedObject.name ?sub .
   FILTER(LANG(?ra) = 'ko') }"""),
 ]
+# 웹페이지에 보여 주는 같은 질문의 Cypher (Neo4j). assets/cypher/cq.js와 같아야 함 — tests/cypher.test.mjs가 결과까지 대조
+CYPHER = [
+    """MATCH (r:RestArea)-[:ON_LINK]->(:Link)-[:OF_SECTION]->(:Section)-[:ON_ROUTE]->(:Route {code: 'GYEONGBU'}),
+      (r)-[:HAS_CHARGING_STATION]->(:ChargingStation)-[:EQUIPMENT_CONTAINER]->(:Feeder)
+         -[:NORMAL_ENERGIZING_SUBSTATION]->(s:Substation)
+RETURN r.label AS ra, s.name AS sub
+ORDER BY ra""",
+    """MATCH (cs:ChargingStation)-[:EQUIPMENT_CONTAINER]->(:Feeder)-[:NORMAL_ENERGIZING_SUBSTATION]->(s:Substation)
+RETURN s.name AS sub, count(cs) AS n, sum(cs.installedKW) AS totalKW
+ORDER BY totalKW DESC""",
+    """MATCH (:Incident)-[:AFFECTS_LINK]->(l:Link)<-[:ON_LINK]-(r:RestArea)
+RETURN r.label AS ra, l.code AS link""",
+    """MATCH (p:ChargingPeak)-[:PEAK_OF]->(:ChargingStation)<-[:HAS_CHARGING_STATION]-(r:RestArea)
+WHERE p.hour >= 7 AND p.hour <= 9
+RETURN r.label AS ra, p.hour AS h, p.mw AS mw
+ORDER BY mw DESC""",
+    """MATCH (r:RestArea)-[:ON_LINK]->(:Link {code: 'S03F'}),
+      (r)-[:HAS_CHARGING_STATION]->(c:ChargingStation)-[:EQUIPMENT_CONTAINER]->(f:Feeder)
+         -[:NORMAL_ENERGIZING_SUBSTATION]->(s:Substation)
+RETURN r.label AS ra, c.label AS cs, f.name AS feeder, s.name AS sub""",
+]
 PREFIX = f"PREFIX ev: <{EVNS}> PREFIX hw: <{HWNS}> PREFIX cim: <http://iec.ch/TC57/CIM100#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
 
 
@@ -230,9 +251,9 @@ def run_cq() -> list[dict]:
     g.parse(ROOT / "examples" / "highway" / "highway-ontology.ttl", format="turtle")
     g.parse(ROOT / "examples" / "twin" / "korea_virtual_grid.ttl", format="turtle")
     out = []
-    for ko, en, q in CQ:
+    for (ko, en, q), cy in zip(CQ, CYPHER):
         rows = [[str(v) if v is not None else "" for v in r] for r in g.query(PREFIX + q)]
-        out.append(dict(q=ko, en=en, sparql=q, rows=rows))
+        out.append(dict(q=ko, en=en, cypher=cy, rows=rows))
     return out, len(g)
 
 

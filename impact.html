@@ -301,8 +301,8 @@ td small{color:var(--muted)}
 
 <section id="ontology">
   <h2><span lang="ko">두 모델을 잇는 방법</span><span lang="en">How the two models are joined</span></h2>
-  <p lang="ko">자산관리 온톨로지는 차단기를 기능 위치 <code>ex:CB_22_1</code>로, 배전선로 모델은 같은 차단기를 mRID IRI(<code>ex:_7fb1…</code>)로 부릅니다. 같은 물건을 두 모델이 다른 이름으로 부르는 것은 흔한 일입니다. 둘을 <code>skos:exactMatch</code>로 잇고, 평상시 개폐 상태에서 전원 → 부하 방향으로 계산한 <code>im:feeds</code>(전이 속성)를 덧붙였습니다. 그러면 "이 자산이 고장 나면 누가 영향을 받나"가 SPARQL 경로 질의 <code>im:feeds+</code> 한 줄이 됩니다.</p>
-  <p lang="en">The asset ontology calls the breaker by its functional location <code>ex:CB_22_1</code>; the feeder model calls the same breaker by its mRID IRI (<code>ex:_7fb1…</code>). Two models naming one thing differently is normal. They are joined by <code>skos:exactMatch</code>, and an <code>im:feeds</code> relation (transitive), computed source → load in the normal switching state, is added. "Who is affected if this asset fails" then becomes one SPARQL path, <code>im:feeds+</code>.</p>
+  <p lang="ko">자산관리 온톨로지는 차단기를 기능 위치 <code>ex:CB_22_1</code>로, 배전선로 모델은 같은 차단기를 mRID IRI(<code>ex:_7fb1…</code>)로 부릅니다. 같은 물건을 두 모델이 다른 이름으로 부르는 것은 흔한 일입니다. 둘을 <code>skos:exactMatch</code>로 잇고, 평상시 개폐 상태에서 전원 → 부하 방향으로 계산한 <code>im:feeds</code>(전이 속성)를 덧붙였습니다. 그러면 "이 자산이 고장 나면 누가 영향을 받나"가 Cypher 가변 길이 경로 <code>-[:FEEDS*]-&gt;</code> 한 줄이 됩니다.</p>
+  <p lang="en">The asset ontology calls the breaker by its functional location <code>ex:CB_22_1</code>; the feeder model calls the same breaker by its mRID IRI (<code>ex:_7fb1…</code>). Two models naming one thing differently is normal. They are joined by <code>skos:exactMatch</code>, and an <code>im:feeds</code> relation (transitive), computed source → load in the normal switching state, is added. "Who is affected if this asset fails" then becomes one Cypher variable-length path, <code>-[:FEEDS*]-&gt;</code>.</p>
 <pre><code>ex:CB_22_1 skos:exactMatch ex:_7fb1ff98-b6b1-53b0-a1a8-ffb3f4c651b1 .   # <span lang="ko">자산관리 ↔ 배전선로 모델</span><span lang="en">asset ontology ↔ feeder model</span>
 ex:TR_1 im:feeds ex:BUS_22 .  ex:BUS_22 im:feeds ex:CB_22_1 .  …
 im:Z4 a im:FeederZone ; im:feeds ex:_…LD_M3, ex:_…LD_B2 ; im:tieTo ex:_…T2 .
@@ -329,7 +329,7 @@ ex:_…LD_B2 im:area "아라 병원"@ko ; im:customers 3 ; im:critical true .</c
 <section id="files">
   <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
   <div class="grid">
-    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/impact/build_impact.py"><h4>build_impact.py</h4><p lang="ko">영향 추적 · 위험도 재계산 · SPARQL</p><p lang="en">Tracing · risk re-rating · SPARQL</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/impact/build_impact.py"><h4>build_impact.py</h4><p lang="ko">영향 추적 · 위험도 재계산 · 역량 질문</p><p lang="en">Tracing · risk re-rating · competency questions</p></a>
     <a class="card" href="examples/impact/impact-links.ttl"><h4>impact-links.ttl</h4><p lang="ko">두 모델을 잇는 트리플</p><p lang="en">Triples joining the two models</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/feeder/build_feeder.py"><h4>build_feeder.py</h4><p lang="ko">배전선로 모델 · 절체 탐색 (best_transfer)</p><p lang="en">Feeder model · transfer search (best_transfer)</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/impact.js"><h4>assets/impact.js</h4><p lang="ko">그래프 그림</p><p lang="en">Graph view</p></a>

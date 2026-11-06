@@ -59,7 +59,7 @@
   <p class="lead" lang="en">An introduction to ontologies, the IEC CIM–based power grid ontology, and <b>pycim</b>, a project that designs CIM as Python classes.</p>
   <div class="grid" style="margin-top:28px">
     <a class="card" href="#what"><h4><span lang="ko">① 온톨로지 소개</span><span lang="en">① What is an ontology</span></h4>
-      <p lang="ko">개념, 구성요소, RDF · OWL · SPARQL</p><p lang="en">Concepts, building blocks, RDF · OWL · SPARQL</p>
+      <p lang="ko">개념, 구성요소, RDF · OWL · Cypher</p><p lang="en">Concepts, building blocks, RDF · OWL · Cypher</p>
       <span class="more"><span lang="ko">이 페이지 ↓</span><span lang="en">This page ↓</span></span></a>
     <a class="card" href="grid.html"><h4><span lang="ko">② 전력망 온톨로지</span><span lang="en">② Power grid ontology</span></h4>
       <p lang="ko">IEC CIM, CGMES, 인터랙티브 단선도</p><p lang="en">IEC CIM, CGMES, interactive single-line diagram</p>
@@ -68,7 +68,7 @@
       <p lang="ko">CIM 파이썬 클래스, pandapower · OpenDSS 변환</p><p lang="en">CIM in Python, export to pandapower · OpenDSS</p>
       <span class="more"><span lang="ko">프로젝트 페이지 →</span><span lang="en">Project →</span></span></a>
     <a class="card" href="lab.html"><h4><span lang="ko">④ 실습</span><span lang="en">④ Lab</span></h4>
-      <p lang="ko">브라우저에서 SPARQL, 지식 그래프</p><p lang="en">SPARQL in the browser, knowledge graph</p>
+      <p lang="ko">브라우저에서 Cypher 질의, 지식 그래프</p><p lang="en">Cypher queries in the browser, knowledge graph</p>
       <span class="more"><span lang="ko">실습 페이지 →</span><span lang="en">Lab →</span></span></a>
     <a class="card" href="physical-ai.html"><h4><span lang="ko">⑤ 피지컬 AI</span><span lang="en">⑤ Physical AI</span></h4>
       <p lang="ko">개념, 관련 기술, 가상에서 운전을 배우는 NEAT 시뮬레이션</p><p lang="en">Concepts, key technologies, a NEAT car learning to drive in simulation</p>
@@ -146,31 +146,29 @@
 </section>
 
 <section id="stack">
-  <h2><span lang="ko">W3C 시맨틱 웹 기술 스택</span><span lang="en">The W3C Semantic Web stack</span></h2>
+  <h2><span lang="ko">온톨로지 기술 스택</span><span lang="en">The ontology technology stack</span></h2>
   <p class="sub" lang="ko">아래 층일수록 기본, 위로 갈수록 표현력과 활용도가 높아집니다.</p>
   <p class="sub" lang="en">Lower layers are the foundation; higher layers add expressiveness.</p>
   <div class="stack">
     <div><b><span lang="ko">응용</span><span lang="en">Apps</span></b><span><span lang="ko">검색 · 추론 · AI · 시각화</span><span lang="en">search · reasoning · AI · visualization</span></span></div>
-    <div><b>SPARQL</b><span><span lang="ko">질의</span><span lang="en">query</span></span></div>
+    <div><b>Cypher</b><span><span lang="ko">질의 (Neo4j)</span><span lang="en">query (Neo4j)</span></span></div>
     <div><b>OWL</b><span><span lang="ko">풍부한 논리 표현</span><span lang="en">rich logic</span></span></div>
     <div><b>RDFS</b><span><span lang="ko">클래스·속성 계층</span><span lang="en">class &amp; property hierarchy</span></span></div>
     <div><b>RDF</b><span><span lang="ko">주어–술어–목적어 트리플</span><span lang="en">subject–predicate–object triples</span></span></div>
     <div><b>IRI</b><span><span lang="ko">전역 식별자</span><span lang="en">global identifiers</span></span></div>
   </div>
-  <blockquote><p lang="ko"><b>SPARQL과 Cypher</b> — RDF 데이터를 질의하는 W3C 표준은 SPARQL입니다. 다만 현업에서는 그래프 DB로 <b>Neo4j</b>를 가장 많이 쓰므로, 이 사이트는 <b>Neo4j 중심</b>으로 가며 질의도 Neo4j의 언어인 <b>Cypher</b>(ISO 표준 GQL과 거의 같음)를 기본으로 하겠습니다. SPARQL은 표준을 이해하기 위한 실습과 RDF 교환에 씁니다.</p><p lang="en"><b>SPARQL and Cypher</b> — SPARQL is the W3C standard for querying RDF. In practice, though, <b>Neo4j</b> is by far the most widely used graph database, so this site is <b>Neo4j-centred</b> and uses Neo4j's query language <b>Cypher</b> (close to the ISO GQL standard) by default. SPARQL is kept for learning the standard and for RDF exchange.</p></blockquote>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>IRI</b>: 세상의 모든 것에 붙이는 <b>겹치지 않는 이름표</b> (웹 주소처럼 생김)</li><li><b>RDF</b>: 모든 지식을 <b>"누가 – 어떻다 – 무엇을"</b> 짧은 문장으로 적는 방법</li><li><b>RDFS</b>: "차단기는 개폐기의 한 종류"처럼 <b>분류표</b>를 적는 방법</li><li><b>OWL</b>: "변압기는 권선이 2개 이상"처럼 더 <b>정교한 규칙</b>을 적는 방법</li><li><b>SPARQL</b>: 이렇게 적은 지식에 <b>질문하는 검색 언어</b></li><li>아래층이 단단해야 위층을 올릴 수 있는 <b>건물</b>처럼, 아래 기술 위에 위 기술이 쌓입니다.</li></ul><ul lang="en"><li><b>IRI</b>: a <b>unique name tag</b> for anything in the world (looks like a web address)</li><li><b>RDF</b>: writing all knowledge as tiny <b>"who – does what – to what"</b> sentences</li><li><b>RDFS</b>: writing a <b>classification chart</b>, e.g. "a breaker is a kind of switch"</li><li><b>OWL</b>: writing <b>finer rules</b>, e.g. "a transformer has at least two windings"</li><li><b>SPARQL</b>: the <b>search language</b> for asking questions of that knowledge</li><li>Like a <b>building</b>, each layer stands on the one below it.</li></ul></div>
+  <blockquote><p lang="ko"><b>질의는 Cypher로</b> — RDF의 W3C 표준 질의 언어는 SPARQL이지만, 현업에서 가장 많이 쓰는 그래프 DB가 <b>Neo4j</b>이므로 이 사이트의 질의는 모두 Neo4j의 <b>Cypher</b>(ISO 표준 GQL과 거의 같음)로 씁니다. RDF 데이터는 Neo4j에 불러올 때 클래스는 <b>라벨</b>, 값은 <b>속성</b>, 개체 사이의 연결은 <b>관계</b>가 됩니다.</p><p lang="en"><b>Queries in Cypher</b> — the W3C standard query language for RDF is SPARQL, but <b>Neo4j</b> is by far the most widely used graph database, so every query on this site is written in Neo4j's <b>Cypher</b> (close to the ISO GQL standard). When RDF is loaded into Neo4j, classes become <b>labels</b>, values become <b>properties</b> and links between individuals become <b>relationships</b>.</p></blockquote>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>IRI</b>: 세상의 모든 것에 붙이는 <b>겹치지 않는 이름표</b> (웹 주소처럼 생김)</li><li><b>RDF</b>: 모든 지식을 <b>"누가 – 어떻다 – 무엇을"</b> 짧은 문장으로 적는 방법</li><li><b>RDFS</b>: "차단기는 개폐기의 한 종류"처럼 <b>분류표</b>를 적는 방법</li><li><b>OWL</b>: "변압기는 권선이 2개 이상"처럼 더 <b>정교한 규칙</b>을 적는 방법</li><li><b>Cypher</b>: 그래프 DB(Neo4j)에 담긴 지식에 <b>질문하는 검색 언어</b>. 찾고 싶은 모양을 <code>(노드)-[관계]-&gt;(노드)</code>처럼 그려서 묻습니다</li><li>아래층이 단단해야 위층을 올릴 수 있는 <b>건물</b>처럼, 아래 기술 위에 위 기술이 쌓입니다.</li></ul><ul lang="en"><li><b>IRI</b>: a <b>unique name tag</b> for anything in the world (looks like a web address)</li><li><b>RDF</b>: writing all knowledge as tiny <b>"who – does what – to what"</b> sentences</li><li><b>RDFS</b>: writing a <b>classification chart</b>, e.g. "a breaker is a kind of switch"</li><li><b>OWL</b>: writing <b>finer rules</b>, e.g. "a transformer has at least two windings"</li><li><b>Cypher</b>: the <b>search language</b> for asking questions of that knowledge in a graph database (Neo4j); you draw the shape you want, like <code>(node)-[relationship]-&gt;(node)</code></li><li>Like a <b>building</b>, each layer stands on the one below it.</li></ul></div>
   <h3><span lang="ko">RDF 트리플 (Turtle)</span><span lang="en">RDF triples (Turtle)</span></h3>
 <pre><code>ex:TR_1  a                                cim:PowerTransformer .
 ex:TR_1  cim:Equipment.EquipmentContainer  ex:SS_A .
 ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">"M.Tr #1은 – 속해 있다 – A변전소에" 처럼 <b>주어·서술어·목적어 세 칸짜리 문장</b> 하나가 트리플입니다. 이런 문장이 수천 개 모이면, 같은 단어끼리 이어지면서 <b>거대한 그물(그래프)</b>이 됩니다. 표의 한 줄이 아니라 문장 하나하나가 데이터라서, 새로운 종류의 정보도 문장만 추가하면 됩니다.</p><p lang="en">A triple is one <b>three-part sentence: subject – verb – object</b>, e.g. "M.Tr #1 – belongs to – Substation A". Thousands of them, joined wherever they share a word, form a <b>giant web (graph)</b>. Because each sentence is data, adding a new kind of fact just means adding sentences — no table redesign.</p></div>
-  <h3><span lang="ko">SPARQL 질의</span><span lang="en">SPARQL query</span></h3>
-<pre><code>SELECT ?substation ?transformer WHERE {
-  ?transformer a cim:PowerTransformer ;
-               cim:Equipment.EquipmentContainer ?substation .
-}</code></pre>
+  <h3><span lang="ko">Cypher 질의 (Neo4j)</span><span lang="en">Cypher query (Neo4j)</span></h3>
+<pre><code>MATCH (t:PowerTransformer)-[:EQUIPMENT_CONTAINER]->(s)
+RETURN s.name AS substation, t.name AS transformer</code></pre>
 
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">데이터에게 하는 <b>빈칸 채우기 질문</b>입니다. <code>?transformer</code>, <code>?substation</code>처럼 물음표가 붙은 곳이 빈칸이고, "<b>변압기이면서 어떤 변전소에 속한 것</b>을 모두 찾아서 빈칸을 채워 줘"라는 뜻입니다. 엑셀 필터와 비슷하지만, 관계를 따라 여러 단계를 건너가며 찾을 수 있습니다.</p><p lang="en">It is a <b>fill-in-the-blanks question</b> to the data. Words with a question mark (<code>?transformer</code>, <code>?substation</code>) are the blanks: "find everything that <b>is a transformer and belongs to some substation</b>, and fill in the blanks". Like a spreadsheet filter — but it can hop along relationships across many steps.</p></div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">찾고 싶은 <b>모양을 그림처럼 적는 질문</b>입니다. <code>(t:PowerTransformer)</code>는 "변압기인 노드 t", <code>-[:EQUIPMENT_CONTAINER]-&gt;</code>는 "~에 속한다"는 화살표, <code>(s)</code>는 그 화살표가 가리키는 노드입니다. "<b>변압기가 어떤 변전소에 속해 있는 모양</b>을 모두 찾아서, 변전소 이름과 변압기 이름을 보여 줘"라는 뜻입니다. 엑셀 필터와 비슷하지만, 화살표를 이어 그리면 여러 단계를 건너가며 찾을 수 있습니다.</p><p lang="en">It is a question written as a <b>picture of the shape you want</b>. <code>(t:PowerTransformer)</code> is "a node t that is a transformer", <code>-[:EQUIPMENT_CONTAINER]-&gt;</code> is a "belongs to" arrow, and <code>(s)</code> is the node it points to: "find every <b>transformer that belongs to something</b> and show that container's name and the transformer's name". Like a spreadsheet filter, but chaining arrows lets you hop across many steps.</p></div>
   <h3><span lang="ko">다른 데이터 모델과 비교</span><span lang="en">Compared with other data models</span></h3>
   <div class="tbl" lang="ko"><table>
     <tr><th>구분</th><th>관계형 DB</th><th>택소노미</th><th>온톨로지</th></tr>
@@ -196,7 +194,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
     <li>클래스 계층 설계</li>
     <li>속성과 제약 정의</li>
     <li>개체(데이터) 입력</li>
-    <li><b>검증</b>: 추론기와 질의로 확인 → <a href="lab.html#sparql">실습</a></li>
+    <li><b>검증</b>: 추론기와 질의로 확인 → <a href="lab.html#cypher">실습</a></li>
   </ol>
   <ol lang="en">
     <li><b>Scope</b>: write the questions it must answer (competency questions)</li>
@@ -205,7 +203,7 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
     <li>Design the class hierarchy</li>
     <li>Define properties and constraints</li>
     <li>Add individuals (data)</li>
-    <li><b>Validate</b> with reasoners and queries → <a href="lab.html#sparql">Lab</a></li>
+    <li><b>Validate</b> with reasoners and queries → <a href="lab.html#cypher">Lab</a></li>
   </ol>
 
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">새로 입사한 회사의 <b>업무 용어집</b>을 만드는 과정과 같습니다. ① 무엇에 답하려는지 정하고 ② 이미 있는 용어집(전력은 IEC CIM)을 가져오고 ③ 용어를 나열해 ④ 큰 분류·작은 분류로 정리하고 ⑤ 용어 사이의 관계와 규칙을 적고 ⑥ 실제 사례를 채운 뒤 ⑦ 틀린 곳이 없는지 검사합니다.</p><p lang="en">It is like building a <b>glossary for a new workplace</b>: ① decide what questions it must answer, ② reuse an existing glossary (IEC CIM for power), ③ list the terms, ④ sort them into big and small categories, ⑤ write how terms relate and the rules, ⑥ fill in real examples, ⑦ check for mistakes.</p></div>
@@ -213,8 +211,9 @@ ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
   <div class="tbl"><table>
     <tr><th><span lang="ko">도구</span><span lang="en">Tool</span></th><th><span lang="ko">용도</span><span lang="en">Use</span></th></tr>
     <tr><td>Protégé</td><td><span lang="ko">온톨로지 편집기 (Stanford, 무료)</span><span lang="en">Ontology editor (Stanford, free)</span></td></tr>
-    <tr><td>Apache Jena / Fuseki</td><td><span lang="ko">Java RDF 프레임워크, SPARQL 서버</span><span lang="en">Java RDF framework, SPARQL server</span></td></tr>
-    <tr><td>GraphDB · Stardog · Virtuoso</td><td><span lang="ko">트리플 스토어</span><span lang="en">Triple stores</span></td></tr>
+    <tr><td>Neo4j</td><td><span lang="ko">그래프 DB, Cypher 질의 (이 사이트의 기준)</span><span lang="en">Graph database, Cypher queries (this site's default)</span></td></tr>
+    <tr><td>neosemantics (n10s)</td><td><span lang="ko">RDF·OWL을 Neo4j로 불러오고 내보내는 플러그인</span><span lang="en">Neo4j plugin to import and export RDF/OWL</span></td></tr>
+    <tr><td>GraphDB · Stardog · Virtuoso · Apache Jena</td><td><span lang="ko">트리플 스토어 (RDF 전용 DB)</span><span lang="en">Triple stores (RDF databases)</span></td></tr>
     <tr><td>rdflib</td><td><span lang="ko">파이썬 RDF 처리</span><span lang="en">Python RDF</span></td></tr>
   </table></div>
 </section>

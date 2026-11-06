@@ -370,7 +370,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
   <h2><span lang="ko">③ 구현과 검증</span><span lang="en">③ Implementation and checks</span></h2>
 <pre><code>examples/highway/data/*.csv ──▶ build_highway.py ──┬─▶ highway-ontology.ttl  (OWL + GeoSPARQL, <span lang="ko">트리플 약 13,000개</span><span lang="en">~13,000 triples</span>)
   nodes · routes ·              ├ <span lang="ko">중력모형 수요</span><span lang="en">gravity demand</span>       ├─▶ assets/data/highway.json (<span lang="ko">이 지도</span><span lang="en">this map</span>)
-  sections · scenarios          ├ <span lang="ko">시간대별 이용자 균형</span><span lang="en">hourly equilibrium</span>  └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: SPARQL 12
+  sections · scenarios          ├ <span lang="ko">시간대별 이용자 균형</span><span lang="en">hourly equilibrium</span>  └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: <span lang="ko">역량 질문 12개</span><span lang="en">12 competency questions</span>
                                 └ <span lang="ko">지도 윤곽</span><span lang="en">outline</span>: Natural Earth (twin.json)</code></pre>
   <h3><span lang="ko">예시: 노드 하나와 방향 링크 하나</span><span lang="en">Example: one node and one link</span></h3>
 <pre><code>hw:N_DAEJEON a hw:Interchange, hw:Junction ;              # <span lang="ko">다중 분류</span><span lang="en">multiple typing</span>

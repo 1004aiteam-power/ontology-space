@@ -300,7 +300,7 @@
 
   function cq() {
     $('imCq').innerHTML = D.cq.map((c, i) => `<details${i === 0 ? ' open' : ''}><summary><b>Q${i + 1}.</b> ${esc(T(c.q, c.en))}</summary>
-      <pre><code>${esc(c.sparql)}</code></pre>
+      <pre><code class="language-cypher">${esc(c.cypher)}</code></pre>
       <div class="tbl"><table><tbody>${c.rows.map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`).join('');
   }
 

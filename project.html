@@ -311,7 +311,7 @@ SvVoltage      (TopologicalNode의 전압 kV, 위상 deg)                       
 SvPowerFlow    (Terminal을 통해 설비로 들어가는 P, Q — 부하 기준 부호)
    │ to_turtle()
    ▼
-RDF  → SPARQL 질의, 다른 시스템과 교환</code></pre>
+RDF  → Neo4j로 불러와 Cypher 질의, 다른 시스템과 교환</code></pre>
   <div id="svTable" class="tbl"></div>
 <pre><code>ex:_6f28b58e-1d64-5245-af34-dc8e70ea32f0 a cim:SvVoltage ;
     cim:SvVoltage.v "154.0"^^xsd:float ;
@@ -425,7 +425,7 @@ Show Voltages LN</code></pre>
     <li>✅ 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)</li>
     <li>✅ CGMES(RDF/XML) 파일 읽기 — CIGRE MV, NEPLAN 결과와 0.00004 pu 이내 일치</li>
     <li>✅ 토폴로지 처리(TP)와 계산 결과의 SV 프로파일 저장</li>
-    <li>✅ 브라우저 SPARQL 실습, 지식 그래프</li>
+    <li>✅ 브라우저 Cypher 실습, 지식 그래프</li>
     <li>⬜ CGMES RDF/XML로 내보내기 (프로파일별 파일 분리)</li>
     <li>⬜ Measurement / Analog 클래스와 SCADA 값 연계</li>
     <li>⬜ 변압기 탭(RatioTapChanger), 여자 성분 반영</li>
@@ -438,7 +438,7 @@ Show Voltages LN</code></pre>
     <li>✅ Legacy code ↔ mRID mapping table (CIM Name / NameType)</li>
     <li>✅ CGMES (RDF/XML) import — CIGRE MV matches NEPLAN within 0.00004 pu</li>
     <li>✅ Topology processing (TP) and solver results saved as the SV profile</li>
-    <li>✅ In-browser SPARQL, knowledge graph</li>
+    <li>✅ In-browser Cypher playground, knowledge graph</li>
     <li>⬜ CGMES RDF/XML export (one file per profile)</li>
     <li>⬜ Measurement / Analog classes linked to SCADA values</li>
     <li>⬜ Transformer taps (RatioTapChanger) and magnetising terms</li>

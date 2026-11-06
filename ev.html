@@ -236,9 +236,9 @@ ev:CS_RA01 a ev:ChargingStation ;                         # <span lang="ko">⊂ 
     cim:Equipment.EquipmentContainer ev:FD_RA01 .
 ev:FD_RA01 a cim:Feeder ;
     cim:Feeder.NormalEnergizingSubstation tw:_…         # <span lang="ko">디지털 트윈의 '수도권 남부' 변전소 (mRID 그대로)</span><span lang="en">the twin's 'Capital South' substation (same mRID)</span></code></pre>
-  <h3><span lang="ko">세 그래프를 합쳐 묻기 (SPARQL)</span><span lang="en">Asking across three graphs (SPARQL)</span></h3>
-  <p lang="ko">빌드할 때 <code>ev-ontology.ttl</code>, <code>highway-ontology.ttl</code>, <code>korea_virtual_grid.ttl</code>을 한 그래프에 불러와 아래 질문을 실행했습니다. 첫 질문은 경로 하나로 교통(<code>hw:onRoute</code>)에서 전력(<code>cim:Feeder.NormalEnergizingSubstation</code>)까지 건너갑니다.</p>
-  <p lang="en">At build time <code>ev-ontology.ttl</code>, <code>highway-ontology.ttl</code> and <code>korea_virtual_grid.ttl</code> are loaded into one graph and these questions run. The first one crosses from traffic (<code>hw:onRoute</code>) to power (<code>cim:Feeder.NormalEnergizingSubstation</code>) in a single path.</p>
+  <h3><span lang="ko">세 그래프를 합쳐 묻기 (Cypher)</span><span lang="en">Asking across three graphs (Cypher)</span></h3>
+  <p lang="ko">빌드할 때 <code>ev-ontology.ttl</code>, <code>highway-ontology.ttl</code>, <code>korea_virtual_grid.ttl</code>을 Neo4j에 불러올 때와 같은 방식(클래스 → 라벨, 개체 연결 → 관계)으로 한 그래프에 합치고, 아래 질문을 Cypher로 실행한 결과입니다. 첫 질문은 패턴 하나로 교통(<code>:ON_ROUTE</code>)에서 전력(<code>:NORMAL_ENERGIZING_SUBSTATION</code>)까지 건너갑니다.</p>
+  <p lang="en">At build time <code>ev-ontology.ttl</code>, <code>highway-ontology.ttl</code> and <code>korea_virtual_grid.ttl</code> are merged into one graph the way Neo4j would load them (classes → labels, links → relationships), and these Cypher questions are run against it. The first crosses from traffic (<code>:ON_ROUTE</code>) to power (<code>:NORMAL_ENERGIZING_SUBSTATION</code>) in a single pattern.</p>
   <div id="evCq"></div>
 </section>
 
@@ -262,7 +262,7 @@ ev:FD_RA01 a cim:Feeder ;
   <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
   <div class="grid">
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/ev/data/rest_areas.csv"><h4>examples/ev/data/rest_areas.csv</h4><p lang="ko">휴게소 15곳 (가상)</p><p lang="en">15 rest areas (virtual)</p></a>
-    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/ev/build_ev.py"><h4>build_ev.py</h4><p lang="ko">수요 계산 · TTL 생성 · 세 그래프 SPARQL</p><p lang="en">Demand · TTL · SPARQL across three graphs</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/ev/build_ev.py"><h4>build_ev.py</h4><p lang="ko">수요 계산 · TTL 생성 · 세 그래프 역량 질문</p><p lang="en">Demand · TTL · questions across three graphs</p></a>
     <a class="card" href="examples/ev/ev-ontology.ttl"><h4>ev-ontology.ttl</h4><p>OWL · hw: · cim:</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/ev.js"><h4>assets/ev.js</h4><p lang="ko">같은 식으로 웹에서 다시 계산</p><p lang="en">Same formula, recomputed in the page</p></a>
   </div>

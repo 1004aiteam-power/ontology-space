@@ -192,6 +192,29 @@ ORDER BY ?zone"""),
   FILTER NOT EXISTS { ?a pam:installedAt ?loc }
   ?loc im:feeds+ ?ld . ?ld im:customers ?c } GROUP BY ?loc"""),
 ]
+# 웹페이지에 보여 주는 같은 질문의 Cypher (Neo4j). assets/cypher/cq.js와 같아야 함 — tests/cypher.test.mjs가 결과까지 대조
+CYPHER = [
+    """// FEEDS* : 공급 방향으로 몇 단계든 따라감 (가변 길이 경로)
+MATCH (:Asset {code: 'AS-TR-0007'})-[:INSTALLED_AT]->(loc)-[:FEEDS*]->(ld:EnergyConsumer)
+WITH DISTINCT ld
+RETURN count(ld) AS loads, sum(ld.customers) AS customers""",
+    """MATCH (:Asset {code: 'AS-TR-0007'})-[:INSTALLED_AT]->(loc)-[:FEEDS*]->(ld)
+WHERE ld.critical = true
+RETURN DISTINCT ld.area AS area""",
+    """MATCH (a:Asset)-[:INSTALLED_AT]->(loc)-[:FEEDS*]->(z:FeederZone)-[:TIE_TO]->(t)
+WHERE a.riskScore >= 15
+RETURN DISTINCT a.code AS asset, z.label AS zone, t.name AS tie
+ORDER BY zone""",
+    """// 자산관리 쪽 기능 위치만 (ex:_mRID 는 배전선로 모델 설비)
+MATCH (loc)-[:FEEDS]->()
+WHERE loc.uri STARTS WITH 'http://example.org/grid#'
+  AND NOT loc.uri STARTS WITH 'http://example.org/grid#_'
+  AND NOT EXISTS { (:Asset)-[:INSTALLED_AT]->(loc) }
+MATCH (loc)-[:FEEDS*]->(ld)
+WHERE ld.customers IS NOT NULL
+WITH DISTINCT loc, ld
+RETURN 'ex:' + split(loc.uri, '#')[1] AS loc, sum(ld.customers) AS customers""",
+]
 PREFIX = ("PREFIX im: <https://1004aiteam-power.github.io/ontology-space/impact#> PREFIX pam: <https://1004aiteam-power.github.io/ontology-space/asset#> "
           "PREFIX ex: <http://example.org/grid#> PREFIX cim: <http://iec.ch/TC57/CIM100#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n")
 
@@ -203,9 +226,9 @@ def run_cq():
     g.parse(ROOT / "examples" / "asset" / "asset-ontology.ttl", format="turtle")
     g.parse(ROOT / "examples" / "feeder" / "feeder.ttl", format="turtle")
     out = []
-    for ko, en, q in CQ:
+    for (ko, en, q), cy in zip(CQ, CYPHER):
         rows = [[str(v).replace("http://example.org/grid#", "ex:") if v is not None else "" for v in r] for r in g.query(PREFIX + q)]
-        out.append(dict(q=ko, en=en, sparql=q, rows=rows))
+        out.append(dict(q=ko, en=en, cypher=cy, rows=rows))
     return out
 
 

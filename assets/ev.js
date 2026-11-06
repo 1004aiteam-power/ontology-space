@@ -209,7 +209,7 @@
 
   function cq() {
     $('evCq').innerHTML = D.cq.map((c, i) => `<details${i === 0 ? ' open' : ''}><summary><b>Q${i + 1}.</b> ${esc(T(c.q, c.en))} <small class="muted">(${c.rows.length}${T('행', ' rows')})</small></summary>
-      <pre><code>${esc(c.sparql)}</code></pre>
+      <pre><code class="language-cypher">${esc(c.cypher)}</code></pre>
       <div class="tbl"><table><tbody>${c.rows.map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('') || `<tr><td>${T('(결과 없음)', '(no rows)')}</td></tr>`}</tbody></table></div></details>`).join('');
   }
 

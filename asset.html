@@ -356,7 +356,7 @@ PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 
 <pre><code>examples/asset/data/*.csv ──▶ build_asset_ontology.py ──┬─▶ asset-ontology.ttl   (OWL, <span lang="ko">계산값 포함</span><span lang="en">with computed values</span>)
    assets · deployments ·      ├ pycim <span lang="ko">토폴로지</span><span lang="en">topology</span> (CoF)      ├─▶ neo4j/import.cypher
    components · tasks ·        ├ HI · PoF · <span lang="ko">위험도</span><span lang="en">risk</span>           ├─▶ assets/data/asset.json (<span lang="ko">이 페이지</span><span lang="en">this page</span>)
-   failure_modes · diagnoses · ├ <span lang="ko">점검 주기 확인</span><span lang="en">inspection cycles</span>        └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: SPARQL
+   failure_modes · diagnoses · ├ <span lang="ko">점검 주기 확인</span><span lang="en">inspection cycles</span>        └─▶ neo4j/queries.cypher (<span lang="ko">역량 질문 8개</span><span lang="en">8 competency questions</span>)
    work_orders · locations     └ + examples/power-grid-sample.ttl (CIM)</code></pre>
 
   <div class="tbl"><table>

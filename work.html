@@ -370,7 +370,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <p lang="en"><b>Why</b>: "is it good?" cannot be judged; "does it answer this?" can. The three failures (approver, effort, systems) made the next step obvious.</p>
     <div class="impl">
       <div><b><span lang="ko">엑셀</span><span lang="en">Excel</span></b><span lang="ko">검증결과 시트</span><span lang="en">Validation sheet</span></div>
-      <div><b>OWL</b><span lang="ko">SPARQL로 같은 질문을 재현</span><span lang="en">Same questions replayed in SPARQL</span></div>
+      
       <div><b>Neo4j</b><code>queries.cypher</code> <span lang="ko">11개 쿼리</span><span lang="en">11 queries</span></div>
     </div>
   </div></article>
@@ -402,7 +402,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <tr><td><b><span lang="ko">선행</span><span lang="en">Precedence</span></b></td><td><span lang="ko">선행업무 열, 관계 시트</span><span lang="en">Predecessors, relations sheet</span></td><td class="code">precedes / dependsOn<br>precedesTransitive</td><td class="code">:PRECEDES, [:PRECEDES*]</td><td><span lang="ko">실선, 가로 위치</span><span lang="en">Solid line, x position</span></td></tr>
     <tr><td><b><span lang="ko">환류</span><span lang="en">Feedback</span></b></td><td><span lang="ko">환류 입력 열, 관계 시트</span><span lang="en">Feedback column, relations sheet</span></td><td class="code">feedsBackTo + feedbackReason</td><td class="code">:FEEDS_BACK_TO {description}</td><td><span lang="ko">주황 점선</span><span lang="en">Orange dashes</span></td></tr>
     <tr><td><b><span lang="ko">적용 조건</span><span lang="en">Condition</span></b></td><td><span lang="ko">적용 조건 열</span><span lang="en">Condition column</span></td><td class="code">aipd:condition</td><td class="code">t.condition</td><td><span lang="ko">업무 패널</span><span lang="en">Panel</span></td></tr>
-    <tr><td><b><span lang="ko">역량 질문</span><span lang="en">Competency Qs</span></b></td><td><span lang="ko">검증결과 시트</span><span lang="en">Validation sheet</span></td><td>SPARQL</td><td>queries.cypher</td><td><span lang="ko">최장 흐름 보기</span><span lang="en">Longest chain</span></td></tr>
+    <tr><td><b><span lang="ko">역량 질문</span><span lang="en">Competency Qs</span></b></td><td><span lang="ko">검증결과 시트</span><span lang="en">Validation sheet</span></td><td>—</td><td>queries.cypher</td><td><span lang="ko">최장 흐름 보기</span><span lang="en">Longest chain</span></td></tr>
   </table></div>
 
   <h3><span lang="ko">예시 1. 엑셀 한 행이 OWL에서는</span><span lang="en">Example 1. One spreadsheet row in OWL</span></h3>
@@ -439,14 +439,11 @@ aipd:Task_MS_1_3 aipd:feedsBackTo aipd:Task_ST_3_3 .   # ROI analysis ⇢ priori
    aipd:feedbackReason "ROI 결과가 다음 우선순위 평가에 반영"@ko .</code></pre>
 
   <h3><span lang="ko">예시 3. 역량 질문이 쿼리가 되는 모습</span><span lang="en">Example 3. A competency question as a query</span></h3>
-  <p lang="ko">"신규 AI 서비스 오픈(OP-1-1) 전에 끝나야 할 업무는?"은 Neo4j에서는 가변 길이 경로 한 줄, SPARQL에서는 속성 경로 한 줄입니다. 둘 다 40건이 나옵니다.</p>
-  <p lang="en">"What must finish before a new AI service launches (OP-1-1)?" is one variable-length path in Neo4j and one property path in SPARQL. Both return 40 tasks.</p>
+  <p lang="ko">"신규 AI 서비스 오픈(OP-1-1) 전에 끝나야 할 업무는?"은 Neo4j(Cypher)의 가변 길이 경로 한 줄입니다. <code>[:PRECEDES*]</code>가 선행 관계를 몇 단계든 거슬러 올라가며, 40건이 나옵니다.</p>
+  <p lang="en">"What must finish before a new AI service launches (OP-1-1)?" is one variable-length path in Neo4j (Cypher): <code>[:PRECEDES*]</code> walks back through any number of predecessors and returns 40 tasks.</p>
 <pre><code>// Neo4j (Cypher)
 MATCH (a:Task)-[:PRECEDES*]-&gt;(:Task {code:'OP-1-1'})
-RETURN DISTINCT a.code, a.name ORDER BY a.code;
-
-# SPARQL
-SELECT DISTINCT ?a WHERE { ?a aipd:precedes+ ?o . ?o aipd:code "OP-1-1" }</code></pre>
+RETURN DISTINCT a.code, a.name ORDER BY a.code;</code></pre>
 
   <h3><span lang="ko">예시 4. 흐름도가 업무를 배치하는 규칙</span><span lang="en">Example 4. How the flow map places tasks</span></h3>
   <p lang="ko">흐름도에는 손으로 배치한 상자가 하나도 없습니다. 세로 위치는 대분류 레인이, 가로 위치는 "그 업무까지 이어지는 가장 긴 선행 사슬의 길이"가 정합니다. 선행 관계를 하나 고치면 그림이 저절로 바뀝니다.</p>
@@ -467,7 +464,7 @@ y = lane top + (order within the column) × row gap</code></pre>
     <li><span class="n">3</span><span><b><span lang="ko">분류체계 설계</span><span lang="en">Taxonomy</span></b>: <span lang="ko">다축 태그를 정하고 겹침 3곳을 결정했습니다.</span><span lang="en">defined facets and settled 3 overlaps.</span></span><span class="out"><span lang="ko">경계결정 3건</span><span lang="en">3 boundary decisions</span></span></li>
     <li><span class="n">4</span><span><b><span lang="ko">모델링</span><span lang="en">Model</span></b>: <span lang="ko">속성을 채우고 선행 관계를 그었습니다. 흐름도를 그려 보니 독립 업무 15건과 끊긴 환류가 보였습니다.</span><span lang="en">filled attributes and drew precedence. The flow map exposed 15 isolated tasks and missing feedback.</span></span><span class="out"><span lang="ko">엑셀 v0.1, 흐름도</span><span lang="en">Excel v0.1, map</span></span></li>
     <li><span class="n">5</span><span><b><span lang="ko">검증</span><span lang="en">Validate</span></b>: <span lang="ko">독립 업무를 0건으로 줄이고, 환류 관계와 적용 조건을 만들고, 업무 3개를 추가했습니다.</span><span lang="en">connected all isolated tasks, added feedback links, conditions and 3 tasks.</span></span><span class="out"><span lang="ko">엑셀 v0.2</span><span lang="en">Excel v0.2</span></span></li>
-    <li><span class="n">6</span><span><b><span lang="ko">구현</span><span lang="en">Implement</span></b>: <span lang="ko">엑셀에서 OWL·Neo4j 파일을 생성하고 SPARQL로 결과를 대조했습니다.</span><span lang="en">generated OWL and Neo4j files and cross-checked with SPARQL.</span></span><span class="out">ttl · cypher · csv</span></li>
+    <li><span class="n">6</span><span><b><span lang="ko">구현</span><span lang="en">Implement</span></b>: <span lang="ko">엑셀에서 OWL·Neo4j 파일을 생성하고 Cypher 쿼리로 역량 질문의 답을 확인했습니다.</span><span lang="en">generated OWL and Neo4j files and checked the competency questions with Cypher.</span></span><span class="out">ttl · cypher · csv</span></li>
     <li><span class="n">7</span><span><b><span lang="ko">유지관리</span><span lang="en">Maintain</span></b>: <span lang="ko">역할, 변경 절차, 버전 규칙, 자동 점검, 정기 점검을 정했습니다.</span><span lang="en">defined roles, change process, versioning, checks and review cadence.</span></span><span class="out"><span lang="ko">운영 가이드</span><span lang="en">Operating guide</span></span></li>
   </ol>
   <div class="easy"><b>💡 <span lang="ko">가장 많이 배운 단계</span><span lang="en">The step that taught the most</span></b>

@@ -228,20 +228,16 @@ Terminal · ConnectivityNode · TopologicalNode · BaseVoltage · Measurement</c
   <div class="sld-bar"><span id="outage"></span><button id="sldReset"><span lang="ko">초기화</span><span lang="en">Reset</span></button></div>
   <div id="info"></div>
   </div>
-  <p lang="ko">같은 계통의 RDF 데이터는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>, SPARQL 예제는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">queries.md</a>에 있습니다.</p>
-  <p lang="en">The RDF data for this grid is in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>; SPARQL examples are in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/queries.md">queries.md</a>.</p>
+  <p lang="ko">같은 계통의 RDF 데이터는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>, Cypher 예제 질의는 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/cypher/presets.js">presets.js</a>에 있습니다.</p>
+  <p lang="en">The RDF data for this grid is in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/power-grid-sample.ttl">power-grid-sample.ttl</a>; example Cypher queries are in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/cypher/presets.js">presets.js</a>.</p>
   <p lang="ko">👉 이 데이터를 <a href="lab.html">실습 페이지</a>에서 직접 질의하고 지식 그래프로 볼 수 있습니다.</p>
   <p lang="en">👉 Query this data yourself and see it as a knowledge graph on the <a href="lab.html">Lab page</a>.</p>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">차단기는 <b>수도 밸브</b>와 같습니다. 밸브를 잠그면 그 아래쪽 집들에 물이 끊기듯, 차단기를 열면 그 뒤쪽 설비에 전기가 끊깁니다. 이 그림은 멀티탭(노드)을 따라가며 <b>전기가 어디까지 가는지</b> 계산해 보여 주고, 숫자(pu)는 정상 전압을 1로 봤을 때의 비율입니다(0.99면 정상의 99%).</p><p lang="en">A breaker is like a <b>water valve</b>: close it and the houses downstream lose water; open a breaker and the equipment behind it loses power. The diagram follows the power strips (nodes) to show <b>how far power reaches</b>, and each number (pu) is voltage relative to normal (0.99 = 99% of normal).</p></div>
-  <h3><span lang="ko">SPARQL로 인접 설비 찾기</span><span lang="en">Finding adjacent equipment with SPARQL</span></h3>
-<pre><code>PREFIX cim: &lt;http://iec.ch/TC57/CIM100#&gt;
-SELECT DISTINCT ?a ?b WHERE {
-  ?t1 cim:Terminal.ConductingEquipment ?e1 ; cim:Terminal.ConnectivityNode ?cn .
-  ?t2 cim:Terminal.ConductingEquipment ?e2 ; cim:Terminal.ConnectivityNode ?cn .
-  FILTER(?e1 != ?e2)
-  ?e1 cim:IdentifiedObject.name ?a .
-  ?e2 cim:IdentifiedObject.name ?b .
-}</code></pre>
+  <h3><span lang="ko">Cypher로 인접 설비 찾기</span><span lang="en">Finding adjacent equipment with Cypher</span></h3>
+<pre><code>MATCH (e1)&lt;-[:CONDUCTING_EQUIPMENT]-(:Terminal)-[:CONNECTIVITY_NODE]-&gt;(cn:ConnectivityNode)
+      &lt;-[:CONNECTIVITY_NODE]-(:Terminal)-[:CONDUCTING_EQUIPMENT]-&gt;(e2)
+WHERE e1 &lt;&gt; e2
+RETURN DISTINCT e1.name AS a, e2.name AS b</code></pre>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">"<b>같은 멀티탭(ConnectivityNode)에 꽂혀 있는 설비 두 개를 모두 짝지어 보여 줘</b>"라는 질문입니다. 이것만으로 어떤 설비가 어떤 설비와 바로 이웃해 있는지 전체 연결 지도를 얻을 수 있습니다.</p><p lang="en">The question is "<b>pair up every two devices plugged into the same power strip (ConnectivityNode)</b>". That alone yields the full map of which equipment sits right next to which.</p></div>
 </section>
 
