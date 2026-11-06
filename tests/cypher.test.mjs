@@ -3,7 +3,7 @@
 // 브라우저용 Cypher 엔진 테스트 — 실행: node tests/cypher.test.mjs
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { loadGraph } from './cypher-load.mjs';
+import { loadGraph } from '../tools/load.mjs';
 import { runCypher, CypherError } from '../assets/cypher/cypher.js';
 import { EV_FILES, EV_CYPHER, IMPACT_FILES, IMPACT_CYPHER } from '../assets/cypher/cq.js';
 import { DATASETS, QUERIES } from '../assets/cypher/presets.js';
@@ -89,3 +89,40 @@ for (const [f, Q] of [['examples/ev/build_ev.py', EV_CYPHER], ['examples/impact/
   assert.deepEqual([...block.matchAll(/"""([\s\S]*?)"""/g)].map(m => m[1]), Q, `${f}: CYPHER matches assets/cypher/cq.js`);
 }
 console.log('✓ build scripts carry the same Cypher text');
+
+// 5) 쓰기 (적재 스크립트용): MERGE · SET · FOREACH · DELETE · 제약조건 — 실습 화면은 읽기 전용
+{
+  const G = { nodes: [], rels: [], byLabel: new Map(), byUri: new Map() };
+  const W = (q) => runCypher(G, q, { write: true });
+  W(`CREATE CONSTRAINT a_id IF NOT EXISTS FOR (a:A) REQUIRE a.id IS UNIQUE;
+     UNWIND [{id: 1, to: [2, 3]}, {id: 2, to: [3]}, {id: 3, to: []}] AS r
+     MERGE (a:A {id: r.id}) SET a.name = 'n' + r.id
+     WITH a, r
+     FOREACH (x IN r.to | MERGE (b:A {id: x}) MERGE (a)-[:TO {w: x}]->(b));
+     MATCH (a:A {id: 3}) SET a += {kind: 'leaf'}, a:Leaf`);
+  assert.equal(G.nodes.length, 3, 'MERGE does not duplicate nodes');
+  assert.equal(G.rels.length, 3, 'FOREACH + MERGE relationships');
+  assert.deepEqual(run(G, 'MATCH (l:Leaf) RETURN l.name, l.kind').rows, [['n3', 'leaf']], 'SET += and SET :Label');
+  W('MATCH (a:A {id: 1}) MERGE (a)-[:TO {w: 2}]->(:A {id: 2})');
+  assert.equal(G.rels.length, 3, 'MERGE on an existing path creates nothing');
+  assert.throws(() => W("CREATE (:A {id: 2})"), /제약 위반/, 'unique constraint');
+  assert.equal(G.nodes.length, 3, 'the failed statement is rolled back');
+  W('MATCH (a:A {id: 2}) DETACH DELETE a');
+  assert.deepEqual([G.nodes.length, G.rels.length], [2, 1], 'DETACH DELETE removes the node and its relationships');
+  assert.throws(() => run(G, 'MATCH (a) SET a.x = 1 RETURN a'), CypherError, 'read-only by default');
+  console.log('✓ write clauses: MERGE, SET, FOREACH, DETACH DELETE, unique constraint; read-only by default');
+}
+
+// 6) 형상검증 규칙: 실제 데이터는 위반 0, 규칙 위반 예제는 규칙별로 잡힘
+{
+  const { parseChecks } = await import('../assets/cypher/script.js');
+  const checks = parseChecks(readFileSync(new URL('../shapes/cim-checks.cypher', import.meta.url), 'utf8'));
+  assert.ok(checks.length >= 12 && checks.every(c => c.id && c.ko && c.en && /Violation|Warning/.test(c.severity)), 'check headers parsed');
+  for (const [key, ds] of Object.entries(DATASETS)) {
+    const G = await loadGraph(ds.file, 'shapes/cim-classes.ttl');
+    const bad = checks.filter(c => run(G, c.query).rows.length).map(c => c.id).sort();
+    if (key === 'broken') assert.deepEqual(bad, ['LINE', 'MRID', 'NAME', 'SWITCH', 'TERMINAL', 'TERMINALS_2', 'VOLTAGE_LEVEL'], 'broken sample violations');
+    else assert.deepEqual(bad, [], `${key}: no violations`);
+  }
+  console.log(`✓ ${checks.length} CIM check rules: real data clean, broken sample caught rule by rule`);
+}

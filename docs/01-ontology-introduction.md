@@ -35,14 +35,14 @@
 - **TBox (Terminological Box)**: 스키마. 클래스, 속성, 규칙 정의
 - **ABox (Assertional Box)**: 데이터. 실제 개체와 사실
 
-## 4. 표준 기술 스택 (W3C 시맨틱 웹)
+## 4. 기술 스택 (이 저장소 기준: 그래프 DB는 Neo4j)
 
 ```
         ┌───────────────────────────────┐
         │  응용 (검색, 추론, AI, 시각화)   │
         ├───────────────────────────────┤
-        │  SPARQL  (질의)                │
-        │  SHACL   (데이터 검증)          │
+        │  Cypher  (질의, Neo4j)         │
+        │  제약조건 + Cypher 검사 (검증)   │
         ├───────────────────────────────┤
         │  OWL     (풍부한 논리 표현)      │
         │  RDFS    (클래스/속성 계층)      │
@@ -70,14 +70,15 @@ ex:TR1  ex:ratedS         "100"^^xsd:float .
 - **JSON-LD**: 웹/API 친화적
 - **N-Triples**: 한 줄에 트리플 하나. 대용량 처리에 적합
 
-### SPARQL 예시
+RDF로 적은 데이터는 Neo4j에 불러와 씁니다. 클래스는 **라벨**, 값은 **속성**, 다른 개체를 가리키는 값은 **관계**가 됩니다
+(예: `cim:Equipment.EquipmentContainer` → `:EQUIPMENT_CONTAINER`). 자세한 규칙은 [examples/queries.md](../examples/queries.md)를 보세요.
 
-```sparql
-# 변전소별 변압기 목록
-SELECT ?substation ?transformer WHERE {
-  ?transformer a cim:PowerTransformer ;
-               cim:Equipment.EquipmentContainer ?substation .
-}
+### Cypher 예시 (Neo4j)
+
+```cypher
+// 변전소별 변압기 목록
+MATCH (t:PowerTransformer)-[:EQUIPMENT_CONTAINER]->(s)
+RETURN s.name AS substation, t.name AS transformer
 ```
 
 ## 5. 식별자: IRI와 UUID
@@ -137,17 +138,17 @@ uuid.uuid5(ns, "A변전소/CB-154-01")            # 항상 같은 값
 4. **클래스 계층 설계**
 5. **속성과 제약 정의**
 6. **개체(데이터) 입력**
-7. **검증**: 추론기(HermiT, Pellet 등), SHACL, Competency Question 질의로 확인
+7. **검증**: 추론기(HermiT, Pellet 등), Neo4j 제약조건과 Cypher 검사 질의, Competency Question 질의로 확인
 
 ## 8. 주요 도구
 
 | 도구 | 용도 |
 |---|---|
 | Protégé | 온톨로지 편집기 (Stanford, 무료) |
-| Apache Jena / Fuseki | Java RDF 프레임워크, SPARQL 서버 |
-| GraphDB, Stardog, Virtuoso | 트리플 스토어 |
-| rdflib (Python) | RDF 파싱·질의 |
-| pySHACL | SHACL 검증 |
+| Neo4j | 그래프 DB, Cypher 질의 (이 저장소의 기준) |
+| neosemantics (n10s) | RDF·OWL을 Neo4j로 불러오고 내보내는 플러그인 |
+| GraphDB, Stardog, Virtuoso, Apache Jena | 트리플 스토어 (RDF 전용 DB) |
+| rdflib (Python) | RDF 파일 읽기·쓰기 |
 
 ## 참고
 

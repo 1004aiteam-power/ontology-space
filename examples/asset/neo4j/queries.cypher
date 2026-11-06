@@ -37,3 +37,11 @@ RETURN a, collect(DISTINCT c) AS components, collect(DISTINCT g) AS diagnoses, c
 // Q8. 정비 업무 흐름 (선행 + 환류)
 MATCH p = (:MaintenanceTask {id:'WF-01'})-[:PRECEDES*]->(:MaintenanceTask {id:'WF-08'})
 RETURN [n IN nodes(p) | n.name] AS flow;
+
+// Q9. EAM 설비번호 EQ-CB-2019-0123은 어느 설비 자리에?
+MATCH (a:Asset {eam:'EQ-CB-2019-0123'})-[d:INSTALLED_AT]->(l:FunctionalLocation) WHERE d.to IS NULL
+RETURN l.name;
+
+// Q10. 정비 업무 흐름 하나가 거치는 단계 수 (:PRECEDES* 가변 길이 경로)
+MATCH (:MaintenanceTask {id:'WF-01'})-[:PRECEDES*]->(s:MaintenanceTask)
+RETURN count(DISTINCT s) AS steps;

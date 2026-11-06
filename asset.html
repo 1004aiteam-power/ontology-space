@@ -153,7 +153,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <a class="card" href="#concepts"><h4><span lang="ko">① 기본 개념</span><span lang="en">① Concepts</span></h4><p lang="ko">자리와 물건, 건전도와 위험도</p><p lang="en">Place vs thing, health vs risk</p></a>
     <a class="card" href="#risk"><h4><span lang="ko">② 위험도 지도</span><span lang="en">② Risk map</span></h4><p lang="ko">자산을 눌러 계산 과정 보기</p><p lang="en">Click an asset to see the calculation</p></a>
     <a class="card" href="#design"><h4><span lang="ko">③ 설계 결정 8가지</span><span lang="en">③ Eight decisions</span></h4><p lang="ko">무엇을 왜 그렇게 정했나</p><p lang="en">What was decided, and why</p></a>
-    <a class="card" href="#impl"><h4><span lang="ko">④ 구현과 검증</span><span lang="en">④ Build &amp; checks</span></h4><p lang="ko">CSV → OWL · Neo4j</p><p lang="en">CSV → OWL · Neo4j</p></a>
+    <a class="card" href="#impl"><h4><span lang="ko">④ 구현과 검증</span><span lang="en">④ Build &amp; checks</span></h4><p lang="ko">CSV → OWL · Neo4j · Cypher 검증</p><p lang="en">CSV → OWL · Neo4j · Cypher checks</p></a>
   </div>
 </div>
 
@@ -291,7 +291,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <p lang="en">Functional locations (CIM equipment) and physical assets (pam:Asset) are different classes, linked by a dated <code>pam:Deployment</code>. The current location is also generated as a shortcut, <code>pam:installedAt</code>.</p>
     <p lang="ko"><b>이유</b>: 둘을 합치면 변압기를 바꾸는 순간 과거 진단이 새 변압기의 기록처럼 보이거나, 자리의 이력이 사라집니다. 주변압기 #1 자리에는 1998년 변압기(폐기)와 2015년 변압기가 차례로 있었고, 이 구조에서는 둘 다 남습니다.</p>
     <p lang="en"><b>Why</b>: merge them and swapping a transformer either makes old diagnoses look like the new unit's or erases the place's history. Bay TR_1 held a 1998 unit (retired) and then a 2015 unit; this structure keeps both.</p>
-    <div class="impl"><div><b>CSV</b>deployments.csv (valid_from, valid_to)</div><div><b>OWL</b><code>Deployment</code> · <code>atLocation</code> · <code>deployedAsset</code></div><div><b>Neo4j</b><code>[:INSTALLED_AT {from, to}]</code></div></div>
+    <div class="impl"><div><b>CSV</b>deployments.csv (valid_from, valid_to)</div><div><b>OWL</b><code>Deployment</code> · <code>atLocation</code> · <code>deployedAsset</code></div><div><b>Neo4j</b><code>[:INSTALLED_AT {from, to}]</code></div><div><b><span lang="ko">검증</span><span lang="en">Check</span></b><span lang="ko">같은 자리 기간 겹침 금지 (Cypher)</span><span lang="en">No overlapping periods per place (Cypher)</span></div></div>
   </div></article>
 
   <article class="decision"><div class="no">D2</div><div>
@@ -300,7 +300,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     <p lang="en">Locations point straight at the CIM IRIs of the grid example (ex:TR_1 …); assets subclass <code>cim:Asset</code>, work orders <code>cim:Work</code>; the workflow's <code>pam:precedes</code> is a sub-property of the work ontology's <code>aipd:precedes</code>. EAM numbers come from the existing mapping table.</p>
     <p lang="ko"><b>이유</b>: 온톨로지의 값어치는 서로 이어질 때 커집니다. 실제로 하위 속성 추론만 적용하면 <code>aipd:precedes</code>라는 업무 온톨로지의 이름으로 정비 흐름 7단계가 조회됩니다.</p>
     <p lang="en"><b>Why</b>: ontologies gain value when they connect. With sub-property inference alone, the maintenance flow's 7 steps can be queried through the work ontology's <code>aipd:precedes</code>.</p>
-    <div class="impl"><div><b>OWL</b><code>rdfs:subClassOf cim:Asset</code>, <code>rdfs:subPropertyOf aipd:precedes</code></div><div><b><span lang="ko">검증</span><span lang="en">Check</span></b><span lang="ko">역량 질문 8번 (7단계)</span><span lang="en">Competency Q8 (7 steps)</span></div></div>
+    <div class="impl"><div><b>OWL</b><code>rdfs:subClassOf cim:Asset</code>, <code>rdfs:subPropertyOf aipd:precedes</code></div><div><b><span lang="ko">검증</span><span lang="en">Check</span></b><span lang="ko">역량 질문 10번 (7단계)</span><span lang="en">Competency Q10 (7 steps)</span></div></div>
   </div></article>
 
   <article class="decision"><div class="no">D3</div><div>
@@ -347,6 +347,15 @@ PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 
     <p lang="en"><b>Why</b>: without "why was this done" you cannot judge whether maintenance worked. Questions like "cautions with unfinished work" rely on this link.</p>
   </div></article>
 
+  <article class="decision"><div class="no">D8</div><div>
+    <h3><span lang="ko">데이터 규칙은 Neo4j 제약조건 + Cypher 검사로, 빈틈은 경고로</span><span lang="en">Data rules as Neo4j constraints + Cypher checks; gaps as warnings</span></h3>
+    <p lang="ko">두 단계로 지킵니다. ① <b>제약조건</b>: 자산 ID·기능 위치 코드·업무 ID는 <code>REQUIRE … IS UNIQUE</code>로 중복 저장 자체를 막습니다(Community 에디션 가능). ② <b>Cypher 검사</b>: 운전 중 자산의 현재 위치는 1곳, 같은 자리에 기간 겹침 없음, EAM 번호 형식, 진단 방법은 점검 업무, 작업지시의 근거 진단, 완료일처럼 제약으로 표현할 수 없는 규칙 8개를 "위반을 찾는 질의"로 적어 데이터를 넣은 뒤 실행합니다. 모선 두 곳에 자산 기록이 없다는 것은 오류가 아니라 <b>경고</b>로 표시합니다.</p>
+    <p lang="en">Two layers. ① <b>Constraints</b>: asset IDs, location codes and task IDs are <code>REQUIRE … IS UNIQUE</code>, so duplicates are never written (works in Community edition). ② <b>Cypher checks</b>: eight rules constraints cannot express — one current place per in-service asset, no overlapping periods, EAM number format, inspection-type methods, a triggering diagnosis per work order, completion dates — are written as violation-finding queries and run after loading. The two busbars without asset records are flagged as <b>warnings</b>, not errors.</p>
+    <p lang="ko"><b>이유</b>: 현실 데이터는 늘 비어 있는 곳이 있습니다. 막아 버리면 아무것도 올릴 수 없으니, 반드시 지켜야 할 것만 제약으로 막고 나머지는 보이게만 해서 사람이 채우게 합니다.</p>
+    <p lang="en"><b>Why</b>: real data always has holes. Blocking everything stops all loading, so only the must-haves are constraints; the rest is made visible for people to fix.</p>
+    <div class="impl"><div><b>Neo4j</b><code>CREATE CONSTRAINT … IS UNIQUE</code> <span lang="ko">3개</span><span lang="en">×3</span></div><div><b>Cypher</b><code>neo4j/checks.cypher</code> <span lang="ko">규칙 8개</span><span lang="en">8 rules</span></div><div><b><span lang="ko">결과</span><span lang="en">Result</span></b><span lang="ko">위반 0 · 경고 2</span><span lang="en">0 violations · 2 warnings</span></div></div>
+  </div></article>
+
 </section>
 
 <section id="impl">
@@ -356,7 +365,7 @@ PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 
 <pre><code>examples/asset/data/*.csv ──▶ build_asset_ontology.py ──┬─▶ asset-ontology.ttl   (OWL, <span lang="ko">계산값 포함</span><span lang="en">with computed values</span>)
    assets · deployments ·      ├ pycim <span lang="ko">토폴로지</span><span lang="en">topology</span> (CoF)      ├─▶ neo4j/import.cypher
    components · tasks ·        ├ HI · PoF · <span lang="ko">위험도</span><span lang="en">risk</span>           ├─▶ assets/data/asset.json (<span lang="ko">이 페이지</span><span lang="en">this page</span>)
-   failure_modes · diagnoses · ├ <span lang="ko">점검 주기 확인</span><span lang="en">inspection cycles</span>        └─▶ neo4j/queries.cypher (<span lang="ko">역량 질문 8개</span><span lang="en">8 competency questions</span>)
+   failure_modes · diagnoses · ├ <span lang="ko">점검 주기 확인</span><span lang="en">inspection cycles</span>        └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: Cypher (neo4j/queries · checks)
    work_orders · locations     └ + examples/power-grid-sample.ttl (CIM)</code></pre>
 
   <div class="tbl"><table>
@@ -382,6 +391,16 @@ PoF: HI ≥80 → 1, ≥60 → 2, ≥40 → 3, ≥20 → 4, <span lang="ko">그 
 pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation ex:TR_1 ;
     pam:validFrom "1998-06-01"^^xsd:date ; pam:validTo "2015-04-30"^^xsd:date .</code></pre>
 
+  <h3><span lang="ko">예시: Cypher 검사 규칙 하나</span><span lang="en">Example: one Cypher check</span></h3>
+  <p lang="ko">규칙 하나는 "규칙을 어긴 것을 모두 찾는" 질의 하나입니다. 결과가 0행이면 통과입니다.</p>
+  <p lang="en">One rule is one query that finds everything breaking it. Zero rows means pass.</p>
+<pre><code class="language-cypher">// [DEPLOYMENT_OVERLAP] 같은 자리에 설치 기간이 겹치는 자산 두 개
+MATCH (a1:Asset)-[d1:INSTALLED_AT]-&gt;(l:FunctionalLocation)&lt;-[d2:INSTALLED_AT]-(a2:Asset)
+WHERE a1.id &lt; a2.id
+  AND (d2.to IS NULL OR d1.from &lt;= d2.to)
+  AND (d1.to IS NULL OR d2.from &lt;= d1.to)
+RETURN l.code AS focus, a1.id AS asset1, a2.id AS asset2;</code></pre>
+
   <h3><span lang="ko">역량 질문 결과</span><span lang="en">Competency questions</span></h3>
   <div class="tbl"><table>
     <tr><th><span lang="ko">질문</span><span lang="en">Question</span></th><th><span lang="ko">답</span><span lang="en">Answer</span></th></tr>
@@ -392,10 +411,10 @@ pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation 
     <tr><td><span lang="ko">정전이 필요한 미완료 작업지시는?</span><span lang="en">Pending work needing an outage?</span></td><td>WO-0877 8h, WO-0912 36h</td></tr>
     <tr><td><span lang="ko">자산 기록이 없는 설비 자리는?</span><span lang="en">Locations without an asset?</span></td><td><span lang="ko">154kV 모선, 22.9kV 모선</span><span lang="en">154 kV and 22.9 kV busbars</span></td></tr>
     <tr><td><span lang="ko">EAM 번호 EQ-CB-2019-0123은 어느 자리에?</span><span lang="en">Where is EAM EQ-CB-2019-0123?</span></td><td><span lang="ko">154kV 선로 CB</span><span lang="en">154 kV line breaker</span></td></tr>
-    <tr><td><span lang="ko">aipd:precedes로 본 정비 흐름의 단계 수는?</span><span lang="en">Workflow steps via aipd:precedes?</span></td><td>7</td></tr>
+    <tr><td><span lang="ko"><code>:PRECEDES*</code>로 본 정비 흐름의 단계 수는?</span><span lang="en">Workflow steps via <code>:PRECEDES*</code>?</span></td><td>7</td></tr>
   </table></div>
-  <p lang="ko">테스트(<code>tests/test_asset.py</code>)가 위 결과를 확인합니다.</p>
-  <p lang="en">Tests (<code>tests/test_asset.py</code>) check these results.</p>
+  <p lang="ko">테스트(<code>tests/test_asset.py</code>)가 위 결과와 함께, 일부러 망가뜨린 데이터(기간 겹침·EAM 형식·근거 없는 작업지시·완료일 누락·점검이 아닌 진단 방법)를 Cypher 검사가 모두 잡아내는지, 중복 자산 ID를 고유 제약이 막는지 확인합니다.</p>
+  <p lang="en">Tests (<code>tests/test_asset.py</code>) check these results, that the Cypher checks catch deliberately broken data (overlap, EAM format, untriggered work order, missing completion date, non-inspection method), and that the unique constraint blocks a duplicate asset ID.</p>
 </section>
 
 <section id="files">
@@ -404,7 +423,7 @@ pam:DEP_01 a pam:Deployment ; pam:deployedAsset pam:AS_TR_0002 ; pam:atLocation 
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/tree/main/examples/asset/data"><h4>examples/asset/data/</h4><p lang="ko">원본 CSV 8개</p><p lang="en">8 source CSVs</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/asset/build_asset_ontology.py"><h4>build_asset_ontology.py</h4><p lang="ko">계산·생성·검증</p><p lang="en">Compute, generate, check</p></a>
     <a class="card" href="examples/asset/asset-ontology.ttl"><h4>asset-ontology.ttl</h4><p>OWL</p></a>
-    <a class="card" href="examples/asset/neo4j/import.cypher"><h4>neo4j/</h4><p lang="ko">적재 스크립트와 쿼리 8개</p><p lang="en">Load script and 8 queries</p></a>
+    <a class="card" href="examples/asset/neo4j/import.cypher"><h4>neo4j/</h4><p lang="ko">적재 스크립트 · 역량 질문 10개 · 검사 규칙 8개</p><p lang="en">Load script · 10 queries · 8 checks</p></a>
   </div>
   <ul lang="ko">
     <li><b>규모</b>: 변전소 한 곳, 방사형 단일 공급이라 고장 영향의 차이가 복구시간에서만 나옵니다. <a href="twin.html">디지털 트윈</a>의 가상 전국 계통에 붙이면 영향이 설비마다 달라집니다.</li>

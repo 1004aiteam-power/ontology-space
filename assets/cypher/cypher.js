@@ -50,7 +50,7 @@ function tokenize(src) {
 }
 
 // ---- 구문 분석 ---------------------------------------------------------------------------
-function parse(src) {
+function parse(src, write = false) {
   const T = tokenize(src);
   let k = 0;
   const peek = (o = 0) => T[k + o], next = () => T[k++];
@@ -60,21 +60,75 @@ function parse(src) {
   const eat = (t, v) => { if (!is(t, v)) fail(`'${v ?? t}'가 필요합니다`); return next(); };
   const ident = () => { if (is('id')) return next().v; if (is('kw') && !['MATCH', 'RETURN', 'WHERE', 'WITH'].includes(peek().v)) return next().raw; fail('이름이 필요합니다'); };
 
-  function query() {
-    const clauses = [];
+  function query() {                           // 문장 여러 개 (;로 구분)
+    const stmts = [];
     while (!is('eof')) {
       if (isSym(';')) { next(); continue; }
-      if (isKw('OPTIONAL') || isKw('MATCH')) clauses.push(matchClause());
-      else if (isKw('WITH')) clauses.push(projection('WITH'));
-      else if (isKw('RETURN')) clauses.push(projection('RETURN'));
-      else if (isKw('UNWIND')) { next(); const e = expr(); eat('kw', 'AS'); clauses.push({ c: 'UNWIND', e, as: ident() }); }
-      else if (is('kw') && ['CREATE', 'MERGE', 'SET', 'DELETE', 'DETACH', 'REMOVE', 'FOREACH', 'LOAD'].includes(peek().v)) throw new CypherError(`이 실습은 읽기 질의만 지원합니다 (${peek().v}는 쓰기 명령)`);
-      else if (is('kw') && ['CALL', 'UNION'].includes(peek().v)) throw new CypherError(`${peek().v}는 이 실습에서 지원하지 않습니다`);
-      else fail('MATCH, WITH, UNWIND, RETURN 중 하나가 와야 합니다');
+      const clauses = [];
+      while (!is('eof') && !isSym(';')) clauses.push(clause());
+      const last = clauses[clauses.length - 1];
+      if (!WRITE.has(last.c) && last.c !== 'RETURN') throw new CypherError('질의는 RETURN으로 끝나야 합니다');
+      stmts.push(clauses);
     }
-    if (!clauses.length) throw new CypherError('빈 질의입니다');
-    if (clauses[clauses.length - 1].c !== 'RETURN') throw new CypherError('질의는 RETURN으로 끝나야 합니다');
-    return clauses;
+    if (!stmts.length) throw new CypherError('빈 질의입니다');
+    return stmts;
+  }
+  function clause() {
+    if (isKw('OPTIONAL') || isKw('MATCH')) return matchClause();
+    if (isKw('WITH')) return projection('WITH');
+    if (isKw('RETURN')) return projection('RETURN');
+    if (isKw('UNWIND')) { next(); const e = expr(); eat('kw', 'AS'); return { c: 'UNWIND', e, as: ident() }; }
+    if (is('kw') && ['CREATE', 'MERGE', 'SET', 'DELETE', 'DETACH', 'REMOVE', 'FOREACH', 'LOAD'].includes(peek().v)) {
+      if (!write) throw new CypherError(`이 실습은 읽기 질의만 지원합니다 (${peek().v}는 쓰기 명령)`);
+      return writeClause();
+    }
+    if (is('kw') && ['CALL', 'UNION'].includes(peek().v)) throw new CypherError(`${peek().v}는 이 실습에서 지원하지 않습니다`);
+    fail('MATCH, WITH, UNWIND, RETURN 중 하나가 와야 합니다');
+  }
+  const isId = (v, o = 0) => { const x = T[k + o]; return (x.t === 'id' || x.t === 'kw') && (x.raw || x.v).toUpperCase() === v; };
+  const eatId = (v) => { if (!isId(v)) fail(`'${v}'가 필요합니다`); return next(); };
+  function writeClause() {
+    if (isKw('CREATE') && isId('CONSTRAINT', 1)) {
+      next(); next();
+      if (!isId('IF') && !isId('FOR')) ident();                     // 제약 이름
+      if (isId('IF')) { next(); eat('kw', 'NOT'); eat('kw', 'EXISTS'); }
+      eatId('FOR'); eat('sym', '('); const v = ident(); eat('sym', ':'); const label = ident(); eat('sym', ')');
+      eatId('REQUIRE'); if (ident() !== v) fail('제약의 변수 이름이 다릅니다'); eat('sym', '.'); const prop = ident();
+      eat('kw', 'IS');
+      let kind; if (isKw('NOT')) { next(); eat('kw', 'NULL'); kind = 'notnull'; } else { eatId('UNIQUE'); kind = 'unique'; }
+      return { c: 'CONSTRAINT', label, prop, kind };
+    }
+    if (isKw('CREATE')) { next(); const patterns = [pattern()]; while (isSym(',')) { next(); patterns.push(pattern()); } return { c: 'CREATE', patterns }; }
+    if (isKw('MERGE')) {
+      next(); const pat = pattern(); let onCreate = [], onMatch = [];
+      while (isId('ON')) { next(); const which = isKw('CREATE') ? 'c' : (eatId('MATCH'), 'm'); if (which === 'c') next(); eat('kw', 'SET'); (which === 'c' ? onCreate : onMatch).push(...setItems()); }
+      return { c: 'MERGE', pattern: pat, onCreate, onMatch };
+    }
+    if (isKw('SET')) { next(); return { c: 'SET', items: setItems() }; }
+    if (isKw('DETACH') || isKw('DELETE')) {
+      let detach = false; if (isKw('DETACH')) { next(); detach = true; } eat('kw', 'DELETE');
+      const items = [expr()]; while (isSym(',')) { next(); items.push(expr()); }
+      return { c: 'DELETE', detach, items };
+    }
+    if (isKw('FOREACH')) {
+      next(); eat('sym', '('); const v = ident(); eat('kw', 'IN'); const e = expr(); eat('sym', '|');
+      const body = []; while (!isSym(')')) body.push(writeClause());
+      eat('sym', ')'); return { c: 'FOREACH', v, e, body };
+    }
+    fail(`${peek().v}는 지원하지 않습니다`);
+  }
+  function setItems() {
+    const items = [];
+    do {
+      if (items.length) next();
+      const v = ident();
+      if (isSym('.')) { next(); const key = ident(); eat('sym', '='); items.push({ t: 'prop', v, key, e: expr() }); }
+      else if (isSym('+') && isSym('=', 1)) { next(); next(); items.push({ t: 'merge', v, e: expr() }); }
+      else if (isSym('=')) { next(); items.push({ t: 'replace', v, e: expr() }); }
+      else if (isSym(':')) { const labels = []; while (isSym(':')) { next(); labels.push(ident()); } items.push({ t: 'label', v, labels }); }
+      else fail('SET 뒤에는 n.속성 = 값, n += {…}, n:라벨 이 와야 합니다');
+    } while (isSym(','));
+    return items;
   }
   function matchClause() {
     let optional = false;
@@ -235,7 +289,9 @@ function parse(src) {
       eat('sym', ']'); return { t: 'list', items };
     }
     if (isSym('{')) return mapLit();
-    if (is('id') || (is('kw') && isSym('(', 1))) {
+    // 식 맨 앞의 ENDS · STARTS · CONTAINS · ASC · DESC 등은 변수 이름 (Neo4j도 허용)
+    const softKw = is('kw') && ['ENDS', 'STARTS', 'CONTAINS', 'ASC', 'ASCENDING', 'DESC', 'DESCENDING', 'BY', 'ORDER', 'SKIP', 'LIMIT', 'END', 'WHEN', 'THEN', 'ELSE', 'IN', 'IS'].includes(peek().v) && !isSym('(', 1);
+    if (is('id') || softKw || (is('kw') && isSym('(', 1))) {
       const name = next(); const nm = name.raw || name.v;
       if (isSym('(')) {
         next();
@@ -295,6 +351,7 @@ function compare(op, a, b) {
 const truth = (v) => v === true;
 
 const AGG = new Set(['count', 'sum', 'avg', 'min', 'max', 'collect']);
+const WRITE = new Set(['CREATE', 'MERGE', 'SET', 'DELETE', 'FOREACH', 'CONSTRAINT']);
 const num = (v, f) => (v == null ? null : f(v));
 const FUNCS = {
   labels: (n) => (isNode(n) ? [...n.labels] : null),
@@ -323,11 +380,12 @@ const FUNCS = {
 };
 
 // ---- 실행 ---------------------------------------------------------------------------------
-export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3e6 } = {}) {
-  const clauses = parse(src);
+// write: true면 CREATE · MERGE · SET · DELETE · FOREACH · CREATE CONSTRAINT 도 실행 (테스트·적재용. 실습 화면은 읽기 전용)
+export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3e6, write = false } = {}) {
+  const stmts = parse(src, write);
   let work = 0;
   const tick = () => { if (++work > maxSteps) throw new CypherError('질의가 너무 많은 경로를 탐색합니다. 관계 타입이나 길이(*1..n)를 좁혀 보세요'); };
-  let rows = [{}];
+  let rows;
   const ev = (e, r) => evalE(e, r);
 
   function evalE(e, r) {
@@ -361,7 +419,7 @@ export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3
         else for (const [w, t] of e.whens) if (truth(ev(w, r))) return ev(t, r);
         return e.els ? ev(e.els, r) : null;
       }
-      case 'exists': { let found = false; matchAll(e.patterns, r, (b) => { if (!e.where || truth(ev(e.where, b))) { found = true; return true; } }); return found; }
+      case 'exists': { let found = false; matchAll(e.patterns, r, (b) => { if (!e.where || truth(ev(e.where, b))) { found = true; return true; } }, !e.where); return found; }
       case 'fn':
         if (AGG.has(e.fn)) throw new CypherError(`집계 함수 ${e.fn}()는 WITH 또는 RETURN에서만 쓸 수 있습니다`);
         return FUNCS[e.fn](...e.args.map(a => ev(a, r)));
@@ -381,28 +439,33 @@ export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3
     return true;
   }
   // from 노드에서 rp를 따라 갈 수 있는 (끝 노드, 관계 목록). forward=false면 패턴을 거꾸로 읽는 중
-  function* steps(from, rp, forward, used, b) {
+  // from 노드에서 rp를 따라 갈 수 있는 (끝 노드, 관계 목록)마다 cb 호출. cb가 true면 멈춤
+  // (재귀 제너레이터 대신 콜백: 일부 Node/V8 버전에서 깊은 yield* 재귀가 비정상 종료하는 문제를 피함)
+  function steps(from, rp, forward, used, b, existsOnly, cb) {
     const dir = rp.dir === 'both' ? 'both' : (rp.dir === 'out') === forward ? 'out' : 'in';
-    const nbrs = (n) => {
-      const o = [];
-      if (dir !== 'in') for (const r of n.out) o.push([r, r.end]);
-      if (dir !== 'out') for (const r of n.in) o.push([r, r.start]);
-      return o;
+    const each = (n, f) => {
+      if (dir !== 'in') for (const r of n.out) if (f(r, r.end)) return true;
+      if (dir !== 'out') for (const r of n.in) if (f(r, r.start)) return true;
+      return false;
     };
-    if (!rp.varLen) { for (const [r, m] of nbrs(from)) if (tick(), true) if (!used.has(r.id) && relOk(r, rp, b)) yield [m, [r]]; return; }
+    if (!rp.varLen) { each(from, (r, m) => { tick(); return !used.has(r.id) && relOk(r, rp, b) ? cb(m, [r]) : false; }); return; }
     const max = Math.min(rp.max, maxHops), path = [], seen = new Set();
-    function* dfs(n) {
-      if (path.length >= rp.min) yield [n, [...path]];
-      if (path.length >= max) return;
-      for (const [r, m] of nbrs(n)) {
+    // EXISTS 안에서 관계 변수가 없으면 '닿는가'만 중요: 이미 가 본 노드는 다시 펼치지 않음 (모든 경로를 세지 않도록)
+    const visited = existsOnly && !rp.v ? new Map() : null;
+    const dfs = (n) => {
+      if (visited) { const d = visited.get(n); if (d != null && d <= path.length) return false; visited.set(n, path.length); }
+      if (path.length >= rp.min && cb(n, [...path])) return true;
+      if (path.length >= max) return false;
+      return each(n, (r, m) => {
         tick();
-        if (used.has(r.id) || seen.has(r.id) || !relOk(r, rp, b)) continue;
+        if (used.has(r.id) || seen.has(r.id) || !relOk(r, rp, b)) return false;
         seen.add(r.id); path.push(r);
-        yield* dfs(m);
+        const stopNow = dfs(m);
         path.pop(); seen.delete(r.id);
-      }
-    }
-    yield* dfs(from);
+        return stopNow;
+      });
+    };
+    dfs(from);
   }
   function bindNode(b, np, n) {
     if (!nodeOk(n, np, b)) return null;
@@ -416,7 +479,7 @@ export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3
     return { ...b, [rp.v]: val };
   }
   // cb가 true를 돌려주면 멈춤
-  function matchAll(patterns, b0, cb) {
+  function matchAll(patterns, b0, cb, existsOnly = false) {
     const used = new Set();
     let stop = false;
     function pat(i, b) {
@@ -441,26 +504,26 @@ export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3
         if (stop) return;
         if (j === N - 1) { left(s, bb); return; }
         const rp = el[2 * j + 1], np = el[2 * j + 2];
-        for (const [m, rl] of steps(nodesAt[j], rp, true, used, bb)) {
-          let b2 = bindRel(bb, rp, rl); if (!b2) continue;
-          b2 = bindNode(b2, np, m); if (!b2) continue;
+        steps(nodesAt[j], rp, true, used, bb, existsOnly && !p.pathVar, (m, rl) => {
+          let b2 = bindRel(bb, rp, rl); if (!b2) return false;
+          b2 = bindNode(b2, np, m); if (!b2) return false;
           nodesAt[j + 1] = m; relsAt[j] = rl;
           rl.forEach(r => used.add(r.id)); right(j + 1, b2); rl.forEach(r => used.delete(r.id));
-          if (stop) return;
-        }
+          return stop;
+        });
       }
       function left(j, bb) {
         if (stop) return;
         if (j === 0) { done(bb); return; }
         const rp = el[2 * j - 1], np = el[2 * j - 2];
-        for (const [m, rl] of steps(nodesAt[j], rp, false, used, bb)) {
+        steps(nodesAt[j], rp, false, used, bb, existsOnly && !p.pathVar, (m, rl) => {
           const rl2 = [...rl].reverse();
-          let b2 = bindRel(bb, rp, rl2); if (!b2) continue;
-          b2 = bindNode(b2, np, m); if (!b2) continue;
+          let b2 = bindRel(bb, rp, rl2); if (!b2) return false;
+          b2 = bindNode(b2, np, m); if (!b2) return false;
           nodesAt[j - 1] = m; relsAt[j - 1] = rl2;
           rl.forEach(r => used.add(r.id)); left(j - 1, b2); rl.forEach(r => used.delete(r.id));
-          if (stop) return;
-        }
+          return stop;
+        });
       }
       function done(bb) {
         if (p.pathVar) {
@@ -520,38 +583,161 @@ export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3
     return { out, cols: items.map(colName) };
   }
 
-  for (const cl of clauses) {
-    if (cl.c === 'MATCH') {
-      const next = [];
-      for (const r of rows) {
-        let any = false;
-        matchAll(cl.patterns, r, (b) => { if (!cl.where || truth(ev(cl.where, b))) { next.push(b); any = true; if (next.length > maxRows) throw new CypherError(`결과가 너무 많습니다 (${maxRows}행 초과). LIMIT이나 조건을 추가하세요`); } });
-        if (!any && cl.optional) {
-          const o = { ...r };
-          for (const p of cl.patterns) { if (p.pathVar && !(p.pathVar in o)) o[p.pathVar] = null; for (const x of p.el) if (x.v && !(x.v in o)) o[x.v] = null; }
-          next.push(o);
-        }
+  // ---- 쓰기 -------------------------------------------------------------------
+  G.constraints ??= [];
+  G.seq ??= { n: G.nodes.reduce((m, n) => Math.max(m, n.id + 1), 0), r: G.rels.reduce((m, r) => Math.max(m, r.id + 1), 0) };
+  const stats = { nodesCreated: 0, relationshipsCreated: 0, propertiesSet: 0, nodesDeleted: 0, relationshipsDeleted: 0 };
+  let journal = [];                                // 문장 하나의 되돌리기 목록 (실패하면 문장 전체를 되돌림 — Neo4j 트랜잭션처럼)
+  const index = (n, l) => { if (!G.byLabel.has(l)) G.byLabel.set(l, []); G.byLabel.get(l).push(n); };
+  const unindex = (n, l) => { const a = G.byLabel.get(l); if (a) { const i = a.indexOf(n); if (i >= 0) a.splice(i, 1); } };
+  const drop = (arr, x) => { const i = arr.indexOf(x); if (i >= 0) arr.splice(i, 1); };
+  function addLabel(n, l) { if (n.labelSet.has(l)) return; n.labels.push(l); n.labelSet.add(l); index(n, l); journal.push(() => { n.labels.pop(); n.labelSet.delete(l); unindex(n, l); }); }
+  function setProp(o, key, v) {
+    if (Array.isArray(v) && v.some(x => x && typeof x === 'object')) throw new CypherError('속성 값은 숫자·문자·참거짓 또는 그 목록만 됩니다');
+    if (v != null && typeof v === 'object' && !Array.isArray(v)) throw new CypherError('속성 값으로 맵을 넣을 수 없습니다');
+    const had = key in o.props, old = o.props[key];
+    journal.push(() => { if (had) o.props[key] = old; else delete o.props[key]; });
+    if (v == null) delete o.props[key]; else o.props[key] = v;
+    stats.propertiesSet++;
+  }
+  function newNode(labels, props) {
+    const n = { id: G.seq.n++, kind: 'node', labels: [], labelSet: new Set(), props: {}, out: [], in: [] };
+    G.nodes.push(n); journal.push(() => drop(G.nodes, n)); labels.forEach(l => addLabel(n, l));
+    for (const [k, v] of Object.entries(props)) if (v != null) setProp(n, k, v);
+    stats.nodesCreated++; return n;
+  }
+  function newRel(type, a, b, props) {
+    const r = { id: G.seq.r++, kind: 'rel', type, start: a, end: b, props: {} };
+    G.rels.push(r); a.out.push(r); b.in.push(r);
+    journal.push(() => { drop(G.rels, r); drop(a.out, r); drop(b.in, r); });
+    for (const [k, v] of Object.entries(props)) if (v != null) setProp(r, k, v);
+    stats.relationshipsCreated++; return r;
+  }
+  const evalProps = (pm, b) => (pm ? Object.fromEntries(pm.entries.map(([k, x]) => [k, ev(x, b)])) : {});
+  function createPattern(p, b) {                  // 묶이지 않은 노드·관계만 새로 만듦
+    b = { ...b };
+    const el = p.el, nodes = [];
+    for (let j = 0; j < el.length; j += 2) {
+      const np = el[j];
+      if (np.v && b[np.v] != null) { if (!isNode(b[np.v])) throw new CypherError(`${np.v}는 노드가 아닙니다`); nodes.push(b[np.v]); continue; }
+      const n = newNode(np.labels, evalProps(np.props, b)); if (np.v) b[np.v] = n; nodes.push(n);
+    }
+    const rels = [];
+    for (let j = 1; j < el.length; j += 2) {
+      const rp = el[j], a = nodes[(j - 1) / 2], c = nodes[(j + 1) / 2];
+      if (rp.types.length !== 1 || rp.varLen) throw new CypherError('만들 관계는 타입이 하나이고 길이가 1이어야 합니다');
+      if (rp.dir === 'both') throw new CypherError('만들 관계는 방향이 있어야 합니다 (-> 또는 <-)');
+      const r = rp.dir === 'out' ? newRel(rp.types[0], a, c, evalProps(rp.props, b)) : newRel(rp.types[0], c, a, evalProps(rp.props, b));
+      if (rp.v) b[rp.v] = r; rels.push(r);
+    }
+    if (p.pathVar) b[p.pathVar] = { kind: 'path', nodes, rels };
+    return b;
+  }
+  function applySet(items, b) {
+    for (const it of items) {
+      const o = b[it.v]; if (o == null) continue;
+      if (!isNode(o) && !isRel(o)) throw new CypherError(`${it.v}는 노드나 관계가 아닙니다`);
+      if (it.t === 'prop') setProp(o, it.key, ev(it.e, b));
+      else if (it.t === 'label') { if (!isNode(o)) throw new CypherError('라벨은 노드에만 붙습니다'); it.labels.forEach(l => addLabel(o, l)); }
+      else {
+        let m = ev(it.e, b); if (isNode(m) || isRel(m)) m = m.props;
+        if (it.t === 'replace') for (const k of Object.keys(o.props)) if (k !== 'uri') delete o.props[k];
+        for (const [k, v] of Object.entries(m || {})) setProp(o, k, v);
       }
-      rows = next;
-    } else if (cl.c === 'UNWIND') {
-      const next = [];
-      for (const r of rows) { const l = ev(cl.e, r); if (l == null) continue; for (const v of Array.isArray(l) ? l : [l]) next.push({ ...r, [cl.as]: v }); }
-      rows = next;
-    } else if (cl.c === 'WITH') {
-      const { out } = project(cl, rows);
-      rows = out.map(o => ({ ...o }));
-      if (cl.where) rows = rows.filter(r => truth(ev(cl.where, r)));
-    } else {
-      const { out, cols } = project(cl, rows);
-      return { columns: cols, rows: out.map(o => cols.map(c => o[c])) };
     }
   }
+  function remove(x, detach) {
+    if (x == null) return;
+    if (isRel(x)) {
+      if (!G.rels.includes(x)) return;
+      drop(G.rels, x); drop(x.start.out, x); drop(x.end.in, x);
+      journal.push(() => { G.rels.push(x); x.start.out.push(x); x.end.in.push(x); });
+      stats.relationshipsDeleted++; return;
+    }
+    if (isNode(x)) {
+      if (!G.nodes.includes(x)) return;
+      if (x.out.length + x.in.length && !detach) throw new CypherError('관계가 남은 노드는 지울 수 없습니다 (DETACH DELETE를 쓰세요)');
+      [...x.out, ...x.in].forEach(r => remove(r));
+      drop(G.nodes, x); for (const l of x.labels) unindex(x, l);
+      journal.push(() => { G.nodes.push(x); x.labels.forEach(l => index(x, l)); });
+      stats.nodesDeleted++;
+    }
+  }
+  function checkConstraints() {
+    for (const c of G.constraints) {
+      const seen = new Map();
+      for (const n of G.byLabel.get(c.label) || []) {
+        const v = n.props[c.prop];
+        if (c.kind === 'notnull' && v == null) throw new CypherError(`제약 위반: :${c.label} 노드에 ${c.prop} 속성이 없습니다`);
+        if (c.kind === 'unique' && v != null) { const k = keyOf(v); if (seen.has(k)) throw new CypherError(`제약 위반: :${c.label} 노드의 ${c.prop} = ${JSON.stringify(v)} 가 이미 있습니다`); seen.set(k, n); }
+      }
+    }
+  }
+  function writeStep(cl, rows) {
+    if (cl.c === 'CONSTRAINT') {
+      if (!G.constraints.some(c => c.label === cl.label && c.prop === cl.prop && c.kind === cl.kind)) { const c = { label: cl.label, prop: cl.prop, kind: cl.kind }; G.constraints.push(c); journal.push(() => drop(G.constraints, c)); }
+      return rows;
+    }
+    const next = [];
+    for (const r of rows) {
+      if (cl.c === 'CREATE') { let b = r; for (const p of cl.patterns) b = createPattern(p, b); next.push(b); }
+      else if (cl.c === 'MERGE') {
+        const found = []; matchAll([cl.pattern], r, (b) => { found.push(b); });
+        if (found.length) { for (const b of found) { applySet(cl.onMatch, b); next.push(b); } }
+        else { const b = createPattern(cl.pattern, r); applySet(cl.onCreate, b); next.push(b); }
+      }
+      else if (cl.c === 'SET') { applySet(cl.items, r); next.push(r); }
+      else if (cl.c === 'DELETE') { for (const e of cl.items) { const v = ev(e, r); for (const x of Array.isArray(v) ? v : [v]) remove(x, cl.detach); } next.push(r); }
+      else if (cl.c === 'FOREACH') {
+        const l = ev(cl.e, r);
+        for (const x of l || []) { let inner = [{ ...r, [cl.v]: x }]; for (const c2 of cl.body) inner = writeStep(c2, inner); }
+        next.push(r);
+      }
+    }
+    return next;
+  }
+
+  let result = null;
+  for (const clauses of stmts) {
+    rows = [{}]; result = null; journal = [];
+    try {
+    for (const cl of clauses) {
+      if (WRITE.has(cl.c)) { rows = writeStep(cl, rows); continue; }
+      if (cl.c === 'MATCH') {
+        const next = [];
+        for (const r of rows) {
+          let any = false;
+          matchAll(cl.patterns, r, (b) => { if (!cl.where || truth(ev(cl.where, b))) { next.push(b); any = true; if (next.length > maxRows) throw new CypherError(`결과가 너무 많습니다 (${maxRows}행 초과). LIMIT이나 조건을 추가하세요`); } });
+          if (!any && cl.optional) {
+            const o = { ...r };
+            for (const p of cl.patterns) { if (p.pathVar && !(p.pathVar in o)) o[p.pathVar] = null; for (const x of p.el) if (x.v && !(x.v in o)) o[x.v] = null; }
+            next.push(o);
+          }
+        }
+        rows = next;
+      } else if (cl.c === 'UNWIND') {
+        const next = [];
+        for (const r of rows) { const l = ev(cl.e, r); if (l == null) continue; for (const v of Array.isArray(l) ? l : [l]) next.push({ ...r, [cl.as]: v }); }
+        rows = next;
+      } else if (cl.c === 'WITH') {
+        const { out } = project(cl, rows);
+        rows = out.map(o => ({ ...o }));
+        if (cl.where) rows = rows.filter(r => truth(ev(cl.where, r)));
+      } else {
+        const { out, cols } = project(cl, rows);
+        result = { columns: cols, rows: out.map(o => cols.map(c => o[c])) };
+      }
+    }
+    if (write) checkConstraints();
+    } catch (e) { for (let i = journal.length - 1; i >= 0; i--) journal[i](); throw e; }
+  }
+  return { ...(result || { columns: [], rows: [] }), stats };
 }
 
 // 화면·테스트용 값 → 글자
 export function show(v, short = (x) => x) {
   if (v == null) return 'null';
-  if (isNode(v)) return `(${v.labels[0] ? ':' + v.labels[0] + ' ' : ''}${v.props.name ?? v.props.label ?? short(v.props.uri)})`;
+  if (isNode(v)) return `(${v.labels[0] ? ':' + v.labels[0] + ' ' : ''}${v.props.name ?? v.props.label ?? v.props.id ?? v.props.code ?? (v.props.uri ? short(v.props.uri) : '#' + v.id)})`;
   if (isRel(v)) return `[:${v.type}]`;
   if (isPath(v)) return v.nodes.map(n => show(n, short)).join('→');
   if (Array.isArray(v)) return '[' + v.map(x => show(x, short)).join(', ') + ']';

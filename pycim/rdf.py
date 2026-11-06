@@ -51,7 +51,7 @@ def to_turtle(objects: Iterable[CIMObject], base: str = "http://example.org/grid
 
 
 def class_hierarchy_turtle() -> str:
-    """pycim 클래스 계층을 RDFS(TBox)로 내보낸다. SHACL·SPARQL에서 하위 클래스 추론에 쓴다."""
+    """pycim 클래스 계층을 RDFS(TBox)로 내보낸다. Neo4j로 불러올 때 상위 클래스를 라벨로 붙이는 데 쓴다."""
     from .cgmes import _all_classes
 
     lines = [f"@prefix cim:  <{CIM_NS}> .",

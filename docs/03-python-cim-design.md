@@ -112,7 +112,7 @@ python examples/build_sample_grid.py
 ```
 
 ```bash
-pip install rdflib pyshacl pandapower opendssdirect.py   # CGMES·SHACL·변환기 사용 시
+pip install rdflib pandapower opendssdirect.py   # CGMES·변환기 사용 시 (Cypher 검사·질의에는 Node.js 필요)
 python -m pytest tests
 ```
 
@@ -194,14 +194,16 @@ CIM (EQ, SSH) ─ topology.process() ─▶ TopologicalNode (TP)
 - `sv.from_pandapower(m)`: SvVoltage(kV, deg), SvPowerFlow(설비로 들어가는 방향이 +)
 - TopologicalNode와 SV 객체의 mRID도 부모에서 파생(v5) → 다시 계산해도 같은 ID
 
-## 9. SHACL 검증
+## 9. 형상검증 (Neo4j · Cypher)
 
-`shapes/cim-shapes.ttl`에 8종의 규칙(mRID 형식, 단자 수, Terminal 소속, 선로 파라미터, 개폐기 상태,
-전압 체계, 변압기 권선단, Name)을 정의했습니다. 클래스 계층은 `pycim.rdf.class_hierarchy_turtle()`이
-자동 생성한 `shapes/cim-classes.ttl`을 씁니다.
+`shapes/cim-checks.cypher`에 규칙 12개(mRID 형식·중복, 단자 수, Terminal 소속, 선로 파라미터, 개폐기 상태,
+전압 체계, 기준전압, 변압기 권선단, Name)를 **위반을 찾는 Cypher 질의**로 적었습니다. 결과가 0행이면 통과입니다.
+데이터는 Neo4j에 불러온 모양(클래스 → 라벨, 상위 클래스도 라벨 / 값 → 속성 / 개체 연결 → 관계)을 기준으로 하며,
+상위 클래스 라벨에는 `pycim.rdf.class_hierarchy_turtle()`이 자동 생성한 `shapes/cim-classes.ttl`을 씁니다.
+mRID 중복처럼 저장 단계에서 막을 수 있는 규칙은 Neo4j에서 `CREATE CONSTRAINT … IS UNIQUE`로 막습니다.
 
 ```bash
-python examples/validate.py
+node tools/cypher.mjs --ttl examples/power-grid-sample.ttl,shapes/cim-classes.ttl --checks shapes/cim-checks.cypher
 ```
 
 | 데이터 | 결과 |
@@ -209,7 +211,8 @@ python examples/validate.py
 | power-grid-sample.ttl (손으로 작성) | 통과 |
 | pycim sample_grid() | 통과 |
 | CIGRE MV (CGMES → pycim) | 통과 |
-| broken-sample.ttl (일부러 규칙 위반) | 위반 8건 |
+| 가상 대한민국 전력망 | 통과 |
+| broken-sample.ttl (일부러 규칙 위반) | 규칙 7개 위반 |
 
 ## 10. 로드맵
 
@@ -218,7 +221,7 @@ python examples/validate.py
 - [x] 기존 설비코드 ↔ mRID 매핑 테이블 (CIM Name / NameType)
 - [x] CGMES(RDF/XML) 파일 읽기 → 파이썬 객체 생성
 - [x] 토폴로지 처리(TP), 계산 결과 → SV 프로파일
-- [x] SHACL 규칙으로 모델 검증
+- [x] Cypher 검사 규칙으로 모델 검증 (Neo4j 형상검증)
 - [ ] CGMES RDF/XML로 내보내기 (프로파일별 파일 분리)
 - [ ] Measurement / Analog 클래스와 SCADA 값 연계
 - [ ] 변압기 탭(RatioTapChanger), 여자 성분 반영

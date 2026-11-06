@@ -2,13 +2,14 @@
 # Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """가상 전국 고속도로 온톨로지·교통 흐름 빌드 검증 (examples/highway)."""
 import runpy
+import sys
 from pathlib import Path
 
 import pytest
-import rdflib
-from pyshacl import validate
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from pycim.cypher import run as run_cypher  # noqa: E402
 
 
 @pytest.fixture(scope="module")
@@ -16,16 +17,18 @@ def B():
     return runpy.run_path(str(ROOT / "examples" / "highway" / "build_highway.py"), run_name="build")
 
 
-def shapes():
-    return rdflib.Graph().parse(ROOT / "shapes" / "highway-shapes.ttl")
-
-
-HW = rdflib.Namespace("https://1004aiteam-power.github.io/ontology-space/highway#")
+def violations(fault: str, tmp_path) -> set:
+    """Turtle을 불러온 그래프에 고장(Cypher 쓰기)을 넣고 형상검증 → 위반이 나온 규칙 ID"""
+    f = tmp_path / "fault.cypher"
+    f.write_text(fault, encoding="utf-8")
+    res = run_cypher(ttl=["examples/highway/highway-ontology.ttl", "examples/highway/highway-alignment.ttl"],
+                     load=str(f), checks="shapes/highway-checks.cypher")
+    return {c["id"] for c in res["checks"] if c["rows"]}
 
 
 def test_network_shape(B):
     assert len(B["links"]) == 2 * len(B["sections"])
-    assert B["shacl"] == []                                   # SHACL 통과
+    assert B["checks"] == []                                  # Cypher 형상검증 통과
 
 
 def test_calibrated_peak(B):
@@ -56,13 +59,9 @@ def test_competency_questions(B):
     assert cq["경부선 구간을 순서대로 나열하면?"][0] == ["1", "서울–수원·신갈"]
 
 
-def test_shacl_catches_broken_link(B):
-    g = rdflib.Graph().parse(data=B["TTL"], format="turtle")
-    g.remove((HW.S01F, HW.oppositeOf, None))
-    g.remove((None, HW.oppositeOf, HW.S01F))
-    g.add((HW.S01F, HW.oppositeOf, HW.S02R))                      # 엉뚱한 반대 링크
-    ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
-    assert not ok
+def test_checks_catch_broken_link(tmp_path):
+    assert "LINK" in violations("MATCH (:Link {code: 'S01F'})-[r:OPPOSITE_OF]-() DELETE r;"
+                                "MATCH (a:Link {code: 'S01F'}), (b:Link {code: 'S02R'}) CREATE (a)-[:OPPOSITE_OF]->(b)", tmp_path)  # 엉뚱한 반대 링크
 
 
 def test_national_roads(B):
@@ -77,18 +76,16 @@ def test_national_roads(B):
     assert {"속초", "울진", "남원"} <= towns
 
 
-def test_shacl_catches_wrong_road_class(B):
-    g = rdflib.Graph().parse(data=B["TTL"], format="turtle")
-    g.add((HW.N_SOKCHO, rdflib.RDF.type, HW.Interchange))        # 국도만 닿는 지점을 IC로
-    ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
-    assert not ok
+def test_checks_catch_wrong_road_class(tmp_path):
+    assert violations("MATCH (n:Node {code: 'SOKCHO'}) SET n:Interchange", tmp_path) == {"INTERCHANGE"}   # 국도만 닿는 지점을 IC로
 
 
-def test_shacl_catches_fake_junction(B):
-    g = rdflib.Graph().parse(data=B["TTL"], format="turtle")
-    g.add((HW.N_ULJIN, rdflib.RDF.type, HW.Junction))             # 노선 1개(국도 7호선)뿐인 노드를 JC로
-    ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
-    assert not ok
+def test_checks_catch_fake_junction(tmp_path):
+    assert violations("MATCH (n:Node {code: 'ULJIN'}) SET n:Junction", tmp_path) == {"JUNCTION"}         # 노선 1개(국도 7호선)뿐인 노드를 JC로
+
+
+def test_checks_catch_disconnected_node(tmp_path):
+    assert violations("MATCH (n:Node {code: 'SOKCHO'})-[r:ADJACENT_TO]-() DELETE r", tmp_path) >= {"CONNECTED"}
 
 
 def test_alignment_covers_core_classes(B):
@@ -99,12 +96,8 @@ def test_alignment_covers_core_classes(B):
         assert m["verified"] == "N" or m["source"]           # '확인'이면 출처가 있어야 한다
 
 
-def test_shacl_catches_unsourced_verified_mapping(B):
-    g = rdflib.Graph().parse(data=B["TTL"], format="turtle").parse(data=B["ALIGN_TTL"], format="turtle")
-    HWX = rdflib.Namespace("https://1004aiteam-power.github.io/ontology-space/highway-std#")
-    g.set((HWX.M02, HWX.verified, rdflib.Literal(True)))      # 출처 없는 기록을 '확인'으로
-    ok, rep, _ = validate(g, shacl_graph=shapes(), advanced=True)
-    assert not ok
+def test_checks_catch_unsourced_verified_mapping(tmp_path):
+    assert violations("MATCH (m:Mapping) WHERE m.uri ENDS WITH '#M02' SET m.verified = true", tmp_path) == {"MAPPING"}  # 출처 없는 기록을 '확인'으로
 
 
 def test_standard_export(B):

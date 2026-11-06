@@ -6,11 +6,12 @@ import init, { parse } from './vendor/oxigraph/web.js';
 import { buildGraph } from './cypher/graph.js';
 import { runCypher, show } from './cypher/cypher.js';
 import { DATASETS, QUERIES } from './cypher/presets.js';
+import { parseChecks } from './cypher/script.js';
 
 const SHORT = [['http://iec.ch/TC57/CIM100#', 'cim:'], ['http://example.org/grid#', 'ex:']];
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-let G, cy, current = 'full', ready = false;
+let G, cy, current = 'full', ready = false, CHECKS = null;
 
 function short(v) {
   for (const [ns, p] of SHORT) if (String(v).startsWith(ns)) return p + v.slice(ns.length);
@@ -31,7 +32,25 @@ async function loadDataset(key) {
   G = buildGraph(quads);
   $('status').textContent = t({ ko: `불러옴: 노드 ${G.nodes.length}개 · 관계 ${G.rels.length}개`, en: `Loaded: ${G.nodes.length} nodes · ${G.rels.length} relationships` });
   runQuery();
+  runChecks();
   drawGraph();
+}
+
+// ---- 데이터 검증: shapes/cim-checks.cypher의 규칙을 모두 실행 -----------------------------
+async function runChecks() {
+  const box = $('checks');
+  try {
+    CHECKS ??= parseChecks(await fetchText('shapes/cim-checks.cypher'));
+    const res = CHECKS.map(c => ({ c, r: runCypher(G, c.query) }));
+    const bad = res.filter(x => x.r.rows.length);
+    $('checkSummary').innerHTML = bad.length
+      ? t({ ko: `규칙 ${res.length}개 중 <b>${bad.length}개 위반</b> (모두 ${bad.reduce((s, x) => s + x.r.rows.length, 0)}건)`, en: `<b>${bad.length} of ${res.length} rules violated</b> (${bad.reduce((s, x) => s + x.r.rows.length, 0)} findings)` })
+      : t({ ko: `규칙 ${res.length}개 모두 통과 ✓`, en: `All ${res.length} rules pass ✓` });
+    box.innerHTML = res.map(({ c, r }, i) => `<details class="chk ${r.rows.length ? 'bad' : 'ok'}"${r.rows.length ? ' open' : ''}><summary>${r.rows.length ? '✗' : '✓'} <b>${esc(c.id)}</b> ${esc(t(c))}${r.rows.length ? ` — ${r.rows.length}${t({ ko: '건', en: '' })}` : ''}</summary>` +
+      (r.rows.length ? `<div class="tbl"><table><tr>${r.columns.map(k => `<th>${esc(k)}</th>`).join('')}</tr>${r.rows.map(row => `<tr>${row.map(v => `<td>${esc(show(v, short))}</td>`).join('')}</tr>`).join('')}</table></div>` : '') +
+      `<pre><code>${esc(c.query)}</code></pre><button class="lab-try" data-i="${i}">${t({ ko: '실습 칸에서 열기 ↑', en: 'Open in the playground ↑' })}</button></details>`).join('');
+    box.querySelectorAll('.lab-try').forEach(b => b.addEventListener('click', () => { $('query').value = CHECKS[b.dataset.i].query; runQuery(); $('cypher').scrollIntoView({ behavior: 'smooth' }); }));
+  } catch (e) { box.innerHTML = `<p class="err">⚠ ${esc(e.message || e)}</p>`; }
 }
 
 function runQuery() {
@@ -147,6 +166,7 @@ async function main() {
     const checked = new Set([...document.querySelectorAll('#layers input:checked')].map(i => i.value));
     fillControls();
     document.querySelectorAll('#layers input').forEach(i => i.checked = checked.has(i.value));
+    if (ready) runChecks();
   });
   $('dataset').addEventListener('change', e => loadDataset(e.target.value));
   $('run').addEventListener('click', runQuery);

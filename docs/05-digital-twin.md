@@ -40,8 +40,8 @@
 python examples/twin/build_korea_twin.py
 ```
 
-- 결과: `assets/data/twin.json` (웹), `examples/twin/korea_virtual_grid.ttl` (CIM RDF, SHACL 검증 통과)
-- 이 CIM 데이터는 [실습 페이지](../lab.html)에서 SPARQL로 질의하고 지식 그래프로 볼 수 있습니다.
+- 결과: `assets/data/twin.json` (웹), `examples/twin/korea_virtual_grid.ttl` (CIM RDF, Cypher 형상검증 통과)
+- 이 CIM 데이터는 [실습 페이지](../lab.html)에서 Cypher로 질의하고 지식 그래프로 볼 수 있습니다.
 
 ## 3. 가정 (모두 가상)
 

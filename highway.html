@@ -370,7 +370,7 @@ td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
   <h2><span lang="ko">③ 구현과 검증</span><span lang="en">③ Implementation and checks</span></h2>
 <pre><code>examples/highway/data/*.csv ──▶ build_highway.py ──┬─▶ highway-ontology.ttl  (OWL + GeoSPARQL, <span lang="ko">트리플 약 13,000개</span><span lang="en">~13,000 triples</span>)
   nodes · routes ·              ├ <span lang="ko">중력모형 수요</span><span lang="en">gravity demand</span>       ├─▶ assets/data/highway.json (<span lang="ko">이 지도</span><span lang="en">this map</span>)
-  sections · scenarios          ├ <span lang="ko">시간대별 이용자 균형</span><span lang="en">hourly equilibrium</span>  └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: <span lang="ko">역량 질문 12개</span><span lang="en">12 competency questions</span>
+  sections · scenarios          ├ <span lang="ko">시간대별 이용자 균형</span><span lang="en">hourly equilibrium</span>  └─▶ <span lang="ko">검증</span><span lang="en">checks</span>: Cypher <span lang="ko">검사 규칙 11 + 역량 질문 12</span><span lang="en">11 check rules + 12 competency questions</span>
                                 └ <span lang="ko">지도 윤곽</span><span lang="en">outline</span>: Natural Earth (twin.json)</code></pre>
   <h3><span lang="ko">예시: 노드 하나와 방향 링크 하나</span><span lang="en">Example: one node and one link</span></h3>
 <pre><code>hw:N_DAEJEON a hw:Interchange, hw:Junction ;              # <span lang="ko">다중 분류</span><span lang="en">multiple typing</span>
@@ -452,6 +452,8 @@ hw:INC_INCIDENT a hw:Incident ; hw:affectsLink hw:S04F ; hw:startHour 16 ; hw:en
   <div class="grid">
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/tree/main/examples/highway/data"><h4>examples/highway/data/</h4><p lang="ko">원본 CSV 5개 (도로망 + 표준 정렬)</p><p lang="en">5 source CSVs (network + alignment)</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/highway/build_highway.py"><h4>build_highway.py</h4><p lang="ko">수요·배정·생성·검증</p><p lang="en">Demand, assignment, generation, checks</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/shapes/highway-checks.cypher"><h4>shapes/highway-checks.cypher</h4><p lang="ko">형상검증 규칙 11개 (Cypher)</p><p lang="en">11 shape-check rules (Cypher)</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/highway/queries.cypher"><h4>queries.cypher</h4><p lang="ko">역량 질문 12개 (Cypher)</p><p lang="en">12 competency questions (Cypher)</p></a>
     <a class="card" href="examples/highway/highway-ontology.ttl"><h4>highway-ontology.ttl</h4><p>OWL + GeoSPARQL</p></a>
     <a class="card" href="examples/highway/highway-alignment.ttl"><h4>highway-alignment.ttl</h4><p lang="ko">표준 대응 19건 (SKOS)</p><p lang="en">19 standard mappings (SKOS)</p></a>
     <a class="card" href="https://github.com/1004aiteam-power/ontology-space/tree/main/examples/highway/export"><h4>export/std_link.csv · std_node.csv</h4><p lang="ko">표준노드링크 형식 예시</p><p lang="en">Standard node-link layout (example)</p></a>

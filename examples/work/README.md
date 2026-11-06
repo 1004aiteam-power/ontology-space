@@ -28,7 +28,7 @@
 
 ## 검증 상태
 
-- `work-ontology.ttl`: rdflib로 파싱했다(트리플 3,080개). SPARQL로 역량 질문을 재현해 엑셀 결과와 일치함을 확인했다. 예: OP-1-1 오픈 전 선행 업무 40건, 선행 순환 0건.
+- `work-ontology.ttl`: Neo4j식 속성 그래프로 불러와 Cypher로 역량 질문을 재현해 엑셀 결과와 일치함을 확인했다(`tools/cypher.mjs`). 예: OP-1-1 오픈 전 선행 업무 40건 (`MATCH (a)-[:PRECEDES*]->(:Task {code:'OP-1-1'})`), 선행 순환 0건.
 - `import.cypher`: 작업 환경에 Neo4j가 없어 실제로 실행하지 못했다. 처음 실행할 때 노드 수(Task 149)와 관계 수(PRECEDES 164, FEEDS_BACK_TO 14)를 확인할 것.
 
 ## 다음 확장 후보

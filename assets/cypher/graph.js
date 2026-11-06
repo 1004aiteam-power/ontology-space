@@ -8,7 +8,7 @@
 //                        언어 태그가 ko이거나 없으면 그 이름 그대로, 다른 언어는 이름_언어 (rdfs:label@en → label_en)
 //  - IRI·빈 노드 값     → 관계. 타입은 술어의 마지막 부분을 대문자_밑줄로 (Terminal.ConductingEquipment → CONDUCTING_EQUIPMENT)
 //  - 모든 노드에 uri 속성 (원래 IRI)
-//  - owl:Class 같은 스키마 정의는 노드로 만들지 않고 라벨 계층에만 씀
+//  - owl:Class 같은 스키마 정의는 노드로 만들지 않고 라벨 계층에만 씀. 클래스를 값으로 가리키면 클래스 이름이 속성 값
 
 const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
 const SUBCLASS = 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
@@ -64,7 +64,7 @@ export function buildGraph(quads) {
       const v = literalValue(o);
       if (k in n.props && k !== 'uri') n.props[k] = [].concat(n.props[k], v); else n.props[k] = v;
     } else {
-      if (schema.has(key(o))) continue;
+      if (schema.has(key(o))) { const k = localName(p), v = localName(o.value); n.props[k] = k in n.props ? [].concat(n.props[k], v) : v; continue; }   // 클래스를 가리키는 값 → 클래스 이름
       const m = node(o), r = { id: rels.length, kind: 'rel', type: relType(p), start: n, end: m, props: {} };
       rels.push(r); n.out.push(r); m.in.push(r);
     }

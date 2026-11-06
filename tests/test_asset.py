@@ -2,12 +2,14 @@
 # Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 """전력설비 자산관리 온톨로지 빌드 검증 (examples/asset)."""
 import runpy
+import sys
 from pathlib import Path
 
-import rdflib
-from pyshacl import validate
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from pycim.cypher import run as run_cypher  # noqa: E402
+
+NEO = "examples/asset/neo4j/"
 B = runpy.run_path(str(ROOT / "examples" / "asset" / "build_asset_ontology.py"), run_name="build")
 
 
@@ -35,24 +37,37 @@ def test_gaps_and_overdue():
         ("AS-TR-0007", "IN-06"), ("AS-TR-0007", "IN-10"), ("AS-CB-0457", "IN-08")}
 
 
-def test_shacl_only_warnings():
-    assert {s["severity"] for s in B["shacl"]} == {"Warning"}
+def test_checks_only_warnings():
+    # Cypher 형상검증: 빈 자리 2곳만 경고, 위반은 없음
+    assert {c["severity"] for c in B["checks"]} == {"Warning"}
+    assert sorted(c["focus"] for c in B["checks"]) == ["BUS_154", "BUS_22"]
 
 
-def test_shacl_catches_overlap():
-    g = rdflib.Graph().parse(data=B["TTL"], format="turtle")
-    g.parse(ROOT / "examples" / "power-grid-sample.ttl")
-    pam = rdflib.Namespace("https://1004aiteam-power.github.io/ontology-space/asset#")
-    ex = rdflib.Namespace("http://example.org/grid#")
-    bad = pam.DEP_BAD
-    g.add((bad, rdflib.RDF.type, pam.Deployment))
-    g.add((bad, pam.deployedAsset, pam.AS_TR_0002))
-    g.add((bad, pam.atLocation, ex.TR_1))
-    g.add((bad, pam.validFrom, rdflib.Literal("2020-01-01", datatype=rdflib.XSD.date)))
-    ok, rep, _ = validate(g, shacl_graph=rdflib.Graph().parse(ROOT / "shapes" / "asset-shapes.ttl"), advanced=True)
-    assert not ok
-    sh = rdflib.Namespace("http://www.w3.org/ns/shacl#")
-    assert (None, sh.focusNode, bad) in rep
+def _violations(fault: str, tmp_path) -> dict:
+    f = tmp_path / "fault.cypher"
+    f.write_text(fault, encoding="utf-8")
+    res = run_cypher(load=[NEO + "import.cypher", str(f)], checks=NEO + "checks.cypher")
+    return {c["id"]: c["rows"] for c in res["checks"] if c["rows"] and c["severity"] == "Violation"}
+
+
+def test_checks_catch_injected_faults(tmp_path):
+    # 일부러 망가뜨린 데이터를 넣으면 해당 규칙이 잡아낸다
+    assert _violations("MATCH (a:Asset {id: 'AS-TR-0002'}), (l:FunctionalLocation {code: 'TR_1'}) "
+                       "CREATE (a)-[:INSTALLED_AT {from: '2014-01-01'}]->(l)", tmp_path).keys() == {"DEPLOYMENT_OVERLAP"}
+    assert _violations("MATCH (a:Asset {id: 'AS-CB-0123'}) SET a.eam = 'CB-0123'", tmp_path).keys() == {"EAM_NUMBER"}
+    assert _violations("MATCH (w:WorkOrder {id: 'WO-2026-0731'})-[r:TRIGGERED_BY]->() DELETE r", tmp_path).keys() == {"WORK_ORDER"}
+    assert _violations("MATCH (w:WorkOrder {id: 'WO-2026-0731'}) SET w.done = ''", tmp_path).keys() == {"WORK_ORDER_DONE"}
+    v = _violations("MATCH (g:Diagnosis {id: 'DG-01'}), (t:MaintenanceTask {id: 'MT-01'}) CREATE (g)-[:USES_METHOD]->(t)", tmp_path)
+    assert v.keys() == {"DIAGNOSIS"} and v["DIAGNOSIS"][0][0] == "DG-01"
+
+
+def test_unique_constraint_blocks_duplicates(tmp_path):
+    # 제약조건(UNIQUE)은 검사 이전에 저장 자체를 막는다
+    import pytest
+    f = tmp_path / "dup.cypher"
+    f.write_text("CREATE (:Asset {id: 'AS-TR-0007'})", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="제약 위반"):
+        run_cypher(load=[NEO + "import.cypher", str(f)])
 
 
 def test_workflow_reuses_work_ontology_precedes():

@@ -14,7 +14,7 @@
 가정: D/L #2·#3은 M.Tr #2 쪽 모선에서 나가므로 M.Tr #1 계통의 고장과 무관하다 (배전선로 그림에서는 한 모선으로 그림).
 입력: assets/data/asset.json, examples/asset/asset-ontology.ttl, examples/feeder/build_feeder.py(모델·절체 탐색), assets/data/twin.json(24시간 부하 곡선)
 생성: examples/impact/impact-links.ttl, assets/data/impact.json
-실행: python examples/impact/build_impact.py   (저장소 루트에서, rdflib 필요)
+실행: python examples/impact/build_impact.py   (저장소 루트에서, Node.js 필요)
 """
 from __future__ import annotations
 
@@ -173,24 +173,16 @@ T.append("im:nothing a rdfs:Resource .")
 TTL = "\n".join(T) + "\n"
 (HERE / "impact-links.ttl").write_text(TTL, encoding="utf-8")
 
+# 역량 질문 (한국어, 영어). 같은 순서의 Cypher가 아래 CYPHER 목록
 CQ = [
-    ("M.Tr #1 본체가 고장 나면 정전되는 고객은 모두 몇 호인가?", "If the M.Tr #1 body fails, how many customers lose power?",
-     """SELECT (COUNT(?ld) AS ?loads) (SUM(?c) AS ?customers) WHERE {
-  pam:AS_TR_0007 pam:installedAt ?loc .
-  ?loc im:feeds+ ?ld . ?ld a cim:EnergyConsumer ; im:customers ?c }"""),
-    ("그중 중요 고객은?", "Which of them are critical customers?",
-     """SELECT ?area WHERE { pam:AS_TR_0007 pam:installedAt ?loc .
-  ?loc im:feeds+ ?ld . ?ld im:critical true ; im:area ?area }"""),
-    ("위험도 '높음' 자산이 끊는 구간은 어느 이웃 선로로 넘길 수 있나?", "Which neighbouring feeders can take the zones cut off by high-risk assets?",
-     """SELECT DISTINCT ?asset ?zone ?tie WHERE {
-  ?a pam:riskScore ?r ; pam:code ?asset ; pam:installedAt ?loc . FILTER(?r >= 15)
-  ?loc im:feeds+ ?z . ?z a im:FeederZone ; rdfs:label ?zone ; im:tieTo ?t . ?t cim:IdentifiedObject.name ?tie }
-ORDER BY ?zone"""),
-    ("자산이 등록되지 않은 기능 위치(빈 자리)는 고장 나면 몇 호에 영향을 주나?", "Functional locations with no asset installed: how many customers do they affect?",
-     """SELECT ?loc (SUM(?c) AS ?customers) WHERE {
-  ?loc im:feeds ?x . FILTER(STRSTARTS(STR(?loc), STR(ex:)) && !STRSTARTS(STR(?loc), STR(ex:_)))   # 자산관리 쪽 기능 위치만 (ex:_mRID 는 배전선로 모델 설비)
-  FILTER NOT EXISTS { ?a pam:installedAt ?loc }
-  ?loc im:feeds+ ?ld . ?ld im:customers ?c } GROUP BY ?loc"""),
+    ("M.Tr #1 본체가 고장 나면 정전되는 고객은 모두 몇 호인가?",
+     "If the M.Tr #1 body fails, how many customers lose power?"),
+    ("그중 중요 고객은?",
+     "Which of them are critical customers?"),
+    ("위험도 '높음' 자산이 끊는 구간은 어느 이웃 선로로 넘길 수 있나?",
+     "Which neighbouring feeders can take the zones cut off by high-risk assets?"),
+    ("자산이 등록되지 않은 기능 위치(빈 자리)는 고장 나면 몇 호에 영향을 주나?",
+     "Functional locations with no asset installed: how many customers do they affect?"),
 ]
 # 웹페이지에 보여 주는 같은 질문의 Cypher (Neo4j). assets/cypher/cq.js와 같아야 함 — tests/cypher.test.mjs가 결과까지 대조
 CYPHER = [
@@ -215,21 +207,15 @@ WHERE ld.customers IS NOT NULL
 WITH DISTINCT loc, ld
 RETURN 'ex:' + split(loc.uri, '#')[1] AS loc, sum(ld.customers) AS customers""",
 ]
-PREFIX = ("PREFIX im: <https://1004aiteam-power.github.io/ontology-space/impact#> PREFIX pam: <https://1004aiteam-power.github.io/ontology-space/asset#> "
-          "PREFIX ex: <http://example.org/grid#> PREFIX cim: <http://iec.ch/TC57/CIM100#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n")
 
 
 def run_cq():
-    import rdflib
-    g = rdflib.Graph()
-    g.parse(data=TTL, format="turtle")
-    g.parse(ROOT / "examples" / "asset" / "asset-ontology.ttl", format="turtle")
-    g.parse(ROOT / "examples" / "feeder" / "feeder.ttl", format="turtle")
-    out = []
-    for (ko, en, q), cy in zip(CQ, CYPHER):
-        rows = [[str(v).replace("http://example.org/grid#", "ex:") if v is not None else "" for v in r] for r in g.query(PREFIX + q)]
-        out.append(dict(q=ko, en=en, cypher=cy, rows=rows))
-    return out
+    """세 Turtle을 Neo4j식 속성 그래프 하나로 합쳐 CYPHER를 실행 (tools/cypher.mjs)"""
+    from pycim.cypher import run as run_cypher
+    res = run_cypher(ttl=["examples/impact/impact-links.ttl", "examples/asset/asset-ontology.ttl", "examples/feeder/feeder.ttl"], query=CYPHER)
+    cell = lambda v: "" if v is None else str(v)  # noqa: E731
+    return [dict(q=ko, en=en, cypher=cy, rows=[[cell(v) for v in row] for row in r["rows"]])
+            for (ko, en), cy, r in zip(CQ, CYPHER, res["queries"])]
 
 
 CQ_OUT = run_cq()

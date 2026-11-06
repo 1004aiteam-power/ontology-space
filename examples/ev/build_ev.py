@@ -14,9 +14,9 @@
   배전선로 부하(MW) = 선로의 다른 부하(피크 × 디지털 트윈 24시간 부하 곡선) + 충전 공급
 
 입력: examples/ev/data/rest_areas.csv, assets/data/highway.json, assets/data/twin.json
-      (CQ는 examples/highway/highway-ontology.ttl · examples/twin/korea_virtual_grid.ttl 과 합쳐 SPARQL로 묻는다)
+      (CQ는 examples/highway/highway-ontology.ttl · examples/twin/korea_virtual_grid.ttl 과 합쳐 Cypher로 실행, tools/cypher.mjs)
 생성: examples/ev/ev-ontology.ttl, assets/data/ev.json
-실행: python examples/ev/build_ev.py   (저장소 루트에서, rdflib 필요)
+실행: python examples/ev/build_ev.py   (저장소 루트에서, Node.js 필요)
 """
 from __future__ import annotations
 
@@ -193,32 +193,19 @@ ev:PK_{i} a ev:ChargingPeak ; ev:peakOf ev:CS_{i} ; ev:hour {h} ; ev:mw {s['peak
 TTL = "\n".join(L)
 (HERE / "ev-ontology.ttl").write_text(TTL, encoding="utf-8")
 
-# ---- 역량 질문 (CQ): 세 온톨로지를 한 그래프에 합쳐 SPARQL로 ---------------------------------------
+# ---- 역량 질문 (CQ): 세 온톨로지를 한 그래프에 합쳐 Cypher로 ---------------------------------------
+# 역량 질문 (한국어, 영어). 같은 순서의 Cypher가 아래 CYPHER 목록
 CQ = [
     ("경부선을 달리다 충전하면, 그 전기는 어느 변전소에서 오나?",
-     "Charging on the Gyeongbu line: which substations supply it?",
-     """SELECT ?ra ?sub WHERE {
-  ?r ev:onLink/hw:ofSection/hw:onRoute hw:R_GYEONGBU ; rdfs:label ?ra ;
-     ev:hasChargingStation/cim:Equipment.EquipmentContainer/cim:Feeder.NormalEnergizingSubstation ?s .
-  ?s cim:IdentifiedObject.name ?sub . FILTER(LANG(?ra) = 'ko') } ORDER BY ?ra"""),
+     "Charging on the Gyeongbu line: which substations supply it?"),
     ("변전소별로 휴게소 충전 설비가 얼마나 걸려 있나?",
-     "Installed charging capacity per substation",
-     """SELECT ?sub (COUNT(?cs) AS ?n) (SUM(?kw) AS ?totalKW) WHERE {
-  ?cs a ev:ChargingStation ; ev:installedKW ?kw ; cim:Equipment.EquipmentContainer/cim:Feeder.NormalEnergizingSubstation ?s .
-  ?s cim:IdentifiedObject.name ?sub } GROUP BY ?sub ORDER BY DESC(?totalKW)"""),
+     "Installed charging capacity per substation"),
     ("사고 시나리오의 차로 차단 링크 위에 있는 휴게소는?",
-     "Which rest areas sit on the link closed in the crash scenario?",
-     """SELECT ?ra ?link WHERE { ?inc a hw:Incident ; hw:affectsLink ?l . ?l hw:code ?link .
-  ?r ev:onLink ?l ; rdfs:label ?ra . FILTER(LANG(?ra) = 'ko') }"""),
+     "Which rest areas sit on the link closed in the crash scenario?"),
     ("충전 첨두가 출근 시간(7~9시)에 오는 충전소는?",
-     "Charging stations that peak in the morning rush (7–9 h)",
-     """SELECT ?ra ?h ?mw WHERE { ?p ev:peakOf ?cs ; ev:hour ?h ; ev:mw ?mw . FILTER(?h >= 7 && ?h <= 9)
-  ?r ev:hasChargingStation ?cs ; rdfs:label ?ra . FILTER(LANG(?ra) = 'ko') } ORDER BY DESC(?mw)"""),
+     "Charging stations that peak in the morning rush (7–9 h)"),
     ("교통 링크 하나에서 출발해 전력 설비까지 몇 단계로 닿나? (S03F)",
-     "From one traffic link to the grid: the path from S03F",
-     """SELECT ?ra ?cs ?feeder ?sub WHERE { ?r ev:onLink hw:S03F ; rdfs:label ?ra ; ev:hasChargingStation ?c .
-  ?c rdfs:label ?cs ; cim:Equipment.EquipmentContainer ?f . ?f cim:IdentifiedObject.name ?feeder ; cim:Feeder.NormalEnergizingSubstation/cim:IdentifiedObject.name ?sub .
-  FILTER(LANG(?ra) = 'ko') }"""),
+     "From one traffic link to the grid: the path from S03F"),
 ]
 # 웹페이지에 보여 주는 같은 질문의 Cypher (Neo4j). assets/cypher/cq.js와 같아야 함 — tests/cypher.test.mjs가 결과까지 대조
 CYPHER = [
@@ -241,23 +228,19 @@ ORDER BY mw DESC""",
          -[:NORMAL_ENERGIZING_SUBSTATION]->(s:Substation)
 RETURN r.label AS ra, c.label AS cs, f.name AS feeder, s.name AS sub""",
 ]
-PREFIX = f"PREFIX ev: <{EVNS}> PREFIX hw: <{HWNS}> PREFIX cim: <http://iec.ch/TC57/CIM100#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
 
 
-def run_cq() -> list[dict]:
-    import rdflib
-    g = rdflib.Graph()
-    g.parse(data=TTL, format="turtle")
-    g.parse(ROOT / "examples" / "highway" / "highway-ontology.ttl", format="turtle")
-    g.parse(ROOT / "examples" / "twin" / "korea_virtual_grid.ttl", format="turtle")
-    out = []
-    for (ko, en, q), cy in zip(CQ, CYPHER):
-        rows = [[str(v) if v is not None else "" for v in r] for r in g.query(PREFIX + q)]
-        out.append(dict(q=ko, en=en, cypher=cy, rows=rows))
-    return out, len(g)
+def run_cq() -> tuple[list[dict], dict]:
+    """세 Turtle을 Neo4j식 속성 그래프 하나로 합쳐 CYPHER를 실행 (tools/cypher.mjs)"""
+    from pycim.cypher import run as run_cypher
+    res = run_cypher(ttl=["examples/ev/ev-ontology.ttl", "examples/highway/highway-ontology.ttl", "examples/twin/korea_virtual_grid.ttl"], query=CYPHER)
+    cell = lambda v: "" if v is None else str(v)  # noqa: E731
+    out = [dict(q=ko, en=en, cypher=cy, rows=[[cell(v) for v in row] for row in r["rows"]])
+           for (ko, en), cy, r in zip(CQ, CYPHER, res["queries"])]
+    return out, res["graph"]
 
 
-CQ_OUT, TRIPLES = run_cq()
+CQ_OUT, GRAPH = run_cq()
 
 # ---- 웹 데이터 ---------------------------------------------------------------------------------
 ex_links = []
@@ -266,12 +249,12 @@ for l in HW["links"]:
         a, b = NODE[l["frm"]], NODE[l["to"]]
         ex_links.append([round(a["lon"], 3), round(a["lat"], 3), round(b["lon"], 3), round(b["lat"], 3)])
 web = dict(virtual=True, params=PARAMS, loadCurve=LOAD_CURVE, outline=HW["outline"], roads=ex_links,
-           restAreas=RAS, stations=STATIONS, scenarios=SCENARIOS, cq=CQ_OUT, triples=TRIPLES,
+           restAreas=RAS, stations=STATIONS, scenarios=SCENARIOS, cq=CQ_OUT, graph=GRAPH,
            nodes=[dict(id=n["id"], ko=n["ko"], en=n["en"], lon=n["lon"], lat=n["lat"]) for n in HW["nodes"]])
 (ROOT / "assets" / "data" / "ev.json").write_text(json.dumps(web, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 if __name__ == "__main__":
-    print(f"휴게소 {len(RAS)}곳 · 연결 변전소 {len(USED_ST)}곳 · 합친 그래프 {TRIPLES:,} 트리플")
+    print(f"휴게소 {len(RAS)}곳 · 연결 변전소 {len(USED_ST)}곳 · 합친 그래프 노드 {GRAPH['nodes']:,}개 · 관계 {GRAPH['relationships']:,}개")
     for ra in RAS:
         s = ra["sim"]
         print(f"  {ra['id']} {ra['ko']:28s} → {ra['station']:9s} {ra['distKm']:5.1f}km · 하루 {s['sessions']:4d}회 · 첨두 {s['peakMW']:.2f}MW "

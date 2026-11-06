@@ -11,7 +11,7 @@
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
 <script src="assets/vendor/cytoscape.min.js"></script>
-<script type="module" src="assets/lab.js?v=20261106c"></script>
+<script type="module" src="assets/lab.js?v=20261106d"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -58,7 +58,7 @@
   <h1><span lang="ko">직접 질의하고, 그래프로 보기</span><span lang="en">Query it, see it as a graph</span></h1>
   <p class="lead" lang="ko">전력망 데이터를 브라우저 안에서 <b>Cypher</b>(Neo4j의 질의 언어)로 다룹니다. 서버 없이, RDF(Turtle) 파일을 Neo4j에 불러온 것과 같은 <b>속성 그래프</b>로 바꿔 메모리에 올리고, 작은 Cypher 엔진이 질의를 실행합니다.</p>
   <p class="lead" lang="en">Query grid data in your browser with <b>Cypher</b>, Neo4j's query language. No server: the RDF (Turtle) files are turned into the same <b>property graph</b> you would get by loading them into Neo4j, and a small Cypher engine runs your queries in memory.</p>
-  <blockquote><p lang="ko"><b>RDF를 Neo4j처럼 불러오기</b> — 클래스(<code>rdf:type</code>)는 <b>라벨</b>이 되고 상위 클래스도 라벨로 함께 붙습니다(예: <code>:Breaker:ProtectedSwitch:Switch:ConductingEquipment</code>). 값은 <b>속성</b>(<code>cim:IdentifiedObject.name</code> → <code>name</code>), 개체를 가리키는 속성은 <b>관계</b>(<code>cim:Terminal.ConductingEquipment</code> → <code>:CONDUCTING_EQUIPMENT</code>)가 되고, 원래 IRI는 <code>uri</code> 속성에 남습니다. Neo4j의 neosemantics(n10s) 플러그인으로 불러올 때와 같은 방식입니다. 이 실습 엔진은 읽기 질의(MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, 가변 길이 경로, 집계, EXISTS)를 지원합니다.</p><p lang="en"><b>Loading RDF the Neo4j way</b> — classes (<code>rdf:type</code>) become <b>labels</b>, with parent classes added as labels too (e.g. <code>:Breaker:ProtectedSwitch:Switch:ConductingEquipment</code>). Values become <b>properties</b> (<code>cim:IdentifiedObject.name</code> → <code>name</code>), links to other individuals become <b>relationships</b> (<code>cim:Terminal.ConductingEquipment</code> → <code>:CONDUCTING_EQUIPMENT</code>), and the original IRI stays in a <code>uri</code> property — the same approach as Neo4j's neosemantics (n10s) plugin. The lab engine supports read queries: MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, variable-length paths, aggregation and EXISTS.</p></blockquote>
+  <blockquote><p lang="ko"><b>RDF를 Neo4j처럼 불러오기</b> — 클래스(<code>rdf:type</code>)는 <b>라벨</b>이 되고 상위 클래스도 라벨로 함께 붙습니다(예: <code>:Breaker:ProtectedSwitch:Switch:ConductingEquipment</code>). 값은 <b>속성</b>(<code>cim:IdentifiedObject.name</code> → <code>name</code>), 개체를 가리키는 속성은 <b>관계</b>(<code>cim:Terminal.ConductingEquipment</code> → <code>:CONDUCTING_EQUIPMENT</code>)가 되고, 원래 IRI는 <code>uri</code> 속성에 남습니다. Neo4j의 neosemantics(n10s) 플러그인으로 불러올 때와 같은 생각이며, 이름은 n10s의 매핑 기능(<code>n10s.mapping.add</code>)으로 짧게 바꾼 모양입니다. 이 실습 엔진은 읽기 질의(MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, 가변 길이 경로, 집계, EXISTS)를 지원합니다.</p><p lang="en"><b>Loading RDF the Neo4j way</b> — classes (<code>rdf:type</code>) become <b>labels</b>, with parent classes added as labels too (e.g. <code>:Breaker:ProtectedSwitch:Switch:ConductingEquipment</code>). Values become <b>properties</b> (<code>cim:IdentifiedObject.name</code> → <code>name</code>), links to other individuals become <b>relationships</b> (<code>cim:Terminal.ConductingEquipment</code> → <code>:CONDUCTING_EQUIPMENT</code>), and the original IRI stays in a <code>uri</code> property — the same idea as Neo4j's neosemantics (n10s) plugin, with names shortened the way n10s's mapping feature (<code>n10s.mapping.add</code>) does. The lab engine supports read queries: MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, variable-length paths, aggregation and EXISTS.</p></blockquote>
   <div class="lab-bar">
     <label for="dataset"><b><span lang="ko">데이터</span><span lang="en">Dataset</span></b></label>
     <select id="dataset"></select>
@@ -75,6 +75,17 @@
   <textarea id="query" spellcheck="false" aria-label="Cypher"></textarea>
   <div class="lab-bar"><button id="run" class="primary">▶ <span lang="ko">실행</span><span lang="en">Run</span></button></div>
   <div id="results"></div>
+</section>
+
+<section id="validate">
+  <h2><span lang="ko">데이터 검증 (형상검증, Cypher)</span><span lang="en">Data validation (shape checks in Cypher)</span></h2>
+  <p class="sub" lang="ko">"선로는 단자 2개", "mRID는 UUID 형식" 같은 규칙을 <b>위반을 찾는 Cypher 질의</b>로 적어 두고, 고른 데이터에 모두 실행합니다. 결과가 0행이면 통과입니다. 위 데이터 목록에서 <b>규칙 위반 예제</b>를 고르면 규칙이 무엇을 잡는지 볼 수 있습니다.</p>
+  <p class="sub" lang="en">Rules such as "a line has two terminals" or "an mRID is a UUID" are written as <b>Cypher queries that find violations</b> and run against the selected data. Zero rows means the rule passes. Pick the <b>rule-breaking sample</b> in the dataset list above to see what the rules catch.</p>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">데이터의 <b>맞춤법 검사기</b>입니다. 규칙마다 "규칙을 어긴 것을 모두 찾아 줘"라는 질문을 하나씩 만들어 두고 한꺼번에 돌립니다. 아무것도 안 나오면 통과, 나오면 그 목록이 고칠 곳입니다.</p><p lang="en">A <b>spell-checker</b> for data. Each rule is a question, "find everything that breaks this rule", and they all run together. Nothing found means pass; anything found is the list of things to fix.</p></div>
+  <blockquote><p lang="ko"><b>Neo4j에서 검증하는 두 가지 방법</b> — ① <b>제약조건</b>은 규칙을 어긴 데이터가 <b>저장되지 못하게</b> 막습니다(예: <code>CREATE CONSTRAINT FOR (o:IdentifiedObject) REQUIRE o.mRID IS UNIQUE</code>). Community 에디션은 고유(UNIQUE) 제약만, 존재·타입 제약은 Enterprise 에디션입니다. ② 관계 수·값 범위·형식처럼 제약으로 표현할 수 없는 규칙은 아래처럼 <b>위반을 찾는 질의</b>로 검사하고, 데이터를 넣은 뒤나 정기적으로 실행합니다.</p><p lang="en"><b>Two ways to validate in Neo4j</b> — ① <b>constraints</b> stop rule-breaking data from being <b>written at all</b> (e.g. <code>CREATE CONSTRAINT FOR (o:IdentifiedObject) REQUIRE o.mRID IS UNIQUE</code>); Community edition has unique constraints only, existence and type constraints need Enterprise. ② Rules constraints cannot express — relationship counts, value ranges, formats — are checked with <b>violation-finding queries</b> like the ones below, run after loading or on a schedule.</p></blockquote>
+  <div id="checkSummary" class="meta"></div>
+  <div id="checks"></div>
+  <p class="meta"><span lang="ko">규칙 파일</span><span lang="en">Rule file</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/shapes/cim-checks.cypher">shapes/cim-checks.cypher</a> · <span lang="ko">명령줄</span><span lang="en">Command line</span>: <code>node tools/cypher.mjs --ttl examples/power-grid-sample.ttl,shapes/cim-classes.ttl --checks shapes/cim-checks.cypher</code></p>
 </section>
 
 <section id="graph-section">

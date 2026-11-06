@@ -6,7 +6,7 @@
 생성: examples/asset/asset-ontology.ttl      OWL (TBox + ABox, 계산값 포함)
       examples/asset/neo4j/import.cypher     Neo4j 적재 스크립트
       assets/data/asset.json                 웹페이지(asset.html) 데이터
-검증: shapes/asset-shapes.ttl (SHACL) + 역량 질문을 SPARQL로 재현
+검증: neo4j/checks.cypher (Cypher 형상검증) + neo4j/queries.cypher (역량 질문), tools/cypher.mjs로 실행
 
 계산 규칙
   건전도 HI = 100 − 60 × 경과연수 / 설계수명 − Σ(방법별 최신 진단 감점: 주의 15, 이상 35)   (0~100)
@@ -15,7 +15,7 @@
                  <100 →1, <500 →2, <2000 →3, <10000 →4, 그 밖 →5
   위험도 = PoF × CoF   (15 이상 높음, 8~14 중간, 7 이하 낮음)
 
-실행: python examples/asset/build_asset_ontology.py   (저장소 루트에서, rdflib · pyshacl 필요)
+실행: python examples/asset/build_asset_ontology.py   (저장소 루트에서, Node.js 필요)
 """
 from __future__ import annotations
 
@@ -426,55 +426,18 @@ MERGE (w)-[:ON_ASSET]->(a) MERGE (w)-[:PERFORMS]->(t) MERGE (w)-[:ADDRESSES]->(f
 (HERE / "neo4j").mkdir(exist_ok=True)
 (HERE / "neo4j" / "import.cypher").write_text(CYPHER, encoding="utf-8")
 
-# ---------------------------------------------------------------- 검증: SHACL + SPARQL 역량 질문
-import rdflib  # noqa: E402
-from pyshacl import validate  # noqa: E402
+# ---------------------------------------------------------------- 검증: Neo4j Cypher (형상검증 + 역량 질문)
+# import.cypher를 그대로 적재한 그래프에 neo4j/queries.cypher(역량 질문)와 neo4j/checks.cypher(형상검증)를 실행.
+# Neo4j 서버 없이 tools/cypher.mjs(브라우저 실습과 같은 엔진)로 돌리며, Neo4j에서도 같은 파일을 그대로 쓸 수 있다.
+from pycim.cypher import run as run_cypher  # noqa: E402
 
-g = rdflib.Graph()
-g.parse(data=TTL, format="turtle")
-g.parse(ROOT / "examples" / "power-grid-sample.ttl")
-conforms, rep_g, _ = validate(g, shacl_graph=rdflib.Graph().parse(ROOT / "shapes" / "asset-shapes.ttl"),
-                              advanced=True, inference="none")
-SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
-shacl = []
-for r in rep_g.subjects(rdflib.RDF.type, SH.ValidationResult):
-    shacl.append(dict(focus=str(rep_g.value(r, SH.focusNode)).split("#")[-1],
-                      severity=str(rep_g.value(r, SH.resultSeverity)).split("#")[-1],
-                      message=str(rep_g.value(r, SH.resultMessage))))
-shacl.sort(key=lambda x: (x["severity"], x["focus"]))
-
-# RDFS 하위 속성 추론(rdfs7)만 직접 적용: pam:precedes ⊑ aipd:precedes 이므로
-# 업무 온톨로지의 속성 이름으로도 정비 업무 흐름을 따라갈 수 있다.
-for sub, sup in list(g.subject_objects(rdflib.RDFS.subPropertyOf)):
-    for s_, o_ in list(g.subject_objects(sub)):
-        g.add((s_, sup, o_))
-
-PFX = "PREFIX pam: <https://1004aiteam-power.github.io/ontology-space/asset#> PREFIX ex: <http://example.org/grid#> PREFIX cim: <http://iec.ch/TC57/CIM100#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-
-
-def q(s: str) -> list[list[str]]:
-    return [[str(x) if x is not None else "" for x in row] for row in g.query(PFX + s)]
-
-
-CQ = [
-    ("주변압기 #1 자리에 지금 있는 자산과 이전 자산은?",
-     "SELECT ?code ?from ?to WHERE { ?d pam:atLocation ex:TR_1 ; pam:deployedAsset ?a ; pam:validFrom ?from . ?a pam:code ?code . OPTIONAL { ?d pam:validTo ?to } } ORDER BY ?from"),
-    ("위험도가 가장 높은 자산은?",
-     "SELECT ?code ?risk ?hi WHERE { ?a pam:code ?code ; pam:riskScore ?risk ; pam:healthIndex ?hi } ORDER BY DESC(?risk) LIMIT 1"),
-    ("OLTC 접점 마모를 찾는 점검과 대응 정비는?",
-     "SELECT ?kind ?name WHERE { ?f pam:code \"FM-02\" . { ?f pam:detectedBy ?t . BIND(\"탐지\" AS ?kind) } UNION { ?f pam:mitigatedBy ?t . BIND(\"대응\" AS ?kind) } ?t rdfs:label ?name } ORDER BY ?kind"),
-    ("주의·이상 판정을 받았는데 작업지시가 아직 끝나지 않은 자산은?",
-     "SELECT DISTINCT ?code ?wo ?st WHERE { ?w pam:triggeredBy ?g ; pam:workStatus ?st ; pam:code ?wo ; pam:onAsset ?a . ?g pam:judgement ?j . FILTER(?j != pam:Normal && STR(?st) != \"완료\") ?a pam:code ?code } ORDER BY ?code ?wo"),
-    ("정전이 필요한 미완료 작업지시와 예상 정전 시간은?",
-     "SELECT ?wo ?h WHERE { ?w pam:code ?wo ; pam:performs ?t ; pam:workStatus ?st ; pam:outageHours ?h . ?t pam:requiresOutage true . FILTER(STR(?st) != \"완료\") } ORDER BY ?wo"),
-    ("자산 기록이 없는 설비(기능 위치)는?",
-     "SELECT ?name WHERE { ?e a ?c ; cim:IdentifiedObject.name ?name . VALUES ?c { cim:BusbarSection cim:Breaker cim:PowerTransformer cim:ACLineSegment } FILTER NOT EXISTS { ?d pam:atLocation ?e . FILTER NOT EXISTS { ?d pam:validTo ?x } } } ORDER BY ?name"),
-    ("EAM 설비번호 EQ-CB-2019-0123은 어느 설비 자리에 있나?",
-     "SELECT ?name WHERE { ?a pam:eamNumber \"EQ-CB-2019-0123\" ; pam:installedAt ?e . ?e cim:IdentifiedObject.name ?name }"),
-    ("정비 작업 하나가 거치는 업무 흐름은? (aipd:precedes로 질의)",
-     "PREFIX aipd: <https://example.org/ai-promotion-dept/ontology#> SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { pam:WF_01 (aipd:precedes)+ ?s }"),
-]
-cq_out = [dict(q=t, rows=q(s)) for t, s in CQ]
+NEO = "examples/asset/neo4j/"
+res = run_cypher(load=NEO + "import.cypher", queries=NEO + "queries.cypher", checks=NEO + "checks.cypher")
+cell = lambda v: "" if v is None else str(v)  # noqa: E731
+checks = sorted((dict(focus=cell(row[0]), severity=c["severity"], rule=c["id"], message=f"{c['ko']} / {c['en']}")
+                 for c in res["checks"] for row in c["rows"]), key=lambda x: (x["severity"], x["focus"]))
+conforms = not any(c["severity"] == "Violation" for c in checks)
+cq_out = [dict(q=q["title"], rows=[[cell(v) for v in row] for row in q["rows"]]) for q in res["queries"]]
 
 # ---------------------------------------------------------------- 웹 데이터
 web = dict(
@@ -487,13 +450,13 @@ web = dict(
                  components=[c for c in comps if c["asset_id"] == a["asset_id"]],
                  deployments=[x for x in deps if x["asset_id"] == a["asset_id"]]) for a in assets],
     tasks=tasks, failureModes=fms, diagnoses=diags, workOrders=wos,
-    overdue=overdue, gaps=gaps, shacl=shacl, cq=cq_out,
+    overdue=overdue, gaps=gaps, checks=checks, cq=cq_out,
 )
 (ROOT / "assets" / "data" / "asset.json").write_text(json.dumps(web, ensure_ascii=False, indent=1), encoding="utf-8")
 
 # ---------------------------------------------------------------- 요약 출력
 if __name__ == "__main__":
-    print(f"트리플 {len(g)}개 (자산 온톨로지 + power-grid-sample)")
+    print(f"Neo4j 그래프: 노드 {res['graph']['nodes']}개 · 관계 {res['graph']['relationships']}개 (import.cypher)")
     print("\n== 위험도 (기준일 %s) ==" % AS_OF)
     for aid, c in sorted(calc.items(), key=lambda x: -x[1]["risk"]):
         print(f"{aid:11s} HI {c['hi']:5.1f}  PoF {c['pof']}  정전 {c['outage_mw']}MW × 복구 → {c['mwh']:>6} MWh  CoF {c['cof']}  위험도 {c['risk']:2d} ({c['level']})"
@@ -502,9 +465,9 @@ if __name__ == "__main__":
     for o in overdue:
         print(f"{o['asset']} {o['task']} {T[o['task']]['name']}: {o['state']}")
     print("\n== 자산 기록이 없는 기능 위치 ==", ", ".join(gaps) or "없음")
-    print(f"\n== SHACL: {'통과' if conforms else '위반·경고 있음'} ==")
-    for s in shacl:
-        print(f"[{s['severity']}] {s['focus']}: {s['message']}")
+    print(f"\n== 형상검증 (Cypher): {'위반 없음' if conforms else '위반 있음'} ==")
+    for c in checks:
+        print(f"[{c['severity']}] {c['rule']} {c['focus']}: {c['message']}")
     print("\n== 역량 질문 ==")
     for c in cq_out:
         print("Q.", c["q"], "→", c["rows"])

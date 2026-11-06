@@ -6,7 +6,7 @@
       nodes(도시 노드·존 가중치) · routes(노선, 고속도로/국도) · sections(구간·차로·자유속도) · scenarios(평일 기본, 사고)
 생성: examples/highway/highway-ontology.ttl   OWL + GeoSPARQL (TBox + ABox, 요약 교통 상태 포함)
       assets/data/highway.json                웹페이지(highway.html) 데이터 (시간별 교통량 전체)
-검증: shapes/highway-shapes.ttl (SHACL) + 역량 질문을 SPARQL로 재현
+검증: shapes/highway-checks.cypher (Cypher 형상검증) + examples/highway/queries.cypher (역량 질문), tools/cypher.mjs로 실행
 
 교통 모형 (모두 단순화한 가상 모형)
   수요   T_ij(일) = k · f · (W_i · W_j)^0.8 / max(40, d_ij)^1.2   (중력모형, W=존 가중치, d=직선거리 km,
@@ -19,13 +19,14 @@
   규모 k 가장 붐비는 고속도로 구간의 기본 시나리오 최대 v/c가 1.15가 되도록 맞춘다 (가상 보정)
   서비스수준(LOS, v/c 기준 단순화) A <0.35, B <0.55, C <0.75, D <0.90, E ≤1.00, F >1.00
 
-실행: python examples/highway/build_highway.py   (저장소 루트에서, rdflib · pyshacl 필요)
+실행: python examples/highway/build_highway.py   (저장소 루트에서, Node.js 필요)
 """
 from __future__ import annotations
 
 import csv
 import heapq
 import json
+import sys
 import math
 from pathlib import Path
 
@@ -451,53 +452,19 @@ with open(EXP / "std_node.csv", "w", newline="", encoding="utf-8-sig") as f:
 ⚠ 모든 데이터는 가상입니다.
 """, encoding="utf-8")
 
-# ---------------------------------------------------------------- 검증: SHACL + SPARQL
-import rdflib  # noqa: E402
-from pyshacl import validate  # noqa: E402
+# ---------------------------------------------------------------- 검증: Neo4j Cypher (형상검증 + 역량 질문)
+# 위에서 쓴 두 Turtle 파일을 Neo4j식 속성 그래프로 불러와(클래스 → 라벨, 값 → 속성, 개체 연결 → 관계)
+# shapes/highway-checks.cypher(형상검증)와 examples/highway/queries.cypher(역량 질문)를 tools/cypher.mjs로 실행
+sys.path.insert(0, str(ROOT))
+from pycim.cypher import run as run_cypher  # noqa: E402
 
-g = rdflib.Graph().parse(data=TTL, format="turtle")
-g.parse(data=ALIGN_TTL, format="turtle")
-conforms, rep, _ = validate(g, shacl_graph=rdflib.Graph().parse(ROOT / "shapes" / "highway-shapes.ttl"), advanced=True)
-SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
-shacl = sorted(dict(focus=str(rep.value(r, SH.focusNode)).split("#")[-1], severity=str(rep.value(r, SH.resultSeverity)).split("#")[-1],
-                    message=str(rep.value(r, SH.resultMessage))) for r in rep.subjects(rdflib.RDF.type, SH.ValidationResult)
-               ) if not conforms else []
-
-Q = "PREFIX hw: <https://1004aiteam-power.github.io/ontology-space/highway#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-
-
-def q(s: str) -> list[list[str]]:
-    return [[str(x) for x in row] for row in g.query(Q + s)]
-
-
-CQ = [
-    ("경부선 구간을 순서대로 나열하면?",
-     "SELECT ?o ?n WHERE { ?s hw:onRoute hw:R_GYEONGBU ; hw:routeOrder ?o ; rdfs:label ?n } ORDER BY ?o"),
-    ("노선이 5개 이상 만나는 분기점(JC)은?",
-     "SELECT ?n (COUNT(?r) AS ?k) WHERE { ?j a hw:Junction ; hw:connectsRoute ?r ; rdfs:label ?n . FILTER(LANG(?n) = 'ko') } GROUP BY ?n HAVING (COUNT(?r) >= 5) ORDER BY DESC(?k) ?n"),
-    ("기본 시나리오에서 하루 교통량이 가장 많은 링크 3개는?",
-     "SELECT ?l ?v WHERE { ?x hw:code ?l ; hw:dailyVolume ?v } ORDER BY DESC(?v) LIMIT 3"),
-    ("기본 시나리오에서 첨두 때 서비스수준 F가 되는 링크는?",
-     "SELECT ?l ?h ?vc WHERE { ?t hw:inScenario hw:SC_BASE ; hw:los hw:LOS_F ; hw:onLink ?x ; hw:hour ?h ; hw:vcRatio ?vc . ?x hw:code ?l } ORDER BY DESC(?vc)"),
-    ("사고 시나리오에서 첨두 v/c가 가장 많이 오른 링크는? (사고 링크 제외)",
-     "SELECT ?l ?b ?i WHERE { ?tb hw:inScenario hw:SC_BASE ; hw:onLink ?x ; hw:vcRatio ?b . ?ti hw:inScenario hw:SC_INCIDENT ; hw:onLink ?x ; hw:vcRatio ?i . "
-     "?x hw:code ?l . FILTER NOT EXISTS { ?inc hw:affectsLink ?x } } ORDER BY DESC(?i - ?b) LIMIT 3"),
-    ("대전에서 링크 2개 이내로 닿는 노드는?",
-     "SELECT (COUNT(DISTINCT ?n) AS ?k) WHERE { hw:N_DAEJEON (hw:adjacentTo|hw:adjacentTo/hw:adjacentTo) ?n . FILTER(?n != hw:N_DAEJEON) }"),
-    ("IC이면서 JC인 노드는 몇 개인가?",
-     "SELECT (COUNT(?n) AS ?k) WHERE { ?n a hw:Interchange, hw:Junction }"),
-    ("고속도로에 닿지 않고 국도로만 갈 수 있는 지점은?",
-     "SELECT ?n WHERE { ?x a hw:Intersection ; rdfs:label ?n . FILTER(LANG(?n) = 'ko') } ORDER BY ?n"),
-    ("고속도로와 국도가 함께 지나는 도시는 몇 곳인가?",
-     "SELECT (COUNT(DISTINCT ?n) AS ?k) WHERE { ?s1 hw:endpoint ?n ; hw:onRoute ?r1 . ?r1 a hw:Expressway . ?s2 hw:endpoint ?n ; hw:onRoute ?r2 . ?r2 a hw:NationalRoad . }"),
-    ("표준과 대응시키지 않은 핵심 클래스는? (Route·Section·Link·Node·Expressway·NationalRoad·Interchange 중)",
-     "PREFIX hwx: <https://1004aiteam-power.github.io/ontology-space/highway-std#> SELECT ?c WHERE { VALUES ?c { hw:Route hw:Section hw:Link hw:Node hw:Expressway hw:NationalRoad hw:Interchange } FILTER NOT EXISTS { ?m hwx:subject ?c } }"),
-    ("표준별 대응 수와 원문 확인 수는?",
-     "PREFIX hwx: <https://1004aiteam-power.github.io/ontology-space/highway-std#> SELECT ?s (COUNT(?m) AS ?n) (SUM(IF(?v, 1, 0)) AS ?ok) WHERE { ?m hwx:standard ?s ; hwx:verified ?v } GROUP BY ?s ORDER BY ?s"),
-    ("서울에서 모든 노드에 닿을 수 있나? (닿지 않는 노드 수)",
-     "SELECT (COUNT(?n) AS ?k) WHERE { ?n a hw:Node . FILTER NOT EXISTS { hw:N_SEOUL hw:adjacentTo* ?n } }"),
-]
-cq_out = [dict(q=t, rows=q(s)) for t, s in CQ]
+HW_TTL = ["examples/highway/highway-ontology.ttl", "examples/highway/highway-alignment.ttl"]
+res = run_cypher(ttl=HW_TTL, queries="examples/highway/queries.cypher", checks="shapes/highway-checks.cypher")
+cell = lambda v: "" if v is None else str(v)  # noqa: E731
+checks = sorted((dict(focus=cell(row[0]), severity=c["severity"], rule=c["id"], message=f"{c['ko']} / {c['en']}")
+                 for c in res["checks"] for row in c["rows"]), key=lambda x: (x["severity"], x["focus"]))
+conforms = not checks
+cq_out = [dict(q=q["title"], rows=[[cell(v) for v in row] for row in q["rows"]]) for q in res["queries"]]
 
 # ---------------------------------------------------------------- 웹 데이터
 twin = json.loads((ROOT / "assets" / "data" / "twin.json").read_text(encoding="utf-8"))
@@ -509,12 +476,12 @@ web = dict(
                 routes=node_routes[n["node_id"]]) for n in nodes],
     routes=routes, sections=[dict(id=s["section_id"], route=s["route_id"], a=s["a"], b=s["b"], km=s["km"], lanes=int(s["lanes"])) for s in sections],
     links=[dict(id=lk["link_id"], section=lk["section"], route=lk["route"], cls=lk["cls"], frm=lk["frm"], to=lk["to"], lanes=lk["lanes"], km=lk["km"]) for lk in links],
-    scenarios=scenarios, results=results, alignment=alignment, odWatch=[f"{o}-{d_}" for o, d_ in OD_WATCH], cq=cq_out, shacl=shacl,
+    scenarios=scenarios, results=results, alignment=alignment, odWatch=[f"{o}-{d_}" for o, d_ in OD_WATCH], cq=cq_out, checks=checks,
 )
 (ROOT / "assets" / "data" / "highway.json").write_text(json.dumps(web, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 if __name__ == "__main__":
-    print(f"노드 {len(nodes)} · 노선 {len(routes)} · 구간 {len(sections)} · 방향 링크 {len(links)} · 트리플 {len(g)}")
+    print(f"노드 {len(nodes)} · 노선 {len(routes)} · 구간 {len(sections)} · 방향 링크 {len(links)} · Neo4j 그래프 노드 {res['graph']['nodes']}개 · 관계 {res['graph']['relationships']}개")
     print(f"규모 보정 k={k:.3g} → 하루 통행 {DAILY_TRIPS:,}대")
     print("통계:", STATS)
     for sid in ("BASE", "INCIDENT"):
@@ -526,7 +493,7 @@ if __name__ == "__main__":
             print(f"{lid} {R[lk['route']]['ko']} {N[lk['frm']]['ko']}→{N[lk['to']]['ko']} v/c {vc}")
         for key, tt in r["od"].items():
             print(f"{key}: 최소 {min(tt)}분, 최대 {max(tt)}분 ({tt.index(max(tt))}시)")
-    print("\n== SHACL ==", "통과" if conforms else shacl)
+    print("\n== 형상검증 (Cypher) ==", "통과" if conforms else checks)
     print("\n== 역량 질문 ==")
     for c in cq_out:
         print("Q.", c["q"], "→", c["rows"][:6])

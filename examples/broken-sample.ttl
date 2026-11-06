@@ -1,5 +1,5 @@
-# SHACL 검증 실습용: 일부러 규칙을 어긴 데이터
-# 실행: python examples/validate.py
+# 데이터 검증(형상검증) 실습용: 일부러 규칙을 어긴 데이터
+# 실행: node tools/cypher.mjs --ttl examples/broken-sample.ttl,shapes/cim-classes.ttl --checks shapes/cim-checks.cypher
 
 @prefix cim: <http://iec.ch/TC57/CIM100#> .
 @prefix ex:  <http://example.org/broken#> .

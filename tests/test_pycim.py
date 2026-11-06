@@ -230,30 +230,27 @@ def test_cgmes_power_flow_matches_file_sv():
         assert abs(v - ref[cn.name]) < 1e-3
 
 
-# ---- SHACL ---------------------------------------------------------------------
+# ---- 형상검증 (Cypher) ------------------------------------------------------------
 def test_tbox_file_is_up_to_date():
     from pycim.rdf import class_hierarchy_turtle
     path = Path(__file__).resolve().parent.parent / "shapes" / "cim-classes.ttl"
     assert path.read_text(encoding="utf-8") == class_hierarchy_turtle()
 
 
-def test_shacl_validation():
-    pytest.importorskip("pyshacl")
-    from pyshacl import validate
-    import rdflib
+def test_cypher_checks(tmp_path):
+    # shapes/cim-checks.cypher: 정상 데이터는 위반 0, 일부러 망가뜨린 데이터는 규칙마다 잡힌다
+    from pycim.cypher import run
     from pycim.samples import sample_grid
-    root = Path(__file__).resolve().parent.parent
-    shapes = rdflib.Graph().parse(root / "shapes" / "cim-shapes.ttl")
-    classes = rdflib.Graph().parse(root / "shapes" / "cim-classes.ttl")
 
-    def ok(g):
-        return validate(g, shacl_graph=shapes, ont_graph=classes, inference="rdfs")
+    def violated(ttl):
+        res = run(ttl=[ttl, "shapes/cim-classes.ttl"], checks="shapes/cim-checks.cypher")
+        return {c["id"] for c in res["checks"] if c["rows"]}
 
-    assert ok(rdflib.Graph().parse(data=to_turtle(sample_grid()), format="turtle"))[0]
-    assert ok(rdflib.Graph().parse(root / "examples" / "power-grid-sample.ttl"))[0]
-    conforms, report, _ = ok(rdflib.Graph().parse(root / "examples" / "broken-sample.ttl"))
-    SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
-    assert not conforms and len(list(report.subjects(rdflib.RDF.type, SH.ValidationResult))) == 8
+    sample = tmp_path / "sample_grid.ttl"
+    sample.write_text(to_turtle(sample_grid()), encoding="utf-8")
+    assert violated(str(sample)) == set()
+    assert violated("examples/power-grid-sample.ttl") == set()
+    assert violated("examples/broken-sample.ttl") == {"MRID", "TERMINALS_2", "TERMINAL", "LINE", "SWITCH", "VOLTAGE_LEVEL", "NAME"}
 
 
 # ---- 디지털 트윈 (가상 대한민국 전력망) ------------------------------------------------

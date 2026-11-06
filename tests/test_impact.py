@@ -34,7 +34,7 @@ def test_risk_rerated(B):
     assert [n["id"] for n in B["CHAIN"] if not n["asset"]] == ["BUS_154", "BUS_22"]
 
 
-def test_sparql_traversal(B):
+def test_cypher_traversal(B):
     rows = {c["q"]: c["rows"] for c in B["CQ_OUT"]}
     assert rows["M.Tr #1 본체가 고장 나면 정전되는 고객은 모두 몇 호인가?"] == [["10", str(B["DL1_CUST"])]]
     assert rows["그중 중요 고객은?"] == [["아라 병원"]]

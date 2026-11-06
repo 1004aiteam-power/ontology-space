@@ -6,7 +6,8 @@ export const DATASETS = {
   full:   { file: 'examples/sample_grid_full.ttl', ko: '예제 변전소 – pycim 출력 (매핑 · TP · SV 포함)', en: 'Sample substation – pycim output (mapping · TP · SV)' },
   sample: { file: 'examples/power-grid-sample.ttl', ko: '예제 변전소 (손으로 작성한 TTL)', en: 'Sample substation (hand-written TTL)' },
   cigre:  { file: 'examples/cgmes/cigre_mv.ttl', ko: 'CIGRE MV 배전망 (CGMES → pycim)', en: 'CIGRE MV network (CGMES → pycim)' },
-  korea:  { file: 'examples/twin/korea_virtual_grid.ttl', ko: '가상 대한민국 전력망 (디지털 트윈, 가상 데이터)', en: 'Virtual Korean grid (digital twin, virtual data)' }
+  korea:  { file: 'examples/twin/korea_virtual_grid.ttl', ko: '가상 대한민국 전력망 (디지털 트윈, 가상 데이터)', en: 'Virtual Korean grid (digital twin, virtual data)' },
+  broken: { file: 'examples/broken-sample.ttl', ko: '규칙 위반 예제 (데이터 검증 실습용)', en: 'Rule-breaking sample (for data validation)' }
 };
 
 export const QUERIES = [
