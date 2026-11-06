@@ -2,7 +2,7 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전 공사현장 안전조치 시뮬레이션 코어 (화면 없이 동작 → 테스트 가능). 단위: 미터, 초
 //
-// 장면: 왕복 2차로 도로(x축 방향), 북쪽 보도 위 전주 4기(-70 개폐기 · -35 접지 · 0 작업 · 35 변압기)
+// 장면: 왕복 2차로 도로(x축 방향), 북쪽 보도 위 전주 4기(-70 개폐기 · -35 접지 · 0 작업 · 35), 고압 3상 + 중성선 (저압선 없음)
 //   시나리오 'pole'    가공 배전선로 애자·완금 교체 (정전 작업) — 안전수칙 1~8, 11(배전)
 //   시나리오 'manhole' 지중 배전 맨홀 내 케이블 점검 — 안전수칙 1, 3, 9, 10, 11(토목: 개구부 방호)
 // 각 단계 = 여러 줄(lane)의 할 일(task)을 동시에 진행. 매 틱 안전 규칙(불변식)을 확인해 위반을 기록
@@ -44,8 +44,8 @@ export const ROLES = {
 // ---- 장면 치수 -----------------------------------------------------------------------
 export const GEO = {
   roadHalf: 4, walkOut: 7.6, poleY: 5.6, poles: [-70, -35, 0, 35], poleH: 13.6,
-  armZ: 11.6, phaseY: [4.5, 5.6, 6.7], neutralZ: 10.3, lvZ: 8.6, lvY: [5.25, 5.95],
-  swX: -70, swZ: 10.2, gndX: -35, workX: 0, txX: 35,
+  armZ: 11.6, phaseY: [4.5, 5.6, 6.7], neutralZ: 10.3, neutralY: 5.3,
+  swX: -70, swZ: 10.2, gndX: -35, workX: 0,
   laneY: 1.9, truckLen: 8.5, truckW: 2.5, park: 0.5,         // 작업차 정차 위치(차체 중심 x)
   ttBack: 2.6, ttZ: 2.9, L1: 6.5, L2: 6.5,                    // 붐 회전대(차체 중심에서 뒤로), 하부·상부 붐 길이
   pedY: 6.95, fallR: 2.4, guideSpot: [-8.5, 0.4],
@@ -76,7 +76,7 @@ export const STOW = { slew: 0, e: 0.05, bend: 3.3 };          // 하부 붐은 �
 const BUCKET = {                                              // 버킷 바닥 목표 위치
   near: [-1.7, 2.5, 9.4],       // 검전용: 충전부와 거리를 둔 위치
   work: [-0.9, 3.35, 10.5],     // 애자·완금 작업 위치
-  cover: [-0.7, 3.7, 7.5]       // 저압선 방호 위치
+  cover: [-0.8, 3.9, 9.2]       // 중성선·인접 상 방호 위치
 };
 const lerpJ = (a, b, k) => ({ slew: a.slew + (b.slew - a.slew) * k, e: a.e + (b.e - a.e) * k, bend: a.bend + (b.bend - a.bend) * k });
 export const bucketPos = (tr) => { const { T } = boomFK(tr); return T; };
@@ -336,19 +336,19 @@ function poleSteps() {
       ] },
 
     { id: 'cover', rules: [8],
-      title: L('충전부 방호 (살아 있는 저압선)', 'Cover live parts (the energised LV line)'),
-      what: L('고압선은 정전되었지만 아래의 저압선은 다른 변압기(35 전주)에서 전기를 받아 살아 있습니다. 버킷을 내려 절연 방호관으로 저압선을 덮습니다.',
-        'The HV line is dead, but the LV line below is fed from another transformer (pole 35) and stays live. Lower the bucket and cover it with insulating line hoses.'),
-      why: L('정전 구간에도 저압선·다른 회선 같은 충전부가 남습니다. 몸이 닿을 수 있는 범위는 모두 방호합니다.', 'Even in an outage, LV or other circuits stay live. Cover everything you could touch.'),
+      title: L('방호: 중성선·인접 상에 절연 커버', 'Cover the neutral and adjacent phase'),
+      what: L('검전·접지가 끝났어도, 작업 중 몸이 닿을 수 있는 중성선과 가까운 상에 절연 방호관·커버를 씌웁니다. 버킷을 조금 내려 중성선부터 덮고, 바로 옆 상을 덮은 뒤 작업 위치로 올라갑니다.',
+        'Even after testing and earthing, fit insulating hoses and covers on the neutral and the nearby phase you could touch while working. Lower the bucket a little, cover the neutral, then the adjacent phase, and move up to the work position.'),
+      why: L('오조작·역송전·유도전압으로 선로에 다시 전기가 올 수 있습니다. 접지는 사고 전류를 흘려 줄 뿐이라, 그 순간 몸이 선에 닿아 있으면 위험이 남습니다.', 'Wrong switching, back-feed or induced voltage can re-energise the line. The earth only carries the fault current; if your body is touching a conductor at that moment, you are still at risk.'),
       lanes: [
         [act('B', 'work', 3, { fx: (W, k) => { W.truck.boom = lerpJ(boomIK(W.truck, BUCKET.near), boomIK(W.truck, BUCKET.cover), ease(k)); } }),
           act('B', 'reach', 4.5, { say: L('방호관 설치', 'Fitting line hoses'), fx: (W, k) => { W.covers = k; } }),
           act('B', 'work', 3.4, { fx: (W, k) => { W.truck.boom = lerpJ(boomIK(W.truck, BUCKET.cover), boomIK(W.truck, BUCKET.work), ease(k)); } })],
-        [say('A', L('저압선 살아 있음 — 방호 철저', 'LV is live — cover it fully'), 2.4)]
+        [say('A', L('몸 닿는 범위는 전부 방호', 'Cover everything within reach'), 2.4)]
       ],
       wrong: [
-        { text: L('정전 작업이니 저압선도 죽어 있다고 보고 바로 작업한다', 'It is an outage, so assume the LV is dead too and start'),
-          why: L('저압선은 다른 변압기에서 전기를 받을 수 있습니다. 살아 있는 충전부는 방호합니다. (수칙 8)', 'LV can be fed from another transformer. Cover live parts. (Rule 8)') },
+        { text: L('정전·접지를 했으니 방호관 없이 바로 작업한다', 'It is dead and earthed, so start without covers'),
+          why: L('오조작·역송전·유도전압으로 다시 전기가 올 수 있습니다. 몸이 닿을 수 있는 중성선·인접 상은 방호합니다. (수칙 8)', 'Wrong switching, back-feed or induced voltage can bring the line back. Cover the neutral and adjacent phase within reach. (Rule 8)') },
         { text: L('방호관 대신 몸을 피해서 조심히 작업한다', 'Skip the hoses and just be careful not to touch'),
           why: L('작업에 집중하면 몸의 위치를 놓칩니다. "조심"은 방호가 아닙니다. (수칙 8)', 'Focused on the task, you lose track of your body. Care is not cover. (Rule 8)') }
       ] },
@@ -740,13 +740,13 @@ export class SafetySim {
       if (tr.moving && Object.entries(W.people).some(([k, p]) => !p.inCab && Math.abs(p.y - tr.y) < 1.7 && Math.abs(p.x - tr.c) < G.truckLen / 2 + 0.6)) v(5, 'person in the path of the moving truck');
       if (W.ground.line > 0 && !(W.ground.earth && W.tested.gnd && !W.sw.closed)) v(8, 'earth clamp without earth end / test / open switch');
       if (W.sw.closed && (W.ground.line > 0 || W.people.B.inBucket && up)) v(8, 'line energised with earth on or worker aloft');
-      // 버킷 작업자 손이 고압선 1.2m 이내 → 검전·접지 끝났어야 함, 저압 방호 끝났어야 함
+      // 버킷 작업자 손이 고압선 1.2m 이내 → 검전·접지 끝났어야 함, 교체 작업은 방호 뒤에
       if (W.people.B.inBucket) {
         const hand = [T[0] + Math.cos(tr.boom.slew) * 0.5, T[1] + Math.sin(tr.boom.slew) * 0.5, T[2] + 1.2];
         const nearHV = G.phaseY.some(y => Math.hypot(hand[1] - y, hand[2] - G.armZ) < 1.2 && Math.abs(hand[0] - G.workX) < 3);
         if (nearHV && !(W.tested.work && W.ground.line === 3 && !W.sw.closed)) v(8, 'hands near HV before test & earth');
         if (nearHV && W.covers < 1 && W.load.state !== 'down') { /* 방호 중 이동은 허용: 작업(교체)은 covers=1에서만 */ }
-        if (W.insul === 'old' && W.load.state === 'bucket' && W.covers < 1) v(8, 'working without LV covers');
+        if (W.insul === 'old' && W.load.state === 'bucket' && W.covers < 1) v(8, 'working without covers');
       }
       // 매달린 인양물 아래 사람 없음
       if (W.load.state === 'hook' && tr.hookDrop < 0.97) {

@@ -3,7 +3,7 @@
 // 배전 공사현장 안전 시뮬레이션 화면: 2D 캔버스 원근(pseudo-3D) 현장, 단계 목록·설명, 훈련(순서 맞히기) 모드
 //
 // 입체감: 비스듬히 내려다보는 원근 투영 · 면마다 햇빛 방향으로 명암 · 땅 위 그림자 · 먼 것부터 그리기 · 멀수록 대기색
-import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT } from './safety.js?v=20261106a';
+import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT } from './safety.js?v=20261106b';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (o == null ? '' : window.t ? window.t(o) : o.ko);
@@ -99,7 +99,7 @@ const fog = (c, d) => mix(c, FOG, clamp((d - 55) / 220, 0, 0.6));
 const COL = {
   grass: [134, 168, 108], walk: [204, 200, 190], walk2: [190, 186, 176], asphalt: [84, 88, 94], curb: [222, 220, 214],
   yellow: [236, 190, 40], white: [244, 244, 240], concrete: [196, 196, 192], steel: [150, 156, 162], red: [200, 52, 44],
-  cone: [244, 110, 30], chock: [240, 194, 40], hv: [58, 62, 70], lv: [40, 40, 44]
+  cone: [244, 110, 30], chock: [240, 194, 40], hv: [58, 62, 70]
 };
 
 // ---- 상자 (면마다 명암, 보이는 면만) ---------------------------------------------------------
@@ -241,17 +241,13 @@ function drawPoles(ctx, now) {
         for (let k = 0.05; k < 0.26; k += 0.07) rod(c, [px, py, G.armZ + k], [px, py, G.armZ + k + 0.02], 0.24, old ? '#7a4a20' : '#b7bec6', 'butt');
         if (old) { const s = project(px, py, G.armZ + 0.13); if (s) { c.fillStyle = '#e03131'; c.font = `700 ${Math.max(9, pxPerM(px, py, G.armZ) * 0.35)}px system-ui`; c.textAlign = 'center'; c.fillText('!', s[0] + pxPerM(px, py, G.armZ) * 0.25, s[1]); } }
       }
-      box(c, { x: px, y: G.lvY[0] + 0.35, hx: 0.05, hy: 0.45, z0: G.lvZ - 0.08, z1: G.lvZ, col: COL.steel });   // 저압 랙
-      rod(c, [px, y - 0.3, G.neutralZ - 0.15], [px, y - 0.3, G.neutralZ], 0.12, '#9aa3ad', 'butt');
+      rod(c, [px, G.neutralY, G.neutralZ - 0.15], [px, G.neutralY, G.neutralZ], 0.12, '#9aa3ad', 'butt');   // 중성선 애자
       if (px === G.swX) {                                       // 개폐기
         const on = W.sw.closed, sy = y - 0.45;
         box(c, { x: px, y: sy, hx: 0.32, hy: 0.25, z0: G.swZ - 0.3, z1: G.swZ + 0.25, col: [120, 130, 140], edge: true });
         const s = project(px, sy - 0.3, G.swZ), k = pxPerM(px, sy, G.swZ);
         if (s) { c.fillStyle = on ? '#e03131' : '#2f9e44'; c.beginPath(); c.arc(s[0], s[1], Math.max(2.5, 0.12 * k), 0, 7); c.fill(); }
         if (W.sw.tag) { const s2 = project(px, sy - 0.27, G.swZ - 0.55); if (s2) { c.fillStyle = '#ffd43b'; c.fillRect(s2[0] - 0.14 * k, s2[1], 0.28 * k, 0.36 * k); c.fillStyle = '#e03131'; c.fillRect(s2[0] - 0.14 * k, s2[1], 0.28 * k, 0.1 * k); } }
-      }
-      if (px === G.txX) {                                       // 변압기 (저압선 전원)
-        box(c, { x: px, y: y - 0.55, hx: 0.38, hy: 0.38, z0: 9.2, z1: 10.4, col: [150, 160, 168], edge: true });
       }
     });
   }
@@ -261,15 +257,14 @@ function drawPoles(ctx, now) {
   for (let i = 0; i < WIRE_POLES.length - 1; i++) {
     const xa = WIRE_POLES[i], xb = WIRE_POLES[i + 1], live = hvLive(xb);
     for (const py of G.phaseY) wires.push({ xa, xb, y: py, z: G.armZ + 0.26, sag: 0.55, kind: 'hv', live });
-    wires.push({ xa, xb, y: G.poleY - 0.3, z: G.neutralZ, sag: 0.5, kind: 'n', live: false });
-    for (const py of G.lvY) wires.push({ xa, xb, y: py, z: G.lvZ, sag: 0.45, kind: 'lv', live: true });
+    wires.push({ xa, xb, y: G.neutralY, z: G.neutralZ, sag: 0.5, kind: 'n', live: false });
   }
   const N = 8;
   for (const wr of wires) for (let k = 0; k < N; k++) {
     const p = (j) => { const u = j / N; return [wr.xa + (wr.xb - wr.xa) * u, wr.y, wr.z - wr.sag * 4 * u * (1 - u)]; };
     const a = p(k), b = p(k + 1), m = p(k + 0.5);
     push(m[0], m[1], m[2], c => {
-      const base = wr.kind === 'lv' ? COL.lv : COL.hv;
+      const base = COL.hv;
       line3(c, [a, b], rgb(fog(base, depth(...m))), Math.max(1, 0.035 * pxPerM(...m)));
       if (showPower && wr.kind !== 'n') {
         if (wr.live) { line3(c, [a, b], 'rgba(255,90,40,.55)', Math.max(1.6, 0.07 * pxPerM(...m))); line3(c, [a, b], 'rgba(255,230,140,.95)', Math.max(1, 0.035 * pxPerM(...m)), [4, 10], -now / 30); }
@@ -277,10 +272,12 @@ function drawPoles(ctx, now) {
       }
     });
   }
-  // 저압선 방호관
+  // 방호관: 중성선 · 도로 쪽 인접 상
   if (scenario === 'pole' && W.covers > 0.001) {
-    const L = 3.2 * W.covers;
-    for (const py of G.lvY) push(0, py, G.lvZ, c => { for (const s of [-1, 1]) line3(c, [[0, py, G.lvZ - 0.01], [s * L, py, G.lvZ - 0.45 * 4 * (L / 35) * (1 - L / 35)]], '#ff7a1a', Math.max(2, 0.13 * pxPerM(0, py, G.lvZ))); });
+    const L = 3.2 * W.covers, sagAt = (sag, x) => sag * 4 * (Math.abs(x) / 35) * (1 - Math.abs(x) / 35);
+    for (const [py, z, sag] of [[G.neutralY, G.neutralZ, 0.5], [G.phaseY[0], G.armZ + 0.26, 0.55]]) push(0, py, z, c => {
+      for (const s of [-1, 1]) { const pts = [0, 0.5, 1].map(u => [s * L * u, py, z - sagAt(sag, s * L * u) - 0.01]); line3(c, pts, '#ff7a1a', Math.max(2, 0.13 * pxPerM(0, py, z))); }
+    });
   }
   // 접지 클램프 · 접지선
   if (scenario === 'pole' && W.ground.line > 0) {
@@ -563,9 +560,8 @@ function drawOverlay(ctx) {
       tag(GEO.swX, GEO.poleY, GEO.poleH + 1, W.sw.closed ? t({ ko: '개폐기: 투입(ON)', en: 'Switch: closed' }) : t({ ko: '개폐기: 개방(OFF)', en: 'Switch: open' }), W.sw.closed ? '#c92a2a' : '#2f9e44');
       tag(GEO.gndX, GEO.poleY, GEO.poleH + 1, t({ ko: '접지 전주 (-35)', en: 'Earthing pole (-35)' }) + (W.ground.line ? ' ✓' : ''), W.ground.line ? '#2b8a3e' : '#495057');
       tag(GEO.workX, GEO.poleY, GEO.poleH + 1, t({ ko: '작업 전주', en: 'Work pole' }), '#495057');
-      tag(GEO.txX, GEO.poleY, GEO.poleH + 1, t({ ko: '변압기 → 저압선', en: 'Transformer → LV' }), '#495057');
       if (W.load.state === 'hook' && W.truck.hookDrop < 0.97) { const h = hookXY(W.truck); tag(h[0], h[1] - GEO.fallR, 0.1, t({ ko: '낙하 반경 출입금지', en: 'Drop zone — keep out' }), '#c92a2a'); }
-      if (W.covers > 0.5) tag(2.4, GEO.lvY[0], GEO.lvZ - 0.5, t({ ko: '방호관 (저압 충전부)', en: 'Line hose (live LV)' }), '#e8590c');
+      if (W.covers > 0.5) tag(2.4, GEO.neutralY, GEO.neutralZ - 0.6, t({ ko: '방호관 (중성선·인접 상)', en: 'Covers (neutral · adjacent phase)' }), '#e8590c');
     }
   }
   if (scenario === 'manhole' && (W.mh.measured || W.people.D.anim === 'probe')) gasPanel(ctx);
