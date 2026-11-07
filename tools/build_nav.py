@@ -23,7 +23,7 @@ NAV = [
         ("twin.html", "디지털 트윈", "Digital twin", "가상 대한민국 전력망 24시간", "Virtual Korean grid over 24 hours"),
         ("hr",),
         ("grid.html#flisr", "배전선로 고장 복구", "Feeder fault restoration", "D/L #1 구간 고장 → 분리 → 복구 (FLISR)", "D/L #1 fault → isolate → restore (FLISR)"),
-        ("safety.html", "배전공사 안전 훈련", "Distribution work safety", "안전수칙 11 · 전주·맨홀 현장 · 순서 맞히기", "Golden rules · pole & manhole sites · sequence quiz"),
+        ("safety.html", "배전공사 안전 훈련", "Distribution work safety", "안전수칙 11 · 전주·변압기·맨홀·철탑 · 순서 맞히기", "Golden rules · pole, transformer, manhole, tower · quiz"),
     ]),
     ("menu", "physaiMenu", "피지컬 AI", "Physical AI", [
         ("physical-ai.html", "피지컬 AI 소개", "About Physical AI", "개념 · 관련 기술 · MuJoCo", "Concepts · key technologies · MuJoCo"),
@@ -33,7 +33,7 @@ NAV = [
     ]),
     ("menu", "simMenu", "시뮬레이션", "Simulation", [
         ("h", "전력 현장 교육", "Power field training"),
-        ("safety.html", "배전공사 안전 훈련", "Distribution Work Safety", "전주·맨홀 현장 · 안전수칙 단계별 조치 · 입체 시점", "Pole & manhole sites · step-by-step safety rules · 3D-style view"),
+        ("safety.html", "배전공사 안전 훈련", "Distribution Work Safety", "전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄", "Pole, transformer, manhole & tower sites · printable training record"),
         ("hr",), ("h", "교통", "Traffic"),
         ("intersection.html", "교차로 신호", "Intersection", "위에서 본 교차로 · 차량·좌회전·보행 신호", "Top-down junction · through, left &amp; walk signals"),
         ("airport.html", "공항 이착륙", "Airport Runways", "평행 활주로 2개 · 도착·출발 안내판 · 입체 시점", "Two parallel runways · arrival &amp; departure boards · 3D-style view"),
