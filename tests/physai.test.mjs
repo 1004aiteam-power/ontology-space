@@ -23,7 +23,7 @@ assert.ok(ok, 'XOR not solved');
 console.log('✓ NEAT solves XOR');
 
 // 2) 트랙: 종류별 생성, 화면 안, 중심선 투영
-for (const type of ['blob', 'mm']) {
+for (const type of ['blob', 'mm', 'circuit', 'snake']) {
   for (let i = 0; i < 10; i++) {
     const tr = makeTrack(type);
     assert.equal(tr.kind, type);
@@ -32,7 +32,7 @@ for (const type of ['blob', 'mm']) {
     assert.ok(pr.dist < 1e-6);
   }
 }
-console.log('✓ tracks: blob and M-M generated within bounds');
+console.log('✓ tracks: blob, M-M, circuit and S-curves generated within bounds');
 
 // 3) 학습: 둥근 트랙에서 15세대 안에 완주하는 차가 나온다
 const T = new Trainer(Population, { trackType: 'blob', popSize: 100 });

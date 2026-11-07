@@ -2,7 +2,7 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // Physical AI 페이지: NEAT 자율주행 학습을 브라우저에서 실행·시각화
 import { Population, Genome } from './neat.js';
-import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEED } from './sim.js';
+import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEED } from './sim.js?v=20261107c';   // ?v= 바꾸면 브라우저 캐시를 무시하고 새로 받음
 
 const $ = (id) => document.getElementById(id);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -433,6 +433,8 @@ function restart() {
 }
 
 const TRACKS = [['blob', { ko: '둥근 트랙', en: 'Round track' }], ['mm', { ko: 'M-M 트랙 (어려움)', en: 'M-M track (hard)' }],
+                ['circuit', { ko: '서킷 트랙 (직선·시케인)', en: 'Circuit (straights · chicane)' }],
+                ['snake', { ko: 'S자 연속 커브 (어려움)', en: 'S-curves (hard)' }],
                 ['random', { ko: '무작위', en: 'Random' }]];
 function fillTrackSelect() {
   const sel = $('trackType'), v = sel.value || 'blob';

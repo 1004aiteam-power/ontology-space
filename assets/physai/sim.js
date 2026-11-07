@@ -70,6 +70,21 @@ function mmControls() {                             // M 두 개를 이은 트�
   return pts;
 }
 
+function circuitControls() {                       // 서킷: 긴 직선 + 헤어핀 + 안쪽으로 파고드는 시케인
+  const base = [[150, 610], [450, 625], [750, 610], [895, 555], [915, 420], [820, 365], [865, 250], [870, 125],
+                [760, 80], [630, 120], [570, 245], [480, 300], [390, 240], [345, 120], [215, 85], [115, 170], [90, 340], [105, 500]];
+  return base.map(([x, y]) => ({ x: x + rnd(-12, 12), y: y + rnd(-12, 12) }));
+}
+
+function snakeControls() {                          // S자 연속 커브: 위쪽은 물결, 아래쪽은 완만한 귀환 직선
+  const pts = [], amp = rnd(95, 115), ph = rnd(-0.3, 0.3);
+  for (let x = 190; x <= 830; x += 40) pts.push({ x, y: 250 + amp * Math.sin(((x - 190) / 320) * Math.PI * 2 + ph) });
+  pts.push({ x: 920, y: 330 }, { x: 925, y: 500 });
+  for (let x = 820; x >= 180; x -= 128) pts.push({ x, y: 605 + 22 * Math.sin((x / 360) * Math.PI * 2) });
+  pts.push({ x: 75, y: 500 }, { x: 85, y: 330 });
+  return pts;
+}
+
 function smooth(p, sigma) {                         // 원형 가우시안 평활화 (원본의 splprep s=5000과 같은 역할)
   const n = p.length, r = Math.ceil(sigma * 3), w = [];
   let sum = 0;
@@ -84,8 +99,9 @@ function smooth(p, sigma) {                         // 원형 가우시안 평�
 export function makeTrack(type = 'blob') {
   const kind = type === 'random' ? (Math.random() < 0.35 ? 'mm' : 'blob') : type;
   for (let attempt = 0; attempt < 60; attempt++) {
-    const ctrl = kind === 'mm' ? mmControls() : blobControls(type === 'random' ? rnd(0.2, 0.45) : 0.3);
-    const hw = kind === 'mm' ? 21 : 30;             // 도로 폭의 절반
+    const ctrl = kind === 'mm' ? mmControls() : kind === 'circuit' ? circuitControls() : kind === 'snake' ? snakeControls()
+      : blobControls(type === 'random' ? rnd(0.2, 0.45) : 0.3);
+    const hw = { mm: 21, circuit: 25, snake: 23 }[kind] || 30;   // 도로 폭의 절반
     const center = resample(smooth(resample(catmullRom(ctrl), 3), 8), 6);
     if (!fits(center, hw)) continue;
     return buildTrack(center, hw, kind);

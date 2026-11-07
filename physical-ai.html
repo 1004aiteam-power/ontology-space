@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css?v=20261107c">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/physai/app.js?v=20261107b"></script>
+<script type="module" src="assets/physai/app.js?v=20261107c"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -244,8 +244,8 @@ print(data.qpos[0])           # → 0.0000 (똑바로 섬)</code></pre>
     <li>If <b>no</b> car completes two laps, the round fails → the cars that got furthest breed the next generation for <b>round 2</b>, 3, …</li>
     <li>The moment <b>any car completes two laps, it's a success</b> and training stops. Replay the winner or test it on an unseen track.</li>
   </ol>
-  <p class="sub" lang="ko"><b>서로 다른 신경망을 가진 자동차 150대가 동시에</b> 달립니다. 모든 차는 <b>차량 속도</b> 슬라이더로 정한 <b>같은 속도로 고정</b>되어 달리고, 각자 7개의 거리 센서로 벽을 감지해 <b>조향만</b> 결정합니다. 한 세대가 끝나면 멀리 간 차들이 부모가 되어 다음 세대 150대를 만들고(교차·변이), 이 과정을 반복하며 무리 전체가 <b>진화</b>로 운전을 배웁니다. 색은 종(비슷한 신경망끼리 묶은 무리), ✕는 실패한 자리, 노란 원은 현재 선두입니다. 트랙 오른쪽에는 <b>1~5등 차량의 신경망</b>이 위에서부터 순서대로 실시간으로 보이고, 트랙 위 차량의 번호(1~5)와 짝을 이룹니다.</p>
-  <p class="sub" lang="en"><b>150 cars, each with its own neural network, drive at the same time.</b> All cars run at the <b>same fixed speed</b> set with the <b>car speed</b> slider; each senses walls with 7 range sensors and decides <b>only the steering</b>. When a generation ends, the cars that got furthest become parents of the next 150 (crossover and mutation); over generations the whole population <b>evolves</b> to drive. Colour = species (a group of similar networks), ✕ = where a car failed, yellow halo = current leader. To the right of the track, the <b>networks of the top five cars</b> are shown live from top to bottom, matching the numbers 1–5 on the cars.</p>
+  <p class="sub" lang="ko"><b>서로 다른 신경망을 가진 자동차 150대가 동시에</b> 달립니다. 모든 차는 <b>차량 속도</b> 슬라이더로 정한 <b>같은 속도로 고정</b>되어 달리고, 각자 7개의 거리 센서로 벽을 감지해 <b>조향만</b> 결정합니다. 한 세대가 끝나면 멀리 간 차들이 부모가 되어 다음 세대 150대를 만들고(교차·변이), 이 과정을 반복하며 무리 전체가 <b>진화</b>로 운전을 배웁니다. 트랙은 둥근 트랙·M-M·서킷(긴 직선과 시케인)·S자 연속 커브·무작위 중에서 고릅니다. 색은 종(비슷한 신경망끼리 묶은 무리), ✕는 실패한 자리, 노란 원은 현재 선두입니다. 트랙 오른쪽에는 <b>1~5등 차량의 신경망</b>이 위에서부터 순서대로 실시간으로 보이고, 트랙 위 차량의 번호(1~5)와 짝을 이룹니다.</p>
+  <p class="sub" lang="en"><b>150 cars, each with its own neural network, drive at the same time.</b> All cars run at the <b>same fixed speed</b> set with the <b>car speed</b> slider; each senses walls with 7 range sensors and decides <b>only the steering</b>. When a generation ends, the cars that got furthest become parents of the next 150 (crossover and mutation); over generations the whole population <b>evolves</b> to drive. Tracks: round, M-M, circuit (straights and a chicane), S-curves or random. Colour = species (a group of similar networks), ✕ = where a car failed, yellow halo = current leader. To the right of the track, the <b>networks of the top five cars</b> are shown live from top to bottom, matching the numbers 1–5 on the cars.</p>
 
   <div class="ctrl">
     <button id="playBtn" class="primary"></button>
