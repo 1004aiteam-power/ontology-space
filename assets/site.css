@@ -632,3 +632,19 @@ nav .menu .menu-h{margin:4px 10px 0;font-size:11.5px;font-weight:700;color:var(-
 .sim-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--warm);border:1px solid var(--warm);border-radius:999px;padding:1px 9px}
 /* 앵커(#…)로 이동할 때 제목이 고정 상단바에 가리지 않게 */
 [id]{scroll-margin-top:72px}
+/* 배전공사 안전 훈련: 결과 기록 · 인쇄 */
+.sf-record{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;padding:8px 10px;border:1px dashed var(--line);border-radius:8px}
+.sf-record label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.sf-record input{border:1px solid var(--line);border-radius:6px;padding:4px 8px;background:var(--bg);color:var(--text);font-size:14px;width:9em}
+.sf-record button{border:1px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px;font-weight:600}
+.sf-hist{margin-top:10px;font-size:13px}
+.sf-hist ul{padding-left:16px;margin:6px 0}
+#sfPrintArea{display:none}
+@media print{
+  body{background:#fff !important}
+  body > *:not(#sfPrintArea){display:none !important}
+  #sfPrintArea{display:block !important;color:#000;font:12pt/1.5 system-ui,sans-serif;padding:0 8mm}
+  #sfPrintArea h1{font-size:18pt;margin:0 0 10px} #sfPrintArea h2{font-size:13pt;margin:16px 0 6px}
+  #sfPrintArea table{width:100%;border-collapse:collapse} #sfPrintArea th,#sfPrintArea td{border:1px solid #999;padding:4px 6px;text-align:left;vertical-align:top}
+  #sfPrintArea .pr-meta th{width:16%;background:#f1f1f1} #sfPrintArea .pr-foot{margin-top:16px;color:#555;font-size:9pt}
+}

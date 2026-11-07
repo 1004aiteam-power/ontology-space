@@ -31,6 +31,12 @@ for (const sc of Object.keys(SCENARIOS)) {
     assert.equal(s.w.covers, 0, 'line hoses removed');
     assert.equal(s.w.truck.present, false, 'truck left');
     assert.ok(Object.values(s.w.people).every(p => !p.inBucket && p.ppe.helmet), 'nobody left in the bucket, everyone in PPE');
+  } else if (sc === 'tx') {
+    assert.deepEqual([s.w.cos.closed, s.w.cos.tag, s.w.txGround, s.w.txEarth, s.w.hvCover], [true, false, false, false, 0], 'cut-out closed, earth and covers removed');
+    assert.deepEqual([s.w.txOld.state, s.w.load.state], ['aside', 'pole'], 'old transformer down, new one mounted');
+    assert.equal(s.w.truck.present, false, 'truck left');
+  } else if (sc === 'tower') {
+    assert.deepEqual([s.w.people.B.z, s.w.arrester, s.w.lanyard, s.w.bag.state], [0, false, false, 'ground'], 'climber down, unclipped on the ground, bag down');
   } else {
     assert.equal(s.w.mh.lid, 'closed'); assert.equal(s.w.mh.inside, false); assert.equal(s.w.mh.vent, false);
   }
@@ -60,7 +66,12 @@ caught('pole', ['test'], 8);
 caught('pole', ['cover'], 8);
 caught('manhole', ['watch'], 9);
 caught('manhole', ['mzone'], 10);
-console.log('✓ skipping chocks, outriggers, earthing, testing, covers, tripod or the zone is caught');
+caught('tx', ['cos'], 8);          // COS를 열지 않으면 버킷이 올라갈 때부터 위반
+caught('tx', ['txearth'], 8);      // 검전·접지 없이 변압기에 손
+caught('tx', ['hvcover'], 8);      // 충전부 방호 없이 변압기에 손
+caught('tower', ['lifeline'], 11); // 점검하지 않은 추락방지 와이어로 승탑
+caught('tower', ['tieoff'], 7);    // 작업 위치에서 랜야드 없이 작업
+console.log('✓ skipping chocks, outriggers, earthing, testing, covers, tripod, zone, cut-out, wire check or tie-off is caught');
 
 // 4) 맨홀: 처음 공기는 부적정, 환기 뒤 적정
 {

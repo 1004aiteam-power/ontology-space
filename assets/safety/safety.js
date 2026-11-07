@@ -32,6 +32,20 @@ export const ROLES = {
     D: { ko: '검전·접지 담당', en: 'Testing & earthing', col: '#9085e9' },
     E: { ko: '신호수(유도자)', en: 'Signaller (guide)', col: '#d4a106' }
   },
+  tx: {
+    A: { ko: '작업책임자', en: 'Supervisor', col: '#2a78d6' },
+    B: { ko: '버킷 작업자', en: 'Bucket lineworker', col: '#d95926' },
+    C: { ko: '지상 작업자·운전원', en: 'Ground worker / driver', col: '#199e70' },
+    D: { ko: '접지·지상 보조', en: 'Earthing & ground helper', col: '#9085e9' },
+    E: { ko: '신호수(유도자)', en: 'Signaller (guide)', col: '#d4a106' }
+  },
+  tower: {
+    A: { ko: '작업책임자', en: 'Supervisor', col: '#2a78d6' },
+    B: { ko: '승탑 작업자', en: 'Climber', col: '#d95926' },
+    C: { ko: '지상 보조(달줄)', en: 'Ground helper (hand line)', col: '#199e70' },
+    D: { ko: '안전 감시자', en: 'Safety watcher', col: '#9085e9' },
+    E: { ko: '출입 통제', en: 'Access control', col: '#d4a106' }
+  },
   manhole: {
     A: { ko: '작업책임자', en: 'Supervisor', col: '#2a78d6' },
     B: { ko: '입조 작업자', en: 'Entrant', col: '#d95926' },
@@ -625,15 +639,349 @@ function manholeSteps() {
   ];
 }
 
+// ---- 시나리오: 배전 변압기 교체 (COS 개방, 본선 활선 유지) ----------------------------------------
+// 전주 현장(작업차·고임목·아웃트리거)은 위 시나리오와 같고, 정전 범위는 COS로 변압기만 끊는다.
+// 본선 고압선과 COS 전원측은 작업 내내 살아 있으므로 접근(1.2m)과 방호가 핵심
+export const TX = { x: -0.4, y: 4.85, z0: 7.6, z1: 8.9, cos: [0, 4.55, 10.35], rod: [0.5, 5.0] };
+const TXB = { near: [-1.6, 3.2, 6.6], work: [-0.9, 4.0, 7.3] };   // 버킷 바닥 목표 (검전·방호 / 교체)
+function txWorld() {
+  const W = poleWorld();
+  W.people.D = person(-18.0, 6.2);
+  Object.assign(W, { cos: { closed: true, tag: false }, txTested: false, txEarth: false, txGround: false, hvCover: 0,
+    txOld: { state: 'pole' }, dBack: true });
+  W.load.kind = 'txnew'; W.load.type = 'tx'; W.insul = 'new';
+  return W;
+}
+function txSteps() {
+  const G = GEO, base = poleSteps(), pick = (id) => base.find(s => s.id === id);
+  const fin = pick('finish'), rear = G.park - G.truckLen / 2;
+  const j = (W, a, b, k) => lerpJ(boomIK(W.truck, a), boomIK(W.truck, b), ease(k));
+  return [
+    { id: 'tbm', rules: [3],
+      title: L('작업 전 TBM · 작업계획서 확인', 'Pre-work TBM · check the work plan'),
+      what: L('작업책임자가 작업 내용(0번 전주 주상변압기 교체), COS로 끊는 정전 범위, 계속 살아 있는 본선 고압선, 역할을 설명합니다.',
+        'The supervisor explains the job (replace the pole-mounted transformer on pole 0), the outage limited by the cut-out, the main HV line that stays live, and each role.'),
+      why: L('본선이 살아 있는 작업은 "어디까지가 죽어 있나"를 모두가 같게 알아야 합니다.', 'With the main line still live, everyone must share the same picture of what is dead and what is not.'),
+      lanes: [
+        [say('A', L('오늘 작업: 0번 전주 변압기 교체', 'Today: replace the transformer on pole 0'), 3),
+          say('A', L('정전 범위: COS 개방 → 변압기만', 'Outage: open the cut-out — transformer only'), 3),
+          say('A', L('본선 고압선·COS 전원측은 살아 있음!', 'Main HV line & cut-out source side stay live!'), 3.2),
+          set(W => { W.plan = true; }), say('A', L('각자 역할 확인!', 'Confirm your roles!'), 1.8)],
+        [act('B', 'read', 12.8)], [act('C', 'read', 12.8)], [act('D', 'read', 12.8)], [act('E', 'read', 11), say('E', L('확인!', 'Confirmed!'), 1.6)]
+      ],
+      wrong: [
+        { text: L('변압기만 바꾸는 간단한 작업이니 TBM 없이 시작한다', 'Only a transformer swap — start without a TBM'),
+          why: L('본선은 살아 있습니다. 정전 범위를 모르는 사람이 한 명이라도 있으면 감전 사고로 이어집니다. (수칙 3)', 'The main line is live. One person unsure of the outage limits is enough for a shock accident. (Rule 3)') },
+        { text: L('현장에서 보고 COS 대신 본선을 활선 상태로 작업하기로 바꾼다', 'On site, switch to working the main line live instead of using the cut-out'),
+          why: L('공법 임의변경 금지. 계획과 다르게 해야 하면 작업을 멈추고 다시 계획합니다. (수칙 3)', 'No ad-hoc method changes. If the plan does not fit, stop and re-plan. (Rule 3)') }
+      ] },
+    pick('ppe'), pick('zone'), pick('reverse'), pick('chocks'), pick('outrig'),
+    { id: 'cos', rules: [11],
+      title: L('COS 개방 — 절연 조작봉 · 조작금지 표찰', 'Open the cut-out (COS) with a hot stick · tag it'),
+      what: L('작업책임자가 절연장갑을 끼고 절연 조작봉으로 변압기 1차측 COS(컷아웃 스위치)를 열고 "조작금지" 표찰을 겁니다. 본선은 살아 있으므로 몸은 충분히 떨어져 있습니다.',
+        "Wearing insulating gloves, the supervisor opens the transformer's cut-out with an insulated hot stick and tags it. The main line is live, so the body stays well clear."),
+      why: L('COS는 충전부 바로 옆에 있습니다. 맨손·일반 막대로 조작하면 아크·감전 사고가 납니다.', 'The cut-out sits right next to live parts. Bare hands or improvised poles mean arc flash and shock.'),
+      lanes: [
+        [go('A', -9, 4.6), go('A', 1.4, 4.3), act('A', 'stick', 3, { stick: TX.cos, say: L('COS 개방!', 'Cut-out open!'), end: W => { W.cos.closed = false; } }),
+          act('A', 'work', 1.5, { say: L('조작금지 표찰 부착', 'Tag attached'), end: W => { W.cos.tag = true; } }), go('A', -6, -0.8)]
+      ],
+      wrong: [
+        { text: L('COS 퓨즈홀더를 장갑 낀 손으로 당겨 연다', 'Pull the fuse holder open with a gloved hand'),
+          why: L('COS 투개방은 반드시 적정 공구(절연 조작봉)로 합니다. (수칙 11 배전)', 'Cut-outs are operated only with the proper tool — an insulated hot stick. (Rule 11, distribution)') },
+        { text: L('본선 개폐기를 열어 마을 전체를 정전시키고 작업한다', 'Open the main switch and black out the whole area'),
+          why: L('계획에 없는 정전 범위 변경입니다. 계획대로 COS로 변압기만 분리합니다. (수칙 3)', 'That is an unplanned change of outage. Isolate only the transformer with its cut-out as planned. (Rule 3)') }
+      ] },
+    { id: 'harness', rules: [7],
+      title: L('안전대 안전고리 체결 → 버킷 상승', 'Clip the harness lanyard → raise the bucket'),
+      what: L('버킷 작업자가 탑승해 안전고리를 걸고, 작업책임자가 확인한 뒤 버킷을 변압기 아래쪽, 고압선과 떨어진 위치로 올립니다.',
+        'The bucket worker boards and clips in; after the supervisor checks, the bucket rises to a spot below the transformer and well clear of the HV line.'),
+      why: L('고리를 걸지 않은 안전대는 소용이 없습니다. 붐이 움직일 때 가장 많이 흔들립니다.', 'An unclipped harness does nothing, and the bucket jolts most when the boom starts.'),
+      lanes: [
+        [go('B', -9, 4.6), go('B', rear - 0.7, 0.4), act('B', 'climb', 1.6, { end: W => { W.people.B.inBucket = true; } }),
+          act('B', 'work', 1.4, { say: L('안전고리 체결', 'Lanyard clipped'), end: W => { W.people.B.hooked = true; } }),
+          until(W => W.checkedHook), act('B', 'work', 6, { fx: (W, k) => { W.truck.boom = lerpJ(STOW, boomIK(W.truck, TXB.near), ease(k)); } })],
+        [go('A', rear - 1.4, -0.6), until(W => W.people.B.hooked), say('A', L('고리 체결 확인 — 상승!', 'Hook checked — up!'), 2), set(W => { W.checkedHook = true; })]
+      ],
+      wrong: pick('harness').wrong },
+    { id: 'txearth', rules: [8],
+      title: L('변압기 쪽 검전 → 접지 (대지측 먼저)', 'Test the transformer side → earth it (earth end first)'),
+      what: L('지상 보조가 전주 아래에 접지봉을 박아 대지측을 먼저 연결하고, 버킷 작업자가 검전기로 COS 아래쪽·변압기 1차 단자의 무전압을 확인한 뒤 접지 클램프를 겁니다.',
+        "The ground helper drives the earth rod and connects the earth end first; the bucket worker proves the cut-out's load side and the transformer primary dead with a detector, then clamps the earth on."),
+      why: L('COS가 열렸어도 퓨즈홀더가 덜 빠졌거나 저압측 역송전이 있을 수 있습니다.', 'An open cut-out can still be half-seated, and back-feed from the low-voltage side is possible.'),
+      lanes: [
+        [go('D', -12.5, 4.6), go('D', TX.rod[0] + 0.3, TX.rod[1] - 0.6), act('D', 'hammer', 2.2, { say: L('접지봉 · 대지측 먼저', 'Rod in — earth end first'), end: W => { W.txEarth = true; } }),
+          go('D', -6, 5.2)],
+        [act('B', 'stick', 1.8, { stick: [TX.cos[0], TX.cos[1], TX.cos[2] - 0.35], tool: 'detector' }),
+          act('B', 'stick', 1.8, { stick: [TX.x, TX.y, TX.z1 + 0.15], tool: 'detector', say: L('변압기 1차 무전압 확인', 'Transformer primary dead'), end: W => { W.txTested = true; } }),
+          until(W => W.txEarth),
+          act('B', 'stick', 1.8, { stick: [TX.x, TX.y, TX.z1 + 0.15], tool: 'clamp', say: L('접지 클램프 체결', 'Earth clamp on'), end: W => { W.txGround = true; } })]
+      ],
+      wrong: [
+        { text: L('COS를 열었으니 검전 없이 바로 변압기 단자를 만진다', 'The cut-out is open — touch the transformer terminals without testing'),
+          why: L('덜 빠진 퓨즈홀더, 저압측 역송전으로 살아 있을 수 있습니다. 검전·접지 후 작업합니다. (수칙 8)', 'A half-seated fuse holder or LV back-feed can keep it live. Test and earth first. (Rule 8)') },
+        { text: L('접지 클램프를 먼저 걸고 접지봉은 나중에 박는다', 'Clamp the earth on first, drive the rod later'),
+          why: L('대지측이 먼저 연결되어야 선로가 살아 있어도 사람을 통해 흐르지 않습니다.', 'The earth end must be connected first so a live line never discharges through a person.') }
+      ] },
+    { id: 'hvcover', rules: [8],
+      title: L('충전부 방호: 살아 있는 COS 전원측 · 고압 인하선', 'Cover live parts: the cut-out source side and HV drop'),
+      what: L('COS 위쪽(전원측)과 고압선에서 내려오는 인하선은 작업 내내 살아 있습니다. 버킷 작업자가 절연봉으로 절연 커버·방호관을 씌우고, 고압선과 1.2m 이상 떨어져 작업합니다.',
+        "The cut-out's source side and the HV drop above it stay live throughout. The bucket worker fits insulating covers with a hot stick and keeps at least 1.2 m from the HV line."),
+      why: L('같은 전주에 죽은 부분과 산 부분이 함께 있습니다. 몸이 닿을 수 있는 산 부분은 모두 덮습니다.', 'Dead and live parts share the same pole. Cover every live part your body could reach.'),
+      lanes: [
+        [act('B', 'stick', 2.2, { stick: [TX.cos[0], TX.cos[1], TX.cos[2] + 0.35], tool: 'stick', say: L('COS 전원측 커버', 'Cover on cut-out source side'), fx: (W, k) => { W.hvCover = 0.5 * k; } }),
+          act('B', 'stick', 2.2, { stick: [0, G.phaseY[0], G.armZ + 0.1], tool: 'stick', say: L('인하선·가까운 상 방호관', 'Hose on drop & nearest phase'), fx: (W, k) => { W.hvCover = 0.5 + 0.5 * k; } })],
+        [say('A', L('고압선 1.2m 이내 접근 금지', 'Stay 1.2 m from the HV line'), 2.4)]
+      ],
+      wrong: [
+        { text: L('COS를 열었으니 전주 위는 전부 정전이라고 보고 작업한다', 'The cut-out is open, so treat the whole pole top as dead'),
+          why: L('COS 전원측과 본선은 살아 있습니다. 산 부분은 방호합니다. (수칙 8)', 'The source side and main line are live. Cover live parts. (Rule 8)') },
+        { text: L('방호 커버는 손으로 씌우는 게 빠르다', 'Fitting the covers by hand is quicker'),
+          why: L('살아 있는 부분에는 절연봉으로 다가갑니다. 손으로 다가가면 접근한계거리를 넘습니다.', 'Approach live parts with a hot stick; reaching by hand breaks the minimum approach distance.') }
+      ] },
+    { id: 'txlift', rules: [6],
+      title: L('변압기 인양 교체 · 인양물 하부 출입금지', 'Swap the transformer on the hook · nobody beneath it'),
+      what: L('리드선을 분리하고 헌 변압기를 지브 훅(해지장치 확인)에 걸어 내린 뒤, 새 변압기를 올려 고정·결선합니다. 지상 작업자는 유도 로프만 잡고 낙하 반경 밖에 섭니다.',
+        'Disconnect the leads, lower the old transformer on the latched jib hook, then lift the new one and bolt and connect it. The ground worker holds only the tag line, outside the drop radius.'),
+      why: L('변압기는 수백 kg입니다. 매달린 물건 아래는 언제나 출입금지입니다.', 'A transformer weighs hundreds of kilograms. Never stand under a suspended load.'),
+      lanes: [
+        [act('B', 'work', 3, { fx: (W, k) => { W.truck.boom = j(W, TXB.near, TXB.work, k); } }),
+          act('B', 'reach', 2.4, { say: L('리드선 분리 · 훅 체결', 'Leads off · hook on'), end: W => { W.txOld.state = 'hook'; W.truck.hookDrop = 0.08; } }),
+          until(W => W.people.C.tagline), say('A', L('인양물 하부 출입금지!', 'Clear the area under the load!'), 2),
+          tween(5, (W, k) => { W.truck.hookDrop = 0.08 + 0.92 * ease(k); }, { end: W => { W.txOld.state = 'down'; } }),
+          until(W => W.load.state === 'hook' && W.people.C.tagline),
+          tween(5, (W, k) => { W.truck.hookDrop = 1 - 0.92 * ease(k); }),
+          act('B', 'reach', 4, { say: L('브래킷 고정 · 리드선 결선', 'Bolt on · connect leads'), end: W => { W.load.state = 'pole'; W.truck.hookDrop = 0; } })],
+        [go('C', G.park - 0.6, 0.2), act('C', 'work', 2, { say: L('새 변압기 하역', 'Unload the new transformer'), end: W => { W.load.state = 'ground'; } }),
+          go('C', -4.4, 1.0), set(W => { W.people.C.tagline = true; }), act('C', 'hold', 1),
+          until(W => W.txOld.state === 'down'), set(W => { W.people.C.tagline = false; }), go('C', -1.6, 3.6),
+          act('C', 'bend', 2, { say: L('헌 변압기 분리 · 새 변압기 훅 체결', 'Old one off · new one on the hook'), end: W => { W.txOld.state = 'aside'; } }),
+          go('C', -4.4, 1.0), set(W => { W.people.C.tagline = true; W.load.state = 'hook'; }), act('C', 'hold', 1),
+          until(W => W.load.state === 'pole'), set(W => { W.people.C.tagline = false; })]
+      ],
+      wrong: [
+        { text: L('변압기를 받으려고 지상 작업자가 전주 바로 아래에서 기다린다', 'The ground worker waits right under the pole to receive it'),
+          why: L('훅·슬링이 풀리면 수백 kg이 떨어집니다. 유도 로프로 낙하 반경 밖에서 잡습니다. (수칙 6)', 'If the hook or sling lets go, hundreds of kilograms fall. Hold the tag line from outside the radius. (Rule 6)') },
+        { text: L('해지장치 없는 훅으로 빨리 내린다', 'Lower it fast on a hook without a safety latch'),
+          why: L('흔들릴 때 슬링이 빠집니다. 고정장치를 확인한 뒤 인양합니다. (수칙 6)', 'The sling jumps off when it swings. Check the securing device first. (Rule 6)') }
+      ] },
+    { id: 'txfinish', rules: [8, 11, 5],
+      title: L('작업 완료 · 역순 철수 (방호·접지 제거 → COS 투입)', 'Finish · tear down in reverse (covers & earth off → close the cut-out)'),
+      what: L('방호 커버 제거 → 접지 제거(선로 측 먼저, 대지측 나중) → 버킷 하강·하차 → 인원 확인 후 절연 조작봉으로 COS 투입 → 저압 전압 확인 → 아웃트리거·고임목·라바콘 회수.',
+        'Covers off → earth off (line end first, earth end last) → bucket down, worker out → after a headcount, close the cut-out with a hot stick → check the LV voltage → outriggers, chocks and cones in.'),
+      why: L('접지를 단 채 COS를 넣으면 단락·아크가 납니다. 사람이 위에 있을 때 넣어서도 안 됩니다.', 'Closing the cut-out into an earth causes a fault and arc — and never with someone still aloft.'),
+      lanes: [
+        [act('B', 'work', 3, { say: L('변압기에서 물러나기', 'Back away from the transformer'), fx: (W, k) => { W.truck.boom = j(W, TXB.work, TXB.near, k); } }),
+          act('B', 'stick', 2.4, { stick: [TX.cos[0], TX.cos[1], TX.cos[2] + 0.35], tool: 'stick', say: L('방호 커버 제거', 'Covers off'), fx: (W, k) => { W.hvCover = 1 - k; } }),
+          act('B', 'stick', 1.8, { stick: [TX.x, TX.y, TX.z1 + 0.15], tool: 'clamp', say: L('접지: 선로 측 먼저', 'Earth: line end first'), end: W => { W.txGround = false; } }),
+          act('B', 'work', 6, { fx: (W, k) => { W.truck.boom = lerpJ(boomIK(W.truck, TXB.near), STOW, ease(k)); }, end: W => { W.truck.boom = { ...STOW }; } }),
+          act('B', 'work', 1, { end: W => { W.people.B.hooked = false; } }),
+          act('B', 'climb', 1.4, { end: W => { const b = W.people.B; b.inBucket = false; b.x = rear - 0.8; b.y = 0.3; b.z = 0; } }),
+          go('B', -9, 4.6), set(W => { W.bOff = true; })],
+        [until(W => !W.txGround), go('D', TX.rod[0] + 0.3, TX.rod[1] - 0.6), act('D', 'work', 1.6, { say: L('대지측은 마지막에', 'Earth end last'), end: W => { W.txEarth = false; } }), go('D', -10, 4.6)],
+        [until(W => W.bOff && !W.txEarth), say('A', L('인원 확인 — 접지 제거 확인', 'Headcount — earth removed'), 2.2), go('A', 1.4, 4.3),
+          act('A', 'work', 1, { end: W => { W.cos.tag = false; } }),
+          act('A', 'stick', 2.6, { stick: TX.cos, say: L('COS 투입 — 저압 전압 확인', 'Cut-out closed — check LV'), end: W => { W.cos.closed = true; } }),
+          go('A', -6, -0.8), go('A', -14, 4.6)],
+        [until(W => W.cos.closed), ...fin.lanes[3]],
+        [until(W => W.cos.closed), ...fin.lanes[4]]
+      ],
+      wrong: [
+        { text: L('끝났으니 접지를 단 채로 먼저 COS를 넣어 본다', 'Done — close the cut-out first, remove the earth later'),
+          why: L('접지에 바로 전기를 넣는 단락입니다. 접지 제거·인원 확인 후 투입합니다. (수칙 8)', 'That energises straight into the earth. Remove earths and count people first. (Rule 8)') },
+        { text: L('버킷에 작업자가 있는 채로 COS를 넣는다', 'Close the cut-out with the worker still in the bucket'),
+          why: L('결선이 잘못됐으면 위에 있는 사람이 위험합니다. 모두 내려온 뒤 투입합니다.', 'If a connection is wrong, whoever is aloft is at risk. Close only when everyone is down.') }
+      ] }
+  ];
+}
+
+// ---- 시나리오: 송전 철탑 승탑 ------------------------------------------------------------
+// 도로 북쪽 들판의 가상 154kV 철탑. 추락방지 와이어(수직 구명줄)를 따라 오르내리며, 공중에서는 언제나 고리 하나 이상
+export const TW = { x: 0, y: 20, base: 4, topHalf: 1.4, top: 38, armZ: [24, 29, 34], armLen: 7.5, workZ: 22 };
+export const towerLeg = (z, out = 0) => {                            // 남서쪽 다리 위의 점 (out: 바깥쪽으로 띄움)
+  const h = TW.base - (TW.base - TW.topHalf) * Math.min(z, TW.top) / TW.top + out;
+  return [TW.x - h, TW.y - h, z];
+};
+export const PULLEY = (() => { const p = towerLeg(TW.armZ[0], 1.1); return [p[0], p[1], TW.armZ[0] + 0.4]; })();
+function towerWorld() {
+  const cones = [];
+  for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; cones.push({ x: TW.x + Math.cos(a) * 9, y: TW.y + Math.sin(a) * 9, placed: false, side: 0 }); }
+  return {
+    people: { A: person(-12, 5.0), B: person(-10.6, 4.5), C: person(-10.2, 5.6), D: person(-11.4, 6.2), E: person(-9.8, 5.1) },
+    truck: { present: false, c: -60, y: GEO.laneY, moving: 0, outrig: 0, pads: false, chocks: [false, false, false, false], boom: { ...STOW }, hookDrop: 0 },
+    van: { c: -10, y: 1.9 },
+    cones, board: { x: -13.4, y: 5.4, present: true },
+    sw: { closed: true, tag: false }, tested: { gnd: false, work: false }, ground: { earth: false, line: 0 }, covers: 0, insul: 'new',
+    load: { x: 0, y: 0, z: 0, state: 'gone', kind: 'new' },
+    lifelineOK: false, arrester: false, lanyard: false, bag: { z: 0, state: 'ground' }, plan: false
+  };
+}
+function towerSteps() {
+  const [lx, ly] = towerLeg(0, 0.9), [px, py] = PULLEY, rope = [px - 4.5, py - 4.5];
+  return [
+    { id: 'ttbm', rules: [3],
+      title: L('작업 전 TBM · 작업계획서 확인', 'Pre-work TBM · check the work plan'),
+      what: L('작업책임자가 작업 내용(철탑 부재·볼트 점검), 승탑 경로와 추락방지 설비, 낙하물 위험 구역, 기상(풍속) 조건을 설명합니다.',
+        'The supervisor covers the job (tower member and bolt inspection), the climbing route and fall-arrest system, the dropped-object zone and the weather (wind) limits.'),
+      why: L('고소 작업은 한 번의 실수가 생명과 직결됩니다. 오르기 전에 모든 것을 정합니다.', 'At height one mistake is fatal. Settle everything before anyone climbs.'),
+      lanes: [
+        [say('A', L('오늘 작업: 154kV 철탑 부재·볼트 점검 (가상)', 'Today: inspect 154 kV tower members & bolts (virtual)'), 3),
+          say('A', L('승탑은 추락방지 와이어로만, 공중에선 고리 항상 체결', 'Climb only on the fall-arrest wire; always clipped aloft'), 3.4),
+          say('A', L('풍속 10m/s 넘으면 중지', 'Stop if wind exceeds 10 m/s'), 2.6), set(W => { W.plan = true; })],
+        [act('B', 'read', 9)], [act('C', 'read', 9)], [act('D', 'read', 9)], [act('E', 'read', 7.4), say('E', L('확인!', 'Confirmed!'), 1.6)]
+      ],
+      wrong: [
+        { text: L('늘 하던 점검이니 TBM 없이 바로 오른다', 'A routine inspection — climb without a TBM'),
+          why: L('익숙한 작업일수록 절차를 건너뛰다 사고가 납니다. (수칙 3)', 'Familiar jobs are exactly where steps get skipped. (Rule 3)') },
+        { text: L('바람이 세도 계획한 날이니 그대로 진행한다', 'Windy, but it is the planned day — carry on'),
+          why: L('강풍은 추락·낙하물 위험을 크게 높입니다. 기준을 넘으면 작업을 미룹니다.', 'Strong wind multiplies fall and dropped-object risk. Postpone above the limit.') }
+      ] },
+    { id: 'tppe', rules: [1, 11],
+      title: L('개인 안전장구 · 안전그네식 안전대', 'PPE · full-body harness'),
+      what: L('안전모(턱끈)·안전화·장갑과 함께 승탑자는 안전그네식(전신) 안전대, 추락방지기, 공구 낙하방지 줄을 착용합니다. 작업책임자가 버클과 고리를 확인합니다.',
+        'Hard hats with chin straps, boots and gloves; the climber also wears a full-body harness, a fall arrester and tool lanyards. The supervisor checks buckles and hooks.'),
+      why: L('송전 철탑에서는 허리 벨트식 안전대를 쓰지 않습니다. 추락을 멈출 때 충격이 몸 전체로 나뉘어야 합니다.', 'Waist belts are not used on towers; arresting a fall must spread the force over the whole body.'),
+      lanes: ['A', 'B', 'C', 'D', 'E'].map(w => [act(w, 'dress', 2.4, { end: W => { Object.assign(W.people[w].ppe, { helmet: true, vest: true, gloves: true, harness: w === 'B' }); } })])
+        .concat([[wait(2.6), say('A', L('그네식 안전대 버클·고리 확인', 'Harness buckles & hooks checked'), 2.4)]]),
+      wrong: [
+        { text: L('허리에 차는 벨트식 안전대로 오른다', 'Climb with a waist-belt type harness'),
+          why: L('철탑 승탑에는 안전그네식 안전대가 필수입니다. (수칙 11 송전)', 'Tower climbing requires a full-body harness. (Rule 11, transmission)') },
+        { text: L('공구는 주머니에 넣고 오른다', 'Put the tools in your pockets and climb'),
+          why: L('주머니에서 떨어진 공구는 아래 사람에게 치명적입니다. 낙하방지 줄로 몸에 묶습니다.', 'A tool slipping from a pocket can kill someone below. Tether tools to your body.') }
+      ] },
+    { id: 'tzone', rules: [5],
+      title: L('철탑 주변 낙하물 위험 구역 출입금지', 'Keep out of the dropped-object zone around the tower'),
+      what: L('철탑 둘레에 라바콘을 둘러 낙하물 위험 구역을 정하고, 승탑 중에는 지상 인원도 다리 바로 아래에 서지 않습니다.',
+        'Cones ring the tower to mark the dropped-object zone; while someone climbs, the ground crew keeps away from the foot of the leg.'),
+      why: L('수십 m 높이에서 떨어진 볼트 하나도 안전모를 뚫을 수 있습니다.', 'A single bolt dropped from tens of metres can pierce a hard hat.'),
+      lanes: [
+        [{ w: 'E', dyn: W => W.cones.filter((c, i) => i % 2 === 0).flatMap(c => [go('E', c.x, c.y), act('E', 'bend', 0.45, { end: () => { c.placed = true; } })]).concat([go('E', -12, 9)]) }],
+        [{ w: 'D', dyn: W => W.cones.filter((c, i) => i % 2 === 1).flatMap(c => [go('D', c.x, c.y), act('D', 'bend', 0.45, { end: () => { c.placed = true; } })]).concat([go('D', rope[0] - 1, rope[1] - 2)]) }],
+        [say('A', L('승탑 중 다리 아래 접근 금지', 'Nobody at the leg foot during the climb'), 2.4)]
+      ],
+      wrong: [
+        { text: L('보조자는 바로 받아 주려고 다리 밑에서 대기한다', 'The helper waits at the leg foot to catch things'),
+          why: L('떨어지는 물건을 받으려다 맞습니다. 낙하 반경 밖에서 대기합니다. (수칙 5)', 'Catching dropped objects is how people get hit. Wait outside the zone. (Rule 5)') },
+        { text: L('들판이라 지나가는 사람이 없으니 구역 표시는 생략한다', 'It is an open field — skip the zone markers'),
+          why: L('농민·산책객이 들어올 수 있습니다. 구역은 언제나 표시합니다.', 'Farmers and walkers do come by. Always mark the zone.') }
+      ] },
+    { id: 'lifeline', rules: [11],
+      title: L('추락방지 와이어(수직 구명줄) · 추락방지기 점검', 'Inspect the fall-arrest wire and arrester'),
+      what: L('승탑자가 철탑 다리의 추락방지 와이어 고정부·장력·손상 여부를 확인하고, 추락방지기를 와이어에 걸어 아래로 당겨 잠기는지 시험합니다.',
+        "The climber checks the fall-arrest wire's anchors, tension and damage, then fits the arrester and tugs it down to prove it locks."),
+      why: L('추락방지 설비가 고장이면 떨어지는 순간 아무것도 붙잡아 주지 않습니다.', 'A faulty fall-arrest system holds nothing when you fall.'),
+      lanes: [
+        [go('B', lx - 0.4, ly - 0.4), act('B', 'work', 3, { say: L('와이어 고정부·장력 확인', 'Anchors & tension OK') }),
+          act('B', 'work', 2.4, { say: L('추락방지기 잠김 시험 OK', 'Arrester lock test OK'), end: W => { W.lifelineOK = true; } })],
+        [go('A', lx - 2.6, ly - 1.6), until(W => W.lifelineOK), say('A', L('점검 결과 확인', 'Inspection confirmed'), 2)],
+        [go('C', px + 0.3, py - 0.9), act('C', 'bend', 1.6, { say: L('공구 가방 달줄 결속 (승탑 전에)', 'Bag tied to the hand line (before the climb)') }), go('C', ...rope)]
+      ],
+      wrong: [
+        { text: L('어제 쓴 설비라서 점검 없이 오른다', 'It was used yesterday — climb without checking'),
+          why: L('밤사이 손상·풀림이 생길 수 있습니다. 매번 오르기 전에 점검합니다. (수칙 11 송전)', 'Damage or slack can appear overnight. Inspect before every climb. (Rule 11, transmission)') },
+        { text: L('추락방지 와이어 대신 손으로 볼트를 잡고 오른다', 'Skip the wire and climb holding the step bolts'),
+          why: L('철탑 승탑 시 추락방지 와이어 사용은 필수입니다. (수칙 11 송전)', 'Using the fall-arrest wire is mandatory on towers. (Rule 11, transmission)') }
+      ] },
+    { id: 'climb', rules: [11, 7],
+      title: L('추락방지기를 체결하고 승탑', 'Clip the arrester on and climb'),
+      what: L('승탑자가 안전대의 추락방지기를 와이어에 체결한 상태로 천천히 오릅니다. 감시자는 아래에서 계속 지켜보고, 아무도 다리 아래로 들어가지 않습니다.',
+        "The climber goes up slowly with the harness arrester on the wire. The watcher stays on him from below, and nobody steps under the leg."),
+      why: L('승탑 중 미끄러지면 추락방지기가 바로 잠겨 떨어지는 거리를 짧게 막아 줍니다.', 'If the climber slips, the arrester locks at once and limits the fall.'),
+      lanes: [
+        [act('B', 'work', 1.4, { say: L('추락방지기 체결', 'Arrester on'), end: W => { W.arrester = true; } }),
+          act('B', 'climb', 14, { fx: (W, k) => { const p = towerLeg(TW.workZ * k, 0.55); Object.assign(W.people.B, { x: p[0], y: p[1], z: p[2] }); } })],
+        [go('D', rope[0] - 1, rope[1] - 2), act('D', 'watch', 15.4, { say: L('승탑 감시 중', 'Watching the climb') })]
+      ],
+      wrong: [
+        { text: L('빨리 오르려고 추락방지기는 작업 위치에서 건다', 'Climb fast and clip the arrester on at the work position'),
+          why: L('오르는 동안이 가장 위험합니다. 지상에서 체결한 뒤 오릅니다. (수칙 7, 11)', 'Climbing is the riskiest part. Clip on at ground level before climbing. (Rules 7, 11)') },
+        { text: L('두 사람이 같은 와이어로 바짝 붙어 함께 오른다', 'Two people climb the same wire close together'),
+          why: L('한 사람이 떨어지면 아래 사람을 덮칩니다. 한 번에 한 사람씩 오릅니다.', 'If the upper one falls, he takes the lower one with him. One at a time.') }
+      ] },
+    { id: 'tieoff', rules: [7],
+      title: L('작업 위치 이중 체결 (고리 하나는 항상)', 'Tie off at the work position (always one hook on)'),
+      what: L('작업 위치에서 먼저 안전대 고리(랜야드)를 철탑 부재에 건 뒤에 추락방지기를 쉬게 합니다. 공중에서는 어느 순간에도 고리 하나 이상이 걸려 있어야 합니다.',
+        'At the work position the climber first clips the lanyard to a tower member, only then parks the arrester. Aloft, at least one hook is on at every moment.'),
+      why: L('고리를 바꿔 거는 그 몇 초 동안의 추락 사고가 가장 많습니다.', 'Most falls happen in the few seconds of swapping hooks.'),
+      lanes: [
+        [act('B', 'reach', 1.8, { say: L('랜야드 부재에 체결', 'Lanyard on the member'), end: W => { W.lanyard = true; } }),
+          act('B', 'work', 1.2, { say: L('두 고리 확인', 'Both hooks checked') })]
+      ],
+      wrong: [
+        { text: L('추락방지기를 먼저 풀고 랜야드를 건다', 'Unclip the arrester first, then clip the lanyard'),
+          why: L('그 사이 아무것도 걸려 있지 않습니다. 새 고리를 먼저 걸고 헌 고리를 풉니다. (수칙 7)', 'For those seconds nothing holds you. New hook on first, then the old one off. (Rule 7)') },
+        { text: L('발판이 넓으니 작업 위치에서는 고리를 풀고 자유롭게 움직인다', 'The platform is wide — unclip and move freely at the work spot'),
+          why: L('발판 위에서도 미끄러짐·돌풍으로 떨어집니다. 고리는 항상 체결합니다. (수칙 7)', 'Slips and gusts happen on platforms too. Stay clipped. (Rule 7)') }
+      ] },
+    { id: 'hoist', rules: [6],
+      title: L('공구·자재 인양: 달줄 · 하부 출입금지', 'Hoist tools on a hand line · nobody beneath'),
+      what: L('공구는 손에 들고 오르지 않고 달줄(도르래)로 올립니다. 지상 보조는 줄 끝을 잡고 낙하 반경 밖에 서며, 매단 가방 아래로는 아무도 들어가지 않습니다.',
+        'Tools go up on a hand line through a pulley, not in the climber\'s hands. The helper holds the line end outside the drop radius and nobody walks under the bag.'),
+      why: L('올리는 중 매듭이 풀리면 가방이 그대로 떨어집니다.', 'If the knot slips on the way up, the bag drops straight down.'),
+      lanes: [
+        [set(W => { W.people.C.tagline = true; }),
+          tween(7, (W, k) => { W.bag.state = 'up'; W.bag.z = 0.3 + (PULLEY[2] - 1.6) * ease(k); }, { end: W => { W.bag.state = 'top'; } }),
+          act('C', 'hold', 1)],
+        [until(W => W.bag.state === 'up'), say('A', L('가방 아래 출입금지!', 'Keep out from under the bag!'), 2)],
+        [until(W => W.bag.state === 'top'), act('B', 'reach', 1.6, { say: L('가방 수령 · 공구 줄 체결', 'Bag in · tools tethered') })]
+      ],
+      wrong: [
+        { text: L('공구를 허리에 차고 한 번에 들고 오른다', 'Carry all the tools up on your belt'),
+          why: L('무게 때문에 균형을 잃고, 떨어진 공구는 아래 사람을 칩니다. 달줄로 올립니다. (수칙 6)', 'The weight unbalances you and dropped tools hit people below. Use a hand line. (Rule 6)') },
+        { text: L('보조자가 가방 바로 아래에서 줄을 당긴다', 'The helper pulls the line standing right under the bag'),
+          why: L('매듭이 풀리면 바로 맞습니다. 줄을 비스듬히 끌어 낙하 반경 밖에 섭니다. (수칙 6)', 'If the knot fails he is hit. Pull at an angle from outside the radius. (Rule 6)') }
+      ] },
+    { id: 'twork', rules: [7],
+      title: L('작업: 공구 줄 체결 상태로 점검', 'Work with tethered tools'),
+      what: L('부재 변형·볼트 풀림을 점검합니다. 공구는 모두 낙하방지 줄로 몸이나 부재에 묶여 있고, 감시자는 무전으로 상태를 확인합니다.',
+        'Inspect members for deformation and loose bolts. Every tool is tethered to the body or the tower; the watcher checks in by radio.'),
+      why: L('작업에 집중하면 손에서 공구가 빠지는 것을 모릅니다.', 'Concentrating on the job, you do not notice a tool slipping.'),
+      lanes: [
+        [act('B', 'work', 8, { say: L('볼트 조임 · 부재 변형 점검', 'Bolt torque · member check') })],
+        [wait(2), say('D', L('상태 이상 없나? — 이상 없음!', 'All OK up there? — All OK!'), 2.6), wait(2), say('A', L('공구 줄 체결 확인', 'Tool tethers — checked'), 2)]
+      ],
+      wrong: [
+        { text: L('줄이 걸리적거려 공구 줄을 풀고 작업한다', 'The tethers get in the way — untie them'),
+          why: L('떨어진 공구는 아래 사람에게 흉기가 됩니다. 줄은 항상 묶어 둡니다.', 'A dropped tool becomes a weapon for those below. Keep tethers on.') },
+        { text: L('감시자도 같이 올라가 작업을 돕는다', 'The watcher climbs up to help'),
+          why: L('아래에서 상황을 보는 사람이 없어집니다. 감시자는 지상에 남습니다.', 'Then nobody watches from below. The watcher stays on the ground.') }
+      ] },
+    { id: 'tdown', rules: [7, 5],
+      title: L('하강 · 철수 (추락방지기 체결 후 랜야드 해제)', 'Descend and tear down (arrester on before the lanyard comes off)'),
+      what: L('공구 가방을 달줄로 먼저 내리고, 추락방지기가 와이어에 걸린 것을 확인한 뒤에 랜야드를 풀고 천천히 내려옵니다. 지상에서 추락방지기를 풀고 라바콘을 거둡니다.',
+        'Lower the tool bag first; make sure the arrester is on the wire, then unclip the lanyard and climb down slowly. Unclip the arrester on the ground and collect the cones.'),
+      why: L('내려올 때도 올라갈 때와 같은 규칙입니다. 지친 상태라 더 위험합니다.', 'Coming down follows the same rules — and you are more tired.'),
+      lanes: [
+        [until(W => W.bag.state === 'ground'), act('B', 'work', 1.4, { say: L('추락방지기 체결 확인', 'Arrester on — checked') }),
+          act('B', 'reach', 1.2, { say: L('랜야드 해제', 'Lanyard off'), end: W => { W.lanyard = false; } }),
+          act('B', 'climb', 12, { fx: (W, k) => { const p = towerLeg(TW.workZ * (1 - k), 0.55); Object.assign(W.people.B, { x: p[0], y: p[1], z: p[2] }); }, end: W => { W.people.B.z = 0; } }),
+          act('B', 'work', 1.2, { say: L('지상 — 추락방지기 해제', 'On the ground — arrester off'), end: W => { W.arrester = false; } }),
+          go('B', -11, 6), set(W => { W.bOff = true; })],
+        [tween(6, (W, k) => { W.bag.state = 'down'; W.bag.z = 0.3 + (PULLEY[2] - 1.6) * (1 - ease(k)); }, { end: W => { W.bag.state = 'ground'; W.bag.z = 0; } }),
+          set(W => { W.people.C.tagline = false; }), go('C', -10.4, 5.6)],
+        [until(W => W.bOff), say('A', L('인원 확인 — 모두 지상', 'Headcount — all on the ground'), 2.2), go('A', -12.5, 5.2)],
+        [until(W => W.bOff), { w: 'E', dyn: W => W.cones.filter(c => c.placed).flatMap(c => [go('E', c.x, c.y), act('E', 'bend', 0.4, { end: () => { c.placed = false; } })]).concat([go('E', -9.8, 5.1)]) }]
+      ],
+      wrong: [
+        { text: L('빨리 내려가려고 랜야드를 먼저 풀고 추락방지기를 건다', 'Unclip the lanyard first, then put the arrester on'),
+          why: L('그 순간 아무것도 걸려 있지 않습니다. 언제나 새 고리 먼저. (수칙 7)', 'For that moment nothing holds you. New hook on first, always. (Rule 7)') },
+        { text: L('공구 가방을 들고 함께 내려온다', 'Climb down carrying the tool bag'),
+          why: L('한 손으로 내려오면 균형을 잃습니다. 가방은 달줄로 먼저 내립니다.', 'One-handed climbing loses balance. Lower the bag on the line first.') }
+      ] }
+  ];
+}
+
 export const SCENARIOS = {
-  pole: { title: L('가공 배전 애자·완금 교체 (정전 작업)', 'Overhead line: replace insulators & crossarm (de-energised)'), world: poleWorld, steps: poleSteps },
-  manhole: { title: L('지중 배전 맨홀 작업 (밀폐공간)', 'Underground: manhole work (confined space)'), world: manholeWorld, steps: manholeSteps }
+  pole: { scene: 'pole', title: L('가공 배전 애자·완금 교체 (정전 작업)', 'Overhead line: replace insulators & crossarm (de-energised)'), world: poleWorld, steps: poleSteps },
+  tx: { scene: 'pole', title: L('배전 변압기 교체 (COS 개방, 본선 활선)', 'Distribution: replace a pole transformer (cut-out open, main line live)'), world: txWorld, steps: txSteps },
+  manhole: { scene: 'manhole', title: L('지중 배전 맨홀 작업 (밀폐공간)', 'Underground: manhole work (confined space)'), world: manholeWorld, steps: manholeSteps },
+  tower: { scene: 'tower', title: L('송전 철탑 승탑 (추락방지)', 'Transmission: climbing a tower (fall arrest)'), world: towerWorld, steps: towerSteps }
 };
 
 // ---- 보행자 ----------------------------------------------------------------------------
 function makePeds(scenario) {
-  const y = scenario === 'pole' ? GEO.pedY : GEO.pedYm;
-  return [{ x: -40, y, dir: 1, sp: 1.25, k: 0 }, { x: 30, y: y + (scenario === 'pole' ? 0.3 : -0.4), dir: -1, sp: 1.05, k: 0.5 }];
+  const north = SCENARIOS[scenario].scene === 'pole';                // 변압기 교체는 낙하 반경을 피해 보도 바깥쪽으로
+  const y = north ? (scenario === 'tx' ? 7.3 : GEO.pedY) : GEO.pedYm;
+  return [{ x: -40, y, dir: 1, sp: 1.25, k: 0 }, { x: 30, y: y + (north ? (scenario === 'tx' ? 0.15 : 0.3) : -0.4), dir: -1, sp: 1.05, k: 0.5 }];
 }
 
 // ---- 시뮬레이터 -------------------------------------------------------------------------
@@ -641,6 +989,7 @@ export class SafetySim {
   constructor(opts = {}) {
     this.scenario = opts.scenario || 'pole';
     const S = SCENARIOS[this.scenario];
+    this.scene = S.scene;
     this.w = S.world();
     this.steps = S.steps();
     this.peds = makePeds(this.scenario);
@@ -730,7 +1079,7 @@ export class SafetySim {
       const last = this.violations[this.violations.length - 1];
       if (!last || last.msg !== msg || this.t - last.t > 1) this.violations.push({ t: this.t, rule, msg, step: this.step?.id });
     };
-    if (this.scenario === 'pole') {
+    if (this.scene === 'pole') {
       const tr = W.truck, T = bucketPos(tr), up = T[2] > 4.2;
       if (up && !(tr.chocks.every(Boolean) && tr.outrig >= 1)) v(2, 'boom up without 4 chocks and full outriggers');
       if (up && !(W.people.B.inBucket && W.people.B.hooked)) v(7, 'boom up without hooked worker');
@@ -738,6 +1087,8 @@ export class SafetySim {
       if (tr.moving && tr.outrig > 0) v(4, 'truck moving with outriggers out');
       if (tr.moving === -1 && dist2([W.people.E.x, W.people.E.y], G.guideSpot) > 0.5) v(5, 'reversing without the guide in position');
       if (tr.moving && Object.entries(W.people).some(([k, p]) => !p.inCab && Math.abs(p.y - tr.y) < 1.7 && Math.abs(p.x - tr.c) < G.truckLen / 2 + 0.6)) v(5, 'person in the path of the moving truck');
+      if (this.scenario === 'tx') this.checkTx(v, T, up);
+      else {
       if (W.ground.line > 0 && !(W.ground.earth && W.tested.gnd && !W.sw.closed)) v(8, 'earth clamp without earth end / test / open switch');
       if (W.sw.closed && (W.ground.line > 0 || W.people.B.inBucket && up)) v(8, 'line energised with earth on or worker aloft');
       // 버킷 작업자 손이 고압선 1.2m 이내 → 검전·접지 끝났어야 함, 교체 작업은 방호 뒤에
@@ -748,11 +1099,23 @@ export class SafetySim {
         if (nearHV && W.covers < 1 && W.load.state !== 'down') { /* 방호 중 이동은 허용: 작업(교체)은 covers=1에서만 */ }
         if (W.insul === 'old' && W.load.state === 'bucket' && W.covers < 1) v(8, 'working without covers');
       }
+      }
       // 매달린 인양물 아래 사람 없음
-      if (W.load.state === 'hook' && tr.hookDrop < 0.97) {
+      if ((W.load.state === 'hook' || W.txOld?.state === 'hook') && tr.hookDrop < 0.97) {
         const h = hookXY(tr);
         for (const [k, p] of Object.entries(W.people)) if (!p.inBucket && !p.inCab && Math.hypot(p.x - h[0], p.y - h[1]) < G.fallR) v(6, `person ${k} under suspended load`);
       }
+    } else if (this.scene === 'tower') {
+      const B = W.people.B, foot = towerLeg(0);
+      if (B.z > 0.3) {
+        if (!(W.arrester || W.lanyard)) v(7, 'aloft with no hook on');
+        if (!B.ppe.harness) v(1, 'aloft without a full-body harness');
+        if ((B.anim === 'work' || B.anim === 'reach') && B.z > 2 && !W.lanyard && !W.arrester) v(7, 'working aloft unclipped');
+        if ((B.anim === 'work' || B.anim === 'reach') && Math.abs(B.z - TW.workZ) < 0.5 && !W.lanyard && this.step?.id !== 'tieoff' && this.step?.id !== 'tdown') v(7, 'working at height without the lanyard tied off');
+      }
+      if (B.anim === 'climb' && B.z > 0.3 && !(W.arrester && W.lifelineOK)) v(11, 'climbing without the checked fall-arrest wire');
+      if (B.z > 2) for (const [k, p] of Object.entries(W.people)) if (k !== 'B' && Math.hypot(p.x - foot[0], p.y - foot[1]) < 3) v(5, `person ${k} under the climber`);
+      if (W.bag.state === 'up' || W.bag.state === 'down') for (const [k, p] of Object.entries(W.people)) if (k !== 'B' && Math.hypot(p.x - PULLEY[0], p.y - PULLEY[1]) < G.fallR) v(6, `person ${k} under the hoisted bag`);
     } else {
       const M = W.mh;
       if (M.lid === 'open' && !(M.guard && W.cones.every(c => c.placed))) v(10, 'open manhole without guard or full zone');
@@ -764,7 +1127,22 @@ export class SafetySim {
       const g = M.gas, k = M.vent ? 1 - Math.exp(-this.dt / 2.5) : 0;
       if (k) for (const key of ['o2', 'h2s', 'co']) g[key] += (GAS_GOOD[key] - g[key]) * k;
     }
-    for (const q of this.peds) if (inPoly([q.x, q.y], this.scenario === 'pole' ? G.zone : G.mhZone)) v(5, 'pedestrian inside work zone');
+    for (const q of this.peds) {
+      const inside = this.scene === 'tower' ? Math.hypot(q.x - TW.x, q.y - TW.y) < 9 : inPoly([q.x, q.y], this.scene === 'pole' ? G.zone : G.mhZone);
+      if (inside) v(5, 'pedestrian inside work zone');
+    }
+  }
+  // 변압기 교체: 본선·COS 전원측은 살아 있음
+  checkTx(v, T, up) {
+    const W = this.w, G = GEO, B = W.people.B;
+    if (W.txGround && !(W.txEarth && W.txTested && !W.cos.closed)) v(8, 'earth clamp without earth end / test / open cut-out');
+    if (W.cos.closed && (W.txGround || (B.inBucket && up))) v(8, 'cut-out closed with earth on or worker aloft');
+    if (!B.inBucket) return;
+    const s = W.truck.boom.slew, hand = [T[0] + Math.cos(s) * 0.5, T[1] + Math.sin(s) * 0.5, T[2] + 1.2];
+    const d3 = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+    const nearLive = G.phaseY.some(y => Math.hypot(hand[1] - y, hand[2] - (G.armZ + 0.26)) < 1.2 && Math.abs(hand[0] - G.workX) < 3) || d3(hand, [TX.cos[0], TX.cos[1], TX.cos[2] + 0.35]) < 1.2;
+    if (nearLive) v(8, 'hands within 1.2 m of live HV');
+    if (d3(hand, [TX.x, TX.y, TX.z1]) < 1.3 && !(W.txTested && W.txGround && !W.cos.closed && W.hvCover >= 1)) v(8, 'hands at the transformer before isolation, test, earth and covers');
   }
 
   // 처음부터 i번째 단계 시작 직전까지 빠르게 진행

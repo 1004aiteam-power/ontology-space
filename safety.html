@@ -7,10 +7,10 @@
 <meta name="title-ko" content="Ontology Space · 배전공사 안전 훈련">
 <meta name="title-en" content="Ontology Space · Distribution Work Safety">
 <meta name="description" content="가상 배전 공사현장(전주·맨홀)에서 작업자들이 안전수칙 11에 따라 안전조치를 단계별로 진행하는 교육용 입체 시뮬레이션과 순서 맞히기 훈련">
-<link rel="stylesheet" href="assets/site.css?v=20261106f">
+<link rel="stylesheet" href="assets/site.css?v=20261107a">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/safety/safety-app.js?v=20261106b"></script>
+<script type="module" src="assets/safety/safety-app.js?v=20261107a"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -66,8 +66,8 @@
 <div class="hero">
   <div class="eyebrow"><span lang="ko">시뮬레이션 · 배전공사 안전</span><span lang="en">SIMULATION · DISTRIBUTION WORK SAFETY</span></div>
   <h1><span lang="ko">배전 공사현장,<br>안전조치를 순서대로</span><span lang="en">A distribution work site,<br>safety steps in order</span></h1>
-  <p class="lead" lang="ko">신입사원과 새로 현장을 맡은 담당자를 위한 교육용 시뮬레이션입니다. 가상 현장에서 작업자 5명이 <b>"생명을 지키는 안전수칙(Golden Rules) 11"</b>에 따라 TBM부터 철수까지 안전조치를 하나씩 진행합니다. <b>훈련 모드</b>에서는 다음에 할 조치를 직접 골라 보고, 틀리면 왜 위험한지 확인할 수 있습니다.</p>
-  <p class="lead" lang="en">A training simulation for new hires and newly assigned site supervisors. On a virtual site, a crew of five works through the <b>"Golden Rules 11"</b> life-saving rules one by one, from the toolbox talk to tear-down. In <b>training mode</b> you choose the next safety action yourself, and a wrong choice explains why it is unsafe.</p>
+  <p class="lead" lang="ko">신입사원과 새로 현장을 맡은 담당자를 위한 교육용 시뮬레이션입니다. 가상 현장 네 곳(전주 애자 교체 · 변압기 교체 · 맨홀 · 송전 철탑)에서 작업자 5명이 <b>"생명을 지키는 안전수칙(Golden Rules) 11"</b>에 따라 TBM부터 철수까지 안전조치를 하나씩 진행합니다. <b>훈련 모드</b>에서는 다음에 할 조치를 직접 골라 보고, 틀리면 왜 위험한지 확인할 수 있습니다.</p>
+  <p class="lead" lang="en">A training simulation for new hires and newly assigned site supervisors. On four virtual sites — pole insulators, a pole transformer, a manhole and a transmission tower — a crew of five works through the <b>"Golden Rules 11"</b> life-saving rules one by one, from the toolbox talk to tear-down. In <b>training mode</b> you choose the next safety action yourself, and a wrong choice explains why it is unsafe.</p>
 </div>
 
 <section id="sim">
@@ -76,6 +76,7 @@
   <div class="ctrl">
     <select id="scnSel" aria-label="scenario"></select>
     <select id="modeSel" aria-label="mode"></select>
+    <select id="fromSel" aria-label="start step" title="강사용: 이 단계부터 훈련 / Instructor: start the quiz at this step" hidden></select>
   </div>
   <div class="ctrl">
     <button id="playBtn" class="primary"></button>
@@ -103,18 +104,20 @@
     <tr><td>3</td><td><span lang="ko">작업계획서·TBM 작성 필수, 공법 임의변경 금지</span><span lang="en">Work plan &amp; TBM required; no ad-hoc method changes</span></td><td><a href="#sim" data-goto="pole:0"><span lang="ko">전주 1. TBM</span><span lang="en">Pole 1. TBM</span></a> · <a href="#sim" data-goto="manhole:0"><span lang="ko">맨홀 1. 허가서·TBM</span><span lang="en">Manhole 1. Permit &amp; TBM</span></a></td></tr>
     <tr><td>4</td><td><span lang="ko">작업차량 전도방지 조치</span><span lang="en">Prevent the work vehicle from tipping</span></td><td><a href="#sim" data-goto="pole:5"><span lang="ko">전주 6. 아웃트리거·받침판</span><span lang="en">Pole 6. Outriggers &amp; pads</span></a></td></tr>
     <tr><td>5</td><td><span lang="ko">작업반경 출입금지, 후진 시 전담유도자 배치</span><span lang="en">Keep out of the work radius; dedicated guide when reversing</span></td><td><a href="#sim" data-goto="pole:2"><span lang="ko">전주 3. 작업구역</span><span lang="en">Pole 3. Work zone</span></a> · <a href="#sim" data-goto="pole:3"><span lang="ko">전주 4. 후진 유도</span><span lang="en">Pole 4. Reversing guide</span></a></td></tr>
-    <tr><td>6</td><td><span lang="ko">인양물 고정장치, 하부 출입금지</span><span lang="en">Secure lifted loads; nobody beneath</span></td><td><a href="#sim" data-goto="pole:11"><span lang="ko">전주 12. 인양</span><span lang="en">Pole 12. Lifting</span></a></td></tr>
-    <tr><td>7</td><td><span lang="ko">안전대 착용, 안전고리 체결</span><span lang="en">Harness on, lanyard clipped</span></td><td><a href="#sim" data-goto="pole:8"><span lang="ko">전주 9. 안전고리·버킷 상승</span><span lang="en">Pole 9. Clip in &amp; raise</span></a> · <a href="#sim" data-goto="manhole:7"><span lang="ko">맨홀 8. 구명줄</span><span lang="en">Manhole 8. Lifeline</span></a></td></tr>
-    <tr><td>8</td><td><span lang="ko">검전, 접지, 충전부 방호</span><span lang="en">Test, earth, cover live parts</span></td><td><a href="#sim" data-goto="pole:7"><span lang="ko">전주 8. 검전·접지</span><span lang="en">Pole 8. Test &amp; earth</span></a> · <a href="#sim" data-goto="pole:9"><span lang="ko">10. 작업개소 검전</span><span lang="en">10. Test at work point</span></a> · <a href="#sim" data-goto="pole:10"><span lang="ko">11. 중성선·인접 상 방호</span><span lang="en">11. Cover neutral &amp; phase</span></a></td></tr>
+    <tr><td>6</td><td><span lang="ko">인양물 고정장치, 하부 출입금지</span><span lang="en">Secure lifted loads; nobody beneath</span></td><td><a href="#sim" data-goto="pole:11"><span lang="ko">전주 12. 인양</span><span lang="en">Pole 12. Lifting</span></a> · <a href="#sim" data-goto="tx:10"><span lang="ko">변압기 11. 인양 교체</span><span lang="en">Transformer 11. Swap on the hook</span></a> · <a href="#sim" data-goto="tower:6"><span lang="ko">철탑 7. 달줄 인양</span><span lang="en">Tower 7. Hand line</span></a></td></tr>
+    <tr><td>7</td><td><span lang="ko">안전대 착용, 안전고리 체결</span><span lang="en">Harness on, lanyard clipped</span></td><td><a href="#sim" data-goto="pole:8"><span lang="ko">전주 9. 안전고리·버킷 상승</span><span lang="en">Pole 9. Clip in &amp; raise</span></a> · <a href="#sim" data-goto="manhole:7"><span lang="ko">맨홀 8. 구명줄</span><span lang="en">Manhole 8. Lifeline</span></a> · <a href="#sim" data-goto="tower:5"><span lang="ko">철탑 6. 이중 체결</span><span lang="en">Tower 6. Tie off</span></a></td></tr>
+    <tr><td>8</td><td><span lang="ko">검전, 접지, 충전부 방호</span><span lang="en">Test, earth, cover live parts</span></td><td><a href="#sim" data-goto="pole:7"><span lang="ko">전주 8. 검전·접지</span><span lang="en">Pole 8. Test &amp; earth</span></a> · <a href="#sim" data-goto="pole:9"><span lang="ko">10. 작업개소 검전</span><span lang="en">10. Test at work point</span></a> · <a href="#sim" data-goto="pole:10"><span lang="ko">11. 중성선·인접 상 방호</span><span lang="en">11. Cover neutral &amp; phase</span></a> · <a href="#sim" data-goto="tx:8"><span lang="ko">변압기 9. 검전·접지</span><span lang="en">Transformer 9. Test &amp; earth</span></a> · <a href="#sim" data-goto="tx:9"><span lang="ko">10. COS 전원측 방호</span><span lang="en">10. Cover the cut-out source side</span></a></td></tr>
     <tr><td>9</td><td><span lang="ko">밀폐공간 작업 허가절차 준수</span><span lang="en">Confined-space permit procedure</span></td><td><a href="#sim" data-goto="manhole:4"><span lang="ko">맨홀 5. 가스 측정</span><span lang="en">Manhole 5. Gas test</span></a> · <a href="#sim" data-goto="manhole:5"><span lang="ko">6. 환기</span><span lang="en">6. Ventilate</span></a> · <a href="#sim" data-goto="manhole:6"><span lang="ko">7. 감시인·삼각대</span><span lang="en">7. Attendant &amp; tripod</span></a></td></tr>
     <tr><td>10</td><td><span lang="ko">맨홀 내 작업 시 작업반경 출입금지</span><span lang="en">Keep out of the radius during manhole work</span></td><td><a href="#sim" data-goto="manhole:2"><span lang="ko">맨홀 3. 작업반경</span><span lang="en">Manhole 3. Work radius</span></a></td></tr>
-    <tr><td>11</td><td><span lang="ko">분야별 수칙</span><span lang="en">Field-specific rules</span></td><td><span lang="ko"><b>배전</b> COS 투개방 및 지상·가공기기(공사용 개폐기 포함) 조작 시 적정공구 사용 → <a href="#sim" data-goto="pole:6">전주 7. 개폐기 개방</a><br><b>토목</b> 단부·개구부 등 추락위험 장소에 추락방지(안전난간, 덮개 등) 방호 조치 → <a href="#sim" data-goto="manhole:3">맨홀 4. 개구부 방호</a><br><b>송전</b> 철탑 승탑 시 추락방지 와이어와 안전그네식 안전대 필수 사용 · <b>변전</b> 기자재 운반 시 저상용 운반장비 사용, 벨트슬링 하중 검토 · <b>건축</b> 비계 설치 장소에서 작업발판·추락방호망 설치 (이 시뮬레이션에는 없음)</span><span lang="en"><b>Distribution</b> use the proper tool to operate cut-outs and ground or overhead equipment (incl. construction switches) → <a href="#sim" data-goto="pole:6">Pole 7. Open the switch</a><br><b>Civil</b> guard edges and openings against falls (rails, covers) → <a href="#sim" data-goto="manhole:3">Manhole 4. Guard the opening</a><br><b>Transmission</b> fall-arrest wire and full-body harness on towers · <b>Substation</b> low-bed carriers, check belt-sling loads · <b>Building</b> working platforms and safety nets on scaffolds (not in this simulation)</span></td></tr>
+    <tr><td>11</td><td><span lang="ko">분야별 수칙</span><span lang="en">Field-specific rules</span></td><td><span lang="ko"><b>배전</b> COS 투개방 및 지상·가공기기(공사용 개폐기 포함) 조작 시 적정공구 사용 → <a href="#sim" data-goto="pole:6">전주 7. 개폐기 개방</a> · <a href="#sim" data-goto="tx:6">변압기 7. COS 개방</a><br><b>토목</b> 단부·개구부 등 추락위험 장소에 추락방지(안전난간, 덮개 등) 방호 조치 → <a href="#sim" data-goto="manhole:3">맨홀 4. 개구부 방호</a><br><b>송전</b> 철탑 승탑 시 추락방지 와이어와 안전그네식 안전대 필수 사용 → <a href="#sim" data-goto="tower:3">철탑 4. 추락방지 와이어 점검</a> · <a href="#sim" data-goto="tower:4">5. 승탑</a><br><b>변전</b> 기자재 운반 시 저상용 운반장비 사용, 벨트슬링 하중 검토 · <b>건축</b> 비계 설치 장소에서 작업발판·추락방호망 설치 (변전·건축은 이 시뮬레이션에 없음)</span><span lang="en"><b>Distribution</b> use the proper tool to operate cut-outs and ground or overhead equipment (incl. construction switches) → <a href="#sim" data-goto="pole:6">Pole 7. Open the switch</a> · <a href="#sim" data-goto="tx:6">Transformer 7. Open the cut-out</a><br><b>Civil</b> guard edges and openings against falls (rails, covers) → <a href="#sim" data-goto="manhole:3">Manhole 4. Guard the opening</a><br><b>Transmission</b> fall-arrest wire and full-body harness on towers → <a href="#sim" data-goto="tower:3">Tower 4. Inspect the wire</a> · <a href="#sim" data-goto="tower:4">5. Climb</a><br><b>Substation</b> low-bed carriers, check belt-sling loads · <b>Building</b> working platforms and safety nets on scaffolds (substation and building are not in this simulation)</span></td></tr>
   </table></div>
 
-  <h3><span lang="ko">두 현장</span><span lang="en">Two sites</span></h3>
+  <h3><span lang="ko">네 현장</span><span lang="en">Four sites</span></h3>
   <div class="grid two">
     <div class="card"><h4><span lang="ko">① 가공 배전 애자·완금 교체 (정전 작업)</span><span lang="en">① Overhead line: insulators &amp; crossarm (de-energised)</span></h4><p lang="ko">0번 전주의 낡은 애자(<b>!</b> 표시)를 바꿉니다. 전원측 개폐기(-70)를 열어 고압선을 정전시키고, 한 경간 떨어진 -35 전주에서 검전·접지합니다. 선로는 고압 3상과 중성선뿐이며, 검전·접지 뒤에도 <b>재송전·유도전압에 대비해</b> 몸이 닿을 수 있는 중성선과 인접 상을 방호관으로 덮습니다. "전기 흐름 보기"를 켜면 충전(빨강)·정전(파랑)이 보입니다.</p><p lang="en">Replace the worn insulators (marked <b>!</b>) on pole 0. Opening the source-side switch (-70) de-energises the HV line; testing and earthing happen one span away at pole -35. The line carries only three HV phases and a neutral; even after testing and earthing, the neutral and adjacent phase within reach are covered <b>in case the line is re-energised or picks up induced voltage</b>. "Show power flow" colours live (red) and dead (blue) wires.</p></div>
     <div class="card"><h4><span lang="ko">② 지중 배전 맨홀 작업 (밀폐공간)</span><span lang="en">② Underground: manhole (confined space)</span></h4><p lang="ko">맨홀 안 케이블 접속부를 점검합니다. 처음 측정에서 <b>산소 17.2%로 부족</b>하게 나오도록 만들어 두었습니다. 송풍기로 환기해 적정 공기(산소 18% 이상 23.5% 미만, 황화수소 10ppm 미만, 일산화탄소 30ppm 미만)가 된 것을 다시 확인한 뒤에만 들어갑니다. 감시인은 밖에서 자리를 지킵니다.</p><p lang="en">Inspect cable joints in a manhole. The first test is set up to read <b>O₂ 17.2 % — too low</b>. Only after ventilating and re-testing to safe air (O₂ 18–23.5 %, H₂S &lt; 10 ppm, CO &lt; 30 ppm) does anyone enter, and the attendant stays outside.</p></div>
+    <div class="card"><h4><span lang="ko">③ 배전 변압기 교체 (COS 개방, 본선 활선)</span><span lang="en">③ Pole transformer swap (cut-out open, main line live)</span></h4><p lang="ko">0번 전주의 낡은 주상변압기를 바꿉니다. 정전 범위는 <b>COS(컷아웃)로 변압기만</b>이고 본선 고압선과 COS 전원측은 <b>계속 살아 있습니다</b>. 그래서 절연 조작봉으로 COS를 열고, 변압기 쪽만 검전·접지하고, 산 부분은 절연봉으로 방호하며, 고압선에서 1.2m 안으로 손이 들어가면 위반입니다.</p><p lang="en">Swap the worn transformer on pole 0. The outage covers <b>only the transformer, via its cut-out</b>; the main HV line and the cut-out source side <b>stay live</b>. So the cut-out is opened with a hot stick, only the transformer side is tested and earthed, live parts are covered with a hot stick, and a hand within 1.2 m of the HV line counts as a violation.</p></div>
+    <div class="card"><h4><span lang="ko">④ 송전 철탑 승탑 (추락방지)</span><span lang="en">④ Climbing a transmission tower (fall arrest)</span></h4><p lang="ko">가상 154kV 철탑의 부재·볼트를 점검합니다. 추락방지 와이어와 추락방지기를 점검·체결한 뒤 오르고, 작업 위치에서는 랜야드를 <b>먼저 건 다음</b> 쉬는 등 <b>공중에서는 언제나 고리 하나 이상</b>이 걸려 있어야 합니다. 승탑 중 다리 아래, 매단 공구 가방 아래로 사람이 들어가면 위반입니다.</p><p lang="en">Inspect members and bolts on a virtual 154 kV tower. The fall-arrest wire and arrester are checked and clipped before climbing; at the work position the lanyard goes on <b>before</b> anything comes off — <b>at least one hook on at every moment aloft</b>. Anyone under the climbing leg or the hoisted tool bag is a violation.</p></div>
   </div>
 
   <h3><span lang="ko">안전 규칙 (코드가 매 순간 확인)</span><span lang="en">Safety rules (checked every tick in code)</span></h3>
@@ -126,21 +129,27 @@
     <tr><td><span lang="ko">고압선 접근</span><span lang="en">Approaching HV</span></td><td><span lang="ko">작업자 손이 고압선 1.2m 안에 들어가려면 작업개소 검전과 3상 접지가 끝나 있어야 함. 교체 작업은 중성선·인접 상 방호 뒤에</span><span lang="en">Hands within 1.2 m of HV only after the work-point test and 3-phase earth; replacement only after the neutral and adjacent phase are covered</span></td></tr>
     <tr><td><span lang="ko">인양</span><span lang="en">Lifting</span></td><td><span lang="ko">자재가 매달려 있는 동안 지상의 누구도 훅 아래 낙하 반경(2.4m) 안에 없음</span><span lang="en">While a load hangs, nobody on the ground is within the 2.4 m drop radius under the hook</span></td></tr>
     <tr><td><span lang="ko">맨홀</span><span lang="en">Manhole</span></td><td><span lang="ko">뚜껑이 열려 있으면 펜스와 작업구역 라바콘이 모두 있어야 함. 입조는 허가서 · 측정값 적정 · 환기 · 삼각대 · 구명줄 · 감시인(입구 2.5m 이내)이 모두 갖춰졌을 때만</span><span lang="en">An open lid needs the guard rail and every cone in place. Entry only with permit, safe readings, ventilation, tripod, lifeline and the attendant within 2.5 m</span></td></tr>
+    <tr><td><span lang="ko">변압기 교체</span><span lang="en">Transformer swap</span></td><td><span lang="ko">손이 살아 있는 고압선·COS 전원측 1.2m 안에 들어가지 않음. 변압기를 만지려면 COS 개방 · 검전 · 접지(대지측 먼저) · 충전부 방호가 끝나 있어야 함. COS 투입은 접지 제거와 버킷 작업자 하차 뒤에만</span><span lang="en">Hands never within 1.2 m of the live HV line or cut-out source side. Touching the transformer needs the cut-out open, a test, an earth (earth end first) and covers. The cut-out closes only after earths are off and the bucket worker is down</span></td></tr>
+    <tr><td><span lang="ko">철탑 승탑</span><span lang="en">Tower climb</span></td><td><span lang="ko">공중(0.3m 이상)에서는 추락방지기나 랜야드 중 하나 이상 체결 · 그네식 안전대 착용. 오르내릴 때는 점검을 마친 추락방지 와이어에 체결. 승탑 중에는 다리 아래 3m, 공구 가방을 올리고 내리는 동안에는 가방 아래 2.4m 안에 아무도 없음</span><span lang="en">Aloft (above 0.3 m): arrester or lanyard always on, full-body harness worn. Climbing only on the inspected fall-arrest wire. Nobody within 3 m below the climbing leg, or within 2.4 m under the tool bag while it moves</span></td></tr>
     <tr><td><span lang="ko">시민</span><span lang="en">Public</span></td><td><span lang="ko">보행자는 작업구역 안으로 들어오지 않음 (보행 통로 확보)</span><span lang="en">Pedestrians never enter the work zone (walkway kept open)</span></td></tr>
   </table></div>
-  <p class="meta" lang="ko">자동 테스트(<code>tests/safety.test.mjs</code>)로 두 시나리오를 처음부터 끝까지 돌려 위반 0회를 확인하고, 반대로 고임목·접지 단계를 빼면 위반이 잡히는지도 확인합니다. 화면 오른쪽 위에 ⚠ 숫자가 나타나면 위반이 생긴 것입니다.</p>
-  <p class="meta" lang="en">Automated tests (<code>tests/safety.test.mjs</code>) run both scenarios end to end with zero violations, and check that skipping the chock or earthing step is caught. A ⚠ count in the top-right corner of the view means a violation occurred.</p>
+  <p class="meta" lang="ko">자동 테스트(<code>tests/safety.test.mjs</code>)로 네 시나리오를 처음부터 끝까지 돌려 위반 0회를 확인하고, 반대로 고임목·접지·COS 개방·충전부 방호·추락방지 와이어 점검·이중 체결 같은 단계를 빼면 위반이 잡히는지도 확인합니다. 화면 오른쪽 위에 ⚠ 숫자가 나타나면 위반이 생긴 것입니다.</p>
+  <p class="meta" lang="en">Automated tests (<code>tests/safety.test.mjs</code>) run all four scenarios end to end with zero violations, and check that skipping steps such as chocks, earthing, opening the cut-out, covering live parts, inspecting the fall-arrest wire or tying off is caught. A ⚠ count in the top-right corner of the view means a violation occurred.</p>
 
   <h3><span lang="ko">교육에 이렇게 써 보세요</span><span lang="en">Using it for training</span></h3>
   <ul lang="ko">
     <li><b>처음 보는 사람</b>: "보기" 모드, 배속 2×로 전체를 한 번 봅니다. 시점은 "자동"으로 두면 단계마다 중요한 곳을 비춥니다.</li>
     <li><b>복습</b>: "훈련" 모드로 바꿔 순서를 맞혀 봅니다. 끝나면 첫 시도 정답 수와 틀린 선택의 이유가 정리됩니다.</li>
+    <li><b>강사용</b>: "훈련" 모드에서 <b>시작 단계</b>를 고르면 앞 단계는 자동으로 진행하고 그 단계부터 문제를 냅니다. 특정 수칙만 집중해서 연습할 때 쓰세요.</li>
+    <li><b>기록</b>: 훈련이 끝나면 이름을 적고 <b>결과 인쇄 · PDF 저장</b>을 누르면 단계별 첫 시도 결과와 틀린 선택의 이유가 한 장으로 나옵니다. 최근 기록은 이 브라우저에만 저장됩니다(서버로 보내지 않음).</li>
     <li><b>토론</b>: 틀린 보기는 현장에서 실제로 나오는 말("금방 끝나니까", "평지니까")로 만들었습니다. 각 보기에 "우리 현장에서는?"을 물어 보세요.</li>
     <li><b>관찰</b>: 신호수가 차량 바로 뒤가 아닌 <b>옆쪽</b>에 서는 위치, 지상 작업자가 <b>유도 로프</b>로 낙하 반경 밖에서 자재를 잡는 모습, 접지선을 <b>대지측 먼저</b> 연결하고 <b>선로 측 먼저</b> 떼는 순서를 확대해서 보세요.</li>
   </ul>
   <ul lang="en">
     <li><b>First viewing</b>: Watch mode at 2×. Leave the view on "auto" so each step frames the important spot.</li>
     <li><b>Review</b>: switch to Train mode and order the steps yourself. At the end you get your first-try score and the reasons behind each wrong pick.</li>
+    <li><b>Instructors</b>: in Train mode pick a <b>start step</b>; earlier steps play automatically and the quiz begins there — handy for drilling one rule.</li>
+    <li><b>Records</b>: at the end, type a name and press <b>Print · save as PDF</b> for a one-page record of first-try results and the reasons behind wrong picks. Recent results are kept only in this browser (nothing is sent to a server).</li>
     <li><b>Discussion</b>: the wrong options use phrases heard on real sites ("it'll be quick", "the road is flat"). Ask "what happens on our sites?" for each.</li>
     <li><b>Look closely</b>: the guide standing <b>to the side</b>, not directly behind; the ground worker holding the <b>tag line</b> outside the drop radius; the earth lead going on <b>earth end first</b> and coming off <b>line end first</b>.</li>
   </ul>
@@ -173,6 +182,7 @@
   </ul>
 </section>
 </main>
+<div id="sfPrintArea" aria-hidden="true"></div>
 
 <footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
 </body>

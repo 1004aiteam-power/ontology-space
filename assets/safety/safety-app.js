@@ -3,7 +3,7 @@
 // 배전 공사현장 안전 시뮬레이션 화면: 2D 캔버스 원근(pseudo-3D) 현장, 단계 목록·설명, 훈련(순서 맞히기) 모드
 //
 // 입체감: 비스듬히 내려다보는 원근 투영 · 면마다 햇빛 방향으로 명암 · 땅 위 그림자 · 먼 것부터 그리기 · 멀수록 대기색
-import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT } from './safety.js?v=20261106b';
+import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT, TX, TW, towerLeg, PULLEY } from './safety.js?v=20261107a';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (o == null ? '' : window.t ? window.t(o) : o.ko);
@@ -14,7 +14,7 @@ const hex = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 const SPEEDS = [1, 2, 4, 8];
-let sim, scenario = 'pole', mode = 'watch', running = false, speedIdx = 1, acc = 0, lastT = 0, hold = 0;
+let sim, scenario = 'pole', scene = 'pole', mode = 'watch', running = false, speedIdx = 1, acc = 0, lastT = 0, hold = 0;
 let showLabels = true, showPower = true, camMode = 'auto';
 let quiz = null, score = { first: 0, total: 0, mistakes: [] }, flash = null;
 
@@ -34,16 +34,29 @@ const CAMS = {
   mboard: { tx: -1.5, ty: -5.4, tz: 1, yaw: 0.3, pitch: 0.3, dist: 15 },
   mzone: { tx: 7.5, ty: -2, tz: 0.5, yaw: 0.12, pitch: 0.62, dist: 38 },
   mh: { tx: 13, ty: -2.2, tz: 0.6, yaw: 0.45, pitch: 0.42, dist: 12 },
-  mvent: { tx: 12, ty: -1.8, tz: 0.6, yaw: 0.35, pitch: 0.45, dist: 16 }
+  mvent: { tx: 12, ty: -1.8, tz: 0.6, yaw: 0.35, pitch: 0.45, dist: 16 },
+  cosv: { tx: 0, ty: 4.6, tz: 9.4, yaw: 0.35, pitch: 0.1, dist: 14 },
+  txv: { tx: -0.5, ty: 4.5, tz: 8.6, yaw: 0.62, pitch: 0.08, dist: 11 },
+  tboard: { tx: -11.5, ty: 5.4, tz: 1, yaw: 0.3, pitch: 0.3, dist: 15 },
+  tzone: { tx: 0, ty: 17, tz: 2, yaw: 0.2, pitch: 0.55, dist: 48 },
+  tbase: { tx: -4, ty: 14.5, tz: 2.5, yaw: 0.4, pitch: 0.28, dist: 22 },
+  tclimb: { tx: -2, ty: 17, tz: 17, yaw: 0.4, pitch: 0.1, dist: 54 },
+  ttop: { tx: -3.2, ty: 16.8, tz: 22.5, yaw: 0.55, pitch: 0.1, dist: 12 }
 };
 const STEP_CAM = {
   tbm: 'board', ppe: 'board', zone: 'zone', reverse: 'reverse', chocks: 'truck', outrig: 'truck', switch: 'sw', earth: 'gnd',
   harness: 'lift', test: 'bucket', cover: 'bucket', lift: 'lift', finish: 'wide',
-  permit: 'mboard', mppe: 'mboard', mzone: 'mzone', lid: 'mh', gas1: 'mh', vent: 'mvent', watch: 'mh', enter: 'mh', mfinish: 'mzone'
+  permit: 'mboard', mppe: 'mboard', mzone: 'mzone', lid: 'mh', gas1: 'mh', vent: 'mvent', watch: 'mh', enter: 'mh', mfinish: 'mzone',
+  cos: 'cosv', txearth: 'txv', hvcover: 'txv', txlift: 'lift', txfinish: 'zone',
+  ttbm: 'tboard', tppe: 'tboard', tzone: 'tzone', lifeline: 'tbase', climb: 'tclimb', tieoff: 'ttop', hoist: 'tclimb', twork: 'ttop', tdown: 'tclimb'
 };
 const CAM_LIST = {
   pole: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['site', { ko: '시점: 작업 현장', en: 'View: work site' }], ['bucket', { ko: '시점: 버킷', en: 'View: bucket' }],
     ['truck', { ko: '시점: 작업차', en: 'View: truck' }], ['gnd', { ko: '시점: 접지 전주 (-35)', en: 'View: earthing pole (-35)' }], ['sw', { ko: '시점: 개폐기 전주 (-70)', en: 'View: switch pole (-70)' }], ['wide', { ko: '시점: 거리 전체', en: 'View: whole street' }]],
+  tx: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['site', { ko: '시점: 작업 현장', en: 'View: work site' }], ['txv', { ko: '시점: 변압기', en: 'View: transformer' }],
+    ['cosv', { ko: '시점: COS · 전주 위', en: 'View: cut-out · pole top' }], ['truck', { ko: '시점: 작업차', en: 'View: truck' }]],
+  tower: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['tclimb', { ko: '시점: 철탑 전체', en: 'View: whole tower' }], ['ttop', { ko: '시점: 작업 위치', en: 'View: work position' }],
+    ['tbase', { ko: '시점: 철탑 아래', en: 'View: tower foot' }], ['tzone', { ko: '시점: 출입금지 구역', en: 'View: keep-out zone' }]],
   manhole: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['mzone', { ko: '시점: 작업 구역', en: 'View: work zone' }], ['mh', { ko: '시점: 맨홀', en: 'View: manhole' }], ['mboard', { ko: '시점: 작업 준비', en: 'View: briefing' }]]
 };
 let camGoal = null, C;
@@ -158,16 +171,25 @@ function drawGround(ctx) {
 }
 
 // 작업구역 바닥 표시 · 낙하 반경
+const hookZ = (tr) => { const jz = bucketPos(tr)[2] + 1.7; return jz - 0.4 - tr.hookDrop * (jz - 0.4 - 1.0); };
+function dangerCircle(ctx, x, y, r) {
+  const pulse = 0.55 + 0.35 * Math.sin(performance.now() / 180);
+  groundCircle(ctx, x, y, r, `rgba(230,40,40,${0.12 + 0.08 * pulse})`, `rgba(220,30,30,${pulse})`, [8, 6]);
+}
 function drawZoneFloor(ctx) {
   const W = sim.w;
-  if (scenario === 'pole') {
+  if (scene === 'tower') {
+    if (W.cones.every(c => c.placed)) groundCircle(ctx, TW.x, TW.y, 9, 'rgba(255,140,40,.13)', null);
+    const foot = towerLeg(0);
+    if (W.people.B.z > 2) dangerCircle(ctx, foot[0], foot[1], 3);
+    if (W.bag.state === 'up' || W.bag.state === 'down') dangerCircle(ctx, PULLEY[0], PULLEY[1], GEO.fallR);
+    return;
+  }
+  if (scene === 'pole') {
     const all = W.cones.filter(c => c.side !== 4).every(c => c.placed);
     if (all) fillPoly(ctx, GEO.zone.map(p => [...p, 0.035]), 'rgba(255,140,40,.13)');
     const tr = W.truck;
-    if (W.load.state === 'hook' && tr.hookDrop < 0.97) {
-      const h = hookXY(tr), pulse = 0.55 + 0.35 * Math.sin(performance.now() / 180);
-      groundCircle(ctx, h[0], h[1], GEO.fallR, `rgba(230,40,40,${0.12 + 0.08 * pulse})`, `rgba(220,30,30,${pulse})`, [8, 6]);
-    }
+    if ((W.load.state === 'hook' || W.txOld?.state === 'hook') && tr.hookDrop < 0.97) { const h = hookXY(tr); dangerCircle(ctx, h[0], h[1], GEO.fallR); }
     if (W.ground.earth) {                                    // 접지봉
       const g = [GEO.gndX + 0.6, 4.2];
       push(g[0], g[1], 0.3, ctx2 => { rod(ctx2, [g[0], g[1], 0], [g[0], g[1], 0.35], 0.05, '#8a6d3b'); });
@@ -202,7 +224,7 @@ const BUILD = (() => {
 })();
 function drawStatic(ctx) {
   const camSide = Math.abs(C.pos[1]) > GEO.walkOut + 0.5 ? Math.sign(C.pos[1]) : 0;   // 카메라 쪽 건물은 잘라 내고 보여 줌
-  for (const b of BUILD) if (Math.sign(b.y) !== camSide) push(b.x, b.y, b.h / 2, c => {
+  for (const b of BUILD) if (Math.sign(b.y) !== camSide && !(scene === 'tower' && b.y > 0)) push(b.x, b.y, b.h / 2, c => {
     box(c, { x: b.x, y: b.y, hx: b.hx, hy: b.hy, z0: 0, z1: b.h, col: b.col, faces: { top: mix(b.col, [120, 120, 120], 0.3) } });
     // 창문 줄
     const face = b.y > 0 ? -1 : 1, yy = b.y + face * b.hy + face * 0.02;
@@ -224,6 +246,7 @@ function drawStatic(ctx) {
 const WIRE_POLES = [-105, -70, -35, 0, 35, 70];
 function drawPoles(ctx, now) {
   const G = GEO, W = sim.w;
+  if (scene === 'tower') return;
   for (const px of WIRE_POLES) {
     const y = G.poleY;
     push(px, y, 6, c => {
@@ -293,6 +316,107 @@ function drawPoles(ctx, now) {
   }
 }
 
+// ---- 변압기 교체: 주상변압기 · COS · 리드선 · 방호 커버 · 접지 ----------------------------------
+function drawTransformer(c, x, y, z0, old) {
+  const body = old ? [128, 116, 100] : [168, 178, 186];
+  box(c, { x, y, hx: 0.36, hy: 0.36, z0, z1: z0 + 1.15, col: body, edge: true });
+  box(c, { x, y, hx: 0.4, hy: 0.4, z0: z0 + 1.15, z1: z0 + 1.25, col: mix(body, [60, 60, 60], 0.3) });
+  for (const dy of [-0.15, 0.15]) rod(c, [x, y + dy, z0 + 1.25], [x, y + dy, z0 + 1.5], 0.09, old ? '#7a4a20' : '#9aa3ad', 'butt');
+  if (old) { const s = project(x - 0.37, y, z0 + 0.6), k = pxPerM(x, y, z0); if (s) { c.fillStyle = '#e03131'; c.font = `700 ${Math.max(9, 0.4 * k)}px system-ui`; c.textAlign = 'center'; c.fillText('!', s[0], s[1]); } }
+}
+function drawTxGear(ctx, now) {
+  if (scenario !== 'tx') return;
+  const W = sim.w, G = GEO, [cx, cy, cz] = TX.cos, tr = W.truck;
+  const live = 'rgba(255,90,40,.6)', dead = 'rgba(60,140,255,.6)';
+  push(cx, cy, cz, c => {
+    rod(c, [0, G.poleY, cz + 0.4], [0, cy - 0.15, cz + 0.4], 0.07, '#868e96');                        // COS 받침대
+    rod(c, [cx, cy, cz - 0.35], [cx, cy, cz + 0.35], 0.13, '#8b5a2b', 'butt');                         // 애자
+    if (W.cos.closed) rod(c, [cx, cy - 0.14, cz - 0.32], [cx, cy - 0.14, cz + 0.32], 0.07, '#495057');  // 퓨즈홀더 (닫힘)
+    else rod(c, [cx, cy - 0.14, cz - 0.32], [cx, cy - 0.6, cz - 0.75], 0.07, '#495057');                // 열려서 아래로 늘어짐
+    const jump = [[0, G.phaseY[0], G.armZ + 0.26], [cx, cy, cz + 0.36]];
+    line3(c, jump, '#343a40', Math.max(1.5, 0.03 * pxPerM(cx, cy, cz)));                              // 인하선 (전원측)
+    if (showPower) line3(c, jump, live, Math.max(2, 0.06 * pxPerM(cx, cy, cz)));
+    const lead = [[cx, cy, cz - 0.36], [TX.x, TX.y + 0.15, TX.z1 + 0.35]];
+    if (W.txOld.state === 'pole' || W.load.state === 'pole') {
+      line3(c, lead, '#343a40', Math.max(1.5, 0.03 * pxPerM(cx, cy, cz)));
+      if (showPower) line3(c, lead, W.cos.closed ? live : dead, Math.max(2, 0.06 * pxPerM(cx, cy, cz)));
+    }
+    if (W.hvCover > 0.01) {                                                                            // 방호 커버
+      box(c, { x: cx, y: cy, hx: 0.16, hy: 0.16, z0: cz + 0.2, z1: cz + 0.2 + 0.4 * Math.min(1, W.hvCover * 2), col: [255, 122, 26] });
+      if (W.hvCover > 0.5) { const k = (W.hvCover - 0.5) * 2; line3(c, [jump[1], [jump[1][0] + (jump[0][0] - jump[1][0]) * k, jump[1][1] + (jump[0][1] - jump[1][1]) * k, jump[1][2] + (jump[0][2] - jump[1][2]) * k]], '#ff7a1a', Math.max(3, 0.14 * pxPerM(cx, cy, cz))); }
+    }
+    if (W.cos.tag) { const s = project(cx, cy - 0.2, cz - 0.6), k = pxPerM(cx, cy, cz); if (s) { c.fillStyle = '#ffd43b'; c.fillRect(s[0] - 0.12 * k, s[1], 0.24 * k, 0.3 * k); c.fillStyle = '#e03131'; c.fillRect(s[0] - 0.12 * k, s[1], 0.24 * k, 0.08 * k); } }
+  });
+  push(0, G.poleY - 0.3, TX.z0, c => box(c, { x: 0, y: G.poleY - 0.32, hx: 0.06, hy: 0.32, z0: TX.z0 + 0.4, z1: TX.z0 + 0.52, col: COL.steel }));   // 변압기 받침 브래킷
+  const h = tr.present ? hookXY(tr) : [TX.x, TX.y], hz = tr.present ? hookZ(tr) : 0;
+  const place = (st, kind, aside) => {
+    if (st === 'pole') return [TX.x, TX.y, TX.z0];
+    if (st === 'hook') return [h[0], h[1], hz - 1.55];
+    if (st === 'down') return [h[0], h[1], 0];
+    if (st === 'aside' || st === 'ground') return [h[0] + aside[0], h[1] + aside[1], 0];
+    return null;
+  };
+  for (const [st, kind, aside] of [[W.txOld.state, 'txold', [-1.6, -0.5]], [W.load.state, 'txnew', [1.4, -0.5]]]) {
+    const p = place(st, kind, aside); if (!p) continue;
+    push(p[0], p[1], p[2] + 0.6, c => { if (p[2] < 0.1) drawShadow(c, p[0], p[1], 0.5); drawTransformer(c, p[0], p[1], p[2], kind === 'txold'); });
+  }
+  if (W.txEarth) push(TX.rod[0], TX.rod[1], 0.3, c => rod(c, [TX.rod[0], TX.rod[1], 0], [TX.rod[0], TX.rod[1], 0.35], 0.05, '#8a6d3b'));
+  if (W.txGround) push(TX.x, TX.y, 4, c => {
+    const pts = [[TX.x, TX.y + 0.15, TX.z1 + 0.35], [0.15, G.poleY - 0.25, 6], [0.2, G.poleY - 0.25, 2], [TX.rod[0], TX.rod[1], 0.3]];
+    line3(c, pts, '#2b8a3e', Math.max(1.5, 0.04 * pxPerM(0, 5, 5))); line3(c, pts, 'rgba(240,220,40,.8)', Math.max(1, 0.02 * pxPerM(0, 5, 5)), [4, 4]);
+  });
+}
+
+// ---- 송전 철탑 ------------------------------------------------------------------------
+const corners = (z, out = 0) => { const h = TW.base - (TW.base - TW.topHalf) * Math.min(z, TW.top) / TW.top + out; return [[-h, -h], [h, -h], [h, h], [-h, h]].map(([dx, dy]) => [TW.x + dx, TW.y + dy, z]); };
+function drawTower(ctx, now) {
+  if (scene !== 'tower') return;
+  const W = sim.w, steel = (d) => rgb(fog([128, 136, 146], d)), levels = [];
+  for (let z = 0; z < TW.top; z += 4) levels.push(z);
+  levels.push(TW.top);
+  const seg = (a, b, w) => push((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2, c => rod(c, a, b, w, steel(depth(...a))));
+  for (let i = 0; i < levels.length; i++) {
+    const A = corners(levels[i]);
+    for (let k = 0; k < 4; k++) seg(A[k], A[(k + 1) % 4], 0.07);                                    // 수평재
+    if (i === levels.length - 1) break;
+    const B = corners(levels[i + 1]);
+    for (let k = 0; k < 4; k++) { seg(A[k], B[k], 0.2); seg(A[k], B[(k + 1) % 4], 0.05); seg(A[(k + 1) % 4], B[k], 0.05); }   // 주주재 · 사재
+  }
+  const wires = [];
+  for (const z of TW.armZ) {
+    const A = corners(z), h = A[1][0] - TW.x;
+    for (const s of [-1, 1]) {                                                                      // 완금 (선로 방향 x에 직각인 y 방향)
+      const tip = [TW.x, TW.y + s * (h + TW.armLen), z + 0.3], i1 = s < 0 ? 0 : 3, i2 = s < 0 ? 1 : 2;
+      seg(A[i1], tip, 0.12); seg(A[i2], tip, 0.12); seg([A[i1][0], A[i1][1], z + 1], tip, 0.08); seg([A[i2][0], A[i2][1], z + 1], tip, 0.08);
+      push(tip[0], tip[1], tip[2] - 1.1, c => { for (let q = 0; q < 10; q++) rod(c, [tip[0], tip[1], tip[2] - 0.15 - q * 0.21], [tip[0], tip[1], tip[2] - 0.25 - q * 0.21], 0.26, q % 2 ? '#8b5a2b' : '#a0522d', 'butt'); });   // 애자련
+      wires.push({ y: tip[1], z: tip[2] - 2.3, w: 0.045, live: true });
+    }
+  }
+  wires.push({ y: TW.y, z: TW.top + 0.4, w: 0.03, live: false });                                    // 가공지선
+  const N = 16, X = 160;
+  for (const wr of wires) for (let k = 0; k < N; k++) {
+    const P = (u) => { const x = -X + 2 * X * u; return [x, wr.y, wr.z - 9 * (x / X) ** 2]; };
+    const a = P(k / N), b = P((k + 1) / N), m = P((k + 0.5) / N);
+    push(m[0], m[1], m[2], c => {
+      line3(c, [a, b], rgb(fog(COL.hv, depth(...m))), Math.max(1, wr.w * pxPerM(...m)));
+      if (showPower && wr.live) { line3(c, [a, b], 'rgba(255,90,40,.5)', Math.max(1.4, 0.08 * pxPerM(...m))); line3(c, [a, b], 'rgba(255,230,140,.95)', Math.max(1, 0.04 * pxPerM(...m)), [4, 10], -now / 30); }
+    });
+  }
+  // 추락방지 와이어 (수직 구명줄) · 추락방지기 · 랜야드
+  const ltop = towerLeg(TW.top - 1, 0.3), lbot = towerLeg(0.3, 0.3), B = W.people.B;
+  push((ltop[0] + lbot[0]) / 2, (ltop[1] + lbot[1]) / 2, 10, c => line3(c, [ltop, lbot], W.lifelineOK ? '#1971c2' : '#5c7cfa', Math.max(1.5, 0.03 * pxPerM(...lbot))));
+  if (W.arrester) { const p = towerLeg(B.z + 1.1, 0.3); push(p[0], p[1], p[2], c => box(c, { x: p[0], y: p[1], hx: 0.07, hy: 0.07, z0: p[2] - 0.12, z1: p[2] + 0.12, col: [250, 176, 5], edge: true })); }
+  if (W.lanyard) { const a = [B.x, B.y, B.z + 1.0], b = towerLeg(B.z + 1.7, 0); push(b[0], b[1], b[2], c => line3(c, [a, b], '#e8590c', Math.max(2, 0.04 * pxPerM(...b)))); }
+  // 도르래 · 달줄 · 공구 가방
+  const [px, py, pz] = PULLEY, bag = [px, py, W.bag.state === 'ground' ? 0.15 : W.bag.z], Cp = W.people.C;
+  push(px, py, pz, c => { const s = project(px, py, pz), k = pxPerM(px, py, pz); if (s) { c.strokeStyle = '#495057'; c.lineWidth = Math.max(1.5, 0.05 * k); c.beginPath(); c.arc(s[0], s[1], Math.max(3, 0.18 * k), 0, 7); c.stroke(); } });
+  push(px, py, pz / 2, c => {
+    line3(c, [[px, py, pz], [bag[0], bag[1], bag[2] + 0.3]], '#b08968', 1.4);
+    if (Cp.tagline || W.bag.state !== 'ground') line3(c, [[px, py, pz], [Cp.x, Cp.y, 1.1]], '#b08968', 1.4);
+  });
+  if (W.bag.state !== 'top') push(bag[0], bag[1], bag[2], c => { if (bag[2] < 0.3) drawShadow(c, bag[0], bag[1], 0.3); box(c, { x: bag[0], y: bag[1], hx: 0.2, hy: 0.15, z0: bag[2], z1: bag[2] + 0.35, col: [214, 51, 108], edge: true }); });
+}
+
 // ---- 작업차 ------------------------------------------------------------------------
 function drawTruck(ctx, now) {
   const tr = sim.w.truck; if (!tr.present) return;
@@ -352,11 +476,12 @@ function drawTruck(ctx, now) {
     const hz = jz - 0.4 - tr.hookDrop * (jz - 0.4 - 1.0);
     line3(c, [[hx[0], hx[1], jz], [hx[0], hx[1], hz]], '#343a40', 1);
     const hs = project(hx[0], hx[1], hz); if (hs) { c.strokeStyle = '#212529'; c.lineWidth = Math.max(1.5, 0.05 * pxPerM(hx[0], hx[1], hz)); c.beginPath(); c.arc(hs[0], hs[1] + 0.06 * pxPerM(hx[0], hx[1], hz), 0.08 * pxPerM(hx[0], hx[1], hz), 0, Math.PI * 1.4); c.stroke(); }
-    if (sim.w.load.state === 'hook') drawLoad(c, hx[0], hx[1], hz - 0.55, sim.w.load.kind);
+    if (sim.w.load.state === 'hook' && scenario !== 'tx') drawLoad(c, hx[0], hx[1], hz - 0.55, sim.w.load.kind);
   });
-  if (sim.w.load.state === 'down') { const h = hookXY(tr); push(h[0], h[1], 0.2, c => drawLoad(c, h[0], h[1], 0.02, sim.w.load.kind)); }
+  if (sim.w.load.state === 'down' && scenario !== 'tx') { const h = hookXY(tr); push(h[0], h[1], 0.2, c => drawLoad(c, h[0], h[1], 0.02, sim.w.load.kind)); }
 }
 function drawLoad(c, x, y, z, kind) {
+  if (kind === 'txnew' || kind === 'txold') { drawTransformer(c, x, y, z, kind === 'txold'); return; }
   const col = kind === 'old' ? [140, 100, 70] : [150, 160, 172];
   box(c, { x, y, hx: 0.12, hy: 1.1, z0: z, z1: z + 0.14, col, edge: true });
   for (const dy of [-0.8, 0, 0.8]) rod(c, [x, y + dy, z + 0.14], [x, y + dy, z + 0.4], 0.14, kind === 'old' ? '#7a4a20' : '#b7bec6', 'butt');
@@ -460,8 +585,8 @@ function drawPeople(ctx, now) {
   sim.peds.forEach((q, i) => push(q.x, q.y, 0.9, c => drawPerson(c, 'ped', { ...q, z: 0, face: q.dir, anim: 'walk', ...PED_COLS[i % 2] }, now, true)));
   // 유도 로프
   const C2 = W.people.C;
-  if (C2.tagline && W.load.state === 'hook') {
-    const h = hookXY(W.truck), T = bucketPos(W.truck), hz = T[2] + 1.3 - W.truck.hookDrop * (T[2] + 0.3) - 0.5;
+  if (C2.tagline && (W.load.state === 'hook' || W.txOld?.state === 'hook') && W.truck.present) {
+    const h = hookXY(W.truck), hz = hookZ(W.truck) - (scenario === 'tx' ? 1.0 : 0.5);
     push((h[0] + C2.x) / 2, (h[1] + C2.y) / 2, 2, c => line3(c, [[h[0], h[1], hz], [C2.x, C2.y, 1.1]], '#e8590c', 1.4));
   }
 }
@@ -478,7 +603,7 @@ function cone(c, x, y) {
 function drawCones(ctx) {
   const W = sim.w;
   for (const cn of W.cones) if (cn.placed) push(cn.x, cn.y, 0.4, c => cone(c, cn.x, cn.y));
-  const chains = scenario === 'pole'
+  const chains = scene === 'pole'
     ? [W.cones.filter(c => c.side === 0), [...W.cones.filter(c => c.side === 3).reverse(), ...W.cones.filter(c => c.side === 2), ...W.cones.filter(c => c.side === 1)], W.cones.filter(c => c.side === 4)]
     : [[...W.cones, W.cones[0]]];
   for (const ch of chains) for (let i = 0; i < ch.length - 1; i++) {
@@ -498,9 +623,8 @@ function drawCones(ctx) {
 }
 
 // ---- 맨홀 장비 · 작업 차량 ---------------------------------------------------------------
-function drawManhole(ctx, now) {
-  if (scenario !== 'manhole') return;
-  const W = sim.w, M = W.mh, [mx, my] = GEO.mh, v = W.van;
+function drawVan(ctx, now) {
+  const v = sim.w.van; if (!v) return;
   push(v.c, v.y, 1.2, c => {
     fillPoly(c, [[v.c - 2.6, v.y - 1.2, 0.03], [v.c + 3.0, v.y - 1.2, 0.03], [v.c + 3.0, v.y + 1.3, 0.03], [v.c - 2.6, v.y + 1.3, 0.03]], 'rgba(0,0,0,.22)');
     for (const wx of [v.c + 1.8, v.c - 1.7]) for (const s of [-1, 1]) disc(c, wx, v.y + s * 0.98, 0.4, 0.4, 'y', '#1f1f22');
@@ -510,6 +634,10 @@ function drawManhole(ctx, now) {
     const blink = (Math.floor(now / 350) % 2) === 0, s = project(v.c + 2.05, v.y, 2.05), k = pxPerM(v.c, v.y, 2);
     if (s) { c.fillStyle = blink ? '#ffb000' : '#a86a00'; c.beginPath(); c.arc(s[0], s[1], Math.max(2, 0.14 * k), 0, 7); c.fill(); }
   });
+}
+function drawManhole(ctx, now) {
+  if (scene !== 'manhole') return;
+  const W = sim.w, M = W.mh, [mx, my] = GEO.mh;
   if (M.guard) push(mx, my, 0.5, c => {
     const r = 0.95, P = [[mx - r, my - r], [mx + r, my - r], [mx + r, my + r], [mx - r, my + r]];
     for (const p of P) rod(c, [p[0], p[1], 0], [p[0], p[1], 1.0], 0.05, '#adb5bd');
@@ -556,6 +684,19 @@ function drawOverlay(ctx) {
   }
   if (showLabels) {
     const tag = (x, y, z, text, col) => { const s = project(x, y, z); if (!s) return; ctx.font = '600 11px system-ui, sans-serif'; const w = ctx.measureText(text).width + 10; ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(s[0] - w / 2, s[1] - 9, w, 18, 4); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText(text, s[0], s[1]); };
+    if (scenario === 'tx') {
+      tag(TX.cos[0], TX.cos[1] - 0.6, TX.cos[2] + 0.9, W.cos.closed ? t({ ko: 'COS: 투입 (충전)', en: 'Cut-out: closed (live)' }) : t({ ko: 'COS: 개방', en: 'Cut-out: open' }), W.cos.closed ? '#c92a2a' : '#2f9e44');
+      tag(8, GEO.phaseY[0], GEO.armZ + 1.2, t({ ko: '본선 고압선: 계속 충전', en: 'Main HV line: stays live' }), '#c92a2a');
+      if ((W.load.state === 'hook' || W.txOld.state === 'hook') && W.truck.hookDrop < 0.97) { const h = hookXY(W.truck); tag(h[0], h[1] - GEO.fallR, 0.1, t({ ko: '낙하 반경 출입금지', en: 'Drop zone — keep out' }), '#c92a2a'); }
+      if (W.hvCover > 0.5) tag(TX.cos[0] + 1.6, TX.cos[1], TX.cos[2] + 0.4, t({ ko: '방호 커버 (충전부)', en: 'Covers (live parts)' }), '#e8590c');
+    }
+    if (scene === 'tower') {
+      const lf = towerLeg(10, 0.6), wk = towerLeg(TW.workZ, 1.6);
+      tag(lf[0] - 1.2, lf[1], lf[2], t({ ko: '추락방지 와이어', en: 'Fall-arrest wire' }) + (W.lifelineOK ? ' ✓' : ''), '#1971c2');
+      tag(wk[0] - 1.6, wk[1], wk[2] + 2.6, W.lanyard ? t({ ko: '고리 2개 체결', en: 'Two hooks on' }) : W.arrester ? t({ ko: '추락방지기 체결', en: 'Arrester on' }) : t({ ko: '작업 위치', en: 'Work position' }), W.lanyard || W.arrester ? '#2b8a3e' : '#495057');
+      if (W.people.B.z > 2) { const f = towerLeg(0); tag(f[0], f[1] - 3, 0.1, t({ ko: '승탑 중 하부 출입금지', en: 'Keep clear below the climber' }), '#c92a2a'); }
+      tag(TW.x + 9, TW.y, TW.armZ[0] - 1, t({ ko: '154kV 송전선: 충전 (가상)', en: '154 kV lines: live (virtual)' }), '#c92a2a');
+    }
     if (scenario === 'pole') {
       tag(GEO.swX, GEO.poleY, GEO.poleH + 1, W.sw.closed ? t({ ko: '개폐기: 투입(ON)', en: 'Switch: closed' }) : t({ ko: '개폐기: 개방(OFF)', en: 'Switch: open' }), W.sw.closed ? '#c92a2a' : '#2f9e44');
       tag(GEO.gndX, GEO.poleY, GEO.poleH + 1, t({ ko: '접지 전주 (-35)', en: 'Earthing pole (-35)' }) + (W.ground.line ? ' ✓' : ''), W.ground.line ? '#2b8a3e' : '#495057');
@@ -564,10 +705,10 @@ function drawOverlay(ctx) {
       if (W.covers > 0.5) tag(2.4, GEO.neutralY, GEO.neutralZ - 0.6, t({ ko: '방호관 (중성선·인접 상)', en: 'Covers (neutral · adjacent phase)' }), '#e8590c');
     }
   }
-  if (scenario === 'manhole' && (W.mh.measured || W.people.D.anim === 'probe')) gasPanel(ctx);
-  if (showPower && scenario === 'pole') {
+  if (scene === 'manhole' && (W.mh.measured || W.people.D.anim === 'probe')) gasPanel(ctx);
+  if (showPower && scene !== 'manhole') {
     ctx.font = '12px system-ui, sans-serif'; ctx.textAlign = 'left';
-    const items = [['rgba(255,110,50,1)', t({ ko: '충전 (전기 있음)', en: 'Live' })], ['rgba(60,140,255,1)', t({ ko: '정전', en: 'De-energised' })], ['#2b8a3e', t({ ko: '접지', en: 'Earth' })]];
+    const items = [['rgba(255,110,50,1)', t({ ko: '충전 (전기 있음)', en: 'Live' })], ['rgba(60,140,255,1)', t({ ko: '정전', en: 'De-energised' })], ['#2b8a3e', t({ ko: '접지', en: 'Earth' })]].slice(0, scene === 'tower' ? 1 : 3);
     let x = 10; const y = C.H - 14;
     ctx.fillStyle = 'rgba(255,255,255,.82)'; ctx.beginPath(); ctx.roundRect(4, y - 11, items.reduce((s, i) => s + ctx.measureText(i[1]).width + 28, 8), 22, 6); ctx.fill();
     for (const [col, txt] of items) { ctx.fillStyle = col; ctx.fillRect(x + 2, y - 2, 14, 4); ctx.fillStyle = '#1d1f24'; ctx.fillText(txt, x + 20, y); x += ctx.measureText(txt).width + 28; }
@@ -626,7 +767,7 @@ function drawScene(now) {
   drawGround(ctx);
   drawZoneFloor(ctx);
   D = [];
-  drawStatic(ctx); drawPoles(ctx, now); drawTruck(ctx, now); drawManhole(ctx, now); drawCones(ctx); drawPeople(ctx, now);
+  drawStatic(ctx); drawPoles(ctx, now); drawTxGear(ctx, now); drawTower(ctx, now); drawTruck(ctx, now); drawVan(ctx, now); drawManhole(ctx, now); drawCones(ctx); drawPeople(ctx, now);
   D.sort((a, b) => b.d - a.d);
   for (const it of D) it.f(ctx);
   drawOverlay(ctx);
@@ -675,13 +816,48 @@ function answer(k) {
     quiz.last = o; panel();
   }
 }
-function finish() { panel(); label(); }
+function finish() { if (mode === 'quiz' && score.total && !score.saved) { score.saved = true; score.when = new Date(); saveHistory(); } panel(); label(); }
+
+// ---- 훈련 기록 (이 브라우저에만 저장) · 인쇄 ------------------------------------------------
+const HKEY = 'sf-history';
+function loadHistory() { try { return JSON.parse(localStorage.getItem(HKEY) || '[]'); } catch (e) { return []; } }
+function saveHistory(name = '') {
+  const h = loadHistory(), n = sim.steps.length - (score.from || 0);
+  const rec = { when: score.when.toISOString(), scenario, from: score.from || 0, first: score.first, n, wrong: score.mistakes.length, name };
+  const i = h.findIndex(x => x.when === rec.when);
+  if (i >= 0) h[i] = rec; else h.unshift(rec);
+  try { localStorage.setItem(HKEY, JSON.stringify(h.slice(0, 30))); } catch (e) { /* 저장 불가 (사생활 보호 모드 등) */ }
+}
+const fmtTime = (d) => new Date(d).toLocaleString(currentLangTag(), { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+const currentLangTag = () => (window.currentLang && window.currentLang() === 'en' ? 'en-GB' : 'ko-KR');
+function historyHtml() {
+  const h = loadHistory().slice(0, 5); if (!h.length) return '';
+  return `<details class="sf-hist"><summary>${t({ ko: '이 브라우저의 최근 훈련 기록', en: 'Recent training in this browser' })} (${h.length})</summary><ul>${h.map(r =>
+    `<li>${fmtTime(r.when)} · ${esc(t(SCENARIOS[r.scenario]?.title || { ko: r.scenario, en: r.scenario }))}${r.from ? ` · ${r.from + 1}${t({ ko: '단계부터', en: '+ ' })}` : ''}${r.name ? ` · ${esc(r.name)}` : ''} — <b>${r.first}/${r.n}</b></li>`).join('')}</ul>
+    <button type="button" class="lab-try" id="sfClear">${t({ ko: '기록 지우기', en: 'Clear history' })}</button></details>`;
+}
+function printRecord() {
+  const name = ($('sfName')?.value || '').trim(), steps = sim.steps, from = score.from || 0, n = steps.length - from;
+  if (score.saved) saveHistory(name);
+  const wrongBy = new Map(); for (const m of score.mistakes) { if (!wrongBy.has(m.step)) wrongBy.set(m.step, []); wrongBy.get(m.step).push(m); }
+  const rows = steps.map((st, i) => i < from ? '' : `<tr><td>${i + 1}</td><td>${esc(t(st.title))}</td><td>${st.rules.join(', ')}</td><td>${wrongBy.has(i) ? `✗ ${wrongBy.get(i).length}${t({ ko: '번 틀림', en: ' wrong' })}` : '✓'}</td></tr>`).join('');
+  $('sfPrintArea').innerHTML = `<h1>${t({ ko: '배전공사 안전 훈련 결과', en: 'Distribution work safety — training record' })}</h1>
+    <table class="pr-meta"><tr><th>${t({ ko: '이름', en: 'Name' })}</th><td>${esc(name) || '&nbsp;'}</td><th>${t({ ko: '일시', en: 'Date' })}</th><td>${fmtTime(score.when || new Date())}</td></tr>
+    <tr><th>${t({ ko: '현장', en: 'Scenario' })}</th><td colspan="3">${esc(t(SCENARIOS[scenario].title))}${from ? ` (${from + 1}${t({ ko: '단계부터', en: ': started at step ' + (from + 1) })})` : ''}</td></tr>
+    <tr><th>${t({ ko: '첫 시도 정답', en: 'Right first time' })}</th><td colspan="3"><b>${score.first} / ${n}</b> (${Math.round(100 * score.first / n)}%)</td></tr></table>
+    <h2>${t({ ko: '단계별 결과', en: 'Steps' })}</h2><table><tr><th>#</th><th>${t({ ko: '안전조치', en: 'Safety action' })}</th><th>${t({ ko: '수칙', en: 'Rule' })}</th><th>${t({ ko: '결과', en: 'Result' })}</th></tr>${rows}</table>
+    ${score.mistakes.length ? `<h2>${t({ ko: '틀린 선택과 이유', en: 'Wrong choices and why' })}</h2><ol>${score.mistakes.map(m => `<li><b>${m.step + 1}. ${esc(t(m.text))}</b><br>${esc(t(m.why))}</li>`).join('')}</ol>` : ''}
+    <p class="pr-foot">${t({ ko: 'Ontology Space 배전공사 안전 훈련 시뮬레이션 · 교육용 가상 현장이며 공식 교육 이수 기록이 아닙니다.', en: 'Ontology Space distribution work safety simulation · a virtual training site; not an official training certificate.' })}</p>`;
+  window.print();
+}
 function restart(i = 0) {
+  scene = SCENARIOS[scenario].scene;
   sim = i > 0 ? SafetySim.jumpTo({ scenario }, i) : new SafetySim({ scenario });
   quiz = null; hold = 0; acc = 0;
-  if (i === 0) { score = { first: 0, total: 0, mistakes: [] }; }
-  if (i > 0) { sim.begin(i); running = true; if (camMode === 'auto') camGoal = { ...CAMS[STEP_CAM[sim.step.id]] }; }
-  else { running = mode === 'quiz'; camGoal = { ...CAMS[scenario === 'pole' ? 'board' : 'mboard'] }; }
+  if (i === 0 || mode === 'quiz') score = { first: 0, total: 0, mistakes: [], from: mode === 'quiz' ? i : 0, saved: false };
+  if (i > 0 && mode === 'quiz') { running = true; if (camMode === 'auto') camGoal = { ...CAMS[STEP_CAM[sim.steps[i].id]] }; }   // 강사용: i단계부터 문제 시작 (앞 단계는 자동 진행)
+  else if (i > 0) { sim.begin(i); running = true; if (camMode === 'auto') camGoal = { ...CAMS[STEP_CAM[sim.step.id]] }; }
+  else { running = mode === 'quiz'; camGoal = { ...CAMS[{ pole: 'board', manhole: 'mboard', tower: 'tboard' }[scene]] }; }
   panel(); label();
 }
 
@@ -702,18 +878,20 @@ function panel() {
       <div class="sf-opts">${q.opts.map((o, k) => `<button type="button" data-k="${k}" ${q.tried.has(k) ? 'disabled class="sf-bad"' : ''}>${esc(t(o.text))}</button>`).join('')}</div>
       ${last ? `<p class="sf-why"><b>⚠ ${t({ ko: '왜 위험한가요?', en: 'Why is it unsafe?' })}</b> ${esc(t(last.why))}</p>` : ''}</div>`;
   } else if (sim.done()) {
-    const n = steps.length, rate = score.total ? Math.round(100 * score.first / n) : null;
+    const n = steps.length - (score.from || 0), rate = score.total ? Math.round(100 * score.first / n) : null;
     card = `<div class="sf-card sf-end"><div class="sf-eyebrow">${t({ ko: '작업 완료', en: 'Job complete' })}</div>
       <h4>${t({ ko: '모든 안전조치를 마쳤습니다', en: 'All safety steps completed' })}</h4>
       ${rate !== null ? `<p>${t({ ko: '첫 시도에 맞힌 단계', en: 'Right on the first try' })}: <b>${score.first} / ${n}</b> (${rate}%)</p>` : ''}
       ${score.mistakes.length ? `<details open><summary>${t({ ko: '틀린 선택 다시 보기', en: 'Review wrong choices' })} (${score.mistakes.length})</summary><ul>${score.mistakes.map(m => `<li><b>${m.step + 1}. ${esc(t(m.text))}</b><br><span class="meta">${esc(t(m.why))}</span></li>`).join('')}</ul></details>` : ''}
       <p class="meta">${t({ ko: '안전 규칙 위반', en: 'Safety-rule violations' })}: <b>${sim.violations.length}</b></p>
-      <button type="button" class="primary" id="sfAgain">${t({ ko: '처음부터 다시', en: 'Start again' })}</button></div>`;
+      ${rate !== null ? `<div class="sf-record"><label>${t({ ko: '이름 (선택)', en: 'Name (optional)' })} <input id="sfName" type="text" maxlength="40" autocomplete="name"></label>
+        <button type="button" id="sfPrint">🖨 ${t({ ko: '결과 인쇄 · PDF 저장', en: 'Print · save as PDF' })}</button></div>` : ''}
+      <button type="button" class="primary" id="sfAgain">${t({ ko: '처음부터 다시', en: 'Start again' })}</button>${historyHtml()}</div>`;
   } else if (cur < 0) {
     card = `<div class="sf-card"><div class="sf-eyebrow">${t(SCENARIOS[scenario].title)}</div>
       <h4>${mode === 'quiz' ? t({ ko: '순서 맞히기 훈련', en: 'Sequence training' }) : t({ ko: '▶ 시작을 누르세요', en: 'Press ▶ Start' })}</h4>
       <p>${mode === 'quiz' ? t({ ko: '단계마다 보기 3개 중 올바른 안전조치를 고르면 현장이 진행됩니다. 틀리면 왜 위험한지 알려 줍니다.', en: 'At each step pick the right safety action out of three; the site then carries on. A wrong pick explains why it is unsafe.' })
-        : t({ ko: '작업자 5명이 안전조치를 순서대로 진행합니다. 왼쪽 목록을 누르면 그 단계로 바로 갈 수 있습니다.', en: 'Five workers carry out the safety steps in order. Click a step in the list to jump to it.' })}</p></div>`;
+        : t({ ko: '작업자 5명이 안전조치를 순서대로 진행합니다. 왼쪽 목록을 누르면 그 단계로 바로 갈 수 있습니다.', en: 'Five workers carry out the safety steps in order. Click a step in the list to jump to it.' })}</p>${historyHtml()}</div>`;
   } else {
     const s = sim.step;
     card = `<div class="sf-card"><div class="sf-eyebrow">${t({ ko: '단계', en: 'Step' })} ${cur + 1} / ${steps.length} ${doneCur ? '· ✓' : ''}</div>
@@ -724,15 +902,18 @@ function panel() {
   el.innerHTML = `${card}<ol class="sf-steps ${mode === 'quiz' ? 'quiz' : ''}">${list}</ol><p class="meta sf-roles">${roles}</p>`;
 }
 function label() {
+  scene = SCENARIOS[scenario].scene;
   $('playBtn').innerHTML = running && !quiz ? t({ ko: '⏸ 일시정지', en: '⏸ Pause' }) : t({ ko: '▶ 시작', en: '▶ Start' });
   $('speedBtn').textContent = t({ ko: '배속 ', en: 'Speed ' }) + SPEEDS[speedIdx] + '×';
   $('labelsBtn').textContent = showLabels ? t({ ko: '이름표 숨기기', en: 'Hide labels' }) : t({ ko: '이름표 보기', en: 'Show labels' });
   $('powerBtn').textContent = showPower ? t({ ko: '전기 흐름 숨기기', en: 'Hide power flow' }) : t({ ko: '전기 흐름 보기', en: 'Show power flow' });
-  $('powerBtn').hidden = scenario !== 'pole';
+  $('powerBtn').hidden = scene === 'manhole';
   const opts = (id, list, v0) => { const el = $(id), v = v0 ?? (el.value || list[0][0]); el.innerHTML = list.map(([k, o]) => `<option value="${k}">${t(o)}</option>`).join(''); el.value = list.some(l => l[0] === v) ? v : list[0][0]; };
   opts('scnSel', Object.entries(SCENARIOS).map(([k, s]) => [k, s.title]), scenario);
   opts('modeSel', [['watch', { ko: '보기: 자동 진행', en: 'Watch: auto play' }], ['quiz', { ko: '훈련: 다음 조치 고르기', en: 'Train: pick the next step' }]], mode);
   opts('camSel', CAM_LIST[scenario], camMode);
+  if (sim) opts('fromSel', sim.steps.map((st, i) => [String(i), i ? { ko: `${i + 1}단계부터: ${st.title.ko}`, en: `From step ${i + 1}: ${st.title.en}` } : { ko: '처음부터 훈련', en: 'Train from the start' }]), String(score.from || 0));
+  $('fromSel').hidden = mode !== 'quiz';
 }
 
 // ---- 조작 ---------------------------------------------------------------------------
@@ -779,13 +960,16 @@ function bind() {
   $('powerBtn').addEventListener('click', () => { showPower = !showPower; label(); });
   $('scnSel').addEventListener('change', () => { scenario = $('scnSel').value; camMode = 'auto'; restart(); });
   $('modeSel').addEventListener('change', () => { mode = $('modeSel').value; restart(); });
+  $('fromSel').addEventListener('change', () => restart(+$('fromSel').value));
   $('camSel').addEventListener('change', () => {
     camMode = $('camSel').value;
-    camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? STEP_CAM[sim.step.id] : (scenario === 'pole' ? 'site' : 'mzone')) : camMode] };
+    camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? STEP_CAM[sim.step.id] : ({ pole: 'site', manhole: 'mzone', tower: 'tclimb' }[scene])) : camMode] };
   });
   $('sfPanel').addEventListener('click', e => {
     const b = e.target.closest('button[data-k]'); if (b && quiz) { answer(+b.dataset.k); return; }
-    if (e.target.closest('#sfAgain')) { restart(); return; }
+    if (e.target.closest('#sfAgain')) { restart(mode === 'quiz' ? (score.from || 0) : 0); return; }
+    if (e.target.closest('#sfPrint')) { printRecord(); return; }
+    if (e.target.closest('#sfClear')) { try { localStorage.removeItem(HKEY); } catch (err) { /* 무시 */ } panel(); return; }
     const li = e.target.closest('li[data-i]'); if (li && mode === 'watch') restart(+li.dataset.i);
   });
   document.addEventListener('click', e => {
@@ -800,7 +984,7 @@ function bind() {
 }
 function main() {
   const q = new URLSearchParams(location.search);
-  if (q.get('s') === 'manhole') scenario = 'manhole';
+  if (SCENARIOS[q.get('s')]) scenario = q.get('s');
   label(); bind(); restart(); requestAnimationFrame(frame);
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', main); else main();
