@@ -84,7 +84,7 @@ function drawWorld(tr, cars, leader) {
     drawCar(ctx, leader, col(leader), true, leader.finished, true);
   }
   const ranks = rankCars(cars, leader);
-  ranks.forEach((c, i) => {                                        // 1~4등 번호 (오른쪽 신경망과 짝)
+  ranks.forEach((c, i) => {                                        // 1~5등 번호 (오른쪽 신경망과 짝)
     ctx.fillStyle = i ? 'rgba(17,24,39,.85)' : '#facc15'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(c.x + 13, c.y - 13, 8, 0, 7); ctx.fill(); ctx.stroke();
     ctx.fillStyle = i ? '#fff' : '#111827'; ctx.font = '700 11px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -201,18 +201,18 @@ function drawNet(genome, net) {
                                  en: `${genome.hidden} hidden nodes · ${genome.enabledConns} active connections — blue = positive weight, orange = negative, dashed = disabled` });
 }
 
-// 1~4등: 1등은 화면이 따라가는 선두 차량, 나머지는 완주 > 주행 중 > 실패 순, 같은 무리에서는 멀리 간 차가 앞
+// 1~5등: 1등은 화면이 따라가는 선두 차량, 나머지는 완주 > 주행 중 > 실패 순, 같은 무리에서는 멀리 간 차가 앞
 function rankCars(cars, leader) {
   const out = leader ? [leader] : [];
   const key = (c) => [c.finished ? 2 : c.alive ? 1 : 0, c.alive && !c.finished ? c.progress : c.maxProgress];
   const rest = cars.filter(c => c !== leader && c.genome).sort((a, b) => { const ka = key(a), kb = key(b); return kb[0] - ka[0] || kb[1] - ka[1]; });
-  return out.concat(rest).slice(0, 4);
+  return out.concat(rest).slice(0, 5);
 }
-// 트랙 오른쪽 바깥의 1~4등 신경망 (위에서 아래로). 창 크기는 예전 화면 안 작은 창과 같음
+// 트랙 오른쪽 바깥의 1~5등 신경망 (위에서 아래로). 창 크기는 예전 화면 안 작은 창과 같음
 function drawRankNets(ranks, cw, col, tr) {
   const wide = matchMedia('(min-width: 960px)').matches;
   const w = Math.max(140, Math.min(220, cw * 0.18)), h = w * 0.62;
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 5; i++) {
     const canvas = $('rankNet' + i); if (!canvas) continue;
     canvas.style.width = wide ? w + 'px' : '';
     const { ctx, cw: W2 } = fit(canvas, 1, 0.62);
