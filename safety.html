@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/site.css?v=20261107a">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
-<script type="module" src="assets/safety/safety-app.js?v=20261107a"></script>
+<script type="module" src="assets/safety/safety-app.js?v=20261107b"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -90,7 +90,7 @@
   <div class="sim-wrap sf-wrap">
     <div>
       <canvas id="sfView" aria-label="work site view"></canvas>
-      <p class="meta legend-line"><span lang="ko">드래그: 둘러보기 · 휠/두 손가락: 확대 · 오른쪽 버튼 또는 Shift+드래그: 이동 · 더블클릭: 시점 되돌리기</span><span lang="en">Drag: orbit · wheel/pinch: zoom · right-drag or Shift+drag: pan · double-click: reset view</span></p>
+      <p class="meta legend-line"><span lang="ko">드래그: 둘러보기 · 휠/두 손가락: 확대 · 오른쪽 버튼 또는 Shift+드래그: 이동 · 더블클릭: 시점 되돌리기 · <b>현장 시점</b>(시점 목록)에서는 드래그 = 그 자리에서 고개 돌리기, 휠 = 한두 걸음 물러서기</span><span lang="en">Drag: orbit · wheel/pinch: zoom · right-drag or Shift+drag: pan · double-click: reset view · in the <b>on-site views</b> (view list), drag turns your head and the wheel steps back</span></p>
     </div>
     <div id="sfPanel" class="sf-panel" aria-live="polite"></div>
   </div>
@@ -140,6 +140,7 @@
   <ul lang="ko">
     <li><b>처음 보는 사람</b>: "보기" 모드, 배속 2×로 전체를 한 번 봅니다. 시점은 "자동"으로 두면 단계마다 중요한 곳을 비춥니다.</li>
     <li><b>복습</b>: "훈련" 모드로 바꿔 순서를 맞혀 봅니다. 끝나면 첫 시도 정답 수와 틀린 선택의 이유가 정리됩니다.</li>
+    <li><b>현장 시점</b>: 시점 목록의 "현장 — 작업책임자(공사담당자) 옆 눈높이"를 고르면 담당자가 현장에서 실제로 보는 높이와 거리에서 작업을 지켜봅니다. "현장 — 지금 일하는 작업자 옆"은 조작봉·검전기를 쓰는 사람, 버킷 안, 철탑 위의 작업자 바로 옆으로 따라갑니다. 담당자 입장에서 "지금 무엇을 확인해야 하나"를 이야기해 보세요.</li>
     <li><b>강사용</b>: "훈련" 모드에서 <b>시작 단계</b>를 고르면 앞 단계는 자동으로 진행하고 그 단계부터 문제를 냅니다. 특정 수칙만 집중해서 연습할 때 쓰세요.</li>
     <li><b>기록</b>: 훈련이 끝나면 이름을 적고 <b>결과 인쇄 · PDF 저장</b>을 누르면 단계별 첫 시도 결과와 틀린 선택의 이유가 한 장으로 나옵니다. 최근 기록은 이 브라우저에만 저장됩니다(서버로 보내지 않음).</li>
     <li><b>토론</b>: 틀린 보기는 현장에서 실제로 나오는 말("금방 끝나니까", "평지니까")로 만들었습니다. 각 보기에 "우리 현장에서는?"을 물어 보세요.</li>
@@ -148,6 +149,7 @@
   <ul lang="en">
     <li><b>First viewing</b>: Watch mode at 2×. Leave the view on "auto" so each step frames the important spot.</li>
     <li><b>Review</b>: switch to Train mode and order the steps yourself. At the end you get your first-try score and the reasons behind each wrong pick.</li>
+    <li><b>On-site views</b>: pick "on site — beside the supervisor, eye level" in the view list to watch the job from where a site supervisor actually stands. "On site — beside the worker on the job" follows whoever is using a hot stick or detector, in the bucket or up the tower. Ask "what should the supervisor be checking right now?"</li>
     <li><b>Instructors</b>: in Train mode pick a <b>start step</b>; earlier steps play automatically and the quiz begins there — handy for drilling one rule.</li>
     <li><b>Records</b>: at the end, type a name and press <b>Print · save as PDF</b> for a one-page record of first-try results and the reasons behind wrong picks. Recent results are kept only in this browser (nothing is sent to a server).</li>
     <li><b>Discussion</b>: the wrong options use phrases heard on real sites ("it'll be quick", "the road is flat"). Ask "what happens on our sites?" for each.</li>

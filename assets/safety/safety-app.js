@@ -59,6 +59,9 @@ const CAM_LIST = {
     ['tbase', { ko: '시점: 철탑 아래', en: 'View: tower foot' }], ['tzone', { ko: '시점: 출입금지 구역', en: 'View: keep-out zone' }]],
   manhole: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['mzone', { ko: '시점: 작업 구역', en: 'View: work zone' }], ['mh', { ko: '시점: 맨홀', en: 'View: manhole' }], ['mboard', { ko: '시점: 작업 준비', en: 'View: briefing' }]]
 };
+const EYE_VIEWS = [['eyeA', { ko: '시점: 현장 — 작업책임자(공사담당자) 옆 눈높이', en: 'View: on site — beside the supervisor, eye level' }],
+  ['eyeW', { ko: '시점: 현장 — 지금 일하는 작업자 옆', en: 'View: on site — beside the worker on the job' }]];
+for (const k of Object.keys(CAM_LIST)) CAM_LIST[k].splice(1, 0, ...EYE_VIEWS);
 let camGoal = null, C;
 
 function makeCamera(W, H) {
@@ -100,6 +103,13 @@ const pxPerM = (x, y, z) => { const d = depth(x, y, z); return d > NEAR ? C.F / 
 // 굵기가 거리에 따라 변하는 선 (붐·전주·막대)
 function rod(ctx, a, b, wM, color, cap = 'round') {
   const sa = project(...a), sb = project(...b); if (!sa || !sb) return;
+  if (camMode.startsWith('eye')) {                      // 현장 시점: 눈앞을 크게 가리는 붐·전주는 반투명 (화면에 그려지는 굵기 기준)
+    const lw = wM * (pxPerM(...a) + pxPerM(...b)) / 2;
+    if (lw > 12) { ctx.save(); ctx.globalAlpha = clamp(12 / lw, 0.12, 1); rodDraw(ctx, a, b, sa, sb, wM, color, cap); ctx.restore(); return; }
+  }
+  rodDraw(ctx, a, b, sa, sb, wM, color, cap);
+}
+function rodDraw(ctx, a, b, sa, sb, wM, color, cap) {
   ctx.strokeStyle = color; ctx.lineCap = cap; ctx.lineWidth = Math.max(1, wM * (pxPerM(...a) + pxPerM(...b)) / 2);
   ctx.beginPath(); ctx.moveTo(sa[0], sa[1]); ctx.lineTo(sb[0], sb[1]); ctx.stroke();
 }
@@ -460,8 +470,12 @@ function drawTruck(ctx, now) {
   const { B, E, T } = boomFK(tr);
   const segs = [[B, E], [E, T]];
   segs.forEach(([a, b], i) => push((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2, c => {
-    rod(c, a, b, i ? 0.3 : 0.38, i ? '#e9ecef' : '#f1f3f5');
-    rod(c, a, b, i ? 0.08 : 0.1, '#c92a2a');
+    const sa = project(...a), sb = project(...b); if (!sa || !sb) return;
+    const lw = (i ? 0.3 : 0.38) * (pxPerM(...a) + pxPerM(...b)) / 2, fade = camMode.startsWith('eye') && lw > 12;   // 현장 시점에서 눈앞의 붐은 통째로 반투명
+    if (fade) { c.save(); c.globalAlpha = clamp(12 / lw, 0.12, 1); }
+    rodDraw(c, a, b, sa, sb, i ? 0.3 : 0.38, i ? '#e9ecef' : '#f1f3f5', 'round');
+    rodDraw(c, a, b, sa, sb, i ? 0.08 : 0.1, '#c92a2a', 'round');
+    if (fade) c.restore();
   }));
   push(E[0], E[1], E[2], c => { const s = project(...E); if (s) { c.fillStyle = '#868e96'; c.beginPath(); c.arc(s[0], s[1], Math.max(2, 0.25 * pxPerM(...E)), 0, 7); c.fill(); } });
   const slew = tr.boom.slew, B2 = sim.w.people.B;
@@ -718,6 +732,13 @@ function drawOverlay(ctx) {
     const w = Math.min(C.W - 20, ctx.measureText(flash.text).width + 26); ctx.beginPath(); ctx.roundRect(C.W / 2 - w / 2, 12, w, 30, 8); ctx.fill();
     ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText(flash.text, C.W / 2, 27, w - 16);
   }
+  if (camMode.startsWith('eye')) {
+    const who = camMode === 'eyeA' ? 'A' : drawScene.eyeWho, role = ROLES[scenario][who];
+    const txt = t({ ko: '현장 시점 · ', en: 'On site · ' }) + t(role) + t({ ko: ' 옆', en: '' }) + (camMode === 'eyeA' && drawScene.eyeWho && drawScene.eyeWho !== 'A' ? t({ ko: ' → ', en: ' → ' }) + t(ROLES[scenario][drawScene.eyeWho]) : '');
+    ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'left'; const w = ctx.measureText(txt).width + 18;
+    ctx.fillStyle = 'rgba(20,24,30,.78)'; ctx.beginPath(); ctx.roundRect(10, C.H - 64, w, 22, 6); ctx.fill();
+    ctx.fillStyle = role.col; ctx.fillRect(10, C.H - 64, 4, 22); ctx.fillStyle = '#fff'; ctx.fillText(txt, 20, C.H - 53);
+  }
   const vn = sim.violations.length;
   if (vn) { ctx.fillStyle = 'rgba(201,42,42,.9)'; ctx.font = '700 12px system-ui'; ctx.textAlign = 'right'; ctx.fillText(`⚠ ${vn}`, C.W - 10, 16); }
 }
@@ -752,8 +773,61 @@ function fit(canvas) {
   if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)) { canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr); canvas.style.height = ch + 'px'; }
   const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { ctx, w: cw, h: ch };
 }
+
+// ---- 현장 눈높이 시점: 사람 옆에 서서 보기 --------------------------------------------------------
+// eyeA: 작업책임자(공사담당자) 옆 1.6m 눈높이에서 지금 일하는 작업자를 봄
+// eyeW: 지금 일하는 작업자 바로 옆에서 그 사람이 다루는 곳(조작봉 끝·검전 지점 등)을 봄
+// 드래그 = 그 자리에서 고개 돌리기, 휠 = 한두 걸음 물러서기, 더블클릭 = 원래대로
+const ACTIVE = new Set(['work', 'reach', 'stick', 'bend', 'hammer', 'climb', 'probe', 'dress', 'wave', 'hold']);
+const eye = { yaw: 0, pitch: 0, back: 1.4, who: null, since: 0 };
+function activeWorker(now) {
+  const P = sim.w.people;
+  const cands = Object.entries(P).filter(([, p]) => !p.inCab && (p.stick || ACTIVE.has(p.anim)));
+  const pick = (cands.find(([, p]) => p.stick) || cands.find(([k]) => k === 'B' && P.B.inBucket) || cands[0] || [])[0];
+  if (pick && pick !== eye.who && (now - eye.since > 1800 || !eye.who || !cands.some(([k]) => k === eye.who))) { eye.who = pick; eye.since = now; }
+  return eye.who || 'A';
+}
+function stepFocus() {
+  const c = CAMS[camMode === 'auto' || camMode.startsWith('eye') ? (sim.step ? STEP_CAM[sim.step.id] : ({ pole: 'site', manhole: 'mzone', tower: 'tclimb' }[scene])) : camMode] || CAMS.site;
+  return [c.tx, c.ty, c.tz];
+}
+const chest = (p) => [p.x, p.y, (p.z || 0) + 1.2];
+function eyeCamera(now) {
+  const P = sim.w.people, wk = activeWorker(now);
+  const me = camMode === 'eyeA' ? P.A : P[wk];
+  let F;
+  const along = (p) => { const h = [p.x, p.y, (p.z || 0) + 1.35], q = p.stick.to; return h.map((v, i) => v + (q[i] - v) * 0.55); };   // 손과 막대 끝 사이 → 막대 전체가 보이게
+  if (camMode === 'eyeA') F = wk !== 'A' ? (P[wk].stick ? along(P[wk]) : chest(P[wk])) : (P.A.stick ? along(P.A) : stepFocus());
+  else if (me.stick) F = along(me);
+  else if (scene === 'tower' && me.z > 1) F = [TW.x, TW.y, me.z + 1.4];   // 철탑 위: 철탑 안쪽, 손 높이
+  else if (me.inBucket) { const sl = sim.w.truck.boom.slew; F = [me.x + Math.cos(sl) * 2.2, me.y + Math.sin(sl) * 2.2, me.z + 1.7]; }   // 버킷 안: 손이 향하는 쪽
+  else F = stepFocus();
+  let ux = F[0] - me.x, uy = F[1] - me.y, L = Math.hypot(ux, uy);
+  if (L < 0.3) { ux = 0; uy = 1; L = 1; }
+  ux /= L; uy /= L;
+  // 옆으로 비켜설 방향: 작업차(붐)에서 먼 쪽
+  const back = eye.back * (camMode === 'eyeA' ? 1.4 : 1), tr = sim.w.truck;
+  let side = me.inBucket ? 1.1 : 0.9;
+  if (tr.present && !me.inBucket) {
+    const dTo = (sg) => Math.hypot(me.x - ux * back - uy * side * sg - tr.c, me.y - uy * back + ux * side * sg - tr.y);
+    if (dTo(-1) > dTo(1)) side = -side;
+  }
+  const E = [me.x - ux * back + -uy * side, me.y - uy * back + ux * side, (me.z || 0) + 1.62];
+  const dx = F[0] - E[0], dy = F[1] - E[1], dz = F[2] - E[2], dist = Math.max(2, Math.hypot(dx, dy, dz));
+  const goal = { yaw: Math.atan2(dx, dy) + eye.yaw, pitch: clamp(-Math.asin(dz / dist) + eye.pitch, -1.2, 1.3), dist };
+  // 카메라 위치가 E가 되도록 바라보는 점(tx,ty,tz)을 정함
+  const cp = Math.cos(goal.pitch), f = [Math.sin(goal.yaw) * cp, Math.cos(goal.yaw) * cp, -Math.sin(goal.pitch)];
+  Object.assign(goal, { tx: E[0] + f[0] * dist, ty: E[1] + f[1] * dist, tz: E[2] + f[2] * dist });
+  const k = 0.12;
+  for (const key of ['tx', 'ty', 'tz', 'dist', 'pitch']) cam[key] += (goal[key] - cam[key]) * k;
+  let d = goal.yaw - cam.yaw; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI; cam.yaw += d * k;
+  return wk;
+}
 function drawScene(now) {
   const cv = $('sfView'), { ctx, w, h } = fit(cv);
+  const eyeMode = camMode.startsWith('eye');
+  if (eyeMode) { camGoal = null; drawScene.eyeWho = eyeCamera(now); }
+  cam.fov = eyeMode ? 1.05 : 0.9;
   if (camGoal) {
     let close = true;
     for (const k of Object.keys(camGoal)) {
@@ -933,13 +1007,14 @@ function bindCamera() {
     if (p.b === 2 || p.sh) {
       const k = cam.dist / C.F, cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw);
       cam.tx -= (dx * cy + dy * sy * 1.6) * k; cam.ty -= (-dx * sy + dy * cy * 1.6) * k;
-    } else { cam.yaw -= dx * 0.005; cam.pitch = clamp(cam.pitch + dy * 0.004, 0.04, 1.35); }
+    } else if (camMode.startsWith('eye')) { eye.yaw -= dx * 0.005; eye.pitch = clamp(eye.pitch + dy * 0.004, -0.9, 0.9); }
+    else { cam.yaw -= dx * 0.005; cam.pitch = clamp(cam.pitch + dy * 0.004, 0.04, 1.35); }
   });
   const up = e => { pts.delete(e.pointerId); if (pts.size < 2) pinch = 0; };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('contextmenu', e => e.preventDefault());
-  cv.addEventListener('wheel', e => { e.preventDefault(); camGoal = null; cam.dist = clamp(cam.dist * Math.exp(e.deltaY * 0.001), 5, 160); }, { passive: false });
-  cv.addEventListener('dblclick', () => { camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? STEP_CAM[sim.step.id] : 'site') : camMode] }; });
+  cv.addEventListener('wheel', e => { e.preventDefault(); camGoal = null; if (camMode.startsWith('eye')) { eye.back = clamp(eye.back * Math.exp(e.deltaY * 0.001), 0.6, 8); return; } cam.dist = clamp(cam.dist * Math.exp(e.deltaY * 0.001), 5, 160); }, { passive: false });
+  cv.addEventListener('dblclick', () => { if (camMode.startsWith('eye')) { Object.assign(eye, { yaw: 0, pitch: 0, back: 1.4 }); return; } camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? STEP_CAM[sim.step.id] : 'site') : camMode] }; });
 }
 function bind() {
   $('playBtn').addEventListener('click', () => {
@@ -963,6 +1038,8 @@ function bind() {
   $('fromSel').addEventListener('change', () => restart(+$('fromSel').value));
   $('camSel').addEventListener('change', () => {
     camMode = $('camSel').value;
+    Object.assign(eye, { yaw: 0, pitch: 0, back: 1.4, who: null });
+    if (camMode.startsWith('eye')) { camGoal = null; return; }
     camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? STEP_CAM[sim.step.id] : ({ pole: 'site', manhole: 'mzone', tower: 'tclimb' }[scene])) : camMode] };
   });
   $('sfPanel').addEventListener('click', e => {
