@@ -648,3 +648,14 @@ nav .menu .menu-h{margin:4px 10px 0;font-size:11.5px;font-weight:700;color:var(-
   #sfPrintArea table{width:100%;border-collapse:collapse} #sfPrintArea th,#sfPrintArea td{border:1px solid #999;padding:4px 6px;text-align:left;vertical-align:top}
   #sfPrintArea .pr-meta th{width:16%;background:#f1f1f1} #sfPrintArea .pr-foot{margin-top:16px;color:#555;font-size:9pt}
 }
+/* NEAT 자율주행: 트랙 오른쪽 바깥에 1~4등 신경망 (위에서 아래로) */
+.sim-row{display:grid;gap:12px;grid-template-columns:1fr}
+.rank-nets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rank-net{width:100%;display:block;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+@media (min-width:960px){
+  /* 생태계 접시처럼 화면 폭 전체를 쓰고, 트랙은 가운데 · 신경망은 오른쪽 여백 */
+  .sim-row{width:calc(100vw - 32px);margin-left:calc((100% - (100vw - 32px)) / 2);grid-template-columns:minmax(0,1fr) min(50vw,calc((100vh - 90px) * 10 / 7)) minmax(0,1fr);align-items:start}
+  .sim-row .sim-stage:not(:fullscreen){grid-column:2;width:auto;justify-self:stretch}
+  .rank-nets{grid-column:3;grid-template-columns:auto;justify-content:start;align-content:start}
+  .rank-net{width:auto}
+}

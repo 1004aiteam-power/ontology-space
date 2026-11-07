@@ -83,9 +83,16 @@ function drawWorld(tr, cars, leader) {
     });
     drawCar(ctx, leader, col(leader), true, leader.finished, true);
   }
+  const ranks = rankCars(cars, leader);
+  ranks.forEach((c, i) => {                                        // 1~4등 번호 (오른쪽 신경망과 짝)
+    ctx.fillStyle = i ? 'rgba(17,24,39,.85)' : '#facc15'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(c.x + 13, c.y - 13, 8, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = i ? '#fff' : '#111827'; ctx.font = '700 11px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(String(i + 1), c.x + 13, c.y - 12.5);
+  });
   ctx.restore();
   if (trainer && (mode === 'train' || mode === 'success')) drawHud(ctx, cars);
-  drawNetInset(ctx, cw, cw * WORLD.h / WORLD.w, leader);
+  drawRankNets(ranks, cw, col, tr);
   if (banner && performance.now() < banner.until) drawBanner(ctx, cw, banner);
   if (mode === 'success') drawBanner(ctx, cw, successBanner());
 }
@@ -194,20 +201,37 @@ function drawNet(genome, net) {
                                  en: `${genome.hidden} hidden nodes · ${genome.enabledConns} active connections — blue = positive weight, orange = negative, dashed = disabled` });
 }
 
-// 주행 화면 오른쪽 아래의 작은 신경망 창 (선두 차량, 실시간)
-function drawNetInset(ctx, cw, ch, car) {
-  if (!car?.genome) return;
-  const w = cw < 600 ? Math.max(96, cw * 0.3) : Math.max(140, Math.min(220, cw * 0.18)), h = w * 0.62, m = cw < 600 ? 6 : 10;
-  const x = cw - w - m, y = ch - h - m;
-  ctx.fillStyle = dark() ? 'rgba(18,20,23,.85)' : 'rgba(255,255,255,.9)';
-  ctx.strokeStyle = css('--line'); ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.roundRect(x, y, w, h, 10); ctx.fill(); ctx.stroke();
-  ctx.font = '600 10px system-ui, sans-serif'; ctx.fillStyle = css('--muted'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.fillText(cw < 600 ? t({ ko: '선두 신경망', en: 'Leader net' })
-    : t({ ko: `선두 신경망 · 은닉 ${car.genome.hidden} · 연결 ${car.genome.enabledConns}`, en: `Leader's network · ${car.genome.hidden} hidden · ${car.genome.enabledConns} links` }), x + 8, y + 6);
-  drawNetGraph(ctx, car.genome, car.net, { x: x + 2, y: y + 16, w: w - 4, h: h - 18 }, true);
+// 1~4등: 1등은 화면이 따라가는 선두 차량, 나머지는 완주 > 주행 중 > 실패 순, 같은 무리에서는 멀리 간 차가 앞
+function rankCars(cars, leader) {
+  const out = leader ? [leader] : [];
+  const key = (c) => [c.finished ? 2 : c.alive ? 1 : 0, c.alive && !c.finished ? c.progress : c.maxProgress];
+  const rest = cars.filter(c => c !== leader && c.genome).sort((a, b) => { const ka = key(a), kb = key(b); return kb[0] - ka[0] || kb[1] - ka[1]; });
+  return out.concat(rest).slice(0, 4);
 }
-
+// 트랙 오른쪽 바깥의 1~4등 신경망 (위에서 아래로). 창 크기는 예전 화면 안 작은 창과 같음
+function drawRankNets(ranks, cw, col, tr) {
+  const wide = matchMedia('(min-width: 960px)').matches;
+  const w = Math.max(140, Math.min(220, cw * 0.18)), h = w * 0.62;
+  for (let i = 0; i < 4; i++) {
+    const canvas = $('rankNet' + i); if (!canvas) continue;
+    canvas.style.width = wide ? w + 'px' : '';
+    const { ctx, cw: W2 } = fit(canvas, 1, 0.62);
+    const H2 = W2 * 0.62, car = ranks[i];
+    ctx.clearRect(0, 0, W2, H2);
+    ctx.font = '600 10px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const badge = (x, y) => { ctx.fillStyle = i ? 'rgba(17,24,39,.85)' : '#facc15'; ctx.beginPath(); ctx.arc(x, y, 8, 0, 7); ctx.fill(); ctx.fillStyle = i ? '#fff' : '#111827'; ctx.font = '700 11px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(i + 1), x, y + 0.5); };
+    badge(12, 12);
+    if (!car) { ctx.fillStyle = css('--muted'); ctx.font = '600 10px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(t({ ko: '—', en: '—' }), 26, 12); continue; }
+    const pct = Math.max(0, 100 * (car.alive && !car.finished ? car.progress : car.maxProgress) / tr.L).toFixed(0);
+    const state = car.finished ? t({ ko: '완주', en: 'done' }) : car.alive ? `${pct}%` : t({ ko: `실패 ${pct}%`, en: `failed ${pct}%` });
+    ctx.fillStyle = col(car); ctx.beginPath(); ctx.arc(26, 12, 4, 0, 7); ctx.fill();
+    ctx.fillStyle = css('--muted'); ctx.font = '600 10px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(W2 < 170 ? state : t({ ko: `${state} · 은닉 ${car.genome.hidden} · 연결 ${car.genome.enabledConns}`, en: `${state} · ${car.genome.hidden} hidden · ${car.genome.enabledConns} links` }), 34, 12);
+    if (!car.alive && !car.finished) ctx.globalAlpha = 0.45;
+    drawNetGraph(ctx, car.genome, car.net, { x: 2, y: 20, w: W2 - 4, h: H2 - 22 }, true);
+    ctx.globalAlpha = 1;
+  }
+}
 // ---- 학습 곡선 차트 ---------------------------------------------------------------
 let hoverGen = null;
 function drawChart() {
