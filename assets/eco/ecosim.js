@@ -7,6 +7,8 @@
 //  - 세포는 에너지를 먹고 움직이며 에너지를 쓴다. 기준을 넘으면 둘로 분열, 0이 되거나 수명이 다하면 죽음
 //  - 진화: 분열할 때 자식의 속도·감지 거리가 조금씩 변한다. 빠르고 멀리 볼수록 에너지를 더 쓴다
 //  - 모든 무작위는 시드 난수 → 같은 시드면 같은 결과
+//  - 세포마다 id · 부모 id(parent) · 생긴 방법(origin) · 태어난 틱(born)을 남기고, 사건(events)에도 관련 세포 id를 적는다
+//    → 혈통·포식 관계를 그래프(온톨로지)로 옮길 수 있음 (assets/eco/eco-graph.js). 무작위 순서는 바뀌지 않아 결과는 그대로
 
 export const WORLD = { w: 960, h: 640 };
 
@@ -99,7 +101,7 @@ export class Ecosystem {
     this.t = 0;
     this.food = []; this.cells = [];
     this.nextId = 1;
-    this.events = [];          // 화면 효과용: { type: 'split'|'eat'|'die', x, y, kind }
+    this.events = [];          // 이번 틱의 사건 (화면 효과 · 기록용): { type: 'split'|'eat'|'die'|'arrive', x, y, kind, id, … }
     this.deaths = { herb: { starve: 0, age: 0, eaten: 0 }, carn: { starve: 0, age: 0 } };   // 누적 사망 원인
     this.respawns = { carn: 0 };   // 누적 자연발생 수
     this.carnGone = 0;             // 육식이 0마리로 지난 틱 수
@@ -123,12 +125,14 @@ export class Ecosystem {
   addFood(x = this.rand() * WORLD.w, y = this.rand() * WORLD.h) { this.food.push({ x, y, dead: false }); }
 
   // 새 세포 (초기 개체 또는 사용자가 투입)
-  spawn(kind, x = this.rand() * WORLD.w, y = this.rand() * WORLD.h) {
+  //  origin: 'initial'(처음 넣은 개체) · 'immigrant'(이주) · 'respawn'(자연발생) · 'user'(사용자 투입)
+  spawn(kind, x = this.rand() * WORLD.w, y = this.rand() * WORLD.h, origin = this.t === 0 ? 'initial' : 'user') {
     const k = this.cfg[kind];
     const c = {
       id: this.nextId++, kind, x, y, a: this.rand() * TAU,
       speed: k.speed * (0.9 + 0.2 * this.rand()), sense: k.sense * (0.9 + 0.2 * this.rand()),
-      energy: k.birth * (0.8 + 0.4 * this.rand()), age: (this.rand() * k.maxAge * 0.5) | 0, gen: 0, dead: false, full: 0, hungry: 0
+      energy: k.birth * (0.8 + 0.4 * this.rand()), age: (this.rand() * k.maxAge * 0.5) | 0, gen: 0, dead: false, full: 0, hungry: 0,
+      parent: null, origin, born: this.t
     };
     this.cells.push(c);
     return c;
@@ -143,11 +147,12 @@ export class Ecosystem {
       id: this.nextId++, kind: c.kind, x: c.x, y: c.y, a: this.rand() * TAU,
       speed: clamp(c.speed * (1 + this.gauss() * m), L.speed[0], L.speed[1]),
       sense: clamp(c.sense * (1 + this.gauss() * m), L.sense[0], L.sense[1]),
-      energy: c.energy / 2, age: 0, gen: c.gen + 1, dead: false, full: 0, hungry: 0
+      energy: c.energy / 2, age: 0, gen: c.gen + 1, dead: false, full: 0, hungry: 0,
+      parent: c.id, origin: 'division', born: this.t
     };
     c.energy /= 2; c.age = 0;
     this.cells.push(child);
-    this.events.push({ type: 'split', x: c.x, y: c.y, kind: c.kind });
+    this.events.push({ type: 'split', x: c.x, y: c.y, kind: c.kind, id: child.id, parent: c.id });
   }
 
   cost(c, v = c.speed) {                                       // v = 이번 틱에 실제로 움직인 속도
@@ -184,7 +189,7 @@ export class Ecosystem {
     }
 
     // 이주
-    if (this.rand() < (cfg.immigration.herb || 0)) this.events.push({ type: 'arrive', ...this.spawn('herb') });
+    if (this.rand() < (cfg.immigration.herb || 0)) { const c = this.spawn('herb', undefined, undefined, 'immigrant'); this.events.push({ type: 'arrive', x: c.x, y: c.y, kind: 'herb', id: c.id }); }
     // 2) 격자 다시 만들기
     this.foodGrid.clear(); this.herbGrid.clear();
     for (const f of this.food) this.foodGrid.add(f);
@@ -234,7 +239,7 @@ export class Ecosystem {
           c.full = k.digest; c.hungry = 0;
           prey.dead = true; this.deaths.herb.eaten++;
           c.energy += k.gain * prey.energy + k.bonus;
-          this.events.push({ type: 'eat', x: prey.x, y: prey.y, kind: 'carn' });
+          this.events.push({ type: 'eat', x: prey.x, y: prey.y, kind: 'carn', id: c.id, prey: prey.id });
         }
       }
       c.energy -= this.cost(c, v);
@@ -247,7 +252,7 @@ export class Ecosystem {
         c.dead = true;
         const cause = c.energy <= 0 ? 'starve' : 'age';
         this.deaths[c.kind][cause]++;
-        this.events.push({ type: 'die', x: c.x, y: c.y, kind: c.kind, cause });
+        this.events.push({ type: 'die', x: c.x, y: c.y, kind: c.kind, cause, id: c.id });
       } else if (c.energy >= k.split && cells.length < cfg.maxCells) this.divide(c);
     }
     // 4) 정리
@@ -257,9 +262,9 @@ export class Ecosystem {
     const wait = cfg.respawn.carn;
     if (wait > 0 && !this.cells.some(c => c.kind === 'carn')) {
       if (++this.carnGone >= wait) {
-        const c = this.spawn('carn'); c.age = 0;
+        const c = this.spawn('carn', undefined, undefined, 'respawn'); c.age = 0;
         this.carnGone = 0; this.respawns.carn++;
-        this.events.push({ type: 'arrive', x: c.x, y: c.y, kind: 'carn', respawn: true });
+        this.events.push({ type: 'arrive', x: c.x, y: c.y, kind: 'carn', respawn: true, id: c.id });
       }
     } else this.carnGone = 0;
     if (this.t % 10 === 0) this.record();

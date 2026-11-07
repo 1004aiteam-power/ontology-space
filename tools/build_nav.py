@@ -51,6 +51,8 @@ NAV = [
         ("hr",),
         ("ev.html", "고속도로 × 전력망: 전기차 충전", "Roads × Grid: EV Charging", "휴게소 충전 수요 → 배전선로 → 변전소", "Rest-area charging → feeder → substation"),
         ("impact.html", "설비 고장 영향 분석", "Failure Impact Analysis", "자산 위험도 × 배전선로 · 고객 · 복구", "Asset risk × feeder · customers · restoration"),
+        ("hr",), ("h", "자연", "Nature"),
+        ("eco-ontology.html", "단세포 생태계 온톨로지", "Cell Ecosystem Ontology", "시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프", "Simulation record → lineage, predation, evolution graph"),
     ]),
 ]
 

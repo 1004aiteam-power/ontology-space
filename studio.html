@@ -67,6 +67,9 @@
       <hr>
       <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
       <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
     </div>
   </nav>
   <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
@@ -105,6 +108,10 @@
       <p lang="ko">자산관리 온톨로지의 자산에서 배전선로 구간·지역·고객까지 그래프를 따라가고, 연계 개폐기 절체를 반영해 위험도를 다시 매깁니다. 위험이 이웃 선로로 옮겨 가는 것도 보여 줍니다.</p>
       <p lang="en">Follows the graph from assets in the asset ontology to feeder zones, areas and customers, then re-rates risk with tie-switch transfers, showing how risk moves to neighbouring feeders.</p>
       <span class="more"><span lang="ko">영향 분석 →</span><span lang="en">Impact analysis →</span></span></a>
+    <a class="card" href="eco-ontology.html"><span class="badge">v0.1</span><h4><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span></h4>
+      <p lang="ko">단세포 생태계 시뮬레이션을 한 번 돌려 세포마다 분열·포식·죽음을 기록하고, 혈통(descendsFrom)과 포식(preysOn) 그래프로 옮깁니다. 살아남은 혈통, 세대별 형질 변화, 피난처 효과, 계절별 굶주림을 Cypher로 묻습니다.</p>
+      <p lang="en">Runs the cell ecosystem simulation once, records every division, predation and death, and turns them into a lineage (descendsFrom) and predation (preysOn) graph. Surviving lineages, trait change by generation, refuge effect and seasonal starvation are asked in Cypher.</p>
+      <span class="more"><span lang="ko">생태계 온톨로지 →</span><span lang="en">Ecosystem ontology →</span></span></a>
   </div>
 </section>
 

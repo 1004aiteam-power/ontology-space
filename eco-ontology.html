@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 단세포 생태계 온톨로지</title>
+<meta name="title-ko" content="Ontology Space · 단세포 생태계 온톨로지">
+<meta name="title-en" content="Ontology Space · Cell Ecosystem Ontology">
+<meta name="description" content="단세포 생태계 시뮬레이션을 한 번 돌려 세포의 분열·포식·죽음을 온톨로지 그래프로 옮기고, 혈통·진화·피난처·계절을 Cypher로 묻는다">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 단세포 생태계 온톨로지">
+<meta property="og:description" content="단세포 생태계 시뮬레이션을 한 번 돌려 세포의 분열·포식·죽음을 온톨로지 그래프로 옮기고, 혈통·진화·피난처·계절을 Cypher로 묻는다">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/eco-ontology.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=20261107d">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
+.eo-schema{margin:16px 0;max-width:760px}
+.eo-schema svg{width:100%;height:auto;display:block}
+.eo-n rect{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.eo-n text{fill:var(--text);font-size:14px;font-weight:600;text-anchor:middle}
+.eo-n.herb rect{stroke:#199e70;stroke-width:2.5} .eo-n.carn rect{stroke:#d95926;stroke-width:2.5}
+.eo-n.sup rect{stroke-dasharray:4 3} .eo-n.sup text{fill:var(--muted)}
+.eo-e path{fill:none;stroke:var(--muted);stroke-width:1.5} .eo-ah{fill:var(--muted)}
+.eo-e text{fill:var(--muted);font-size:12px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.eo-cap{fill:var(--muted);font-size:12px}
+.eo-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0}
+.eo-stats div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.eo-stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.eo-stats span{color:var(--muted);font-size:12.5px}
+.eo-tree{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow-x:auto}
+.eo-tree svg{display:block;width:100%;min-width:560px;height:auto}
+.eo-tree .win{fill:color-mix(in srgb,var(--mv) 8%,transparent)}
+.eo-tree .life{stroke:#d95926;stroke-width:1.2;opacity:.45}
+.eo-tree .life.anc{opacity:1;stroke-width:2.6}
+.eo-tree .split{stroke:#d95926;stroke-width:1;opacity:.35}
+.eo-tree .split.anc{opacity:1;stroke-width:1.6}
+.eo-tree .x{stroke:var(--muted);stroke-width:1.2}
+.eo-tree .alive{fill:#d95926}
+.eo-tree .ax{fill:var(--muted);font-size:11px}
+.eo-tree .grid{stroke:var(--line);stroke-width:1}
+.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:20px 0;border-top:1px solid var(--line)}
+.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
+.decision h3{margin:0 0 6px}
+.decision p{margin:6px 0}
+@media (max-width:560px){.decision{grid-template-columns:minmax(0,1fr)}}
+#results .tbl{max-height:420px;overflow:auto}
+#results table{font-size:13px}
+input#eoSeed{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text);font-size:14px}
+</style>
+<script type="module" src="assets/eco/eco-onto-app.js?v=20261107a"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html" aria-current="page"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">SIMULATION × ONTOLOGY</div>
+  <h1><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell ecosystem ontology</span></h1>
+  <p class="thesis" lang="ko">개체수 그래프는 "몇 마리"를 보여 줍니다.<br>온톨로지는 <b>누가 누구에게서 태어나</b>, <b>누구에게 먹혔는지</b>를 남깁니다.</p>
+  <p class="thesis" lang="en">A population chart shows "how many".<br>An ontology keeps <b>who was born from whom</b> and <b>who was eaten by whom</b>.</p>
+  <p class="lead" lang="ko"><a href="ecosystem.html">단세포 생태계 시뮬레이션</a>을 이 페이지에서 한 번 끝까지 돌리면서 세포마다 태어남·분열·포식·죽음을 기록하고, 그 기록을 온톨로지의 클래스와 관계로 옮깁니다. 그다음 혈통·진화·피난처·계절에 대한 질문을 Cypher로 바로 물어봅니다.</p>
+  <p class="lead" lang="en">This page runs the <a href="ecosystem.html">cell ecosystem simulation</a> once to the end, records every cell's birth, division, predation and death, and turns that record into the classes and relationships of an ontology. Then it asks questions about lineage, evolution, refuges and seasons in Cypher.</p>
+  <div class="notice"><b>⚠ <span lang="ko">시뮬레이션 세계의 가상 생물입니다</span><span lang="en">These are virtual organisms in a simulated world</span></b>
+    <p lang="ko">속도·감지 거리·에너지 규칙은 <code>assets/eco/ecosim.js</code>에 정한 값이며 실제 미생물의 측정값이 아닙니다. 같은 시드면 같은 브라우저에서는 언제나 같은 결과가 나옵니다. 다만 JavaScript 엔진마다 삼각함수 같은 계산의 마지막 자리가 조금씩 달라, 이 작은 차이가 수천 틱에 걸쳐 커지면 다른 브라우저나 Node.js에서는 결과가 달라질 수 있습니다.</p>
+    <p lang="en">Speed, sensing and energy rules are the values set in <code>assets/eco/ecosim.js</code>, not measurements of real microbes. The same seed always gives the same result in the same browser. JavaScript engines differ slightly in the last digits of functions like cosine, though, and over thousands of ticks that difference grows, so another browser or Node.js may produce a different run.</p></div>
+</div>
+
+<section id="mapping">
+  <h2><span lang="ko">시뮬레이션의 무엇이 무엇이 되나</span><span lang="en">What becomes what</span></h2>
+  <p lang="ko">시뮬레이션 코드에 이미 있는 것을 그대로 온톨로지 개념으로 옮겼습니다. 왼쪽이 화면에서 보이는 것, 가운데가 코드, 오른쪽이 온톨로지(<code>eco:</code>)입니다.</p>
+  <p lang="en">Everything here already exists in the simulation code and is carried over as is. Left: what you see on screen; middle: the code; right: the ontology (<code>eco:</code>).</p>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></th><th><span lang="ko">코드</span><span lang="en">Code</span></th><th><span lang="ko">온톨로지</span><span lang="en">Ontology</span></th></tr>
+    <tr><td><span lang="ko">초식 세포 · 육식 세포</span><span lang="en">Herbivore · carnivore cells</span></td><td><code>kind: 'herb' | 'carn'</code></td><td><code>eco:Herbivore</code> · <code>eco:Carnivore</code> ⊑ <code>eco:Cell</code></td></tr>
+    <tr><td><span lang="ko">먹이 입자</span><span lang="en">Food particles</span></td><td><code>food</code></td><td><code>eco:FoodParticle</code> <span lang="ko">(스키마만, D2)</span><span lang="en">(schema only, D2)</span></td></tr>
+    <tr><td><span lang="ko">피난처 3곳</span><span lang="en">Three refuges</span></td><td><code>refuge.zones</code></td><td><code>eco:Refuge1–3</code></td></tr>
+    <tr><td><span lang="ko">봄·여름·가을·겨울</span><span lang="en">Four seasons</span></td><td><code>season()</code>, <span lang="ko">1년 = 6000틱</span><span lang="en">1 year = 6000 ticks</span></td><td><code>eco:Spring … eco:Winter</code></td></tr>
+    <tr><td><span lang="ko">분열 (자식은 세대 + 1)</span><span lang="en">Division (child = generation + 1)</span></td><td><code>divide()</code>, <code>parent</code>, <code>gen</code></td><td><code>eco:descendsFrom</code>, <code>eco:generation</code>, <code>eco:bornAt</code></td></tr>
+    <tr><td><span lang="ko">육식이 초식을 잡아먹음</span><span lang="en">A carnivore eats a herbivore</span></td><td><code>events: 'eat'</code></td><td><code>eco:preysOn</code></td></tr>
+    <tr><td><span lang="ko">초식이 먹이를 먹음</span><span lang="en">A herbivore eats food</span></td><td><code>foodGrid.nearest()</code></td><td><code>eco:eats</code> <span lang="ko">(스키마만)</span><span lang="en">(schema only)</span></td></tr>
+    <tr><td><span lang="ko">굶어 죽음 · 수명 · 잡아먹힘</span><span lang="en">Starved · old age · eaten</span></td><td><code>deaths</code>, <code>events: 'die'</code></td><td><code>eco:deathCause</code>, <code>eco:diedAt</code>, <code>eco:diedIn</code></td></tr>
+    <tr><td><span lang="ko">피난처 안에서는 보이지 않음</span><span lang="en">Hidden inside a refuge</span></td><td><code>c.safe</code></td><td><code>eco:refugeShare</code>, <code>eco:bornInRefuge</code></td></tr>
+    <tr><td><span lang="ko">속도 · 감지 거리 (분열 때 변이)</span><span lang="en">Speed · sensing (mutate on division)</span></td><td><code>speed</code>, <code>sense</code>, <code>mutation</code></td><td><code>eco:speed</code>, <code>eco:sense</code></td></tr>
+    <tr><td><span lang="ko">이주 · 자연발생 · 직접 넣기</span><span lang="en">Immigration · respawn · added by hand</span></td><td><code>origin</code></td><td><code>eco:origin</code></td></tr>
+  </table></div>
+  <figure class="eo-schema" aria-label="schema">
+    <svg viewBox="0 0 760 300" role="img">
+      <defs><marker id="eoArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 10,5 0,10z" class="eo-ah"/></marker></defs>
+      <g class="eo-e">
+        <path d="M150 150 H 330" marker-end="url(#eoArr)"/><text x="240" y="142">eats</text>
+        <path d="M555 150 H 455" marker-end="url(#eoArr)"/><text x="472" y="142">preysOn</text>
+        <path d="M390 128 V 62" marker-end="url(#eoArr)"/><text x="398" y="98">bornIn · diedIn</text>
+        <path d="M612 128 C 612 70, 470 50, 455 50" marker-end="url(#eoArr)"/><text x="585" y="70">bornIn · diedIn</text>
+        <path d="M370 172 V 238" marker-end="url(#eoArr)"/><text x="300" y="210">bornInRefuge</text>
+        <path d="M420 172 C 470 230, 360 230, 405 176" marker-end="url(#eoArr)"/><text x="436" y="228">descendsFrom</text>
+        <path d="M650 172 C 700 230, 590 230, 635 176" marker-end="url(#eoArr)"/><text x="666" y="228">descendsFrom</text>
+      </g>
+      <g class="eo-n"><rect x="20" y="128" width="130" height="44" rx="8"/><text x="85" y="155">FoodParticle</text></g>
+      <g class="eo-n herb"><rect x="330" y="128" width="125" height="44" rx="8"/><text x="392" y="155">Herbivore</text></g>
+      <g class="eo-n carn"><rect x="555" y="128" width="125" height="44" rx="8"/><text x="617" y="155">Carnivore</text></g>
+      <g class="eo-n"><rect x="330" y="20" width="125" height="42" rx="8"/><text x="392" y="46">Season ×4</text></g>
+      <g class="eo-n"><rect x="300" y="238" width="140" height="42" rx="8"/><text x="370" y="264">Refuge ×3</text></g>
+      <g class="eo-n sup"><rect x="555" y="250" width="125" height="34" rx="8"/><text x="617" y="272">Cell</text></g>
+      <text class="eo-cap" x="20" y="290"><tspan lang="ko">Herbivore · Carnivore는 Cell의 하위 클래스 (서로 겹치지 않음)</tspan><tspan lang="en">Herbivore and Carnivore are disjoint subclasses of Cell</tspan></text>
+    </svg>
+  </figure>
+</section>
+
+<section id="run">
+  <h2><span lang="ko">돌려서 그래프로 만들기</span><span lang="en">Run it and build the graph</span></h2>
+  <p lang="ko">시드와 길이를 고르고 실행하면, 이 브라우저 안에서 시뮬레이션을 끝까지 돌리고(화면은 그리지 않음) 기록을 RDF 트리플로 바꾼 뒤 Neo4j에 불러올 때와 같은 속성 그래프로 만듭니다. 기본 설정(시드 1, 2년)은 1~3초쯤 걸립니다.</p>
+  <p lang="en">Pick a seed and a length and run: the simulation runs to the end right in this browser (without drawing), the record is turned into RDF triples, and those into the same property graph you would get in Neo4j. The default (seed 1, 2 years) takes a second or three.</p>
+  <div class="lab-bar">
+    <label><b><span lang="ko">시드</span><span lang="en">Seed</span></b> <input id="eoSeed" type="number" min="1" max="9999" value="1" style="width:5.5em"></label>
+    <label><b><span lang="ko">길이</span><span lang="en">Length</span></b> <select id="eoYears"><option value="1">1년 · 1 year</option><option value="2" selected>2년 · 2 years</option><option value="3">3년 · 3 years</option></select></label>
+    <button id="eoRun" class="primary">▶ <span lang="ko">실행하고 그래프 만들기</span><span lang="en">Run and build graph</span></button>
+    <span id="eoStatus" class="meta"></span>
+  </div>
+  <progress id="eoProg" max="1" value="0" hidden style="width:100%"></progress>
+  <div id="eoStats" class="eo-stats"></div>
+
+  <h3><span lang="ko">육식 세포의 혈통</span><span lang="en">Carnivore family tree</span></h3>
+  <p class="meta" lang="ko">가로는 시간(틱), 가로줄 하나가 세포 한 마리의 일생입니다. 세로선은 분열(부모 → 자식), 줄 끝의 ✕는 굶어 죽음, ●는 끝까지 살아남음입니다. 굵은 줄은 살아남은 세포의 조상들입니다. 배경의 옅은 띠는 겨울입니다. 모든 줄은 <code>eco:descendsFrom</code>·<code>eco:bornAt</code>·<code>eco:diedAt</code>만으로 그렸습니다.</p>
+  <p class="meta" lang="en">Time (ticks) runs left to right; each horizontal line is one cell's life. Vertical lines are divisions (parent → child), ✕ is starvation, ● survived to the end. Bold lines are the ancestors of survivors. Pale bands are winters. Drawn only from <code>eco:descendsFrom</code>, <code>eco:bornAt</code> and <code>eco:diedAt</code>.</p>
+  <div id="eoTree" class="eo-tree"></div>
+</section>
+
+<section id="cq">
+  <h2><span lang="ko">그래프에 묻기 (Cypher)</span><span lang="en">Ask the graph (Cypher)</span></h2>
+  <p lang="ko">질문을 누르면 Cypher가 채워지고 바로 실행됩니다. 고쳐서 다시 실행해도 됩니다(Ctrl/⌘ + Enter). 시드를 바꿔 다시 만들면 답도 달라집니다.</p>
+  <p lang="en">Click a question to fill in and run its Cypher; edit and re-run as you like (Ctrl/⌘ + Enter). Rebuild with another seed and the answers change.</p>
+  <div class="presets" id="eoPresets"></div>
+  <textarea id="query" spellcheck="false" aria-label="Cypher"></textarea>
+  <div class="lab-bar"><button id="eoQuery" class="primary">▶ <span lang="ko">실행</span><span lang="en">Run</span></button></div>
+  <div id="results"></div>
+</section>
+
+<section id="design">
+  <h2><span lang="ko">설계 결정</span><span lang="en">Design decisions</span></h2>
+  <div class="decision"><div class="no">D1</div><div><h3><span lang="ko">사건을 노드로 만들지 않고 세포에 접어 넣음</span><span lang="en">Events folded into cells, not nodes</span></h3>
+    <p lang="ko">분열·포식·죽음은 모두 세포 한 마리에 한 번만 일어납니다(태어남 1번, 죽음 1번). 그래서 <code>Division</code>·<code>Death</code> 사건 노드를 따로 두지 않고 <code>bornAt</code>·<code>descendsFrom</code>, <code>diedAt</code>·<code>deathCause</code>로 세포에 붙였습니다. 질의가 한 단계 짧아집니다. 한 사건에 참여자가 여럿이거나 사건 자체에 속성이 많아지면(예: 포식 위치, 추격 시간) 그때 <code>eco:Predation</code> 노드로 꺼내면 됩니다.</p>
+    <p lang="en">Division, predation and death each happen once per cell (one birth, one death), so instead of separate <code>Division</code>/<code>Death</code> event nodes they are attached to the cell as <code>bornAt</code>/<code>descendsFrom</code> and <code>diedAt</code>/<code>deathCause</code>, which keeps queries one hop shorter. If an event gains several participants or its own attributes (e.g. where, how long the chase), it can be lifted out into an <code>eco:Predation</code> node then.</p></div></div>
+  <div class="decision"><div class="no">D2</div><div><h3><span lang="ko">먹이 입자는 개체로 남기지 않음</span><span lang="en">Food particles are not recorded as individuals</span></h3>
+    <p lang="ko">2년 동안 먹이 입자는 수만 개가 생기고 사라지며, 서로 구별할 이유가 없습니다. 클래스와 <code>eco:eats</code>는 스키마에만 두어 "초식은 먹이를 먹는다"는 지식은 남기고, 개체 데이터는 세포 2천 마리 안팎으로 작게 유지했습니다.</p>
+    <p lang="en">Tens of thousands of food particles appear and vanish over two years, and nothing distinguishes one from another. The class and <code>eco:eats</code> stay in the schema, so "herbivores eat food" is still known, while instance data stays at about two thousand cells.</p></div></div>
+  <div class="decision"><div class="no">D3</div><div><h3><span lang="ko">조상 관계는 전이 속성이 아니라 경로로</span><span lang="en">Ancestry as a path, not a transitive property</span></h3>
+    <p lang="ko"><code>descendsFrom</code>을 <code>owl:TransitiveProperty</code>로 선언하면 추론기가 모든 조상–자손 쌍(세대 26이면 수만 쌍)을 만들어 냅니다. 부모 한 단계만 저장하고, 조상이 필요할 때 Cypher <code>-[:DESCENDS_FROM*0..]-&gt;</code>로 따라가게 했습니다. "몇 대 위 조상인가"도 경로 길이로 바로 나옵니다.</p>
+    <p lang="en">Declaring <code>descendsFrom</code> an <code>owl:TransitiveProperty</code> would make a reasoner materialise every ancestor–descendant pair (tens of thousands at 26 generations). Only the parent link is stored, and ancestry is followed with Cypher <code>-[:DESCENDS_FROM*0..]-&gt;</code> when needed; "how many generations up" is simply the path length.</p></div></div>
+  <div class="decision"><div class="no">D4</div><div><h3><span lang="ko">생태 관계는 OBO 관계 온톨로지에 맞춤</span><span lang="en">Ecological relations aligned to the OBO Relation Ontology</span></h3>
+    <p lang="ko"><code>eco:eats</code> ⊑ <code>RO_0002470</code>(eats), <code>eco:preysOn</code> ⊑ <code>RO_0002439</code>(preys on), <code>eco:descendsFrom</code> ⊑ <code>RO_0001000</code>(derives from). 생물 다양성·생태 데이터에서 널리 쓰는 관계라, 다른 생태 온톨로지와 같은 뜻으로 읽힙니다. 하위 속성(⊑)으로 둔 것은 이 시뮬레이션의 관계가 더 좁은 뜻(한 번의 실행 안에서 실제로 일어난 일)이기 때문입니다.</p>
+    <p lang="en"><code>eco:eats</code> ⊑ <code>RO_0002470</code> (eats), <code>eco:preysOn</code> ⊑ <code>RO_0002439</code> (preys on), <code>eco:descendsFrom</code> ⊑ <code>RO_0001000</code> (derives from). These are widely used in biodiversity and ecology data, so other ecological ontologies read them the same way. They are sub-properties (⊑) because here they mean something narrower: what actually happened within one run.</p></div></div>
+</section>
+
+<section id="files">
+  <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
+  <div class="grid">
+    <a class="card" href="examples/ecosystem/eco-ontology.ttl"><h4>eco-ontology.ttl</h4><p lang="ko">스키마 · 계절 · 피난처</p><p lang="en">Schema · seasons · refuges</p></a>
+    <a class="card" href="examples/ecosystem/eco-run-seed1.ttl"><h4>eco-run-seed1.ttl</h4><p lang="ko">시드 1, 2년 실행의 세포 기록 (Node.js로 만듦)</p><p lang="en">Cells of one 2-year run, seed 1 (built with Node.js)</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/eco/eco-graph.js"><h4>assets/eco/eco-graph.js</h4><p lang="ko">기록 → 트리플 · Turtle · 역량 질문</p><p lang="en">Record → triples · Turtle · questions</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/ecosystem/build_eco.mjs"><h4>build_eco.mjs</h4><p lang="ko">명령줄에서 Turtle 만들기와 질의</p><p lang="en">Build the Turtle and query from the command line</p></a>
+  </div>
+  <ul lang="ko">
+    <li><b>형질은 태어날 때 값</b>: 이 시뮬레이션에서는 속도·감지 거리가 평생 바뀌지 않으므로 한 번만 기록합니다.</li>
+    <li><b>피난처 시간은 초식만</b>: 육식은 피난처에 숨지 않으므로 <code>refugeShare</code>가 없습니다. 잡아먹힌 그 틱은 세지 않습니다.</li>
+    <li><b>기본 설정만</b>: 이 페이지는 시뮬레이션 기본값으로 돌립니다. 시뮬레이션 화면에서 바꾼 설정(먹이 속도, 돌연변이 크기 등)은 반영되지 않습니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Traits at birth</b>: speed and sensing never change during a cell's life in this simulation, so they are recorded once.</li>
+    <li><b>Refuge time for herbivores only</b>: carnivores never hide, so they have no <code>refugeShare</code>; the tick of being eaten is not counted.</li>
+    <li><b>Default settings only</b>: this page runs the simulation defaults; settings changed on the simulation page (food growth, mutation size…) are not carried over.</li>
+  </ul>
+  <div class="pager"><a href="impact.html"><span lang="ko">← 이전: 설비 고장 영향 분석</span><span lang="en">← Prev: Failure Impact Analysis</span></a><a href="ecosystem.html"><span lang="ko">시뮬레이션 보기 →</span><span lang="en">See the simulation →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

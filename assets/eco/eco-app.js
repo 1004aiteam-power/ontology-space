@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 단세포 생태계 페이지: 배양 접시 · 개체수 그래프 · 형질 진화
-import { Ecosystem, WORLD } from './ecosim.js?v=20261104i';
+import { Ecosystem, WORLD } from './ecosim.js?v=20261107a';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (window.t ? window.t(o) : o.ko);
@@ -274,7 +274,7 @@ function bind() {
     const r = $('dish').getBoundingClientRect(), k = WORLD.w / r.width;
     const x = (e.clientX - r.left) * k, y = (e.clientY - r.top) * k;
     if (addMode === 'food') for (let i = 0; i < 25; i++) eco.addFood((x + (Math.random() - 0.5) * 50 + WORLD.w) % WORLD.w, (y + (Math.random() - 0.5) * 50 + WORLD.h) % WORLD.h);
-    else for (let i = 0; i < 3; i++) eco.spawn(addMode, (x + (Math.random() - 0.5) * 16 + WORLD.w) % WORLD.w, (y + (Math.random() - 0.5) * 16 + WORLD.h) % WORLD.h);
+    else for (let i = 0; i < 3; i++) eco.spawn(addMode, (x + (Math.random() - 0.5) * 16 + WORLD.w) % WORLD.w, (y + (Math.random() - 0.5) * 16 + WORLD.h) % WORLD.h, 'user');
     effects.push({ type: 'arrive', x, y, kind: addMode, life: 18 });
   });
   for (const id of ['liveChart', 'popChart', 'speedChart', 'senseChart']) {

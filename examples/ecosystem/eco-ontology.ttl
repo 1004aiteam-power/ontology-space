@@ -1,0 +1,79 @@
+# 단세포 생태계 온톨로지 (스키마 + 고정 개체: 계절 4 · 피난처 3)
+# 세포 개체는 시뮬레이션을 한 번 돌릴 때마다 생깁니다: examples/ecosystem/build_eco.mjs → eco-run-seed1.ttl
+# ⚠ 시뮬레이션 세계의 가상 생물입니다. 실제 미생물의 측정값이 아닙니다.
+@prefix eco:  <https://1004aiteam-power.github.io/ontology-space/eco#> .
+@prefix obo:  <http://purl.obolibrary.org/obo/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://1004aiteam-power.github.io/ontology-space/eco> a owl:Ontology ;
+    rdfs:label "단세포 생태계 온톨로지"@ko, "Cell ecosystem ontology"@en ; owl:versionInfo "0.1" ;
+    rdfs:comment "단세포 생태계 시뮬레이션(assets/eco/ecosim.js)의 세포·먹이·피난처·계절과 분열·포식·죽음을 그래프로 옮긴다. 시뮬레이션 한 번이 개체 데이터 한 벌이 된다."@ko .
+
+### 클래스
+eco:Cell a owl:Class ; rdfs:label "세포"@ko, "Cell"@en ;
+    rdfs:comment "시뮬레이션 속 단세포 생물 한 개체. 분열로 태어나고, 굶거나 늙거나 잡아먹혀 죽는다."@ko .
+eco:Herbivore a owl:Class ; rdfs:subClassOf eco:Cell ; rdfs:label "초식 세포"@ko, "Herbivore"@en ;
+    rdfs:comment "먹이 입자를 먹는 세포 (ecosim.js의 kind: 'herb')."@ko .
+eco:Carnivore a owl:Class ; rdfs:subClassOf eco:Cell ; rdfs:label "육식 세포"@ko, "Carnivore"@en ;
+    rdfs:comment "초식 세포를 잡아먹는 세포 (kind: 'carn')."@ko .
+[] a owl:AllDisjointClasses ; owl:members ( eco:Herbivore eco:Carnivore ) .
+eco:FoodParticle a owl:Class ; rdfs:label "먹이 입자"@ko, "Food particle"@en ;
+    rdfs:comment "영양 입자. 수가 많고 서로 구별할 필요가 없어 개체로 기록하지 않는다 (설계 결정 D2)."@ko .
+eco:Refuge a owl:Class ; rdfs:label "피난처"@ko, "Refuge"@en ;
+    rdfs:comment "육식 세포가 사냥할 수 없는 구역. 가우스(Gause)의 짚신벌레 실험에서 침전물에 해당한다."@ko .
+eco:Season a owl:Class ; rdfs:label "계절"@ko, "Season"@en ;
+    rdfs:comment "1년(6000틱)의 4분의 1. 계절에 따라 먹이의 상한과 자라는 속도가 바뀐다."@ko .
+eco:SimulationRun a owl:Class ; rdfs:label "시뮬레이션 실행"@ko, "Simulation run"@en ;
+    rdfs:comment "시드와 길이(틱)로 정해지는 한 번의 실행. 같은 시드면 같은 결과."@ko .
+
+### 관계 (생태 관계는 OBO 관계 온톨로지(RO)의 하위 속성)
+eco:eats a owl:ObjectProperty ; rdfs:domain eco:Herbivore ; rdfs:range eco:FoodParticle ;
+    rdfs:subPropertyOf obo:RO_0002470 ; rdfs:label "먹는다"@ko, "eats"@en ;
+    rdfs:comment "스키마 수준의 관계. 먹이 입자를 개체로 남기지 않으므로 개체 데이터에는 나타나지 않는다."@ko .
+eco:preysOn a owl:ObjectProperty ; rdfs:domain eco:Carnivore ; rdfs:range eco:Herbivore ;
+    rdfs:subPropertyOf obo:RO_0002439 ; rdfs:label "잡아먹었다"@ko, "preys on"@en ;
+    rdfs:comment "육식 세포가 실제로 잡아먹은 초식 세포. 잡아먹힌 쪽의 diedAt이 포식 시각이다."@ko .
+eco:descendsFrom a owl:ObjectProperty ; rdfs:domain eco:Cell ; rdfs:range eco:Cell ;
+    rdfs:subPropertyOf obo:RO_0001000 ; rdfs:label "분열로 태어난 부모"@ko, "descends from"@en ;
+    rdfs:comment "자식 → 부모 한 단계. 조상 전체는 Cypher 가변 길이 경로 -[:DESCENDS_FROM*]-> 로 따라간다 (전이 속성으로 선언하지 않음, D3)."@ko .
+eco:bornIn a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain eco:Cell ; rdfs:range eco:Season ; rdfs:label "태어난 계절"@ko .
+eco:diedIn a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain eco:Cell ; rdfs:range eco:Season ; rdfs:label "죽은 계절"@ko .
+eco:bornInRefuge a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain eco:Herbivore ; rdfs:range eco:Refuge ; rdfs:label "태어난 피난처"@ko ;
+    rdfs:comment "피난처 안에서 태어난 초식 세포만 가진다."@ko .
+eco:inRun a owl:ObjectProperty ; rdfs:domain eco:Cell ; rdfs:range eco:SimulationRun ; rdfs:label "속한 실행"@ko .
+
+### 값
+eco:cellId a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:integer ; rdfs:label "세포 번호 (ecosim.js의 id)"@ko .
+eco:generation a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:integer ; rdfs:label "세대 (처음 넣은 개체 = 0)"@ko .
+eco:origin a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:string ;
+    rdfs:label "생긴 방법"@ko ; rdfs:comment "initial(처음 넣음) · division(분열) · immigrant(이주) · respawn(자연발생) · user(사용자 투입)"@ko .
+eco:bornAt a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:integer ; rdfs:label "태어난 틱"@ko .
+eco:diedAt a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:integer ; rdfs:label "죽은 틱 (실행 끝까지 살았으면 없음)"@ko .
+eco:deathCause a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:string ;
+    rdfs:label "죽은 원인"@ko ; rdfs:comment "starve(굶어 죽음) · age(수명) · eaten(잡아먹힘)"@ko .
+eco:alive a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:boolean ; rdfs:label "실행이 끝날 때 살아 있음"@ko .
+eco:speed a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:decimal ; rdfs:label "속도 형질 (틱당 이동 거리)"@ko ;
+    rdfs:comment "태어날 때 정해져 평생 바뀌지 않는다. 분열할 때 자식은 부모 값에서 조금 변이한다."@ko .
+eco:sense a owl:DatatypeProperty ; rdfs:domain eco:Cell ; rdfs:range xsd:decimal ; rdfs:label "감지 거리 형질"@ko .
+eco:refugeShare a owl:DatatypeProperty ; rdfs:domain eco:Herbivore ; rdfs:range xsd:decimal ;
+    rdfs:label "피난처 안에서 보낸 시간 비율 (0–1)"@ko .
+eco:seed a owl:DatatypeProperty ; rdfs:domain eco:SimulationRun ; rdfs:range xsd:integer .
+eco:ticks a owl:DatatypeProperty ; rdfs:domain eco:SimulationRun ; rdfs:range xsd:integer .
+eco:index a owl:DatatypeProperty ; rdfs:label "순서 (계절 0=봄, 피난처 1–3)"@ko ; rdfs:range xsd:integer .
+eco:x a owl:DatatypeProperty ; rdfs:domain eco:Refuge ; rdfs:range xsd:decimal .
+eco:y a owl:DatatypeProperty ; rdfs:domain eco:Refuge ; rdfs:range xsd:decimal .
+eco:radius a owl:DatatypeProperty ; rdfs:domain eco:Refuge ; rdfs:range xsd:decimal .
+
+### 고정 개체: 계절 (ecosim.js의 season(): 0 봄 1 여름 2 가을 3 겨울)
+eco:Spring a eco:Season ; eco:index 0 ; rdfs:label "봄"@ko, "Spring"@en .
+eco:Summer a eco:Season ; eco:index 1 ; rdfs:label "여름"@ko, "Summer"@en .
+eco:Autumn a eco:Season ; eco:index 2 ; rdfs:label "가을"@ko, "Autumn"@en .
+eco:Winter a eco:Season ; eco:index 3 ; rdfs:label "겨울"@ko, "Winter"@en .
+
+### 고정 개체: 피난처 (ecosim.js DEFAULTS.refuge.zones, 월드 960 × 640)
+eco:Refuge1 a eco:Refuge ; eco:index 1 ; rdfs:label "피난처 1 (왼쪽 위)"@ko, "Refuge 1 (top left)"@en ; eco:x 170 ; eco:y 150 ; eco:radius 55 .
+eco:Refuge2 a eco:Refuge ; eco:index 2 ; rdfs:label "피난처 2 (오른쪽 위)"@ko, "Refuge 2 (top right)"@en ; eco:x 760 ; eco:y 220 ; eco:radius 55 .
+eco:Refuge3 a eco:Refuge ; eco:index 3 ; rdfs:label "피난처 3 (아래 가운데)"@ko, "Refuge 3 (bottom centre)"@en ; eco:x 450 ; eco:y 500 ; eco:radius 55 .
