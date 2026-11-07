@@ -6,15 +6,16 @@
   const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const T = (o) => window.t(o);
   const L = (x) => T({ ko: x.ko, en: x.en });
-  // 자리 (viewBox 1000 × 640). 전력은 가운데, 업무는 왼쪽 위, 교통은 오른쪽, 자연은 왼쪽 아래
+  // 자리 (viewBox 1000 × 610). 배전공사 안전이 가운데에서 업무 · 자산관리 · 배전선로 · 변전소 · 고장 영향과 잇고, 교통은 오른쪽, 자연은 왼쪽 아래
+  // (상자를 지나가는 화살표가 없도록 고른 배치)
   const POS = {
-    asset: [370, 90], impact: [620, 90], work: [120, 255],
-    substation: [370, 255], feeder: [620, 255],
-    highway: [875, 90], ev: [875, 255], twin: [875, 420],
-    eco: [120, 420],
+    substation: [300, 90], impact: [700, 90],
+    asset: [100, 255], safety: [500, 255],
+    eco: [100, 420], work: [300, 420], feeder: [700, 420],
+    highway: [900, 90], ev: [900, 255], twin: [900, 420],
     obo: [120, 580], dct: [330, 580], cim: [560, 580], skos: [745, 580], geo: [900, 580]
   };
-  const W = 190, H = 70, SW = 150, SH = 34;
+  const W = 176, H = 70, SW = 150, SH = 34;
   const GROUP = { power: { ko: '전력', en: 'Power' }, traffic: { ko: '교통', en: 'Traffic' }, work: { ko: '업무', en: 'Work' }, nature: { ko: '자연', en: 'Nature' } };
   let D = null, sel = null;
 
@@ -32,8 +33,8 @@
   }
 
   function draw() {
-    const out = [`<defs><marker id="omA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 10,5 0,10z" class="om-ah"/></marker>
-      <marker id="omA2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 10,5 0,10z" class="om-ah hot"/></marker></defs>`];
+    const out = [`<defs><marker id="omA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 10,5 0,10z" class="om-ah"/></marker>
+      <marker id="omA2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 10,5 0,10z" class="om-ah hot"/></marker></defs>`];
     out.push(`<text class="om-band" x="8" y="555">${esc(T({ ko: '외부 표준', en: 'External standards' }))}</text><line class="om-sep" x1="0" x2="1000" y1="530" y2="530"/>`);
     const hot = (l) => sel && (l.from === sel || l.to === sel);
     for (const l of D.standardLinks) {
@@ -42,8 +43,9 @@
     }
     for (const l of D.links) {
       const [x1, y1] = edgePt(l.from, l.to), [x2, y2] = edgePt(l.to, l.from);
-      const h = hot(l), mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      const h = hot(l), my = (y1 + y2) / 2;
       const lab = `${l.via[0].p.split('.').pop()}${l.via.length > 1 ? ' …' : ''} ×${l.n}`, lw = lab.length * 7 + 18;   // 이름표 폭은 글자 수만큼 (CIM의 Class.prop은 prop만)
+      const mx = Math.min(1000 - lw / 2 - 2, Math.max(lw / 2 + 2, (x1 + x2) / 2));                                        // 이름표가 그림 밖으로 나가지 않게
       out.push(`<g class="om-link${h ? ' hot' : sel ? ' dim' : ''}" data-link="${l.from}>${l.to}" tabindex="0" role="button">
         <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-end="url(#${h ? 'omA2' : 'omA'})" style="stroke-width:${Math.min(5, 1.4 + Math.log2(l.n))}"/>
         <line class="hit" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>
@@ -61,6 +63,9 @@
         <rect x="${x - SW / 2}" y="${y - SH / 2}" width="${SW}" height="${SH}" rx="17"/><text x="${x}" y="${y + 5}">${esc(L(s))}</text></g>`);
     }
     $('omSvg').innerHTML = out.join('');
+    for (const t of $('omSvg').querySelectorAll('.om-n text')) {    // 상자보다 긴 글은 상자 폭에 맞게 줄임 (영어 설명 등)
+      if (t.getComputedTextLength() > W - 14) { t.setAttribute('textLength', W - 14); t.setAttribute('lengthAdjust', 'spacingAndGlyphs'); }
+    }
   }
   const linked = (id) => [...D.links, ...D.standardLinks].some(l => (l.from === sel && l.to === id) || (l.to === sel && l.from === id));
   const name = (id) => L(D.nodes.find(n => n.id === id) || D.standards.find(s => s.id === id));
@@ -109,7 +114,7 @@
 
   document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const r = await fetch('assets/data/ontology-map.json?v=20261107a');
+      const r = await fetch('assets/data/ontology-map.json?v=20261107b');
       D = await r.json();
     } catch (e) { $('omSide').textContent = '⚠ ' + e.message; return; }
     const svg = $('omSvg');

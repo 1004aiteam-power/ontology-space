@@ -131,6 +131,23 @@
    "classesUsed": 16
   },
   {
+   "id": "safety",
+   "ko": "배전공사 안전",
+   "en": "Distribution work safety",
+   "page": "safety-ontology.html",
+   "group": "power",
+   "files": [
+    "examples/safety/safety-schema.ttl",
+    "examples/safety/safety-steps.ttl"
+   ],
+   "triples": 1798,
+   "classes": 9,
+   "objectProps": 16,
+   "dataProps": 8,
+   "individuals": 174,
+   "classesUsed": 12
+  },
+  {
    "id": "eco",
    "ko": "단세포 생태계",
    "en": "Cell ecosystem",
@@ -180,6 +197,84 @@
   }
  ],
  "links": [
+  {
+   "from": "safety",
+   "to": "work",
+   "n": 197,
+   "via": [
+    {
+     "p": "inStage",
+     "n": 86
+    },
+    {
+     "p": "hasRisk",
+     "n": 68
+    },
+    {
+     "p": "precedes",
+     "n": 39
+    },
+    {
+     "p": "subClassOf",
+     "n": 3
+    },
+    {
+     "p": "imports",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "safety",
+   "to": "asset",
+   "n": 74,
+   "via": [
+    {
+     "p": "inWorkflow",
+     "n": 43
+    },
+    {
+     "p": "range",
+     "n": 5
+    },
+    {
+     "p": "type",
+     "n": 5
+    },
+    {
+     "p": "code",
+     "n": 4
+    },
+    {
+     "p": "installedAt",
+     "n": 4
+    },
+    {
+     "p": "maintenanceTask",
+     "n": 4
+    },
+    {
+     "p": "subClassOf",
+     "n": 3
+    },
+    {
+     "p": "hasComponent",
+     "n": 2
+    },
+    {
+     "p": "componentType",
+     "n": 2
+    },
+    {
+     "p": "imports",
+     "n": 1
+    },
+    {
+     "p": "carries",
+     "n": 1
+    }
+   ]
+  },
   {
    "from": "impact",
    "to": "feeder",
@@ -264,6 +359,33 @@
    ]
   },
   {
+   "from": "safety",
+   "to": "feeder",
+   "n": 9,
+   "via": [
+    {
+     "p": "installedAt",
+     "n": 3
+    },
+    {
+     "p": "workSection",
+     "n": 3
+    },
+    {
+     "p": "isolatedBy",
+     "n": 1
+    },
+    {
+     "p": "liveNearby",
+     "n": 1
+    },
+    {
+     "p": "interruptsLoad",
+     "n": 1
+    }
+   ]
+  },
+  {
    "from": "asset",
    "to": "work",
    "n": 2,
@@ -271,6 +393,28 @@
     {
      "p": "subPropertyOf",
      "n": 2
+    }
+   ]
+  },
+  {
+   "from": "safety",
+   "to": "impact",
+   "n": 1,
+   "via": [
+    {
+     "p": "interruptsLoad",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "safety",
+   "to": "substation",
+   "n": 1,
+   "via": [
+    {
+     "p": "installedAt",
+     "n": 1
     }
    ]
   }
@@ -815,6 +959,25 @@
    ]
   },
   {
+   "from": "safety",
+   "to": "cim",
+   "n": 4,
+   "via": [
+    {
+     "p": "ACLineSegment",
+     "n": 2
+    },
+    {
+     "p": "Switch",
+     "n": 1
+    },
+    {
+     "p": "EnergyConsumer",
+     "n": 1
+    }
+   ]
+  },
+  {
    "from": "eco",
    "to": "obo",
    "n": 3,
@@ -851,6 +1014,17 @@
    "via": [
     {
      "p": "exactMatch",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "safety",
+   "to": "dct",
+   "n": 1,
+   "via": [
+    {
+     "p": "created",
      "n": 1
     }
    ]

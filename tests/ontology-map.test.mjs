@@ -16,6 +16,8 @@ assert.ok(has('ev', 'twin', 'Feeder.NormalEnergizingSubstation'));
 assert.ok(has('asset', 'work', 'subPropertyOf'));
 assert.ok(has('asset', 'substation', 'installedAt'));
 assert.ok(has('impact', 'feeder', 'exactMatch') && has('impact', 'substation', 'exactMatch'));
+assert.ok(has('safety', 'work', 'inStage') && has('safety', 'work', 'precedes') && has('safety', 'work', 'subClassOf'), 'safety steps are work tasks');
+assert.ok(has('safety', 'asset', 'inWorkflow') && has('safety', 'feeder', 'isolatedBy') && has('safety', 'impact', 'interruptsLoad'));
 assert.ok(!map.links.some(l => l.to === 'cim' || l.from === 'eco' || l.to === 'eco'), 'standards and the ecosystem are not linked as ontologies');
 assert.ok(!has('twin', 'feeder') && !has('feeder', 'twin'), 'sharing CIM is not a link');
 console.log('✓ the links described on the page exist (and the ones it says are absent do not)');

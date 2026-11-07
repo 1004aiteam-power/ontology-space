@@ -1,0 +1,80 @@
+# 배전공사 안전 온톨로지 — 스키마 (클래스 · 관계 · 값)
+# 개체(수칙 11 · 시나리오 4 · 작업 단계 · 역할 · 위험요인 · 잘못된 선택 · 작업 대상 설비)는
+# 안전 훈련 시뮬레이션 코드(assets/safety/safety.js)에서 만듭니다: examples/safety/build_safety.mjs → safety-steps.ttl
+#
+# 다른 온톨로지와 잇는 곳
+#   업무 온톨로지      sf:WorkStep ⊑ aipd:Task · sf:Hazard ⊑ aipd:Risk · sf:CrewRole ⊑ aipd:Role, 단계 사이 aipd:precedes, aipd:hasRisk, aipd:inStage
+#   자산관리 온톨로지  작업 대상 설비는 pam:Asset의 하위 클래스, pam:installedAt · pam:hasComponent, 단계 → pam:WorkflowStep, 현장 → pam:MaintenanceTask
+#   배전선로 D/L #1    작업 구간 · 개방하는 개폐기 · 옆에서 살아 있는 선로 · 끊기는 부하 (cim:ACLineSegment · cim:LoadBreakSwitch · cim:EnergyConsumer)
+#
+# ⚠ 교육용 가상 현장입니다. 실제 작업은 소속 기관의 작업기준·안전수칙을 따르세요.
+@prefix sf:   <https://1004aiteam-power.github.io/ontology-space/safety#> .
+@prefix aipd: <https://example.org/ai-promotion-dept/ontology#> .
+@prefix pam:  <https://1004aiteam-power.github.io/ontology-space/asset#> .
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://1004aiteam-power.github.io/ontology-space/safety> a owl:Ontology ;
+    rdfs:label "배전공사 안전 온톨로지"@ko, "Distribution work safety ontology"@en ;
+    owl:versionInfo "0.1" ;
+    dct:created "2026-11-07"^^xsd:date ;
+    owl:imports <https://example.org/ai-promotion-dept/ontology>, <https://1004aiteam-power.github.io/ontology-space/asset> ;
+    rdfs:comment "배전공사 안전 훈련 시뮬레이션의 현장 · 작업 단계 · 생명을 지키는 안전수칙 11 · 위험요인 · 역할 · 흔한 잘못을 그래프로 옮기고, 업무 · 자산관리 · 배전선로 온톨로지와 잇는다. 모든 현장과 설비는 가상."@ko .
+
+### 클래스
+sf:WorkScenario a owl:Class ; rdfs:label "작업 현장 (시나리오)"@ko, "Work scenario"@en ;
+    rdfs:comment "시뮬레이션의 현장 하나 (safety.js의 SCENARIOS). 작업 대상 설비와 배전선로 구간을 가진다."@ko .
+sf:WorkStep a owl:Class ; rdfs:subClassOf aipd:Task ; rdfs:label "작업 단계"@ko, "Work step"@en ;
+    rdfs:comment "TBM부터 철수까지 차례로 하는 안전조치 한 단계. 업무 온톨로지의 단위업무(aipd:Task)로 읽히므로 선행 관계 · 리스크 · 생애주기를 같은 속성으로 쓴다."@ko .
+sf:SafetyRule a owl:Class ; rdfs:label "안전수칙"@ko, "Safety rule"@en ;
+    rdfs:comment "생명을 지키는 안전수칙 11 (safety.js의 RULES)."@ko .
+sf:Hazard a owl:Class ; rdfs:subClassOf aipd:Risk ; rdfs:label "위험요인"@ko, "Hazard"@en ;
+    rdfs:comment "현장에서 다치거나 죽을 수 있는 원인. 업무 온톨로지의 리스크(aipd:Risk) 가운데 사람의 안전에 관한 것."@ko .
+sf:CrewRole a owl:Class ; rdfs:subClassOf aipd:Role ; rdfs:label "작업 역할"@ko, "Crew role"@en ;
+    rdfs:comment "현장 작업자 5명의 역할 (safety.js의 ROLES). 이름이 같은 역할은 현장이 달라도 같은 개체."@ko .
+sf:UnsafeChoice a owl:Class ; rdfs:label "잘못된 선택"@ko, "Unsafe choice"@en ;
+    rdfs:comment "순서 맞히기 훈련의 오답: 현장에서 흔히 하는 잘못과 그것이 어기는 수칙."@ko .
+sf:PoleAsset a owl:Class ; rdfs:subClassOf pam:Asset ; rdfs:label "전주 자산"@ko, "Pole asset"@en .
+sf:TowerAsset a owl:Class ; rdfs:subClassOf pam:Asset ; rdfs:label "송전 철탑 자산"@ko, "Tower asset"@en .
+sf:CableAsset a owl:Class ; rdfs:subClassOf pam:ConductorAsset ; rdfs:label "지중 케이블 자산"@ko, "Underground cable asset"@en .
+sf:WorkStep owl:disjointWith sf:SafetyRule, sf:Hazard, sf:CrewRole, sf:UnsafeChoice .
+
+### 관계 — 안전 온톨로지 안
+sf:inScenario a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain sf:WorkStep ; rdfs:range sf:WorkScenario ; rdfs:label "현장"@ko, "in scenario"@en .
+sf:firstStep a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range sf:WorkStep ; rdfs:label "첫 단계"@ko, "first step"@en ;
+    rdfs:comment "나머지 순서는 aipd:precedes로 따라간다."@ko .
+sf:appliesRule a owl:ObjectProperty ; rdfs:domain sf:WorkStep ; rdfs:range sf:SafetyRule ; rdfs:label "지키는 수칙"@ko, "applies rule"@en .
+sf:controls a owl:ObjectProperty ; rdfs:domain sf:SafetyRule ; rdfs:range sf:Hazard ; rdfs:label "막는 위험요인"@ko, "controls"@en .
+sf:involves a owl:ObjectProperty ; rdfs:domain sf:WorkStep ; rdfs:range sf:CrewRole ; rdfs:label "참여 역할"@ko, "involves"@en .
+sf:mistakeAt a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain sf:UnsafeChoice ; rdfs:range sf:WorkStep ; rdfs:label "잘못이 나오는 단계"@ko, "mistake at"@en .
+sf:violates a owl:ObjectProperty ; rdfs:domain sf:UnsafeChoice ; rdfs:range sf:SafetyRule ; rdfs:label "어기는 수칙"@ko, "violates"@en .
+
+### 관계 — 자산관리 온톨로지로
+sf:inWorkflow a owl:ObjectProperty, owl:FunctionalProperty ; rdfs:domain sf:WorkStep ; rdfs:range pam:WorkflowStep ; rdfs:label "정비 업무 흐름 단계"@ko, "in workflow step"@en ;
+    rdfs:comment "작업 단계가 자산관리의 정비 업무 흐름(작업 요청 → … → 이력 등록) 가운데 어디에 속하는지."@ko .
+sf:targetAsset a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range pam:Asset ; rdfs:label "작업 대상 설비"@ko, "target asset"@en .
+sf:replacesComponent a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range pam:Component ; rdfs:label "교체 구성품"@ko, "replaces component"@en .
+sf:maintenanceTask a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range pam:MaintenanceTask ; rdfs:label "점검·정비 업무 유형"@ko, "maintenance task"@en .
+sf:carries a owl:ObjectProperty ; rdfs:domain sf:TowerAsset ; rdfs:range pam:ConductorAsset ; rdfs:label "지지하는 도체"@ko, "carries"@en .
+
+### 관계 — 배전선로(CIM)로
+sf:workSection a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range cim:ACLineSegment ; rdfs:label "작업 구간"@ko, "work section"@en .
+sf:isolatedBy a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range cim:Switch ; rdfs:label "개방하는 개폐기"@ko, "isolated by"@en ;
+    rdfs:comment "정전 작업 구간의 전원측 개폐기. 이 개폐기 하류가 정전 구간이 된다."@ko .
+sf:liveNearby a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range cim:ACLineSegment ; rdfs:label "옆에서 살아 있는 선로"@ko, "live nearby"@en ;
+    rdfs:comment "작업 중에도 충전 상태로 남는 선로 (예: COS만 열고 본선은 활선)."@ko .
+sf:interruptsLoad a owl:ObjectProperty ; rdfs:domain sf:WorkScenario ; rdfs:range cim:EnergyConsumer ; rdfs:label "끊기는 부하"@ko, "interrupts load"@en .
+
+### 값
+sf:scenarioId a owl:DatatypeProperty ; rdfs:domain sf:WorkScenario ; rdfs:range xsd:string ; rdfs:label "시나리오 코드"@ko .
+sf:stepId a owl:DatatypeProperty ; rdfs:domain sf:WorkStep ; rdfs:range xsd:string ; rdfs:label "단계 코드 (safety.js의 id)"@ko .
+sf:stepNo a owl:DatatypeProperty ; rdfs:domain sf:WorkStep ; rdfs:range xsd:integer ; rdfs:label "단계 순서"@ko .
+sf:ruleNo a owl:DatatypeProperty ; rdfs:domain sf:SafetyRule ; rdfs:range xsd:integer ; rdfs:label "수칙 번호"@ko .
+sf:instruction a owl:DatatypeProperty ; rdfs:domain sf:WorkStep ; rdfs:range rdf:langString ; rdfs:label "무엇을 하나"@ko .
+sf:reason a owl:DatatypeProperty ; rdfs:domain sf:WorkStep ; rdfs:range rdf:langString ; rdfs:label "왜 하나"@ko .
+sf:explanation a owl:DatatypeProperty ; rdfs:domain sf:UnsafeChoice ; rdfs:range rdf:langString ; rdfs:label "왜 틀렸나"@ko .
+sf:lineDeEnergised a owl:DatatypeProperty ; rdfs:domain sf:WorkScenario ; rdfs:range xsd:boolean ; rdfs:label "본선 정전 여부"@ko .

@@ -1,0 +1,1638 @@
+# 배전공사 안전 온톨로지 — 개체 데이터. 만든 곳: examples/safety/build_safety.mjs (원본: assets/safety/safety.js)
+# 시나리오 4 · 작업 단계 43 · 수칙 11 · 위험요인 9 · 역할 13 · 잘못된 선택 86. 스키마는 safety-schema.ttl
+# ⚠ 교육용 가상 현장입니다. 설비 · 선로 구간은 가상 데이터이며, 실제 작업은 소속 기관의 작업기준·안전수칙을 따르세요.
+@prefix sf: <https://1004aiteam-power.github.io/ontology-space/safety#> .
+@prefix aipd: <https://example.org/ai-promotion-dept/ontology#> .
+@prefix pam: <https://1004aiteam-power.github.io/ontology-space/asset#> .
+@prefix ex: <http://example.org/grid#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sf:HazardShock a sf:Hazard ;
+    rdfs:label "감전"@ko ;
+    rdfs:label "Electric shock"@en .
+sf:HazardArc a sf:Hazard ;
+    rdfs:label "아크·화상"@ko ;
+    rdfs:label "Arc flash & burns"@en .
+sf:HazardFall a sf:Hazard ;
+    rdfs:label "추락"@ko ;
+    rdfs:label "Fall from height"@en .
+sf:HazardStruck a sf:Hazard ;
+    rdfs:label "낙하물·인양물에 맞음"@ko ;
+    rdfs:label "Struck by falling objects"@en .
+sf:HazardTipOver a sf:Hazard ;
+    rdfs:label "작업차 전도"@ko ;
+    rdfs:label "Work vehicle tipping over"@en .
+sf:HazardRollaway a sf:Hazard ;
+    rdfs:label "작업차 밀림"@ko ;
+    rdfs:label "Work vehicle rolling away"@en .
+sf:HazardVehicle a sf:Hazard ;
+    rdfs:label "차량 충돌·끼임"@ko ;
+    rdfs:label "Struck or caught by a vehicle"@en .
+sf:HazardAsphyxia a sf:Hazard ;
+    rdfs:label "산소결핍·유해가스"@ko ;
+    rdfs:label "Oxygen deficiency & toxic gas"@en .
+sf:HazardMiscoordination a sf:Hazard ;
+    rdfs:label "작업 착오 (계획·소통 부재)"@ko ;
+    rdfs:label "Miscoordination (no plan, no briefing)"@en .
+sf:Rule01 a sf:SafetyRule ;
+    sf:ruleNo 1 ;
+    rdfs:label "개인 안전장구 착용"@ko ;
+    rdfs:label "Wear personal protective equipment"@en ;
+    sf:controls sf:HazardStruck ;
+    sf:controls sf:HazardShock ;
+    sf:controls sf:HazardAsphyxia ;
+    sf:controls sf:HazardFall .
+sf:Rule02 a sf:SafetyRule ;
+    sf:ruleNo 2 ;
+    rdfs:label "고임목 4개 이상 설치"@ko ;
+    rdfs:label "Place 4 or more wheel chocks"@en ;
+    sf:controls sf:HazardRollaway .
+sf:Rule03 a sf:SafetyRule ;
+    sf:ruleNo 3 ;
+    rdfs:label "작업계획서·TBM 작성 필수, 공법 임의변경 금지"@ko ;
+    rdfs:label "Work plan and TBM required; no ad-hoc method changes"@en ;
+    sf:controls sf:HazardMiscoordination .
+sf:Rule04 a sf:SafetyRule ;
+    sf:ruleNo 4 ;
+    rdfs:label "작업차량 전도방지 조치"@ko ;
+    rdfs:label "Prevent the work vehicle from tipping over"@en ;
+    sf:controls sf:HazardTipOver .
+sf:Rule05 a sf:SafetyRule ;
+    sf:ruleNo 5 ;
+    rdfs:label "작업반경 출입금지, 후진 시 전담유도자 배치"@ko ;
+    rdfs:label "Keep out of the work radius; a dedicated guide when reversing"@en ;
+    sf:controls sf:HazardVehicle ;
+    sf:controls sf:HazardStruck .
+sf:Rule06 a sf:SafetyRule ;
+    sf:ruleNo 6 ;
+    rdfs:label "인양물 고정장치, 하부 출입금지"@ko ;
+    rdfs:label "Secure lifted loads; nobody beneath them"@en ;
+    sf:controls sf:HazardStruck .
+sf:Rule07 a sf:SafetyRule ;
+    sf:ruleNo 7 ;
+    rdfs:label "안전대 착용, 안전고리 체결"@ko ;
+    rdfs:label "Wear a safety harness and clip the lanyard"@en ;
+    sf:controls sf:HazardFall .
+sf:Rule08 a sf:SafetyRule ;
+    sf:ruleNo 8 ;
+    rdfs:label "검전, 접지, 충전부 방호"@ko ;
+    rdfs:label "Test for voltage, earth, cover live parts"@en ;
+    sf:controls sf:HazardShock .
+sf:Rule09 a sf:SafetyRule ;
+    sf:ruleNo 9 ;
+    rdfs:label "밀폐공간 작업 허가절차 준수"@ko ;
+    rdfs:label "Follow the confined-space permit procedure"@en ;
+    sf:controls sf:HazardAsphyxia .
+sf:Rule10 a sf:SafetyRule ;
+    sf:ruleNo 10 ;
+    rdfs:label "맨홀 내 작업 시 작업반경 출입금지"@ko ;
+    rdfs:label "Keep out of the work radius during manhole work"@en ;
+    sf:controls sf:HazardFall ;
+    sf:controls sf:HazardVehicle .
+sf:Rule11 a sf:SafetyRule ;
+    sf:ruleNo 11 ;
+    rdfs:label "분야별 수칙 (배전: 적정공구 사용 · 토목: 개구부 추락방지 등)"@ko ;
+    rdfs:label "Field rules (distribution: proper tools · civil: guard openings, etc.)"@en ;
+    sf:controls sf:HazardShock ;
+    sf:controls sf:HazardArc ;
+    sf:controls sf:HazardFall .
+sf:RoleSupervisor a sf:CrewRole ;
+    rdfs:label "작업책임자"@ko ;
+    rdfs:label "Supervisor"@en .
+sf:RoleBucketLineworker a sf:CrewRole ;
+    rdfs:label "버킷 작업자"@ko ;
+    rdfs:label "Bucket lineworker"@en .
+sf:RoleGroundWorkerDriver a sf:CrewRole ;
+    rdfs:label "지상 작업자·운전원"@ko ;
+    rdfs:label "Ground worker / driver"@en .
+sf:RoleTestingEarthing a sf:CrewRole ;
+    rdfs:label "검전·접지 담당"@ko ;
+    rdfs:label "Testing & earthing"@en .
+sf:RoleSignaller a sf:CrewRole ;
+    rdfs:label "신호수(유도자)"@ko ;
+    rdfs:label "Signaller (guide)"@en .
+sf:RoleEarthingGroundHelper a sf:CrewRole ;
+    rdfs:label "접지·지상 보조"@ko ;
+    rdfs:label "Earthing & ground helper"@en .
+sf:RoleClimber a sf:CrewRole ;
+    rdfs:label "승탑 작업자"@ko ;
+    rdfs:label "Climber"@en .
+sf:RoleGroundHelper a sf:CrewRole ;
+    rdfs:label "지상 보조(달줄)"@ko ;
+    rdfs:label "Ground helper (hand line)"@en .
+sf:RoleSafetyWatcher a sf:CrewRole ;
+    rdfs:label "안전 감시자"@ko ;
+    rdfs:label "Safety watcher"@en .
+sf:RoleAccessControl a sf:CrewRole ;
+    rdfs:label "출입 통제"@ko ;
+    rdfs:label "Access control"@en .
+sf:RoleEntrant a sf:CrewRole ;
+    rdfs:label "입조 작업자"@ko ;
+    rdfs:label "Entrant"@en .
+sf:RoleAttendant a sf:CrewRole ;
+    rdfs:label "감시인"@ko ;
+    rdfs:label "Attendant"@en .
+sf:RoleGasTestingVentilation a sf:CrewRole ;
+    rdfs:label "가스 측정·환기 담당"@ko ;
+    rdfs:label "Gas testing & ventilation"@en .
+sf:CT_Insulator a pam:ComponentType .
+sf:CT_Crossarm a pam:ComponentType .
+sf:CT_Insulator rdfs:label "Insulator" .
+sf:CT_Crossarm rdfs:label "Crossarm" .
+sf:Scenario_pole a sf:WorkScenario ;
+    sf:scenarioId "pole" ;
+    rdfs:label "가공 배전 애자·완금 교체 (정전 작업)"@ko ;
+    rdfs:label "Overhead line: replace insulators & crossarm (de-energised)"@en .
+sf:AS_PL_0601 a sf:PoleAsset ;
+    pam:code "AS-PL-0601" ;
+    rdfs:label "D/L #1 6구간 전주 (가상)"@ko ;
+    rdfs:label "Pole on D/L #1 section 6 (virtual)"@en ;
+    pam:installedAt ex:_756664b6-b373-5677-98ab-854ba7714b9f ;
+    pam:hasComponent sf:CP_PL0601_INS .
+sf:CP_PL0601_INS a pam:Component ;
+    rdfs:label "현수애자"@ko ;
+    rdfs:label "Suspension insulators"@en ;
+    pam:componentType sf:CT_Insulator .
+sf:Scenario_pole sf:replacesComponent sf:CP_PL0601_INS .
+sf:AS_PL_0601 pam:hasComponent sf:CP_PL0601_ARM .
+sf:CP_PL0601_ARM a pam:Component ;
+    rdfs:label "완금"@ko ;
+    rdfs:label "Crossarm"@en ;
+    pam:componentType sf:CT_Crossarm .
+sf:Scenario_pole sf:replacesComponent sf:CP_PL0601_ARM ;
+    sf:targetAsset sf:AS_PL_0601 ;
+    sf:maintenanceTask pam:MT_10 ;
+    sf:workSection ex:_756664b6-b373-5677-98ab-854ba7714b9f ;
+    sf:isolatedBy ex:_a1e1b903-48f9-5256-8862-92c891050074 ;
+    sf:lineDeEnergised true ;
+    sf:firstStep sf:pole_tbm .
+sf:pole_tbm a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "tbm" ;
+    sf:stepNo 1 ;
+    rdfs:label "작업 전 TBM · 작업계획서 확인"@ko ;
+    rdfs:label "Pre-work TBM · check the work plan"@en ;
+    sf:instruction "작업책임자가 작업계획서로 작업 내용·순서·정전 구간·위험요인을 설명하고 각자 역할을 확인합니다. 계획서에 없는 방법으로 바꾸지 않습니다."@ko ;
+    sf:instruction "The supervisor walks the crew through the plan: task, sequence, outage section and hazards, then confirms each role. No method outside the plan."@en ;
+    sf:reason "감전·추락·전도 사고 대부분은 \"계획에 없던 즉흥 작업\"에서 시작됩니다."@ko ;
+    sf:reason "Most shock, fall and tip-over accidents begin with an improvised step that was not in the plan."@en ;
+    sf:appliesRule sf:Rule03 ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:precedes sf:pole_ppe .
+sf:pole_tbm_x1 a sf:UnsafeChoice ;
+    rdfs:label "시간이 없으니 TBM은 생략하고 바로 작업차를 진입시킨다"@ko ;
+    rdfs:label "Skip the TBM to save time and bring the truck in"@en ;
+    sf:explanation "작업자마다 정전 구간·역할을 다르게 알고 있으면 충전부 접촉 같은 치명적 실수로 이어집니다. (수칙 3)"@ko ;
+    sf:explanation "If people hold different ideas of the outage section and roles, someone touches a live part. (Rule 3)"@en ;
+    sf:mistakeAt sf:pole_tbm ;
+    sf:violates sf:Rule03 .
+sf:pole_tbm_x2 a sf:UnsafeChoice ;
+    rdfs:label "현장 상황이 다르니 작업 방법은 각자 판단해서 바꾼다"@ko ;
+    rdfs:label "The site looks different, so each person adapts the method as they see fit"@en ;
+    sf:explanation "공법 임의변경 금지. 현장이 계획과 다르면 작업을 멈추고 계획을 다시 세웁니다. (수칙 3)"@ko ;
+    sf:explanation "No ad-hoc method changes. If the site differs from the plan, stop and re-plan. (Rule 3)"@en ;
+    sf:mistakeAt sf:pole_tbm ;
+    sf:violates sf:Rule03 .
+sf:pole_ppe a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "ppe" ;
+    sf:stepNo 2 ;
+    rdfs:label "개인 안전장구 착용"@ko ;
+    rdfs:label "Put on personal protective equipment"@en ;
+    sf:instruction "안전모(턱끈 체결)·절연장갑·안전화·반사조끼를 착용하고, 버킷 작업자는 그네식 안전대를 맵니다. 작업책임자가 서로의 착용 상태를 확인합니다."@ko ;
+    sf:instruction "Hard hat with chin strap, insulating gloves, safety boots, hi-vis vest; the bucket worker puts on a full-body harness. The supervisor checks everyone."@en ;
+    sf:reason "장구는 사고가 났을 때 생사를 가르는 마지막 방어선입니다."@ko ;
+    sf:reason "PPE is the last line of defence when everything else has failed."@en ;
+    sf:appliesRule sf:Rule01 ;
+    aipd:hasRisk sf:HazardStruck ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_zone .
+sf:pole_ppe_x1 a sf:UnsafeChoice ;
+    rdfs:label "지상 작업자는 높은 곳에 안 올라가니 안전모를 쓰지 않는다"@ko ;
+    rdfs:label "Ground workers stay low, so they skip the hard hat"@en ;
+    sf:explanation "지상 작업자는 위에서 떨어지는 공구·자재에 가장 많이 다칩니다. (수칙 1)"@ko ;
+    sf:explanation "Ground workers are the ones hit by dropped tools and parts. (Rule 1)"@en ;
+    sf:mistakeAt sf:pole_ppe ;
+    sf:violates sf:Rule01 .
+sf:pole_ppe_x2 a sf:UnsafeChoice ;
+    rdfs:label "정전 작업이니 절연장갑은 필요 없다"@ko ;
+    rdfs:label "It is a dead-line job, so insulating gloves are unnecessary"@en ;
+    sf:explanation "검전 전에는 충전 상태로 간주합니다. 역송전·오조작도 있습니다. (수칙 1, 8)"@ko ;
+    sf:explanation "Treat it as live until tested; back-feed and wrong switching happen. (Rules 1, 8)"@en ;
+    sf:mistakeAt sf:pole_ppe ;
+    sf:violates sf:Rule01 ;
+    sf:violates sf:Rule08 .
+sf:pole_zone a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "zone" ;
+    sf:stepNo 3 ;
+    rdfs:label "작업구역 설정 · 출입금지 · 보행 통로 확보"@ko ;
+    rdfs:label "Set up the work zone · keep out · keep a walkway"@en ;
+    sf:instruction "라바콘과 안전띠로 작업차·전주 주변을 막아 작업반경 출입을 금지합니다. 보도는 바깥쪽에 보행 통로를 남겨 시민이 작업구역에 들어오지 않게 합니다."@ko ;
+    sf:instruction "Cones and tape close off the truck and pole area. A walkway stays open on the outer sidewalk so the public never enters the zone."@en ;
+    sf:reason "붐 회전·낙하물 반경 안에 사람이 있으면 아무리 조심해도 사고가 납니다."@ko ;
+    sf:reason "Anyone inside the boom-swing or drop radius will eventually be hit."@en ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_reverse .
+sf:pole_zone_x1 a sf:UnsafeChoice ;
+    rdfs:label "작업이 금방 끝나니 라바콘 없이 시작한다"@ko ;
+    rdfs:label "It will be quick — start without cones"@en ;
+    sf:explanation "작업 시간과 상관없이 붐 회전·낙하 반경 안으로 사람·차량이 들어옵니다. (수칙 5)"@ko ;
+    sf:explanation "Short or not, people and cars wander into the swing and drop radius. (Rule 5)"@en ;
+    sf:mistakeAt sf:pole_zone ;
+    sf:violates sf:Rule05 .
+sf:pole_zone_x2 a sf:UnsafeChoice ;
+    rdfs:label "보도 전체를 막고 시민에게 차도로 돌아가라고 한다"@ko ;
+    rdfs:label "Close the whole sidewalk and send pedestrians onto the road"@en ;
+    sf:explanation "보행자를 차도로 내보내면 교통사고 위험이 생깁니다. 안전한 보행 통로를 남깁니다."@ko ;
+    sf:explanation "Sending pedestrians into traffic creates a new hazard. Keep a safe walkway."@en ;
+    sf:mistakeAt sf:pole_zone ;
+    sf:violates sf:Rule05 .
+sf:pole_reverse a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "reverse" ;
+    sf:stepNo 4 ;
+    rdfs:label "작업차 진입 · 후진 시 전담 유도자"@ko ;
+    rdfs:label "Bring in the truck · dedicated guide when reversing"@en ;
+    sf:instruction "운전원이 작업차를 전주 옆으로 몰고 와 후진으로 위치를 맞춥니다. 신호수(전담 유도자)는 운전석에서 보이는 차량 뒤쪽 옆에 서서 신호봉으로 유도하고, 운전원은 유도자가 보이지 않으면 즉시 멈춥니다."@ko ;
+    sf:instruction "The driver brings the truck alongside the pole and reverses into position. The dedicated guide stands behind and to the side, visible from the cab, signalling with a baton; if the guide is out of sight the driver stops."@en ;
+    sf:reason "후진 차량의 사각지대는 차량 뒤 수 m에 이릅니다. 끼임·충돌 사고의 대표 원인입니다."@ko ;
+    sf:reason "A reversing truck has a blind zone several metres long — a top cause of crush and strike accidents."@en ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_chocks .
+sf:pole_reverse_x1 a sf:UnsafeChoice ;
+    rdfs:label "후사경과 후방카메라만 보고 혼자 후진한다"@ko ;
+    rdfs:label "Reverse alone using mirrors and the rear camera"@en ;
+    sf:explanation "카메라·거울에는 사각지대가 있습니다. 후진 시에는 반드시 전담 유도자를 배치합니다. (수칙 5)"@ko ;
+    sf:explanation "Mirrors and cameras have blind spots. Reversing needs a dedicated guide. (Rule 5)"@en ;
+    sf:mistakeAt sf:pole_reverse ;
+    sf:violates sf:Rule05 .
+sf:pole_reverse_x2 a sf:UnsafeChoice ;
+    rdfs:label "유도자가 차량 바로 뒤 가운데에 서서 신호한다"@ko ;
+    rdfs:label "The guide stands directly behind the truck, in the middle"@en ;
+    sf:explanation "차량 바로 뒤는 운전석에서 보이지 않는 끼임 위치입니다. 운전원이 볼 수 있는 옆쪽에 섭니다."@ko ;
+    sf:explanation "Dead centre behind is invisible from the cab and a crush point. Stand to the side, in view."@en ;
+    sf:mistakeAt sf:pole_reverse ;
+    sf:violates sf:Rule05 .
+sf:pole_chocks a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "chocks" ;
+    sf:stepNo 5 ;
+    rdfs:label "고임목 4개 이상 설치"@ko ;
+    rdfs:label "Place 4 or more wheel chocks"@en ;
+    sf:instruction "주차 브레이크를 채운 뒤 앞·뒤 바퀴 양쪽에 고임목을 받쳐 차량이 밀리지 않게 합니다."@ko ;
+    sf:instruction "With the parking brake on, chock front and rear wheels on both sides so the truck cannot roll."@en ;
+    sf:reason "붐을 올리면 무게중심이 바뀌어 경사가 거의 없는 도로에서도 차량이 밀릴 수 있습니다."@ko ;
+    sf:reason "Raising the boom shifts the centre of gravity; even a gentle slope can make the truck creep."@en ;
+    sf:appliesRule sf:Rule02 ;
+    aipd:hasRisk sf:HazardRollaway ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_outrig .
+sf:pole_chocks_x1 a sf:UnsafeChoice ;
+    rdfs:label "평지이니 고임목 없이 주차 브레이크만 채운다"@ko ;
+    rdfs:label "The road is flat, so the parking brake is enough"@en ;
+    sf:explanation "붐 하중으로 무게중심이 바뀌면 브레이크만으로는 밀림을 막지 못합니다. (수칙 2)"@ko ;
+    sf:explanation "Boom loads shift the centre of gravity; the brake alone will not stop creep. (Rule 2)"@en ;
+    sf:mistakeAt sf:pole_chocks ;
+    sf:violates sf:Rule02 .
+sf:pole_chocks_x2 a sf:UnsafeChoice ;
+    rdfs:label "뒷바퀴 한쪽에만 고임목 2개를 받친다"@ko ;
+    rdfs:label "Put two chocks under one rear wheel only"@en ;
+    sf:explanation "앞·뒤 양쪽 4개 이상을 받쳐야 어느 방향으로도 밀리지 않습니다. (수칙 2)"@ko ;
+    sf:explanation "Four or more, front and rear on both sides, stop movement in any direction. (Rule 2)"@en ;
+    sf:mistakeAt sf:pole_chocks ;
+    sf:violates sf:Rule02 .
+sf:pole_outrig a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "outrig" ;
+    sf:stepNo 6 ;
+    rdfs:label "아웃트리거 전개 · 받침판 설치 (전도방지)"@ko ;
+    rdfs:label "Deploy outriggers on pads (anti-tip)"@en ;
+    sf:instruction "받침판을 깔고 아웃트리거를 끝까지 펼쳐 바퀴가 들릴 정도로 차체를 받칩니다. 수평계로 기울기를 확인합니다."@ko ;
+    sf:instruction "Lay outrigger pads, extend the outriggers fully and take the weight off the wheels. Check the level gauge."@en ;
+    sf:reason "아웃트리거를 덜 펴거나 연약지반에 그대로 내리면 붐이 기울 때 차량이 넘어갑니다."@ko ;
+    sf:reason "Half-extended outriggers, or feet on soft ground, let the truck roll over when the boom leans out."@en ;
+    sf:appliesRule sf:Rule04 ;
+    aipd:hasRisk sf:HazardTipOver ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_switch .
+sf:pole_outrig_x1 a sf:UnsafeChoice ;
+    rdfs:label "자리가 좁으니 아웃트리거를 반만 펴고 작업한다"@ko ;
+    rdfs:label "Space is tight — extend the outriggers halfway"@en ;
+    sf:explanation "반만 펴면 전도 한계가 크게 줄어듭니다. 공간이 없으면 작업 위치·방법을 다시 정합니다. (수칙 4)"@ko ;
+    sf:explanation "Half extension slashes the tip limit. If there is no room, re-plan the position or method. (Rule 4)"@en ;
+    sf:mistakeAt sf:pole_outrig ;
+    sf:violates sf:Rule04 .
+sf:pole_outrig_x2 a sf:UnsafeChoice ;
+    rdfs:label "받침판 없이 보도블록 위에 아웃트리거를 바로 내린다"@ko ;
+    rdfs:label "Lower the outriggers straight onto paving blocks, no pads"@en ;
+    sf:explanation "보도블록·맨홀 뚜껑·연약지반은 꺼질 수 있습니다. 받침판으로 하중을 분산합니다. (수칙 4)"@ko ;
+    sf:explanation "Paving, covers and soft ground can sink. Pads spread the load. (Rule 4)"@en ;
+    sf:mistakeAt sf:pole_outrig ;
+    sf:violates sf:Rule04 .
+sf:pole_switch a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "switch" ;
+    sf:stepNo 7 ;
+    rdfs:label "개폐기 개방 — 절연 조작봉 사용"@ko ;
+    rdfs:label "Open the switch with an insulated hot stick"@en ;
+    sf:instruction "작업책임자가 정전 구간 전원측 개폐기(-70 전주)를 절연장갑을 끼고 절연 조작봉으로 개방하고, \"작업 중 조작금지\" 표찰을 겁니다."@ko ;
+    sf:instruction "The supervisor opens the source-side switch on pole -70 with insulating gloves and an insulated hot stick, then hangs a \"Do not operate — work in progress\" tag."@en ;
+    sf:reason "맨손이나 아무 막대로 조작하면 아크·감전 위험이 있습니다. 표찰이 없으면 다른 사람이 다시 투입할 수 있습니다."@ko ;
+    sf:reason "Bare hands or improvised poles risk arc and shock. Without a tag someone may close it again."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleTestingEarthing ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_earth .
+sf:pole_switch_x1 a sf:UnsafeChoice ;
+    rdfs:label "가까이 있는 일반 막대로 개폐기 손잡이를 당긴다"@ko ;
+    rdfs:label "Pull the switch handle with any pole lying around"@en ;
+    sf:explanation "적정 공구(절연 조작봉)가 아니면 감전·아크에 노출됩니다. (수칙 11 배전)"@ko ;
+    sf:explanation "Without the proper insulated tool you are exposed to shock and arc. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:pole_switch ;
+    sf:violates sf:Rule11 .
+sf:pole_switch_x2 a sf:UnsafeChoice ;
+    rdfs:label "개폐기를 열지 않고 활선 상태로 바로 교체 작업을 한다"@ko ;
+    rdfs:label "Skip the switching and replace parts live"@en ;
+    sf:explanation "계획은 정전 작업입니다. 활선 작업으로 바꾸는 것은 공법 임의변경입니다. (수칙 3, 8)"@ko ;
+    sf:explanation "The plan is dead-line work. Working live is an unauthorised method change. (Rules 3, 8)"@en ;
+    sf:mistakeAt sf:pole_switch ;
+    sf:violates sf:Rule03 ;
+    sf:violates sf:Rule08 .
+sf:pole_earth a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "earth" ;
+    sf:stepNo 8 ;
+    rdfs:label "검전 → 접지 (작업장소에서 1경간 이상 떨어진 곳)"@ko ;
+    rdfs:label "Test, then earth (at least one span from the work)"@en ;
+    sf:instruction "-35 전주에서 접지봉을 박고 접지선의 대지측을 먼저 연결합니다. 검전기로 세 상 모두 무전압을 확인한 뒤, 절연봉으로 접지 클램프를 선로 측에 겁니다."@ko ;
+    sf:instruction "At pole -35: drive the earth rod and connect the earth end first. Prove all three phases dead with a voltage detector, then clamp the earth onto the line with an insulated stick."@en ;
+    sf:reason "검전 없이 접지하면 충전 선로를 단락시킵니다. 접지는 오조작·역송전·유도전압이 와도 작업자를 지켜 줍니다."@ko ;
+    sf:reason "Earthing a live line is a short circuit; test first. The earth protects you from wrong switching, back-feed and induced voltage."@en ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleTestingEarthing ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_harness .
+sf:pole_earth_x1 a sf:UnsafeChoice ;
+    rdfs:label "개폐기를 열었으니 검전 없이 바로 접지 클램프를 건다"@ko ;
+    rdfs:label "The switch is open, so clamp the earth without testing"@en ;
+    sf:explanation "다른 전원·오조작으로 살아 있을 수 있습니다. 검전 → 접지 순서는 바꿀 수 없습니다. (수칙 8)"@ko ;
+    sf:explanation "Another source or wrong switching may keep it live. Test before earth, always. (Rule 8)"@en ;
+    sf:mistakeAt sf:pole_earth ;
+    sf:violates sf:Rule08 .
+sf:pole_earth_x2 a sf:UnsafeChoice ;
+    rdfs:label "선로 측 클램프를 먼저 걸고 대지측을 나중에 연결한다"@ko ;
+    rdfs:label "Clamp the line end first, connect the earth end later"@en ;
+    sf:explanation "선로가 살아 있으면 접지선을 든 사람이 대지 역할을 합니다. 대지측을 먼저, 뗄 때는 선로 측을 먼저."@ko ;
+    sf:explanation "If the line is live, the person holding the lead becomes the earth path. Earth end first on, last off."@en ;
+    sf:mistakeAt sf:pole_earth ;
+    sf:violates sf:Rule08 .
+sf:pole_harness a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "harness" ;
+    sf:stepNo 9 ;
+    rdfs:label "안전대 안전고리 체결 → 버킷 상승"@ko ;
+    rdfs:label "Clip the harness lanyard → raise the bucket"@en ;
+    sf:instruction "버킷 작업자가 버킷에 탑승해 안전대 고리를 버킷 지지점에 걸고, 작업책임자가 확인한 뒤에 붐을 올립니다. 버킷은 충전부와 거리를 둔 위치에 먼저 세웁니다."@ko ;
+    sf:instruction "The bucket worker steps in and clips the lanyard to the bucket anchor; only after the supervisor checks does the boom go up — first to a spot well clear of the conductors."@en ;
+    sf:reason "고리를 걸지 않은 안전대는 아무 소용이 없습니다. 버킷 흔들림·충격으로 튕겨 나가는 추락 사고가 납니다."@ko ;
+    sf:reason "An unclipped harness does nothing. Jolts of the bucket throw people out."@en ;
+    sf:appliesRule sf:Rule07 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_test .
+sf:pole_harness_x1 a sf:UnsafeChoice ;
+    rdfs:label "버킷 안이니 안전고리는 위에 올라가서 건다"@ko ;
+    rdfs:label "Clip the lanyard once the bucket is up"@en ;
+    sf:explanation "붐이 움직이는 순간이 가장 흔들립니다. 탑승 즉시, 상승 전에 체결합니다. (수칙 7)"@ko ;
+    sf:explanation "The bucket jolts most when the boom starts. Clip in on boarding, before lifting. (Rule 7)"@en ;
+    sf:mistakeAt sf:pole_harness ;
+    sf:violates sf:Rule07 .
+sf:pole_harness_x2 a sf:UnsafeChoice ;
+    rdfs:label "허리에 차는 벨트식 안전대를 쓴다"@ko ;
+    rdfs:label "Use a waist-belt type safety belt"@en ;
+    sf:explanation "추락을 멈출 때 충격이 허리에 집중됩니다. 그네식(전신) 안전대를 씁니다. (수칙 7, 11)"@ko ;
+    sf:explanation "Arresting a fall with a waist belt injures the spine. Use a full-body harness. (Rules 7, 11)"@en ;
+    sf:mistakeAt sf:pole_harness ;
+    sf:violates sf:Rule07 ;
+    sf:violates sf:Rule11 .
+sf:pole_test a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "test" ;
+    sf:stepNo 10 ;
+    rdfs:label "작업 개소 검전"@ko ;
+    rdfs:label "Test for voltage at the work point"@en ;
+    sf:instruction "버킷 작업자가 작업 전주에서도 검전기로 세 상을 다시 확인합니다. 무전압이 확인되어야 작업 위치로 다가갑니다."@ko ;
+    sf:instruction "At the work pole the bucket worker tests all three phases again. Only when they are proven dead does the bucket move in."@en ;
+    sf:reason "접지 지점과 작업 지점 사이에 다른 회선·분기·역송전이 있을 수 있습니다."@ko ;
+    sf:reason "Between the earth and the work point there may be another feed, a tap or back-feed."@en ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_cover .
+sf:pole_test_x1 a sf:UnsafeChoice ;
+    rdfs:label "-35 전주에서 검전했으니 여기서는 생략한다"@ko ;
+    rdfs:label "Already tested at pole -35, skip it here"@en ;
+    sf:explanation "작업 위치에서 다시 확인해야 다른 전원이 없음을 알 수 있습니다. (수칙 8)"@ko ;
+    sf:explanation "Only a test at the work point proves no other source reaches it. (Rule 8)"@en ;
+    sf:mistakeAt sf:pole_test ;
+    sf:violates sf:Rule08 .
+sf:pole_test_x2 a sf:UnsafeChoice ;
+    rdfs:label "장갑 낀 손등으로 전선을 살짝 대 본다"@ko ;
+    rdfs:label "Touch the conductor lightly with the back of a gloved hand"@en ;
+    sf:explanation "사람은 검전기가 아닙니다. 반드시 정격 검전기를 쓰고, 쓰기 전에 검전기 자체를 점검합니다."@ko ;
+    sf:explanation "People are not voltage detectors. Use a rated detector and check the detector itself first."@en ;
+    sf:mistakeAt sf:pole_test ;
+    sf:violates sf:Rule08 .
+sf:pole_cover a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "cover" ;
+    sf:stepNo 11 ;
+    rdfs:label "방호: 중성선·인접 상에 절연 커버"@ko ;
+    rdfs:label "Cover the neutral and adjacent phase"@en ;
+    sf:instruction "검전·접지가 끝났어도, 작업 중 몸이 닿을 수 있는 중성선과 가까운 상에 절연 방호관·커버를 씌웁니다. 버킷을 조금 내려 중성선부터 덮고, 바로 옆 상을 덮은 뒤 작업 위치로 올라갑니다."@ko ;
+    sf:instruction "Even after testing and earthing, fit insulating hoses and covers on the neutral and the nearby phase you could touch while working. Lower the bucket a little, cover the neutral, then the adjacent phase, and move up to the work position."@en ;
+    sf:reason "오조작·역송전·유도전압으로 선로에 다시 전기가 올 수 있습니다. 접지는 사고 전류를 흘려 줄 뿐이라, 그 순간 몸이 선에 닿아 있으면 위험이 남습니다."@ko ;
+    sf:reason "Wrong switching, back-feed or induced voltage can re-energise the line. The earth only carries the fault current; if your body is touching a conductor at that moment, you are still at risk."@en ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:pole_lift .
+sf:pole_cover_x1 a sf:UnsafeChoice ;
+    rdfs:label "정전·접지를 했으니 방호관 없이 바로 작업한다"@ko ;
+    rdfs:label "It is dead and earthed, so start without covers"@en ;
+    sf:explanation "오조작·역송전·유도전압으로 다시 전기가 올 수 있습니다. 몸이 닿을 수 있는 중성선·인접 상은 방호합니다. (수칙 8)"@ko ;
+    sf:explanation "Wrong switching, back-feed or induced voltage can bring the line back. Cover the neutral and adjacent phase within reach. (Rule 8)"@en ;
+    sf:mistakeAt sf:pole_cover ;
+    sf:violates sf:Rule08 .
+sf:pole_cover_x2 a sf:UnsafeChoice ;
+    rdfs:label "방호관 대신 몸을 피해서 조심히 작업한다"@ko ;
+    rdfs:label "Skip the hoses and just be careful not to touch"@en ;
+    sf:explanation "작업에 집중하면 몸의 위치를 놓칩니다. \"조심\"은 방호가 아닙니다. (수칙 8)"@ko ;
+    sf:explanation "Focused on the task, you lose track of your body. Care is not cover. (Rule 8)"@en ;
+    sf:mistakeAt sf:pole_cover ;
+    sf:violates sf:Rule08 .
+sf:pole_lift a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "lift" ;
+    sf:stepNo 12 ;
+    rdfs:label "인양물 고정 · 하부 출입금지"@ko ;
+    rdfs:label "Secure the load · nobody beneath it"@en ;
+    sf:instruction "새 애자·완금을 버킷 지브 훅으로 올립니다. 훅 해지장치를 확인하고 유도 로프를 단 뒤, 지상 작업자는 낙하 반경 밖에서 로프만 잡습니다. 낡은 자재도 같은 방법으로 내립니다."@ko ;
+    sf:instruction "The new insulators and crossarm go up on the jib hook. Check the hook latch and attach a tag line; the ground worker holds only the tag line, outside the drop radius. The old parts come down the same way."@en ;
+    sf:reason "매단 자재는 언제든 떨어질 수 있다고 봅니다. 아래에 사람이 없으면 떨어져도 사고가 아닙니다."@ko ;
+    sf:reason "Assume a hanging load can drop at any moment. If nobody is under it, a drop is not an injury."@en ;
+    sf:appliesRule sf:Rule06 ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:pole_finish .
+sf:pole_lift_x1 a sf:UnsafeChoice ;
+    rdfs:label "빨리 받으려고 지상 작업자가 인양물 바로 아래에서 기다린다"@ko ;
+    rdfs:label "The ground worker waits right under the load to grab it"@en ;
+    sf:explanation "훅·슬링이 풀리면 바로 아래 사람이 맞습니다. 유도 로프로 낙하 반경 밖에서 잡습니다. (수칙 6)"@ko ;
+    sf:explanation "If the hook or sling lets go, whoever is underneath is hit. Use a tag line from outside the radius. (Rule 6)"@en ;
+    sf:mistakeAt sf:pole_lift ;
+    sf:violates sf:Rule06 .
+sf:pole_lift_x2 a sf:UnsafeChoice ;
+    rdfs:label "해지장치가 고장 난 훅에 자재를 걸어 그대로 올린다"@ko ;
+    rdfs:label "Lift on a hook whose safety latch is broken"@en ;
+    sf:explanation "해지장치가 없으면 흔들릴 때 슬링이 빠집니다. 고정장치를 확인한 뒤 올립니다. (수칙 6)"@ko ;
+    sf:explanation "Without a latch the sling can jump off when it swings. Check the securing device first. (Rule 6)"@en ;
+    sf:mistakeAt sf:pole_lift ;
+    sf:violates sf:Rule06 .
+sf:pole_finish a sf:WorkStep ;
+    sf:inScenario sf:Scenario_pole ;
+    sf:stepId "finish" ;
+    sf:stepNo 13 ;
+    rdfs:label "작업 완료 · 역순 철수 (방호 → 접지 → 개폐기 투입)"@ko ;
+    rdfs:label "Finish · tear down in reverse (cover → earth → switch)"@en ;
+    sf:instruction "방호관 제거 → 버킷 하강·하차 → 접지 제거(선로 측 먼저, 대지측 나중) → 인원·공구 확인 후 개폐기 투입 → 아웃트리거·고임목·라바콘 회수 → 유도자 신호로 출발."@ko ;
+    sf:instruction "Remove hoses → lower and leave the bucket → remove the earth (line end first, earth end last) → count people and tools, then close the switch → stow outriggers, chocks, cones → leave under the guide’s signal."@en ;
+    sf:reason "송전 전 인원·접지 확인을 빠뜨리면 접지를 단 채 송전하거나 작업자가 남은 상태로 송전합니다."@ko ;
+    sf:reason "Skip the count and you may re-energise with the earth on or a worker still on the line."@en ;
+    sf:appliesRule sf:Rule08 ;
+    sf:appliesRule sf:Rule05 ;
+    sf:appliesRule sf:Rule02 ;
+    sf:appliesRule sf:Rule04 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    aipd:hasRisk sf:HazardRollaway ;
+    aipd:hasRisk sf:HazardTipOver ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_07 ;
+    aipd:inStage aipd:Stage_Close .
+sf:pole_finish_x1 a sf:UnsafeChoice ;
+    rdfs:label "작업이 끝났으니 접지를 단 채로 먼저 개폐기를 투입한다"@ko ;
+    rdfs:label "Work is done — close the switch first, remove the earth later"@en ;
+    sf:explanation "접지를 단 채 송전하면 지락·아크 사고가 납니다. 접지 제거와 인원 확인 후에 송전합니다. (수칙 8)"@ko ;
+    sf:explanation "Re-energising into an earth causes a fault and arc. Remove earths and count people first. (Rule 8)"@en ;
+    sf:mistakeAt sf:pole_finish ;
+    sf:violates sf:Rule08 .
+sf:pole_finish_x2 a sf:UnsafeChoice ;
+    rdfs:label "붐을 올린 채로 아웃트리거부터 거둔다"@ko ;
+    rdfs:label "Retract the outriggers while the boom is still up"@en ;
+    sf:explanation "붐이 펼쳐진 상태에서 아웃트리거를 거두면 바로 전도됩니다. 붐 수납이 먼저입니다. (수칙 4)"@ko ;
+    sf:explanation "Retracting with the boom out tips the truck immediately. Stow the boom first. (Rule 4)"@en ;
+    sf:mistakeAt sf:pole_finish ;
+    sf:violates sf:Rule04 .
+sf:Scenario_tx a sf:WorkScenario ;
+    sf:scenarioId "tx" ;
+    rdfs:label "배전 변압기 교체 (COS 개방, 본선 활선)"@ko ;
+    rdfs:label "Distribution: replace a pole transformer (cut-out open, main line live)"@en .
+sf:AS_TR_P0021 a pam:TransformerAsset ;
+    pam:code "AS-TR-P0021" ;
+    rdfs:label "주상변압기 (분기선 2, 가상)"@ko ;
+    rdfs:label "Pole transformer on branch 2 (virtual)"@en ;
+    pam:installedAt ex:_c8cfbc2d-15f4-5ce1-9862-3e1a8efb577d .
+sf:Scenario_tx sf:targetAsset sf:AS_TR_P0021 ;
+    sf:maintenanceTask pam:MT_10 ;
+    sf:workSection ex:_c8cfbc2d-15f4-5ce1-9862-3e1a8efb577d ;
+    sf:liveNearby ex:_9deae0c4-be38-58c3-bd4c-bf0f60cba6db ;
+    sf:interruptsLoad ex:_596df0e5-b7d1-5426-9e12-c660a00639f4 ;
+    sf:lineDeEnergised false ;
+    sf:firstStep sf:tx_tbm .
+sf:tx_tbm a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "tbm" ;
+    sf:stepNo 1 ;
+    rdfs:label "작업 전 TBM · 작업계획서 확인"@ko ;
+    rdfs:label "Pre-work TBM · check the work plan"@en ;
+    sf:instruction "작업책임자가 작업 내용(0번 전주 주상변압기 교체), COS로 끊는 정전 범위, 계속 살아 있는 본선 고압선, 역할을 설명합니다."@ko ;
+    sf:instruction "The supervisor explains the job (replace the pole-mounted transformer on pole 0), the outage limited by the cut-out, the main HV line that stays live, and each role."@en ;
+    sf:reason "본선이 살아 있는 작업은 \"어디까지가 죽어 있나\"를 모두가 같게 알아야 합니다."@ko ;
+    sf:reason "With the main line still live, everyone must share the same picture of what is dead and what is not."@en ;
+    sf:appliesRule sf:Rule03 ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleEarthingGroundHelper ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:precedes sf:tx_ppe .
+sf:tx_tbm_x1 a sf:UnsafeChoice ;
+    rdfs:label "변압기만 바꾸는 간단한 작업이니 TBM 없이 시작한다"@ko ;
+    rdfs:label "Only a transformer swap — start without a TBM"@en ;
+    sf:explanation "본선은 살아 있습니다. 정전 범위를 모르는 사람이 한 명이라도 있으면 감전 사고로 이어집니다. (수칙 3)"@ko ;
+    sf:explanation "The main line is live. One person unsure of the outage limits is enough for a shock accident. (Rule 3)"@en ;
+    sf:mistakeAt sf:tx_tbm ;
+    sf:violates sf:Rule03 .
+sf:tx_tbm_x2 a sf:UnsafeChoice ;
+    rdfs:label "현장에서 보고 COS 대신 본선을 활선 상태로 작업하기로 바꾼다"@ko ;
+    rdfs:label "On site, switch to working the main line live instead of using the cut-out"@en ;
+    sf:explanation "공법 임의변경 금지. 계획과 다르게 해야 하면 작업을 멈추고 다시 계획합니다. (수칙 3)"@ko ;
+    sf:explanation "No ad-hoc method changes. If the plan does not fit, stop and re-plan. (Rule 3)"@en ;
+    sf:mistakeAt sf:tx_tbm ;
+    sf:violates sf:Rule03 .
+sf:tx_ppe a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "ppe" ;
+    sf:stepNo 2 ;
+    rdfs:label "개인 안전장구 착용"@ko ;
+    rdfs:label "Put on personal protective equipment"@en ;
+    sf:instruction "안전모(턱끈 체결)·절연장갑·안전화·반사조끼를 착용하고, 버킷 작업자는 그네식 안전대를 맵니다. 작업책임자가 서로의 착용 상태를 확인합니다."@ko ;
+    sf:instruction "Hard hat with chin strap, insulating gloves, safety boots, hi-vis vest; the bucket worker puts on a full-body harness. The supervisor checks everyone."@en ;
+    sf:reason "장구는 사고가 났을 때 생사를 가르는 마지막 방어선입니다."@ko ;
+    sf:reason "PPE is the last line of defence when everything else has failed."@en ;
+    sf:appliesRule sf:Rule01 ;
+    aipd:hasRisk sf:HazardStruck ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleEarthingGroundHelper ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_zone .
+sf:tx_ppe_x1 a sf:UnsafeChoice ;
+    rdfs:label "지상 작업자는 높은 곳에 안 올라가니 안전모를 쓰지 않는다"@ko ;
+    rdfs:label "Ground workers stay low, so they skip the hard hat"@en ;
+    sf:explanation "지상 작업자는 위에서 떨어지는 공구·자재에 가장 많이 다칩니다. (수칙 1)"@ko ;
+    sf:explanation "Ground workers are the ones hit by dropped tools and parts. (Rule 1)"@en ;
+    sf:mistakeAt sf:tx_ppe ;
+    sf:violates sf:Rule01 .
+sf:tx_ppe_x2 a sf:UnsafeChoice ;
+    rdfs:label "정전 작업이니 절연장갑은 필요 없다"@ko ;
+    rdfs:label "It is a dead-line job, so insulating gloves are unnecessary"@en ;
+    sf:explanation "검전 전에는 충전 상태로 간주합니다. 역송전·오조작도 있습니다. (수칙 1, 8)"@ko ;
+    sf:explanation "Treat it as live until tested; back-feed and wrong switching happen. (Rules 1, 8)"@en ;
+    sf:mistakeAt sf:tx_ppe ;
+    sf:violates sf:Rule01 ;
+    sf:violates sf:Rule08 .
+sf:tx_zone a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "zone" ;
+    sf:stepNo 3 ;
+    rdfs:label "작업구역 설정 · 출입금지 · 보행 통로 확보"@ko ;
+    rdfs:label "Set up the work zone · keep out · keep a walkway"@en ;
+    sf:instruction "라바콘과 안전띠로 작업차·전주 주변을 막아 작업반경 출입을 금지합니다. 보도는 바깥쪽에 보행 통로를 남겨 시민이 작업구역에 들어오지 않게 합니다."@ko ;
+    sf:instruction "Cones and tape close off the truck and pole area. A walkway stays open on the outer sidewalk so the public never enters the zone."@en ;
+    sf:reason "붐 회전·낙하물 반경 안에 사람이 있으면 아무리 조심해도 사고가 납니다."@ko ;
+    sf:reason "Anyone inside the boom-swing or drop radius will eventually be hit."@en ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleEarthingGroundHelper ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_reverse .
+sf:tx_zone_x1 a sf:UnsafeChoice ;
+    rdfs:label "작업이 금방 끝나니 라바콘 없이 시작한다"@ko ;
+    rdfs:label "It will be quick — start without cones"@en ;
+    sf:explanation "작업 시간과 상관없이 붐 회전·낙하 반경 안으로 사람·차량이 들어옵니다. (수칙 5)"@ko ;
+    sf:explanation "Short or not, people and cars wander into the swing and drop radius. (Rule 5)"@en ;
+    sf:mistakeAt sf:tx_zone ;
+    sf:violates sf:Rule05 .
+sf:tx_zone_x2 a sf:UnsafeChoice ;
+    rdfs:label "보도 전체를 막고 시민에게 차도로 돌아가라고 한다"@ko ;
+    rdfs:label "Close the whole sidewalk and send pedestrians onto the road"@en ;
+    sf:explanation "보행자를 차도로 내보내면 교통사고 위험이 생깁니다. 안전한 보행 통로를 남깁니다."@ko ;
+    sf:explanation "Sending pedestrians into traffic creates a new hazard. Keep a safe walkway."@en ;
+    sf:mistakeAt sf:tx_zone ;
+    sf:violates sf:Rule05 .
+sf:tx_reverse a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "reverse" ;
+    sf:stepNo 4 ;
+    rdfs:label "작업차 진입 · 후진 시 전담 유도자"@ko ;
+    rdfs:label "Bring in the truck · dedicated guide when reversing"@en ;
+    sf:instruction "운전원이 작업차를 전주 옆으로 몰고 와 후진으로 위치를 맞춥니다. 신호수(전담 유도자)는 운전석에서 보이는 차량 뒤쪽 옆에 서서 신호봉으로 유도하고, 운전원은 유도자가 보이지 않으면 즉시 멈춥니다."@ko ;
+    sf:instruction "The driver brings the truck alongside the pole and reverses into position. The dedicated guide stands behind and to the side, visible from the cab, signalling with a baton; if the guide is out of sight the driver stops."@en ;
+    sf:reason "후진 차량의 사각지대는 차량 뒤 수 m에 이릅니다. 끼임·충돌 사고의 대표 원인입니다."@ko ;
+    sf:reason "A reversing truck has a blind zone several metres long — a top cause of crush and strike accidents."@en ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_chocks .
+sf:tx_reverse_x1 a sf:UnsafeChoice ;
+    rdfs:label "후사경과 후방카메라만 보고 혼자 후진한다"@ko ;
+    rdfs:label "Reverse alone using mirrors and the rear camera"@en ;
+    sf:explanation "카메라·거울에는 사각지대가 있습니다. 후진 시에는 반드시 전담 유도자를 배치합니다. (수칙 5)"@ko ;
+    sf:explanation "Mirrors and cameras have blind spots. Reversing needs a dedicated guide. (Rule 5)"@en ;
+    sf:mistakeAt sf:tx_reverse ;
+    sf:violates sf:Rule05 .
+sf:tx_reverse_x2 a sf:UnsafeChoice ;
+    rdfs:label "유도자가 차량 바로 뒤 가운데에 서서 신호한다"@ko ;
+    rdfs:label "The guide stands directly behind the truck, in the middle"@en ;
+    sf:explanation "차량 바로 뒤는 운전석에서 보이지 않는 끼임 위치입니다. 운전원이 볼 수 있는 옆쪽에 섭니다."@ko ;
+    sf:explanation "Dead centre behind is invisible from the cab and a crush point. Stand to the side, in view."@en ;
+    sf:mistakeAt sf:tx_reverse ;
+    sf:violates sf:Rule05 .
+sf:tx_chocks a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "chocks" ;
+    sf:stepNo 5 ;
+    rdfs:label "고임목 4개 이상 설치"@ko ;
+    rdfs:label "Place 4 or more wheel chocks"@en ;
+    sf:instruction "주차 브레이크를 채운 뒤 앞·뒤 바퀴 양쪽에 고임목을 받쳐 차량이 밀리지 않게 합니다."@ko ;
+    sf:instruction "With the parking brake on, chock front and rear wheels on both sides so the truck cannot roll."@en ;
+    sf:reason "붐을 올리면 무게중심이 바뀌어 경사가 거의 없는 도로에서도 차량이 밀릴 수 있습니다."@ko ;
+    sf:reason "Raising the boom shifts the centre of gravity; even a gentle slope can make the truck creep."@en ;
+    sf:appliesRule sf:Rule02 ;
+    aipd:hasRisk sf:HazardRollaway ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_outrig .
+sf:tx_chocks_x1 a sf:UnsafeChoice ;
+    rdfs:label "평지이니 고임목 없이 주차 브레이크만 채운다"@ko ;
+    rdfs:label "The road is flat, so the parking brake is enough"@en ;
+    sf:explanation "붐 하중으로 무게중심이 바뀌면 브레이크만으로는 밀림을 막지 못합니다. (수칙 2)"@ko ;
+    sf:explanation "Boom loads shift the centre of gravity; the brake alone will not stop creep. (Rule 2)"@en ;
+    sf:mistakeAt sf:tx_chocks ;
+    sf:violates sf:Rule02 .
+sf:tx_chocks_x2 a sf:UnsafeChoice ;
+    rdfs:label "뒷바퀴 한쪽에만 고임목 2개를 받친다"@ko ;
+    rdfs:label "Put two chocks under one rear wheel only"@en ;
+    sf:explanation "앞·뒤 양쪽 4개 이상을 받쳐야 어느 방향으로도 밀리지 않습니다. (수칙 2)"@ko ;
+    sf:explanation "Four or more, front and rear on both sides, stop movement in any direction. (Rule 2)"@en ;
+    sf:mistakeAt sf:tx_chocks ;
+    sf:violates sf:Rule02 .
+sf:tx_outrig a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "outrig" ;
+    sf:stepNo 6 ;
+    rdfs:label "아웃트리거 전개 · 받침판 설치 (전도방지)"@ko ;
+    rdfs:label "Deploy outriggers on pads (anti-tip)"@en ;
+    sf:instruction "받침판을 깔고 아웃트리거를 끝까지 펼쳐 바퀴가 들릴 정도로 차체를 받칩니다. 수평계로 기울기를 확인합니다."@ko ;
+    sf:instruction "Lay outrigger pads, extend the outriggers fully and take the weight off the wheels. Check the level gauge."@en ;
+    sf:reason "아웃트리거를 덜 펴거나 연약지반에 그대로 내리면 붐이 기울 때 차량이 넘어갑니다."@ko ;
+    sf:reason "Half-extended outriggers, or feet on soft ground, let the truck roll over when the boom leans out."@en ;
+    sf:appliesRule sf:Rule04 ;
+    aipd:hasRisk sf:HazardTipOver ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_cos .
+sf:tx_outrig_x1 a sf:UnsafeChoice ;
+    rdfs:label "자리가 좁으니 아웃트리거를 반만 펴고 작업한다"@ko ;
+    rdfs:label "Space is tight — extend the outriggers halfway"@en ;
+    sf:explanation "반만 펴면 전도 한계가 크게 줄어듭니다. 공간이 없으면 작업 위치·방법을 다시 정합니다. (수칙 4)"@ko ;
+    sf:explanation "Half extension slashes the tip limit. If there is no room, re-plan the position or method. (Rule 4)"@en ;
+    sf:mistakeAt sf:tx_outrig ;
+    sf:violates sf:Rule04 .
+sf:tx_outrig_x2 a sf:UnsafeChoice ;
+    rdfs:label "받침판 없이 보도블록 위에 아웃트리거를 바로 내린다"@ko ;
+    rdfs:label "Lower the outriggers straight onto paving blocks, no pads"@en ;
+    sf:explanation "보도블록·맨홀 뚜껑·연약지반은 꺼질 수 있습니다. 받침판으로 하중을 분산합니다. (수칙 4)"@ko ;
+    sf:explanation "Paving, covers and soft ground can sink. Pads spread the load. (Rule 4)"@en ;
+    sf:mistakeAt sf:tx_outrig ;
+    sf:violates sf:Rule04 .
+sf:tx_cos a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "cos" ;
+    sf:stepNo 7 ;
+    rdfs:label "COS 개방 — 절연 조작봉 · 조작금지 표찰"@ko ;
+    rdfs:label "Open the cut-out (COS) with a hot stick · tag it"@en ;
+    sf:instruction "작업책임자가 절연장갑을 끼고 절연 조작봉으로 변압기 1차측 COS(컷아웃 스위치)를 열고 \"조작금지\" 표찰을 겁니다. 본선은 살아 있으므로 몸은 충분히 떨어져 있습니다."@ko ;
+    sf:instruction "Wearing insulating gloves, the supervisor opens the transformer's cut-out with an insulated hot stick and tags it. The main line is live, so the body stays well clear."@en ;
+    sf:reason "COS는 충전부 바로 옆에 있습니다. 맨손·일반 막대로 조작하면 아크·감전 사고가 납니다."@ko ;
+    sf:reason "The cut-out sits right next to live parts. Bare hands or improvised poles mean arc flash and shock."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    sf:involves sf:RoleSupervisor ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_harness .
+sf:tx_cos_x1 a sf:UnsafeChoice ;
+    rdfs:label "COS 퓨즈홀더를 장갑 낀 손으로 당겨 연다"@ko ;
+    rdfs:label "Pull the fuse holder open with a gloved hand"@en ;
+    sf:explanation "COS 투개방은 반드시 적정 공구(절연 조작봉)로 합니다. (수칙 11 배전)"@ko ;
+    sf:explanation "Cut-outs are operated only with the proper tool — an insulated hot stick. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:tx_cos ;
+    sf:violates sf:Rule11 .
+sf:tx_cos_x2 a sf:UnsafeChoice ;
+    rdfs:label "본선 개폐기를 열어 마을 전체를 정전시키고 작업한다"@ko ;
+    rdfs:label "Open the main switch and black out the whole area"@en ;
+    sf:explanation "계획에 없는 정전 범위 변경입니다. 계획대로 COS로 변압기만 분리합니다. (수칙 3)"@ko ;
+    sf:explanation "That is an unplanned change of outage. Isolate only the transformer with its cut-out as planned. (Rule 3)"@en ;
+    sf:mistakeAt sf:tx_cos ;
+    sf:violates sf:Rule03 .
+sf:tx_harness a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "harness" ;
+    sf:stepNo 8 ;
+    rdfs:label "안전대 안전고리 체결 → 버킷 상승"@ko ;
+    rdfs:label "Clip the harness lanyard → raise the bucket"@en ;
+    sf:instruction "버킷 작업자가 탑승해 안전고리를 걸고, 작업책임자가 확인한 뒤 버킷을 변압기 아래쪽, 고압선과 떨어진 위치로 올립니다."@ko ;
+    sf:instruction "The bucket worker boards and clips in; after the supervisor checks, the bucket rises to a spot below the transformer and well clear of the HV line."@en ;
+    sf:reason "고리를 걸지 않은 안전대는 소용이 없습니다. 붐이 움직일 때 가장 많이 흔들립니다."@ko ;
+    sf:reason "An unclipped harness does nothing, and the bucket jolts most when the boom starts."@en ;
+    sf:appliesRule sf:Rule07 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_txearth .
+sf:tx_harness_x1 a sf:UnsafeChoice ;
+    rdfs:label "버킷 안이니 안전고리는 위에 올라가서 건다"@ko ;
+    rdfs:label "Clip the lanyard once the bucket is up"@en ;
+    sf:explanation "붐이 움직이는 순간이 가장 흔들립니다. 탑승 즉시, 상승 전에 체결합니다. (수칙 7)"@ko ;
+    sf:explanation "The bucket jolts most when the boom starts. Clip in on boarding, before lifting. (Rule 7)"@en ;
+    sf:mistakeAt sf:tx_harness ;
+    sf:violates sf:Rule07 .
+sf:tx_harness_x2 a sf:UnsafeChoice ;
+    rdfs:label "허리에 차는 벨트식 안전대를 쓴다"@ko ;
+    rdfs:label "Use a waist-belt type safety belt"@en ;
+    sf:explanation "추락을 멈출 때 충격이 허리에 집중됩니다. 그네식(전신) 안전대를 씁니다. (수칙 7, 11)"@ko ;
+    sf:explanation "Arresting a fall with a waist belt injures the spine. Use a full-body harness. (Rules 7, 11)"@en ;
+    sf:mistakeAt sf:tx_harness ;
+    sf:violates sf:Rule07 ;
+    sf:violates sf:Rule11 .
+sf:tx_txearth a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "txearth" ;
+    sf:stepNo 9 ;
+    rdfs:label "변압기 쪽 검전 → 접지 (대지측 먼저)"@ko ;
+    rdfs:label "Test the transformer side → earth it (earth end first)"@en ;
+    sf:instruction "지상 보조가 전주 아래에 접지봉을 박아 대지측을 먼저 연결하고, 버킷 작업자가 검전기로 COS 아래쪽·변압기 1차 단자의 무전압을 확인한 뒤 접지 클램프를 겁니다."@ko ;
+    sf:instruction "The ground helper drives the earth rod and connects the earth end first; the bucket worker proves the cut-out's load side and the transformer primary dead with a detector, then clamps the earth on."@en ;
+    sf:reason "COS가 열렸어도 퓨즈홀더가 덜 빠졌거나 저압측 역송전이 있을 수 있습니다."@ko ;
+    sf:reason "An open cut-out can still be half-seated, and back-feed from the low-voltage side is possible."@en ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleEarthingGroundHelper ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_hvcover .
+sf:tx_txearth_x1 a sf:UnsafeChoice ;
+    rdfs:label "COS를 열었으니 검전 없이 바로 변압기 단자를 만진다"@ko ;
+    rdfs:label "The cut-out is open — touch the transformer terminals without testing"@en ;
+    sf:explanation "덜 빠진 퓨즈홀더, 저압측 역송전으로 살아 있을 수 있습니다. 검전·접지 후 작업합니다. (수칙 8)"@ko ;
+    sf:explanation "A half-seated fuse holder or LV back-feed can keep it live. Test and earth first. (Rule 8)"@en ;
+    sf:mistakeAt sf:tx_txearth ;
+    sf:violates sf:Rule08 .
+sf:tx_txearth_x2 a sf:UnsafeChoice ;
+    rdfs:label "접지 클램프를 먼저 걸고 접지봉은 나중에 박는다"@ko ;
+    rdfs:label "Clamp the earth on first, drive the rod later"@en ;
+    sf:explanation "대지측이 먼저 연결되어야 선로가 살아 있어도 사람을 통해 흐르지 않습니다."@ko ;
+    sf:explanation "The earth end must be connected first so a live line never discharges through a person."@en ;
+    sf:mistakeAt sf:tx_txearth ;
+    sf:violates sf:Rule08 .
+sf:tx_hvcover a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "hvcover" ;
+    sf:stepNo 10 ;
+    rdfs:label "충전부 방호: 살아 있는 COS 전원측 · 고압 인하선"@ko ;
+    rdfs:label "Cover live parts: the cut-out source side and HV drop"@en ;
+    sf:instruction "COS 위쪽(전원측)과 고압선에서 내려오는 인하선은 작업 내내 살아 있습니다. 버킷 작업자가 절연봉으로 절연 커버·방호관을 씌우고, 고압선과 1.2m 이상 떨어져 작업합니다."@ko ;
+    sf:instruction "The cut-out's source side and the HV drop above it stay live throughout. The bucket worker fits insulating covers with a hot stick and keeps at least 1.2 m from the HV line."@en ;
+    sf:reason "같은 전주에 죽은 부분과 산 부분이 함께 있습니다. 몸이 닿을 수 있는 산 부분은 모두 덮습니다."@ko ;
+    sf:reason "Dead and live parts share the same pole. Cover every live part your body could reach."@en ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tx_txlift .
+sf:tx_hvcover_x1 a sf:UnsafeChoice ;
+    rdfs:label "COS를 열었으니 전주 위는 전부 정전이라고 보고 작업한다"@ko ;
+    rdfs:label "The cut-out is open, so treat the whole pole top as dead"@en ;
+    sf:explanation "COS 전원측과 본선은 살아 있습니다. 산 부분은 방호합니다. (수칙 8)"@ko ;
+    sf:explanation "The source side and main line are live. Cover live parts. (Rule 8)"@en ;
+    sf:mistakeAt sf:tx_hvcover ;
+    sf:violates sf:Rule08 .
+sf:tx_hvcover_x2 a sf:UnsafeChoice ;
+    rdfs:label "방호 커버는 손으로 씌우는 게 빠르다"@ko ;
+    rdfs:label "Fitting the covers by hand is quicker"@en ;
+    sf:explanation "살아 있는 부분에는 절연봉으로 다가갑니다. 손으로 다가가면 접근한계거리를 넘습니다."@ko ;
+    sf:explanation "Approach live parts with a hot stick; reaching by hand breaks the minimum approach distance."@en ;
+    sf:mistakeAt sf:tx_hvcover ;
+    sf:violates sf:Rule08 .
+sf:tx_txlift a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "txlift" ;
+    sf:stepNo 11 ;
+    rdfs:label "변압기 인양 교체 · 인양물 하부 출입금지"@ko ;
+    rdfs:label "Swap the transformer on the hook · nobody beneath it"@en ;
+    sf:instruction "리드선을 분리하고 헌 변압기를 지브 훅(해지장치 확인)에 걸어 내린 뒤, 새 변압기를 올려 고정·결선합니다. 지상 작업자는 유도 로프만 잡고 낙하 반경 밖에 섭니다."@ko ;
+    sf:instruction "Disconnect the leads, lower the old transformer on the latched jib hook, then lift the new one and bolt and connect it. The ground worker holds only the tag line, outside the drop radius."@en ;
+    sf:reason "변압기는 수백 kg입니다. 매달린 물건 아래는 언제나 출입금지입니다."@ko ;
+    sf:reason "A transformer weighs hundreds of kilograms. Never stand under a suspended load."@en ;
+    sf:appliesRule sf:Rule06 ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:tx_txfinish .
+sf:tx_txlift_x1 a sf:UnsafeChoice ;
+    rdfs:label "변압기를 받으려고 지상 작업자가 전주 바로 아래에서 기다린다"@ko ;
+    rdfs:label "The ground worker waits right under the pole to receive it"@en ;
+    sf:explanation "훅·슬링이 풀리면 수백 kg이 떨어집니다. 유도 로프로 낙하 반경 밖에서 잡습니다. (수칙 6)"@ko ;
+    sf:explanation "If the hook or sling lets go, hundreds of kilograms fall. Hold the tag line from outside the radius. (Rule 6)"@en ;
+    sf:mistakeAt sf:tx_txlift ;
+    sf:violates sf:Rule06 .
+sf:tx_txlift_x2 a sf:UnsafeChoice ;
+    rdfs:label "해지장치 없는 훅으로 빨리 내린다"@ko ;
+    rdfs:label "Lower it fast on a hook without a safety latch"@en ;
+    sf:explanation "흔들릴 때 슬링이 빠집니다. 고정장치를 확인한 뒤 인양합니다. (수칙 6)"@ko ;
+    sf:explanation "The sling jumps off when it swings. Check the securing device first. (Rule 6)"@en ;
+    sf:mistakeAt sf:tx_txlift ;
+    sf:violates sf:Rule06 .
+sf:tx_txfinish a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tx ;
+    sf:stepId "txfinish" ;
+    sf:stepNo 12 ;
+    rdfs:label "작업 완료 · 역순 철수 (방호·접지 제거 → COS 투입)"@ko ;
+    rdfs:label "Finish · tear down in reverse (covers & earth off → close the cut-out)"@en ;
+    sf:instruction "방호 커버 제거 → 접지 제거(선로 측 먼저, 대지측 나중) → 버킷 하강·하차 → 인원 확인 후 절연 조작봉으로 COS 투입 → 저압 전압 확인 → 아웃트리거·고임목·라바콘 회수."@ko ;
+    sf:instruction "Covers off → earth off (line end first, earth end last) → bucket down, worker out → after a headcount, close the cut-out with a hot stick → check the LV voltage → outriggers, chocks and cones in."@en ;
+    sf:reason "접지를 단 채 COS를 넣으면 단락·아크가 납니다. 사람이 위에 있을 때 넣어서도 안 됩니다."@ko ;
+    sf:reason "Closing the cut-out into an earth causes a fault and arc — and never with someone still aloft."@en ;
+    sf:appliesRule sf:Rule08 ;
+    sf:appliesRule sf:Rule11 ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerDriver ;
+    sf:involves sf:RoleEarthingGroundHelper ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_07 ;
+    aipd:inStage aipd:Stage_Close .
+sf:tx_txfinish_x1 a sf:UnsafeChoice ;
+    rdfs:label "끝났으니 접지를 단 채로 먼저 COS를 넣어 본다"@ko ;
+    rdfs:label "Done — close the cut-out first, remove the earth later"@en ;
+    sf:explanation "접지에 바로 전기를 넣는 단락입니다. 접지 제거·인원 확인 후 투입합니다. (수칙 8)"@ko ;
+    sf:explanation "That energises straight into the earth. Remove earths and count people first. (Rule 8)"@en ;
+    sf:mistakeAt sf:tx_txfinish ;
+    sf:violates sf:Rule08 .
+sf:tx_txfinish_x2 a sf:UnsafeChoice ;
+    rdfs:label "버킷에 작업자가 있는 채로 COS를 넣는다"@ko ;
+    rdfs:label "Close the cut-out with the worker still in the bucket"@en ;
+    sf:explanation "결선이 잘못됐으면 위에 있는 사람이 위험합니다. 모두 내려온 뒤 투입합니다."@ko ;
+    sf:explanation "If a connection is wrong, whoever is aloft is at risk. Close only when everyone is down."@en ;
+    sf:mistakeAt sf:tx_txfinish ;
+    sf:violates sf:Rule08 ;
+    sf:violates sf:Rule11 ;
+    sf:violates sf:Rule05 .
+sf:Scenario_manhole a sf:WorkScenario ;
+    sf:scenarioId "manhole" ;
+    rdfs:label "지중 배전 맨홀 작업 (밀폐공간)"@ko ;
+    rdfs:label "Underground: manhole work (confined space)"@en .
+sf:AS_UG_0004 a sf:CableAsset ;
+    pam:code "AS-UG-0004" ;
+    rdfs:label "지중 케이블 (D/L #1 끝 → T4, 가상)"@ko ;
+    rdfs:label "Underground cable, D/L #1 end → T4 (virtual)"@en ;
+    pam:installedAt ex:_604bcf96-d6de-5322-b795-23b28c1f72b9 .
+sf:Scenario_manhole sf:targetAsset sf:AS_UG_0004 ;
+    sf:maintenanceTask pam:IN_01 ;
+    sf:workSection ex:_604bcf96-d6de-5322-b795-23b28c1f72b9 ;
+    sf:firstStep sf:manhole_permit .
+sf:manhole_permit a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "permit" ;
+    sf:stepNo 1 ;
+    rdfs:label "밀폐공간 작업허가서 · TBM"@ko ;
+    rdfs:label "Confined-space permit · TBM"@en ;
+    sf:instruction "맨홀은 밀폐공간입니다. 작업책임자가 작업허가서(측정·환기·감시인·구조장비·출입 인원)를 확인하고 TBM에서 비상 시 연락·구조 방법까지 정합니다."@ko ;
+    sf:instruction "A manhole is a confined space. The supervisor checks the permit — testing, ventilation, attendant, rescue gear, entrants — and the TBM agrees how to call for help and rescue."@en ;
+    sf:reason "밀폐공간 사고는 구하러 들어간 사람까지 쓰러지는 연쇄 사고가 많습니다. 허가 절차가 이를 막습니다."@ko ;
+    sf:reason "Confined-space accidents often kill the would-be rescuers too. The permit procedure prevents that chain."@en ;
+    sf:appliesRule sf:Rule09 ;
+    sf:appliesRule sf:Rule03 ;
+    aipd:hasRisk sf:HazardAsphyxia ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleEntrant ;
+    sf:involves sf:RoleAttendant ;
+    sf:involves sf:RoleGasTestingVentilation ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:precedes sf:manhole_mppe .
+sf:manhole_permit_x1 a sf:UnsafeChoice ;
+    rdfs:label "뚜껑만 열고 잠깐 들어갔다 나오니 허가서는 생략한다"@ko ;
+    rdfs:label "It is a quick look inside — skip the permit"@en ;
+    sf:explanation "짧은 출입에서도 산소결핍은 몇 번의 호흡만에 의식을 잃게 합니다. (수칙 9)"@ko ;
+    sf:explanation "Even a brief entry: oxygen-poor air knocks you out within a few breaths. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_permit ;
+    sf:violates sf:Rule09 .
+sf:manhole_permit_x2 a sf:UnsafeChoice ;
+    rdfs:label "작업자가 쓰러지면 옆 사람이 바로 들어가 구한다"@ko ;
+    rdfs:label "If the entrant collapses, the nearest person goes in to rescue"@en ;
+    sf:explanation "준비 없이 들어간 구조자도 같은 공기에 쓰러집니다. 삼각대·윈치로 밖에서 구조합니다."@ko ;
+    sf:explanation "An unprepared rescuer breathes the same air and collapses too. Rescue from outside with the tripod winch."@en ;
+    sf:mistakeAt sf:manhole_permit ;
+    sf:violates sf:Rule09 ;
+    sf:violates sf:Rule03 .
+sf:manhole_mppe a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "mppe" ;
+    sf:stepNo 2 ;
+    rdfs:label "개인 안전장구 · 측정기 준비"@ko ;
+    rdfs:label "PPE · gas detector ready"@en ;
+    sf:instruction "안전모·반사조끼·장갑을 착용하고 입조자는 그네식 안전대를 맵니다. 가스 측정기는 교정 상태와 경보를 확인합니다."@ko ;
+    sf:instruction "Hard hats, vests and gloves; the entrant wears a full-body harness. Check the gas detector is calibrated and its alarm works."@en ;
+    sf:reason "측정기가 고장이면 \"안전\"이라는 잘못된 숫자를 믿게 됩니다."@ko ;
+    sf:reason "A faulty detector gives a false \"safe\"."@en ;
+    sf:appliesRule sf:Rule01 ;
+    aipd:hasRisk sf:HazardStruck ;
+    aipd:hasRisk sf:HazardAsphyxia ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleEntrant ;
+    sf:involves sf:RoleAttendant ;
+    sf:involves sf:RoleGasTestingVentilation ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:manhole_mzone .
+sf:manhole_mppe_x1 a sf:UnsafeChoice ;
+    rdfs:label "측정기 점검은 생략하고 바로 쓴다"@ko ;
+    rdfs:label "Use the detector straight away without checking it"@en ;
+    sf:explanation "교정이 안 된 측정기는 산소 부족을 정상으로 표시할 수 있습니다. (수칙 9)"@ko ;
+    sf:explanation "An uncalibrated detector can show oxygen-poor air as normal. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_mppe ;
+    sf:violates sf:Rule09 .
+sf:manhole_mppe_x2 a sf:UnsafeChoice ;
+    rdfs:label "입조자도 안전대 없이 사다리로만 오르내린다"@ko ;
+    rdfs:label "The entrant uses only the ladder, no harness"@en ;
+    sf:explanation "쓰러지면 밖에서 끌어올릴 방법이 없습니다. 안전대와 구명줄이 구조 수단입니다."@ko ;
+    sf:explanation "If they collapse there is no way to pull them out. Harness and lifeline are the rescue path."@en ;
+    sf:mistakeAt sf:manhole_mppe ;
+    sf:violates sf:Rule01 .
+sf:manhole_mzone a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "mzone" ;
+    sf:stepNo 3 ;
+    rdfs:label "맨홀 작업반경 출입금지"@ko ;
+    rdfs:label "Keep out of the manhole work radius"@en ;
+    sf:instruction "작업 차량과 맨홀을 라바콘으로 둘러싸 차량·보행자가 들어오지 못하게 하고, 신호수가 접근 차량을 유도합니다."@ko ;
+    sf:instruction "Cones surround the van and manhole so no vehicle or pedestrian enters; the signaller guides approaching traffic."@en ;
+    sf:reason "열린 맨홀은 추락 위험이고, 차로 위 작업자는 차량에 치일 위험이 있습니다."@ko ;
+    sf:reason "An open manhole is a fall hazard, and people on the carriageway can be struck by traffic."@en ;
+    sf:appliesRule sf:Rule10 ;
+    aipd:hasRisk sf:HazardFall ;
+    aipd:hasRisk sf:HazardVehicle ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGasTestingVentilation ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:manhole_lid .
+sf:manhole_mzone_x1 a sf:UnsafeChoice ;
+    rdfs:label "맨홀 주변만 막고 작업 차량 주변은 그대로 둔다"@ko ;
+    rdfs:label "Cone only the manhole, not the van"@en ;
+    sf:explanation "작업자는 차량과 맨홀 사이를 계속 오갑니다. 작업반경 전체를 막습니다. (수칙 10)"@ko ;
+    sf:explanation "People walk back and forth between van and manhole. Close the whole work radius. (Rule 10)"@en ;
+    sf:mistakeAt sf:manhole_mzone ;
+    sf:violates sf:Rule10 .
+sf:manhole_mzone_x2 a sf:UnsafeChoice ;
+    rdfs:label "지나가는 차가 적으니 라바콘 없이 한다"@ko ;
+    rdfs:label "Little traffic — work without cones"@en ;
+    sf:explanation "드문 차량일수록 속도가 빠르고 운전자가 작업을 예상하지 못합니다. (수칙 10)"@ko ;
+    sf:explanation "Sparse traffic is fast traffic, and drivers do not expect you. (Rule 10)"@en ;
+    sf:mistakeAt sf:manhole_mzone ;
+    sf:violates sf:Rule10 .
+sf:manhole_lid a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "lid" ;
+    sf:stepNo 4 ;
+    rdfs:label "뚜껑 개방 (전용 공구) · 개구부 방호"@ko ;
+    rdfs:label "Open the lid (proper tool) · guard the opening"@en ;
+    sf:instruction "맨홀 뚜껑은 전용 개폐 공구로 두 사람이 엽니다. 연 즉시 개구부 주위에 안전 펜스를 세워 추락을 막습니다."@ko ;
+    sf:instruction "Two people open the lid with a purpose-made lifter. A guard rail goes around the opening immediately to stop falls."@en ;
+    sf:reason "무거운 뚜껑은 손·발 끼임과 허리 부상을, 열린 구멍은 추락을 부릅니다."@ko ;
+    sf:reason "Heavy lids crush hands and feet and strain backs; open holes invite falls."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleEntrant ;
+    sf:involves sf:RoleAttendant ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:manhole_gas1 .
+sf:manhole_lid_x1 a sf:UnsafeChoice ;
+    rdfs:label "드라이버를 틈에 끼워 한 사람이 들어 올린다"@ko ;
+    rdfs:label "Lever it up alone with a screwdriver"@en ;
+    sf:explanation "뚜껑이 미끄러지면 손발이 끼입니다. 전용 공구와 2인 작업이 원칙입니다. (수칙 11)"@ko ;
+    sf:explanation "If the lid slips it crushes hands and feet. Proper lifter, two people. (Rule 11)"@en ;
+    sf:mistakeAt sf:manhole_lid ;
+    sf:violates sf:Rule11 .
+sf:manhole_lid_x2 a sf:UnsafeChoice ;
+    rdfs:label "뚜껑을 연 채 펜스 없이 다른 준비를 한다"@ko ;
+    rdfs:label "Leave the hole unguarded while preparing other things"@en ;
+    sf:explanation "개구부는 즉시 방호합니다. 작업자 자신도 뒷걸음질하다 떨어집니다. (수칙 11 토목)"@ko ;
+    sf:explanation "Guard openings at once — workers step backwards into them too. (Rule 11, civil)"@en ;
+    sf:mistakeAt sf:manhole_lid ;
+    sf:violates sf:Rule11 .
+sf:manhole_gas1 a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "gas1" ;
+    sf:stepNo 5 ;
+    rdfs:label "산소·유해가스 측정 (들어가기 전)"@ko ;
+    rdfs:label "Test oxygen and toxic gas (before entry)"@en ;
+    sf:instruction "입구에서 측정기 호스를 내려 위·중간·바닥 세 높이에서 잽니다. 산소 18% 이상 23.5% 미만, 황화수소 10ppm 미만, 일산화탄소 30ppm 미만이어야 들어갈 수 있습니다."@ko ;
+    sf:instruction "From the opening, lower the sampling hose and test at top, middle and bottom. Entry needs O₂ 18–23.5 %, H₂S under 10 ppm, CO under 30 ppm."@en ;
+    sf:reason "밀폐공간의 공기는 눈으로 알 수 없습니다. 가스는 무겁거나 가벼워 높이마다 다릅니다."@ko ;
+    sf:reason "You cannot see bad air, and gases layer by height."@en ;
+    sf:appliesRule sf:Rule09 ;
+    aipd:hasRisk sf:HazardAsphyxia ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGasTestingVentilation ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:manhole_vent .
+sf:manhole_gas1_x1 a sf:UnsafeChoice ;
+    rdfs:label "냄새가 안 나니 측정 없이 들어간다"@ko ;
+    rdfs:label "It does not smell, so go in without testing"@en ;
+    sf:explanation "산소결핍과 일산화탄소는 냄새가 없고, 황화수소는 고농도에서 후각을 마비시킵니다. (수칙 9)"@ko ;
+    sf:explanation "Oxygen deficiency and CO are odourless; high H₂S paralyses the sense of smell. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_gas1 ;
+    sf:violates sf:Rule09 .
+sf:manhole_gas1_x2 a sf:UnsafeChoice ;
+    rdfs:label "입구에서 한 번만 재고 괜찮으면 들어간다"@ko ;
+    rdfs:label "Test once at the opening and go in if it reads fine"@en ;
+    sf:explanation "가스는 층을 이룹니다. 바닥까지 여러 높이에서 잽니다. (수칙 9)"@ko ;
+    sf:explanation "Gases layer. Test at several heights down to the floor. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_gas1 ;
+    sf:violates sf:Rule09 .
+sf:manhole_vent a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "vent" ;
+    sf:stepNo 6 ;
+    rdfs:label "강제 환기 → 재측정"@ko ;
+    rdfs:label "Force-ventilate → re-test"@en ;
+    sf:instruction "송풍기로 신선한 공기를 바닥까지 불어 넣고, 다시 측정해 적정 공기를 확인합니다. 환기는 작업이 끝날 때까지 계속합니다. (화면은 시간을 줄여서 보여 줍니다)"@ko ;
+    sf:instruction "A blower pushes fresh air to the bottom; re-test to confirm safe air. Ventilation runs until the job is finished. (Time is compressed on screen.)"@en ;
+    sf:reason "측정이 한 번 좋아도 작업 중 가스가 다시 나올 수 있어 환기를 멈추지 않습니다."@ko ;
+    sf:reason "Gas can build up again during work, so ventilation never stops."@en ;
+    sf:appliesRule sf:Rule09 ;
+    aipd:hasRisk sf:HazardAsphyxia ;
+    sf:involves sf:RoleGasTestingVentilation ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:manhole_watch .
+sf:manhole_vent_x1 a sf:UnsafeChoice ;
+    rdfs:label "뚜껑을 열어 두었으니 자연 환기로 충분하다"@ko ;
+    rdfs:label "The lid is open — natural ventilation is enough"@en ;
+    sf:explanation "깊은 맨홀은 자연 환기로 바닥 공기가 바뀌지 않습니다. 송풍기로 강제 환기합니다. (수칙 9)"@ko ;
+    sf:explanation "Deep manholes do not clear naturally. Use a blower. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_vent ;
+    sf:violates sf:Rule09 .
+sf:manhole_vent_x2 a sf:UnsafeChoice ;
+    rdfs:label "환기 후 측정 없이 바로 들어간다"@ko ;
+    rdfs:label "Ventilate, then go in without re-testing"@en ;
+    sf:explanation "환기가 충분한지는 측정해야만 압니다. (수칙 9)"@ko ;
+    sf:explanation "Only a test tells you the ventilation worked. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_vent ;
+    sf:violates sf:Rule09 .
+sf:manhole_watch a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "watch" ;
+    sf:stepNo 7 ;
+    rdfs:label "감시인 배치 · 구조장비(삼각대) 설치"@ko ;
+    rdfs:label "Post an attendant · set up rescue tripod"@en ;
+    sf:instruction "맨홀 위에 삼각대와 윈치를 세우고, 감시인은 입구에서 작업자와 계속 연락하며 자리를 떠나지 않습니다."@ko ;
+    sf:instruction "A tripod and winch go over the opening; the attendant stays at the entrance in constant contact and never leaves."@en ;
+    sf:reason "안에서 쓰러지면 감시인이 밖에서 바로 끌어올릴 수 있어야 합니다."@ko ;
+    sf:reason "If the entrant collapses, the attendant must be able to winch them out from outside."@en ;
+    sf:appliesRule sf:Rule09 ;
+    sf:appliesRule sf:Rule10 ;
+    aipd:hasRisk sf:HazardAsphyxia ;
+    aipd:hasRisk sf:HazardFall ;
+    aipd:hasRisk sf:HazardVehicle ;
+    sf:involves sf:RoleEntrant ;
+    sf:involves sf:RoleAttendant ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:manhole_enter .
+sf:manhole_watch_x1 a sf:UnsafeChoice ;
+    rdfs:label "감시인도 같이 들어가 작업을 돕는다"@ko ;
+    rdfs:label "The attendant goes in to help"@en ;
+    sf:explanation "밖에 남은 사람이 없으면 구조할 사람이 없습니다. 감시인은 밖에 있어야 합니다. (수칙 9)"@ko ;
+    sf:explanation "With nobody outside, nobody can rescue. The attendant stays out. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_watch ;
+    sf:violates sf:Rule09 .
+sf:manhole_watch_x2 a sf:UnsafeChoice ;
+    rdfs:label "구조장비는 차에 실어 두고 필요할 때 꺼낸다"@ko ;
+    rdfs:label "Keep the rescue gear in the van and fetch it if needed"@en ;
+    sf:explanation "산소결핍은 몇 분 안에 생명을 잃게 합니다. 구조장비는 입조 전에 설치합니다."@ko ;
+    sf:explanation "Oxygen deficiency kills in minutes. Rig the rescue gear before anyone enters."@en ;
+    sf:mistakeAt sf:manhole_watch ;
+    sf:violates sf:Rule09 ;
+    sf:violates sf:Rule10 .
+sf:manhole_enter a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "enter" ;
+    sf:stepNo 8 ;
+    rdfs:label "입조: 구명줄 체결 · 연속 측정"@ko ;
+    rdfs:label "Enter: lifeline clipped · continuous testing"@en ;
+    sf:instruction "입조자는 안전대 고리를 삼각대 윈치 줄에 걸고 들어갑니다. 개인 가스 측정기를 차고, 밖에서도 계속 측정하며 감시인은 정해진 간격으로 상태를 확인합니다."@ko ;
+    sf:instruction "The entrant clips the harness to the tripod winch line and goes down wearing a personal gas monitor; testing continues outside and the attendant checks in at set intervals."@en ;
+    sf:reason "들어갈 때 안전했던 공기도 작업 중 바뀔 수 있습니다."@ko ;
+    sf:reason "Air that was safe at entry can change during the job."@en ;
+    sf:appliesRule sf:Rule09 ;
+    sf:appliesRule sf:Rule07 ;
+    aipd:hasRisk sf:HazardAsphyxia ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleEntrant ;
+    sf:involves sf:RoleAttendant ;
+    sf:involves sf:RoleGasTestingVentilation ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:manhole_mfinish .
+sf:manhole_enter_x1 a sf:UnsafeChoice ;
+    rdfs:label "입조자 혼자 들어가고 밖의 인원은 다른 일을 한다"@ko ;
+    rdfs:label "The entrant goes in alone and everyone else does other work"@en ;
+    sf:explanation "밖에서 아무도 지켜보지 않으면 쓰러져도 알 수 없습니다. (수칙 9, 10)"@ko ;
+    sf:explanation "With nobody watching, a collapse goes unnoticed. (Rules 9, 10)"@en ;
+    sf:mistakeAt sf:manhole_enter ;
+    sf:violates sf:Rule09 ;
+    sf:violates sf:Rule10 .
+sf:manhole_enter_x2 a sf:UnsafeChoice ;
+    rdfs:label "송풍기 소음이 시끄러우니 입조 후 끈다"@ko ;
+    rdfs:label "The blower is noisy — switch it off once inside"@en ;
+    sf:explanation "환기는 작업이 끝날 때까지 계속합니다. (수칙 9)"@ko ;
+    sf:explanation "Ventilation runs until the work is finished. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_enter ;
+    sf:violates sf:Rule09 .
+sf:manhole_mfinish a sf:WorkStep ;
+    sf:inScenario sf:Scenario_manhole ;
+    sf:stepId "mfinish" ;
+    sf:stepNo 9 ;
+    rdfs:label "출조 · 뚜껑 복구 · 철수"@ko ;
+    rdfs:label "Exit · close the lid · tear down"@en ;
+    sf:instruction "입조자가 나온 것을 인원 확인한 뒤 구명줄을 풀고, 삼각대·펜스를 거두고 뚜껑을 닫습니다. 마지막으로 송풍기와 라바콘을 회수합니다."@ko ;
+    sf:instruction "Confirm the entrant is out by headcount, unclip, remove tripod and guard, close the lid; finally collect the blower and cones."@en ;
+    sf:reason "사람이 남았는지 확인하지 않고 뚜껑을 닫는 사고를 막기 위해 인원 확인을 먼저 합니다."@ko ;
+    sf:reason "Headcount first — lids have been closed on people."@en ;
+    sf:appliesRule sf:Rule09 ;
+    sf:appliesRule sf:Rule10 ;
+    aipd:hasRisk sf:HazardAsphyxia ;
+    aipd:hasRisk sf:HazardFall ;
+    aipd:hasRisk sf:HazardVehicle ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleEntrant ;
+    sf:involves sf:RoleAttendant ;
+    sf:involves sf:RoleGasTestingVentilation ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Close .
+sf:manhole_mfinish_x1 a sf:UnsafeChoice ;
+    rdfs:label "인원 확인 없이 뚜껑부터 닫는다"@ko ;
+    rdfs:label "Close the lid before the headcount"@en ;
+    sf:explanation "안에 사람이 남아 있을 수 있습니다. 인원 확인이 먼저입니다. (수칙 9)"@ko ;
+    sf:explanation "Someone may still be inside. Headcount first. (Rule 9)"@en ;
+    sf:mistakeAt sf:manhole_mfinish ;
+    sf:violates sf:Rule09 .
+sf:manhole_mfinish_x2 a sf:UnsafeChoice ;
+    rdfs:label "뚜껑을 닫기 전에 펜스와 라바콘부터 치운다"@ko ;
+    rdfs:label "Remove the guard and cones before closing the lid"@en ;
+    sf:explanation "열린 구멍이 방호 없이 남습니다. 뚜껑을 닫은 뒤에 펜스·라바콘을 거둡니다. (수칙 10, 11)"@ko ;
+    sf:explanation "That leaves an open hole unguarded. Close the lid, then remove guards and cones. (Rules 10, 11)"@en ;
+    sf:mistakeAt sf:manhole_mfinish ;
+    sf:violates sf:Rule10 ;
+    sf:violates sf:Rule11 .
+sf:Scenario_tower a sf:WorkScenario ;
+    sf:scenarioId "tower" ;
+    rdfs:label "송전 철탑 승탑 (추락방지)"@ko ;
+    rdfs:label "Transmission: climbing a tower (fall arrest)"@en .
+sf:AS_TW_0017 a sf:TowerAsset ;
+    pam:code "AS-TW-0017" ;
+    rdfs:label "B-A 154kV 송전 철탑 No.17 (가상)"@ko ;
+    rdfs:label "B-A 154 kV tower No. 17 (virtual)"@en ;
+    pam:installedAt ex:ACLS_1 ;
+    sf:carries pam:AS_LN_0031 .
+sf:Scenario_tower sf:targetAsset sf:AS_TW_0017 ;
+    sf:maintenanceTask pam:IN_01 ;
+    sf:firstStep sf:tower_ttbm .
+sf:tower_ttbm a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "ttbm" ;
+    sf:stepNo 1 ;
+    rdfs:label "작업 전 TBM · 작업계획서 확인"@ko ;
+    rdfs:label "Pre-work TBM · check the work plan"@en ;
+    sf:instruction "작업책임자가 작업 내용(철탑 부재·볼트 점검), 승탑 경로와 추락방지 설비, 낙하물 위험 구역, 기상(풍속) 조건을 설명합니다."@ko ;
+    sf:instruction "The supervisor covers the job (tower member and bolt inspection), the climbing route and fall-arrest system, the dropped-object zone and the weather (wind) limits."@en ;
+    sf:reason "고소 작업은 한 번의 실수가 생명과 직결됩니다. 오르기 전에 모든 것을 정합니다."@ko ;
+    sf:reason "At height one mistake is fatal. Settle everything before anyone climbs."@en ;
+    sf:appliesRule sf:Rule03 ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleClimber ;
+    sf:involves sf:RoleGroundHelper ;
+    sf:involves sf:RoleSafetyWatcher ;
+    sf:involves sf:RoleAccessControl ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:precedes sf:tower_tppe .
+sf:tower_ttbm_x1 a sf:UnsafeChoice ;
+    rdfs:label "늘 하던 점검이니 TBM 없이 바로 오른다"@ko ;
+    rdfs:label "A routine inspection — climb without a TBM"@en ;
+    sf:explanation "익숙한 작업일수록 절차를 건너뛰다 사고가 납니다. (수칙 3)"@ko ;
+    sf:explanation "Familiar jobs are exactly where steps get skipped. (Rule 3)"@en ;
+    sf:mistakeAt sf:tower_ttbm ;
+    sf:violates sf:Rule03 .
+sf:tower_ttbm_x2 a sf:UnsafeChoice ;
+    rdfs:label "바람이 세도 계획한 날이니 그대로 진행한다"@ko ;
+    rdfs:label "Windy, but it is the planned day — carry on"@en ;
+    sf:explanation "강풍은 추락·낙하물 위험을 크게 높입니다. 기준을 넘으면 작업을 미룹니다."@ko ;
+    sf:explanation "Strong wind multiplies fall and dropped-object risk. Postpone above the limit."@en ;
+    sf:mistakeAt sf:tower_ttbm ;
+    sf:violates sf:Rule03 .
+sf:tower_tppe a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "tppe" ;
+    sf:stepNo 2 ;
+    rdfs:label "개인 안전장구 · 안전그네식 안전대"@ko ;
+    rdfs:label "PPE · full-body harness"@en ;
+    sf:instruction "안전모(턱끈)·안전화·장갑과 함께 승탑자는 안전그네식(전신) 안전대, 추락방지기, 공구 낙하방지 줄을 착용합니다. 작업책임자가 버클과 고리를 확인합니다."@ko ;
+    sf:instruction "Hard hats with chin straps, boots and gloves; the climber also wears a full-body harness, a fall arrester and tool lanyards. The supervisor checks buckles and hooks."@en ;
+    sf:reason "송전 철탑에서는 허리 벨트식 안전대를 쓰지 않습니다. 추락을 멈출 때 충격이 몸 전체로 나뉘어야 합니다."@ko ;
+    sf:reason "Waist belts are not used on towers; arresting a fall must spread the force over the whole body."@en ;
+    sf:appliesRule sf:Rule01 ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardStruck ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleClimber ;
+    sf:involves sf:RoleGroundHelper ;
+    sf:involves sf:RoleSafetyWatcher ;
+    sf:involves sf:RoleAccessControl ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tower_tzone .
+sf:tower_tppe_x1 a sf:UnsafeChoice ;
+    rdfs:label "허리에 차는 벨트식 안전대로 오른다"@ko ;
+    rdfs:label "Climb with a waist-belt type harness"@en ;
+    sf:explanation "철탑 승탑에는 안전그네식 안전대가 필수입니다. (수칙 11 송전)"@ko ;
+    sf:explanation "Tower climbing requires a full-body harness. (Rule 11, transmission)"@en ;
+    sf:mistakeAt sf:tower_tppe ;
+    sf:violates sf:Rule01 ;
+    sf:violates sf:Rule11 .
+sf:tower_tppe_x2 a sf:UnsafeChoice ;
+    rdfs:label "공구는 주머니에 넣고 오른다"@ko ;
+    rdfs:label "Put the tools in your pockets and climb"@en ;
+    sf:explanation "주머니에서 떨어진 공구는 아래 사람에게 치명적입니다. 낙하방지 줄로 몸에 묶습니다."@ko ;
+    sf:explanation "A tool slipping from a pocket can kill someone below. Tether tools to your body."@en ;
+    sf:mistakeAt sf:tower_tppe ;
+    sf:violates sf:Rule01 ;
+    sf:violates sf:Rule11 .
+sf:tower_tzone a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "tzone" ;
+    sf:stepNo 3 ;
+    rdfs:label "철탑 주변 낙하물 위험 구역 출입금지"@ko ;
+    rdfs:label "Keep out of the dropped-object zone around the tower"@en ;
+    sf:instruction "철탑 둘레에 라바콘을 둘러 낙하물 위험 구역을 정하고, 승탑 중에는 지상 인원도 다리 바로 아래에 서지 않습니다."@ko ;
+    sf:instruction "Cones ring the tower to mark the dropped-object zone; while someone climbs, the ground crew keeps away from the foot of the leg."@en ;
+    sf:reason "수십 m 높이에서 떨어진 볼트 하나도 안전모를 뚫을 수 있습니다."@ko ;
+    sf:reason "A single bolt dropped from tens of metres can pierce a hard hat."@en ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleSafetyWatcher ;
+    sf:involves sf:RoleAccessControl ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tower_lifeline .
+sf:tower_tzone_x1 a sf:UnsafeChoice ;
+    rdfs:label "보조자는 바로 받아 주려고 다리 밑에서 대기한다"@ko ;
+    rdfs:label "The helper waits at the leg foot to catch things"@en ;
+    sf:explanation "떨어지는 물건을 받으려다 맞습니다. 낙하 반경 밖에서 대기합니다. (수칙 5)"@ko ;
+    sf:explanation "Catching dropped objects is how people get hit. Wait outside the zone. (Rule 5)"@en ;
+    sf:mistakeAt sf:tower_tzone ;
+    sf:violates sf:Rule05 .
+sf:tower_tzone_x2 a sf:UnsafeChoice ;
+    rdfs:label "들판이라 지나가는 사람이 없으니 구역 표시는 생략한다"@ko ;
+    rdfs:label "It is an open field — skip the zone markers"@en ;
+    sf:explanation "농민·산책객이 들어올 수 있습니다. 구역은 언제나 표시합니다."@ko ;
+    sf:explanation "Farmers and walkers do come by. Always mark the zone."@en ;
+    sf:mistakeAt sf:tower_tzone ;
+    sf:violates sf:Rule05 .
+sf:tower_lifeline a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "lifeline" ;
+    sf:stepNo 4 ;
+    rdfs:label "추락방지 와이어(수직 구명줄) · 추락방지기 점검"@ko ;
+    rdfs:label "Inspect the fall-arrest wire and arrester"@en ;
+    sf:instruction "승탑자가 철탑 다리의 추락방지 와이어 고정부·장력·손상 여부를 확인하고, 추락방지기를 와이어에 걸어 아래로 당겨 잠기는지 시험합니다."@ko ;
+    sf:instruction "The climber checks the fall-arrest wire's anchors, tension and damage, then fits the arrester and tugs it down to prove it locks."@en ;
+    sf:reason "추락방지 설비가 고장이면 떨어지는 순간 아무것도 붙잡아 주지 않습니다."@ko ;
+    sf:reason "A faulty fall-arrest system holds nothing when you fall."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleClimber ;
+    sf:involves sf:RoleGroundHelper ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:tower_climb .
+sf:tower_lifeline_x1 a sf:UnsafeChoice ;
+    rdfs:label "어제 쓴 설비라서 점검 없이 오른다"@ko ;
+    rdfs:label "It was used yesterday — climb without checking"@en ;
+    sf:explanation "밤사이 손상·풀림이 생길 수 있습니다. 매번 오르기 전에 점검합니다. (수칙 11 송전)"@ko ;
+    sf:explanation "Damage or slack can appear overnight. Inspect before every climb. (Rule 11, transmission)"@en ;
+    sf:mistakeAt sf:tower_lifeline ;
+    sf:violates sf:Rule11 .
+sf:tower_lifeline_x2 a sf:UnsafeChoice ;
+    rdfs:label "추락방지 와이어 대신 손으로 볼트를 잡고 오른다"@ko ;
+    rdfs:label "Skip the wire and climb holding the step bolts"@en ;
+    sf:explanation "철탑 승탑 시 추락방지 와이어 사용은 필수입니다. (수칙 11 송전)"@ko ;
+    sf:explanation "Using the fall-arrest wire is mandatory on towers. (Rule 11, transmission)"@en ;
+    sf:mistakeAt sf:tower_lifeline ;
+    sf:violates sf:Rule11 .
+sf:tower_climb a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "climb" ;
+    sf:stepNo 5 ;
+    rdfs:label "추락방지기를 체결하고 승탑"@ko ;
+    rdfs:label "Clip the arrester on and climb"@en ;
+    sf:instruction "승탑자가 안전대의 추락방지기를 와이어에 체결한 상태로 천천히 오릅니다. 감시자는 아래에서 계속 지켜보고, 아무도 다리 아래로 들어가지 않습니다."@ko ;
+    sf:instruction "The climber goes up slowly with the harness arrester on the wire. The watcher stays on him from below, and nobody steps under the leg."@en ;
+    sf:reason "승탑 중 미끄러지면 추락방지기가 바로 잠겨 떨어지는 거리를 짧게 막아 줍니다."@ko ;
+    sf:reason "If the climber slips, the arrester locks at once and limits the fall."@en ;
+    sf:appliesRule sf:Rule11 ;
+    sf:appliesRule sf:Rule07 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleClimber ;
+    sf:involves sf:RoleSafetyWatcher ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:tower_tieoff .
+sf:tower_climb_x1 a sf:UnsafeChoice ;
+    rdfs:label "빨리 오르려고 추락방지기는 작업 위치에서 건다"@ko ;
+    rdfs:label "Climb fast and clip the arrester on at the work position"@en ;
+    sf:explanation "오르는 동안이 가장 위험합니다. 지상에서 체결한 뒤 오릅니다. (수칙 7, 11)"@ko ;
+    sf:explanation "Climbing is the riskiest part. Clip on at ground level before climbing. (Rules 7, 11)"@en ;
+    sf:mistakeAt sf:tower_climb ;
+    sf:violates sf:Rule07 ;
+    sf:violates sf:Rule11 .
+sf:tower_climb_x2 a sf:UnsafeChoice ;
+    rdfs:label "두 사람이 같은 와이어로 바짝 붙어 함께 오른다"@ko ;
+    rdfs:label "Two people climb the same wire close together"@en ;
+    sf:explanation "한 사람이 떨어지면 아래 사람을 덮칩니다. 한 번에 한 사람씩 오릅니다."@ko ;
+    sf:explanation "If the upper one falls, he takes the lower one with him. One at a time."@en ;
+    sf:mistakeAt sf:tower_climb ;
+    sf:violates sf:Rule11 ;
+    sf:violates sf:Rule07 .
+sf:tower_tieoff a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "tieoff" ;
+    sf:stepNo 6 ;
+    rdfs:label "작업 위치 이중 체결 (고리 하나는 항상)"@ko ;
+    rdfs:label "Tie off at the work position (always one hook on)"@en ;
+    sf:instruction "작업 위치에서 먼저 안전대 고리(랜야드)를 철탑 부재에 건 뒤에 추락방지기를 쉬게 합니다. 공중에서는 어느 순간에도 고리 하나 이상이 걸려 있어야 합니다."@ko ;
+    sf:instruction "At the work position the climber first clips the lanyard to a tower member, only then parks the arrester. Aloft, at least one hook is on at every moment."@en ;
+    sf:reason "고리를 바꿔 거는 그 몇 초 동안의 추락 사고가 가장 많습니다."@ko ;
+    sf:reason "Most falls happen in the few seconds of swapping hooks."@en ;
+    sf:appliesRule sf:Rule07 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleClimber ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:tower_hoist .
+sf:tower_tieoff_x1 a sf:UnsafeChoice ;
+    rdfs:label "추락방지기를 먼저 풀고 랜야드를 건다"@ko ;
+    rdfs:label "Unclip the arrester first, then clip the lanyard"@en ;
+    sf:explanation "그 사이 아무것도 걸려 있지 않습니다. 새 고리를 먼저 걸고 헌 고리를 풉니다. (수칙 7)"@ko ;
+    sf:explanation "For those seconds nothing holds you. New hook on first, then the old one off. (Rule 7)"@en ;
+    sf:mistakeAt sf:tower_tieoff ;
+    sf:violates sf:Rule07 .
+sf:tower_tieoff_x2 a sf:UnsafeChoice ;
+    rdfs:label "발판이 넓으니 작업 위치에서는 고리를 풀고 자유롭게 움직인다"@ko ;
+    rdfs:label "The platform is wide — unclip and move freely at the work spot"@en ;
+    sf:explanation "발판 위에서도 미끄러짐·돌풍으로 떨어집니다. 고리는 항상 체결합니다. (수칙 7)"@ko ;
+    sf:explanation "Slips and gusts happen on platforms too. Stay clipped. (Rule 7)"@en ;
+    sf:mistakeAt sf:tower_tieoff ;
+    sf:violates sf:Rule07 .
+sf:tower_hoist a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "hoist" ;
+    sf:stepNo 7 ;
+    rdfs:label "공구·자재 인양: 달줄 · 하부 출입금지"@ko ;
+    rdfs:label "Hoist tools on a hand line · nobody beneath"@en ;
+    sf:instruction "공구는 손에 들고 오르지 않고 달줄(도르래)로 올립니다. 지상 보조는 줄 끝을 잡고 낙하 반경 밖에 서며, 매단 가방 아래로는 아무도 들어가지 않습니다."@ko ;
+    sf:instruction "Tools go up on a hand line through a pulley, not in the climber's hands. The helper holds the line end outside the drop radius and nobody walks under the bag."@en ;
+    sf:reason "올리는 중 매듭이 풀리면 가방이 그대로 떨어집니다."@ko ;
+    sf:reason "If the knot slips on the way up, the bag drops straight down."@en ;
+    sf:appliesRule sf:Rule06 ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleClimber ;
+    sf:involves sf:RoleGroundHelper ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:tower_twork .
+sf:tower_hoist_x1 a sf:UnsafeChoice ;
+    rdfs:label "공구를 허리에 차고 한 번에 들고 오른다"@ko ;
+    rdfs:label "Carry all the tools up on your belt"@en ;
+    sf:explanation "무게 때문에 균형을 잃고, 떨어진 공구는 아래 사람을 칩니다. 달줄로 올립니다. (수칙 6)"@ko ;
+    sf:explanation "The weight unbalances you and dropped tools hit people below. Use a hand line. (Rule 6)"@en ;
+    sf:mistakeAt sf:tower_hoist ;
+    sf:violates sf:Rule06 .
+sf:tower_hoist_x2 a sf:UnsafeChoice ;
+    rdfs:label "보조자가 가방 바로 아래에서 줄을 당긴다"@ko ;
+    rdfs:label "The helper pulls the line standing right under the bag"@en ;
+    sf:explanation "매듭이 풀리면 바로 맞습니다. 줄을 비스듬히 끌어 낙하 반경 밖에 섭니다. (수칙 6)"@ko ;
+    sf:explanation "If the knot fails he is hit. Pull at an angle from outside the radius. (Rule 6)"@en ;
+    sf:mistakeAt sf:tower_hoist ;
+    sf:violates sf:Rule06 .
+sf:tower_twork a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "twork" ;
+    sf:stepNo 8 ;
+    rdfs:label "작업: 공구 줄 체결 상태로 점검"@ko ;
+    rdfs:label "Work with tethered tools"@en ;
+    sf:instruction "부재 변형·볼트 풀림을 점검합니다. 공구는 모두 낙하방지 줄로 몸이나 부재에 묶여 있고, 감시자는 무전으로 상태를 확인합니다."@ko ;
+    sf:instruction "Inspect members for deformation and loose bolts. Every tool is tethered to the body or the tower; the watcher checks in by radio."@en ;
+    sf:reason "작업에 집중하면 손에서 공구가 빠지는 것을 모릅니다."@ko ;
+    sf:reason "Concentrating on the job, you do not notice a tool slipping."@en ;
+    sf:appliesRule sf:Rule07 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleClimber ;
+    sf:involves sf:RoleSafetyWatcher ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:tower_tdown .
+sf:tower_twork_x1 a sf:UnsafeChoice ;
+    rdfs:label "줄이 걸리적거려 공구 줄을 풀고 작업한다"@ko ;
+    rdfs:label "The tethers get in the way — untie them"@en ;
+    sf:explanation "떨어진 공구는 아래 사람에게 흉기가 됩니다. 줄은 항상 묶어 둡니다."@ko ;
+    sf:explanation "A dropped tool becomes a weapon for those below. Keep tethers on."@en ;
+    sf:mistakeAt sf:tower_twork ;
+    sf:violates sf:Rule07 .
+sf:tower_twork_x2 a sf:UnsafeChoice ;
+    rdfs:label "감시자도 같이 올라가 작업을 돕는다"@ko ;
+    rdfs:label "The watcher climbs up to help"@en ;
+    sf:explanation "아래에서 상황을 보는 사람이 없어집니다. 감시자는 지상에 남습니다."@ko ;
+    sf:explanation "Then nobody watches from below. The watcher stays on the ground."@en ;
+    sf:mistakeAt sf:tower_twork ;
+    sf:violates sf:Rule07 .
+sf:tower_tdown a sf:WorkStep ;
+    sf:inScenario sf:Scenario_tower ;
+    sf:stepId "tdown" ;
+    sf:stepNo 9 ;
+    rdfs:label "하강 · 철수 (추락방지기 체결 후 랜야드 해제)"@ko ;
+    rdfs:label "Descend and tear down (arrester on before the lanyard comes off)"@en ;
+    sf:instruction "공구 가방을 달줄로 먼저 내리고, 추락방지기가 와이어에 걸린 것을 확인한 뒤에 랜야드를 풀고 천천히 내려옵니다. 지상에서 추락방지기를 풀고 라바콘을 거둡니다."@ko ;
+    sf:instruction "Lower the tool bag first; make sure the arrester is on the wire, then unclip the lanyard and climb down slowly. Unclip the arrester on the ground and collect the cones."@en ;
+    sf:reason "내려올 때도 올라갈 때와 같은 규칙입니다. 지친 상태라 더 위험합니다."@ko ;
+    sf:reason "Coming down follows the same rules — and you are more tired."@en ;
+    sf:appliesRule sf:Rule07 ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardFall ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleClimber ;
+    sf:involves sf:RoleGroundHelper ;
+    sf:involves sf:RoleAccessControl ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Close .
+sf:tower_tdown_x1 a sf:UnsafeChoice ;
+    rdfs:label "빨리 내려가려고 랜야드를 먼저 풀고 추락방지기를 건다"@ko ;
+    rdfs:label "Unclip the lanyard first, then put the arrester on"@en ;
+    sf:explanation "그 순간 아무것도 걸려 있지 않습니다. 언제나 새 고리 먼저. (수칙 7)"@ko ;
+    sf:explanation "For that moment nothing holds you. New hook on first, always. (Rule 7)"@en ;
+    sf:mistakeAt sf:tower_tdown ;
+    sf:violates sf:Rule07 .
+sf:tower_tdown_x2 a sf:UnsafeChoice ;
+    rdfs:label "공구 가방을 들고 함께 내려온다"@ko ;
+    rdfs:label "Climb down carrying the tool bag"@en ;
+    sf:explanation "한 손으로 내려오면 균형을 잃습니다. 가방은 달줄로 먼저 내립니다."@ko ;
+    sf:explanation "One-handed climbing loses balance. Lower the bag on the line first."@en ;
+    sf:mistakeAt sf:tower_tdown ;
+    sf:violates sf:Rule07 ;
+    sf:violates sf:Rule05 .

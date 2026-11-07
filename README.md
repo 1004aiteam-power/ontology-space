@@ -40,9 +40,10 @@
 | [assets/airport/](assets/airport/) | 공항 이착륙: 가상 공항의 평행 활주로 2개 혼합 운영, 하루 전체 운항 일정, 후류 간격·복행·지상 이동, 도착·출발 안내판과 2D 캔버스 원근(pseudo-3D) 화면 (`airport.html`, ⚠ 가상 공항·항공사) |
 | [assets/flights/](assets/flights/) | 세계 항공 교통: 실제 주요 공항 176곳 · 가상 항공사의 하루 약 1만 편, 대권 항로·고도·편서풍, 국내선/국제선, 낮·밤 경계를 그린 메르카토르 세계 지도 (`flights.html`, 지도 데이터는 [examples/flights/build_world_map.mjs](examples/flights/build_world_map.mjs)로 Natural Earth에서 생성, ⚠ 가상 데이터: 공항 이름·위치만 실제이고 항공사·편명·운항 일정·항공기 위치는 모두 가상, 실제 항공편 추적 아님) |
 | [examples/ecosystem/](examples/ecosystem/) | 단세포 생태계 온톨로지: 시뮬레이션 한 번의 세포 기록(분열·포식·죽음·피난처·계절) → OWL 스키마 `eco-ontology.ttl` + 개체 `eco-run-seed1.ttl` (`build_eco.mjs`, 브라우저와 같은 코드 `assets/eco/eco-graph.js`), 혈통·진화·피난처·계절 Cypher 질문 (`eco-ontology.html`, ⚠ 시뮬레이션 속 가상 생물) |
+| [examples/safety/](examples/safety/) | 배전공사 안전 온톨로지: 안전 훈련 시뮬레이션(`assets/safety/safety.js`)의 현장 · 작업 단계 · 안전수칙 11 · 역할 · 훈련 오답 + 위험요인 → 스키마 `safety-schema.ttl` + 개체 `safety-steps.ttl` (`build_safety.mjs`, 브라우저와 같은 코드 `assets/safety/safety-graph.js`). 작업 단계 ⊑ 업무 온톨로지 `aipd:Task`(선행 · 리스크 · 생애주기), 작업 대상 설비 → 자산관리 자산 · 정비 흐름, 정전 작업 구간 → 배전선로 D/L #1 구간 · 개폐기 (`safety-ontology.html`, ⚠ 교육용 가상 현장) |
 | [examples/twin/](examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
 | [examples/feeder/](examples/feeder/) | A변전소 D/L #1 배전선로 상세: 구간 개폐기 6 · 연계 개폐기 4 · 분기점 3, pycim 모델 → CIM RDF · 웹 그림 데이터 · 모든 구간의 고장 복구(FLISR) 계획 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 단세포 생태계), 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `safety-ontology.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 배전공사 안전 · 단세포 생태계), 한·영 전환) |
 
 웹사이트: https://1004aiteam-power.github.io/ontology-space/
 
@@ -89,6 +90,10 @@ python examples/impact/build_impact.py   # 설비 고장 영향 분석: 자산 �
 ```
 
 ```bash
+node examples/safety/build_safety.mjs   # 배전공사 안전 온톨로지: 시뮬레이션 → Turtle, 업무 · 자산 · 배전선로를 함께 불러 Cypher 질의
+```
+
+```bash
 python -m pytest tests               # 테스트
 ```
 
@@ -102,6 +107,7 @@ node tests/ecosim.test.mjs           # 단세포 생태계 시뮬레이션 테�
 
 ```bash
 node tests/safety.test.mjs           # 배전공사 안전 시뮬레이션 테스트
+node tests/safety-graph.test.mjs     # 배전공사 안전 온톨로지: Turtle 최신 여부 · 다른 온톨로지 IRI 확인 · 역량 질문
 node tests/cypher.test.mjs           # 브라우저 Cypher 엔진 · 실습 예제 · 역량 질문 결과 대조
 node tests/traffic.test.mjs          # 교차로 신호 시뮬레이션 테스트
 node tests/airport.test.mjs          # 공항 이착륙 시뮬레이션 테스트

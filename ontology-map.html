@@ -58,7 +58,7 @@
 .ways{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .ways .card h4{margin-top:0} .ways pre{margin:8px 0;font-size:12.5px;padding:10px 12px}
 </style>
-<script src="assets/ontology-map.js?v=20261107a" defer></script>
+<script src="assets/ontology-map.js?v=20261107b" defer></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -105,6 +105,7 @@
       <hr>
       <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
       <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
       <hr>
       <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
       <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
@@ -154,7 +155,11 @@ ex:CB_22_1 im:feeds ex:_7fb1ff98-… .</code></pre>
       <p lang="en">The maintenance workflow's "precedes" and "feeds back to" are sub-properties of the work ontology's relations, so queries about work flow also work on maintenance steps.</p>
 <pre><code>pam:precedes rdfs:subPropertyOf aipd:precedes .
 pam:feedsBackTo rdfs:subPropertyOf aipd:feedsBackTo .</code></pre>
-      <p class="meta"><span lang="ko">자산관리 → 업무</span><span lang="en">Asset → Work</span></p></div>
+      <p lang="ko">배전공사 안전 온톨로지는 클래스를 물려받았습니다. 현장 작업 단계가 곧 업무 온톨로지의 단위업무여서 <code>aipd:precedes</code> · <code>aipd:hasRisk</code> · <code>aipd:inStage</code>를 그대로 씁니다.</p>
+      <p lang="en">The distribution work safety ontology inherits classes: a field work step is a work-ontology task, so it uses <code>aipd:precedes</code>, <code>aipd:hasRisk</code> and <code>aipd:inStage</code> as they are.</p>
+<pre><code>sf:WorkStep rdfs:subClassOf aipd:Task .
+sf:pole_switch aipd:precedes sf:pole_earth .</code></pre>
+      <p class="meta"><span lang="ko">자산관리 · 배전공사 안전 → 업무</span><span lang="en">Asset · Distribution work safety → Work</span></p></div>
     <div class="card"><h4><span lang="ko">④ 표준 클래스에서 만나기</span><span lang="en">④ Meet in a standard class</span></h4>
       <p lang="ko">휴게소 충전소는 교통 쪽에서는 시설이고, 전력 쪽에서는 부하입니다. CIM의 <code>EnergyConsumer</code>를 상위 클래스로 두고, 충전소를 공급하는 선로를 디지털 트윈의 변전소에 이었습니다.</p>
       <p lang="en">A rest-area charging station is a facility to traffic and a load to the grid. It subclasses CIM's <code>EnergyConsumer</code>, and its feeder is tied to a digital-twin substation.</p>
@@ -165,12 +170,14 @@ ev:FD_RA01 cim:Feeder.NormalEnergizingSubstation tw:_6c61… .</code></pre>
   </div>
   <h3><span lang="ko">지도에서 보이는 것</span><span lang="en">What the map shows</span></h3>
   <ul lang="ko">
+    <li><b>배전공사 안전이 업무를 현장과 잇습니다.</b> 전에는 업무 온톨로지를 가리키는 것이 자산관리의 하위 속성 2개뿐이었습니다. 안전 온톨로지의 작업 단계·위험요인·역할이 업무의 단위업무·리스크·역할을 물려받으면서, 한 상자에서 업무 · 자산관리 · 배전선로 · 예제 변전소 · 고장 영향 다섯 곳으로 화살표가 나갑니다.</li>
     <li><b>자산관리와 고장 영향은 직접 잇지 않습니다.</b> 둘 다 예제 변전소의 같은 기능 위치를 가리켜서 만납니다. 공통 기준점이 있으면 서로를 몰라도 이어집니다.</li>
     <li><b>같은 표준을 쓴다고 이어지는 것은 아닙니다.</b> 디지털 트윈과 배전선로 모델은 둘 다 IEC CIM을 쓰지만, 서로의 개체를 가리키지 않아 지도에서 떨어져 있습니다. 표준은 "같은 말"을 주고, 연결은 "같은 대상"을 가리킬 때 생깁니다.</li>
     <li><b>전기차 충전이 교통과 전력을 잇는 유일한 다리입니다.</b> 이 상자를 빼면 고속도로가 전력 쪽과 완전히 떨어집니다.</li>
     <li><b>단세포 생태계는 따로 서 있습니다.</b> 다른 분야와 공유할 대상이 없어 OBO 관계 온톨로지라는 표준만 함께 씁니다.</li>
   </ul>
   <ul lang="en">
+    <li><b>Distribution work safety ties "work" to the field.</b> Before, the only thing pointing at the work ontology was two sub-properties in asset management. Now the safety ontology's work steps, hazards and roles inherit the work ontology's tasks, risks and roles, and one box sends arrows to five others: work, asset management, feeder, sample substation and failure impact.</li>
     <li><b>Asset management and failure impact are not linked directly.</b> Both point at the same functional locations in the sample substation and meet there. A shared reference point connects models that do not know each other.</li>
     <li><b>Sharing a standard is not the same as being connected.</b> The digital twin and the feeder model both use IEC CIM but never point at each other's individuals, so they sit apart. A standard gives a shared vocabulary; a link appears when both point at the same thing.</li>
     <li><b>EV charging is the only bridge between traffic and power.</b> Remove that box and the road ontology is cut off from the power side entirely.</li>

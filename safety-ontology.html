@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 배전공사 안전 온톨로지</title>
+<meta name="title-ko" content="Ontology Space · 배전공사 안전 온톨로지">
+<meta name="title-en" content="Ontology Space · Distribution Work Safety Ontology">
+<meta name="description" content="배전공사 안전 훈련 시뮬레이션의 작업 단계·안전수칙·위험요인을 온톨로지로 옮기고, 업무 온톨로지 · 전력설비 자산관리 · 배전선로와 이어 Cypher로 묻는다">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 배전공사 안전 온톨로지">
+<meta property="og:description" content="배전공사 안전 훈련 시뮬레이션의 작업 단계·안전수칙·위험요인을 온톨로지로 옮기고, 업무 온톨로지 · 전력설비 자산관리 · 배전선로와 이어 Cypher로 묻는다">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/safety-ontology.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=20261107d">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
+.so-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0}
+.so-stats div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.so-stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.so-stats span{color:var(--muted);font-size:12.5px}
+.so-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:14px 0}
+.so-links .card{border-top:4px solid var(--line)}
+.so-links .card.work{border-top-color:#8b5cf6} .so-links .card.asset{border-top-color:#1f6feb} .so-links .card.feeder{border-top-color:#0891b2}
+.so-links pre{font-size:12px;white-space:pre-wrap;word-break:break-word}
+.so-schema{margin:16px 0;max-width:800px}
+.so-schema svg{width:100%;height:auto;display:block}
+.so-n rect{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.so-n text{fill:var(--text);font-size:13px;font-weight:600;text-anchor:middle;font-family:ui-monospace,Menlo,Consolas,monospace}
+.so-n.sf rect{stroke:#d95926;stroke-width:2.5} .so-n.aipd rect{stroke:#8b5cf6;stroke-width:2} .so-n.pam rect{stroke:#1f6feb;stroke-width:2} .so-n.cim rect{stroke:#0891b2;stroke-width:2}
+.so-e path{fill:none;stroke:var(--muted);stroke-width:1.5} .so-e path.sub{stroke-dasharray:5 4} .so-ah{fill:var(--muted)}
+.so-e text{fill:var(--muted);font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.so-hd{fill:var(--muted);font-size:12px;font-weight:700;text-anchor:middle}
+.so-cap{fill:var(--muted);font-size:12px}
+.so-scn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.so-scn button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13.5px}
+.so-scn button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.so-site{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:10px 0 14px}
+.so-site div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.so-site span{display:block;color:var(--muted);font-size:12.5px}
+.so-site b{font-weight:600}
+.so-site .crit{display:inline-block;margin-left:4px;padding:0 6px;border-radius:6px;background:#dc2626;color:#fff;font-size:12px}
+#soSteps table{font-size:13px}
+#soSteps .rn{display:inline-block;min-width:20px;padding:0 5px;border-radius:6px;background:color-mix(in srgb,#d95926 14%,transparent);color:var(--text);text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:20px 0;border-top:1px solid var(--line)}
+.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
+.decision h3{margin:0 0 6px}
+.decision p{margin:6px 0}
+@media (max-width:560px){.decision{grid-template-columns:minmax(0,1fr)}}
+#results .tbl{max-height:420px;overflow:auto}
+#results table{font-size:13px}
+</style>
+<script type="module" src="assets/safety/safety-onto-app.js?v=20261107a"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html" aria-current="page"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">SIMULATION × ONTOLOGY</div>
+  <h1><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution work safety ontology</span></h1>
+  <p class="thesis" lang="ko">시뮬레이션은 안전조치를 <b>어떤 순서로</b> 하는지 보여 줍니다.<br>온톨로지는 그 단계가 <b>어떤 업무</b>이고, <b>어떤 설비</b>를 다루며, <b>어느 선로</b>를 끊는지 잇습니다.</p>
+  <p class="thesis" lang="en">The simulation shows <b>in what order</b> the safety steps go.<br>The ontology ties each step to <b>a task</b>, <b>an asset</b> and <b>the line section</b> it cuts.</p>
+  <p class="lead" lang="ko"><a href="safety.html">배전공사 안전 훈련 시뮬레이션</a>의 현장 네 곳, 작업 단계, "생명을 지키는 안전수칙 11", 작업자 역할, 훈련 오답을 시뮬레이션 코드에서 그대로 읽어 온톨로지로 옮겼습니다. 그리고 세 갈래로 다른 온톨로지와 이었습니다: 작업 단계는 <a href="work.html">업무 온톨로지</a>의 단위업무, 작업 대상 설비는 <a href="asset.html">전력설비 자산관리</a>의 자산, 정전 작업 구간은 <a href="grid.html#feeder">배전선로 D/L #1</a>의 구간과 개폐기입니다.</p>
+  <p class="lead" lang="en">The four sites, work steps, "Golden Rules 11", crew roles and training wrong answers of the <a href="safety.html">distribution work safety simulation</a> are read straight from the simulation code and turned into an ontology, then joined to three others: work steps are tasks of the <a href="work.html">work ontology</a>, target equipment is an asset in <a href="asset.html">power asset management</a>, and the outage section is a section and switch of <a href="grid.html#feeder">feeder D/L #1</a>.</p>
+  <div class="notice"><b>⚠ <span lang="ko">교육용 가상 현장입니다</span><span lang="en">A virtual site for training</span></b>
+    <p lang="ko">현장 · 설비 · 선로 구간 · 고객은 모두 가상 데이터입니다. 위험요인과 정비 흐름 대응은 이 사이트가 정한 교육용 분류이며, 실제 작업은 소속 기관의 작업기준·안전수칙을 따르세요.</p>
+    <p lang="en">Sites, equipment, line sections and customers are all virtual. The hazard and workflow mappings are a teaching classification made for this site; real work follows your organisation's own standards and safety rules.</p></div>
+  <div id="soStats" class="so-stats"></div>
+  <p id="soStatus" class="meta"></p>
+</div>
+
+<section id="links">
+  <h2><span lang="ko">세 갈래 연결</span><span lang="en">Three links out</span></h2>
+  <p lang="ko">새 클래스를 따로 만들기보다 이미 있는 온톨로지의 클래스·속성·개체를 그대로 썼습니다. 그래서 다른 온톨로지의 질의가 안전 데이터에도 그대로 통합니다. 연결 수는 <a href="ontology-map.html">온톨로지 지도</a>에서 볼 수 있습니다.</p>
+  <p lang="en">Rather than new classes, the existing ontologies' classes, properties and individuals are reused, so their queries work on the safety data as is. Link counts are on the <a href="ontology-map.html">ontology map</a>.</p>
+  <div class="so-links">
+    <div class="card work"><h4><span lang="ko">작업 단계 → 업무 온톨로지</span><span lang="en">Work step → work ontology</span></h4>
+      <p lang="ko">작업 단계는 단위업무(<code>aipd:Task</code>), 위험요인은 리스크, 작업 역할은 역할의 하위 클래스입니다. 단계 순서는 업무의 "직접 선행", 단계의 위험은 "관련 리스크", TBM·착수·실행·종료는 업무 생애주기를 그대로 씁니다.</p>
+      <p lang="en">A work step is a task (<code>aipd:Task</code>), a hazard a risk, a crew role a role. Step order uses the work ontology's "precedes", step risks its "hasRisk", and TBM / set-up / doing / close-out its lifecycle stages.</p>
+<pre><code>sf:WorkStep rdfs:subClassOf aipd:Task .
+sf:pole_switch aipd:precedes sf:pole_earth ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:inStage aipd:Stage_Initiate .</code></pre></div>
+    <div class="card asset"><h4><span lang="ko">작업 대상 설비 → 자산관리</span><span lang="en">Target equipment → asset management</span></h4>
+      <p lang="ko">현장마다 작업 대상 설비를 자산관리의 자산으로 만들었습니다(전주 · 주상변압기 · 지중 케이블 · 송전 철탑). 교체하는 애자·완금은 구성품, 단계는 정비 업무 흐름(작업 허가·안전조치 → 작업 수행 → 재가압·복구)에 놓입니다.</p>
+      <p lang="en">Each site's target equipment is an asset-management asset (pole, pole transformer, underground cable, tower). The insulators and crossarm being replaced are components, and steps sit in the maintenance workflow (permit &amp; safety → work → re-energise).</p>
+<pre><code>sf:AS_PL_0601 a sf:PoleAsset ;   # ⊑ pam:Asset
+    pam:hasComponent sf:CP_PL0601_INS .
+sf:pole_earth sf:inWorkflow pam:WF_04 .</code></pre></div>
+    <div class="card feeder"><h4><span lang="ko">정전 작업 구간 → 배전선로</span><span lang="en">Outage section → feeder</span></h4>
+      <p lang="ko">설비의 설치 위치와 정전 작업 구간은 배전선로 모델의 구간 IRI(mRID)를 그대로 가리킵니다. 개방하는 개폐기만 적어 두면, 끊기는 고객과 연계로 살릴 구간은 고장 영향 분석의 공급 관계로 계산됩니다.</p>
+      <p lang="en">Where the equipment sits and which section is de-energised point directly at the feeder model's section IRIs (mRID). Only the switch to open is stored; the customers cut and the zones a tie can re-feed come from the failure-impact supply relation.</p>
+<pre><code>sf:Scenario_pole sf:isolatedBy ex:_a1e1b903-… ;  # S5
+    sf:workSection ex:_756664b6-… .
+sf:AS_PL_0601 pam:installedAt ex:_756664b6-… .</code></pre></div>
+  </div>
+  <figure class="so-schema" aria-label="schema">
+    <svg viewBox="0 0 810 370" role="img">
+      <defs><marker id="soArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 10,5 0,10z" class="so-ah"/></marker></defs>
+      <text class="so-hd" x="85" y="22"><tspan lang="ko">업무 (aipd:)</tspan><tspan lang="en">Work (aipd:)</tspan></text>
+      <text class="so-hd" x="392" y="22"><tspan lang="ko">배전공사 안전 (sf:)</tspan><tspan lang="en">Work safety (sf:)</tspan></text>
+      <text class="so-hd" x="705" y="22"><tspan lang="ko">자산관리 · 배전선로</tspan><tspan lang="en">Assets · feeder</tspan></text>
+      <g class="so-e">
+        <path class="sub" d="M220 150 H 158" marker-end="url(#soArr)"/><text x="182" y="143">⊑</text>
+        <path class="sub" d="M220 240 H 158" marker-end="url(#soArr)"/><text x="182" y="233">⊑</text>
+        <path class="sub" d="M220 320 H 158" marker-end="url(#soArr)"/><text x="182" y="313">⊑</text>
+        <path d="M240 132 L 150 78" marker-end="url(#soArr)"/><text x="150" y="118">inStage</text>
+        <path d="M290 168 V 220" marker-end="url(#soArr)"/><text x="296" y="198">hasRisk</text>
+        <path d="M222 160 C 196 210, 196 280, 222 312" marker-end="url(#soArr)"/><text x="196" y="290" text-anchor="end">involves</text>
+        <path d="M330 132 L 440 78" marker-end="url(#soArr)"/><text x="392" y="126">inScenario</text>
+        <path d="M335 168 L 450 222" marker-end="url(#soArr)"/><text x="400" y="186">appliesRule</text>
+        <path d="M425 240 H 362" marker-end="url(#soArr)"/><text x="368" y="233">controls</text>
+        <path d="M495 302 V 260" marker-end="url(#soArr)"/><text x="502" y="286">violates</text>
+        <path d="M262 132 C 250 100, 330 100, 318 132" marker-end="url(#soArr)"/><text x="290" y="100" text-anchor="middle">precedes</text>
+        <path d="M362 150 H 628" marker-end="url(#soArr)"/><text x="520" y="143">inWorkflow</text>
+        <path d="M567 60 H 628" marker-end="url(#soArr)"/><text x="572" y="52">target</text>
+        <path d="M545 78 C 600 130, 590 250, 628 278" marker-end="url(#soArr)"/><text x="700" y="316" text-anchor="middle">workSection · isolatedBy</text>
+        <path d="M772 72 C 800 120, 800 240, 772 272" marker-end="url(#soArr)"/><text x="792" y="176" transform="rotate(90 792 176)" text-anchor="middle">installedAt</text>
+      </g>
+      <g class="so-n aipd"><rect x="15" y="42" width="140" height="36" rx="8"/><text x="85" y="65">LifecycleStage</text></g>
+      <g class="so-n aipd"><rect x="15" y="132" width="140" height="36" rx="8"/><text x="85" y="155">Task</text></g>
+      <g class="so-n aipd"><rect x="15" y="222" width="140" height="36" rx="8"/><text x="85" y="245">Risk</text></g>
+      <g class="so-n aipd"><rect x="15" y="302" width="140" height="36" rx="8"/><text x="85" y="325">Role</text></g>
+      <g class="so-n sf"><rect x="220" y="132" width="140" height="36" rx="8"/><text x="290" y="155">WorkStep</text></g>
+      <g class="so-n sf"><rect x="220" y="222" width="140" height="36" rx="8"/><text x="290" y="245">Hazard</text></g>
+      <g class="so-n sf"><rect x="220" y="302" width="140" height="36" rx="8"/><text x="290" y="325">CrewRole</text></g>
+      <g class="so-n sf"><rect x="425" y="42" width="140" height="36" rx="8"/><text x="495" y="65">WorkScenario</text></g>
+      <g class="so-n sf"><rect x="425" y="222" width="140" height="36" rx="8"/><text x="495" y="245">SafetyRule</text></g>
+      <g class="so-n sf"><rect x="425" y="302" width="140" height="36" rx="8"/><text x="495" y="325">UnsafeChoice</text></g>
+      <g class="so-n pam"><rect x="630" y="42" width="140" height="36" rx="8"/><text x="700" y="65">pam:Asset</text></g>
+      <g class="so-n pam"><rect x="630" y="132" width="140" height="36" rx="8"/><text x="700" y="155">pam:WorkflowStep</text></g>
+      <g class="so-n cim"><rect x="630" y="262" width="140" height="36" rx="8"/><text x="700" y="285">cim:ACLineSegment</text></g>
+      <text class="so-cap" x="15" y="362"><tspan lang="ko">점선 ⊑ = 하위 클래스. 단계 → 오답(mistakeAt), 현장 → 정비 업무 유형 · 끊기는 부하는 그림에서 뺐습니다</tspan><tspan lang="en">Dashed ⊑ = subclass. Step ← wrong answer (mistakeAt), site → maintenance task and interrupted load are left out of the drawing</tspan></text>
+    </svg>
+  </figure>
+</section>
+
+<section id="mapping">
+  <h2><span lang="ko">시뮬레이션의 무엇이 무엇이 되나</span><span lang="en">What becomes what</span></h2>
+  <p lang="ko">시뮬레이션 코드(<code>assets/safety/safety.js</code>)에 이미 있는 것은 그대로 옮기고, 없는 것(위험요인 · 설비 · 선로 구간)만 덧붙였습니다. 시뮬레이션의 단계나 수칙을 고치면 <code>build_safety.mjs</code>를 다시 돌리기만 하면 됩니다.</p>
+  <p lang="en">What already exists in the simulation code (<code>assets/safety/safety.js</code>) is carried over as is; only what is missing (hazards, equipment, line sections) is added. Change a step or rule in the simulation and just re-run <code>build_safety.mjs</code>.</p>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></th><th><span lang="ko">코드</span><span lang="en">Code</span></th><th><span lang="ko">온톨로지</span><span lang="en">Ontology</span></th></tr>
+    <tr><td><span lang="ko">현장 네 곳</span><span lang="en">Four sites</span></td><td><code>SCENARIOS</code></td><td><code>sf:WorkScenario</code></td></tr>
+    <tr><td><span lang="ko">안전조치 단계 (TBM → 철수)</span><span lang="en">Safety steps (TBM → tear-down)</span></td><td><code>steps()</code>, <code>id</code>, <code>title</code>, <code>what</code>, <code>why</code></td><td><code>sf:WorkStep</code> ⊑ <code>aipd:Task</code>, <code>aipd:precedes</code>, <code>sf:instruction</code>, <code>sf:reason</code></td></tr>
+    <tr><td><span lang="ko">생명을 지키는 안전수칙 11</span><span lang="en">Golden Rules 11</span></td><td><code>RULES</code>, <code>step.rules</code></td><td><code>sf:SafetyRule</code>, <code>sf:appliesRule</code></td></tr>
+    <tr><td><span lang="ko">작업자 5명의 역할</span><span lang="en">Five crew roles</span></td><td><code>ROLES</code>, <span lang="ko">할 일의 담당자(<code>w</code>)</span><span lang="en">task owner (<code>w</code>)</span></td><td><code>sf:CrewRole</code> ⊑ <code>aipd:Role</code>, <code>sf:involves</code></td></tr>
+    <tr><td><span lang="ko">훈련 모드 오답과 설명</span><span lang="en">Training wrong answers</span></td><td><code>step.wrong</code>, <span lang="ko">설명 끝 "(수칙 n)"</span><span lang="en">"(Rule n)" at the end</span></td><td><code>sf:UnsafeChoice</code>, <code>sf:mistakeAt</code>, <code>sf:violates</code></td></tr>
+    <tr><td><span lang="ko">TBM에서 말하는 위험요인</span><span lang="en">Hazards named in the TBM</span></td><td><span lang="ko">(코드에 목록 없음 → 덧붙임)</span><span lang="en">(no list in the code → added)</span></td><td><code>sf:Hazard</code> ⊑ <code>aipd:Risk</code>, <code>sf:controls</code>, <code>aipd:hasRisk</code></td></tr>
+    <tr><td><span lang="ko">0번 전주 · 변압기 · 맨홀 케이블 · 철탑</span><span lang="en">Pole 0 · transformer · manhole cable · tower</span></td><td><span lang="ko">장면 그림</span><span lang="en">Drawn in the scene</span></td><td><code>sf:PoleAsset</code> · <code>pam:TransformerAsset</code> · <code>sf:CableAsset</code> · <code>sf:TowerAsset</code> (⊑ <code>pam:Asset</code>)</td></tr>
+    <tr><td><span lang="ko">-70 개폐기 개방 → 정전 구간</span><span lang="en">Open switch at -70 → outage section</span></td><td><code>W.sw</code></td><td><code>sf:isolatedBy</code> → <span lang="ko">D/L #1 구간 개폐기 S5</span><span lang="en">D/L #1 sectionaliser S5</span>, <code>sf:workSection</code></td></tr>
+    <tr><td><span lang="ko">COS 개방, 본선은 활선</span><span lang="en">Cut-out open, main line live</span></td><td><code>W.cos</code></td><td><code>sf:liveNearby</code>, <code>sf:interruptsLoad</code>, <code>sf:lineDeEnergised false</code></td></tr>
+  </table></div>
+</section>
+
+<section id="steps">
+  <h2><span lang="ko">현장별 단계 (그래프에서 읽음)</span><span lang="en">Steps by site (read from the graph)</span></h2>
+  <p lang="ko">현장을 고르면 그 현장의 설비 · 선로 정보와 단계 표를 그래프에서 Cypher로 읽어 보여 줍니다. 수칙 번호는 시뮬레이션과 같고, 위험요인 · 정비 흐름 · 생애주기는 다른 온톨로지와 이어진 값입니다.</p>
+  <p lang="en">Pick a site to see its equipment, line data and step table, all read from the graph with Cypher. Rule numbers match the simulation; hazards, workflow and stage come from the linked ontologies.</p>
+  <div class="so-scn" id="soScn"></div>
+  <div class="so-site" id="soSite"></div>
+  <div class="tbl" id="soSteps"></div>
+</section>
+
+<section id="cq">
+  <h2><span lang="ko">그래프에 묻기 (Cypher)</span><span lang="en">Ask the graph (Cypher)</span></h2>
+  <p lang="ko">안전 온톨로지와 업무 · 자산관리 · 배전선로 · 고장 영향 · 예제 변전소를 한 그래프에 불러 두었습니다. 질문을 누르면 Cypher가 채워지고 바로 실행됩니다. 고쳐서 다시 실행해도 됩니다(Ctrl/⌘ + Enter).</p>
+  <p lang="en">The safety ontology, work, asset management, feeder, failure impact and the sample substation are loaded into one graph. Click a question to fill in and run its Cypher; edit and re-run as you like (Ctrl/⌘ + Enter).</p>
+  <div class="presets" id="soPresets"></div>
+  <textarea id="query" spellcheck="false" aria-label="Cypher"></textarea>
+  <div class="lab-bar"><button id="soQuery" class="primary">▶ <span lang="ko">실행</span><span lang="en">Run</span></button></div>
+  <div id="results"></div>
+</section>
+
+<section id="design">
+  <h2><span lang="ko">설계 결정</span><span lang="en">Design decisions</span></h2>
+  <div class="decision"><div class="no">D1</div><div><h3><span lang="ko">작업 단계를 업무의 하위 클래스로</span><span lang="en">Work steps as a subclass of task</span></h3>
+    <p lang="ko">작업 단계를 따로 정의하고 업무와 매핑할 수도 있었지만, 단계는 "누가 · 무엇보다 먼저 · 어떤 위험을 안고 하는 일"이라 업무 온톨로지의 단위업무와 뜻이 같습니다. <code>sf:WorkStep ⊑ aipd:Task</code>로 두니 <code>aipd:precedes</code> · <code>aipd:hasRisk</code> · <code>aipd:inStage</code>를 새로 만들 필요가 없고, 업무 온톨로지의 "선행 업무 따라가기" 질의가 현장 단계에도 그대로 통합니다. 업무 온톨로지 쪽은 고치지 않았습니다.</p>
+    <p lang="en">Steps could have been defined separately and mapped to tasks, but a step is "work someone does, before something else, carrying some risk": the work ontology's task. With <code>sf:WorkStep ⊑ aipd:Task</code>, <code>aipd:precedes</code>, <code>aipd:hasRisk</code> and <code>aipd:inStage</code> need not be reinvented, and the work ontology's "follow the predecessors" queries work on field steps too. The work ontology itself is unchanged.</p></div></div>
+  <div class="decision"><div class="no">D2</div><div><h3><span lang="ko">위험요인은 수칙에서 끌어냄</span><span lang="en">Hazards derived from rules</span></h3>
+    <p lang="ko">시뮬레이션 코드에는 위험요인 목록이 없습니다. 단계마다 손으로 적는 대신 "수칙이 막는 위험요인"(<code>sf:controls</code>)을 한 번 정하고, 단계의 위험요인은 그 단계가 지키는 수칙에서 끌어냈습니다. 수칙 11(분야별 수칙)처럼 현장마다 뜻이 다른 것만 현장별로 따로 정했습니다(배전: 감전·아크, 맨홀: 개구부 추락, 철탑: 추락). 단계에 수칙을 더하면 위험요인도 따라옵니다.</p>
+    <p lang="en">The simulation has no hazard list. Instead of tagging each step by hand, "the hazards a rule controls" (<code>sf:controls</code>) is set once and a step's hazards follow from its rules. Only rules whose meaning changes by site, like rule 11 (field rules), get per-site hazards (distribution: shock and arc; manhole: falling into the opening; tower: falls). Add a rule to a step and its hazards come along.</p></div></div>
+  <div class="decision"><div class="no">D3</div><div><h3><span lang="ko">설비는 자산관리 클래스로, 위치는 선로 모델의 IRI 그대로</span><span lang="en">Equipment in asset classes, locations as the grid model's IRIs</span></h3>
+    <p lang="ko">자산관리 온톨로지에는 변전소 설비(변압기 · 차단기 · 가공도체)만 있어서, 전주 · 지중 케이블 · 송전 철탑 클래스를 <code>pam:Asset</code>의 하위 클래스로 더했습니다. 주상변압기는 있는 <code>pam:TransformerAsset</code>을 그대로 씁니다. 설치 위치는 새 이름을 만들지 않고 배전선로 모델의 구간 IRI(mRID)를 가리켜, 지도에서 말하는 "같은 개체를 그대로 가리키기"로 이었습니다.</p>
+    <p lang="en">The asset ontology only has substation equipment (transformers, breakers, overhead conductors), so pole, underground cable and tower classes are added under <code>pam:Asset</code>; the pole transformer uses the existing <code>pam:TransformerAsset</code>. Locations make no new names and point at the feeder model's section IRIs (mRID) — the map's "point at the same individual".</p></div></div>
+  <div class="decision"><div class="no">D4</div><div><h3><span lang="ko">정전 구간은 개폐기 하나만 저장</span><span lang="en">Store only the switch, not the outage</span></h3>
+    <p lang="ko">정전되는 고객 목록을 안전 데이터에 적어 두면, 선로 개폐 상태나 고객 수가 바뀔 때마다 두 곳을 고쳐야 합니다. 그래서 "어느 개폐기를 여는가"(<code>sf:isolatedBy</code>)만 저장하고, 그 하류는 고장 영향 분석의 <code>im:feeds</code>로 따라가 계산합니다(Q2). 변압기 교체처럼 선로 모델에 없는 COS를 여는 경우만 끊기는 부하를 직접 적었습니다.</p>
+    <p lang="en">Writing the list of customers who lose supply into the safety data would mean fixing two places whenever switching states or customer counts change. So only "which switch is opened" (<code>sf:isolatedBy</code>) is stored, and everything downstream is computed by following failure impact's <code>im:feeds</code> (Q2). Only the transformer job, which opens a cut-out the grid model does not contain, names its interrupted load directly.</p></div></div>
+  <div class="decision"><div class="no">D5</div><div><h3><span lang="ko">훈련 오답도 개체로</span><span lang="en">Training wrong answers as individuals</span></h3>
+    <p lang="ko">훈련 모드의 오답은 "현장에서 흔히 하는 잘못"이기도 합니다. 설명 끝의 "(수칙 3, 8)"을 읽어 <code>sf:violates</code>로 남겼고, 번호가 없으면 그 단계의 수칙을 씁니다. 그래서 "어느 수칙이 가장 많이 어겨지나"(Q6)를 물을 수 있고, 나중에 실제 훈련 기록을 붙이면 단계별 오답률도 같은 그래프에서 볼 수 있습니다.</p>
+    <p lang="en">Training-mode wrong answers are also "mistakes people really make". The "(Rules 3, 8)" at the end of each explanation becomes <code>sf:violates</code>; with no number, the step's own rules are used. That lets you ask which rule is broken most (Q6), and real training records could later add error rates per step to the same graph.</p></div></div>
+</section>
+
+<section id="files">
+  <h2><span lang="ko">파일과 한계</span><span lang="en">Files and limits</span></h2>
+  <div class="grid">
+    <a class="card" href="examples/safety/safety-schema.ttl"><h4>safety-schema.ttl</h4><p lang="ko">스키마: 클래스 · 관계 · 값 (손으로 씀)</p><p lang="en">Schema: classes, relations, values (hand-written)</p></a>
+    <a class="card" href="examples/safety/safety-steps.ttl"><h4>safety-steps.ttl</h4><p lang="ko">개체: 현장 · 단계 · 수칙 · 위험요인 · 역할 · 오답 · 설비</p><p lang="en">Individuals: sites, steps, rules, hazards, roles, wrong answers, equipment</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/safety/safety-graph.js"><h4>assets/safety/safety-graph.js</h4><p lang="ko">시뮬레이션 → 트리플 · Turtle · 역량 질문</p><p lang="en">Simulation → triples · Turtle · questions</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/safety/build_safety.mjs"><h4>build_safety.mjs</h4><p lang="ko">명령줄에서 Turtle 만들기와 질의</p><p lang="en">Build the Turtle and query from the command line</p></a>
+  </div>
+  <ul lang="ko">
+    <li><b>현장은 선로 위 한 자리</b>: 시뮬레이션은 전주 4기짜리 짧은 구간만 그립니다. 그 구간을 D/L #1의 어느 구간에 놓을지는 이 페이지가 정한 것입니다(전주 작업: 간선 6구간, 변압기: 분기선 2 끝, 맨홀: T4 연계 구간, 철탑: B-A 154kV 선로).</li>
+    <li><b>정전은 전원측만</b>: 시뮬레이션처럼 전원측 개폐기 하나만 엽니다. 그래서 Q2에서는 S5 하류의 두 구간(Z6 · Z7)이 모두 끊기고, Z7은 연계 개폐기 T4로 다시 살릴 수 있다고 나옵니다.</li>
+    <li><b>단계 순서는 한 줄</b>: 시뮬레이션 안에서는 여러 사람이 같은 단계 안에서 동시에 움직이지만, 단계와 단계 사이는 한 줄로 이어지므로 <code>aipd:precedes</code>도 한 줄입니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>A site is one spot on the line</b>: the simulation draws a short stretch with four poles. Where that stretch sits on D/L #1 is this page's choice (pole job: main section 6; transformer: end of branch 2; manhole: the T4 tie section; tower: the B-A 154 kV line).</li>
+    <li><b>Source side only</b>: as in the simulation, only the source-side switch is opened, so Q2 shows both zones downstream of S5 (Z6, Z7) losing supply, and Z7 able to be re-fed through tie switch T4.</li>
+    <li><b>One chain of steps</b>: several people move at once within a step, but steps follow one another in a single line, so <code>aipd:precedes</code> is a single chain too.</li>
+  </ul>
+  <div class="pager"><a href="impact.html"><span lang="ko">← 이전: 설비 고장 영향 분석</span><span lang="en">← Prev: Failure Impact Analysis</span></a><a href="eco-ontology.html"><span lang="ko">다음: 단세포 생태계 온톨로지 →</span><span lang="en">Next: Cell Ecosystem Ontology →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

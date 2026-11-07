@@ -26,6 +26,7 @@ export const ONTOLOGIES = [
   { id: 'twin', files: ['examples/twin/korea_virtual_grid.ttl'], page: 'twin.html', ko: '디지털 트윈 전력망', en: 'Digital twin grid', group: 'power' },
   { id: 'ev', files: ['examples/ev/ev-ontology.ttl'], page: 'ev.html', ko: '전기차 충전', en: 'EV charging', group: 'traffic' },
   { id: 'highway', files: ['examples/highway/highway-ontology.ttl', 'examples/highway/highway-alignment.ttl'], page: 'highway.html', ko: '고속도로·국도 교통', en: 'Road traffic', group: 'traffic' },
+  { id: 'safety', files: ['examples/safety/safety-schema.ttl', 'examples/safety/safety-steps.ttl'], page: 'safety-ontology.html', ko: '배전공사 안전', en: 'Distribution work safety', group: 'power' },
   { id: 'eco', files: ['examples/ecosystem/eco-ontology.ttl'], page: 'eco-ontology.html', ko: '단세포 생태계', en: 'Cell ecosystem', group: 'nature' }
 ];
 // 외부 표준: 이름공간 → 이름
