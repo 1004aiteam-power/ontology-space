@@ -4,9 +4,11 @@
 
 메뉴를 바꿀 때는 이 파일의 NAV만 고치고 실행: python tools/build_nav.py
 현재 페이지의 링크에는 aria-current="page", 그 링크가 든 드롭다운 버튼에는 class="menu-btn current"를 붙인다.
+<head>에는 파비콘과 링크 공유 미리보기(Open Graph · Twitter 카드) 태그도 함께 넣는다 (페이지의 제목·설명에서 만듦).
 """
 from __future__ import annotations
 
+import html
 import re
 from pathlib import Path
 
@@ -23,7 +25,6 @@ NAV = [
         ("twin.html", "디지털 트윈", "Digital twin", "가상 대한민국 전력망 24시간", "Virtual Korean grid over 24 hours"),
         ("hr",),
         ("grid.html#flisr", "배전선로 고장 복구", "Feeder fault restoration", "D/L #1 구간 고장 → 분리 → 복구 (FLISR)", "D/L #1 fault → isolate → restore (FLISR)"),
-        ("safety.html", "배전공사 안전 훈련", "Distribution work safety", "안전수칙 11 · 전주·변압기·맨홀·철탑 · 순서 맞히기", "Golden rules · pole, transformer, manhole, tower · quiz"),
     ]),
     ("menu", "physaiMenu", "피지컬 AI", "Physical AI", [
         ("physical-ai.html", "피지컬 AI 소개", "About Physical AI", "개념 · 관련 기술 · MuJoCo", "Concepts · key technologies · MuJoCo"),
@@ -54,12 +55,47 @@ NAV = [
 ]
 
 
+SITE = "https://1004aiteam-power.github.io/ontology-space/"
+# 공유 미리보기 이미지: 시뮬레이션 썸네일(tools/thumbs.cjs)이 있는 페이지는 그것, 나머지는 소개 페이지 화면
+OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem")}
+OG_DEFAULT = "assets/og/site.jpg"
+
+
+def head_meta(page: str, s: str) -> str:
+    title = re.search(r'<meta name="title-ko" content="([^"]*)"', s) or re.search(r"<title>([^<]*)</title>", s)
+    desc = re.search(r'<meta name="description" content="([^"]*)"', s)
+    t, d = title.group(1).strip(), desc.group(1) if desc else ""
+    url = SITE + ("" if page == "index.html" else page)
+    img = SITE + OG_IMAGE.get(page, OG_DEFAULT)
+    q = lambda v: html.escape(html.unescape(v), quote=True)  # noqa: E731
+    return "\n".join([
+        "<!-- head:meta (tools/build_nav.py) -->",
+        '<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">',
+        '<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">',
+        '<meta property="og:type" content="website">',
+        '<meta property="og:site_name" content="Ontology Space">',
+        f'<meta property="og:title" content="{q(t)}">',
+        f'<meta property="og:description" content="{q(d)}">',
+        f'<meta property="og:url" content="{url}">',
+        f'<meta property="og:image" content="{img}">',
+        '<meta property="og:locale" content="ko_KR">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        "<!-- /head:meta -->",
+    ])
+
+
+def add_head_meta(page: str, s: str) -> str:
+    s = re.sub(r"<!-- head:meta .*?<!-- /head:meta -->\n", "", s, flags=re.S)
+    m = re.search(r'<meta name="description"[^>]*>\n', s) or re.search(r"</title>\n", s)
+    return s[:m.end()] + head_meta(page, s) + "\n" + s[m.end():] if m else s
+
+
 def label(ko: str, en: str) -> str:
     return f'<span lang="ko">{ko}</span><span lang="en">{en}</span>'
 
 
-# 여러 메뉴에 들어 있는 페이지는 이 메뉴의 버튼만 강조 (링크 표시는 양쪽 다)
-PRIMARY = {"safety.html": "simMenu"}
+# 여러 메뉴에 들어 있는 페이지는 이 메뉴의 버튼만 강조 (링크 표시는 양쪽 다). 지금은 중복 없음.
+PRIMARY: dict[str, str] = {}
 
 
 def build(page: str) -> str:
@@ -94,11 +130,12 @@ def main() -> None:
     n = 0
     for f in sorted(ROOT.glob("*.html")):
         s = f.read_text(encoding="utf-8")
-        new, k = re.subn(r"[ \t]*<nav>.*?</nav>", lambda m: build(f.name), s, count=1, flags=re.S)
-        if k and new != s:
+        new = re.sub(r"[ \t]*<nav>.*?</nav>", lambda m: build(f.name), s, count=1, flags=re.S)
+        new = add_head_meta(f.name, new)
+        if new != s:
             f.write_text(new, encoding="utf-8")
             n += 1
-    print(f"메뉴를 다시 만든 페이지: {n}개")
+    print(f"메뉴·head 태그를 다시 만든 페이지: {n}개")
 
 
 if __name__ == "__main__":
