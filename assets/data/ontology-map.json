@@ -1,0 +1,859 @@
+{
+ "generated": "tools/build_ontology_map.mjs",
+ "nodes": [
+  {
+   "id": "work",
+   "ko": "업무",
+   "en": "Work",
+   "page": "work.html",
+   "group": "work",
+   "files": [
+    "examples/work/work-ontology.ttl"
+   ],
+   "triples": 3080,
+   "classes": 10,
+   "objectProps": 13,
+   "dataProps": 5,
+   "individuals": 450,
+   "classesUsed": 9
+  },
+  {
+   "id": "asset",
+   "ko": "전력설비 자산관리",
+   "en": "Asset management",
+   "page": "asset.html",
+   "group": "power",
+   "files": [
+    "examples/asset/asset-ontology.ttl"
+   ],
+   "triples": 745,
+   "classes": 16,
+   "objectProps": 18,
+   "dataProps": 22,
+   "individuals": 94,
+   "classesUsed": 14
+  },
+  {
+   "id": "substation",
+   "ko": "예제 변전소",
+   "en": "Sample substation",
+   "page": "grid.html",
+   "group": "power",
+   "files": [
+    "examples/power-grid-sample.ttl"
+   ],
+   "triples": 221,
+   "classes": 0,
+   "objectProps": 0,
+   "dataProps": 0,
+   "individuals": 58,
+   "classesUsed": 12
+  },
+  {
+   "id": "impact",
+   "ko": "설비 고장 영향",
+   "en": "Failure impact",
+   "page": "impact.html",
+   "group": "power",
+   "files": [
+    "examples/impact/impact-links.ttl"
+   ],
+   "triples": 114,
+   "classes": 1,
+   "objectProps": 3,
+   "dataProps": 3,
+   "individuals": 18,
+   "classesUsed": 2
+  },
+  {
+   "id": "feeder",
+   "ko": "배전선로 D/L #1",
+   "en": "Feeder D/L #1",
+   "page": "grid.html#feeder",
+   "group": "power",
+   "files": [
+    "examples/feeder/feeder.ttl"
+   ],
+   "triples": 1437,
+   "classes": 0,
+   "objectProps": 0,
+   "dataProps": 0,
+   "individuals": 235,
+   "classesUsed": 12
+  },
+  {
+   "id": "twin",
+   "ko": "디지털 트윈 전력망",
+   "en": "Digital twin grid",
+   "page": "twin.html",
+   "group": "power",
+   "files": [
+    "examples/twin/korea_virtual_grid.ttl"
+   ],
+   "triples": 4587,
+   "classes": 0,
+   "objectProps": 0,
+   "dataProps": 0,
+   "individuals": 728,
+   "classesUsed": 11
+  },
+  {
+   "id": "ev",
+   "ko": "전기차 충전",
+   "en": "EV charging",
+   "page": "ev.html",
+   "group": "traffic",
+   "files": [
+    "examples/ev/ev-ontology.ttl"
+   ],
+   "triples": 473,
+   "classes": 4,
+   "objectProps": 4,
+   "dataProps": 10,
+   "individuals": 75,
+   "classesUsed": 5
+  },
+  {
+   "id": "highway",
+   "ko": "고속도로·국도 교통",
+   "en": "Road traffic",
+   "page": "highway.html",
+   "group": "traffic",
+   "files": [
+    "examples/highway/highway-ontology.ttl",
+    "examples/highway/highway-alignment.ttl"
+   ],
+   "triples": 13469,
+   "classes": 15,
+   "objectProps": 16,
+   "dataProps": 18,
+   "individuals": 2367,
+   "classesUsed": 16
+  },
+  {
+   "id": "eco",
+   "ko": "단세포 생태계",
+   "en": "Cell ecosystem",
+   "page": "eco-ontology.html",
+   "group": "nature",
+   "files": [
+    "examples/ecosystem/eco-ontology.ttl"
+   ],
+   "triples": 180,
+   "classes": 7,
+   "objectProps": 7,
+   "dataProps": 16,
+   "individuals": 8,
+   "classesUsed": 2
+  }
+ ],
+ "standards": [
+  {
+   "id": "cim",
+   "ko": "IEC CIM",
+   "en": "IEC CIM",
+   "page": "grid.html"
+  },
+  {
+   "id": "geo",
+   "ko": "GeoSPARQL",
+   "en": "GeoSPARQL",
+   "page": null
+  },
+  {
+   "id": "skos",
+   "ko": "SKOS",
+   "en": "SKOS",
+   "page": null
+  },
+  {
+   "id": "obo",
+   "ko": "OBO 관계 온톨로지",
+   "en": "OBO Relation Ontology",
+   "page": null
+  },
+  {
+   "id": "dct",
+   "ko": "Dublin Core",
+   "en": "Dublin Core",
+   "page": null
+  }
+ ],
+ "links": [
+  {
+   "from": "impact",
+   "to": "feeder",
+   "n": 27,
+   "via": [
+    {
+     "p": "feeds",
+     "n": 14
+    },
+    {
+     "p": "toFeeder",
+     "n": 8
+    },
+    {
+     "p": "tieTo",
+     "n": 4
+    },
+    {
+     "p": "exactMatch",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "ev",
+   "to": "highway",
+   "n": 17,
+   "via": [
+    {
+     "p": "onLink",
+     "n": 15
+    },
+    {
+     "p": "imports",
+     "n": 1
+    },
+    {
+     "p": "range",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "ev",
+   "to": "twin",
+   "n": 15,
+   "via": [
+    {
+     "p": "Feeder.NormalEnergizingSubstation",
+     "n": 15
+    }
+   ]
+  },
+  {
+   "from": "impact",
+   "to": "substation",
+   "n": 12,
+   "via": [
+    {
+     "p": "feeds",
+     "n": 11
+    },
+    {
+     "p": "exactMatch",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "asset",
+   "to": "substation",
+   "n": 9,
+   "via": [
+    {
+     "p": "atLocation",
+     "n": 5
+    },
+    {
+     "p": "installedAt",
+     "n": 4
+    }
+   ]
+  },
+  {
+   "from": "asset",
+   "to": "work",
+   "n": 2,
+   "via": [
+    {
+     "p": "subPropertyOf",
+     "n": 2
+    }
+   ]
+  }
+ ],
+ "standardLinks": [
+  {
+   "from": "twin",
+   "to": "cim",
+   "n": 4587,
+   "via": [
+    {
+     "p": "IdentifiedObject.mRID",
+     "n": 728
+    },
+    {
+     "p": "IdentifiedObject.name",
+     "n": 674
+    },
+    {
+     "p": "a Terminal",
+     "n": 281
+    },
+    {
+     "p": "ACDCTerminal.sequenceNumber",
+     "n": 281
+    },
+    {
+     "p": "ACDCTerminal.connected",
+     "n": 281
+    },
+    {
+     "p": "Terminal.ConductingEquipment",
+     "n": 281
+    },
+    {
+     "p": "Terminal.ConnectivityNode",
+     "n": 281
+    },
+    {
+     "p": "a VoltageLevel",
+     "n": 76
+    },
+    {
+     "p": "VoltageLevel.Substation",
+     "n": 76
+    },
+    {
+     "p": "VoltageLevel.BaseVoltage",
+     "n": 76
+    },
+    {
+     "p": "a ConnectivityNode",
+     "n": 76
+    },
+    {
+     "p": "ConnectivityNode.ConnectivityNodeContainer",
+     "n": 76
+    },
+    {
+     "p": "IdentifiedObject.description",
+     "n": 68
+    },
+    {
+     "p": "a ACLineSegment",
+     "n": 65
+    },
+    {
+     "p": "ConductingEquipment.BaseVoltage",
+     "n": 65
+    },
+    {
+     "p": "Conductor.length",
+     "n": 65
+    },
+    {
+     "p": "ACLineSegment.r",
+     "n": 65
+    },
+    {
+     "p": "ACLineSegment.x",
+     "n": 65
+    },
+    {
+     "p": "ACLineSegment.bch",
+     "n": 65
+    },
+    {
+     "p": "a PowerTransformerEnd",
+     "n": 54
+    },
+    {
+     "p": "TransformerEnd.endNumber",
+     "n": 54
+    },
+    {
+     "p": "TransformerEnd.Terminal",
+     "n": 54
+    },
+    {
+     "p": "TransformerEnd.BaseVoltage",
+     "n": 54
+    },
+    {
+     "p": "PowerTransformerEnd.PowerTransformer",
+     "n": 54
+    },
+    {
+     "p": "PowerTransformerEnd.ratedS",
+     "n": 54
+    },
+    {
+     "p": "PowerTransformerEnd.ratedU",
+     "n": 54
+    },
+    {
+     "p": "PowerTransformerEnd.r",
+     "n": 54
+    },
+    {
+     "p": "PowerTransformerEnd.x",
+     "n": 54
+    },
+    {
+     "p": "a Substation",
+     "n": 49
+    },
+    {
+     "p": "a PowerElectronicsConnection",
+     "n": 43
+    },
+    {
+     "p": "PowerElectronicsConnection.p",
+     "n": 43
+    },
+    {
+     "p": "PowerElectronicsConnection.q",
+     "n": 43
+    },
+    {
+     "p": "PowerElectronicsConnection.ratedS",
+     "n": 43
+    },
+    {
+     "p": "a EnergyConsumer",
+     "n": 41
+    },
+    {
+     "p": "EnergyConsumer.p",
+     "n": 41
+    },
+    {
+     "p": "EnergyConsumer.q",
+     "n": 41
+    },
+    {
+     "p": "a PowerTransformer",
+     "n": 27
+    },
+    {
+     "p": "Equipment.EquipmentContainer",
+     "n": 27
+    },
+    {
+     "p": "a SynchronousMachine",
+     "n": 13
+    },
+    {
+     "p": "RotatingMachine.ratedS",
+     "n": 13
+    },
+    {
+     "p": "RotatingMachine.p",
+     "n": 13
+    },
+    {
+     "p": "RotatingMachine.q",
+     "n": 13
+    },
+    {
+     "p": "a BaseVoltage",
+     "n": 3
+    },
+    {
+     "p": "BaseVoltage.nominalVoltage",
+     "n": 3
+    }
+   ]
+  },
+  {
+   "from": "feeder",
+   "to": "cim",
+   "n": 1437,
+   "via": [
+    {
+     "p": "IdentifiedObject.mRID",
+     "n": 235
+    },
+    {
+     "p": "IdentifiedObject.name",
+     "n": 235
+    },
+    {
+     "p": "a Terminal",
+     "n": 114
+    },
+    {
+     "p": "ACDCTerminal.sequenceNumber",
+     "n": 114
+    },
+    {
+     "p": "ACDCTerminal.connected",
+     "n": 114
+    },
+    {
+     "p": "Terminal.ConductingEquipment",
+     "n": 114
+    },
+    {
+     "p": "Terminal.ConnectivityNode",
+     "n": 114
+    },
+    {
+     "p": "a ConnectivityNode",
+     "n": 47
+    },
+    {
+     "p": "Equipment.EquipmentContainer",
+     "n": 40
+    },
+    {
+     "p": "a ACLineSegment",
+     "n": 35
+    },
+    {
+     "p": "ConductingEquipment.BaseVoltage",
+     "n": 35
+    },
+    {
+     "p": "Conductor.length",
+     "n": 35
+    },
+    {
+     "p": "ACLineSegment.r",
+     "n": 35
+    },
+    {
+     "p": "ACLineSegment.x",
+     "n": 35
+    },
+    {
+     "p": "ACLineSegment.bch",
+     "n": 35
+    },
+    {
+     "p": "Switch.normalOpen",
+     "n": 14
+    },
+    {
+     "p": "Switch.open",
+     "n": 14
+    },
+    {
+     "p": "a EnergyConsumer",
+     "n": 13
+    },
+    {
+     "p": "EnergyConsumer.p",
+     "n": 13
+    },
+    {
+     "p": "EnergyConsumer.q",
+     "n": 13
+    },
+    {
+     "p": "a LoadBreakSwitch",
+     "n": 10
+    },
+    {
+     "p": "a Line",
+     "n": 4
+    },
+    {
+     "p": "a Breaker",
+     "n": 4
+    },
+    {
+     "p": "a Substation",
+     "n": 2
+    },
+    {
+     "p": "a VoltageLevel",
+     "n": 2
+    },
+    {
+     "p": "VoltageLevel.Substation",
+     "n": 2
+    },
+    {
+     "p": "VoltageLevel.BaseVoltage",
+     "n": 2
+    },
+    {
+     "p": "ConnectivityNode.ConnectivityNodeContainer",
+     "n": 2
+    },
+    {
+     "p": "a ExternalNetworkInjection",
+     "n": 2
+    },
+    {
+     "p": "a BaseVoltage",
+     "n": 1
+    },
+    {
+     "p": "BaseVoltage.nominalVoltage",
+     "n": 1
+    },
+    {
+     "p": "a BusbarSection",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "highway",
+   "to": "geo",
+   "n": 269,
+   "via": [
+    {
+     "p": "asWKT",
+     "n": 133
+    },
+    {
+     "p": "hasGeometry",
+     "n": 133
+    },
+    {
+     "p": "⊑ Feature",
+     "n": 2
+    },
+    {
+     "p": "Feature",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "highway",
+   "to": "skos",
+   "n": 75,
+   "via": [
+    {
+     "p": "prefLabel",
+     "n": 21
+    },
+    {
+     "p": "a Concept",
+     "n": 17
+    },
+    {
+     "p": "inScheme",
+     "n": 17
+    },
+    {
+     "p": "closeMatch",
+     "n": 9
+    },
+    {
+     "p": "relatedMatch",
+     "n": 4
+    },
+    {
+     "p": "exactMatch",
+     "n": 4
+    },
+    {
+     "p": "a ConceptScheme",
+     "n": 2
+    },
+    {
+     "p": "broadMatch",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "ev",
+   "to": "cim",
+   "n": 64,
+   "via": [
+    {
+     "p": "Equipment.EquipmentContainer",
+     "n": 15
+    },
+    {
+     "p": "a Feeder",
+     "n": 15
+    },
+    {
+     "p": "IdentifiedObject.name",
+     "n": 15
+    },
+    {
+     "p": "Feeder.NormalEnergizingSubstation",
+     "n": 15
+    },
+    {
+     "p": "Feeder",
+     "n": 3
+    },
+    {
+     "p": "⊑ EnergyConsumer",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "substation",
+   "to": "cim",
+   "n": 58,
+   "via": [
+    {
+     "p": "IdentifiedObject.mRID",
+     "n": 31
+    },
+    {
+     "p": "ACDCTerminal.sequenceNumber",
+     "n": 11
+    },
+    {
+     "p": "BaseVoltage.nominalVoltage",
+     "n": 2
+    },
+    {
+     "p": "TransformerEnd.endNumber",
+     "n": 2
+    },
+    {
+     "p": "PowerTransformerEnd.ratedU",
+     "n": 2
+    },
+    {
+     "p": "PowerTransformerEnd.ratedS",
+     "n": 2
+    },
+    {
+     "p": "TransformerEnd.Terminal",
+     "n": 2
+    },
+    {
+     "p": "ConductingEquipment.BaseVoltage",
+     "n": 1
+    },
+    {
+     "p": "Conductor.length",
+     "n": 1
+    },
+    {
+     "p": "ACLineSegment.r",
+     "n": 1
+    },
+    {
+     "p": "ACLineSegment.x",
+     "n": 1
+    },
+    {
+     "p": "EnergyConsumer.p",
+     "n": 1
+    },
+    {
+     "p": "EnergyConsumer.q",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "ev",
+   "to": "geo",
+   "n": 31,
+   "via": [
+    {
+     "p": "asWKT",
+     "n": 15
+    },
+    {
+     "p": "hasGeometry",
+     "n": 15
+    },
+    {
+     "p": "⊑ Feature",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "highway",
+   "to": "dct",
+   "n": 19,
+   "via": [
+    {
+     "p": "source",
+     "n": 19
+    }
+   ]
+  },
+  {
+   "from": "impact",
+   "to": "cim",
+   "n": 12,
+   "via": [
+    {
+     "p": "a EnergyConsumer",
+     "n": 10
+    },
+    {
+     "p": "LoadBreakSwitch",
+     "n": 1
+    },
+    {
+     "p": "Line",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "asset",
+   "to": "cim",
+   "n": 4,
+   "via": [
+    {
+     "p": "PowerSystemResource",
+     "n": 2
+    },
+    {
+     "p": "⊑ Asset",
+     "n": 1
+    },
+    {
+     "p": "⊑ Work",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "eco",
+   "to": "obo",
+   "n": 3,
+   "via": [
+    {
+     "p": "⊑ RO_0002470",
+     "n": 1
+    },
+    {
+     "p": "⊑ RO_0002439",
+     "n": 1
+    },
+    {
+     "p": "⊑ RO_0001000",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "work",
+   "to": "dct",
+   "n": 1,
+   "via": [
+    {
+     "p": "created",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "impact",
+   "to": "skos",
+   "n": 1,
+   "via": [
+    {
+     "p": "exactMatch",
+     "n": 1
+    }
+   ]
+  }
+ ]
+}

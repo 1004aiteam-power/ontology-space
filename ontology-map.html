@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · 온톨로지 지도</title>
+<meta name="title-ko" content="Ontology Space · 온톨로지 지도">
+<meta name="title-en" content="Ontology Space · Ontology Map">
+<meta name="description" content="사이트의 온톨로지·데이터 모델 9개가 서로 어떻게 이어지는지 한 장의 지도로: 클래스·개체 수, 서로 가리키는 관계와 건수, 함께 쓰는 표준 (Turtle 파일에서 자동 집계)">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 온톨로지 지도">
+<meta property="og:description" content="사이트의 온톨로지·데이터 모델 9개가 서로 어떻게 이어지는지 한 장의 지도로: 클래스·개체 수, 서로 가리키는 관계와 건수, 함께 쓰는 표준 (Turtle 파일에서 자동 집계)">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/ontology-map.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=20261107d">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
+.om-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:18px 0}
+.om-stats div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.om-stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.om-stats span{color:var(--muted);font-size:12.5px}
+.om-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;width:min(1240px,100vw - 32px);position:relative;left:50%;transform:translateX(-50%)}
+@media (min-width:1100px){.om-wrap{grid-template-columns:minmax(0,1fr) 320px;align-items:start}}
+.om-map{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow-x:auto}
+.om-map svg{display:block;width:100%;min-width:720px;height:auto}
+#omSide{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px 16px;font-size:14px}
+#omSide h3{margin:0 0 8px;font-size:17px} #omSide h3 small{font-weight:400}
+#omSide h4{margin:14px 0 4px;font-size:14px}
+#omSide ul{margin:4px 0;padding-left:18px} #omSide li{margin:4px 0}
+#omSide code{word-break:break-all}
+#omSide .muted,.muted{color:var(--muted)}
+.om-kv{min-width:0;font-size:13px} .om-kv td{padding:4px 8px} .om-kv td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.om-n rect{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.om-n.power rect{stroke:#1f6feb} .om-n.traffic rect{stroke:#d97706} .om-n.work rect{stroke:#8b5cf6} .om-n.nature rect{stroke:#16a34a}
+.om-n .t1{fill:var(--text);font-size:15px;font-weight:700;text-anchor:middle}
+.om-n .t2{fill:var(--muted);font-size:12px;text-anchor:middle}
+.om-n,.om-s,.om-link{cursor:pointer}
+.om-n.sel rect,.om-s.sel rect{stroke-width:4}
+.om-n:focus-visible rect,.om-s:focus-visible rect{stroke:var(--accent);stroke-width:4} .om-n:focus,.om-s:focus,.om-link:focus{outline:none}
+.om-s rect{fill:var(--code);stroke:var(--line);stroke-width:1.5}
+.om-s text{fill:var(--text);font-size:13px;font-weight:600;text-anchor:middle}
+.om-link line{stroke:var(--text);opacity:.55;fill:none} .om-link .hit{stroke:transparent;stroke-width:14;opacity:1}
+.om-link rect{fill:var(--surface);stroke:var(--line)} .om-link text{fill:var(--text);font-size:11.5px;text-anchor:middle;font-family:ui-monospace,Menlo,Consolas,monospace}
+.om-link.hot line{stroke:var(--accent);opacity:1} .om-link.hot rect{stroke:var(--accent)}
+.om-ah{fill:var(--text);opacity:.6} .om-ah.hot{fill:var(--accent);opacity:1}
+.om-std{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 4;opacity:.45} .om-std.hot{stroke:var(--accent);opacity:.9;stroke-width:1.5}
+.dim{opacity:.25} .om-std.dim{opacity:.1}
+.om-band{fill:var(--muted);font-size:12px;font-weight:700;letter-spacing:.03em} .om-sep{stroke:var(--line);stroke-dasharray:2 4}
+.ways{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.ways .card h4{margin-top:0} .ways pre{margin:8px 0;font-size:12.5px;padding:10px 12px}
+</style>
+<script src="assets/ontology-map.js?v=20261107a" defer></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html" aria-current="page"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">ONTOLOGY MAP</div>
+  <h1><span lang="ko">사이트 전체 온톨로지 지도</span><span lang="en">Ontology map of the site</span></h1>
+  <p class="thesis" lang="ko">온톨로지는 따로 있을 때보다<br><b>서로 이어질 때</b> 쓸모가 커집니다.</p>
+  <p class="thesis" lang="en">Ontologies are worth more<br><b>connected</b> than on their own.</p>
+  <p class="lead" lang="ko">이 사이트에서 만든 온톨로지와 데이터 모델이 서로 어떻게 이어지는지 한 장에 모았습니다. 숫자는 모두 Turtle 파일에서 직접 센 값입니다. 처음 오셨다면 여기서 관심 있는 상자를 눌러 출발해 보세요.</p>
+  <p class="lead" lang="en">How the ontologies and data models built on this site connect, on one page. Every number is counted straight from the Turtle files. New here? Click a box that interests you and start from there.</p>
+  <div id="omStats" class="om-stats"></div>
+</div>
+
+<section id="map" style="padding-top:8px">
+  <h2><span lang="ko">지도</span><span lang="en">The map</span></h2>
+  <div class="om-wrap">
+    <div class="om-map"><svg id="omSvg" viewBox="0 0 1000 610" role="img" aria-label="ontology map"></svg></div>
+    <aside id="omSide" aria-live="polite"></aside>
+  </div>
+  <p class="meta" lang="ko">테두리 색: <b style="color:#1f6feb">전력</b> · <b style="color:#d97706">교통</b> · <b style="color:#8b5cf6">업무</b> · <b style="color:#16a34a">자연</b>. 화살표 굵기는 잇는 트리플 수(로그 눈금)입니다.</p>
+  <p class="meta" lang="en">Border colour: <b style="color:#1f6feb">power</b> · <b style="color:#d97706">traffic</b> · <b style="color:#8b5cf6">work</b> · <b style="color:#16a34a">nature</b>. Arrow width follows the number of linking triples (log scale).</p>
+</section>
+
+<section id="ways">
+  <h2><span lang="ko">온톨로지를 잇는 네 가지 방법</span><span lang="en">Four ways the ontologies are joined</span></h2>
+  <p lang="ko">지도의 화살표는 모두 이 네 가지 중 하나입니다. 같은 사이트 안에서도 상황에 따라 다른 방법을 골랐습니다.</p>
+  <p lang="en">Every arrow on the map is one of these four. Even within one site, different situations called for different methods.</p>
+  <div class="ways">
+    <div class="card"><h4><span lang="ko">① 같은 개체를 그대로 가리키기</span><span lang="en">① Point at the same individual</span></h4>
+      <p lang="ko">자산관리 온톨로지는 차단기 자산이 설치된 자리로 예제 변전소의 기능 위치 IRI를 그대로 씁니다. 새 이름을 만들지 않으니 가장 단순합니다.</p>
+      <p lang="en">The asset ontology uses the sample substation's functional-location IRI directly as where a breaker asset is installed. No new name is made, so it is the simplest way.</p>
+<pre><code>pam:AS_CB_0457 pam:installedAt ex:CB_22_1 .</code></pre>
+      <p class="meta"><span lang="ko">자산관리 → 예제 변전소</span><span lang="en">Asset → Sample substation</span></p></div>
+    <div class="card"><h4><span lang="ko">② 다른 이름을 매핑으로 잇기</span><span lang="en">② Map two names for one thing</span></h4>
+      <p lang="ko">같은 차단기를 변전소 모델은 <code>ex:CB_22_1</code>, 배전선로 모델은 mRID IRI로 부릅니다. <code>skos:exactMatch</code>로 잇고, 그 위에 공급 방향 관계 <code>im:feeds</code>를 얹었습니다.</p>
+      <p lang="en">The substation model calls a breaker <code>ex:CB_22_1</code>; the feeder model uses an mRID IRI. They are joined by <code>skos:exactMatch</code>, with the supply-direction relation <code>im:feeds</code> on top.</p>
+<pre><code>ex:CB_22_1 skos:exactMatch ex:_7fb1ff98-… .
+ex:CB_22_1 im:feeds ex:_7fb1ff98-… .</code></pre>
+      <p class="meta"><span lang="ko">고장 영향 → 예제 변전소 · 배전선로</span><span lang="en">Failure impact → Substation · Feeder</span></p></div>
+    <div class="card"><h4><span lang="ko">③ 관계를 물려받기</span><span lang="en">③ Inherit a relation</span></h4>
+      <p lang="ko">점검정비 절차의 "선행"·"환류"는 업무 온톨로지의 관계를 하위 속성으로 물려받았습니다. 그래서 업무 흐름을 묻는 질의가 정비 절차에도 그대로 통합니다.</p>
+      <p lang="en">The maintenance workflow's "precedes" and "feeds back to" are sub-properties of the work ontology's relations, so queries about work flow also work on maintenance steps.</p>
+<pre><code>pam:precedes rdfs:subPropertyOf aipd:precedes .
+pam:feedsBackTo rdfs:subPropertyOf aipd:feedsBackTo .</code></pre>
+      <p class="meta"><span lang="ko">자산관리 → 업무</span><span lang="en">Asset → Work</span></p></div>
+    <div class="card"><h4><span lang="ko">④ 표준 클래스에서 만나기</span><span lang="en">④ Meet in a standard class</span></h4>
+      <p lang="ko">휴게소 충전소는 교통 쪽에서는 시설이고, 전력 쪽에서는 부하입니다. CIM의 <code>EnergyConsumer</code>를 상위 클래스로 두고, 충전소를 공급하는 선로를 디지털 트윈의 변전소에 이었습니다.</p>
+      <p lang="en">A rest-area charging station is a facility to traffic and a load to the grid. It subclasses CIM's <code>EnergyConsumer</code>, and its feeder is tied to a digital-twin substation.</p>
+<pre><code>ev:ChargingStation rdfs:subClassOf cim:EnergyConsumer .
+ev:RA01 ev:onLink hw:S03F .
+ev:FD_RA01 cim:Feeder.NormalEnergizingSubstation tw:_6c61… .</code></pre>
+      <p class="meta"><span lang="ko">전기차 충전 → 고속도로 · 디지털 트윈</span><span lang="en">EV charging → Roads · Digital twin</span></p></div>
+  </div>
+  <h3><span lang="ko">지도에서 보이는 것</span><span lang="en">What the map shows</span></h3>
+  <ul lang="ko">
+    <li><b>자산관리와 고장 영향은 직접 잇지 않습니다.</b> 둘 다 예제 변전소의 같은 기능 위치를 가리켜서 만납니다. 공통 기준점이 있으면 서로를 몰라도 이어집니다.</li>
+    <li><b>같은 표준을 쓴다고 이어지는 것은 아닙니다.</b> 디지털 트윈과 배전선로 모델은 둘 다 IEC CIM을 쓰지만, 서로의 개체를 가리키지 않아 지도에서 떨어져 있습니다. 표준은 "같은 말"을 주고, 연결은 "같은 대상"을 가리킬 때 생깁니다.</li>
+    <li><b>전기차 충전이 교통과 전력을 잇는 유일한 다리입니다.</b> 이 상자를 빼면 고속도로가 전력 쪽과 완전히 떨어집니다.</li>
+    <li><b>단세포 생태계는 따로 서 있습니다.</b> 다른 분야와 공유할 대상이 없어 OBO 관계 온톨로지라는 표준만 함께 씁니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Asset management and failure impact are not linked directly.</b> Both point at the same functional locations in the sample substation and meet there. A shared reference point connects models that do not know each other.</li>
+    <li><b>Sharing a standard is not the same as being connected.</b> The digital twin and the feeder model both use IEC CIM but never point at each other's individuals, so they sit apart. A standard gives a shared vocabulary; a link appears when both point at the same thing.</li>
+    <li><b>EV charging is the only bridge between traffic and power.</b> Remove that box and the road ontology is cut off from the power side entirely.</li>
+    <li><b>The cell ecosystem stands alone.</b> It shares nothing with the other fields, only a standard, the OBO Relation Ontology.</li>
+  </ul>
+</section>
+
+<section id="links">
+  <h2><span lang="ko">연결 목록</span><span lang="en">All links</span></h2>
+  <div class="tbl" id="omTable"></div>
+</section>
+
+<section id="how">
+  <h2><span lang="ko">어떻게 셌나</span><span lang="en">How it is counted</span></h2>
+  <ul lang="ko">
+    <li><code>tools/build_ontology_map.mjs</code>가 각 Turtle 파일을 읽어 <code>assets/data/ontology-map.json</code>을 만듭니다. 온톨로지가 바뀌면 다시 실행만 하면 되고, 테스트가 JSON이 파일과 맞는지 확인합니다.</li>
+    <li>어떤 IRI에 <code>rdf:type</code>을 붙인 파일이 그 IRI의 "주인"입니다. 다른 온톨로지의 트리플이 그 IRI를 주어·술어·목적어로 쓰면 화살표 하나로 셉니다. 숫자는 서로 다른 대상의 수가 아니라 트리플의 수입니다.</li>
+    <li>IEC CIM · GeoSPARQL · SKOS · OBO · Dublin Core 용어는 어느 파일이 정의해도 주인으로 치지 않고 "외부 표준"으로 따로 셉니다. 예제 변전소 파일처럼 CIM 클래스 계층을 함께 담은 파일이 있어도, 그 때문에 화살표가 생기지는 않습니다.</li>
+    <li>"정의한 클래스"는 그 온톨로지 이름공간의 <code>owl:Class</code>만 셉니다. 배전선로·디지털 트윈·예제 변전소는 자기 클래스 없이 CIM 클래스만 쓰므로 "CIM 클래스 n종"으로 표시했습니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><code>tools/build_ontology_map.mjs</code> reads each Turtle file and writes <code>assets/data/ontology-map.json</code>. Re-run it when an ontology changes; a test checks the JSON matches the files.</li>
+    <li>The file that gives an IRI an <code>rdf:type</code> "owns" it. When another ontology's triple uses that IRI as subject, predicate or object, it counts toward an arrow. Numbers count triples, not distinct things.</li>
+    <li>IEC CIM, GeoSPARQL, SKOS, OBO and Dublin Core terms are never owned by a file, even if a file declares them; they are counted separately as external standards. A file that carries part of the CIM class hierarchy (like the sample substation) does not create arrows because of it.</li>
+    <li>"Classes defined" counts only <code>owl:Class</code> in the ontology's own namespace. The feeder, digital twin and sample substation have no classes of their own and only use CIM classes, shown as "n CIM classes".</li>
+  </ul>
+  <div class="pager"><a href="studio.html"><span lang="ko">← 온톨로지 설계실</span><span lang="en">← Design Studio</span></a><a href="index.html"><span lang="ko">소개로 →</span><span lang="en">Back to the intro →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

@@ -44,6 +44,7 @@ NAV = [
     ]),
     ("menu", "studioMenu", "온톨로지 설계실", "Design Studio", [
         ("studio.html", "설계실 소개", "About the studio", "정답 없는 설계를 기록하는 곳", "Where design decisions are recorded"),
+        ("ontology-map.html", "온톨로지 지도", "Ontology map", "사이트의 온톨로지가 서로 어떻게 이어지나", "How the site's ontologies connect"),
         ("hr",),
         ("work.html", "업무 온톨로지", "Work Ontology", "가상의 AI추진부 업무 149개", "149 tasks of a fictional department"),
         ("asset.html", "전력설비 자산관리", "Power Asset Management", "가상 A변전소 설비 · 진단 · 위험도", "Virtual substation: assets, diagnoses, risk"),

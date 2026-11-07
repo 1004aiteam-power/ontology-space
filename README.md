@@ -29,6 +29,7 @@
 | [examples/cgmes/](examples/cgmes/) | CGMES 예제 데이터 (CIGRE MV, 출처 cimpy · Apache-2.0)와 변환 결과 |
 | [examples/mapping_table.csv](examples/mapping_table.csv) | 예제 변전소의 SCADA / EAM / GIS 코드 ↔ mRID 매핑 테이블 |
 | [shapes/](shapes/) | 형상검증 규칙(`cim-checks.cypher` · `highway-checks.cypher`, Neo4j Cypher)과 pycim 클래스 계층(`cim-classes.ttl`) |
+| [tools/build_ontology_map.mjs](tools/build_ontology_map.mjs) | 사이트 전체 온톨로지 지도 데이터(`assets/data/ontology-map.json`): Turtle 파일에서 온톨로지별 클래스·개체 수와 서로 가리키는 트리플(술어별 건수), 외부 표준 사용을 셈 (`ontology-map.html`) |
 | [tools/build_nav.py](tools/build_nav.py) | 모든 페이지의 위쪽 메뉴와 파비콘·링크 공유 미리보기(Open Graph) 태그를 한 곳에서 만듦 (메뉴를 바꿀 때 이 파일만 고치고 실행). [tools/thumbs.cjs](tools/thumbs.cjs): 소개 페이지 시뮬레이션 썸네일 생성 |
 | [tools/cypher.mjs](tools/cypher.mjs) · [pycim/cypher.py](pycim/cypher.py) | Neo4j 없이 Cypher 실행 (브라우저 실습과 같은 엔진): Turtle 불러오기 · 적재 스크립트 · 질의 · 형상검증. 빌드 스크립트와 테스트가 사용 |
 | [assets/physai/](assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터, NEAT 스네이크 (`neat-snake.html`) |
@@ -41,7 +42,7 @@
 | [examples/ecosystem/](examples/ecosystem/) | 단세포 생태계 온톨로지: 시뮬레이션 한 번의 세포 기록(분열·포식·죽음·피난처·계절) → OWL 스키마 `eco-ontology.ttl` + 개체 `eco-run-seed1.ttl` (`build_eco.mjs`, 브라우저와 같은 코드 `assets/eco/eco-graph.js`), 혈통·진화·피난처·계절 Cypher 질문 (`eco-ontology.html`, ⚠ 시뮬레이션 속 가상 생물) |
 | [examples/twin/](examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
 | [examples/feeder/](examples/feeder/) | A변전소 D/L #1 배전선로 상세: 구간 개폐기 6 · 연계 개폐기 4 · 분기점 3, pycim 모델 → CIM RDF · 웹 그림 데이터 · 모든 구간의 고장 복구(FLISR) 계획 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `eco-ontology.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 단세포 생태계), 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 단세포 생태계), 한·영 전환) |
 
 웹사이트: https://1004aiteam-power.github.io/ontology-space/
 
