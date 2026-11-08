@@ -57,6 +57,7 @@
 .om-band{fill:var(--muted);font-size:12px;font-weight:700;letter-spacing:.03em} .om-sep{stroke:var(--line);stroke-dasharray:2 4}
 .ways{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .ways .card h4{margin-top:0} .ways pre{margin:8px 0;font-size:12.5px;padding:10px 12px}
+#standards pre{white-space:pre-wrap;overflow-wrap:anywhere} #standards .meta code{overflow-wrap:anywhere} #standards .card>.meta:first-of-type{margin:2px 0 10px}
 </style>
 <script src="assets/ontology-map.js?v=20261107b" defer></script>
 </head>
@@ -185,6 +186,34 @@ ev:FD_RA01 cim:Feeder.NormalEnergizingSubstation tw:_6c61… .</code></pre>
   </ul>
 </section>
 
+<section id="standards">
+  <h2><span lang="ko">표준 용어 풀이</span><span lang="en">Standards in brief</span></h2>
+  <p lang="ko">지도와 Turtle 파일에 자주 나오는 표준 어휘 가운데 세 가지를 약자와 함께 풀었습니다. 모두 누구나 쓸 수 있는 공개 표준이라, 같은 IRI를 쓰면 다른 데이터와 같은 뜻으로 읽힙니다.</p>
+  <p lang="en">Three standard vocabularies that come up often on the map and in the Turtle files, with what their abbreviations stand for. All are open standards, so using the same IRIs means other data reads them the same way.</p>
+  <div class="ways">
+    <div class="card"><h4>Dublin Core <code>dct:</code></h4>
+      <p class="meta">Dublin Core Metadata Initiative (DCMI) · <code>http://purl.org/dc/terms/</code></p>
+      <p lang="ko">문서나 데이터에 "누가 · 언제 · 무엇을 출처로 만들었나" 같은 설명 정보(메타데이터)를 붙이는 국제 표준 어휘입니다. 1995년 미국 오하이오주 더블린에서 열린 회의에서 시작해 이름이 붙었고, 도서관과 공공데이터에서 널리 씁니다.</p>
+      <p lang="en">An international vocabulary for describing documents and data — who made it, when, from what source (metadata). It began at a 1995 workshop in Dublin, Ohio, hence the name, and is widely used by libraries and open-data portals.</p>
+<pre><code>&lt;…/ontology&gt; dct:created "2026-11-03"^^xsd:date .
+hwx:M01 dct:source &lt;https://docs.os.uk/…/roadlink.md&gt; .</code></pre>
+      <p class="meta"><span lang="ko">이 사이트: 업무 · 배전공사 안전(만든 날짜), 고속도로(표준 대응의 원문 출처)</span><span lang="en">Here: work and work safety (date created), roads (source of each standard mapping)</span></p></div>
+    <div class="card"><h4>OBO <code>obo:</code></h4>
+      <p class="meta">Open Biological and Biomedical Ontologies · <code>http://purl.obolibrary.org/obo/</code></p>
+      <p lang="ko">생물학 · 의학 분야의 공개 온톨로지 모음입니다. 그중 <b>관계 온톨로지(RO, Relation Ontology)</b>는 "먹는다", "잡아먹는다", "~에서 유래한다" 같은 생물 사이의 관계를 <code>RO_0002470</code>처럼 번호가 붙은 표준 ID로 정해 둡니다.</p>
+      <p lang="en">A collection of open ontologies for biology and medicine. Its <b>Relation Ontology (RO)</b> fixes relations between organisms — "eats", "preys on", "derives from" — as numbered standard IDs such as <code>RO_0002470</code>.</p>
+<pre><code>eco:eats rdfs:subPropertyOf obo:RO_0002470 .     # eats
+eco:preysOn rdfs:subPropertyOf obo:RO_0002439 .  # preys on</code></pre>
+      <p class="meta"><span lang="ko">이 사이트: 단세포 생태계 (관계 3개를 하위 속성으로)</span><span lang="en">Here: cell ecosystem (three relations as sub-properties)</span></p></div>
+    <div class="card"><h4>XSD <code>xsd:</code></h4>
+      <p class="meta">XML Schema Definition (W3C) · <code>http://www.w3.org/2001/XMLSchema#</code></p>
+      <p lang="ko">원래 XML 문서의 형식을 정하는 W3C 표준인데, 그 안의 <b>데이터 형식</b>(문자열 · 정수 · 소수 · 참/거짓 · 날짜 등)을 RDF와 OWL이 그대로 가져다 씁니다. 값 뒤에 <code>^^xsd:date</code>처럼 붙여 "이 글자는 날짜"라고 알려 주므로, 크기 비교나 날짜 계산을 바르게 할 수 있습니다.</p>
+      <p lang="en">Originally the W3C standard for the structure of XML documents; RDF and OWL reuse its <b>datatypes</b> (string, integer, decimal, boolean, date…). A suffix like <code>^^xsd:date</code> says "this text is a date", so values compare and calculate correctly.</p>
+<pre><code>pam:validFrom "2015-05-01"^^xsd:date .
+aipd:code a owl:DatatypeProperty ; rdfs:range xsd:string .</code></pre>
+      <p class="meta"><span lang="ko">이 사이트: 거의 모든 온톨로지 (값이 있는 곳마다). 어디서나 쓰는 기본 형식이라 지도에는 따로 그리지 않았습니다</span><span lang="en">Here: almost every ontology, wherever there is a value. It is so basic that the map does not draw it</span></p></div>
+  </div>
+</section>
 <section id="links">
   <h2><span lang="ko">연결 목록</span><span lang="en">All links</span></h2>
   <div class="tbl" id="omTable"></div>
