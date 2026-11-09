@@ -11,6 +11,7 @@
 | [docs/03-python-cim-design.md](docs/03-python-cim-design.md) | **프로젝트**: CIM을 파이썬 클래스로 설계 (`pycim`) |
 | [docs/04-physical-ai.md](docs/04-physical-ai.md) | Physical AI 개념·관련 기술과 NEAT 자율주행 시뮬레이션 |
 | [docs/05-digital-twin.md](docs/05-digital-twin.md) | 가상 대한민국 전력망 디지털 트윈 (⚠ 가상 데이터) |
+| [vpp.html](vpp.html) | VPP(가상발전소)·분산에너지 기본 개념: DER 종류, 예측 → 입찰 → 제어 → 정산, 관련 표준(IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP)과 국내외 제도, 기존 전력망·전기차 온톨로지와의 연결 |
 | [examples/work/](examples/work/) | 업무 온톨로지: 가상의 AI추진부 업무 149개를 분류한 엑셀 원본, OWL, Neo4j 스크립트 (⚠ 가상 부서) |
 | [examples/asset/](examples/asset/) | 전력설비 자산관리 온톨로지: 원본 CSV → `build_asset_ontology.py` → OWL · Neo4j · Cypher 검증(`neo4j/checks.cypher`) (⚠ 가상 데이터) |
 | [examples/asset/neo4j/checks.cypher](examples/asset/neo4j/checks.cypher) | 자산관리 형상검증 (Neo4j · Cypher): 빈 설비 자리, 설치 기간 겹침, EAM 번호 형식, 근거 없는 작업지시 등 8개 규칙 |

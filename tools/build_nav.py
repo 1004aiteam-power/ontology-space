@@ -26,6 +26,14 @@ NAV = [
         ("hr",),
         ("grid.html#flisr", "배전선로 고장 복구", "Feeder fault restoration", "D/L #1 구간 고장 → 분리 → 복구 (FLISR)", "D/L #1 fault → isolate → restore (FLISR)"),
     ]),
+    ("menu", "vppMenu", "VPP·분산에너지", "VPP · DER", [
+        ("vpp.html", "VPP 기본 개념", "VPP basics", "가상발전소란 · 운영 고리 · 기존 발전소와 비교", "What a VPP is · operating loop · vs. conventional plants"),
+        ("hr",),
+        ("vpp.html#der", "분산에너지자원(DER)", "Distributed energy resources", "태양광 · ESS · 전기차 · 수요반응", "Solar, storage, EVs, demand response"),
+        ("vpp.html#market", "예측 · 입찰 · 정산", "Forecast, bid, settle", "하루 전부터 실시간까지의 흐름", "From day-ahead to real time"),
+        ("vpp.html#standards", "통신 · 데이터 표준", "Standards", "IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP", "IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP"),
+        ("vpp.html#policy", "국내외 제도", "Rules in Korea and abroad", "소규모전력중개 · 분산에너지법 · FERC 2222", "Brokerage, Distributed Energy Act, FERC 2222"),
+    ]),
     ("menu", "physaiMenu", "피지컬 AI", "Physical AI", [
         ("physical-ai.html", "피지컬 AI 소개", "About Physical AI", "개념 · 관련 기술 · MuJoCo", "Concepts · key technologies · MuJoCo"),
         ("hr",),
