@@ -32,7 +32,7 @@ NAV = [
         ("vpp.html#der", "분산에너지자원(DER)", "Distributed energy resources", "태양광 · ESS · 전기차 · 수요반응", "Solar, storage, EVs, demand response"),
         ("vpp.html#market", "예측 · 입찰 · 정산", "Forecast, bid, settle", "하루 전부터 실시간까지의 흐름", "From day-ahead to real time"),
         ("vpp.html#standards", "통신 · 데이터 표준", "Standards", "IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP", "IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP"),
-        ("vpp.html#policy", "국내외 제도", "Rules in Korea and abroad", "소규모전력중개 · 분산에너지법 · FERC 2222", "Brokerage, Distributed Energy Act, FERC 2222"),
+        ("vpp.html#policy", "국내외 제도 (참고용)", "Rules in Korea and abroad (reference)", "소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음", "Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate"),
     ]),
     ("menu", "physaiMenu", "피지컬 AI", "Physical AI", [
         ("physical-ai.html", "피지컬 AI 소개", "About Physical AI", "개념 · 관련 기술 · MuJoCo", "Concepts · key technologies · MuJoCo"),
