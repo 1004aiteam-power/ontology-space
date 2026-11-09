@@ -486,6 +486,8 @@ export function runCypher(G, src, { maxRows = 100000, maxHops = 30, maxSteps = 3
       if (stop) return;
       if (i === patterns.length) { if (cb(b)) stop = true; return; }
       const p = patterns[i], el = p.el, N = (el.length + 1) / 2;
+      // 앞 절(OPTIONAL MATCH 실패 등)에서 null로 묶인 변수가 패턴에 있으면 매칭 없음 (Neo4j와 같음)
+      for (const x of el) if (x.v && x.v in b && b[x.v] == null) return;
       // 시작 노드: 이미 묶인 변수 → 라벨·속성이 있는 노드 → 첫 노드
       let s = -1;
       for (let j = 0; j < N; j++) { const v = el[2 * j].v; if (v && v in b && b[v] != null) { s = j; break; } }

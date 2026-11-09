@@ -1,0 +1,3763 @@
+# VPP 가상 전력시장 — 개체 데이터. 만든 곳: examples/vpp/build_vpp.mjs (원본: assets/vpp/vpp-graph.js)
+# VPP 10 · DER 81 · 배전선로 15 · 시장 시간대 24 · 입찰 168 · 정산 168 · 출력제한 지시 7. 스키마는 vpp-schema.ttl
+# 변전소(tw:)는 디지털 트윈(examples/twin/korea_virtual_grid.ttl)의 개체를 그대로 가리킵니다.
+# ⚠ 가상 데이터입니다. 회사 · 설비 · 배전선로 · 가격 · 정산 규칙은 개념 설명용이며 실제 제도와 다릅니다.
+@prefix vpp: <https://1004aiteam-power.github.io/ontology-space/vpp#> .
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix tw: <http://example.org/kr-twin#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+vpp:MarketOperator a vpp:MarketOperator ;
+    rdfs:label "가상 시장운영자"@ko ;
+    rdfs:label "Virtual market operator"@en .
+
+vpp:DSO a vpp:DistributionOperator ;
+    rdfs:label "가상 배전운영자 (DERMS)"@ko ;
+    rdfs:label "Virtual distribution operator (DERMS)"@en .
+
+vpp:DayAheadMarket a vpp:Market ;
+    rdfs:label "가상 하루 전 전력시장"@ko ;
+    rdfs:label "Virtual day-ahead market"@en ;
+    vpp:operatedBy vpp:MarketOperator ;
+    vpp:tolerancePct 8.0 .
+
+vpp:Hour00 a vpp:MarketInterval ;
+    vpp:hour 0 ;
+    vpp:smp 118.0 ;
+    rdfs:label "00:00–01:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour01 a vpp:MarketInterval ;
+    vpp:hour 1 ;
+    vpp:smp 115.0 ;
+    rdfs:label "01:00–02:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour02 a vpp:MarketInterval ;
+    vpp:hour 2 ;
+    vpp:smp 112.0 ;
+    rdfs:label "02:00–03:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour03 a vpp:MarketInterval ;
+    vpp:hour 3 ;
+    vpp:smp 110.0 ;
+    rdfs:label "03:00–04:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour04 a vpp:MarketInterval ;
+    vpp:hour 4 ;
+    vpp:smp 110.0 ;
+    rdfs:label "04:00–05:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour05 a vpp:MarketInterval ;
+    vpp:hour 5 ;
+    vpp:smp 113.0 ;
+    rdfs:label "05:00–06:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour06 a vpp:MarketInterval ;
+    vpp:hour 6 ;
+    vpp:smp 120.0 ;
+    rdfs:label "06:00–07:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour07 a vpp:MarketInterval ;
+    vpp:hour 7 ;
+    vpp:smp 128.0 ;
+    rdfs:label "07:00–08:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour08 a vpp:MarketInterval ;
+    vpp:hour 8 ;
+    vpp:smp 132.0 ;
+    rdfs:label "08:00–09:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour09 a vpp:MarketInterval ;
+    vpp:hour 9 ;
+    vpp:smp 126.0 ;
+    rdfs:label "09:00–10:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour10 a vpp:MarketInterval ;
+    vpp:hour 10 ;
+    vpp:smp 112.0 ;
+    rdfs:label "10:00–11:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour11 a vpp:MarketInterval ;
+    vpp:hour 11 ;
+    vpp:smp 98.0 ;
+    rdfs:label "11:00–12:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour12 a vpp:MarketInterval ;
+    vpp:hour 12 ;
+    vpp:smp 92.0 ;
+    rdfs:label "12:00–13:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour13 a vpp:MarketInterval ;
+    vpp:hour 13 ;
+    vpp:smp 90.0 ;
+    rdfs:label "13:00–14:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour14 a vpp:MarketInterval ;
+    vpp:hour 14 ;
+    vpp:smp 95.0 ;
+    rdfs:label "14:00–15:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour15 a vpp:MarketInterval ;
+    vpp:hour 15 ;
+    vpp:smp 108.0 ;
+    rdfs:label "15:00–16:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour16 a vpp:MarketInterval ;
+    vpp:hour 16 ;
+    vpp:smp 128.0 ;
+    rdfs:label "16:00–17:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour17 a vpp:MarketInterval ;
+    vpp:hour 17 ;
+    vpp:smp 150.0 ;
+    rdfs:label "17:00–18:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour18 a vpp:MarketInterval ;
+    vpp:hour 18 ;
+    vpp:smp 162.0 ;
+    rdfs:label "18:00–19:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour19 a vpp:MarketInterval ;
+    vpp:hour 19 ;
+    vpp:smp 158.0 ;
+    rdfs:label "19:00–20:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour20 a vpp:MarketInterval ;
+    vpp:hour 20 ;
+    vpp:smp 145.0 ;
+    rdfs:label "20:00–21:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour21 a vpp:MarketInterval ;
+    vpp:hour 21 ;
+    vpp:smp 135.0 ;
+    rdfs:label "21:00–22:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour22 a vpp:MarketInterval ;
+    vpp:hour 22 ;
+    vpp:smp 128.0 ;
+    rdfs:label "22:00–23:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:Hour23 a vpp:MarketInterval ;
+    vpp:hour 23 ;
+    vpp:smp 122.0 ;
+    rdfs:label "23:00–24:00" ;
+    vpp:inMarket vpp:DayAheadMarket .
+
+vpp:FD_GWANGJU_1 a cim:Feeder ;
+    cim:IdentifiedObject.name "광주 D/L 1 (가상)" ;
+    rdfs:label "광주 D/L 1"@ko ;
+    rdfs:label "Gwangju D/L 1"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_301b3101-17f2-581b-a211-1735dbfa2c62 ;
+    vpp:feederKind "urban" ;
+    vpp:peakLoadMW 7.5 ;
+    vpp:hostingCapacityMW 4.0 .
+
+vpp:FD_GWANGJU_2 a cim:Feeder ;
+    cim:IdentifiedObject.name "광주 D/L 2 (가상)" ;
+    rdfs:label "광주 D/L 2"@ko ;
+    rdfs:label "Gwangju D/L 2"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_301b3101-17f2-581b-a211-1735dbfa2c62 ;
+    vpp:feederKind "industrial" ;
+    vpp:peakLoadMW 6.0 ;
+    vpp:hostingCapacityMW 3.5 .
+
+vpp:FD_GWANGJU_3 a cim:Feeder ;
+    cim:IdentifiedObject.name "광주 D/L 3 (가상)" ;
+    rdfs:label "광주 D/L 3"@ko ;
+    rdfs:label "Gwangju D/L 3"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_301b3101-17f2-581b-a211-1735dbfa2c62 ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 2.4 ;
+    vpp:hostingCapacityMW 2.6 .
+
+vpp:FD_JEONJU_1 a cim:Feeder ;
+    cim:IdentifiedObject.name "전주 D/L 1 (가상)" ;
+    rdfs:label "전주 D/L 1"@ko ;
+    rdfs:label "Jeonju D/L 1"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_2dc2d0c5-8a46-5e72-89f3-98604795fe47 ;
+    vpp:feederKind "urban" ;
+    vpp:peakLoadMW 6.5 ;
+    vpp:hostingCapacityMW 3.5 .
+
+vpp:FD_JEONJU_2 a cim:Feeder ;
+    cim:IdentifiedObject.name "전주 D/L 2 (가상)" ;
+    rdfs:label "전주 D/L 2"@ko ;
+    rdfs:label "Jeonju D/L 2"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_2dc2d0c5-8a46-5e72-89f3-98604795fe47 ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 2.2 ;
+    vpp:hostingCapacityMW 1.8 .
+
+vpp:FD_JEONJU_3 a cim:Feeder ;
+    cim:IdentifiedObject.name "전주 D/L 3 (가상)" ;
+    rdfs:label "전주 D/L 3"@ko ;
+    rdfs:label "Jeonju D/L 3"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_2dc2d0c5-8a46-5e72-89f3-98604795fe47 ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 1.8 ;
+    vpp:hostingCapacityMW 1.5 .
+
+vpp:FD_MOKPO_1 a cim:Feeder ;
+    cim:IdentifiedObject.name "목포 D/L 1 (가상)" ;
+    rdfs:label "목포 D/L 1"@ko ;
+    rdfs:label "Mokpo D/L 1"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6baafe9b-ed3b-5d70-b9fa-c2f65a27836b ;
+    vpp:feederKind "urban" ;
+    vpp:peakLoadMW 5.0 ;
+    vpp:hostingCapacityMW 3.0 .
+
+vpp:FD_MOKPO_2 a cim:Feeder ;
+    cim:IdentifiedObject.name "목포 D/L 2 (가상)" ;
+    rdfs:label "목포 D/L 2"@ko ;
+    rdfs:label "Mokpo D/L 2"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6baafe9b-ed3b-5d70-b9fa-c2f65a27836b ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 1.6 ;
+    vpp:hostingCapacityMW 1.4 .
+
+vpp:FD_MOKPO_3 a cim:Feeder ;
+    cim:IdentifiedObject.name "목포 D/L 3 (가상)" ;
+    rdfs:label "목포 D/L 3"@ko ;
+    rdfs:label "Mokpo D/L 3"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6baafe9b-ed3b-5d70-b9fa-c2f65a27836b ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 1.4 ;
+    vpp:hostingCapacityMW 1.2 .
+
+vpp:FD_GUNSAN_1 a cim:Feeder ;
+    cim:IdentifiedObject.name "군산 D/L 1 (가상)" ;
+    rdfs:label "군산 D/L 1"@ko ;
+    rdfs:label "Gunsan D/L 1"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6cfe1260-c04a-5030-a232-ae1440440cec ;
+    vpp:feederKind "industrial" ;
+    vpp:peakLoadMW 7.0 ;
+    vpp:hostingCapacityMW 4.0 .
+
+vpp:FD_GUNSAN_2 a cim:Feeder ;
+    cim:IdentifiedObject.name "군산 D/L 2 (가상)" ;
+    rdfs:label "군산 D/L 2"@ko ;
+    rdfs:label "Gunsan D/L 2"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6cfe1260-c04a-5030-a232-ae1440440cec ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 1.5 ;
+    vpp:hostingCapacityMW 1.2 .
+
+vpp:FD_GUNSAN_3 a cim:Feeder ;
+    cim:IdentifiedObject.name "군산 D/L 3 (가상)" ;
+    rdfs:label "군산 D/L 3"@ko ;
+    rdfs:label "Gunsan D/L 3"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_6cfe1260-c04a-5030-a232-ae1440440cec ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 2.0 ;
+    vpp:hostingCapacityMW 1.6 .
+
+vpp:FD_SUNCHEON_1 a cim:Feeder ;
+    cim:IdentifiedObject.name "순천 D/L 1 (가상)" ;
+    rdfs:label "순천 D/L 1"@ko ;
+    rdfs:label "Suncheon D/L 1"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_3ff77a97-0654-5324-89d2-b4612d4bca03 ;
+    vpp:feederKind "urban" ;
+    vpp:peakLoadMW 5.5 ;
+    vpp:hostingCapacityMW 3.0 .
+
+vpp:FD_SUNCHEON_2 a cim:Feeder ;
+    cim:IdentifiedObject.name "순천 D/L 2 (가상)" ;
+    rdfs:label "순천 D/L 2"@ko ;
+    rdfs:label "Suncheon D/L 2"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_3ff77a97-0654-5324-89d2-b4612d4bca03 ;
+    vpp:feederKind "industrial" ;
+    vpp:peakLoadMW 6.5 ;
+    vpp:hostingCapacityMW 3.5 .
+
+vpp:FD_SUNCHEON_3 a cim:Feeder ;
+    cim:IdentifiedObject.name "순천 D/L 3 (가상)" ;
+    rdfs:label "순천 D/L 3"@ko ;
+    rdfs:label "Suncheon D/L 3"@en ;
+    cim:Feeder.NormalEnergizingSubstation tw:_3ff77a97-0654-5324-89d2-b4612d4bca03 ;
+    vpp:feederKind "rural" ;
+    vpp:peakLoadMW 1.8 ;
+    vpp:hostingCapacityMW 1.5 .
+
+vpp:AGG_01 a vpp:Aggregator ;
+    rdfs:label "햇살모아에너지"@ko ;
+    rdfs:label "Haetsal Energy"@en .
+
+vpp:VPP01 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP01" ;
+    rdfs:label "햇살모아 VPP"@ko ;
+    rdfs:label "Sunshine VPP"@en ;
+    vpp:strategy "태양광만 묶음 (가장 단순)"@ko ;
+    vpp:strategy "Solar only (simplest)"@en ;
+    vpp:operatedBy vpp:AGG_01 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_02 a vpp:Aggregator ;
+    rdfs:label "빛고을파워"@ko ;
+    rdfs:label "Bitgoeul Power"@en .
+
+vpp:VPP02 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP02" ;
+    rdfs:label "빛고을 VPP"@ko ;
+    rdfs:label "Bitgoeul VPP"@en ;
+    vpp:strategy "태양광 + ESS로 오차 보정"@ko ;
+    vpp:strategy "Solar + battery to correct errors"@en ;
+    vpp:operatedBy vpp:AGG_02 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_03 a vpp:Aggregator ;
+    rdfs:label "새만금그리드"@ko ;
+    rdfs:label "Saemangeum Grid"@en .
+
+vpp:VPP03 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP03" ;
+    rdfs:label "새만금 에너지"@ko ;
+    rdfs:label "Saemangeum Energy"@en ;
+    vpp:strategy "태양광 · 풍력 · ESS 혼합"@ko ;
+    vpp:strategy "Solar, wind and battery mix"@en ;
+    vpp:operatedBy vpp:AGG_03 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_04 a vpp:Aggregator ;
+    rdfs:label "다도해에너지"@ko ;
+    rdfs:label "Dadohae Energy"@en .
+
+vpp:VPP04 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP04" ;
+    rdfs:label "다도해 바람"@ko ;
+    rdfs:label "Dadohae Wind"@en ;
+    vpp:strategy "풍력 중심 (밤에도 발전)"@ko ;
+    vpp:strategy "Wind-led (generates at night too)"@en ;
+    vpp:operatedBy vpp:AGG_04 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_05 a vpp:Aggregator ;
+    rdfs:label "충전나눔모빌리티"@ko ;
+    rdfs:label "ChargeShare Mobility"@en .
+
+vpp:VPP05 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP05" ;
+    rdfs:label "충전나눔 VPP"@ko ;
+    rdfs:label "ChargeShare VPP"@en ;
+    vpp:strategy "전기차 충전 미루기 (저녁 피크)"@ko ;
+    vpp:strategy "Deferring EV charging (evening peak)"@en ;
+    vpp:operatedBy vpp:AGG_05 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_06 a vpp:Aggregator ;
+    rdfs:label "산단수요관리"@ko ;
+    rdfs:label "Industrial DR Co."@en .
+
+vpp:VPP06 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP06" ;
+    rdfs:label "공장절전 VPP"@ko ;
+    rdfs:label "FactoryFlex VPP"@en ;
+    vpp:strategy "공장 수요반응 (오후 피크 감축)"@ko ;
+    vpp:strategy "Factory demand response (afternoon peak)"@en ;
+    vpp:operatedBy vpp:AGG_06 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_07 a vpp:Aggregator ;
+    rdfs:label "마을에너지협동조합"@ko ;
+    rdfs:label "Village Energy Co-op"@en .
+
+vpp:VPP07 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP07" ;
+    rdfs:label "마을발전소"@ko ;
+    rdfs:label "Village Power"@en ;
+    vpp:strategy "농촌 지붕 태양광 + 작은 ESS"@ko ;
+    vpp:strategy "Rural rooftop solar + small battery"@en ;
+    vpp:operatedBy vpp:AGG_07 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_08 a vpp:Aggregator ;
+    rdfs:label "그린캠퍼스에너지"@ko ;
+    rdfs:label "Green Campus Energy"@en .
+
+vpp:VPP08 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP08" ;
+    rdfs:label "그린캠퍼스"@ko ;
+    rdfs:label "Green Campus"@en ;
+    vpp:strategy "대학 · 공공건물 태양광 + 냉방 수요반응"@ko ;
+    vpp:strategy "Campus solar + cooling demand response"@en ;
+    vpp:operatedBy vpp:AGG_08 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_09 a vpp:Aggregator ;
+    rdfs:label "남도스마트그리드"@ko ;
+    rdfs:label "Namdo Smart Grid"@en .
+
+vpp:VPP09 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP09" ;
+    rdfs:label "남도스마트"@ko ;
+    rdfs:label "Namdo Smart"@en ;
+    vpp:strategy "다섯 종류 모두 (분산 투자)"@ko ;
+    vpp:strategy "All five kinds (diversified)"@en ;
+    vpp:operatedBy vpp:AGG_09 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:AGG_10 a vpp:Aggregator ;
+    rdfs:label "한빛저장"@ko ;
+    rdfs:label "Hanbit Storage"@en .
+
+vpp:VPP10 a vpp:VirtualPowerPlant ;
+    vpp:vppId "VPP10" ;
+    rdfs:label "한빛배터리"@ko ;
+    rdfs:label "Hanbit Battery"@en ;
+    vpp:strategy "ESS 중심 (한낮에 사서 저녁에 판다)"@ko ;
+    vpp:strategy "Battery-led (buy at noon, sell in the evening)"@en ;
+    vpp:operatedBy vpp:AGG_10 ;
+    vpp:participatesIn vpp:DayAheadMarket .
+
+vpp:PV_001 a vpp:PVSystem ;
+    vpp:derId "PV_001" ;
+    rdfs:label "전주 D/L 2 축사 지붕 태양광 750kW"@ko ;
+    rdfs:label "Jeonju D/L 2 barn rooftop solar 750 kW"@en ;
+    vpp:ownerType "축사 지붕"@ko ;
+    vpp:ownerType "barn rooftop"@en ;
+    vpp:capacityKW 750.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_2 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_001 .
+
+vpp:PV_002 a vpp:PVSystem ;
+    vpp:derId "PV_002" ;
+    rdfs:label "광주 D/L 3 창고 지붕 태양광 780kW"@ko ;
+    rdfs:label "Gwangju D/L 3 warehouse roof solar 780 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 780.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_002 .
+
+vpp:PV_003 a vpp:PVSystem ;
+    vpp:derId "PV_003" ;
+    rdfs:label "광주 D/L 1 주차장 태양광 960kW"@ko ;
+    rdfs:label "Gwangju D/L 1 car park solar 960 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 960.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_1 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_003 .
+
+vpp:PV_004 a vpp:PVSystem ;
+    vpp:derId "PV_004" ;
+    rdfs:label "광주 D/L 3 주차장 태양광 400kW"@ko ;
+    rdfs:label "Gwangju D/L 3 car park solar 400 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 400.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_004 .
+
+vpp:PV_005 a vpp:PVSystem ;
+    vpp:derId "PV_005" ;
+    rdfs:label "광주 D/L 2 가정 지붕 태양광 180kW"@ko ;
+    rdfs:label "Gwangju D/L 2 home rooftop solar 180 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 180.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_2 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_005 .
+
+vpp:PV_006 a vpp:PVSystem ;
+    vpp:derId "PV_006" ;
+    rdfs:label "광주 D/L 3 학교 옥상 태양광 780kW"@ko ;
+    rdfs:label "Gwangju D/L 3 school roof solar 780 kW"@en ;
+    vpp:ownerType "학교 옥상"@ko ;
+    vpp:ownerType "school roof"@en ;
+    vpp:capacityKW 780.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_006 .
+
+vpp:PV_007 a vpp:PVSystem ;
+    vpp:derId "PV_007" ;
+    rdfs:label "광주 D/L 3 축사 지붕 태양광 300kW"@ko ;
+    rdfs:label "Gwangju D/L 3 barn rooftop solar 300 kW"@en ;
+    vpp:ownerType "축사 지붕"@ko ;
+    vpp:ownerType "barn rooftop"@en ;
+    vpp:capacityKW 300.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_007 .
+
+vpp:PV_008 a vpp:PVSystem ;
+    vpp:derId "PV_008" ;
+    rdfs:label "광주 D/L 3 주차장 태양광 920kW"@ko ;
+    rdfs:label "Gwangju D/L 3 car park solar 920 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 920.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_008 .
+
+vpp:PV_009 a vpp:PVSystem ;
+    vpp:derId "PV_009" ;
+    rdfs:label "전주 D/L 2 창고 지붕 태양광 800kW"@ko ;
+    rdfs:label "Jeonju D/L 2 warehouse roof solar 800 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 800.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_2 .
+
+vpp:VPP01 vpp:aggregates vpp:PV_009 .
+
+vpp:PV_010 a vpp:PVSystem ;
+    vpp:derId "PV_010" ;
+    rdfs:label "광주 D/L 2 주차장 태양광 490kW"@ko ;
+    rdfs:label "Gwangju D/L 2 car park solar 490 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 490.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_2 .
+
+vpp:VPP02 vpp:aggregates vpp:PV_010 .
+
+vpp:PV_011 a vpp:PVSystem ;
+    vpp:derId "PV_011" ;
+    rdfs:label "광주 D/L 3 창고 지붕 태양광 570kW"@ko ;
+    rdfs:label "Gwangju D/L 3 warehouse roof solar 570 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 570.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP02 vpp:aggregates vpp:PV_011 .
+
+vpp:PV_012 a vpp:PVSystem ;
+    vpp:derId "PV_012" ;
+    rdfs:label "광주 D/L 3 축사 지붕 태양광 870kW"@ko ;
+    rdfs:label "Gwangju D/L 3 barn rooftop solar 870 kW"@en ;
+    vpp:ownerType "축사 지붕"@ko ;
+    vpp:ownerType "barn rooftop"@en ;
+    vpp:capacityKW 870.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP02 vpp:aggregates vpp:PV_012 .
+
+vpp:PV_013 a vpp:PVSystem ;
+    vpp:derId "PV_013" ;
+    rdfs:label "광주 D/L 3 가정 지붕 태양광 620kW"@ko ;
+    rdfs:label "Gwangju D/L 3 home rooftop solar 620 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 620.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP02 vpp:aggregates vpp:PV_013 .
+
+vpp:PV_014 a vpp:PVSystem ;
+    vpp:derId "PV_014" ;
+    rdfs:label "광주 D/L 2 가정 지붕 태양광 880kW"@ko ;
+    rdfs:label "Gwangju D/L 2 home rooftop solar 880 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 880.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_2 .
+
+vpp:VPP02 vpp:aggregates vpp:PV_014 .
+
+vpp:PV_015 a vpp:PVSystem ;
+    vpp:derId "PV_015" ;
+    rdfs:label "광주 D/L 3 가정 지붕 태양광 840kW"@ko ;
+    rdfs:label "Gwangju D/L 3 home rooftop solar 840 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 840.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_3 .
+
+vpp:VPP02 vpp:aggregates vpp:PV_015 .
+
+vpp:ESS_001 a vpp:BatterySystem ;
+    vpp:derId "ESS_001" ;
+    rdfs:label "광주 D/L 2 태양광 연계 ESS 500kW"@ko ;
+    rdfs:label "Gwangju D/L 2 solar-paired battery 500 kW"@en ;
+    vpp:ownerType "태양광 연계 ESS"@ko ;
+    vpp:ownerType "solar-paired battery"@en ;
+    vpp:capacityKW 500.0 ;
+    vpp:energyKWh 2000.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_2 .
+
+vpp:VPP02 vpp:aggregates vpp:ESS_001 .
+
+vpp:ESS_002 a vpp:BatterySystem ;
+    vpp:derId "ESS_002" ;
+    rdfs:label "광주 D/L 1 태양광 연계 ESS 400kW"@ko ;
+    rdfs:label "Gwangju D/L 1 solar-paired battery 400 kW"@en ;
+    vpp:ownerType "태양광 연계 ESS"@ko ;
+    vpp:ownerType "solar-paired battery"@en ;
+    vpp:capacityKW 400.0 ;
+    vpp:energyKWh 800.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_1 .
+
+vpp:VPP02 vpp:aggregates vpp:ESS_002 .
+
+vpp:PV_016 a vpp:PVSystem ;
+    vpp:derId "PV_016" ;
+    rdfs:label "전주 D/L 3 축사 지붕 태양광 230kW"@ko ;
+    rdfs:label "Jeonju D/L 3 barn rooftop solar 230 kW"@en ;
+    vpp:ownerType "축사 지붕"@ko ;
+    vpp:ownerType "barn rooftop"@en ;
+    vpp:capacityKW 230.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_3 .
+
+vpp:VPP03 vpp:aggregates vpp:PV_016 .
+
+vpp:PV_017 a vpp:PVSystem ;
+    vpp:derId "PV_017" ;
+    rdfs:label "군산 D/L 3 영농형 태양광 420kW"@ko ;
+    rdfs:label "Gunsan D/L 3 agrivoltaic solar 420 kW"@en ;
+    vpp:ownerType "영농형"@ko ;
+    vpp:ownerType "agrivoltaic"@en ;
+    vpp:capacityKW 420.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_3 .
+
+vpp:VPP03 vpp:aggregates vpp:PV_017 .
+
+vpp:PV_018 a vpp:PVSystem ;
+    vpp:derId "PV_018" ;
+    rdfs:label "전주 D/L 1 영농형 태양광 570kW"@ko ;
+    rdfs:label "Jeonju D/L 1 agrivoltaic solar 570 kW"@en ;
+    vpp:ownerType "영농형"@ko ;
+    vpp:ownerType "agrivoltaic"@en ;
+    vpp:capacityKW 570.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_1 .
+
+vpp:VPP03 vpp:aggregates vpp:PV_018 .
+
+vpp:PV_019 a vpp:PVSystem ;
+    vpp:derId "PV_019" ;
+    rdfs:label "군산 D/L 3 가정 지붕 태양광 790kW"@ko ;
+    rdfs:label "Gunsan D/L 3 home rooftop solar 790 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 790.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_3 .
+
+vpp:VPP03 vpp:aggregates vpp:PV_019 .
+
+vpp:PV_020 a vpp:PVSystem ;
+    vpp:derId "PV_020" ;
+    rdfs:label "전주 D/L 2 가정 지붕 태양광 850kW"@ko ;
+    rdfs:label "Jeonju D/L 2 home rooftop solar 850 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 850.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_2 .
+
+vpp:VPP03 vpp:aggregates vpp:PV_020 .
+
+vpp:PV_021 a vpp:PVSystem ;
+    vpp:derId "PV_021" ;
+    rdfs:label "군산 D/L 3 주차장 태양광 350kW"@ko ;
+    rdfs:label "Gunsan D/L 3 car park solar 350 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 350.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_3 .
+
+vpp:VPP03 vpp:aggregates vpp:PV_021 .
+
+vpp:WT_001 a vpp:WindSystem ;
+    vpp:derId "WT_001" ;
+    rdfs:label "군산 D/L 2 해안 풍력 750kW"@ko ;
+    rdfs:label "Gunsan D/L 2 coastal wind 750 kW"@en ;
+    vpp:ownerType "해안 풍력"@ko ;
+    vpp:ownerType "coastal wind"@en ;
+    vpp:capacityKW 750.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_2 .
+
+vpp:VPP03 vpp:aggregates vpp:WT_001 .
+
+vpp:WT_002 a vpp:WindSystem ;
+    vpp:derId "WT_002" ;
+    rdfs:label "전주 D/L 2 해안 풍력 800kW"@ko ;
+    rdfs:label "Jeonju D/L 2 coastal wind 800 kW"@en ;
+    vpp:ownerType "해안 풍력"@ko ;
+    vpp:ownerType "coastal wind"@en ;
+    vpp:capacityKW 800.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_2 .
+
+vpp:VPP03 vpp:aggregates vpp:WT_002 .
+
+vpp:ESS_003 a vpp:BatterySystem ;
+    vpp:derId "ESS_003" ;
+    rdfs:label "군산 D/L 2 상가 ESS 300kW"@ko ;
+    rdfs:label "Gunsan D/L 2 commercial battery 300 kW"@en ;
+    vpp:ownerType "상가 ESS"@ko ;
+    vpp:ownerType "commercial battery"@en ;
+    vpp:capacityKW 300.0 ;
+    vpp:energyKWh 1200.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_2 .
+
+vpp:VPP03 vpp:aggregates vpp:ESS_003 .
+
+vpp:WT_003 a vpp:WindSystem ;
+    vpp:derId "WT_003" ;
+    rdfs:label "목포 D/L 3 해안 풍력 600kW"@ko ;
+    rdfs:label "Mokpo D/L 3 coastal wind 600 kW"@en ;
+    vpp:ownerType "해안 풍력"@ko ;
+    vpp:ownerType "coastal wind"@en ;
+    vpp:capacityKW 600.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_3 .
+
+vpp:VPP04 vpp:aggregates vpp:WT_003 .
+
+vpp:WT_004 a vpp:WindSystem ;
+    vpp:derId "WT_004" ;
+    rdfs:label "목포 D/L 1 해안 풍력 850kW"@ko ;
+    rdfs:label "Mokpo D/L 1 coastal wind 850 kW"@en ;
+    vpp:ownerType "해안 풍력"@ko ;
+    vpp:ownerType "coastal wind"@en ;
+    vpp:capacityKW 850.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_1 .
+
+vpp:VPP04 vpp:aggregates vpp:WT_004 .
+
+vpp:WT_005 a vpp:WindSystem ;
+    vpp:derId "WT_005" ;
+    rdfs:label "목포 D/L 2 해안 풍력 750kW"@ko ;
+    rdfs:label "Mokpo D/L 2 coastal wind 750 kW"@en ;
+    vpp:ownerType "해안 풍력"@ko ;
+    vpp:ownerType "coastal wind"@en ;
+    vpp:capacityKW 750.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_2 .
+
+vpp:VPP04 vpp:aggregates vpp:WT_005 .
+
+vpp:WT_006 a vpp:WindSystem ;
+    vpp:derId "WT_006" ;
+    rdfs:label "목포 D/L 1 해안 풍력 850kW"@ko ;
+    rdfs:label "Mokpo D/L 1 coastal wind 850 kW"@en ;
+    vpp:ownerType "해안 풍력"@ko ;
+    vpp:ownerType "coastal wind"@en ;
+    vpp:capacityKW 850.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_1 .
+
+vpp:VPP04 vpp:aggregates vpp:WT_006 .
+
+vpp:PV_022 a vpp:PVSystem ;
+    vpp:derId "PV_022" ;
+    rdfs:label "목포 D/L 1 주차장 태양광 790kW"@ko ;
+    rdfs:label "Mokpo D/L 1 car park solar 790 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 790.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_1 .
+
+vpp:VPP04 vpp:aggregates vpp:PV_022 .
+
+vpp:PV_023 a vpp:PVSystem ;
+    vpp:derId "PV_023" ;
+    rdfs:label "목포 D/L 2 창고 지붕 태양광 100kW"@ko ;
+    rdfs:label "Mokpo D/L 2 warehouse roof solar 100 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 100.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_2 .
+
+vpp:VPP04 vpp:aggregates vpp:PV_023 .
+
+vpp:PV_024 a vpp:PVSystem ;
+    vpp:derId "PV_024" ;
+    rdfs:label "목포 D/L 2 축사 지붕 태양광 250kW"@ko ;
+    rdfs:label "Mokpo D/L 2 barn rooftop solar 250 kW"@en ;
+    vpp:ownerType "축사 지붕"@ko ;
+    vpp:ownerType "barn rooftop"@en ;
+    vpp:capacityKW 250.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_2 .
+
+vpp:VPP04 vpp:aggregates vpp:PV_024 .
+
+vpp:PV_025 a vpp:PVSystem ;
+    vpp:derId "PV_025" ;
+    rdfs:label "목포 D/L 2 학교 옥상 태양광 440kW"@ko ;
+    rdfs:label "Mokpo D/L 2 school roof solar 440 kW"@en ;
+    vpp:ownerType "학교 옥상"@ko ;
+    vpp:ownerType "school roof"@en ;
+    vpp:capacityKW 440.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_2 .
+
+vpp:VPP04 vpp:aggregates vpp:PV_025 .
+
+vpp:EV_001 a vpp:EVChargingSite ;
+    vpp:derId "EV_001" ;
+    rdfs:label "순천 D/L 1 공영주차장 충전소 650kW"@ko ;
+    rdfs:label "Suncheon D/L 1 public car park chargers 650 kW"@en ;
+    vpp:ownerType "공영주차장 충전소"@ko ;
+    vpp:ownerType "public car park chargers"@en ;
+    vpp:capacityKW 650.0 ;
+    vpp:flexibleKW 440.0 ;
+    vpp:chargerCount 13 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_1 .
+
+vpp:VPP05 vpp:aggregates vpp:EV_001 .
+
+vpp:EV_002 a vpp:EVChargingSite ;
+    vpp:derId "EV_002" ;
+    rdfs:label "광주 D/L 1 마트 충전소 550kW"@ko ;
+    rdfs:label "Gwangju D/L 1 supermarket chargers 550 kW"@en ;
+    vpp:ownerType "마트 충전소"@ko ;
+    vpp:ownerType "supermarket chargers"@en ;
+    vpp:capacityKW 550.0 ;
+    vpp:flexibleKW 250.0 ;
+    vpp:chargerCount 11 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_1 .
+
+vpp:VPP05 vpp:aggregates vpp:EV_002 .
+
+vpp:EV_003 a vpp:EVChargingSite ;
+    vpp:derId "EV_003" ;
+    rdfs:label "순천 D/L 2 마트 충전소 650kW"@ko ;
+    rdfs:label "Suncheon D/L 2 supermarket chargers 650 kW"@en ;
+    vpp:ownerType "마트 충전소"@ko ;
+    vpp:ownerType "supermarket chargers"@en ;
+    vpp:capacityKW 650.0 ;
+    vpp:flexibleKW 330.0 ;
+    vpp:chargerCount 13 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_2 .
+
+vpp:VPP05 vpp:aggregates vpp:EV_003 .
+
+vpp:EV_004 a vpp:EVChargingSite ;
+    vpp:derId "EV_004" ;
+    rdfs:label "전주 D/L 1 마트 충전소 550kW"@ko ;
+    rdfs:label "Jeonju D/L 1 supermarket chargers 550 kW"@en ;
+    vpp:ownerType "마트 충전소"@ko ;
+    vpp:ownerType "supermarket chargers"@en ;
+    vpp:capacityKW 550.0 ;
+    vpp:flexibleKW 370.0 ;
+    vpp:chargerCount 11 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_1 .
+
+vpp:VPP05 vpp:aggregates vpp:EV_004 .
+
+vpp:EV_005 a vpp:EVChargingSite ;
+    vpp:derId "EV_005" ;
+    rdfs:label "전주 D/L 3 공영주차장 충전소 300kW"@ko ;
+    rdfs:label "Jeonju D/L 3 public car park chargers 300 kW"@en ;
+    vpp:ownerType "공영주차장 충전소"@ko ;
+    vpp:ownerType "public car park chargers"@en ;
+    vpp:capacityKW 300.0 ;
+    vpp:flexibleKW 150.0 ;
+    vpp:chargerCount 6 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_3 .
+
+vpp:VPP05 vpp:aggregates vpp:EV_005 .
+
+vpp:EV_006 a vpp:EVChargingSite ;
+    vpp:derId "EV_006" ;
+    rdfs:label "순천 D/L 1 마트 충전소 600kW"@ko ;
+    rdfs:label "Suncheon D/L 1 supermarket chargers 600 kW"@en ;
+    vpp:ownerType "마트 충전소"@ko ;
+    vpp:ownerType "supermarket chargers"@en ;
+    vpp:capacityKW 600.0 ;
+    vpp:flexibleKW 370.0 ;
+    vpp:chargerCount 12 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_1 .
+
+vpp:VPP05 vpp:aggregates vpp:EV_006 .
+
+vpp:PV_026 a vpp:PVSystem ;
+    vpp:derId "PV_026" ;
+    rdfs:label "순천 D/L 3 창고 지붕 태양광 420kW"@ko ;
+    rdfs:label "Suncheon D/L 3 warehouse roof solar 420 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 420.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_3 .
+
+vpp:VPP05 vpp:aggregates vpp:PV_026 .
+
+vpp:PV_027 a vpp:PVSystem ;
+    vpp:derId "PV_027" ;
+    rdfs:label "순천 D/L 1 가정 지붕 태양광 630kW"@ko ;
+    rdfs:label "Suncheon D/L 1 home rooftop solar 630 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 630.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_1 .
+
+vpp:VPP05 vpp:aggregates vpp:PV_027 .
+
+vpp:DR_001 a vpp:DemandResponseResource ;
+    vpp:derId "DR_001" ;
+    rdfs:label "순천 D/L 2 주물 공장 수요반응 720kW"@ko ;
+    rdfs:label "Suncheon D/L 2 foundry demand response 720 kW"@en ;
+    vpp:ownerType "주물 공장"@ko ;
+    vpp:ownerType "foundry"@en ;
+    vpp:capacityKW 720.0 ;
+    vpp:flexibleKW 390.0 ;
+    vpp:maxDurationH 2 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_2 .
+
+vpp:VPP06 vpp:aggregates vpp:DR_001 .
+
+vpp:DR_002 a vpp:DemandResponseResource ;
+    vpp:derId "DR_002" ;
+    rdfs:label "군산 D/L 1 주물 공장 수요반응 820kW"@ko ;
+    rdfs:label "Gunsan D/L 1 foundry demand response 820 kW"@en ;
+    vpp:ownerType "주물 공장"@ko ;
+    vpp:ownerType "foundry"@en ;
+    vpp:capacityKW 820.0 ;
+    vpp:flexibleKW 350.0 ;
+    vpp:maxDurationH 3 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_1 .
+
+vpp:VPP06 vpp:aggregates vpp:DR_002 .
+
+vpp:DR_003 a vpp:DemandResponseResource ;
+    vpp:derId "DR_003" ;
+    rdfs:label "군산 D/L 2 냉동 창고 수요반응 1090kW"@ko ;
+    rdfs:label "Gunsan D/L 2 cold storage demand response 1090 kW"@en ;
+    vpp:ownerType "냉동 창고"@ko ;
+    vpp:ownerType "cold storage"@en ;
+    vpp:capacityKW 1090.0 ;
+    vpp:flexibleKW 580.0 ;
+    vpp:maxDurationH 4 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_2 .
+
+vpp:VPP06 vpp:aggregates vpp:DR_003 .
+
+vpp:DR_004 a vpp:DemandResponseResource ;
+    vpp:derId "DR_004" ;
+    rdfs:label "군산 D/L 1 냉동 창고 수요반응 1190kW"@ko ;
+    rdfs:label "Gunsan D/L 1 cold storage demand response 1190 kW"@en ;
+    vpp:ownerType "냉동 창고"@ko ;
+    vpp:ownerType "cold storage"@en ;
+    vpp:capacityKW 1190.0 ;
+    vpp:flexibleKW 430.0 ;
+    vpp:maxDurationH 4 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_1 .
+
+vpp:VPP06 vpp:aggregates vpp:DR_004 .
+
+vpp:DR_005 a vpp:DemandResponseResource ;
+    vpp:derId "DR_005" ;
+    rdfs:label "군산 D/L 1 정수장 수요반응 670kW"@ko ;
+    rdfs:label "Gunsan D/L 1 water works demand response 670 kW"@en ;
+    vpp:ownerType "정수장"@ko ;
+    vpp:ownerType "water works"@en ;
+    vpp:capacityKW 670.0 ;
+    vpp:flexibleKW 400.0 ;
+    vpp:maxDurationH 4 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_1 .
+
+vpp:VPP06 vpp:aggregates vpp:DR_005 .
+
+vpp:DR_006 a vpp:DemandResponseResource ;
+    vpp:derId "DR_006" ;
+    rdfs:label "광주 D/L 2 냉동 창고 수요반응 900kW"@ko ;
+    rdfs:label "Gwangju D/L 2 cold storage demand response 900 kW"@en ;
+    vpp:ownerType "냉동 창고"@ko ;
+    vpp:ownerType "cold storage"@en ;
+    vpp:capacityKW 900.0 ;
+    vpp:flexibleKW 470.0 ;
+    vpp:maxDurationH 2 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_2 .
+
+vpp:VPP06 vpp:aggregates vpp:DR_006 .
+
+vpp:DR_007 a vpp:DemandResponseResource ;
+    vpp:derId "DR_007" ;
+    rdfs:label "순천 D/L 2 주물 공장 수요반응 510kW"@ko ;
+    rdfs:label "Suncheon D/L 2 foundry demand response 510 kW"@en ;
+    vpp:ownerType "주물 공장"@ko ;
+    vpp:ownerType "foundry"@en ;
+    vpp:capacityKW 510.0 ;
+    vpp:flexibleKW 300.0 ;
+    vpp:maxDurationH 2 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_2 .
+
+vpp:VPP06 vpp:aggregates vpp:DR_007 .
+
+vpp:PV_028 a vpp:PVSystem ;
+    vpp:derId "PV_028" ;
+    rdfs:label "목포 D/L 3 축사 지붕 태양광 290kW"@ko ;
+    rdfs:label "Mokpo D/L 3 barn rooftop solar 290 kW"@en ;
+    vpp:ownerType "축사 지붕"@ko ;
+    vpp:ownerType "barn rooftop"@en ;
+    vpp:capacityKW 290.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_3 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_028 .
+
+vpp:PV_029 a vpp:PVSystem ;
+    vpp:derId "PV_029" ;
+    rdfs:label "목포 D/L 3 주차장 태양광 640kW"@ko ;
+    rdfs:label "Mokpo D/L 3 car park solar 640 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 640.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_3 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_029 .
+
+vpp:PV_030 a vpp:PVSystem ;
+    vpp:derId "PV_030" ;
+    rdfs:label "전주 D/L 3 가정 지붕 태양광 530kW"@ko ;
+    rdfs:label "Jeonju D/L 3 home rooftop solar 530 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 530.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_3 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_030 .
+
+vpp:PV_031 a vpp:PVSystem ;
+    vpp:derId "PV_031" ;
+    rdfs:label "전주 D/L 3 주차장 태양광 940kW"@ko ;
+    rdfs:label "Jeonju D/L 3 car park solar 940 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 940.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_3 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_031 .
+
+vpp:PV_032 a vpp:PVSystem ;
+    vpp:derId "PV_032" ;
+    rdfs:label "전주 D/L 2 주차장 태양광 440kW"@ko ;
+    rdfs:label "Jeonju D/L 2 car park solar 440 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 440.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_2 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_032 .
+
+vpp:PV_033 a vpp:PVSystem ;
+    vpp:derId "PV_033" ;
+    rdfs:label "전주 D/L 3 가정 지붕 태양광 340kW"@ko ;
+    rdfs:label "Jeonju D/L 3 home rooftop solar 340 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 340.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_3 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_033 .
+
+vpp:PV_034 a vpp:PVSystem ;
+    vpp:derId "PV_034" ;
+    rdfs:label "전주 D/L 3 창고 지붕 태양광 290kW"@ko ;
+    rdfs:label "Jeonju D/L 3 warehouse roof solar 290 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 290.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_3 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_034 .
+
+vpp:PV_035 a vpp:PVSystem ;
+    vpp:derId "PV_035" ;
+    rdfs:label "목포 D/L 3 주차장 태양광 350kW"@ko ;
+    rdfs:label "Mokpo D/L 3 car park solar 350 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 350.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_3 .
+
+vpp:VPP07 vpp:aggregates vpp:PV_035 .
+
+vpp:ESS_004 a vpp:BatterySystem ;
+    vpp:derId "ESS_004" ;
+    rdfs:label "목포 D/L 2 상가 ESS 800kW"@ko ;
+    rdfs:label "Mokpo D/L 2 commercial battery 800 kW"@en ;
+    vpp:ownerType "상가 ESS"@ko ;
+    vpp:ownerType "commercial battery"@en ;
+    vpp:capacityKW 800.0 ;
+    vpp:energyKWh 2400.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_2 .
+
+vpp:VPP07 vpp:aggregates vpp:ESS_004 .
+
+vpp:PV_036 a vpp:PVSystem ;
+    vpp:derId "PV_036" ;
+    rdfs:label "순천 D/L 3 주차장 태양광 670kW"@ko ;
+    rdfs:label "Suncheon D/L 3 car park solar 670 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 670.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_3 .
+
+vpp:VPP08 vpp:aggregates vpp:PV_036 .
+
+vpp:PV_037 a vpp:PVSystem ;
+    vpp:derId "PV_037" ;
+    rdfs:label "광주 D/L 1 주차장 태양광 320kW"@ko ;
+    rdfs:label "Gwangju D/L 1 car park solar 320 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 320.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_1 .
+
+vpp:VPP08 vpp:aggregates vpp:PV_037 .
+
+vpp:PV_038 a vpp:PVSystem ;
+    vpp:derId "PV_038" ;
+    rdfs:label "순천 D/L 3 창고 지붕 태양광 130kW"@ko ;
+    rdfs:label "Suncheon D/L 3 warehouse roof solar 130 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 130.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_3 .
+
+vpp:VPP08 vpp:aggregates vpp:PV_038 .
+
+vpp:PV_039 a vpp:PVSystem ;
+    vpp:derId "PV_039" ;
+    rdfs:label "순천 D/L 1 주차장 태양광 980kW"@ko ;
+    rdfs:label "Suncheon D/L 1 car park solar 980 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 980.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_1 .
+
+vpp:VPP08 vpp:aggregates vpp:PV_039 .
+
+vpp:DR_008 a vpp:DemandResponseResource ;
+    vpp:derId "DR_008" ;
+    rdfs:label "순천 D/L 3 냉동 창고 수요반응 380kW"@ko ;
+    rdfs:label "Suncheon D/L 3 cold storage demand response 380 kW"@en ;
+    vpp:ownerType "냉동 창고"@ko ;
+    vpp:ownerType "cold storage"@en ;
+    vpp:capacityKW 380.0 ;
+    vpp:flexibleKW 220.0 ;
+    vpp:maxDurationH 4 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_3 .
+
+vpp:VPP08 vpp:aggregates vpp:DR_008 .
+
+vpp:DR_009 a vpp:DemandResponseResource ;
+    vpp:derId "DR_009" ;
+    rdfs:label "순천 D/L 2 냉동 창고 수요반응 350kW"@ko ;
+    rdfs:label "Suncheon D/L 2 cold storage demand response 350 kW"@en ;
+    vpp:ownerType "냉동 창고"@ko ;
+    vpp:ownerType "cold storage"@en ;
+    vpp:capacityKW 350.0 ;
+    vpp:flexibleKW 120.0 ;
+    vpp:maxDurationH 2 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_2 .
+
+vpp:VPP08 vpp:aggregates vpp:DR_009 .
+
+vpp:ESS_005 a vpp:BatterySystem ;
+    vpp:derId "ESS_005" ;
+    rdfs:label "순천 D/L 2 상가 ESS 950kW"@ko ;
+    rdfs:label "Suncheon D/L 2 commercial battery 950 kW"@en ;
+    vpp:ownerType "상가 ESS"@ko ;
+    vpp:ownerType "commercial battery"@en ;
+    vpp:capacityKW 950.0 ;
+    vpp:energyKWh 2850.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_2 .
+
+vpp:VPP08 vpp:aggregates vpp:ESS_005 .
+
+vpp:PV_040 a vpp:PVSystem ;
+    vpp:derId "PV_040" ;
+    rdfs:label "목포 D/L 2 창고 지붕 태양광 750kW"@ko ;
+    rdfs:label "Mokpo D/L 2 warehouse roof solar 750 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 750.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_2 .
+
+vpp:VPP09 vpp:aggregates vpp:PV_040 .
+
+vpp:PV_041 a vpp:PVSystem ;
+    vpp:derId "PV_041" ;
+    rdfs:label "순천 D/L 3 가정 지붕 태양광 630kW"@ko ;
+    rdfs:label "Suncheon D/L 3 home rooftop solar 630 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 630.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_3 .
+
+vpp:VPP09 vpp:aggregates vpp:PV_041 .
+
+vpp:PV_042 a vpp:PVSystem ;
+    vpp:derId "PV_042" ;
+    rdfs:label "군산 D/L 2 가정 지붕 태양광 370kW"@ko ;
+    rdfs:label "Gunsan D/L 2 home rooftop solar 370 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 370.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_2 .
+
+vpp:VPP09 vpp:aggregates vpp:PV_042 .
+
+vpp:PV_043 a vpp:PVSystem ;
+    vpp:derId "PV_043" ;
+    rdfs:label "순천 D/L 3 주차장 태양광 740kW"@ko ;
+    rdfs:label "Suncheon D/L 3 car park solar 740 kW"@en ;
+    vpp:ownerType "주차장"@ko ;
+    vpp:ownerType "car park"@en ;
+    vpp:capacityKW 740.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_3 .
+
+vpp:VPP09 vpp:aggregates vpp:PV_043 .
+
+vpp:WT_007 a vpp:WindSystem ;
+    vpp:derId "WT_007" ;
+    rdfs:label "목포 D/L 2 해안 풍력 700kW"@ko ;
+    rdfs:label "Mokpo D/L 2 coastal wind 700 kW"@en ;
+    vpp:ownerType "해안 풍력"@ko ;
+    vpp:ownerType "coastal wind"@en ;
+    vpp:capacityKW 700.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_2 .
+
+vpp:VPP09 vpp:aggregates vpp:WT_007 .
+
+vpp:ESS_006 a vpp:BatterySystem ;
+    vpp:derId "ESS_006" ;
+    rdfs:label "순천 D/L 2 태양광 연계 ESS 900kW"@ko ;
+    rdfs:label "Suncheon D/L 2 solar-paired battery 900 kW"@en ;
+    vpp:ownerType "태양광 연계 ESS"@ko ;
+    vpp:ownerType "solar-paired battery"@en ;
+    vpp:capacityKW 900.0 ;
+    vpp:energyKWh 1800.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_2 .
+
+vpp:VPP09 vpp:aggregates vpp:ESS_006 .
+
+vpp:EV_007 a vpp:EVChargingSite ;
+    vpp:derId "EV_007" ;
+    rdfs:label "순천 D/L 3 마트 충전소 750kW"@ko ;
+    rdfs:label "Suncheon D/L 3 supermarket chargers 750 kW"@en ;
+    vpp:ownerType "마트 충전소"@ko ;
+    vpp:ownerType "supermarket chargers"@en ;
+    vpp:capacityKW 750.0 ;
+    vpp:flexibleKW 300.0 ;
+    vpp:chargerCount 15 ;
+    cim:Equipment.EquipmentContainer vpp:FD_SUNCHEON_3 .
+
+vpp:VPP09 vpp:aggregates vpp:EV_007 .
+
+vpp:EV_008 a vpp:EVChargingSite ;
+    vpp:derId "EV_008" ;
+    rdfs:label "목포 D/L 1 공영주차장 충전소 550kW"@ko ;
+    rdfs:label "Mokpo D/L 1 public car park chargers 550 kW"@en ;
+    vpp:ownerType "공영주차장 충전소"@ko ;
+    vpp:ownerType "public car park chargers"@en ;
+    vpp:capacityKW 550.0 ;
+    vpp:flexibleKW 360.0 ;
+    vpp:chargerCount 11 ;
+    cim:Equipment.EquipmentContainer vpp:FD_MOKPO_1 .
+
+vpp:VPP09 vpp:aggregates vpp:EV_008 .
+
+vpp:DR_010 a vpp:DemandResponseResource ;
+    vpp:derId "DR_010" ;
+    rdfs:label "군산 D/L 1 냉동 창고 수요반응 430kW"@ko ;
+    rdfs:label "Gunsan D/L 1 cold storage demand response 430 kW"@en ;
+    vpp:ownerType "냉동 창고"@ko ;
+    vpp:ownerType "cold storage"@en ;
+    vpp:capacityKW 430.0 ;
+    vpp:flexibleKW 150.0 ;
+    vpp:maxDurationH 2 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_1 .
+
+vpp:VPP09 vpp:aggregates vpp:DR_010 .
+
+vpp:ESS_007 a vpp:BatterySystem ;
+    vpp:derId "ESS_007" ;
+    rdfs:label "군산 D/L 2 태양광 연계 ESS 300kW"@ko ;
+    rdfs:label "Gunsan D/L 2 solar-paired battery 300 kW"@en ;
+    vpp:ownerType "태양광 연계 ESS"@ko ;
+    vpp:ownerType "solar-paired battery"@en ;
+    vpp:capacityKW 300.0 ;
+    vpp:energyKWh 600.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_2 .
+
+vpp:VPP10 vpp:aggregates vpp:ESS_007 .
+
+vpp:ESS_008 a vpp:BatterySystem ;
+    vpp:derId "ESS_008" ;
+    rdfs:label "전주 D/L 3 태양광 연계 ESS 850kW"@ko ;
+    rdfs:label "Jeonju D/L 3 solar-paired battery 850 kW"@en ;
+    vpp:ownerType "태양광 연계 ESS"@ko ;
+    vpp:ownerType "solar-paired battery"@en ;
+    vpp:capacityKW 850.0 ;
+    vpp:energyKWh 2550.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_3 .
+
+vpp:VPP10 vpp:aggregates vpp:ESS_008 .
+
+vpp:ESS_009 a vpp:BatterySystem ;
+    vpp:derId "ESS_009" ;
+    rdfs:label "전주 D/L 1 태양광 연계 ESS 700kW"@ko ;
+    rdfs:label "Jeonju D/L 1 solar-paired battery 700 kW"@en ;
+    vpp:ownerType "태양광 연계 ESS"@ko ;
+    vpp:ownerType "solar-paired battery"@en ;
+    vpp:capacityKW 700.0 ;
+    vpp:energyKWh 2100.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_1 .
+
+vpp:VPP10 vpp:aggregates vpp:ESS_009 .
+
+vpp:ESS_010 a vpp:BatterySystem ;
+    vpp:derId "ESS_010" ;
+    rdfs:label "군산 D/L 2 상가 ESS 400kW"@ko ;
+    rdfs:label "Gunsan D/L 2 commercial battery 400 kW"@en ;
+    vpp:ownerType "상가 ESS"@ko ;
+    vpp:ownerType "commercial battery"@en ;
+    vpp:capacityKW 400.0 ;
+    vpp:energyKWh 1600.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_2 .
+
+vpp:VPP10 vpp:aggregates vpp:ESS_010 .
+
+vpp:PV_044 a vpp:PVSystem ;
+    vpp:derId "PV_044" ;
+    rdfs:label "전주 D/L 2 축사 지붕 태양광 260kW"@ko ;
+    rdfs:label "Jeonju D/L 2 barn rooftop solar 260 kW"@en ;
+    vpp:ownerType "축사 지붕"@ko ;
+    vpp:ownerType "barn rooftop"@en ;
+    vpp:capacityKW 260.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_2 .
+
+vpp:VPP10 vpp:aggregates vpp:PV_044 .
+
+vpp:PV_045 a vpp:PVSystem ;
+    vpp:derId "PV_045" ;
+    rdfs:label "전주 D/L 2 가정 지붕 태양광 700kW"@ko ;
+    rdfs:label "Jeonju D/L 2 home rooftop solar 700 kW"@en ;
+    vpp:ownerType "가정 지붕"@ko ;
+    vpp:ownerType "home rooftop"@en ;
+    vpp:capacityKW 700.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_JEONJU_2 .
+
+vpp:VPP10 vpp:aggregates vpp:PV_045 .
+
+vpp:PV_046 a vpp:PVSystem ;
+    vpp:derId "PV_046" ;
+    rdfs:label "군산 D/L 3 창고 지붕 태양광 630kW"@ko ;
+    rdfs:label "Gunsan D/L 3 warehouse roof solar 630 kW"@en ;
+    vpp:ownerType "창고 지붕"@ko ;
+    vpp:ownerType "warehouse roof"@en ;
+    vpp:capacityKW 630.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GUNSAN_3 .
+
+vpp:VPP10 vpp:aggregates vpp:PV_046 .
+
+vpp:BID_VPP01_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.11 .
+
+vpp:STL_VPP01_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_06 ;
+    vpp:actualMWh 0.11 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 13200 ;
+    vpp:incentiveKRW 440 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP01_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.66 .
+
+vpp:STL_VPP01_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_07 ;
+    vpp:actualMWh 0.66 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 84480 ;
+    vpp:incentiveKRW 2640 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP01_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 1.65 .
+
+vpp:STL_VPP01_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_08 ;
+    vpp:actualMWh 1.65 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 217800 ;
+    vpp:incentiveKRW 6600 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP01_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 2.75 .
+
+vpp:STL_VPP01_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_09 ;
+    vpp:actualMWh 2.75 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 346500 ;
+    vpp:incentiveKRW 11000 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP01_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 3.739 .
+
+vpp:STL_VPP01_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_10 ;
+    vpp:actualMWh 3.572 ;
+    vpp:deviationPct -4.5 ;
+    vpp:curtailedMWh 0.167 ;
+    vpp:energyRevenueKRW 400064 ;
+    vpp:incentiveKRW 14288 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP01_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 4.399 .
+
+vpp:STL_VPP01_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_11 ;
+    vpp:actualMWh 3.733 ;
+    vpp:deviationPct -15.1 ;
+    vpp:curtailedMWh 0.666 ;
+    vpp:energyRevenueKRW 365834 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 9234 .
+
+vpp:BID_VPP01_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 4.729 .
+
+vpp:STL_VPP01_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_12 ;
+    vpp:actualMWh 3.804 ;
+    vpp:deviationPct -19.6 ;
+    vpp:curtailedMWh 0.925 ;
+    vpp:energyRevenueKRW 349968 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 15088 .
+
+vpp:BID_VPP01_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 4.619 .
+
+vpp:STL_VPP01_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_13 ;
+    vpp:actualMWh 3.358 ;
+    vpp:deviationPct -27.3 ;
+    vpp:curtailedMWh 0.676 ;
+    vpp:energyRevenueKRW 302220 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 24070 .
+
+vpp:BID_VPP01_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 4.124 .
+
+vpp:STL_VPP01_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_14 ;
+    vpp:actualMWh 3.222 ;
+    vpp:deviationPct -21.9 ;
+    vpp:curtailedMWh 0.379 ;
+    vpp:energyRevenueKRW 306090 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 16304 .
+
+vpp:BID_VPP01_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 3.299 .
+
+vpp:STL_VPP01_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_15 ;
+    vpp:actualMWh 2.881 ;
+    vpp:deviationPct -12.7 ;
+    vpp:energyRevenueKRW 311148 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 4992 .
+
+vpp:BID_VPP01_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 2.2 .
+
+vpp:STL_VPP01_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_16 ;
+    vpp:actualMWh 1.921 ;
+    vpp:deviationPct -12.7 ;
+    vpp:energyRevenueKRW 245888 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 3955 .
+
+vpp:BID_VPP01_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 1.1 .
+
+vpp:STL_VPP01_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_17 ;
+    vpp:actualMWh 1.1 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 165000 ;
+    vpp:incentiveKRW 4400 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP01_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP01 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 0.275 .
+
+vpp:STL_VPP01_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP01_18 ;
+    vpp:actualMWh 0.275 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 44550 ;
+    vpp:incentiveKRW 1100 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.081 .
+
+vpp:STL_VPP02_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_06 ;
+    vpp:actualMWh 0.081 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 9720 ;
+    vpp:incentiveKRW 324 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.487 .
+
+vpp:STL_VPP02_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_07 ;
+    vpp:actualMWh 0.487 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 62336 ;
+    vpp:incentiveKRW 1948 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 1.217 .
+
+vpp:STL_VPP02_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_08 ;
+    vpp:actualMWh 1.217 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 160644 ;
+    vpp:incentiveKRW 4868 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 2.028 .
+
+vpp:STL_VPP02_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_09 ;
+    vpp:actualMWh 2.028 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 255528 ;
+    vpp:incentiveKRW 8112 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 2.758 .
+
+vpp:STL_VPP02_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_10 ;
+    vpp:actualMWh 2.758 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.152 ;
+    vpp:curtailedMWh 0.152 ;
+    vpp:energyRevenueKRW 308896 ;
+    vpp:incentiveKRW 11032 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 2.795 .
+
+vpp:STL_VPP02_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_11 ;
+    vpp:actualMWh 2.795 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.506 ;
+    vpp:curtailedMWh 0.506 ;
+    vpp:energyRevenueKRW 273910 ;
+    vpp:incentiveKRW 11180 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 3.039 .
+
+vpp:STL_VPP02_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_12 ;
+    vpp:actualMWh 3.039 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.672 ;
+    vpp:curtailedMWh 0.671 ;
+    vpp:energyRevenueKRW 279588 ;
+    vpp:incentiveKRW 12156 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 2.957 .
+
+vpp:STL_VPP02_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_13 ;
+    vpp:actualMWh 2.957 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.593 ;
+    vpp:curtailedMWh 0.616 ;
+    vpp:energyRevenueKRW 266130 ;
+    vpp:incentiveKRW 11828 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 2.592 .
+
+vpp:STL_VPP02_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_14 ;
+    vpp:actualMWh 2.592 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.238 ;
+    vpp:curtailedMWh 0.345 ;
+    vpp:energyRevenueKRW 246240 ;
+    vpp:incentiveKRW 10368 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 2.434 .
+
+vpp:STL_VPP02_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_15 ;
+    vpp:actualMWh 2.434 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 262872 ;
+    vpp:incentiveKRW 9736 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 1.623 .
+
+vpp:STL_VPP02_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_16 ;
+    vpp:actualMWh 1.623 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 207744 ;
+    vpp:incentiveKRW 6492 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 0.811 .
+
+vpp:STL_VPP02_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_17 ;
+    vpp:actualMWh 0.811 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 121650 ;
+    vpp:incentiveKRW 3244 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 0.653 .
+
+vpp:STL_VPP02_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_18 ;
+    vpp:actualMWh 0.653 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.14 ;
+    vpp:energyRevenueKRW 105786 ;
+    vpp:incentiveKRW 2612 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP02_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 0.45 .
+
+vpp:STL_VPP02_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_19 ;
+    vpp:actualMWh 0.4 ;
+    vpp:deviationPct -11.1 ;
+    vpp:essAdjustMWh 0.2 ;
+    vpp:energyRevenueKRW 63200 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 664 .
+
+vpp:BID_VPP02_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 0.45 .
+
+vpp:STL_VPP02_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_20 ;
+    vpp:actualMWh 0.06 ;
+    vpp:deviationPct -86.7 ;
+    vpp:energyRevenueKRW 8700 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 15399 .
+
+vpp:BID_VPP02_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP02 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 0.45 .
+
+vpp:STL_VPP02_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP02_21 ;
+    vpp:actualMWh 0.0 ;
+    vpp:deviationPct -100.0 ;
+    vpp:energyRevenueKRW 0 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 16767 .
+
+vpp:BID_VPP03_00 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour00 ;
+    vpp:offeredMWh 0.853 .
+
+vpp:STL_VPP03_00 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_00 ;
+    vpp:actualMWh 0.853 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.02 ;
+    vpp:energyRevenueKRW 100654 ;
+    vpp:incentiveKRW 3412 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_01 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour01 ;
+    vpp:offeredMWh 0.899 .
+
+vpp:STL_VPP03_01 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_01 ;
+    vpp:actualMWh 0.899 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.022 ;
+    vpp:energyRevenueKRW 103385 ;
+    vpp:incentiveKRW 3596 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_02 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour02 ;
+    vpp:offeredMWh 0.93 .
+
+vpp:STL_VPP03_02 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_02 ;
+    vpp:actualMWh 0.93 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.022 ;
+    vpp:energyRevenueKRW 104160 ;
+    vpp:incentiveKRW 3720 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_03 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour03 ;
+    vpp:offeredMWh 0.93 .
+
+vpp:STL_VPP03_03 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_03 ;
+    vpp:actualMWh 0.93 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.022 ;
+    vpp:energyRevenueKRW 102300 ;
+    vpp:incentiveKRW 3720 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_04 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour04 ;
+    vpp:offeredMWh 0.899 .
+
+vpp:STL_VPP03_04 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_04 ;
+    vpp:actualMWh 0.899 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.022 ;
+    vpp:energyRevenueKRW 98890 ;
+    vpp:incentiveKRW 3596 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_05 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour05 ;
+    vpp:offeredMWh 0.853 .
+
+vpp:STL_VPP03_05 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_05 ;
+    vpp:actualMWh 0.853 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.02 ;
+    vpp:energyRevenueKRW 96389 ;
+    vpp:incentiveKRW 3412 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.823 .
+
+vpp:STL_VPP03_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_06 ;
+    vpp:actualMWh 0.823 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.016 ;
+    vpp:energyRevenueKRW 98760 ;
+    vpp:incentiveKRW 3292 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.988 .
+
+vpp:STL_VPP03_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_07 ;
+    vpp:actualMWh 0.988 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.002 ;
+    vpp:energyRevenueKRW 126464 ;
+    vpp:incentiveKRW 3952 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 1.346 .
+
+vpp:STL_VPP03_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_08 ;
+    vpp:actualMWh 1.346 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.031 ;
+    vpp:energyRevenueKRW 177672 ;
+    vpp:incentiveKRW 5384 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 1.769 .
+
+vpp:STL_VPP03_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_09 ;
+    vpp:actualMWh 1.769 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.065 ;
+    vpp:energyRevenueKRW 222894 ;
+    vpp:incentiveKRW 7076 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 2.514 .
+
+vpp:STL_VPP03_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_10 ;
+    vpp:actualMWh 2.348 ;
+    vpp:deviationPct -6.6 ;
+    vpp:essAdjustMWh 0.3 ;
+    vpp:energyRevenueKRW 262976 ;
+    vpp:incentiveKRW 9392 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 2.689 .
+
+vpp:STL_VPP03_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_11 ;
+    vpp:actualMWh 2.689 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.074 ;
+    vpp:curtailedMWh 0.085 ;
+    vpp:energyRevenueKRW 263522 ;
+    vpp:incentiveKRW 10756 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 2.867 .
+
+vpp:STL_VPP03_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_12 ;
+    vpp:actualMWh 2.867 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.131 ;
+    vpp:curtailedMWh 0.141 ;
+    vpp:energyRevenueKRW 263764 ;
+    vpp:incentiveKRW 11468 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 2.838 .
+
+vpp:STL_VPP03_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_13 ;
+    vpp:actualMWh 2.527 ;
+    vpp:deviationPct -11.0 ;
+    vpp:essAdjustMWh 0.3 ;
+    vpp:energyRevenueKRW 227430 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 2267 .
+
+vpp:BID_VPP03_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 2.618 .
+
+vpp:STL_VPP03_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_14 ;
+    vpp:actualMWh 2.374 ;
+    vpp:deviationPct -9.3 ;
+    vpp:essAdjustMWh 0.3 ;
+    vpp:energyRevenueKRW 225530 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 985 .
+
+vpp:BID_VPP03_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 2.369 .
+
+vpp:STL_VPP03_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_15 ;
+    vpp:actualMWh 2.08 ;
+    vpp:deviationPct -12.2 ;
+    vpp:essAdjustMWh 0.142 ;
+    vpp:energyRevenueKRW 224640 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 3223 .
+
+vpp:BID_VPP03_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 1.838 .
+
+vpp:STL_VPP03_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_16 ;
+    vpp:actualMWh 1.557 ;
+    vpp:deviationPct -15.3 ;
+    vpp:energyRevenueKRW 199296 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 5144 .
+
+vpp:BID_VPP03_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 1.306 .
+
+vpp:STL_VPP03_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_17 ;
+    vpp:actualMWh 1.306 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.018 ;
+    vpp:energyRevenueKRW 195900 ;
+    vpp:incentiveKRW 5224 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 1.073 .
+
+vpp:STL_VPP03_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_18 ;
+    vpp:actualMWh 0.96 ;
+    vpp:deviationPct -10.5 ;
+    vpp:energyRevenueKRW 155520 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 1320 .
+
+vpp:BID_VPP03_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 0.956 .
+
+vpp:STL_VPP03_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_19 ;
+    vpp:actualMWh 0.826 ;
+    vpp:deviationPct -13.6 ;
+    vpp:energyRevenueKRW 130508 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 2537 .
+
+vpp:BID_VPP03_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 0.987 .
+
+vpp:STL_VPP03_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_20 ;
+    vpp:actualMWh 0.857 ;
+    vpp:deviationPct -13.2 ;
+    vpp:energyRevenueKRW 124265 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 2220 .
+
+vpp:BID_VPP03_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 1.003 .
+
+vpp:STL_VPP03_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_21 ;
+    vpp:actualMWh 0.873 ;
+    vpp:deviationPct -13.0 ;
+    vpp:energyRevenueKRW 117855 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 2015 .
+
+vpp:BID_VPP03_22 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour22 ;
+    vpp:offeredMWh 0.868 .
+
+vpp:STL_VPP03_22 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_22 ;
+    vpp:actualMWh 0.868 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.021 ;
+    vpp:energyRevenueKRW 111104 ;
+    vpp:incentiveKRW 3472 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP03_23 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP03 ;
+    vpp:forInterval vpp:Hour23 ;
+    vpp:offeredMWh 0.868 .
+
+vpp:STL_VPP03_23 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP03_23 ;
+    vpp:actualMWh 0.868 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh -0.021 ;
+    vpp:energyRevenueKRW 105896 ;
+    vpp:incentiveKRW 3472 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_00 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour00 ;
+    vpp:offeredMWh 1.678 .
+
+vpp:STL_VPP04_00 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_00 ;
+    vpp:actualMWh 1.342 ;
+    vpp:deviationPct -20.0 ;
+    vpp:energyRevenueKRW 158356 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 7142 .
+
+vpp:BID_VPP04_01 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour01 ;
+    vpp:offeredMWh 1.769 .
+
+vpp:STL_VPP04_01 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_01 ;
+    vpp:actualMWh 1.415 ;
+    vpp:deviationPct -20.0 ;
+    vpp:energyRevenueKRW 162725 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 7331 .
+
+vpp:BID_VPP04_02 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour02 ;
+    vpp:offeredMWh 1.83 .
+
+vpp:STL_VPP04_02 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_02 ;
+    vpp:actualMWh 1.464 ;
+    vpp:deviationPct -20.0 ;
+    vpp:energyRevenueKRW 163968 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 7379 .
+
+vpp:BID_VPP04_03 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour03 ;
+    vpp:offeredMWh 1.83 .
+
+vpp:STL_VPP04_03 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_03 ;
+    vpp:actualMWh 1.464 ;
+    vpp:deviationPct -20.0 ;
+    vpp:energyRevenueKRW 161040 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 7247 .
+
+vpp:BID_VPP04_04 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour04 ;
+    vpp:offeredMWh 1.769 .
+
+vpp:STL_VPP04_04 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_04 ;
+    vpp:actualMWh 1.415 ;
+    vpp:deviationPct -20.0 ;
+    vpp:energyRevenueKRW 155650 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 7012 .
+
+vpp:BID_VPP04_05 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour05 ;
+    vpp:offeredMWh 1.678 .
+
+vpp:STL_VPP04_05 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_05 ;
+    vpp:actualMWh 1.342 ;
+    vpp:deviationPct -20.0 ;
+    vpp:energyRevenueKRW 151646 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 6840 .
+
+vpp:BID_VPP04_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 1.555 .
+
+vpp:STL_VPP04_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_06 ;
+    vpp:actualMWh 1.25 ;
+    vpp:deviationPct -19.6 ;
+    vpp:energyRevenueKRW 150000 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 6502 .
+
+vpp:BID_VPP04_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 1.553 .
+
+vpp:STL_VPP04_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_07 ;
+    vpp:actualMWh 1.511 ;
+    vpp:deviationPct -2.7 ;
+    vpp:energyRevenueKRW 193408 ;
+    vpp:incentiveKRW 6044 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 1.67 .
+
+vpp:STL_VPP04_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_08 ;
+    vpp:actualMWh 1.634 ;
+    vpp:deviationPct -2.2 ;
+    vpp:energyRevenueKRW 215688 ;
+    vpp:incentiveKRW 6536 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 1.849 .
+
+vpp:STL_VPP04_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_09 ;
+    vpp:actualMWh 1.816 ;
+    vpp:deviationPct -1.8 ;
+    vpp:energyRevenueKRW 228816 ;
+    vpp:incentiveKRW 7264 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 1.997 .
+
+vpp:STL_VPP04_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_10 ;
+    vpp:actualMWh 1.967 ;
+    vpp:deviationPct -1.5 ;
+    vpp:energyRevenueKRW 220304 ;
+    vpp:incentiveKRW 7868 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 2.116 .
+
+vpp:STL_VPP04_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_11 ;
+    vpp:actualMWh 2.088 ;
+    vpp:deviationPct -1.3 ;
+    vpp:energyRevenueKRW 204624 ;
+    vpp:incentiveKRW 8352 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 2.206 .
+
+vpp:STL_VPP04_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_12 ;
+    vpp:actualMWh 2.178 ;
+    vpp:deviationPct -1.3 ;
+    vpp:energyRevenueKRW 200376 ;
+    vpp:incentiveKRW 8712 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 2.237 .
+
+vpp:STL_VPP04_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_13 ;
+    vpp:actualMWh 2.208 ;
+    vpp:deviationPct -1.3 ;
+    vpp:energyRevenueKRW 198720 ;
+    vpp:incentiveKRW 8832 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 2.193 .
+
+vpp:STL_VPP04_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_14 ;
+    vpp:actualMWh 2.161 ;
+    vpp:deviationPct -1.5 ;
+    vpp:energyRevenueKRW 205295 ;
+    vpp:incentiveKRW 8644 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 2.06 .
+
+vpp:STL_VPP04_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_15 ;
+    vpp:actualMWh 2.025 ;
+    vpp:deviationPct -1.7 ;
+    vpp:energyRevenueKRW 218700 ;
+    vpp:incentiveKRW 8100 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 1.881 .
+
+vpp:STL_VPP04_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_16 ;
+    vpp:actualMWh 1.843 ;
+    vpp:deviationPct -2.0 ;
+    vpp:energyRevenueKRW 235904 ;
+    vpp:incentiveKRW 7372 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 1.703 .
+
+vpp:STL_VPP04_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_17 ;
+    vpp:actualMWh 1.661 ;
+    vpp:deviationPct -2.5 ;
+    vpp:energyRevenueKRW 249150 ;
+    vpp:incentiveKRW 6644 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 1.6 .
+
+vpp:STL_VPP04_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_18 ;
+    vpp:actualMWh 1.554 ;
+    vpp:deviationPct -2.9 ;
+    vpp:energyRevenueKRW 251748 ;
+    vpp:incentiveKRW 6216 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 1.586 .
+
+vpp:STL_VPP04_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_19 ;
+    vpp:actualMWh 1.538 ;
+    vpp:deviationPct -3.0 ;
+    vpp:energyRevenueKRW 243004 ;
+    vpp:incentiveKRW 6152 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 1.647 .
+
+vpp:STL_VPP04_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_20 ;
+    vpp:actualMWh 1.598 ;
+    vpp:deviationPct -3.0 ;
+    vpp:energyRevenueKRW 231710 ;
+    vpp:incentiveKRW 6392 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 1.678 .
+
+vpp:STL_VPP04_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_21 ;
+    vpp:actualMWh 1.627 ;
+    vpp:deviationPct -3.0 ;
+    vpp:energyRevenueKRW 219645 ;
+    vpp:incentiveKRW 6508 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_22 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour22 ;
+    vpp:offeredMWh 1.708 .
+
+vpp:STL_VPP04_22 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_22 ;
+    vpp:actualMWh 1.657 ;
+    vpp:deviationPct -3.0 ;
+    vpp:energyRevenueKRW 212096 ;
+    vpp:incentiveKRW 6628 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP04_23 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP04 ;
+    vpp:forInterval vpp:Hour23 ;
+    vpp:offeredMWh 1.708 .
+
+vpp:STL_VPP04_23 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP04_23 ;
+    vpp:actualMWh 1.657 ;
+    vpp:deviationPct -3.0 ;
+    vpp:energyRevenueKRW 202154 ;
+    vpp:incentiveKRW 6628 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.02 .
+
+vpp:STL_VPP05_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_06 ;
+    vpp:actualMWh 0.019 ;
+    vpp:deviationPct -5.0 ;
+    vpp:energyRevenueKRW 2280 ;
+    vpp:incentiveKRW 76 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.12 .
+
+vpp:STL_VPP05_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_07 ;
+    vpp:actualMWh 0.113 ;
+    vpp:deviationPct -5.8 ;
+    vpp:energyRevenueKRW 14464 ;
+    vpp:incentiveKRW 452 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 0.299 .
+
+vpp:STL_VPP05_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_08 ;
+    vpp:actualMWh 0.284 ;
+    vpp:deviationPct -5.0 ;
+    vpp:energyRevenueKRW 37488 ;
+    vpp:incentiveKRW 1136 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 0.499 .
+
+vpp:STL_VPP05_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_09 ;
+    vpp:actualMWh 0.473 ;
+    vpp:deviationPct -5.2 ;
+    vpp:energyRevenueKRW 59598 ;
+    vpp:incentiveKRW 1892 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 0.678 .
+
+vpp:STL_VPP05_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_10 ;
+    vpp:actualMWh 0.643 ;
+    vpp:deviationPct -5.2 ;
+    vpp:energyRevenueKRW 72016 ;
+    vpp:incentiveKRW 2572 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 0.798 .
+
+vpp:STL_VPP05_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_11 ;
+    vpp:actualMWh 0.756 ;
+    vpp:deviationPct -5.3 ;
+    vpp:energyRevenueKRW 74088 ;
+    vpp:incentiveKRW 3024 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 0.858 .
+
+vpp:STL_VPP05_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_12 ;
+    vpp:actualMWh 0.813 ;
+    vpp:deviationPct -5.2 ;
+    vpp:energyRevenueKRW 74796 ;
+    vpp:incentiveKRW 3252 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 0.838 .
+
+vpp:STL_VPP05_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_13 ;
+    vpp:actualMWh 0.794 ;
+    vpp:deviationPct -5.3 ;
+    vpp:energyRevenueKRW 71460 ;
+    vpp:incentiveKRW 3176 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 0.748 .
+
+vpp:STL_VPP05_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_14 ;
+    vpp:actualMWh 0.709 ;
+    vpp:deviationPct -5.2 ;
+    vpp:energyRevenueKRW 67355 ;
+    vpp:incentiveKRW 2836 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 0.599 .
+
+vpp:STL_VPP05_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_15 ;
+    vpp:actualMWh 0.567 ;
+    vpp:deviationPct -5.3 ;
+    vpp:energyRevenueKRW 61236 ;
+    vpp:incentiveKRW 2268 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 0.399 .
+
+vpp:STL_VPP05_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_16 ;
+    vpp:actualMWh 0.378 ;
+    vpp:deviationPct -5.3 ;
+    vpp:energyRevenueKRW 48384 ;
+    vpp:incentiveKRW 1512 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP05_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 2.11 .
+
+vpp:STL_VPP05_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_17 ;
+    vpp:actualMWh 1.908 ;
+    vpp:deviationPct -9.6 ;
+    vpp:energyRevenueKRW 286200 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 1494 .
+
+vpp:BID_VPP05_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 1.96 .
+
+vpp:STL_VPP05_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_18 ;
+    vpp:actualMWh 1.766 ;
+    vpp:deviationPct -9.9 ;
+    vpp:energyRevenueKRW 286092 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 1808 .
+
+vpp:BID_VPP05_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 1.91 .
+
+vpp:STL_VPP05_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_19 ;
+    vpp:actualMWh 1.719 ;
+    vpp:deviationPct -10.0 ;
+    vpp:energyRevenueKRW 271602 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 1811 .
+
+vpp:BID_VPP05_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 1.91 .
+
+vpp:STL_VPP05_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_20 ;
+    vpp:actualMWh 1.719 ;
+    vpp:deviationPct -10.0 ;
+    vpp:energyRevenueKRW 249255 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 1662 .
+
+vpp:BID_VPP05_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP05 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 1.91 .
+
+vpp:STL_VPP05_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP05_21 ;
+    vpp:actualMWh 1.719 ;
+    vpp:deviationPct -10.0 ;
+    vpp:energyRevenueKRW 232065 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 1547 .
+
+vpp:BID_VPP06_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP06 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 2.92 .
+
+vpp:STL_VPP06_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP06_14 ;
+    vpp:actualMWh 2.774 ;
+    vpp:deviationPct -5.0 ;
+    vpp:energyRevenueKRW 263530 ;
+    vpp:incentiveKRW 11096 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP06_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP06 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 2.92 .
+
+vpp:STL_VPP06_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP06_15 ;
+    vpp:actualMWh 2.774 ;
+    vpp:deviationPct -5.0 ;
+    vpp:energyRevenueKRW 299592 ;
+    vpp:incentiveKRW 11096 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP06_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP06 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 1.76 .
+
+vpp:STL_VPP06_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP06_16 ;
+    vpp:actualMWh 1.672 ;
+    vpp:deviationPct -5.0 ;
+    vpp:energyRevenueKRW 214016 ;
+    vpp:incentiveKRW 6688 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP06_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP06 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 1.41 .
+
+vpp:STL_VPP06_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP06_17 ;
+    vpp:actualMWh 1.34 ;
+    vpp:deviationPct -5.0 ;
+    vpp:energyRevenueKRW 201000 ;
+    vpp:incentiveKRW 5360 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.07 .
+
+vpp:STL_VPP07_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_06 ;
+    vpp:actualMWh 0.07 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 8400 ;
+    vpp:incentiveKRW 280 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.42 .
+
+vpp:STL_VPP07_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_07 ;
+    vpp:actualMWh 0.42 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 53760 ;
+    vpp:incentiveKRW 1680 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 1.051 .
+
+vpp:STL_VPP07_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_08 ;
+    vpp:actualMWh 1.051 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 138732 ;
+    vpp:incentiveKRW 4204 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 1.751 .
+
+vpp:STL_VPP07_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_09 ;
+    vpp:actualMWh 1.751 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 220626 ;
+    vpp:incentiveKRW 7004 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 2.381 .
+
+vpp:STL_VPP07_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_10 ;
+    vpp:actualMWh 2.381 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 266672 ;
+    vpp:incentiveKRW 9524 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 2.402 .
+
+vpp:STL_VPP07_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_11 ;
+    vpp:actualMWh 2.402 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.032 ;
+    vpp:curtailedMWh 0.032 ;
+    vpp:energyRevenueKRW 235396 ;
+    vpp:incentiveKRW 9608 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 2.612 .
+
+vpp:STL_VPP07_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_12 ;
+    vpp:actualMWh 2.612 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.054 ;
+    vpp:curtailedMWh 0.054 ;
+    vpp:energyRevenueKRW 240304 ;
+    vpp:incentiveKRW 10448 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 2.542 .
+
+vpp:STL_VPP07_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_13 ;
+    vpp:actualMWh 2.382 ;
+    vpp:deviationPct -6.3 ;
+    vpp:essAdjustMWh 0.8 ;
+    vpp:energyRevenueKRW 214380 ;
+    vpp:incentiveKRW 9528 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 2.227 .
+
+vpp:STL_VPP07_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_14 ;
+    vpp:actualMWh 2.169 ;
+    vpp:deviationPct -2.6 ;
+    vpp:essAdjustMWh 0.8 ;
+    vpp:energyRevenueKRW 206055 ;
+    vpp:incentiveKRW 8676 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 2.101 .
+
+vpp:STL_VPP07_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_15 ;
+    vpp:actualMWh 2.101 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.686 ;
+    vpp:energyRevenueKRW 226908 ;
+    vpp:incentiveKRW 8404 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 1.401 .
+
+vpp:STL_VPP07_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_16 ;
+    vpp:actualMWh 1.372 ;
+    vpp:deviationPct -2.1 ;
+    vpp:essAdjustMWh 0.429 ;
+    vpp:energyRevenueKRW 175616 ;
+    vpp:incentiveKRW 5488 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 0.7 .
+
+vpp:STL_VPP07_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_17 ;
+    vpp:actualMWh 0.7 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 105000 ;
+    vpp:incentiveKRW 2800 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP07_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 0.575 .
+
+vpp:STL_VPP07_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_18 ;
+    vpp:actualMWh 0.176 ;
+    vpp:deviationPct -69.4 ;
+    vpp:energyRevenueKRW 28512 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 17156 .
+
+vpp:BID_VPP07_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 0.4 .
+
+vpp:STL_VPP07_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_19 ;
+    vpp:actualMWh 0.0 ;
+    vpp:deviationPct -100.0 ;
+    vpp:energyRevenueKRW 0 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 17443 .
+
+vpp:BID_VPP07_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 0.4 .
+
+vpp:STL_VPP07_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_20 ;
+    vpp:actualMWh 0.0 ;
+    vpp:deviationPct -100.0 ;
+    vpp:energyRevenueKRW 0 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 16008 .
+
+vpp:BID_VPP07_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP07 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 0.4 .
+
+vpp:STL_VPP07_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP07_21 ;
+    vpp:actualMWh 0.0 ;
+    vpp:deviationPct -100.0 ;
+    vpp:energyRevenueKRW 0 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 14904 .
+
+vpp:BID_VPP08_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.04 .
+
+vpp:STL_VPP08_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_06 ;
+    vpp:actualMWh 0.04 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.002 ;
+    vpp:energyRevenueKRW 4800 ;
+    vpp:incentiveKRW 160 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.239 .
+
+vpp:STL_VPP08_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_07 ;
+    vpp:actualMWh 0.239 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.01 ;
+    vpp:energyRevenueKRW 30592 ;
+    vpp:incentiveKRW 956 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 0.599 .
+
+vpp:STL_VPP08_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_08 ;
+    vpp:actualMWh 0.599 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.027 ;
+    vpp:energyRevenueKRW 79068 ;
+    vpp:incentiveKRW 2396 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 0.997 .
+
+vpp:STL_VPP08_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_09 ;
+    vpp:actualMWh 0.997 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.044 ;
+    vpp:energyRevenueKRW 125622 ;
+    vpp:incentiveKRW 3988 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 1.357 .
+
+vpp:STL_VPP08_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_10 ;
+    vpp:actualMWh 1.357 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.061 ;
+    vpp:energyRevenueKRW 151984 ;
+    vpp:incentiveKRW 5428 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 1.121 .
+
+vpp:STL_VPP08_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_11 ;
+    vpp:actualMWh 1.121 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.071 ;
+    vpp:energyRevenueKRW 109858 ;
+    vpp:incentiveKRW 4484 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 1.241 .
+
+vpp:STL_VPP08_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_12 ;
+    vpp:actualMWh 1.241 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.077 ;
+    vpp:energyRevenueKRW 114172 ;
+    vpp:incentiveKRW 4964 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 1.201 .
+
+vpp:STL_VPP08_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_13 ;
+    vpp:actualMWh 1.201 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.075 ;
+    vpp:energyRevenueKRW 108090 ;
+    vpp:incentiveKRW 4804 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 1.361 .
+
+vpp:STL_VPP08_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_14 ;
+    vpp:actualMWh 1.385 ;
+    vpp:deviationPct 1.8 ;
+    vpp:energyRevenueKRW 131575 ;
+    vpp:incentiveKRW 5540 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 1.537 .
+
+vpp:STL_VPP08_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_15 ;
+    vpp:actualMWh 1.537 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.07 ;
+    vpp:energyRevenueKRW 165996 ;
+    vpp:incentiveKRW 6148 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 1.018 .
+
+vpp:STL_VPP08_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_16 ;
+    vpp:actualMWh 1.018 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.047 ;
+    vpp:energyRevenueKRW 130304 ;
+    vpp:incentiveKRW 4072 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 0.619 .
+
+vpp:STL_VPP08_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_17 ;
+    vpp:actualMWh 0.619 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.029 ;
+    vpp:energyRevenueKRW 92850 ;
+    vpp:incentiveKRW 2476 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 0.575 .
+
+vpp:STL_VPP08_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_18 ;
+    vpp:actualMWh 0.575 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.005 ;
+    vpp:energyRevenueKRW 93150 ;
+    vpp:incentiveKRW 2300 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 0.475 .
+
+vpp:STL_VPP08_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_19 ;
+    vpp:actualMWh 0.475 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 75050 ;
+    vpp:incentiveKRW 1900 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 0.475 .
+
+vpp:STL_VPP08_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_20 ;
+    vpp:actualMWh 0.475 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 68875 ;
+    vpp:incentiveKRW 1900 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP08_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP08 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 0.475 .
+
+vpp:STL_VPP08_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP08_21 ;
+    vpp:actualMWh 0.475 ;
+    vpp:deviationPct 0.0 ;
+    vpp:energyRevenueKRW 64125 ;
+    vpp:incentiveKRW 1900 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_00 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour00 ;
+    vpp:offeredMWh 0.385 .
+
+vpp:STL_VPP09_00 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_00 ;
+    vpp:actualMWh 0.385 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.077 ;
+    vpp:energyRevenueKRW 45430 ;
+    vpp:incentiveKRW 1540 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_01 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour01 ;
+    vpp:offeredMWh 0.406 .
+
+vpp:STL_VPP09_01 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_01 ;
+    vpp:actualMWh 0.406 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.081 ;
+    vpp:energyRevenueKRW 46690 ;
+    vpp:incentiveKRW 1624 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_02 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour02 ;
+    vpp:offeredMWh 0.42 .
+
+vpp:STL_VPP09_02 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_02 ;
+    vpp:actualMWh 0.42 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.084 ;
+    vpp:energyRevenueKRW 47040 ;
+    vpp:incentiveKRW 1680 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_03 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour03 ;
+    vpp:offeredMWh 0.42 .
+
+vpp:STL_VPP09_03 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_03 ;
+    vpp:actualMWh 0.42 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.084 ;
+    vpp:energyRevenueKRW 46200 ;
+    vpp:incentiveKRW 1680 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_04 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour04 ;
+    vpp:offeredMWh 0.406 .
+
+vpp:STL_VPP09_04 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_04 ;
+    vpp:actualMWh 0.406 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.081 ;
+    vpp:energyRevenueKRW 44660 ;
+    vpp:incentiveKRW 1624 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_05 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour05 ;
+    vpp:offeredMWh 0.385 .
+
+vpp:STL_VPP09_05 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_05 ;
+    vpp:actualMWh 0.385 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.077 ;
+    vpp:energyRevenueKRW 43505 ;
+    vpp:incentiveKRW 1540 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.395 .
+
+vpp:STL_VPP09_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_06 ;
+    vpp:actualMWh 0.395 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.072 ;
+    vpp:energyRevenueKRW 47400 ;
+    vpp:incentiveKRW 1580 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.583 .
+
+vpp:STL_VPP09_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_07 ;
+    vpp:actualMWh 0.583 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.022 ;
+    vpp:energyRevenueKRW 74624 ;
+    vpp:incentiveKRW 2332 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 0.951 .
+
+vpp:STL_VPP09_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_08 ;
+    vpp:actualMWh 0.951 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.04 ;
+    vpp:energyRevenueKRW 125532 ;
+    vpp:incentiveKRW 3804 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 1.37 .
+
+vpp:STL_VPP09_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_09 ;
+    vpp:actualMWh 1.37 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.06 ;
+    vpp:energyRevenueKRW 172620 ;
+    vpp:incentiveKRW 5480 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 1.833 .
+
+vpp:STL_VPP09_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_10 ;
+    vpp:actualMWh 1.833 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.167 ;
+    vpp:energyRevenueKRW 205296 ;
+    vpp:incentiveKRW 7332 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 1.652 .
+
+vpp:STL_VPP09_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_11 ;
+    vpp:actualMWh 1.652 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.061 ;
+    vpp:energyRevenueKRW 161896 ;
+    vpp:incentiveKRW 6608 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 1.794 .
+
+vpp:STL_VPP09_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_12 ;
+    vpp:actualMWh 1.794 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.065 ;
+    vpp:energyRevenueKRW 165048 ;
+    vpp:incentiveKRW 7176 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 1.761 .
+
+vpp:STL_VPP09_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_13 ;
+    vpp:actualMWh 1.761 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.064 ;
+    vpp:energyRevenueKRW 158490 ;
+    vpp:incentiveKRW 7044 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_14 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:offeredMWh 1.719 .
+
+vpp:STL_VPP09_14 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_14 ;
+    vpp:actualMWh 1.719 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.066 ;
+    vpp:energyRevenueKRW 163305 ;
+    vpp:incentiveKRW 6876 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 1.835 .
+
+vpp:STL_VPP09_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_15 ;
+    vpp:actualMWh 1.835 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.056 ;
+    vpp:energyRevenueKRW 198180 ;
+    vpp:incentiveKRW 7340 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 1.24 .
+
+vpp:STL_VPP09_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_16 ;
+    vpp:actualMWh 1.24 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.036 ;
+    vpp:energyRevenueKRW 158720 ;
+    vpp:incentiveKRW 4960 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 1.455 .
+
+vpp:STL_VPP09_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_17 ;
+    vpp:actualMWh 1.455 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.089 ;
+    vpp:energyRevenueKRW 218250 ;
+    vpp:incentiveKRW 5820 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 1.578 .
+
+vpp:STL_VPP09_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_18 ;
+    vpp:actualMWh 1.578 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.08 ;
+    vpp:energyRevenueKRW 255636 ;
+    vpp:incentiveKRW 6312 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 1.474 .
+
+vpp:STL_VPP09_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_19 ;
+    vpp:actualMWh 1.474 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.077 ;
+    vpp:energyRevenueKRW 232892 ;
+    vpp:incentiveKRW 5896 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 1.488 .
+
+vpp:STL_VPP09_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_20 ;
+    vpp:actualMWh 1.32 ;
+    vpp:deviationPct -11.3 ;
+    vpp:energyRevenueKRW 191400 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 2130 .
+
+vpp:BID_VPP09_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 1.495 .
+
+vpp:STL_VPP09_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_21 ;
+    vpp:actualMWh 0.967 ;
+    vpp:deviationPct -35.3 ;
+    vpp:energyRevenueKRW 130545 ;
+    vpp:incentiveKRW 0 ;
+    vpp:penaltyKRW 16540 .
+
+vpp:BID_VPP09_22 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour22 ;
+    vpp:offeredMWh 0.392 .
+
+vpp:STL_VPP09_22 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_22 ;
+    vpp:actualMWh 0.38 ;
+    vpp:deviationPct -3.1 ;
+    vpp:energyRevenueKRW 48640 ;
+    vpp:incentiveKRW 1520 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP09_23 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP09 ;
+    vpp:forInterval vpp:Hour23 ;
+    vpp:offeredMWh 0.392 .
+
+vpp:STL_VPP09_23 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP09_23 ;
+    vpp:actualMWh 0.38 ;
+    vpp:deviationPct -3.1 ;
+    vpp:energyRevenueKRW 46360 ;
+    vpp:incentiveKRW 1520 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_06 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour06 ;
+    vpp:offeredMWh 0.025 .
+
+vpp:STL_VPP10_06 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_06 ;
+    vpp:actualMWh 0.025 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.001 ;
+    vpp:energyRevenueKRW 3000 ;
+    vpp:incentiveKRW 100 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_07 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour07 ;
+    vpp:offeredMWh 0.149 .
+
+vpp:STL_VPP10_07 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_07 ;
+    vpp:actualMWh 0.149 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.008 ;
+    vpp:energyRevenueKRW 19072 ;
+    vpp:incentiveKRW 596 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_08 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour08 ;
+    vpp:offeredMWh 0.373 .
+
+vpp:STL_VPP10_08 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_08 ;
+    vpp:actualMWh 0.373 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.019 ;
+    vpp:energyRevenueKRW 49236 ;
+    vpp:incentiveKRW 1492 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_09 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour09 ;
+    vpp:offeredMWh 0.621 .
+
+vpp:STL_VPP10_09 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_09 ;
+    vpp:actualMWh 0.621 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.031 ;
+    vpp:energyRevenueKRW 78246 ;
+    vpp:incentiveKRW 2484 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_10 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:offeredMWh 0.995 .
+
+vpp:STL_VPP10_10 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_10 ;
+    vpp:actualMWh 0.995 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.193 ;
+    vpp:energyRevenueKRW 111440 ;
+    vpp:incentiveKRW 3980 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_11 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:offeredMWh 0.045 .
+
+vpp:STL_VPP10_11 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_11 ;
+    vpp:actualMWh 0.045 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.069 ;
+    vpp:curtailedMWh 0.069 ;
+    vpp:energyRevenueKRW 4410 ;
+    vpp:incentiveKRW 180 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_12 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:offeredMWh 0.133 .
+
+vpp:STL_VPP10_12 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_12 ;
+    vpp:actualMWh 0.133 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.117 ;
+    vpp:curtailedMWh 0.117 ;
+    vpp:energyRevenueKRW 12236 ;
+    vpp:incentiveKRW 532 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_13 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:offeredMWh 0.103 .
+
+vpp:STL_VPP10_13 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_13 ;
+    vpp:actualMWh 0.103 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.362 ;
+    vpp:energyRevenueKRW 9270 ;
+    vpp:incentiveKRW 412 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_15 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour15 ;
+    vpp:offeredMWh 0.878 .
+
+vpp:STL_VPP10_15 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_15 ;
+    vpp:actualMWh 0.878 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.26 ;
+    vpp:energyRevenueKRW 94824 ;
+    vpp:incentiveKRW 3512 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_16 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour16 ;
+    vpp:offeredMWh 0.585 .
+
+vpp:STL_VPP10_16 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_16 ;
+    vpp:actualMWh 0.585 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.173 ;
+    vpp:energyRevenueKRW 74880 ;
+    vpp:incentiveKRW 2340 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_17 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour17 ;
+    vpp:offeredMWh 0.293 .
+
+vpp:STL_VPP10_17 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_17 ;
+    vpp:actualMWh 0.293 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.001 ;
+    vpp:energyRevenueKRW 43950 ;
+    vpp:incentiveKRW 1172 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_18 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour18 ;
+    vpp:offeredMWh 1.198 .
+
+vpp:STL_VPP10_18 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_18 ;
+    vpp:actualMWh 1.198 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.15 ;
+    vpp:energyRevenueKRW 194076 ;
+    vpp:incentiveKRW 4792 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_19 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour19 ;
+    vpp:offeredMWh 1.125 .
+
+vpp:STL_VPP10_19 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_19 ;
+    vpp:actualMWh 1.125 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.15 ;
+    vpp:energyRevenueKRW 177750 ;
+    vpp:incentiveKRW 4500 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_20 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour20 ;
+    vpp:offeredMWh 1.125 .
+
+vpp:STL_VPP10_20 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_20 ;
+    vpp:actualMWh 1.125 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.15 ;
+    vpp:energyRevenueKRW 163125 ;
+    vpp:incentiveKRW 4500 ;
+    vpp:penaltyKRW 0 .
+
+vpp:BID_VPP10_21 a vpp:Bid ;
+    vpp:submittedBy vpp:VPP10 ;
+    vpp:forInterval vpp:Hour21 ;
+    vpp:offeredMWh 1.125 .
+
+vpp:STL_VPP10_21 a vpp:Settlement ;
+    vpp:settles vpp:BID_VPP10_21 ;
+    vpp:actualMWh 1.125 ;
+    vpp:deviationPct 0.0 ;
+    vpp:essAdjustMWh 0.15 ;
+    vpp:energyRevenueKRW 151875 ;
+    vpp:incentiveKRW 4500 ;
+    vpp:penaltyKRW 0 .
+
+vpp:CI_FD_GWANGJU_3_10 a vpp:CurtailmentInstruction ;
+    vpp:issuedBy vpp:DSO ;
+    vpp:onFeeder vpp:FD_GWANGJU_3 ;
+    vpp:forInterval vpp:Hour10 ;
+    vpp:reverseFlowMW 2.92 ;
+    vpp:limitMW 2.6 ;
+    vpp:curtailedMWh 0.32 ;
+    vpp:affects vpp:PV_002 ;
+    vpp:affects vpp:PV_004 ;
+    vpp:affects vpp:PV_006 ;
+    vpp:affects vpp:PV_007 ;
+    vpp:affects vpp:PV_008 ;
+    vpp:affects vpp:PV_011 ;
+    vpp:affects vpp:PV_012 ;
+    vpp:affects vpp:PV_013 ;
+    vpp:affects vpp:PV_015 .
+
+vpp:CI_FD_GWANGJU_3_11 a vpp:CurtailmentInstruction ;
+    vpp:issuedBy vpp:DSO ;
+    vpp:onFeeder vpp:FD_GWANGJU_3 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:reverseFlowMW 3.661 ;
+    vpp:limitMW 2.6 ;
+    vpp:curtailedMWh 1.061 ;
+    vpp:affects vpp:PV_002 ;
+    vpp:affects vpp:PV_004 ;
+    vpp:affects vpp:PV_006 ;
+    vpp:affects vpp:PV_007 ;
+    vpp:affects vpp:PV_008 ;
+    vpp:affects vpp:PV_011 ;
+    vpp:affects vpp:PV_012 ;
+    vpp:affects vpp:PV_013 ;
+    vpp:affects vpp:PV_015 .
+
+vpp:CI_FD_GWANGJU_3_12 a vpp:CurtailmentInstruction ;
+    vpp:issuedBy vpp:DSO ;
+    vpp:onFeeder vpp:FD_GWANGJU_3 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:reverseFlowMW 4.007 ;
+    vpp:limitMW 2.6 ;
+    vpp:curtailedMWh 1.407 ;
+    vpp:affects vpp:PV_002 ;
+    vpp:affects vpp:PV_004 ;
+    vpp:affects vpp:PV_006 ;
+    vpp:affects vpp:PV_007 ;
+    vpp:affects vpp:PV_008 ;
+    vpp:affects vpp:PV_011 ;
+    vpp:affects vpp:PV_012 ;
+    vpp:affects vpp:PV_013 ;
+    vpp:affects vpp:PV_015 .
+
+vpp:CI_FD_GWANGJU_3_13 a vpp:CurtailmentInstruction ;
+    vpp:issuedBy vpp:DSO ;
+    vpp:onFeeder vpp:FD_GWANGJU_3 ;
+    vpp:forInterval vpp:Hour13 ;
+    vpp:reverseFlowMW 3.892 ;
+    vpp:limitMW 2.6 ;
+    vpp:curtailedMWh 1.292 ;
+    vpp:affects vpp:PV_002 ;
+    vpp:affects vpp:PV_004 ;
+    vpp:affects vpp:PV_006 ;
+    vpp:affects vpp:PV_007 ;
+    vpp:affects vpp:PV_008 ;
+    vpp:affects vpp:PV_011 ;
+    vpp:affects vpp:PV_012 ;
+    vpp:affects vpp:PV_013 ;
+    vpp:affects vpp:PV_015 .
+
+vpp:CI_FD_GWANGJU_3_14 a vpp:CurtailmentInstruction ;
+    vpp:issuedBy vpp:DSO ;
+    vpp:onFeeder vpp:FD_GWANGJU_3 ;
+    vpp:forInterval vpp:Hour14 ;
+    vpp:reverseFlowMW 3.324 ;
+    vpp:limitMW 2.6 ;
+    vpp:curtailedMWh 0.724 ;
+    vpp:affects vpp:PV_002 ;
+    vpp:affects vpp:PV_004 ;
+    vpp:affects vpp:PV_006 ;
+    vpp:affects vpp:PV_007 ;
+    vpp:affects vpp:PV_008 ;
+    vpp:affects vpp:PV_011 ;
+    vpp:affects vpp:PV_012 ;
+    vpp:affects vpp:PV_013 ;
+    vpp:affects vpp:PV_015 .
+
+vpp:CI_FD_JEONJU_2_11 a vpp:CurtailmentInstruction ;
+    vpp:issuedBy vpp:DSO ;
+    vpp:onFeeder vpp:FD_JEONJU_2 ;
+    vpp:forInterval vpp:Hour11 ;
+    vpp:reverseFlowMW 2.096 ;
+    vpp:limitMW 1.8 ;
+    vpp:curtailedMWh 0.296 ;
+    vpp:affects vpp:PV_001 ;
+    vpp:affects vpp:PV_009 ;
+    vpp:affects vpp:PV_020 ;
+    vpp:affects vpp:WT_002 ;
+    vpp:affects vpp:PV_032 ;
+    vpp:affects vpp:PV_044 ;
+    vpp:affects vpp:PV_045 .
+
+vpp:CI_FD_JEONJU_2_12 a vpp:CurtailmentInstruction ;
+    vpp:issuedBy vpp:DSO ;
+    vpp:onFeeder vpp:FD_JEONJU_2 ;
+    vpp:forInterval vpp:Hour12 ;
+    vpp:reverseFlowMW 2.301 ;
+    vpp:limitMW 1.8 ;
+    vpp:curtailedMWh 0.501 ;
+    vpp:affects vpp:PV_001 ;
+    vpp:affects vpp:PV_009 ;
+    vpp:affects vpp:PV_020 ;
+    vpp:affects vpp:WT_002 ;
+    vpp:affects vpp:PV_032 ;
+    vpp:affects vpp:PV_044 ;
+    vpp:affects vpp:PV_045 .

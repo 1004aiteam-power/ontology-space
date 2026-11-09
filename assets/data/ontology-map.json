@@ -148,6 +148,23 @@
    "classesUsed": 12
   },
   {
+   "id": "vpp",
+   "ko": "VPP 가상 전력시장",
+   "en": "VPP virtual market",
+   "page": "vpp-market.html",
+   "group": "power",
+   "files": [
+    "examples/vpp/vpp-schema.ttl",
+    "examples/vpp/vpp-market.ttl"
+   ],
+   "triples": 3391,
+   "classes": 15,
+   "objectProps": 10,
+   "dataProps": 25,
+   "individuals": 485,
+   "classesUsed": 15
+  },
+  {
    "id": "eco",
    "ko": "단세포 생태계",
    "en": "Cell ecosystem",
@@ -319,6 +336,17 @@
   },
   {
    "from": "ev",
+   "to": "twin",
+   "n": 15,
+   "via": [
+    {
+     "p": "Feeder.NormalEnergizingSubstation",
+     "n": 15
+    }
+   ]
+  },
+  {
+   "from": "vpp",
    "to": "twin",
    "n": 15,
    "via": [
@@ -762,6 +790,49 @@
    ]
   },
   {
+   "from": "vpp",
+   "to": "cim",
+   "n": 135,
+   "via": [
+    {
+     "p": "Equipment.EquipmentContainer",
+     "n": 81
+    },
+    {
+     "p": "a Feeder",
+     "n": 15
+    },
+    {
+     "p": "IdentifiedObject.name",
+     "n": 15
+    },
+    {
+     "p": "Feeder.NormalEnergizingSubstation",
+     "n": 15
+    },
+    {
+     "p": "Feeder",
+     "n": 4
+    },
+    {
+     "p": "⊑ EnergyConsumer",
+     "n": 2
+    },
+    {
+     "p": "⊑ PhotoVoltaicUnit",
+     "n": 1
+    },
+    {
+     "p": "⊑ PowerElectronicsWindUnit",
+     "n": 1
+    },
+    {
+     "p": "⊑ BatteryUnit",
+     "n": 1
+    }
+   ]
+  },
+  {
    "from": "highway",
    "to": "skos",
    "n": 75,
@@ -1020,6 +1091,17 @@
   },
   {
    "from": "safety",
+   "to": "dct",
+   "n": 1,
+   "via": [
+    {
+     "p": "created",
+     "n": 1
+    }
+   ]
+  },
+  {
+   "from": "vpp",
    "to": "dct",
    "n": 1,
    "via": [

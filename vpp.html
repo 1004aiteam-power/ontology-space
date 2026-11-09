@@ -39,6 +39,7 @@
     <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu" id="vppMenu" hidden>
       <a href="vpp.html" aria-current="page"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
       <hr>
       <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
       <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
@@ -255,8 +256,8 @@ DERMS ──limits──▶ DERGroup  (feeder voltage / congestion)</code></pre>
     <div class="card"><h4><a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span></a></h4><p lang="ko">24시간 계통 흐름 위에 VPP 출력을 겹치면, 어느 변전소에서 역송·혼잡이 생기는지 볼 수 있습니다.</p><p lang="en">Overlay VPP output on the 24-hour grid flow to see where reverse flow or congestion appears.</p></div>
     <div class="card"><h4><a href="asset.html"><span lang="ko">자산관리</span><span lang="en">Asset management</span></a></h4><p lang="ko">ESS와 인버터도 설비입니다. 진단·열화 정보가 ESS의 충방전 한도를 정하는 근거가 됩니다.</p><p lang="en">Batteries and inverters are assets too; diagnosis and degradation data set the battery's charge/discharge limits.</p></div>
   </div>
-  <p lang="ko">다음 단계로, 가상 데이터로 이 VPP 온톨로지를 실제로 만들어 <a href="studio.html">온톨로지 설계실</a>에 추가할 예정입니다.</p>
-  <p lang="en">Next, a VPP ontology built from virtual data will be added to the <a href="studio.html">Design Studio</a>.</p>
+  <p lang="ko">이 구조를 가상 데이터로 실제로 만든 것이 <a href="vpp-market.html"><b>VPP 가상 전력시장 (그래프 DB)</b></a>입니다. VPP 10개 · 배전선로 15개 · DER 81개의 온톨로지를 그래프 DB로 바꿔 Cypher로 물어볼 수 있습니다.</p>
+  <p lang="en">This structure is built with virtual data in <a href="vpp-market.html"><b>VPP virtual market (graph DB)</b></a>: an ontology of 10 VPPs, 15 feeders and 81 DER turned into a graph DB you can query with Cypher.</p>
 </section>
 
 <section>
@@ -267,7 +268,7 @@ DERMS ──limits──▶ DERGroup  (feeder voltage / congestion)</code></pre>
     <li><a href="https://www.openadr.org/">OpenADR Alliance</a> · <a href="https://openchargealliance.org/">Open Charge Alliance (OCPP)</a></li>
     <li><a href="https://www.kpx.or.kr/"><span lang="ko">한국전력거래소(KPX)</span><span lang="en">Korea Power Exchange (KPX)</span></a> · <a href="https://www.law.go.kr/"><span lang="ko">국가법령정보센터: 분산에너지 활성화 특별법</span><span lang="en">Korean law database: Distributed Energy Act</span></a></li>
   </ul>
-  <div class="pager"><a href="twin.html"><span lang="ko">← 이전: 디지털 트윈</span><span lang="en">← Prev: Digital Twin</span></a><a href="ev.html"><span lang="ko">다음: 전기차 충전 →</span><span lang="en">Next: EV Charging →</span></a></div>
+  <div class="pager"><a href="twin.html"><span lang="ko">← 이전: 디지털 트윈</span><span lang="en">← Prev: Digital Twin</span></a><a href="vpp-market.html"><span lang="ko">다음: VPP 가상 전력시장 →</span><span lang="en">Next: VPP virtual market →</span></a></div>
 </section>
 </main>
 

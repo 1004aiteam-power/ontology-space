@@ -28,6 +28,7 @@ NAV = [
     ]),
     ("menu", "vppMenu", "VPP·분산에너지", "VPP · DER", [
         ("vpp.html", "VPP 기본 개념", "VPP basics", "가상발전소란 · 운영 고리 · 기존 발전소와 비교", "What a VPP is · operating loop · vs. conventional plants"),
+        ("vpp-market.html", "VPP 가상 전력시장 (그래프 DB)", "VPP virtual market (graph DB)", "VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB", "10 VPPs, feeders, bids, settlements → ontology → graph DB"),
         ("hr",),
         ("vpp.html#der", "분산에너지자원(DER)", "Distributed energy resources", "태양광 · ESS · 전기차 · 수요반응", "Solar, storage, EVs, demand response"),
         ("vpp.html#market", "예측 · 입찰 · 정산", "Forecast, bid, settle", "하루 전부터 실시간까지의 흐름", "From day-ahead to real time"),

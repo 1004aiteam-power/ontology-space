@@ -6,15 +6,16 @@
   const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const T = (o) => window.t(o);
   const L = (x) => T({ ko: x.ko, en: x.en });
-  // 자리 (viewBox 1000 × 610). 배전공사 안전이 가운데에서 업무 · 자산관리 · 배전선로 · 변전소 · 고장 영향과 잇고, 교통은 오른쪽, 자연은 왼쪽 아래
+  // 자리 (viewBox 1200 × 610). VPP 가상 전력시장은 오른쪽 끝(디지털 트윈 위 오른쪽). 배전공사 안전이 가운데에서 업무 · 자산관리 · 배전선로 · 변전소 · 고장 영향과 잇고, 교통은 오른쪽, 자연은 왼쪽 아래
   // (상자를 지나가는 화살표가 없도록 고른 배치)
   const POS = {
     substation: [300, 90], impact: [700, 90],
     asset: [100, 255], safety: [500, 255],
     eco: [100, 420], work: [300, 420], feeder: [700, 420],
-    highway: [900, 90], ev: [900, 255], twin: [900, 420],
+    highway: [900, 90], ev: [900, 255], twin: [900, 420], vpp: [1100, 255],
     obo: [120, 580], dct: [330, 580], cim: [560, 580], skos: [745, 580], geo: [900, 580]
   };
+  const LABEL_AT = { 'vpp>twin': 0.22 };   // 다른 이름표와 겹치는 선만 가운데가 아닌 곳에
   const W = 176, H = 70, SW = 150, SH = 34;
   const GROUP = { power: { ko: '전력', en: 'Power' }, traffic: { ko: '교통', en: 'Traffic' }, work: { ko: '업무', en: 'Work' }, nature: { ko: '자연', en: 'Nature' } };
   let D = null, sel = null;
@@ -35,7 +36,7 @@
   function draw() {
     const out = [`<defs><marker id="omA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 10,5 0,10z" class="om-ah"/></marker>
       <marker id="omA2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 10,5 0,10z" class="om-ah hot"/></marker></defs>`];
-    out.push(`<text class="om-band" x="8" y="555">${esc(T({ ko: '외부 표준', en: 'External standards' }))}</text><line class="om-sep" x1="0" x2="1000" y1="530" y2="530"/>`);
+    out.push(`<text class="om-band" x="8" y="555">${esc(T({ ko: '외부 표준', en: 'External standards' }))}</text><line class="om-sep" x1="0" x2="1200" y1="530" y2="530"/>`);
     const hot = (l) => sel && (l.from === sel || l.to === sel);
     for (const l of D.standardLinks) {
       const [x1, y1] = edgePt(l.from, l.to), [x2, y2] = edgePt(l.to, l.from);
@@ -43,9 +44,9 @@
     }
     for (const l of D.links) {
       const [x1, y1] = edgePt(l.from, l.to), [x2, y2] = edgePt(l.to, l.from);
-      const h = hot(l), my = (y1 + y2) / 2;
+      const k = LABEL_AT[l.from + '>' + l.to] ?? 0.5, h = hot(l), my = y1 + (y2 - y1) * k;   // 이름표 자리 (선을 따라 비율)
       const lab = `${l.via[0].p.split('.').pop()}${l.via.length > 1 ? ' …' : ''} ×${l.n}`, lw = lab.length * 7 + 18;   // 이름표 폭은 글자 수만큼 (CIM의 Class.prop은 prop만)
-      const mx = Math.min(1000 - lw / 2 - 2, Math.max(lw / 2 + 2, (x1 + x2) / 2));                                        // 이름표가 그림 밖으로 나가지 않게
+      const mx = Math.min(1200 - lw / 2 - 2, Math.max(lw / 2 + 2, x1 + (x2 - x1) * k));                                        // 이름표가 그림 밖으로 나가지 않게
       out.push(`<g class="om-link${h ? ' hot' : sel ? ' dim' : ''}" data-link="${l.from}>${l.to}" tabindex="0" role="button">
         <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-end="url(#${h ? 'omA2' : 'omA'})" style="stroke-width:${Math.min(5, 1.4 + Math.log2(l.n))}"/>
         <line class="hit" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>

@@ -1,0 +1,95 @@
+# VPP 가상 전력시장 온톨로지 — 스키마 (클래스 · 관계 · 값)
+# 개체(VPP 10 · 중개사업자 · DER · 배전선로 · 시장 시간대 · 입찰 · 정산 · 출력제한 지시)는
+# assets/vpp/vpp-graph.js에서 만듭니다: examples/vpp/build_vpp.mjs → vpp-market.ttl
+#
+# 다른 온톨로지와 잇는 곳
+#   IEC CIM          DER 클래스는 cim:PhotoVoltaicUnit · cim:PowerElectronicsWindUnit · cim:BatteryUnit · cim:EnergyConsumer의 하위 클래스,
+#                    배전선로는 cim:Feeder, DER → 선로는 cim:Equipment.EquipmentContainer (CIM 속성 그대로)
+#   디지털 트윈      선로 → 154kV 변전소는 cim:Feeder.NormalEnergizingSubstation으로 examples/twin/korea_virtual_grid.ttl의 변전소 IRI를 가리킴
+#
+# ⚠ 가상 데이터용 스키마입니다. 정산 규칙과 회사 이름은 개념 설명용이며 실제 제도와 다릅니다.
+@prefix vpp:  <https://1004aiteam-power.github.io/ontology-space/vpp#> .
+@prefix cim:  <http://iec.ch/TC57/CIM100#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://1004aiteam-power.github.io/ontology-space/vpp> a owl:Ontology ;
+    rdfs:label "VPP 가상 전력시장 온톨로지"@ko, "VPP virtual power market ontology"@en ;
+    owl:versionInfo "0.1" ;
+    dct:created "2026-11-09"^^xsd:date ;
+    rdfs:comment "가상발전소(VPP)가 묶은 분산에너지자원(DER), 그 자원이 붙은 배전선로와 변전소, 하루 전 시장의 입찰 · 정산, 배전운영자의 출력제한 지시를 한 그래프로 잇는다. 모든 데이터는 가상."@ko .
+
+### 주체
+vpp:VirtualPowerPlant a owl:Class ; rdfs:label "가상발전소 (VPP)"@ko, "Virtual power plant"@en ;
+    rdfs:comment "여러 DER을 묶어 시장과 계통 운영자에게 하나의 발전소처럼 보이게 하는 단위. 입찰과 정산의 주체."@ko .
+vpp:Aggregator a owl:Class ; rdfs:label "중개사업자"@ko, "Aggregator"@en ;
+    rdfs:comment "VPP를 운영하는 회사 (소규모전력중개사업자 · 수요관리사업자 등)."@ko .
+vpp:Market a owl:Class ; rdfs:label "전력시장"@ko, "Electricity market"@en .
+vpp:MarketOperator a owl:Class ; rdfs:label "시장운영자"@ko, "Market operator"@en .
+vpp:DistributionOperator a owl:Class ; rdfs:label "배전운영자 (DERMS)"@ko, "Distribution operator (DERMS)"@en ;
+    rdfs:comment "배전선로의 전압 · 역송 한도를 지키기 위해 DER 출력을 제한하는 주체."@ko .
+
+### 분산에너지자원 (DER) — CIM 클래스의 하위 클래스로
+vpp:DER a owl:Class ; rdfs:label "분산에너지자원"@ko, "Distributed energy resource"@en ;
+    rdfs:comment "배전망에 붙은 작은 발전 · 저장 · 조절 가능한 부하. VPP가 묶는 부품."@ko .
+vpp:PVSystem a owl:Class ; rdfs:subClassOf vpp:DER, cim:PhotoVoltaicUnit ; rdfs:label "태양광"@ko, "Solar PV system"@en .
+vpp:WindSystem a owl:Class ; rdfs:subClassOf vpp:DER, cim:PowerElectronicsWindUnit ; rdfs:label "풍력"@ko, "Wind system"@en .
+vpp:BatterySystem a owl:Class ; rdfs:subClassOf vpp:DER, cim:BatteryUnit ; rdfs:label "에너지저장장치 (ESS)"@ko, "Battery energy storage"@en .
+vpp:EVChargingSite a owl:Class ; rdfs:subClassOf vpp:DER, cim:EnergyConsumer ; rdfs:label "전기차 충전소"@ko, "EV charging site"@en ;
+    rdfs:comment "충전을 미루는 만큼(flexibleKW)을 VPP 출력으로 쓴다 (V1G)."@ko .
+vpp:DemandResponseResource a owl:Class ; rdfs:subClassOf vpp:DER, cim:EnergyConsumer ; rdfs:label "수요반응 자원"@ko, "Demand response resource"@en ;
+    rdfs:comment "지시에 따라 줄이는 사용량(flexibleKW)을 발전한 것과 같이 친다."@ko .
+
+### 시장
+vpp:MarketInterval a owl:Class ; rdfs:label "시장 시간대"@ko, "Market interval"@en ;
+    rdfs:comment "하루 전 시장의 한 시간. 그 시간의 SMP(원/kWh)를 가진다."@ko .
+vpp:Bid a owl:Class ; rdfs:label "입찰"@ko, "Bid"@en ;
+    rdfs:comment "VPP가 한 시간대에 내겠다고 약속한 전력량."@ko .
+vpp:Settlement a owl:Class ; rdfs:label "정산"@ko, "Settlement"@en ;
+    rdfs:comment "입찰 하나에 대한 계량 실적, 오차, 수익 · 정산금 · 벌칙."@ko .
+vpp:CurtailmentInstruction a owl:Class ; rdfs:label "출력제한 지시"@ko, "Curtailment instruction"@en ;
+    rdfs:comment "배전선로 역송이 한도를 넘을 때 배전운영자가 그 선로의 DER에 내리는 지시."@ko .
+
+### 관계
+vpp:aggregates a owl:ObjectProperty ; rdfs:domain vpp:VirtualPowerPlant ; rdfs:range vpp:DER ; rdfs:label "묶는다"@ko, "aggregates"@en .
+vpp:operatedBy a owl:ObjectProperty ; rdfs:label "운영 주체"@ko, "operated by"@en .
+vpp:participatesIn a owl:ObjectProperty ; rdfs:domain vpp:VirtualPowerPlant ; rdfs:range vpp:Market ; rdfs:label "참여 시장"@ko, "participates in"@en .
+vpp:inMarket a owl:ObjectProperty ; rdfs:domain vpp:MarketInterval ; rdfs:range vpp:Market ; rdfs:label "시장"@ko, "in market"@en .
+vpp:submittedBy a owl:ObjectProperty ; rdfs:domain vpp:Bid ; rdfs:range vpp:VirtualPowerPlant ; rdfs:label "입찰자"@ko, "submitted by"@en .
+vpp:forInterval a owl:ObjectProperty ; rdfs:range vpp:MarketInterval ; rdfs:label "시간대"@ko, "for interval"@en .
+vpp:settles a owl:ObjectProperty ; rdfs:domain vpp:Settlement ; rdfs:range vpp:Bid ; rdfs:label "정산 대상"@ko, "settles"@en .
+vpp:issuedBy a owl:ObjectProperty ; rdfs:domain vpp:CurtailmentInstruction ; rdfs:range vpp:DistributionOperator ; rdfs:label "지시 주체"@ko, "issued by"@en .
+vpp:onFeeder a owl:ObjectProperty ; rdfs:domain vpp:CurtailmentInstruction ; rdfs:range cim:Feeder ; rdfs:label "대상 선로"@ko, "on feeder"@en .
+vpp:affects a owl:ObjectProperty ; rdfs:domain vpp:CurtailmentInstruction ; rdfs:range vpp:DER ; rdfs:label "제한받는 자원"@ko, "affects"@en .
+# DER → 배전선로: cim:Equipment.EquipmentContainer, 배전선로 → 변전소: cim:Feeder.NormalEnergizingSubstation (CIM 속성 그대로 씀)
+
+### 값
+vpp:vppId a owl:DatatypeProperty ; rdfs:range xsd:string .
+vpp:derId a owl:DatatypeProperty ; rdfs:range xsd:string .
+vpp:strategy a owl:DatatypeProperty ; rdfs:label "운영 전략"@ko, "strategy"@en .
+vpp:ownerType a owl:DatatypeProperty ; rdfs:label "설치 장소"@ko, "owner type"@en .
+vpp:capacityKW a owl:DatatypeProperty ; rdfs:range xsd:decimal ; rdfs:label "정격 용량 (kW)"@ko, "rated capacity (kW)"@en .
+vpp:energyKWh a owl:DatatypeProperty ; rdfs:domain vpp:BatterySystem ; rdfs:range xsd:decimal ; rdfs:label "저장 용량 (kWh)"@ko, "energy capacity (kWh)"@en .
+vpp:flexibleKW a owl:DatatypeProperty ; rdfs:range xsd:decimal ; rdfs:label "조절 가능 용량 (kW)"@ko, "flexible capacity (kW)"@en .
+vpp:chargerCount a owl:DatatypeProperty ; rdfs:domain vpp:EVChargingSite ; rdfs:range xsd:integer .
+vpp:maxDurationH a owl:DatatypeProperty ; rdfs:domain vpp:DemandResponseResource ; rdfs:range xsd:integer ; rdfs:label "최대 감축 시간 (h)"@ko, "max duration (h)"@en .
+vpp:feederKind a owl:DatatypeProperty ; rdfs:domain cim:Feeder ; rdfs:range xsd:string ; rdfs:comment "urban 도심 · industrial 공단 · rural 농어촌"@ko .
+vpp:peakLoadMW a owl:DatatypeProperty ; rdfs:domain cim:Feeder ; rdfs:range xsd:decimal .
+vpp:hostingCapacityMW a owl:DatatypeProperty ; rdfs:domain cim:Feeder ; rdfs:range xsd:decimal ;
+    rdfs:label "역송 한도 (MW)"@ko, "hosting capacity (MW)"@en ; rdfs:comment "DER 출력 − 선로 부하가 이 값을 넘으면 출력제한."@ko .
+vpp:hour a owl:DatatypeProperty ; rdfs:domain vpp:MarketInterval ; rdfs:range xsd:integer .
+vpp:smp a owl:DatatypeProperty ; rdfs:domain vpp:MarketInterval ; rdfs:range xsd:decimal ; rdfs:label "계통한계가격 (원/kWh)"@ko, "system marginal price (KRW/kWh)"@en .
+vpp:tolerancePct a owl:DatatypeProperty ; rdfs:domain vpp:Market ; rdfs:range xsd:decimal .
+vpp:offeredMWh a owl:DatatypeProperty ; rdfs:domain vpp:Bid ; rdfs:range xsd:decimal .
+vpp:actualMWh a owl:DatatypeProperty ; rdfs:domain vpp:Settlement ; rdfs:range xsd:decimal .
+vpp:deviationPct a owl:DatatypeProperty ; rdfs:domain vpp:Settlement ; rdfs:range xsd:decimal ; rdfs:comment "(실적 − 입찰) / 입찰 × 100"@ko .
+vpp:essAdjustMWh a owl:DatatypeProperty ; rdfs:domain vpp:Settlement ; rdfs:range xsd:decimal ; rdfs:comment "실시간 오차를 메우려고 ESS가 추가로 충방전한 양"@ko .
+vpp:curtailedMWh a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+vpp:energyRevenueKRW a owl:DatatypeProperty ; rdfs:domain vpp:Settlement ; rdfs:range xsd:integer .
+vpp:incentiveKRW a owl:DatatypeProperty ; rdfs:domain vpp:Settlement ; rdfs:range xsd:integer .
+vpp:penaltyKRW a owl:DatatypeProperty ; rdfs:domain vpp:Settlement ; rdfs:range xsd:integer .
+vpp:reverseFlowMW a owl:DatatypeProperty ; rdfs:domain vpp:CurtailmentInstruction ; rdfs:range xsd:decimal .
+vpp:limitMW a owl:DatatypeProperty ; rdfs:domain vpp:CurtailmentInstruction ; rdfs:range xsd:decimal .

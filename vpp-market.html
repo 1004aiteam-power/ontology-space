@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · VPP Market Graph</title>
+<meta name="title-ko" content="Ontology Space · VPP 가상 전력시장 그래프 DB">
+<meta name="title-en" content="Ontology Space · VPP virtual market graph DB">
+<meta name="description" content="VPP 10개가 참여하는 가상 전력시장: 배전선로 · 변전소 · 분산에너지자원 · 입찰 · 정산을 온톨로지로 정의하고 그래프 DB로 바꿔 Cypher로 묻기 (가상 데이터)">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · VPP 가상 전력시장 그래프 DB">
+<meta property="og:description" content="VPP 10개가 참여하는 가상 전력시장: 배전선로 · 변전소 · 분산에너지자원 · 입찰 · 정산을 온톨로지로 정의하고 그래프 DB로 바꿔 Cypher로 묻기 (가상 데이터)">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/vpp-market.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=20261107d">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script src="assets/vendor/cytoscape.min.js"></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:780px}
+.vp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0}
+.vp-stats div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.vp-stats b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.vp-stats span{color:var(--muted);font-size:12.5px}
+.vp-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+.vp-steps .card{border-top:4px solid var(--line)}
+.vp-steps .card:nth-child(1){border-top-color:#8b5cf6} .vp-steps .card:nth-child(2){border-top-color:#0891b2} .vp-steps .card:nth-child(3){border-top-color:#1f6feb}
+.vp-steps .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted);font-size:13px}
+.vp-steps pre{font-size:12px;white-space:pre-wrap;word-break:break-word;margin:10px 0 0}
+.vp-schema{margin:16px 0;max-width:840px}
+.vp-schema svg{width:100%;height:auto;display:block}
+.vp-n rect{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.vp-n text{fill:var(--text);font-size:13px;font-weight:600;text-anchor:middle;font-family:ui-monospace,Menlo,Consolas,monospace}
+.vp-n .sm{font-size:11.5px;font-weight:400;fill:var(--muted);text-anchor:start}
+.vp-n.v rect{stroke:#2a78d6;stroke-width:2.5} .vp-n.cim rect{stroke:#0891b2;stroke-width:2} .vp-n.tw rect{stroke:#0891b2;stroke-width:2;stroke-dasharray:5 3} .vp-n.mk rect{stroke:#c2410c;stroke-width:2}
+.vp-e path{fill:none;stroke:var(--muted);stroke-width:1.5} .vp-ah{fill:var(--muted)}
+.vp-e text{fill:var(--muted);font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.vp-cap{fill:var(--muted);font-size:12px}
+.vp-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.vp-chips button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13.5px}
+.vp-chips button small{color:var(--muted);font-variant-numeric:tabular-nums}
+.vp-chips button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+#vpSelInfo{margin:4px 0 8px;font-size:14.5px}
+details.q{margin:6px 0 10px;font-size:14px} details.q summary{cursor:pointer;color:var(--muted)} details.q pre{margin:6px 0 0;font-size:12px}
+.vp-gbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:8px 0}
+.vp-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted)}
+.vp-legend span{display:inline-flex;align-items:center;gap:6px}
+.vp-legend i{display:inline-block;width:11px;height:11px;border-radius:50%}
+.vp-legend i.sh-rectangle,.vp-legend i.sh-round-rectangle,.vp-legend i.sh-barrel,.vp-legend i.sh-tag{border-radius:2px}
+.vp-legend i.sh-diamond{border-radius:1px;transform:rotate(45deg) scale(.85)}
+.vp-legend i.sh-triangle{border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.vp-legend i.sh-hexagon{border-radius:0;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.vp-legend i.sh-pentagon{border-radius:0;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)}
+.vp-gbar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:3px 10px;cursor:pointer;font-size:13px;margin-left:auto}
+#graph{height:600px}
+.vp-detail{margin:12px 0}
+.vp-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.vp-two h4{margin:0 0 6px}
+.vp-two pre{margin:0;font-size:12px;max-height:380px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.vp-two .tbl{max-height:380px;overflow:auto} .vp-two table{font-size:12.5px}
+@media (max-width:760px){.vp-two{grid-template-columns:minmax(0,1fr)} #graph{height:440px}}
+.vp-chart{position:relative;margin:8px 0}
+.vp-chart svg{width:100%;height:auto;display:block}
+.vp-chart .grid{stroke:var(--line);stroke-width:1} .vp-chart .base{stroke:var(--muted);stroke-width:1}
+.vp-chart .ax{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums} .vp-chart .smp{fill:var(--muted);font-size:9.5px;font-variant-numeric:tabular-nums}
+.vp-chart .warn{fill:var(--text);font-size:12px;font-weight:700}
+.vp-chart .cutband{fill:color-mix(in srgb,#eb6834 13%,transparent)}
+.vp-chart .bid{opacity:.45}
+.vp-chart .hit{fill:transparent;cursor:default} .vp-chart .hit.on{fill:color-mix(in srgb,var(--text) 6%,transparent)}
+.vp-tip{position:absolute;width:180px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);pointer-events:none;font-variant-numeric:tabular-nums}
+.vp-clegend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--muted)}
+.vp-clegend span{display:inline-flex;align-items:center;gap:6px}
+.vp-clegend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+.vp-clegend i.band{background:color-mix(in srgb,#eb6834 22%,transparent)}
+.vp-clegend .warnb{color:var(--text)}
+#vpSettle table{font-size:13px} #vpSettle td.num{text-align:right;font-variant-numeric:tabular-nums} #vpSettle tr.on td{background:var(--accent-soft);font-weight:600}
+.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:20px 0;border-top:1px solid var(--line)}
+.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
+.decision h3{margin:0 0 6px} .decision p{margin:6px 0}
+@media (max-width:560px){.decision{grid-template-columns:minmax(0,1fr)}}
+#results .tbl{max-height:420px;overflow:auto}
+#results table{font-size:13px}
+</style>
+<script type="module" src="assets/vpp/vpp-app.js?v=20261109a"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html" aria-current="page"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">VPP × ONTOLOGY × GRAPH DB</div>
+  <h1><span lang="ko">VPP 10개가 참여하는 가상 전력시장</span><span lang="en">A virtual power market with ten VPPs</span></h1>
+  <p class="thesis" lang="ko">VPP가 묶은 자원은 <b>어느 배전선로</b>에 붙어 있고, 그 선로가 막히면 <b>누구의 입찰</b>이 틀어질까?<br>온톨로지로 뜻을 정하고, 그래프 DB로 바꿔 한 번에 묻습니다.</p>
+  <p class="thesis" lang="en">Which <b>feeder</b> does each VPP resource sit on, and when that feeder congests, <b>whose bid</b> breaks?<br>Define the meaning with an ontology, turn it into a graph DB, ask in one query.</p>
+  <p class="lead" lang="ko">가상 지역 다섯 곳(광주 · 전주 · 목포 · 군산 · 순천)의 154kV 변전소는 <a href="twin.html">디지털 트윈</a>의 변전소를 그대로 가리킵니다. 그 아래 22.9kV 배전선로 15개에 태양광 · 풍력 · ESS · 전기차 충전소 · 수요반응 81개가 붙어 있고, 중개사업자 10곳이 이것을 VPP 10개로 묶어 하루 전 시장에 24시간 입찰합니다. 당일에는 날씨가 예보와 다르고, 역송이 넘친 선로에는 배전운영자의 출력제한 지시가 내려옵니다. 개념은 <a href="vpp.html">VPP 기본 개념</a>에 정리했습니다.</p>
+  <p class="lead" lang="en">The 154 kV substations of five virtual regions (Gwangju, Jeonju, Mokpo, Gunsan, Suncheon) point straight at the <a href="twin.html">digital twin</a>. Below them, 15 feeders at 22.9 kV carry 81 solar, wind, battery, EV-charging and demand-response resources; ten aggregators bundle them into ten VPPs that bid 24 hours into a day-ahead market. On the day the weather differs from the forecast, and feeders with too much reverse flow get curtailment instructions from the distribution operator. Concepts are on <a href="vpp.html">VPP basics</a>.</p>
+  <div class="notice"><b>⚠ <span lang="ko">가상 데이터입니다</span><span lang="en">Virtual data</span></b>
+    <p lang="ko">회사 · 설비 · 배전선로 · 날씨 · SMP · 정산 규칙(오차 ±8%, 정산금 4원/kWh, 벌칙 SMP의 30%)은 모두 개념 설명을 위해 만든 값이며 실제 시장 · 제도와 다릅니다.</p>
+    <p lang="en">Companies, equipment, feeders, weather, SMP and the settlement rule (±8% band, 4 KRW/kWh incentive, 30% of SMP penalty) are all made up to explain the idea and differ from any real market.</p></div>
+  <div id="vpStats" class="vp-stats"></div>
+  <p id="vpStatus" class="meta"></p>
+</div>
+
+<section id="pipeline">
+  <h2><span lang="ko">온톨로지에서 그래프 DB까지, 세 단계</span><span lang="en">From ontology to graph DB in three steps</span></h2>
+  <p lang="ko">같은 정보를 세 가지 모양으로 봅니다. 아래 그래프에서 노드를 누르면 ②와 ③을 그 개체로 나란히 보여 줍니다.</p>
+  <p lang="en">The same information in three shapes. Click a node in the graph below to see ② and ③ side by side for that individual.</p>
+  <div class="vp-steps">
+    <div class="card"><div class="no">① <span lang="ko">스키마 (TBox)</span><span lang="en">Schema (TBox)</span></div>
+      <h4><span lang="ko">무엇이 있고 어떻게 이어지나</span><span lang="en">What exists and how it connects</span></h4>
+      <p lang="ko">클래스와 관계를 정합니다. DER 클래스는 IEC CIM 클래스의 하위 클래스라서, CIM을 아는 도구는 VPP 데이터도 읽을 수 있습니다.</p>
+      <p lang="en">Classes and relations. DER classes are subclasses of IEC CIM classes, so CIM-aware tools can read the VPP data.</p>
+<pre><code>vpp:BatterySystem
+    rdfs:subClassOf vpp:DER, cim:BatteryUnit .
+vpp:aggregates rdfs:domain vpp:VirtualPowerPlant ;
+    rdfs:range vpp:DER .</code></pre></div>
+    <div class="card"><div class="no">② <span lang="ko">개체 (ABox, RDF 트리플)</span><span lang="en">Individuals (ABox, RDF triples)</span></div>
+      <h4><span lang="ko">실제 VPP · 선로 · 입찰</span><span lang="en">The actual VPPs, feeders, bids</span></h4>
+      <p lang="ko">주어 · 술어 · 목적어 세 칸짜리 문장의 모음입니다. 선로가 붙은 변전소는 디지털 트윈의 IRI를 그대로 씁니다.</p>
+      <p lang="en">A set of three-part statements. A feeder's substation is the digital twin's own IRI.</p>
+<pre><code>vpp:VPP02 vpp:aggregates vpp:ESS_001 .
+vpp:ESS_001 a vpp:BatterySystem ;
+    vpp:capacityKW 500.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_2 .
+vpp:FD_GWANGJU_2 cim:Feeder.NormalEnergizingSubstation
+    tw:_301b3101-… .   # 광주 (디지털 트윈)</code></pre></div>
+    <div class="card"><div class="no">③ <span lang="ko">속성 그래프 (그래프 DB)</span><span lang="en">Property graph (graph DB)</span></div>
+      <h4><span lang="ko">Neo4j처럼 노드 · 관계로</span><span lang="en">Nodes and relationships, Neo4j-style</span></h4>
+      <p lang="ko">타입은 라벨(상위 클래스 포함), 값은 노드 속성, 개체 연결은 관계가 됩니다. 이 페이지는 브라우저 안에서 바꾸고, 같은 결과를 Neo4j 적재 스크립트로도 내보냅니다.</p>
+      <p lang="en">Types become labels (with superclasses), values become properties, links become relationships. This page converts in the browser and exports the same result as a Neo4j load script.</p>
+<pre><code>(:VirtualPowerPlant {vppId:'VPP02'})
+  -[:AGGREGATES]->
+(:BatterySystem:DER:BatteryUnit
+   {derId:'ESS_001', capacityKW:500})
+  -[:EQUIPMENT_CONTAINER]->(:Feeder)
+  -[:NORMAL_ENERGIZING_SUBSTATION]->(:Substation)</code></pre></div>
+  </div>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">온톨로지 (RDF)</span><span lang="en">Ontology (RDF)</span></th><th><span lang="ko">그래프 DB</span><span lang="en">Graph DB</span></th><th><span lang="ko">예</span><span lang="en">Example</span></th></tr>
+    <tr><td><code>rdf:type</code> + <code>rdfs:subClassOf</code></td><td><span lang="ko">라벨 (상위 클래스까지 모두)</span><span lang="en">Labels (all superclasses too)</span></td><td><code>:PVSystem:DER:PhotoVoltaicUnit</code></td></tr>
+    <tr><td><span lang="ko">값(리터럴)을 가진 술어</span><span lang="en">Predicate with a literal</span></td><td><span lang="ko">노드 속성 (이름은 술어의 마지막 부분)</span><span lang="en">Node property (local name)</span></td><td><code>vpp:capacityKW 500.0</code> → <code>capacityKW: 500</code></td></tr>
+    <tr><td><span lang="ko">언어 태그</span><span lang="en">Language tags</span></td><td><span lang="ko"><code>@ko</code>는 그대로, 다른 언어는 <code>_en</code>을 붙임</span><span lang="en"><code>@ko</code> as is; others get <code>_en</code> etc.</span></td><td><code>label</code> · <code>label_en</code></td></tr>
+    <tr><td><span lang="ko">개체를 가리키는 술어</span><span lang="en">Predicate pointing at an individual</span></td><td><span lang="ko">관계 (대문자_밑줄)</span><span lang="en">Relationship (UPPER_SNAKE)</span></td><td><code>cim:Equipment.EquipmentContainer</code> → <code>:EQUIPMENT_CONTAINER</code></td></tr>
+    <tr><td><span lang="ko">개체 IRI</span><span lang="en">Individual IRI</span></td><td><code>uri</code> <span lang="ko">속성 (고유 키)</span><span lang="en">property (unique key)</span></td><td><code>uri: '…/vpp#ESS_001'</code></td></tr>
+  </table></div>
+</section>
+
+<section id="schema">
+  <h2><span lang="ko">스키마: 클래스와 관계</span><span lang="en">Schema: classes and relations</span></h2>
+  <figure class="vp-schema" aria-label="schema">
+    <svg viewBox="0 0 820 420" role="img">
+      <defs><marker id="vpArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 10,5 0,10z" class="vp-ah"/></marker></defs>
+      <g class="vp-e">
+        <path d="M400 100 V 58" marker-end="url(#vpArr)"/><text x="406" y="84">operatedBy</text>
+        <path d="M500 112 L 610 50" marker-end="url(#vpArr)"/><text x="530" y="70">participatesIn</text>
+        <path d="M400 136 V 198" marker-end="url(#vpArr)"/><text x="406" y="172">aggregates</text>
+        <path d="M300 218 H 192" marker-end="url(#vpArr)"/><text x="200" y="210">EquipmentContainer</text>
+        <path d="M105 200 V 138" marker-end="url(#vpArr)"/><text x="111" y="174">NormalEnergizing…</text>
+        <path d="M105 352 V 238" marker-end="url(#vpArr)"/><text x="111" y="300">onFeeder</text>
+        <path d="M190 365 C 250 365, 270 340, 298 330" marker-end="url(#vpArr)"/><text x="206" y="390">affects</text>
+        <path d="M610 210 L 502 130" marker-end="url(#vpArr)"/><text x="512" y="182">submittedBy</text>
+        <path d="M705 200 V 138" marker-end="url(#vpArr)"/><text x="711" y="174">forInterval</text>
+        <path d="M705 100 V 58" marker-end="url(#vpArr)"/><text x="711" y="84">inMarket</text>
+        <path d="M705 300 V 238" marker-end="url(#vpArr)"/><text x="711" y="274">settles</text>
+      </g>
+      <g class="vp-n v"><rect x="300" y="20" width="200" height="36" rx="8"/><text x="400" y="43">Aggregator</text></g>
+      <g class="vp-n v"><rect x="300" y="100" width="200" height="36" rx="8"/><text x="400" y="123">VirtualPowerPlant</text></g>
+      <g class="vp-n v"><rect x="300" y="200" width="200" height="150" rx="8"/><text x="400" y="223">DER</text>
+        <text class="sm" x="314" y="250">⊒ PVSystem ⊑ cim:PhotoVoltaicUnit</text>
+        <text class="sm" x="314" y="270">⊒ WindSystem ⊑ cim:…WindUnit</text>
+        <text class="sm" x="314" y="290">⊒ BatterySystem ⊑ cim:BatteryUnit</text>
+        <text class="sm" x="314" y="310">⊒ EVChargingSite ⊑ cim:EnergyConsumer</text>
+        <text class="sm" x="314" y="330">⊒ DemandResponse… ⊑ cim:EnergyConsumer</text></g>
+      <g class="vp-n tw"><rect x="20" y="100" width="170" height="36" rx="8"/><text x="105" y="123">cim:Substation</text></g>
+      <g class="vp-n cim"><rect x="20" y="200" width="170" height="36" rx="8"/><text x="105" y="223">cim:Feeder</text></g>
+      <g class="vp-n mk"><rect x="20" y="352" width="170" height="36" rx="8"/><text x="105" y="375">Curtailment…</text></g>
+      <g class="vp-n mk"><rect x="610" y="20" width="190" height="36" rx="8"/><text x="705" y="43">Market</text></g>
+      <g class="vp-n mk"><rect x="610" y="100" width="190" height="36" rx="8"/><text x="705" y="123">MarketInterval</text></g>
+      <g class="vp-n mk"><rect x="610" y="200" width="190" height="36" rx="8"/><text x="705" y="223">Bid</text></g>
+      <g class="vp-n mk"><rect x="610" y="300" width="190" height="36" rx="8"/><text x="705" y="323">Settlement</text></g>
+      <text class="vp-cap" x="20" y="80"><tspan lang="ko">점선 = 디지털 트윈의 개체</tspan><tspan lang="en">Dashed = digital-twin individual</tspan></text>
+      <text class="vp-cap" x="20" y="412"><tspan lang="ko">⊑ 하위 클래스. 출력제한 지시는 배전운영자(issuedBy)가 시간대(forInterval)마다 내림 — 그림에서 생략</tspan><tspan lang="en">⊑ subclass. Curtailments are issued by the DSO (issuedBy) per interval (forInterval) — omitted in the drawing</tspan></text>
+    </svg>
+  </figure>
+</section>
+
+<section id="graph-db">
+  <h2><span lang="ko">그래프 DB 둘러보기</span><span lang="en">Explore the graph DB</span></h2>
+  <p lang="ko">위쪽은 계통(변전소 → 배전선로 → DER), 아래쪽은 VPP와 중개사업자입니다. VPP를 고르면 그 VPP의 자원 · 선로 · 변전소 · 받은 출력제한이 강조됩니다. 강조는 미리 그려 둔 것이 아니라 <b>그래프에 Cypher를 실행한 결과</b>입니다.</p>
+  <p lang="en">Top: the grid (substation → feeder → DER). Bottom: VPPs and aggregators. Pick a VPP to highlight its resources, feeders, substations and curtailments. The highlight is not pre-drawn — it is <b>the result of a Cypher query on the graph</b>.</p>
+  <div class="vp-chips" id="vpChips"></div>
+  <p id="vpSelInfo"></p>
+  <details class="q" id="vpSelQuery" hidden></details>
+  <div class="vp-gbar"><div class="vp-legend" id="vpLegend"></div><button type="button" id="vpFit"><span lang="ko">전체 보기</span><span lang="en">Fit</span></button></div>
+  <div id="graph" role="img" aria-label="VPP graph"></div>
+  <div class="vp-detail" id="vpDetail"></div>
+</section>
+
+<section id="market">
+  <h2><span lang="ko">하루 전 시장: 약속과 실적</span><span lang="en">Day-ahead market: promise vs. delivery</span></h2>
+  <p lang="ko">위에서 고른 VPP의 24시간입니다. 막대에 마우스를 올리면 SMP · 오차 · ESS 보정 · 출력제한량이 나옵니다. 전주는 오후에 예보에 없던 구름이 끼었고, 광주 D/L 3과 전주 D/L 2는 한낮 역송이 한도를 넘어 출력제한을 받았습니다.</p>
+  <p lang="en">The 24 hours of the VPP picked above. Hover a bar for SMP, deviation, battery correction and curtailment. Unforecast clouds covered Jeonju in the afternoon, and Gwangju D/L 3 and Jeonju D/L 2 were curtailed when midday reverse flow passed their limits.</p>
+  <h3 id="vpMkTitle"></h3>
+  <div class="vp-clegend" id="vpChartLegend"></div>
+  <div class="vp-chart" id="vpChart"></div>
+  <details class="q" id="vpMkQuery"></details>
+  <h3><span lang="ko">하루 정산 (VPP 10개)</span><span lang="en">Daily settlement (all ten VPPs)</span></h3>
+  <div class="tbl" id="vpSettle"></div>
+  <p class="meta" lang="ko">순수익 = 전력량 수익(실적 × SMP) + 정산금 − 벌칙. ESS가 있는 VPP는 구름 · 출력제한으로 생긴 오차를 메워 오차 범위 안에 머무는 시간이 많습니다(Q7).</p>
+  <p class="meta" lang="en">Net = energy revenue (actual × SMP) + incentive − penalty. VPPs with a battery fill the gaps left by clouds and curtailment and stay in band more often (Q7).</p>
+</section>
+
+<section id="cq">
+  <h2><span lang="ko">그래프에 묻기 (Cypher)</span><span lang="en">Ask the graph (Cypher)</span></h2>
+  <p lang="ko">VPP 온톨로지 · 스키마 · 디지털 트윈을 한 그래프에 불러 두었습니다. 질문을 누르면 Cypher가 채워지고 바로 실행됩니다. 고쳐서 다시 실행해도 됩니다(Ctrl/⌘ + Enter).</p>
+  <p lang="en">The VPP ontology, schema and digital twin are loaded into one graph. Click a question to fill in and run its Cypher; edit and re-run as you like (Ctrl/⌘ + Enter).</p>
+  <div class="presets" id="vpPresets"></div>
+  <textarea id="query" spellcheck="false" aria-label="Cypher"></textarea>
+  <div class="lab-bar"><button id="vpQuery" class="primary">▶ <span lang="ko">실행</span><span lang="en">Run</span></button></div>
+  <div id="results"></div>
+</section>
+
+<section id="neo4j">
+  <h2><span lang="ko">실제 Neo4j에 올리기</span><span lang="en">Load into a real Neo4j</span></h2>
+  <p lang="ko">브라우저에서 만든 그래프와 똑같은 노드 · 관계를 Neo4j에 만드는 스크립트를 함께 냅니다. Neo4j Browser나 <code>cypher-shell</code>에 붙여 넣으면 되고, 위의 질문 Q1~Q8을 그대로 실행할 수 있습니다.</p>
+  <p lang="en">A script that creates exactly the same nodes and relationships in Neo4j is published alongside. Paste it into Neo4j Browser or <code>cypher-shell</code>, then run Q1–Q8 above unchanged.</p>
+<pre><code>// examples/vpp/neo4j/import.cypher (일부)
+CREATE CONSTRAINT resource_uri IF NOT EXISTS FOR (r:Resource) REQUIRE r.uri IS UNIQUE;
+UNWIND [ {uri: '…/vpp#ESS_001', derId: 'ESS_001', capacityKW: 500, …}, … ] AS p
+MERGE (n:Resource {uri: p.uri}) SET n += p, n:`BatterySystem`:`DER`:`BatteryUnit`;
+UNWIND [ ['…/vpp#VPP02', '…/vpp#ESS_001'], … ] AS e
+MATCH (a:Resource {uri: e[0]}), (b:Resource {uri: e[1]}) MERGE (a)-[:AGGREGATES]->(b);</code></pre>
+  <p lang="ko">RDF 그대로 넣고 싶다면 Neo4j의 neosemantics(n10s) 플러그인으로 <code>vpp-schema.ttl</code> · <code>vpp-market.ttl</code>을 불러올 수도 있습니다. 다만 n10s의 기본 설정은 관계 이름을 이 페이지와 다르게 만들 수 있으므로(예: <code>Equipment.EquipmentContainer</code>), 질문을 그대로 쓰려면 위 스크립트를 권합니다.</p>
+  <p lang="en">To load the RDF itself, Neo4j's neosemantics (n10s) plugin can import <code>vpp-schema.ttl</code> and <code>vpp-market.ttl</code>. Its default settings may name relationships differently from this page (e.g. <code>Equipment.EquipmentContainer</code>), so the script above is recommended if you want to reuse the questions.</p>
+</section>
+
+<section id="design">
+  <h2><span lang="ko">설계 결정</span><span lang="en">Design decisions</span></h2>
+  <div class="decision"><div class="no">D1</div><div><h3><span lang="ko">DER은 새로 만들되 CIM의 하위 클래스로</span><span lang="en">New DER classes, as CIM subclasses</span></h3>
+    <p lang="ko">CIM에는 이미 태양광(<code>PhotoVoltaicUnit</code>) · 배터리(<code>BatteryUnit</code>) 클래스가 있지만 "어느 VPP에 묶였나", "얼마나 조절할 수 있나" 같은 시장 쪽 뜻은 없습니다. 그래서 <code>vpp:DER</code> 계층을 만들고 각각 CIM 클래스의 하위 클래스로 두었습니다. 그래프에서는 한 노드가 <code>:BatterySystem:DER:BatteryUnit</code> 라벨을 모두 가지므로, CIM 질의와 VPP 질의가 같은 노드를 찾습니다. 전기차 충전소와 수요반응은 계통에서 보면 부하라서 <code>cim:EnergyConsumer</code> 아래에 두었습니다.</p>
+    <p lang="en">CIM already has solar (<code>PhotoVoltaicUnit</code>) and battery (<code>BatteryUnit</code>) classes, but no market meaning such as "which VPP" or "how flexible". So a <code>vpp:DER</code> hierarchy is added, each class a subclass of the CIM one. In the graph one node carries <code>:BatterySystem:DER:BatteryUnit</code>, so CIM queries and VPP queries find the same node. EV sites and demand response are loads from the grid's view, so they sit under <code>cim:EnergyConsumer</code>.</p></div></div>
+  <div class="decision"><div class="no">D2</div><div><h3><span lang="ko">계통 연결은 CIM 속성 그대로, 변전소는 디지털 트윈의 IRI로</span><span lang="en">Grid links use CIM properties; substations are the twin's IRIs</span></h3>
+    <p lang="ko">DER → 배전선로는 <code>cim:Equipment.EquipmentContainer</code>, 배전선로 → 변전소는 <code>cim:Feeder.NormalEnergizingSubstation</code>을 썼습니다(<a href="ev.html">전기차 충전 온톨로지</a>와 같은 방식). 변전소는 새로 만들지 않고 디지털 트윈의 개체 IRI를 가리키므로, 트윈의 변압기 · 송전선로 질의에서 바로 VPP 자원까지 내려올 수 있습니다(Q8).</p>
+    <p lang="en">DER → feeder uses <code>cim:Equipment.EquipmentContainer</code> and feeder → substation <code>cim:Feeder.NormalEnergizingSubstation</code> (as in the <a href="ev.html">EV charging ontology</a>). Substations are not recreated; they point at the twin's IRIs, so a query over the twin's transformers and lines can walk straight down to VPP resources (Q8).</p></div></div>
+  <div class="decision"><div class="no">D3</div><div><h3><span lang="ko">입찰과 정산을 다른 노드로</span><span lang="en">Bids and settlements as separate nodes</span></h3>
+    <p lang="ko">입찰량과 실적을 한 노드에 넣을 수도 있었지만, 입찰은 <b>하루 전</b>, 정산은 <b>하루 뒤</b>에 생기는 서로 다른 사건입니다. 나누어 두면 "정산이 아직 안 된 입찰"이나 "정정 정산"을 같은 모양으로 더할 수 있습니다. 시간대(<code>MarketInterval</code>)도 노드라서 SMP와 출력제한 지시가 같은 시간대 노드에서 만납니다.</p>
+    <p lang="en">Bid and outcome could share one node, but a bid happens <b>the day before</b> and a settlement <b>the day after</b>: different events. Splitting them leaves room for "bids not yet settled" or "corrected settlements" in the same shape. The hour (<code>MarketInterval</code>) is a node too, so SMP and curtailment instructions meet on the same interval node.</p></div></div>
+  <div class="decision"><div class="no">D4</div><div><h3><span lang="ko">시간별 자원 출력은 그래프에 넣지 않음</span><span lang="en">No per-resource hourly output in the graph</span></h3>
+    <p lang="ko">DER 81개 × 24시간 출력까지 노드로 만들면 그래프가 커지는데 관계는 늘지 않습니다. 그래프에는 <b>관계가 의미 있는 것</b>(누가 누구를 묶나, 어디에 붙었나, 누가 무엇을 약속했나)만 두고, 자원별 시계열은 시계열 DB에 두는 것이 보통입니다. 이 페이지는 VPP 단위의 입찰 · 정산만 그래프에 넣었습니다.</p>
+    <p lang="en">Making nodes for 81 DER × 24 hours would grow the graph without adding relationships. A graph holds <b>what is meaningful as a relationship</b> (who bundles whom, where it connects, who promised what); per-resource time series usually live in a time-series database. This page keeps only VPP-level bids and settlements in the graph.</p></div></div>
+</section>
+
+<section id="files">
+  <h2><span lang="ko">파일</span><span lang="en">Files</span></h2>
+  <div class="grid">
+    <a class="card" href="examples/vpp/vpp-schema.ttl"><h4>vpp-schema.ttl</h4><p lang="ko">스키마: 클래스 · 관계 · 값 (손으로 씀)</p><p lang="en">Schema: classes, relations, values (hand-written)</p></a>
+    <a class="card" href="examples/vpp/vpp-market.ttl"><h4>vpp-market.ttl</h4><p lang="ko">개체: VPP · DER · 선로 · 입찰 · 정산 · 출력제한</p><p lang="en">Individuals: VPPs, DER, feeders, bids, settlements, curtailments</p></a>
+    <a class="card" href="examples/vpp/neo4j/import.cypher"><h4>neo4j/import.cypher</h4><p lang="ko">Neo4j 적재 스크립트 (브라우저 그래프와 같음)</p><p lang="en">Neo4j load script (same as the browser graph)</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/vpp/vpp-graph.js"><h4>assets/vpp/vpp-graph.js</h4><p lang="ko">가상 시장 계산 → 트리플 · Turtle · 역량 질문</p><p lang="en">Virtual market → triples · Turtle · questions</p></a>
+    <a class="card" href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/vpp/build_vpp.mjs"><h4>build_vpp.mjs</h4><p lang="ko">명령줄에서 Turtle · Neo4j 스크립트 만들기와 질의</p><p lang="en">Build Turtle and the Neo4j script, run the questions</p></a>
+  </div>
+  <div class="pager"><a href="vpp.html"><span lang="ko">← 이전: VPP 기본 개념</span><span lang="en">← Prev: VPP basics</span></a><a href="ev.html"><span lang="ko">다음: 전기차 충전 →</span><span lang="en">Next: EV Charging →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
