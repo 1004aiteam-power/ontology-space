@@ -22,15 +22,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- /head:meta -->
 <title>Ontology Space · 업무 흐름도</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap">
 <style>
 /* 레이아웃: 상단 요약 → 영역별 스윔레인 그래프(가로=선행 깊이) + 우측 상세 패널 → 영역 간 흐름 행렬 */
 :root{
   --bg:#f4f6f9;--surface:#ffffff;--ink:#1b2130;--muted:#5d6678;--line:#d8dde6;--edge:#b3bbca;--accent:#1f4fd1;--fb:#d0581b;
   --c-ST:#2f63c9;--c-BD:#b77806;--c-TD:#7546c4;--c-DM:#0f8a77;--c-PM:#55657d;--c-GV:#c2394a;--c-OC:#b8478a;--c-MS:#5f7d1f;--c-OP:#167fa6;
-  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic","Segoe UI",sans-serif;   /* 사이트 본문과 같은 글꼴 (외부 글꼴 서버를 쓰지 않음) */
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#11141a;--surface:#191e27;--ink:#e5e9f0;--muted:#98a2b4;--line:#2b3240;--edge:#3e4757;--accent:#86a8ff;--fb:#ff9a5c;

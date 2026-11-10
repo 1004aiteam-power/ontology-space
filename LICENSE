@@ -52,6 +52,7 @@ Commercial use or use under other terms requires separate permission from the co
 ======================================================================
   - assets/vendor/n3/                  N3.js — MIT (assets/vendor/n3/LICENSE.md)
   - assets/vendor/cytoscape.min.js     Cytoscape.js — MIT
+  - assets/vendor/highlight.min.js     highlight.js — BSD-3-Clause (assets/vendor/highlight.LICENSE)
   - examples/cgmes/CIGRE_MV/           cimpy sample data — Apache-2.0
                                        (examples/cgmes/LICENSE-cimpy-Apache-2.0)
   - examples/twin/korea_outline.geojson
