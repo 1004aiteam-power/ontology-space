@@ -84,6 +84,16 @@ NAV = [
 ]
 
 
+# 첫 화면이 그려지기 전에 끝나야 하는 것만 <head> 안에 직접 넣는다 (언어 · 테마 · window.t). 나머지는 assets/site.js 가 defer 로.
+# 주소의 ?lang=en · ?lang=ko 가 가장 먼저, 다음이 지난번 선택, 다음이 브라우저 언어.
+BOOT = ("<script>(function(){var r=document.documentElement,l=null,s=null;"
+        "try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}"
+        "try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}"
+        "r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');"
+        "if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');"
+        "window.currentLang=function(){return r.lang};"
+        "window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>")
+
 SITE = "https://1004aiteam-power.github.io/ontology-space/"
 # 공유 미리보기 이미지: 시뮬레이션 썸네일(tools/thumbs.cjs)이 있는 페이지는 그것, 나머지는 소개 페이지 화면
 OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem")}
@@ -127,6 +137,7 @@ def head_meta(page: str, s: str) -> str:
         '<meta property="og:locale" content="ko_KR">',
         *(['<meta property="og:locale:alternate" content="en_US">'] if has_en(s) else []),
         '<meta name="twitter:card" content="summary_large_image">',
+        BOOT,
         "<!-- /head:meta -->",
     ])
 
@@ -227,6 +238,9 @@ def stamp_js(rel: str, text: str) -> str:
 
 
 def stamp_html(text: str) -> str:
+    # 화면 그리기를 막지 않게: 공통 스크립트와 코드 색칠 라이브러리는 defer (실행 순서는 문서에 적힌 순서 그대로)
+    text = re.sub(r'(<script src="assets/(?:site|vendor/highlight\.min)\.js[^"]*")></script>', r"\1 defer></script>", text)
+
     def ref(m: re.Match) -> str:
         return f'{m.group(1)}{m.group(2)}?v={version(m.group(2))}"' if (ROOT / m.group(2)).is_file() else m.group(0)
     return HTML_REF.sub(ref, text)

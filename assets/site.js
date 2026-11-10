@@ -9,9 +9,10 @@
   };
 
   // ---- 언어 ----
-  // 주소의 ?lang=en · ?lang=ko 가 가장 먼저 (검색엔진·공유 링크용 언어별 주소), 다음이 지난번 선택, 다음이 브라우저 언어
+  // 언어 · 테마의 첫 값과 window.t · currentLang 은 <head> 안의 작은 스크립트(tools/build_nav.py 의 BOOT)가 이미 정해 둠.
+  // 이 파일은 defer 로 불러와 화면 그리기를 막지 않음.
   const urlLang = (() => { try { const v = new URLSearchParams(location.search).get('lang'); return v === 'ko' || v === 'en' ? v : null; } catch (e) { return null; } })();
-  const initialLang = urlLang || store.get('lang') || ((navigator.language || 'ko').startsWith('ko') ? 'ko' : 'en');
+  const initialLang = root.lang === 'en' ? 'en' : 'ko';
   function setLang(lang) {
     root.lang = lang;
     store.set('lang', lang);
@@ -21,14 +22,10 @@
     if (t) document.title = t.content;
     document.dispatchEvent(new CustomEvent('langchange', { detail: lang }));
   }
+  // BOOT 가 없는 페이지에서도 동작하도록 한 번 더 정의 (같은 내용)
   root.classList.add('js');
-  root.lang = initialLang;  // 첫 화면 깜빡임 방지: body가 그려지기 전에 적용
   window.currentLang = () => root.lang;
   window.t = (obj) => obj[root.lang] ?? obj.ko;
-
-  // ---- 테마 ----
-  const savedTheme = store.get('theme');
-  if (savedTheme) root.dataset.theme = savedTheme;
 
   document.addEventListener('DOMContentLoaded', () => {
     setLang(initialLang);
