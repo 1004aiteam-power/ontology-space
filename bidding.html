@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Power Market Bidding</title>
+<meta name="title-ko" content="Ontology Space · 내가 이해한 전력시장 입찰제도">
+<meta name="title-en" content="Ontology Space · Power market bidding, as I understand it">
+<meta name="description" content="한국 전력시장의 입찰이 어떻게 돌아가는지, 발전사업자는 무엇을 해야 하는지 쉽게 정리한 개인 학습 노트 (참고용, 정확하지 않을 수 있음)">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 내가 이해한 전력시장 입찰제도">
+<meta property="og:description" content="한국 전력시장의 입찰이 어떻게 돌아가는지, 발전사업자는 무엇을 해야 하는지 쉽게 정리한 개인 학습 노트 (참고용, 정확하지 않을 수 있음)">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/bidding.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=20261107d">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<style>
+.who{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:14px 0}
+.who .card h4{margin:0 0 6px}
+.who .ico{font-size:26px;line-height:1}
+.mo-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;margin:10px 0}
+.mo-ctl label{display:flex;align-items:center;gap:8px;font-size:15px}
+.mo-ctl input[type=range]{width:220px}
+.mo-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.mo-out div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.mo-out b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.mo-out span{color:var(--muted);font-size:12.5px}
+.mo-chart{position:relative;margin:6px 0}
+.mo-chart svg{width:100%;height:auto;display:block}
+.mo-chart .grid{stroke:var(--line)} .mo-chart .base{stroke:var(--muted)}
+.mo-chart .ax{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.mo-chart .blk{stroke:var(--surface);stroke-width:2}
+.mo-chart .off{opacity:.28}
+.mo-chart .dem{stroke:var(--text);stroke-width:2;stroke-dasharray:6 4}
+.mo-chart .smp{stroke:var(--text);stroke-width:2}
+.mo-chart .lbl{fill:var(--text);font-size:12px;font-weight:600}
+.mo-tip{position:absolute;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);pointer-events:none;max-width:220px}
+.mo-legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--muted)}
+.mo-legend span{display:inline-flex;align-items:center;gap:6px}
+.mo-legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+.timeline{list-style:none;margin:16px 0;padding:0;border-left:3px solid var(--line)}
+.timeline li{position:relative;margin:0 0 16px;padding-left:20px}
+.timeline li::before{content:"";position:absolute;left:-9px;top:5px;width:15px;height:15px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
+.timeline .when{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--accent);font-weight:700;margin-right:6px}
+.timeline p{margin:4px 0;color:var(--muted)}
+.check{list-style:none;padding:0;margin:8px 0}
+.check li{padding:6px 0 6px 28px;position:relative;border-bottom:1px solid var(--line)}
+.check li::before{content:"☐";position:absolute;left:2px;top:5px;color:var(--accent);font-size:17px}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--code);border-radius:10px;padding:12px 16px;margin:10px 0;line-height:1.8;overflow-x:auto}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+    <a href="bidding.html" aria-current="page"><span lang="ko">내가 이해한 전력시장 입찰제도</span><span lang="en">Power market bidding, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">MY NOTES · POWER MARKET</div>
+  <h1><span lang="ko">내가 이해한<br>전력시장 입찰제도</span><span lang="en">Power market bidding,<br>as I understand it</span></h1>
+  <p class="lead" lang="ko">전기는 어떻게 사고팔까? 발전소는 하루 전에 무엇을 "입찰"하고, 가격은 누가 어떻게 정하며, 발전사업자는 매일 무엇을 해야 할까? 공부하면서 이해한 내용을 될 수 있는 대로 쉽게 정리한 노트입니다.</p>
+  <p class="lead" lang="en">How is electricity bought and sold? What does a power plant "bid" the day before, who sets the price and how, and what does a generator have to do every day? Notes from my own study, written as simply as I can.</p>
+  <div class="notice"><b>⚠ <span lang="ko">개인 학습 노트입니다. 참고만 하세요</span><span lang="en">Personal study notes — for reference only</span></b>
+    <p lang="ko">이 페이지는 제가 공부하며 <strong>이해한 내용</strong>과 인터넷에서 찾은 자료를 정리한 것으로, <strong>정확하지 않거나 최신이 아닐 수 있습니다.</strong> 시각 · 정산 항목 · 규칙은 단순하게 줄였고, 그래프의 숫자는 설명을 위한 가상 값입니다. 실제 업무에는 반드시 전력거래소의 <strong>전력시장운영규칙</strong>과 공식 자료를 확인하세요.</p>
+    <p lang="en">This page collects what I <strong>understood</strong> while studying, plus material found online. It <strong>may be inaccurate or out of date.</strong> Times, settlement items and rules are simplified, and chart numbers are made up for illustration. For real work, always check KPX's <strong>Market Operation Rules</strong> and official sources.</p></div>
+</div>
+
+<section id="summary">
+  <h2><span lang="ko">한 문단으로 요약하면</span><span lang="en">In one paragraph</span></h2>
+  <blockquote lang="ko">발전사업자는 <b>하루 전</b>에 "내일 몇 시에 얼마까지 발전할 수 있다"(<b>공급가능용량</b>)를 전력거래소에 냅니다. 전력거래소는 내일 수요를 예측하고, <b>연료비가 싼 발전기부터</b> 차례로 세워 수요를 채웁니다. 마지막으로 필요한 발전기의 비용이 그 시간의 전기 가격, <b>SMP(계통한계가격)</b>가 됩니다. 당일에는 전력거래소의 <b>급전지시</b>대로 발전하고, 나중에 계량값으로 <b>정산</b>받습니다.</blockquote>
+  <blockquote lang="en">The day before, a generator tells the Korea Power Exchange (KPX) "tomorrow at each hour I can produce up to this much" (<b>available capacity</b>). KPX forecasts tomorrow's demand and stacks plants <b>from the cheapest fuel cost up</b> until demand is met. The cost of the last plant needed becomes that hour's price: the <b>SMP (system marginal price)</b>. On the day the plant follows KPX's <b>dispatch instructions</b> and is later <b>settled</b> on metered output.</blockquote>
+</section>
+
+<section id="who">
+  <h2><span lang="ko">등장인물</span><span lang="en">Who's who</span></h2>
+  <div class="who">
+    <div class="card"><div class="ico">🏭</div><h4><span lang="ko">발전사업자</span><span lang="en">Generators</span></h4><p lang="ko">전기를 만들어 시장에 파는 회사. 발전공기업, 민간 발전사, 태양광·풍력 사업자 등.</p><p lang="en">Companies that make and sell electricity: state-owned gencos, private IPPs, solar and wind owners.</p></div>
+    <div class="card"><div class="ico">🏛️</div><h4><span lang="ko">전력거래소 (KPX)</span><span lang="en">Korea Power Exchange (KPX)</span></h4><p lang="ko">시장 운영자이자 계통 운영자. 입찰을 받고, 발전 계획을 세우고, 실시간 급전지시를 내리고, 정산합니다.</p><p lang="en">Both market operator and system operator: takes bids, schedules plants, issues real-time dispatch, settles.</p></div>
+    <div class="card"><div class="ico">⚡</div><h4><span lang="ko">한국전력 (판매사업자)</span><span lang="en">KEPCO (retailer)</span></h4><p lang="ko">시장에서 전기를 사서 가정·공장에 팝니다. 송전망·배전망도 운영합니다.</p><p lang="en">Buys from the market and sells to homes and factories; also runs the transmission and distribution networks.</p></div>
+    <div class="card"><div class="ico">🧮</div><h4><span lang="ko">비용평가</span><span lang="en">Cost evaluation</span></h4><p lang="ko">발전기마다 "1kWh를 만드는 데 드는 연료비"(변동비)를 정해 둡니다. 시장 가격은 이 값으로 계산됩니다.</p><p lang="en">Sets each plant's "fuel cost to make 1 kWh" (variable cost). Market prices are computed from these values.</p></div>
+  </div>
+</section>
+
+<section id="cbp">
+  <h2><span lang="ko">한국 시장의 특징: "가격"이 아니라 "얼마나"를 입찰</span><span lang="en">Korea's twist: bid "how much", not "at what price"</span></h2>
+  <p lang="ko">"입찰"이라고 하면 경매처럼 가격을 써 내는 모습을 떠올리기 쉽습니다. 하지만 한국 시장(<b>변동비 반영시장</b>, CBP: Cost-Based Pool)에서 일반 발전기는 <b>가격을 써 내지 않습니다.</b> 가격 대신 "몇 시에 몇 MW까지 낼 수 있는지"만 내고, 가격은 미리 평가해 둔 <b>연료비(변동비)</b>로 정해집니다.</p>
+  <p lang="en">"Bidding" sounds like an auction where you write down a price. But in Korea's market (a <b>Cost-Based Pool</b>, CBP), ordinary plants <b>do not bid a price.</b> They only state how many MW they can deliver each hour; the price comes from a pre-evaluated <b>variable (fuel) cost</b>.</p>
+  <div class="tbl"><table>
+    <tr><th></th><th><span lang="ko">변동비 반영시장 (한국)</span><span lang="en">Cost-based pool (Korea)</span></th><th><span lang="ko">가격입찰시장 (미국·유럽 다수)</span><span lang="en">Price-based market (much of US/EU)</span></th></tr>
+    <tr><td><span lang="ko">발전사가 내는 것</span><span lang="en">Generator submits</span></td><td><span lang="ko">시간대별 공급가능용량 (MW)</span><span lang="en">Hourly available capacity (MW)</span></td><td><span lang="ko">시간대별 수량 + 가격</span><span lang="en">Hourly quantity + price</span></td></tr>
+    <tr><td><span lang="ko">순서를 정하는 기준</span><span lang="en">Merit order by</span></td><td><span lang="ko">평가된 변동비 (연료비)</span><span lang="en">Evaluated variable cost</span></td><td><span lang="ko">써 낸 가격</span><span lang="en">Offered price</span></td></tr>
+    <tr><td><span lang="ko">장점</span><span lang="en">Pros</span></td><td><span lang="ko">가격 조작이 어렵고 단순함</span><span lang="en">Hard to game, simple</span></td><td><span lang="ko">경쟁으로 효율 · 혁신 유도</span><span lang="en">Competition drives efficiency</span></td></tr>
+    <tr><td><span lang="ko">한계</span><span lang="en">Cons</span></td><td><span lang="ko">재생에너지 · 유연성 같은 새로운 가치를 담기 어려움</span><span lang="en">Hard to price new values such as flexibility</span></td><td><span lang="ko">가격 급등 · 시장지배력 문제</span><span lang="en">Price spikes, market power</span></td></tr>
+  </table></div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">발전사업자가 정하는 것은 <b>"내일 우리 발전소를 얼마나 쓸 수 있나"</b>이고, <b>"얼마에 팔까"</b>는 연료비로 이미 정해져 있습니다. 그래서 정비 일정, 연료 확보, 고장 관리가 곧 수익과 직결됩니다.</p><p lang="en">The generator decides <b>"how much of our plant is available tomorrow"</b>; <b>"at what price"</b> is already fixed by fuel cost. So maintenance planning, fuel supply and avoiding breakdowns translate directly into revenue.</p></div>
+</section>
+
+<section id="merit">
+  <h2><span lang="ko">직접 해 보기: 싼 발전기부터 줄 세우기</span><span lang="en">Try it: line plants up from cheapest</span></h2>
+  <p lang="ko">막대 하나가 발전기 묶음입니다. 폭은 용량(GW), 높이는 1kWh당 변동비입니다. 수요를 움직여 보세요. 수요선에 걸린 <b>마지막 발전기의 변동비가 SMP</b>가 되고, 그보다 싼 발전기는 모두 같은 SMP를 받습니다. 한낮 태양광을 켜면 그만큼 다른 발전기가 덜 필요해져 SMP가 내려갑니다.</p>
+  <p lang="en">Each bar is a group of plants: width = capacity (GW), height = variable cost per kWh. Move the demand. The <b>variable cost of the last plant needed is the SMP</b>, and every cheaper plant is paid that same SMP. Turn on midday solar and fewer other plants are needed, so the SMP drops.</p>
+  <div class="mo-ctl">
+    <label><span lang="ko">수요</span><span lang="en">Demand</span> <input type="range" id="moDem" min="40" max="95" step="1" value="70"> <b id="moDemV"></b></label>
+    <label><input type="checkbox" id="moSolar"> <span lang="ko">한낮 태양광 +15 GW (수요를 줄이는 효과)</span><span lang="en">Midday solar +15 GW (lowers net demand)</span></label>
+  </div>
+  <div class="mo-out" id="moOut"></div>
+  <div class="mo-legend" id="moLegend"></div>
+  <div class="mo-chart" id="moChart"></div>
+  <p class="meta" lang="ko">⚠ 발전기 용량과 변동비는 설명을 위한 가상 값입니다. 실제 SMP는 연료 가격, 환율, 계통 제약 등으로 날마다 시간마다 달라집니다.</p>
+  <p class="meta" lang="en">⚠ Capacities and costs are made up for illustration. The real SMP moves hour by hour with fuel prices, exchange rates and grid constraints.</p>
+</section>
+
+<section id="day">
+  <h2><span lang="ko">입찰부터 정산까지, 하루의 흐름</span><span lang="en">From bid to settlement</span></h2>
+  <p class="meta" lang="ko">시각은 이해를 돕기 위한 대략적인 흐름이며, 정확한 마감 시각은 시장운영규칙을 확인하세요.</p>
+  <p class="meta" lang="en">Times are a rough sketch; check the market rules for exact deadlines.</p>
+  <ol class="timeline" lang="ko">
+    <li><span class="when">D-1 오전</span><b>입찰: 공급가능용량 제출</b><p>발전사업자가 내일 24시간 각 시간대에 낼 수 있는 최대 출력을 냅니다. 정비 · 연료 · 고장 상태를 반영해야 합니다.</p></li>
+    <li><span class="when">D-1 오후</span><b>가격결정 발전계획 → SMP 결정</b><p>전력거래소가 수요를 예측하고, 송전 제약을 빼고 변동비 순으로 발전기를 세워 시간대별 SMP를 정합니다.</p></li>
+    <li><span class="when">D-1 저녁</span><b>운영 발전계획</b><p>실제 송전망 제약까지 넣어 "누가 몇 시에 얼마나 발전할지" 계획을 세웁니다. 이 계획이 SMP 계획과 다르면 나중에 따로 보상합니다(제약 발전).</p></li>
+    <li><span class="when">D 당일</span><b>급전지시 따라 발전</b><p>실시간 수요 · 고장에 따라 전력거래소가 출력을 올리거나 내리라고 지시합니다. 발전사업자는 지시를 따라야 하고, 따르지 못하면 불이익이 있습니다.</p></li>
+    <li><span class="when">D 이후</span><b>계량</b><p>거래용 계량기로 시간대별 실제 발전량을 확정합니다.</p></li>
+    <li><span class="when">월 단위</span><b>정산 · 대금 지급</b><p>전력량 · 용량 · 제약 등 항목별로 계산해 대금을 주고받습니다.</p></li>
+  </ol>
+  <ol class="timeline" lang="en">
+    <li><span class="when">D-1 AM</span><b>Bid: submit available capacity</b><p>For each of tomorrow's 24 hours, the generator submits its maximum output, reflecting maintenance, fuel and faults.</p></li>
+    <li><span class="when">D-1 PM</span><b>Price-setting schedule → SMP</b><p>KPX forecasts demand and stacks plants by variable cost, ignoring transmission limits, to set each hour's SMP.</p></li>
+    <li><span class="when">D-1 eve</span><b>Operating schedule</b><p>With real grid limits included, KPX plans who runs when. Differences from the price-setting schedule are compensated separately (constrained generation).</p></li>
+    <li><span class="when">Day D</span><b>Follow dispatch</b><p>KPX raises or lowers output in real time for demand and faults. Generators must follow; failing to do so is penalised.</p></li>
+    <li><span class="when">After D</span><b>Metering</b><p>Revenue meters fix actual hourly output.</p></li>
+    <li><span class="when">Monthly</span><b>Settlement and payment</b><p>Energy, capacity, constraint and other items are computed and paid.</p></li>
+  </ol>
+</section>
+
+<section id="money">
+  <h2><span lang="ko">발전사업자는 무엇으로 돈을 버나</span><span lang="en">How a generator gets paid</span></h2>
+  <div class="formula" lang="ko">받는 돈 ≈ <b>전력량 정산금</b> (발전량 × SMP)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>용량 정산금</b> (발전 안 해도, 쓸 수 있게 준비해 둔 용량에 대한 대가)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>제약 정산금</b> (계통 사정으로 계획과 다르게 돌리거나 멈춘 것의 보상)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>보조서비스</b> (주파수 조정 · 예비력 등)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+ 재생에너지는 <b>REC</b> 판매 수익)</div>
+  <div class="formula" lang="en">Revenue ≈ <b>energy payment</b> (output × SMP)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>capacity payment</b> (for keeping capacity available, even when not running)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>constraint payments</b> (run or stopped differently from plan because of the grid)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>ancillary services</b> (frequency regulation, reserves)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+ for renewables, <b>REC</b> sales)</div>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">이익 = SMP − 내 변동비</span><span lang="en">Margin = SMP − my cost</span></h4><p lang="ko">SMP는 마지막 발전기의 비용이라, 나보다 비싼 발전기가 돌고 있으면 그 차이만큼 남습니다. 원자력처럼 변동비가 낮은 발전기는 이 차이가 큽니다.</p><p lang="en">SMP is the last plant's cost, so if pricier plants are running you keep the difference. Low-cost plants such as nuclear earn a wide margin.</p></div>
+    <div class="card"><h4><span lang="ko">용량 정산금은 "준비"의 대가</span><span lang="en">Capacity pays for readiness</span></h4><p lang="ko">입찰한 공급가능용량에 따라 받으므로, 실제보다 부풀려 입찰하면 안 되고 입찰한 만큼은 실제로 낼 수 있어야 합니다.</p><p lang="en">It follows the available capacity you bid, so you must not overstate it — what you bid must really be deliverable.</p></div>
+    <div class="card"><h4><span lang="ko">재생에너지는 조금 다름</span><span lang="en">Renewables differ a bit</span></h4><p lang="ko">태양광 · 풍력은 SMP에 더해 RPS 제도의 REC를 팝니다. 작은 설비는 시장에 직접 들어가는 대신 한전과 계약하거나, <a href="vpp.html">중개사업자(VPP)</a>를 통해 거래하기도 합니다.</p><p lang="en">Solar and wind sell RECs under the RPS on top of SMP. Small units may contract with KEPCO or trade through an <a href="vpp.html">aggregator (VPP)</a> instead of joining the market directly.</p></div>
+  </div>
+</section>
+
+<section id="todo">
+  <h2><span lang="ko">발전사업자가 해야 할 일 체크리스트</span><span lang="en">The generator's checklist</span></h2>
+  <h3><span lang="ko">① 시장에 들어가기 전</span><span lang="en">① Before entering the market</span></h3>
+  <ul class="check" lang="ko">
+    <li><b>발전사업 허가</b>: 용량에 따라 산업통상자원부 또는 시·도에서 허가를 받음</li>
+    <li><b>계통 연계</b>: 한전과 송전망·배전망 접속 협의 · 공사</li>
+    <li><b>전력거래소 회원 가입 · 발전기 등록</b>: 발전기의 성능 · 출력 범위 등 기술 자료 제출</li>
+    <li><b>계량 · 통신 설비</b>: 거래용 계량기, 급전지시를 받고 운전 정보를 보내는 통신 설비</li>
+    <li><b>비용 자료 제출</b>: 연료비 등 변동비 평가에 필요한 자료</li>
+  </ul>
+  <ul class="check" lang="en">
+    <li><b>Generation licence</b> from the ministry or the province, depending on size</li>
+    <li><b>Grid connection</b>: agree and build the connection with KEPCO</li>
+    <li><b>Join KPX and register the plant</b>: technical data such as output range and performance</li>
+    <li><b>Metering and communication</b>: revenue meters and links to receive dispatch and send operating data</li>
+    <li><b>Cost data</b> for variable-cost evaluation (fuel etc.)</li>
+  </ul>
+  <h3><span lang="ko">② 매일</span><span lang="en">② Every day</span></h3>
+  <ul class="check" lang="ko">
+    <li><b>정확한 공급가능용량 입찰</b>: 정비 · 연료 재고 · 설비 상태를 반영 (부풀리면 불이익)</li>
+    <li><b>급전지시 이행</b>: 지시받은 출력을 정해진 속도로 맞춤</li>
+    <li><b>고장 · 출력 저하 즉시 통보</b>: 갑자기 못 내게 되면 바로 알려야 계통이 대비할 수 있음</li>
+    <li><b>재생에너지라면 발전량 예측</b>: 예측을 제출하고 정확하면 정산금을 받는 제도가 있음</li>
+  </ul>
+  <ul class="check" lang="en">
+    <li><b>Bid accurate available capacity</b>, reflecting maintenance, fuel stock and condition (overstating is penalised)</li>
+    <li><b>Follow dispatch</b> at the required ramp rate</li>
+    <li><b>Report faults and derates immediately</b> so the system can prepare</li>
+    <li><b>Renewables: forecast output</b> — accurate forecasts can earn a settlement payment</li>
+  </ul>
+  <h3><span lang="ko">③ 매월 · 매년</span><span lang="en">③ Monthly and yearly</span></h3>
+  <ul class="check" lang="ko">
+    <li><b>정산 내역 확인</b>: 계량값 · 정산 항목이 맞는지 확인하고 이의가 있으면 제기</li>
+    <li><b>정비 계획 조율</b>: 수요가 많은 여름 · 겨울을 피해 계획 정비 일정을 전력거래소와 맞춤</li>
+    <li><b>규칙 변경 챙기기</b>: 시장운영규칙은 자주 바뀌므로 개정 내용을 확인</li>
+  </ul>
+  <ul class="check" lang="en">
+    <li><b>Check settlement statements</b> and dispute errors</li>
+    <li><b>Coordinate maintenance</b> with KPX, avoiding summer and winter peaks</li>
+    <li><b>Track rule changes</b> — the market rules are revised often</li>
+  </ul>
+</section>
+
+<section id="changing">
+  <h2><span lang="ko">바뀌고 있는 것들</span><span lang="en">What is changing</span></h2>
+  <p lang="ko">재생에너지가 늘면서 "싼 순서대로 세우기"만으로는 부족해졌습니다. 그래서 재생에너지도 입찰하고 급전지시를 받게 하는 제도(제주에서 시범 시작), 하루 전보다 더 가까운 시점에 거래하는 실시간 시장, 유연성 · 예비력에 값을 매기는 보조서비스 시장 같은 개편이 논의 · 시행되고 있다고 이해하고 있습니다. 이런 변화가 <a href="vpp.html">VPP</a>가 주목받는 이유이기도 합니다.</p>
+  <p lang="en">As renewables grow, "stack the cheapest first" is no longer enough. My understanding is that reforms are under discussion or rolling out: renewables bidding and receiving dispatch (piloted in Jeju), real-time markets closer to delivery than day-ahead, and ancillary-service markets that price flexibility and reserves. These changes are also why <a href="vpp.html">VPPs</a> are drawing attention.</p>
+  <div class="easy"><b>💡 <span lang="ko">이 사이트의 다른 페이지와 이어 보기</span><span lang="en">Continue on this site</span></b><p lang="ko"><a href="vpp.html">VPP 기본 개념</a>에서 작은 설비를 묶어 입찰하는 방법을, <a href="vpp-market.html">VPP 가상 전력시장</a>에서 입찰 · 정산을 그래프 DB로 직접 물어보는 예를 볼 수 있습니다.</p><p lang="en">See <a href="vpp.html">VPP basics</a> for bidding small resources as one, and <a href="vpp-market.html">VPP virtual market</a> to query bids and settlements in a graph DB.</p></div>
+  <div class="pager"><a href="vpp-market.html"><span lang="ko">← 이전: VPP 가상 전력시장</span><span lang="en">← Prev: VPP virtual market</span></a><a href="index.html"><span lang="ko">처음으로 →</span><span lang="en">Home →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+
+<script>
+// 메리트 오더 체험 (가상 값). 막대 = 발전기 묶음 (폭 GW, 높이 원/kWh), 수요선에 걸린 마지막 묶음의 변동비 = SMP
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const T = (o) => window.t(o);
+  const FUEL = [
+    { k: 'nuc', slot: 0, ko: '원자력', en: 'Nuclear' }, { k: 'coal', slot: 1, ko: '석탄', en: 'Coal' },
+    { k: 'lng', slot: 2, ko: 'LNG', en: 'LNG' }, { k: 'oil', slot: 3, ko: '유류 · 첨두', en: 'Oil · peakers' }
+  ];
+  // [연료, 용량 GW, 변동비 원/kWh] — 가상
+  const BLOCKS = [['nuc', 12, 6], ['nuc', 12, 8], ['coal', 10, 58], ['coal', 10, 66], ['coal', 10, 74], ['lng', 8, 118], ['lng', 8, 132], ['lng', 8, 146], ['lng', 8, 162], ['lng', 6, 185], ['oil', 4, 240], ['oil', 3, 300]];
+  const PAL = { light: ['#2a78d6', '#eb6834', '#1baf7a', '#eda100'], dark: ['#3987e5', '#d95926', '#199e70', '#c98500'] };
+  const dark = () => document.documentElement.dataset.theme === 'dark' || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+  const color = (k) => PAL[dark() ? 'dark' : 'light'][FUEL.find(f => f.k === k).slot];
+  const total = BLOCKS.reduce((a, b) => a + b[1], 0);
+
+  function draw() {
+    const dem = +$('moDem').value, solar = $('moSolar').checked ? 15 : 0, net = Math.max(0, dem - solar);
+    $('moDemV').textContent = dem + ' GW';
+    let x = 0, smp = null, marg = null;
+    for (const b of BLOCKS) { if (smp == null && x + b[1] >= net) { smp = b[2]; marg = b; } x += b[1]; }
+    const short = smp == null;
+    const W = 760, H = 300, pL = 46, pR = 12, pT = 16, pB = 34, maxY = 320;
+    const sx = (g) => pL + (W - pL - pR) * g / total, sy = (v) => pT + (H - pT - pB) * (1 - v / maxY);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="merit order">`;
+    for (const v of [0, 100, 200, 300]) s += `<line class="grid" x1="${pL}" x2="${W - pR}" y1="${sy(v)}" y2="${sy(v)}"/><text class="ax" x="${pL - 6}" y="${sy(v) + 4}" text-anchor="end">${v}</text>`;
+    x = 0;
+    BLOCKS.forEach((b, i) => {
+      const on = x < net, x0 = sx(x), x1 = sx(x + b[1]), y = sy(b[2]);
+      s += `<path class="blk${on ? '' : ' off'}" data-i="${i}" fill="${color(b[0])}" d="M${x0},${sy(0)} V${y + 4} q0,-4 4,-4 H${x1 - 4} q4,0 4,4 V${sy(0)} Z"/>`;
+      x += b[1];
+    });
+    for (const g of [0, 25, 50, 75, 100]) if (g <= total) s += `<text class="ax" x="${sx(g)}" y="${H - pB + 16}" text-anchor="middle">${g}</text>`;
+    s += `<text class="ax" x="${W - pR}" y="${H - 4}" text-anchor="end">GW</text><text class="ax" x="${pL - 6}" y="${pT - 4}" text-anchor="end">${T({ ko: '원/kWh', en: 'KRW/kWh' })}</text>`;
+    s += `<line class="base" x1="${pL}" x2="${W - pR}" y1="${sy(0)}" y2="${sy(0)}"/>`;
+    const dx = sx(Math.min(net, total));
+    s += `<line class="dem" x1="${dx}" x2="${dx}" y1="${pT}" y2="${sy(0)}"/><text class="lbl" x="${dx + 6}" y="${pT + 12}">${T({ ko: '수요', en: 'Demand' })} ${net} GW</text>`;
+    if (!short) s += `<line class="smp" x1="${pL}" x2="${dx}" y1="${sy(smp)}" y2="${sy(smp)}"/><text class="lbl" x="${pL + 6}" y="${sy(smp) - 6}">SMP ${smp}</text>`;
+    s += '</svg><div class="mo-tip" id="moTip" hidden></div>';
+    $('moChart').innerHTML = s;
+    const dispatched = BLOCKS.reduce((a, b, i) => { let c = 0; for (let j = 0; j <= i; j++) c += BLOCKS[j][1]; return a + (c - b[1] < net ? 1 : 0); }, 0);
+    const marginalFuel = marg ? T(FUEL.find(f => f.k === marg[0])) : '—';
+    $('moOut').innerHTML = [
+      [short ? T({ ko: '공급 부족!', en: 'Short!' }) : smp + ' ' + T({ ko: '원/kWh', en: 'KRW/kWh' }), 'SMP'],
+      [marginalFuel, T({ ko: '가격을 정한 발전기 (한계 발전기)', en: 'Price-setting (marginal) plant' })],
+      [dispatched + ' / ' + BLOCKS.length, T({ ko: '돌아가는 발전기 묶음', en: 'Plant groups running' })],
+      [short ? '—' : (smp - 6) + ' ' + T({ ko: '원/kWh', en: 'KRW/kWh' }), T({ ko: '원자력 묶음의 kWh당 마진 (SMP − 변동비)', en: 'Nuclear margin per kWh (SMP − cost)' })]
+    ].map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
+    $('moLegend').innerHTML = FUEL.map(f => `<span><i style="background:${color(f.k)}"></i>${T(f)}</span>`).join('') + `<span>${T({ ko: '흐린 막대 = 이 수요에서는 돌지 않음', en: 'Faded bars = not needed at this demand' })}</span>`;
+    const tip = $('moTip'), box = $('moChart');
+    box.querySelectorAll('.blk').forEach(p => {
+      p.addEventListener('mouseenter', () => {
+        const b = BLOCKS[+p.dataset.i];
+        tip.innerHTML = `<b>${T(FUEL.find(f => f.k === b[0]))}</b><br>${T({ ko: '용량', en: 'Capacity' })} ${b[1]} GW · ${T({ ko: '변동비', en: 'Cost' })} ${b[2]} ${T({ ko: '원/kWh', en: 'KRW/kWh' })}<br>${p.classList.contains('off') ? T({ ko: '이번 시간엔 쉼', en: 'Idle this hour' }) : T({ ko: `받는 가격 = SMP ${smp ?? '—'}`, en: `Paid SMP ${smp ?? '—'}` })}`;
+        const bb = box.getBoundingClientRect(), pb = p.getBoundingClientRect();
+        tip.hidden = false; tip.style.left = Math.min(bb.width - 200, Math.max(0, pb.left - bb.left)) + 'px'; tip.style.top = '4px';
+      });
+      p.addEventListener('mouseleave', () => { tip.hidden = true; });
+    });
+  }
+  $('moDem').addEventListener('input', draw);
+  $('moSolar').addEventListener('change', draw);
+  document.addEventListener('langchange', draw);
+  new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  draw();
+})();
+</script>
+</body>
+</html>

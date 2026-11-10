@@ -65,6 +65,7 @@ NAV = [
         ("hr",), ("h", "자연", "Nature"),
         ("eco-ontology.html", "단세포 생태계 온톨로지", "Cell Ecosystem Ontology", "시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프", "Simulation record → lineage, predation, evolution graph"),
     ]),
+    ("bidding.html", "내가 이해한 전력시장 입찰제도", "Power market bidding, as I understand it"),
 ]
 
 
