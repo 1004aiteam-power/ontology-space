@@ -22,6 +22,18 @@
 <link rel="stylesheet" href="assets/site.css?v=20261107d">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js"></script>
+<style>
+.dc{margin:14px 0;max-width:860px}
+.dc svg{width:100%;height:auto;display:block}
+.dc .bx rect{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.dc .bx.gw rect{stroke:#1baf7a;stroke-width:2} .dc .bx.net rect{stroke:#eda100;stroke-width:2;stroke-dasharray:6 4} .dc .bx.pf rect{stroke:var(--accent);stroke-width:2.5} .dc .bx.op rect{stroke:var(--muted);stroke-width:2}
+.dc .t{fill:var(--text);font-size:13px;font-weight:700;text-anchor:middle}
+.dc .s{fill:var(--muted);font-size:11px;text-anchor:middle}
+.dc .hd{fill:var(--muted);font-size:12px;font-weight:700;text-anchor:middle}
+.dc .up{stroke:var(--accent);stroke-width:2;fill:none} .dc .dn{stroke:#eb6834;stroke-width:2;fill:none;stroke-dasharray:5 4}
+.dc .ahu{fill:var(--accent)} .dc .ahd{fill:#eb6834}
+.dc .lg{fill:var(--muted);font-size:12px}
+</style>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -44,6 +56,7 @@
       <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
       <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
       <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
       <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
     </div>
     <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
@@ -219,6 +232,80 @@
     <tr><td><b>OCPP · ISO 15118</b></td><td><span lang="ko">충전 관제 ↔ 충전기 ↔ 차량</span><span lang="en">Charge management ↔ charger ↔ vehicle</span></td><td><span lang="ko">충전 제어, 스마트 충전, ISO 15118-20의 양방향(V2G)</span><span lang="en">Charging control, smart charging, bidirectional (V2G) in ISO 15118-20</span></td></tr>
     <tr><td><b>IEC 61968-5</b></td><td><span lang="ko">DERMS ↔ 다른 시스템</span><span lang="en">DERMS ↔ other systems</span></td><td><span lang="ko">CIM 기반 DER 그룹 관리 메시지 (그룹 생성, 출력 지시, 상태 조회)</span><span lang="en">CIM-based DER group management messages (create groups, dispatch, status)</span></td></tr>
   </table></div>
+</section>
+
+<section id="collect">
+  <h2><span lang="ko">현장 데이터 수집 구조</span><span lang="en">How field data is collected</span></h2>
+  <p lang="ko">VPP가 예측 · 입찰 · 제어를 하려면 먼저 수많은 현장 설비의 <b>지금 출력</b>을 알아야 합니다. 보통 <b>현장 장치 → 게이트웨이 → 통신망 → VPP 플랫폼</b>의 네 단계로 모으고, 제어 명령은 같은 길을 거꾸로 내려갑니다.</p>
+  <p lang="en">To forecast, bid and control, a VPP first needs the <b>current output</b> of countless field devices. Data usually flows <b>field device → gateway → network → VPP platform</b>, and control commands travel the same path in reverse.</p>
+  <figure class="dc" aria-label="field data collection">
+    <svg viewBox="0 0 860 360" role="img">
+      <defs>
+        <marker id="dcU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 10,5 0,10z" class="ahu"/></marker>
+        <marker id="dcD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 10,5 0,10z" class="ahd"/></marker>
+      </defs>
+      <text class="hd" x="90" y="18"><tspan lang="ko">① 현장 장치</tspan><tspan lang="en">① Field devices</tspan></text>
+      <text class="hd" x="290" y="18"><tspan lang="ko">② 게이트웨이</tspan><tspan lang="en">② Gateway</tspan></text>
+      <text class="hd" x="460" y="18"><tspan lang="ko">③ 통신망</tspan><tspan lang="en">③ Network</tspan></text>
+      <text class="hd" x="640" y="18"><tspan lang="ko">④ VPP 플랫폼</tspan><tspan lang="en">④ VPP platform</tspan></text>
+      <text class="hd" x="800" y="18"><tspan lang="ko">외부</tspan><tspan lang="en">Outside</tspan></text>
+      <g class="up" marker-end="url(#dcU)">
+        <path d="M170 50 C 200 50, 200 150, 228 158"/><path d="M170 108 C 200 108, 200 160, 228 166"/><path d="M170 166 H 228"/>
+        <path d="M170 224 C 200 224, 200 172, 228 174"/><path d="M170 282 C 200 282, 200 180, 228 180"/>
+        <path d="M352 158 H 398"/><path d="M522 158 H 568"/><path d="M712 140 H 748"/>
+      </g>
+      <g class="dn" marker-end="url(#dcD)"><path d="M748 196 H 712"/><path d="M568 196 H 522"/><path d="M398 196 H 352"/><path d="M228 200 C 205 204, 200 232, 172 234"/></g>
+      <g class="bx"><rect x="10" y="30" width="160" height="40" rx="8"/><text class="t" x="90" y="48">☀️ <tspan lang="ko">태양광 인버터</tspan><tspan lang="en">PV inverter</tspan></text><text class="s" x="90" y="63">Modbus · SunSpec</text></g>
+      <g class="bx"><rect x="10" y="88" width="160" height="40" rx="8"/><text class="t" x="90" y="106">🔋 ESS PCS · BMS</text><text class="s" x="90" y="121">Modbus · CAN</text></g>
+      <g class="bx"><rect x="10" y="146" width="160" height="40" rx="8"/><text class="t" x="90" y="164">🚗 <tspan lang="ko">전기차 충전기</tspan><tspan lang="en">EV charger</tspan></text><text class="s" x="90" y="179">OCPP</text></g>
+      <g class="bx"><rect x="10" y="204" width="160" height="40" rx="8"/><text class="t" x="90" y="222">🏭 <tspan lang="ko">건물 · 공장 제어</tspan><tspan lang="en">Building / plant control</tspan></text><text class="s" x="90" y="237">BACnet · OpenADR</text></g>
+      <g class="bx"><rect x="10" y="262" width="160" height="40" rx="8"/><text class="t" x="90" y="280">📟 <tspan lang="ko">거래용 계량기</tspan><tspan lang="en">Revenue meter</tspan></text><text class="s" x="90" y="295">AMI · DLMS/COSEM</text></g>
+      <g class="bx gw"><rect x="230" y="120" width="120" height="96" rx="10"/><text class="t" x="290" y="150"><tspan lang="ko">RTU · 데이터로거</tspan><tspan lang="en">RTU · data logger</tspan></text>
+        <text class="s" x="290" y="170"><tspan lang="ko">1초~수 분 주기 읽기</tspan><tspan lang="en">reads every 1 s–min</tspan></text><text class="s" x="290" y="186"><tspan lang="ko">끊기면 저장 후 재전송</tspan><tspan lang="en">buffers on outage</tspan></text><text class="s" x="290" y="202"><tspan lang="ko">명령을 장치에 전달</tspan><tspan lang="en">relays commands</tspan></text></g>
+      <g class="bx net"><rect x="400" y="120" width="120" height="96" rx="10"/><text class="t" x="460" y="150">LTE · <tspan lang="ko">인터넷</tspan><tspan lang="en">internet</tspan></text>
+        <text class="s" x="460" y="170">MQTT · HTTPS</text><text class="s" x="460" y="186">IEEE 2030.5</text><text class="s" x="460" y="202"><tspan lang="ko">암호화 · 기기 인증서</tspan><tspan lang="en">TLS · device certs</tspan></text></g>
+      <g class="bx pf"><rect x="570" y="80" width="140" height="176" rx="10"/><text class="t" x="640" y="104"><tspan lang="ko">VPP 플랫폼</tspan><tspan lang="en">VPP platform</tspan></text>
+        <text class="s" x="640" y="128"><tspan lang="ko">수집 · 시계열 DB</tspan><tspan lang="en">ingest · time-series DB</tspan></text><text class="s" x="640" y="150"><tspan lang="ko">자원 · 선로 그래프</tspan><tspan lang="en">resource · feeder graph</tspan></text>
+        <text class="s" x="640" y="172"><tspan lang="ko">발전량 예측</tspan><tspan lang="en">forecasting</tspan></text><text class="s" x="640" y="194"><tspan lang="ko">입찰 · 최적화</tspan><tspan lang="en">bidding · optimisation</tspan></text>
+        <text class="s" x="640" y="216"><tspan lang="ko">실시간 관제</tspan><tspan lang="en">real-time control</tspan></text><text class="s" x="640" y="238"><tspan lang="ko">정산</tspan><tspan lang="en">settlement</tspan></text></g>
+      <g class="bx op"><rect x="750" y="100" width="100" height="56" rx="8"/><text class="t" x="800" y="124"><tspan lang="ko">전력거래소</tspan><tspan lang="en">KPX</tspan></text><text class="s" x="800" y="142"><tspan lang="ko">입찰 · 급전</tspan><tspan lang="en">bids · dispatch</tspan></text></g>
+      <g class="bx op"><rect x="750" y="176" width="100" height="56" rx="8"/><text class="t" x="800" y="200"><tspan lang="ko">배전운영자</tspan><tspan lang="en">DSO</tspan></text><text class="s" x="800" y="218"><tspan lang="ko">출력제한</tspan><tspan lang="en">curtailment</tspan></text></g>
+      <line class="up" x1="20" y1="336" x2="60" y2="336" marker-end="url(#dcU)"/><text class="lg" x="68" y="340"><tspan lang="ko">측정값 (올라감)</tspan><tspan lang="en">measurements (up)</tspan></text>
+      <line class="dn" x1="240" y1="336" x2="280" y2="336" marker-end="url(#dcD)"/><text class="lg" x="288" y="340"><tspan lang="ko">제어 명령 (내려감): 출력제한 · 충방전 · 충전 지연 · 감축 (계량기 제외 모든 장치로)</tspan><tspan lang="en">commands (down): curtail, charge/discharge, defer, reduce — to all but meters</tspan></text>
+    </svg>
+  </figure>
+
+  <h3><span lang="ko">① 현장 장치에서 읽기</span><span lang="en">① Reading the field devices</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">자원</span><span lang="en">Resource</span></th><th><span lang="ko">읽는 곳</span><span lang="en">Read from</span></th><th><span lang="ko">주로 쓰는 방식</span><span lang="en">Typical protocol</span></th><th><span lang="ko">주요 값</span><span lang="en">Key values</span></th></tr>
+    <tr><td><span lang="ko">태양광 · 풍력</span><span lang="en">Solar, wind</span></td><td><span lang="ko">인버터</span><span lang="en">Inverter</span></td><td><span lang="ko">Modbus RTU(RS-485) · Modbus TCP, 표준 레지스터 맵 SunSpec</span><span lang="en">Modbus RTU (RS-485) / TCP, SunSpec register maps</span></td><td><span lang="ko">유효 · 무효전력, 전압, 누적 발전량, 고장 코드</span><span lang="en">Active/reactive power, voltage, energy, fault codes</span></td></tr>
+    <tr><td>ESS</td><td>PCS · BMS</td><td>Modbus · CAN</td><td><span lang="ko">충방전 전력, 충전 상태(SOC), 온도</span><span lang="en">Charge/discharge power, SOC, temperature</span></td></tr>
+    <tr><td><span lang="ko">전기차 충전기</span><span lang="en">EV charger</span></td><td><span lang="ko">충전기 → 충전 관제 서버</span><span lang="en">Charger → charge management server</span></td><td>OCPP</td><td><span lang="ko">충전 전력, 세션, 출발 예정 시각</span><span lang="en">Charging power, sessions, departure time</span></td></tr>
+    <tr><td><span lang="ko">수요반응</span><span lang="en">Demand response</span></td><td><span lang="ko">건물 자동제어(BMS) · 공장 설비</span><span lang="en">Building automation, plant equipment</span></td><td><span lang="ko">BACnet · Modbus, 지시는 OpenADR</span><span lang="en">BACnet, Modbus; signals via OpenADR</span></td><td><span lang="ko">부하, 감축 가능량</span><span lang="en">Load, reducible amount</span></td></tr>
+    <tr><td><span lang="ko">거래용 계량</span><span lang="en">Revenue metering</span></td><td><span lang="ko">전력량계 · AMI</span><span lang="en">Meter, AMI</span></td><td>DLMS/COSEM <span lang="ko">등</span><span lang="en">etc.</span></td><td><span lang="ko">정산 기준 전력량 (15분 · 1시간)</span><span lang="en">Settlement energy (15 min, hourly)</span></td></tr>
+  </table></div>
+
+  <h3><span lang="ko">② 용도마다 필요한 주기가 다름</span><span lang="en">② Each use needs a different interval</span></h3>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">실시간 감시 · 제어: 초~분</span><span lang="en">Monitoring & control: seconds–minutes</span></h4><p lang="ko">구름이 끼어 출력이 떨어지면 바로 ESS를 방전하려면 빨리 알아야 합니다.</p><p lang="en">To discharge a battery the moment clouds cut output, you must know fast.</p></div>
+    <div class="card"><h4><span lang="ko">예측 모델 학습: 15분~1시간</span><span lang="en">Forecast training: 15 min–1 h</span></h4><p lang="ko">날씨와 함께 쌓은 평균값으로 다음 날 발전량을 예측합니다.</p><p lang="en">Averages stored alongside weather train the next day's forecast.</p></div>
+    <div class="card"><h4><span lang="ko">정산: 공인 계량기 값</span><span lang="en">Settlement: certified meter values</span></h4><p lang="ko">돈 계산은 인버터 값이 아니라 거래용 계량기 값을 기준으로 합니다. 둘이 다를 수 있습니다.</p><p lang="en">Money is computed from revenue meters, not inverter readings — the two can differ.</p></div>
+  </div>
+
+  <h3><span lang="ko">③ 실제로 가장 어려운 점</span><span lang="en">③ The hard part in practice</span></h3>
+  <ul lang="ko">
+    <li><b>제조사마다 데이터가 제각각</b>: 같은 "현재 출력"도 인버터마다 레지스터 위치 · 단위 · 이름이 다릅니다. SunSpec, IEC 61850-7-420 같은 표준 모델로 맞추는 작업이 필요합니다.</li>
+    <li><b>통신 품질</b>: 시골 지붕 태양광은 LTE가 약하거나 끊기기 쉬워, 게이트웨이의 저장 후 재전송이 중요합니다.</li>
+    <li><b>보안</b>: 원격 제어 권한을 가로채이면 수많은 설비를 한꺼번에 끌 수 있으므로 암호화 · 인증 · 접근 통제가 필수입니다.</li>
+    <li><b>시각 맞추기</b>: 수천 대의 값을 합치려면 장치마다 시계가 맞아야 합니다(NTP 등).</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Every vendor is different</b>: even "current output" sits at different registers, units and names. Mapping to standard models such as SunSpec or IEC 61850-7-420 is needed.</li>
+    <li><b>Link quality</b>: rural rooftops often have weak LTE, so gateway buffering and resend matter.</li>
+    <li><b>Security</b>: a hijacked control channel could switch off many devices at once — encryption, authentication and access control are mandatory.</li>
+    <li><b>Time alignment</b>: summing thousands of readings needs synchronised clocks (NTP etc.).</li>
+  </ul>
+  <div class="easy"><b>💡 <span lang="ko">온톨로지가 쓰이는 곳</span><span lang="en">Where an ontology helps</span></b><p lang="ko">제각각인 값을 "이 값은 <b>어느 설비</b>의, <b>어느 배전선로</b>의, <b>어느 VPP</b>의 출력인가"로 하나의 모델에 묶는 일이 바로 온톨로지의 역할입니다. 측정값 자체는 시계열 DB에, 설비 · 선로 · VPP의 관계는 그래프 DB에 두는 구성이 흔합니다. <a href="vpp-market.html">VPP 가상 전력시장</a>의 그래프가 그 관계 부분입니다.</p><p lang="en">Tying mismatched readings to "<b>which device</b>, on <b>which feeder</b>, in <b>which VPP</b>" in one model is exactly an ontology's job. A common setup keeps readings in a time-series DB and device–feeder–VPP relationships in a graph DB; the graph in the <a href="vpp-market.html">VPP virtual market</a> is that relationship part.</p></div>
 </section>
 
 <section id="policy">
