@@ -11,7 +11,7 @@
 // 브라우저(safety-ontology.html)와 빌드 스크립트(examples/safety/build_safety.mjs), 테스트가 같이 씀
 //
 // ⚠ 교육용 가상 현장입니다. 설비 · 선로 구간은 가상 배전선로(D/L #1)와 가상 A변전소 데이터입니다.
-import { SCENARIOS, ROLES, RULES } from './safety.js?v=20261107a';
+import { SCENARIOS, ROLES, RULES } from './safety.js?v=a96c9949';
 
 export const SF = 'https://1004aiteam-power.github.io/ontology-space/safety#';
 const AIPD = 'https://example.org/ai-promotion-dept/ontology#';

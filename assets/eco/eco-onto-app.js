@@ -2,10 +2,10 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 단세포 생태계 온톨로지 페이지: 시뮬레이션 실행 → 기록 → RDF → 속성 그래프 → 혈통 그림 · Cypher 질의
 // 스키마 Turtle은 cypher/turtle.js(N3.js)로 읽음. 세포 트리플은 eco-graph.js가 바로 만듦
-import { parse } from '../cypher/turtle.js';
-import { buildGraph } from '../cypher/graph.js';
-import { runCypher, show } from '../cypher/cypher.js';
-import { Recorder, ECO_CYPHER } from './eco-graph.js?v=20261107a';
+import { parse } from '../cypher/turtle.js?v=dd7711a6';
+import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
+import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
+import { Recorder, ECO_CYPHER } from './eco-graph.js?v=208ed727';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

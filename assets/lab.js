@@ -2,11 +2,11 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 실습 페이지: RDF(Turtle) 데이터를 Neo4j식 속성 그래프로 불러와 브라우저 안에서 Cypher 실행 + Cytoscape로 지식 그래프 표시
 // Turtle 파일은 cypher/turtle.js(N3.js)로 읽습니다. 질의는 assets/cypher/cypher.js (Cypher 부분집합 엔진)
-import { parse } from './cypher/turtle.js';
-import { buildGraph } from './cypher/graph.js';
-import { runCypher, show } from './cypher/cypher.js';
-import { DATASETS, QUERIES } from './cypher/presets.js';
-import { parseChecks } from './cypher/script.js';
+import { parse } from './cypher/turtle.js?v=dd7711a6';
+import { buildGraph } from './cypher/graph.js?v=3901bd2d';
+import { runCypher, show } from './cypher/cypher.js?v=429e52a6';
+import { DATASETS, QUERIES } from './cypher/presets.js?v=49736877';
+import { parseChecks } from './cypher/script.js?v=b2b731a7';
 
 const SHORT = [['http://iec.ch/TC57/CIM100#', 'cim:'], ['http://example.org/grid#', 'ex:']];
 const $ = (id) => document.getElementById(id);

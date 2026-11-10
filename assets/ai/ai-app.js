@@ -4,10 +4,10 @@
 //  - GraphRAG: 질문 → 온톨로지에서 꺼낸 스키마 → Cypher → 실행(실제) → 결과로 만든 답 → 근거 그래프
 //  - 에이전트: 생각 → 도구 호출(Cypher, 실제 실행) → 관찰 → … → 보고서
 // ⚠ AI가 쓰는 부분(Cypher · 생각 · 도구 선택)은 미리 작성한 시연용 예시. 실행 · 결과 · 답의 숫자는 매번 그래프에서 계산
-import { parse } from '../cypher/turtle.js';
-import { buildGraph, localName, relType } from '../cypher/graph.js';
-import { runCypher, show } from '../cypher/cypher.js';
-import { GRAPHRAG, AGENT, TOOLS, GRAPHRAG_FILES, AGENT_FILES, toEn } from './ai-scenarios.js?v=20261110a';
+import { parse } from '../cypher/turtle.js?v=dd7711a6';
+import { buildGraph, localName, relType } from '../cypher/graph.js?v=3901bd2d';
+import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
+import { GRAPHRAG, AGENT, TOOLS, GRAPHRAG_FILES, AGENT_FILES, toEn } from './ai-scenarios.js?v=bfc5e522';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

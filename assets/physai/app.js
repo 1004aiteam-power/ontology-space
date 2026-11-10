@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // Physical AI 페이지: NEAT 자율주행 학습을 브라우저에서 실행·시각화
-import { Population, Genome } from './neat.js';
-import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEED } from './sim.js?v=20261107c';   // ?v= 바꾸면 브라우저 캐시를 무시하고 새로 받음
+import { Population, Genome } from './neat.js?v=a16de3e3';
+import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEED } from './sim.js?v=e978db4e';   // ?v= 는 tools/build_nav.py 가 파일 내용으로 만듦
 
 const $ = (id) => document.getElementById(id);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();

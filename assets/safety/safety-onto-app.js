@@ -2,11 +2,11 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전공사 안전 온톨로지 페이지: 시뮬레이션 코드(safety.js) → 트리플 + 스키마 · 업무 · 자산관리 · 배전선로 · 고장 영향 Turtle
 // → 한 속성 그래프 → 현장별 단계 표 · Cypher 질의. Turtle은 cypher/turtle.js(N3.js)로 읽음
-import { parse } from '../cypher/turtle.js';
-import { buildGraph } from '../cypher/graph.js';
-import { runCypher, show } from '../cypher/cypher.js';
-import { toQuads, SAFETY_CYPHER, SAFETY_SCHEMA, LINKED_FILES } from './safety-graph.js?v=20261107a';
-import { SCENARIOS } from './safety.js?v=20261107a';
+import { parse } from '../cypher/turtle.js?v=dd7711a6';
+import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
+import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
+import { toQuads, SAFETY_CYPHER, SAFETY_SCHEMA, LINKED_FILES } from './safety-graph.js?v=ffc76238';
+import { SCENARIOS } from './safety.js?v=a96c9949';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

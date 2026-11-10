@@ -7,10 +7,14 @@
 <head>에는 파비콘과 링크 공유 미리보기(Open Graph · Twitter 카드) 태그, 검색엔진용 대표 주소(canonical)와
 언어별 주소(hreflang: 영어는 ?lang=en)도 함께 넣는다 (페이지의 제목·설명에서 만듦).
 sitemap.xml 과 robots.txt 도 여기서 만든다 (404.html 은 검색 대상에서 뺌).
+스크립트·스타일 주소 뒤의 ?v= 도 여기서 붙인다: 파일 내용(과 그 파일이 불러오는 모듈)의 해시라서, 파일을 고치고
+이 도구를 실행하면 방문자의 브라우저가 옛 파일 대신 새 파일을 받는다. 손으로 ?v= 를 고칠 필요가 없다.
 """
 from __future__ import annotations
 
+import hashlib
 import html
+import posixpath
 import re
 from pathlib import Path
 
@@ -162,6 +166,65 @@ def build(page: str) -> str:
     return "\n".join(out)
 
 
+# ---- ?v= (캐시 갱신) --------------------------------------------------------------------------------------
+V = r"(?:\?v=[0-9A-Za-z]+)?"
+JS_IMPORT = re.compile(r"""(\bfrom\s*|\bimport\s*)(['"])(\.{1,2}/[^'"?]+\.js)""" + V + r"\2")        # import … from './x.js'
+JS_FETCH = re.compile(r"""(\bfetch\(\s*)(['"])(assets/[^'"?]+)\?v=[0-9A-Za-z]+\2""")              # fetch('assets/…?v=…') 만 (이미 붙은 것)
+HTML_REF = re.compile(r"""(<(?:script|link)\b[^>]*?\b(?:src|href)=")(assets/[^"?]+\.(?:js|css))""" + V + '"')
+_ver: dict[str, str] = {}
+
+
+def _deps(rel: str, text: str) -> list[str]:
+    """이 파일이 가리키는 사이트 안의 파일들 (사이트 뿌리 기준 경로)."""
+    if not rel.endswith(".js") or rel.startswith("assets/vendor/"):
+        return []
+    here = posixpath.dirname(rel)
+    out = [posixpath.normpath(posixpath.join(here, m.group(3))) for m in JS_IMPORT.finditer(text)]
+    return out + [m.group(3) for m in JS_FETCH.finditer(text)]
+
+
+def version(rel: str, _stack: tuple[str, ...] = ()) -> str:
+    """파일 내용 + 불러오는 파일들의 버전으로 만든 8자리 해시 (?v= 자체는 빼고 계산)."""
+    if rel in _ver:
+        return _ver[rel]
+    p = ROOT / rel
+    data = p.read_bytes()
+    h = hashlib.sha1()
+    if rel.endswith((".js", ".css")) and not rel.startswith("assets/vendor/"):
+        text = data.decode("utf-8")
+        h.update(re.sub(r"\?v=[0-9A-Za-z]+", "", text).encode("utf-8"))
+        for d in sorted(set(_deps(rel, text))):
+            if d not in _stack and (ROOT / d).is_file():      # 서로 불러오는 경우(순환)는 내용만으로
+                h.update(version(d, _stack + (rel,)).encode())
+    else:
+        h.update(data)
+    _ver[rel] = h.hexdigest()[:8]
+    return _ver[rel]
+
+
+def stamp_js(rel: str, text: str) -> str:
+    here = posixpath.dirname(rel)
+
+    def imp(m: re.Match) -> str:
+        target = posixpath.normpath(posixpath.join(here, m.group(3)))
+        if not (ROOT / target).is_file():
+            return m.group(0)
+        return f"{m.group(1)}{m.group(2)}{m.group(3)}?v={version(target)}{m.group(2)}"
+
+    def fetch(m: re.Match) -> str:
+        if not (ROOT / m.group(3)).is_file():
+            return m.group(0)
+        return f"{m.group(1)}{m.group(2)}{m.group(3)}?v={version(m.group(3))}{m.group(2)}"
+
+    return JS_FETCH.sub(fetch, JS_IMPORT.sub(imp, text))
+
+
+def stamp_html(text: str) -> str:
+    def ref(m: re.Match) -> str:
+        return f'{m.group(1)}{m.group(2)}?v={version(m.group(2))}"' if (ROOT / m.group(2)).is_file() else m.group(0)
+    return HTML_REF.sub(ref, text)
+
+
 def write_if_changed(path: Path, text: str) -> int:
     if path.exists() and path.read_text(encoding="utf-8") == text:
         return 0
@@ -186,14 +249,19 @@ def main() -> None:
     pages = [f.name for f in sorted(ROOT.glob("*.html")) if f.name not in NOINDEX]
     n += write_if_changed(ROOT / "sitemap.xml", sitemap(pages))
     n += write_if_changed(ROOT / "robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n")
+    for f in sorted((ROOT / "assets").rglob("*.js")):
+        rel = f.relative_to(ROOT).as_posix()
+        if not rel.startswith("assets/vendor/"):
+            s = f.read_text(encoding="utf-8")
+            n += write_if_changed(f, stamp_js(rel, s))
     for f in sorted(ROOT.glob("*.html")):
         s = f.read_text(encoding="utf-8")
         new = re.sub(r"[ \t]*<nav>.*?</nav>", lambda m: build(f.name), s, count=1, flags=re.S)
-        new = add_head_meta(f.name, new)
+        new = stamp_html(add_head_meta(f.name, new))
         if new != s:
             f.write_text(new, encoding="utf-8")
             n += 1
-    print(f"메뉴·head 태그·sitemap을 다시 만든 파일: {n}개")
+    print(f"메뉴·head 태그·sitemap·?v= 를 다시 만든 파일: {n}개")
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@
 //  toQuads()  브라우저 Cypher 엔진(assets/cypher/graph.js)이 읽는 RDF/JS 모양
 //  toTurtle() Neo4j(neosemantics) · rdflib 등으로 가져갈 Turtle 텍스트
 // 브라우저(eco-ontology.html)와 빌드 스크립트(examples/ecosystem/build_eco.mjs)가 같이 씀
-import { Ecosystem, WORLD } from './ecosim.js?v=20261107a';
+import { Ecosystem, WORLD } from './ecosim.js?v=61384595';
 
 export const ECO = 'https://1004aiteam-power.github.io/ontology-space/eco#';
 const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';

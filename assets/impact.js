@@ -340,7 +340,7 @@
 
   async function main() {
     if (!$('imGraph')) return;
-    try { D = await (await fetch('assets/data/impact.json?v=8')).json(); } catch (e) { $('imGraph').textContent = 'impact.json?'; return; }
+    try { D = await (await fetch('assets/data/impact.json?v=96a4c5a3')).json(); } catch (e) { $('imGraph').textContent = 'impact.json?'; return; }
     document.querySelectorAll('[data-im-phase]').forEach(b => b.addEventListener('click', () => { phase = b.dataset.imPhase; render(); }));
     document.querySelectorAll('[data-im-mode]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.imMode; render(); }));
     document.querySelectorAll('[data-im-phase]').forEach(b => b.addEventListener('click', () => { stopAnim(true); }, true));

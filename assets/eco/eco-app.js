@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 단세포 생태계 페이지: 배양 접시 · 개체수 그래프 · 형질 진화
-import { Ecosystem, WORLD } from './ecosim.js?v=20261107a';
+import { Ecosystem, WORLD } from './ecosim.js?v=61384595';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (window.t ? window.t(o) : o.ko);

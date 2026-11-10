@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 교차로 신호 페이지: 위에서 내려다본 교차로, 신호 현시, 대기열·지체 그래프
-import { Intersection, PHASES, GEO, ARMS, AXIS, pointAt } from './traffic.js?v=20261104a';
+import { Intersection, PHASES, GEO, ARMS, AXIS, pointAt } from './traffic.js?v=3897f5af';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (window.t ? window.t(o) : o.ko);

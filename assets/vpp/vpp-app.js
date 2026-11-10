@@ -3,10 +3,10 @@
 // VPP 가상 전력시장 페이지: 시장 계산(vpp-graph.js) → 트리플 + 스키마 · 디지털 트윈 Turtle → 속성 그래프(그래프 DB)
 // → Cytoscape 그래프 · 노드 상세(그래프 DB 노드 ↔ 원본 Turtle) · 시간대별 입찰/실적 · Cypher 질의.
 // 화면에 보이는 숫자는 모두 그래프에 Cypher를 실행해 얻습니다. Turtle은 cypher/turtle.js(N3.js)로 읽음
-import { parse } from '../cypher/turtle.js';
-import { buildGraph } from '../cypher/graph.js';
-import { runCypher, show } from '../cypher/cypher.js';
-import { triples, toQuads, turtleBlock, qname, VPPS, VPP_CYPHER, VPP_SCHEMA, LINKED_FILES, RULE } from './vpp-graph.js?v=20261109a';
+import { parse } from '../cypher/turtle.js?v=dd7711a6';
+import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
+import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
+import { triples, toQuads, turtleBlock, qname, VPPS, VPP_CYPHER, VPP_SCHEMA, LINKED_FILES, RULE } from './vpp-graph.js?v=ee95d81f';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
