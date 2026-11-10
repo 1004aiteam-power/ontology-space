@@ -15,7 +15,7 @@
 | [ood.html](ood.html) | 온톨로지 vs. 객체지향 설계(OOD): 같은 ESS를 파이썬 클래스와 OWL로 나란히 적고, 목적 · 열린 세계 · 다중 분류 · 독립 속성 · 전역 이름 · 스키마 변경 · domain/range 추론의 일곱 가지 차이와 함께 쓰는 법 |
 | [vpp.html](vpp.html) | VPP(가상발전소)·분산에너지 기본 개념: DER 종류, 예측 → 입찰 → 제어 → 정산, 관련 표준(IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP)과 국내외 제도, 기존 전력망·전기차 온톨로지와의 연결 |
 | [examples/vpp/](examples/vpp/) | VPP 가상 전력시장 (`vpp-market.html`): VPP 10개 · 중개사업자 · DER 81개(태양광 · 풍력 · ESS · 전기차 충전소 · 수요반응) · 22.9kV 배전선로 15개 → 디지털 트윈 154kV 변전소 5곳, 하루 전 시장 24시간 입찰 · 정산 · 배전운영자 출력제한. `assets/vpp/vpp-graph.js` → `build_vpp.mjs` → 스키마 `vpp-schema.ttl` · 개체 `vpp-market.ttl` · Neo4j 적재 스크립트 `neo4j/import.cypher`, 브라우저에서 속성 그래프(Cytoscape)와 Cypher 질의 (⚠ 가상 데이터) |
-| [bidding.html](bidding.html) | 내가 이해한 전력시장 입찰제도: 변동비 반영시장(CBP)에서 공급가능용량 입찰 → SMP 결정 → 급전지시 → 계량 · 정산 흐름, 메리트 오더 체험(가상 값), 발전사업자 체크리스트 (⚠ 개인 학습 노트, 참고용) |
+| [bidding.html](bidding.html) | 내가 이해한 전력시장: 변동비 반영시장(CBP)에서 공급가능용량 입찰 → SMP 결정 → 급전지시 → 계량 · 정산 흐름, 메리트 오더 체험(가상 값), 발전사업자 체크리스트 (⚠ 개인 학습 노트, 참고용) |
 | [examples/work/](examples/work/) | 업무 온톨로지: 가상의 AI추진부 업무 149개를 분류한 엑셀 원본, OWL, Neo4j 스크립트 (⚠ 가상 부서) |
 | [examples/asset/](examples/asset/) | 전력설비 자산관리 온톨로지: 원본 CSV → `build_asset_ontology.py` → OWL · Neo4j · Cypher 검증(`neo4j/checks.cypher`) (⚠ 가상 데이터) |
 | [examples/asset/neo4j/checks.cypher](examples/asset/neo4j/checks.cypher) | 자산관리 형상검증 (Neo4j · Cypher): 빈 설비 자리, 설치 기간 겹침, EAM 번호 형식, 근거 없는 작업지시 등 8개 규칙 |
