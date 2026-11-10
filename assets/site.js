@@ -19,6 +19,7 @@
     if (t) document.title = t.content;
     document.dispatchEvent(new CustomEvent('langchange', { detail: lang }));
   }
+  root.classList.add('js');
   root.lang = initialLang;  // 첫 화면 깜빡임 방지: body가 그려지기 전에 적용
   window.currentLang = () => root.lang;
   window.t = (obj) => obj[root.lang] ?? obj.ko;
@@ -39,6 +40,7 @@
     initEasy();
     initViewers();
     initMenus();
+    initNavToggle();
   });
 
   // ---- 💡 쉬운 설명 켜기/끄기 (쉬운 설명이 있는 페이지에만 버튼 표시) ----
@@ -56,6 +58,25 @@
     btn.addEventListener('click', () => { const on = root.classList.contains('hide-easy'); store.set('easy', on ? 'on' : 'off'); apply(on); });
     document.addEventListener('langchange', () => apply(!root.classList.contains('hide-easy')));
     tools.prepend(btn);
+  }
+
+  // ---- 좁은 화면: ☰ 버튼으로 위쪽 메뉴 열고 닫기 (모양은 site.css의 .nav-toggle · nav.open) ----
+  function initNavToggle() {
+    const nav = document.querySelector('header.top nav'), tools = document.querySelector('header.top .tools');
+    if (!nav || !tools) return;
+    nav.id = nav.id || 'siteNav';
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'nav-toggle'; btn.textContent = '☰';
+    btn.setAttribute('aria-controls', nav.id);
+    const label = () => { const s = t({ ko: '메뉴', en: 'Menu' }); btn.setAttribute('aria-label', s); btn.title = s; };
+    const set = (on) => { nav.classList.toggle('open', on); btn.setAttribute('aria-expanded', on); btn.textContent = on ? '✕' : '☰'; };
+    label(); set(false);
+    document.addEventListener('langchange', label);
+    btn.addEventListener('click', e => { e.stopPropagation(); set(!nav.classList.contains('open')); });
+    nav.addEventListener('click', e => { if (e.target.closest('a')) set(false); });          // 같은 페이지 안의 #링크로 갈 때도 닫음
+    document.addEventListener('click', e => { if (!nav.contains(e.target)) set(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { set(false); btn.focus(); } });
+    tools.append(btn);
   }
 
   // ---- nav 드롭다운 (피지컬 AI · 온톨로지 설계실) ----
