@@ -55,7 +55,7 @@
 ## 빠르게 써 보기
 
 ```bash
-pip install rdflib pandapower opendssdirect.py pytest   # Cypher 질의·검증에는 Node.js도 필요
+pip install -r requirements-dev.txt   # rdflib · pandapower · opendssdirect.py · pytest (Cypher 질의·검증에는 Node.js도 필요)
 ```
 
 ```bash

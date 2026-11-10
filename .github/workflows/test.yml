@@ -1,0 +1,45 @@
+# push · pull request마다 테스트를 돌리고, 메뉴·head 태그(tools/build_nav.py)가 최신인지 확인한다
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install Python packages
+        run: pip install -r requirements-dev.txt
+      - name: Python tests
+        run: python -m pytest -q tests
+      - name: Node tests
+        run: |
+          for t in tests/*.test.mjs; do
+            echo "::group::$t"
+            node "$t"
+            echo "::endgroup::"
+          done
+      - name: Menus and head tags are up to date
+        run: |
+          python tools/build_nav.py
+          git diff --exit-code -- '*.html' || { echo "::error::tools/build_nav.py 를 실행한 결과를 커밋하세요"; exit 1; }
