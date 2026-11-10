@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Ontology vs. OOD</title>
+<meta name="title-ko" content="Ontology Space · 온톨로지 vs. 객체지향 설계">
+<meta name="title-en" content="Ontology Space · Ontology vs. object-oriented design">
+<meta name="description" content="온톨로지와 객체지향 설계(OOD)는 무엇이 같고 무엇이 다른가: 같은 ESS를 파이썬 클래스와 OWL로 표현해 비교하고, 열린 세계 · 다중 분류 · 독립 속성 · 전역 이름 · domain/range의 차이와 함께 쓰는 법을 정리">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 온톨로지 vs. 객체지향 설계">
+<meta property="og:description" content="온톨로지와 객체지향 설계(OOD)는 무엇이 같고 무엇이 다른가: 같은 ESS를 파이썬 클래스와 OWL로 표현해 비교하고, 열린 세계 · 다중 분류 · 독립 속성 · 전역 이름 · domain/range의 차이와 함께 쓰는 법을 정리">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/ood.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=20261110a">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:780px}
+.side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin:12px 0}
+.side > div{min-width:0}
+.side h4{margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.side pre{margin:0;font-size:12.5px;overflow-x:auto}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;color:#fff}
+.tag.oo{background:#6250d6} .tag.on{background:#1baf7a}
+:root[data-theme="dark"] .tag.oo{background:#9085e9} :root[data-theme="dark"] .tag.on{background:#199e70}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .tag.oo{background:#9085e9} :root:not([data-theme="light"]) .tag.on{background:#199e70} }
+@media (max-width:760px){.side{grid-template-columns:minmax(0,1fr)}}
+.diff{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:22px 0;border-top:1px solid var(--line)}
+.diff .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:700;padding-top:3px}
+.diff h3{margin:0 0 6px}
+.diff p{margin:6px 0}
+@media (max-width:560px){.diff{grid-template-columns:minmax(0,1fr)}}
+.qa td:first-child{font-weight:600}
+.ok{color:#008300;font-weight:700} .ng{color:#c2410c;font-weight:700}
+:root[data-theme="dark"] .ok{color:#4ade80}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ok{color:#4ade80} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html" aria-current="page"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+    <a href="bidding.html"><span lang="ko">내가 이해한 전력시장 입찰제도</span><span lang="en">Power market bidding, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">ONTOLOGY vs. OOD</div>
+  <h1><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. object-oriented design</span></h1>
+  <p class="thesis" lang="ko">뿌리는 같습니다. 세상을 <b>클래스와 개체, 상속과 관계</b>로 나눕니다.<br>목적이 다릅니다. 객체지향은 <b>프로그램을 움직이게</b>, 온톨로지는 <b>의미를 함께 쓰게</b> 합니다.</p>
+  <p class="thesis" lang="en">Same roots: both split the world into <b>classes and individuals, inheritance and relations</b>.<br>Different goals: OOD makes <b>a program run</b>; an ontology makes <b>meaning shareable</b>.</p>
+  <p class="lead" lang="ko">객체지향 설계(OOD, Object-Oriented Design)에 익숙한 개발자라면 온톨로지는 금방 익숙해 보입니다. 그런데 바로 그 익숙함 때문에 자주 틀리는 곳이 있습니다. 이 페이지는 같은 ESS 하나를 <b>파이썬 클래스</b>와 <b>OWL 온톨로지</b>로 나란히 적어 보고, 어디까지 같고 어디서부터 다른지, 그리고 둘을 어떻게 함께 쓰는지 정리합니다. 예는 이 사이트의 <a href="vpp-market.html">VPP 가상 전력시장</a>과 <a href="project.html">pycim</a>에서 가져왔습니다.</p>
+  <p class="lead" lang="en">If you know object-oriented design (OOD), ontologies look familiar at once — and that very familiarity is where people slip. This page writes the same battery as a <b>Python class</b> and as an <b>OWL ontology</b>, side by side, shows where they agree and where they part, and how to use them together. Examples come from this site's <a href="vpp-market.html">VPP virtual market</a> and <a href="project.html">pycim</a>.</p>
+</div>
+
+<section id="map">
+  <h2><span lang="ko">한눈에: 무엇이 무엇에 대응하나</span><span lang="en">At a glance: what maps to what</span></h2>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">객체지향 (Python · Java · UML)</span><span lang="en">OOD (Python, Java, UML)</span></th><th><span lang="ko">온톨로지 (RDF · RDFS · OWL)</span><span lang="en">Ontology (RDF, RDFS, OWL)</span></th><th><span lang="ko">이 사이트의 예</span><span lang="en">Example on this site</span></th></tr>
+    <tr><td><span lang="ko">클래스</span><span lang="en">Class</span></td><td><code>owl:Class</code></td><td><code>vpp:BatterySystem</code></td></tr>
+    <tr><td><span lang="ko">상속</span><span lang="en">Inheritance</span> <code>class A(B)</code></td><td><code>rdfs:subClassOf</code></td><td><code>vpp:BatterySystem ⊑ cim:BatteryUnit</code></td></tr>
+    <tr><td><span lang="ko">객체 (인스턴스)</span><span lang="en">Object (instance)</span></td><td><span lang="ko">개체 (individual)</span><span lang="en">Individual</span></td><td><code>vpp:ESS_001</code></td></tr>
+    <tr><td><span lang="ko">값 필드</span><span lang="en">Value field</span> <code>capacity_kw: float</code></td><td><code>owl:DatatypeProperty</code></td><td><code>vpp:capacityKW</code></td></tr>
+    <tr><td><span lang="ko">참조 필드</span><span lang="en">Reference field</span> <code>feeder: Feeder</code></td><td><code>owl:ObjectProperty</code></td><td><code>cim:Equipment.EquipmentContainer</code></td></tr>
+    <tr><td><span lang="ko">필드의 타입</span><span lang="en">Field type</span></td><td><code>rdfs:domain</code> · <code>rdfs:range</code> <span lang="ko">(뜻이 다름! ⑦)</span><span lang="en">(different meaning! ⑦)</span></td><td><code>vpp:aggregates rdfs:range vpp:DER</code></td></tr>
+    <tr><td><span lang="ko">패키지 · 네임스페이스</span><span lang="en">Package / namespace</span></td><td><span lang="ko">IRI 네임스페이스 (접두어)</span><span lang="en">IRI namespace (prefix)</span></td><td><code>vpp:</code> · <code>cim:</code></td></tr>
+    <tr><td><span lang="ko">객체 식별자 (메모리 주소 · id)</span><span lang="en">Object identity (memory address, id)</span></td><td><span lang="ko">전역 IRI</span><span lang="en">Global IRI</span></td><td><code>https://…/vpp#ESS_001</code></td></tr>
+    <tr><td><span lang="ko">메서드 (행동)</span><span lang="en">Method (behaviour)</span></td><td><b><span lang="ko">대응하는 것 없음</span><span lang="en">No counterpart</span></b></td><td><span lang="ko">충방전 계산은 코드에</span><span lang="en">Charge/discharge logic lives in code</span></td></tr>
+    <tr><td><span lang="ko">타입 검사 · 유효성 검사</span><span lang="en">Type checking, validation</span></td><td><span lang="ko">SHACL · 형상검증 질의 (OWL과 별도)</span><span lang="en">SHACL / shape-check queries (separate from OWL)</span></td><td><a href="lab.html">Cypher <span lang="ko">형상검증</span><span lang="en">shape checks</span></a></td></tr>
+  </table></div>
+  <p lang="ko">실제로 전력 분야의 표준 IEC CIM은 처음부터 <b>UML 클래스 다이어그램</b>(객체지향 설계 도구)으로 만들어졌고, 그것을 RDF로 옮긴 것이 CGMES입니다. 이 사이트의 <a href="project.html">pycim</a>은 반대로 CIM을 다시 파이썬 클래스로 옮긴 것입니다. 두 세계는 이렇게 서로 오갑니다.</p>
+  <p lang="en">In fact the power-sector standard IEC CIM was built from the start as a <b>UML class diagram</b> (an OOD tool), and CGMES is that model carried into RDF. This site's <a href="project.html">pycim</a> goes the other way, turning CIM back into Python classes. The two worlds travel in both directions.</p>
+</section>
+
+<section id="side">
+  <h2><span lang="ko">같은 ESS를 두 가지로 적어 보기</span><span lang="en">The same battery, written two ways</span></h2>
+  <div class="side">
+    <div><h4><span class="tag oo">OOD</span> <span lang="ko">파이썬 클래스</span><span lang="en">Python classes</span></h4>
+<pre><code class="language-python">from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class Feeder:
+    name: str
+
+@dataclass
+class DER:
+    der_id: str
+    capacity_kw: float
+    feeder: Feeder              # 참조
+
+@dataclass
+class BatterySystem(DER):       # 상속
+    energy_kwh: Optional[float] = None
+    soc: float = 0.5            # 충전 상태
+
+    def discharge(self, kw, hours):   # 행동
+        e = min(kw * hours, self.soc * self.energy_kwh)
+        self.soc -= e / self.energy_kwh
+        return e
+
+ess = BatterySystem("ESS_001", 500.0,
+                    Feeder("광주 D/L 2"), energy_kwh=2000.0)
+print(ess.discharge(500, 1), round(ess.soc, 2))   # 500 0.25</code></pre></div>
+    <div><h4><span class="tag on">Ontology</span> <span lang="ko">OWL (Turtle)</span><span lang="en">OWL (Turtle)</span></h4>
+<pre><code># 스키마 (TBox): 클래스와 속성
+vpp:DER a owl:Class .
+vpp:BatterySystem a owl:Class ;
+    rdfs:subClassOf vpp:DER, cim:BatteryUnit .   # 상속 (여러 개)
+
+vpp:capacityKW a owl:DatatypeProperty ;
+    rdfs:domain vpp:DER ; rdfs:range xsd:decimal .
+vpp:energyKWh a owl:DatatypeProperty ;
+    rdfs:domain vpp:BatterySystem .
+
+# 개체 (ABox): 사실
+vpp:ESS_001 a vpp:BatterySystem ;
+    vpp:capacityKW 500.0 ;
+    vpp:energyKWh 2000.0 ;
+    cim:Equipment.EquipmentContainer vpp:FD_GWANGJU_2 .
+
+# discharge()에 해당하는 것은 없음:
+# 온톨로지는 "무엇인가"를 말하고, "어떻게 움직이나"는 말하지 않음</code></pre></div>
+  </div>
+  <p class="meta" lang="ko">파이썬 쪽은 Python 3로 실행해 결과(<code>500 0.25</code>)를 확인했습니다. 오른쪽은 <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/vpp/vpp-schema.ttl">vpp-schema.ttl</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/vpp/vpp-market.ttl">vpp-market.ttl</a>에서 줄여 옮겼습니다.</p>
+  <p class="meta" lang="en">The Python side was run with Python 3 (output <code>500 0.25</code>). The right side is trimmed from <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/vpp/vpp-schema.ttl">vpp-schema.ttl</a> and <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/examples/vpp/vpp-market.ttl">vpp-market.ttl</a>.</p>
+  <p lang="ko">겉보기에는 거의 같습니다. 하지만 아래 일곱 가지에서 두 세계는 다르게 생각합니다.</p>
+  <p lang="en">They look almost identical. But on the seven points below, the two worlds think differently.</p>
+</section>
+
+<section id="diff">
+  <h2><span lang="ko">일곱 가지 차이</span><span lang="en">Seven differences</span></h2>
+
+  <div class="diff"><div class="no">①</div><div><h3><span lang="ko">목적: 움직이는 프로그램 vs. 함께 쓰는 의미</span><span lang="en">Purpose: a running program vs. shared meaning</span></h3>
+    <p lang="ko">객체지향의 클래스는 <b>프로그램 안에서 일을 하기 위해</b> 존재합니다. 데이터와 함께 <b>메서드</b>(행동)를 묶고, 바깥에서 함부로 못 건드리게 <b>캡슐화</b>합니다. 온톨로지에는 메서드도 캡슐화도 없습니다. 모든 사실이 공개된 문장(트리플)이고, 목적은 <b>여러 시스템과 사람이 같은 뜻으로 데이터를 읽고 묻는 것</b>입니다.</p>
+    <p lang="en">An OO class exists <b>to do work inside a program</b>: it bundles data with <b>methods</b> and <b>encapsulates</b> them. An ontology has neither methods nor encapsulation. Every fact is a public statement (triple), and the goal is that <b>many systems and people read and query the data with the same meaning</b>.</p>
+    <p lang="ko">그래서 "ESS가 방전하면 충전 상태가 줄어든다"는 <b>계산</b>은 코드에, "ESS_001은 배터리이고 광주 D/L 2에 붙어 있다"는 <b>사실</b>은 온톨로지에 두는 것이 자연스럽습니다.</p>
+    <p lang="en">So the <b>computation</b> "discharging lowers the state of charge" belongs in code, and the <b>fact</b> "ESS_001 is a battery on Gwangju D/L 2" belongs in the ontology.</p></div></div>
+
+  <div class="diff"><div class="no">②</div><div><h3><span lang="ko">닫힌 세계 vs. 열린 세계</span><span lang="en">Closed world vs. open world</span></h3>
+    <p lang="ko">프로그램과 데이터베이스는 <b>닫힌 세계 가정</b>(CWA)을 씁니다. 적혀 있지 않으면 <b>없는 것</b>입니다. 온톨로지(OWL)는 <b>열린 세계 가정</b>(OWA)을 씁니다. 적혀 있지 않으면 <b>모르는 것</b>입니다. 누군가 다른 파일에서 그 사실을 더할 수 있기 때문입니다.</p>
+    <p lang="en">Programs and databases use the <b>closed-world assumption</b> (CWA): if it is not written, it is <b>false</b>. OWL uses the <b>open-world assumption</b> (OWA): if it is not written, it is <b>unknown</b> — someone may add it in another file.</p>
+    <div class="tbl"><table class="qa">
+      <tr><th><span lang="ko">질문</span><span lang="en">Question</span></th><th><span class="tag oo">OOD</span></th><th><span class="tag on">Ontology</span></th></tr>
+      <tr><td lang="ko">PV_001의 저장 용량은?</td><td lang="ko"><code>AttributeError</code> (그런 필드 없음)</td><td lang="ko">모름 (적힌 값이 없을 뿐)</td></tr>
+      <tr><td lang="en">PV_001's energy capacity?</td><td lang="en"><code>AttributeError</code> (no such field)</td><td lang="en">Unknown (simply not stated)</td></tr>
+      <tr><td lang="ko">ESS_001은 VPP 하나에만 속하나?</td><td lang="ko">필드가 하나면 하나</td><td lang="ko">제약을 적지 않으면 여럿일 수도 있다고 봄</td></tr>
+      <tr><td lang="en">Does ESS_001 belong to only one VPP?</td><td lang="en">One field, so one</td><td lang="en">Could be several unless a constraint says otherwise</td></tr>
+      <tr><td lang="ko">출력제한 지시가 없는 선로는 혼잡이 없나?</td><td lang="ko">없음</td><td lang="ko">그렇다고 단정하지 않음</td></tr>
+      <tr><td lang="en">No curtailment recorded — so no congestion?</td><td lang="en">No congestion</td><td lang="en">Does not conclude that</td></tr>
+    </table></div>
+    <p lang="ko">이 차이 때문에, "필수 값이 빠졌는지" 같은 <b>검사</b>는 OWL이 아니라 닫힌 세계로 읽는 별도 도구(SHACL, 또는 이 사이트의 <a href="lab.html">Cypher 형상검증</a>)로 합니다. 그래프 DB(Neo4j)에 올린 뒤 Cypher로 묻는 순간에는 다시 닫힌 세계가 된다는 점도 기억해 두면 좋습니다.</p>
+    <p lang="en">That is why <b>checks</b> such as "is a required value missing?" are done not with OWL but with closed-world tools (SHACL, or this site's <a href="lab.html">Cypher shape checks</a>). Note also that once the data sits in a graph DB (Neo4j) and you query it with Cypher, you are back in a closed world.</p></div></div>
+
+  <div class="diff"><div class="no">③</div><div><h3><span lang="ko">클래스 소속: 태어날 때 고정 vs. 여럿 · 나중에 추론</span><span lang="en">Membership: fixed at birth vs. many, inferred later</span></h3>
+    <p lang="ko">객체는 만들어질 때 클래스 하나가 정해지고 바뀌지 않습니다. 여러 성격을 가지려면 다중 상속이나 인터페이스를 미리 설계해야 합니다. 온톨로지의 개체는 <b>여러 클래스에 동시에</b> 속할 수 있고, <b>조건을 만족하면 추론기가 분류</b>해 줍니다.</p>
+    <p lang="en">An object gets one class when created, and it never changes; to wear several hats you must design multiple inheritance or interfaces up front. An individual can belong to <b>several classes at once</b>, and <b>a reasoner can classify it</b> when it meets a definition.</p>
+<pre><code># "1,000kW 이상인 배터리"를 정의 → 조건을 만족하는 개체는 자동으로 LargeBattery
+vpp:LargeBattery owl:equivalentClass [ a owl:Class ;
+    owl:intersectionOf ( vpp:BatterySystem
+      [ a owl:Restriction ; owl:onProperty vpp:capacityKW ;
+        owl:someValuesFrom [ a rdfs:Datatype ; owl:onDatatype xsd:decimal ;
+                             owl:withRestrictions ( [ xsd:minInclusive 1000 ] ) ] ] ) ] .</code></pre>
+    <p lang="ko">이 사이트의 그래프 DB에서 ESS 노드가 <code>:BatterySystem:DER:BatteryUnit</code> 라벨을 한꺼번에 가진 것도 같은 생각입니다. 파이썬이라면 <code>class BatterySystem(DER, BatteryUnit)</code>처럼 다중 상속을 설계해야 같은 효과가 납니다.</p>
+    <p lang="en">The ESS nodes in this site's graph DB carrying <code>:BatterySystem:DER:BatteryUnit</code> at once is the same idea. In Python you would need to design multiple inheritance — <code>class BatterySystem(DER, BatteryUnit)</code> — to get the same effect.</p></div></div>
+
+  <div class="diff"><div class="no">④</div><div><h3><span lang="ko">속성이 클래스 밖에서 독립적으로 존재</span><span lang="en">Properties live on their own, outside classes</span></h3>
+    <p lang="ko">객체지향에서 필드는 <b>클래스 안에</b> 선언됩니다. <code>DER.capacity_kw</code>와 <code>Feeder.capacity_kw</code>는 이름만 같은 별개의 것입니다. 온톨로지에서 속성은 <b>그 자체로 정의되는 1급 요소</b>라서, 여러 클래스가 같은 속성을 공유하고 속성끼리 관계도 가집니다.</p>
+    <p lang="en">In OOD a field is declared <b>inside a class</b>; <code>DER.capacity_kw</code> and <code>Feeder.capacity_kw</code> merely share a name. In an ontology a property is <b>a first-class thing defined by itself</b>: many classes share it, and properties relate to each other.</p>
+    <ul lang="ko">
+      <li><code>rdfs:subPropertyOf</code>: "정격 용량"은 "용량"의 한 종류</li>
+      <li><code>owl:inverseOf</code>: VPP가 DER을 <code>aggregates</code>하면, DER은 VPP에 <code>memberOf</code> (한쪽만 적어도 됨)</li>
+      <li><code>owl:TransitiveProperty</code>: 변전소 → 선로 → 구간으로 <code>feeds</code>가 이어지면 변전소가 구간에도 공급한다고 추론 (<a href="impact.html">고장 영향 분석</a>의 <code>im:feeds</code>와 같은 생각)</li>
+    </ul>
+    <ul lang="en">
+      <li><code>rdfs:subPropertyOf</code>: "rated capacity" is a kind of "capacity"</li>
+      <li><code>owl:inverseOf</code>: if a VPP <code>aggregates</code> a DER, the DER is <code>memberOf</code> the VPP (state just one side)</li>
+      <li><code>owl:TransitiveProperty</code>: substation → feeder → section via <code>feeds</code> lets you infer the substation feeds the section (the idea behind <code>im:feeds</code> in <a href="impact.html">failure impact</a>)</li>
+    </ul>
+    <p lang="ko">객체지향에서는 이런 규칙을 매번 코드로 짜야 합니다(역방향 참조를 양쪽에 유지하기, 재귀로 하류 찾기).</p>
+    <p lang="en">In OOD each of these rules has to be coded by hand (keeping back-references in sync, recursing to find downstream).</p></div></div>
+
+  <div class="diff"><div class="no">⑤</div><div><h3><span lang="ko">이름: 프로그램 안 vs. 전 세계</span><span lang="en">Names: inside one program vs. worldwide</span></h3>
+    <p lang="ko">객체의 정체성은 메모리 주소나 DB의 id입니다. 프로그램 밖으로 나가면 의미가 없고, 다른 시스템의 같은 설비와 이으려면 매핑 표가 필요합니다. 온톨로지의 개체는 <b>전역 IRI</b>를 가지므로, 다른 파일 · 다른 회사의 데이터가 같은 IRI를 쓰면 <b>그대로 합쳐집니다</b>. VPP 데이터가 디지털 트윈의 변전소 IRI를 가리키기만 했는데 두 그래프가 이어진 것이 그 예입니다.</p>
+    <p lang="en">An object's identity is a memory address or a DB id: meaningless outside the program, so linking to the same asset in another system needs a mapping table. An individual has a <b>global IRI</b>, so data from other files or companies that use the same IRI <b>simply merges</b>. The VPP data pointing at the digital twin's substation IRIs — and the two graphs joining — is exactly that.</p>
+    <p lang="ko">또 하나 다른 점은 OWL에 <b>"이름이 다르면 다른 것" 가정이 없다</b>는 것입니다(UNA 없음). SCADA 코드와 EAM 코드가 같은 변압기라면 <code>owl:sameAs</code>로 같다고 말할 수 있습니다. <a href="project.html">pycim</a>의 SCADA · EAM · GIS 코드 ↔ mRID 매핑 표가 객체지향 쪽에서 같은 문제를 푼 방식입니다.</p>
+    <p lang="en">Another difference: OWL has <b>no "different names mean different things" assumption</b> (no UNA). If a SCADA code and an EAM code name the same transformer, <code>owl:sameAs</code> says so. The SCADA/EAM/GIS ↔ mRID mapping table in <a href="project.html">pycim</a> is how the OOD side solves the same problem.</p></div></div>
+
+  <div class="diff"><div class="no">⑥</div><div><h3><span lang="ko">스키마 변경: 코드 수정 · 이관 vs. 문장 추가</span><span lang="en">Schema change: refactor and migrate vs. add statements</span></h3>
+    <p lang="ko">클래스에 필드를 하나 더하려면 코드를 고치고, 다시 배포하고, 저장된 데이터를 이관해야 합니다. 온톨로지는 스키마도 데이터와 똑같은 트리플이라 <b>새 클래스 · 속성 · 상위 클래스를 문장으로 더하기만</b> 하면 됩니다. 기존 데이터는 그대로 두고 새 뜻을 덧붙일 수 있습니다(예: 나중에 <code>vpp:BatterySystem ⊑ ex:FlexibleResource</code>를 한 줄 추가).</p>
+    <p lang="en">Adding a field to a class means editing code, redeploying and migrating stored data. In an ontology the schema is triples just like the data, so you <b>only add statements</b> — a new class, property or superclass — and leave existing data untouched (e.g. later add one line <code>vpp:BatterySystem ⊑ ex:FlexibleResource</code>).</p>
+    <p lang="ko">그 대가로, 스키마가 너무 쉽게 바뀌므로 <b>누가 · 왜 바꿨는지 기록</b>하는 습관이 중요합니다. 이 사이트의 <a href="studio.html">온톨로지 설계실</a>이 설계 결정(D1, D2…)을 남기는 이유입니다.</p>
+    <p lang="en">The price: because the schema changes so easily, <b>recording who changed what and why</b> matters. That is why this site's <a href="studio.html">Design Studio</a> keeps design decisions (D1, D2…).</p></div></div>
+
+  <div class="diff"><div class="no">⑦</div><div><h3><span lang="ko">domain · range는 "검사"가 아니라 "추론" (가장 흔한 실수)</span><span lang="en">domain and range infer — they do not check (the most common mistake)</span></h3>
+    <p lang="ko">객체지향의 타입 선언 <code>feeder: Feeder</code>는 <b>검사</b>입니다. 다른 타입을 넣으면 오류가 납니다(정적 타입 언어라면 컴파일 단계에서). 개발자는 <code>rdfs:range</code>도 그렇게 동작하리라 기대하지만, RDFS · OWL에서 range는 <b>"그러니 이것은 그 클래스다"라고 추론</b>합니다.</p>
+    <p lang="en">The OO declaration <code>feeder: Feeder</code> is a <b>check</b>: put in the wrong type and you get an error (at compile time in a static language). Developers expect <code>rdfs:range</code> to behave the same, but in RDFS/OWL a range <b>infers "therefore this is of that class"</b>.</p>
+<pre><code>vpp:aggregates rdfs:range vpp:DER .
+vpp:VPP02 vpp:aggregates vpp:FD_GWANGJU_2 .     # 실수로 배전선로를 넣음
+
+# OOD라면:    타입 오류
+# OWL이라면:  "FD_GWANGJU_2는 DER이다"라고 결론 (오류 아님!)</code></pre>
+    <p lang="ko">이 때문에 "잘못된 데이터를 막는 일"은 반드시 별도의 검증 규칙(SHACL, 형상검증 질의)으로 해야 합니다. 이 사이트의 테스트가 "모든 DER은 정확히 하나의 VPP와 하나의 선로를 가진다"를 Cypher로 따로 확인하는 것도 그래서입니다.</p>
+    <p lang="en">So "keeping bad data out" must be done with separate validation rules (SHACL, shape-check queries). That is why this site's tests check "every DER has exactly one VPP and one feeder" separately with Cypher.</p></div></div>
+</section>
+
+<section id="summary">
+  <h2><span lang="ko">정리 비교표</span><span lang="en">Summary table</span></h2>
+  <div class="tbl"><table>
+    <tr><th></th><th><span class="tag oo">OOD</span></th><th><span class="tag on">Ontology</span></th></tr>
+    <tr><td><span lang="ko">목적</span><span lang="en">Purpose</span></td><td><span lang="ko">프로그램의 동작</span><span lang="en">Program behaviour</span></td><td><span lang="ko">의미의 공유 · 질의 · 추론</span><span lang="en">Sharing, querying, reasoning about meaning</span></td></tr>
+    <tr><td><span lang="ko">행동 (메서드)</span><span lang="en">Behaviour</span></td><td><span class="ok">○</span></td><td><span class="ng">✕</span></td></tr>
+    <tr><td><span lang="ko">캡슐화</span><span lang="en">Encapsulation</span></td><td><span class="ok">○</span></td><td><span class="ng">✕</span> <span lang="ko">(모두 공개된 사실)</span><span lang="en">(all facts public)</span></td></tr>
+    <tr><td><span lang="ko">세계 가정</span><span lang="en">World assumption</span></td><td><span lang="ko">닫힌 세계: 없으면 거짓</span><span lang="en">Closed: absent = false</span></td><td><span lang="ko">열린 세계: 없으면 모름</span><span lang="en">Open: absent = unknown</span></td></tr>
+    <tr><td><span lang="ko">클래스 소속</span><span lang="en">Membership</span></td><td><span lang="ko">하나, 생성 시 고정</span><span lang="en">One, fixed at creation</span></td><td><span lang="ko">여럿, 추론으로 바뀔 수 있음</span><span lang="en">Many; may be inferred</span></td></tr>
+    <tr><td><span lang="ko">속성</span><span lang="en">Properties</span></td><td><span lang="ko">클래스 안에 종속</span><span lang="en">Owned by a class</span></td><td><span lang="ko">독립 · 계층 · 역관계 · 이행성</span><span lang="en">Independent; hierarchy, inverse, transitive</span></td></tr>
+    <tr><td><span lang="ko">이름 · 정체성</span><span lang="en">Identity</span></td><td><span lang="ko">프로그램 안 (주소 · id)</span><span lang="en">Local (address, id)</span></td><td><span lang="ko">전역 IRI, <code>owl:sameAs</code></span><span lang="en">Global IRI, <code>owl:sameAs</code></span></td></tr>
+    <tr><td><span lang="ko">타입 선언</span><span lang="en">Type declarations</span></td><td><span lang="ko">검사 (어기면 오류)</span><span lang="en">Check (error if violated)</span></td><td><span lang="ko">추론 (어기면 새 사실)</span><span lang="en">Inference (violation creates new facts)</span></td></tr>
+    <tr><td><span lang="ko">스키마 변경</span><span lang="en">Schema change</span></td><td><span lang="ko">코드 수정 · 배포 · 데이터 이관</span><span lang="en">Edit code, redeploy, migrate</span></td><td><span lang="ko">트리플 추가</span><span lang="en">Add triples</span></td></tr>
+    <tr><td><span lang="ko">잘 맞는 곳</span><span lang="en">Best at</span></td><td><span lang="ko">계산 · 시뮬레이션 · 제어 로직</span><span lang="en">Computation, simulation, control logic</span></td><td><span lang="ko">시스템 간 통합 · 표준 · 지식 그래프 · AI의 지식 바탕</span><span lang="en">Integration across systems, standards, knowledge graphs, grounding for AI</span></td></tr>
+  </table></div>
+</section>
+
+<section id="together">
+  <h2><span lang="ko">둘을 함께 쓰는 법</span><span lang="en">Using them together</span></h2>
+  <p lang="ko">둘은 경쟁 관계가 아닙니다. 실무에서는 <b>온톨로지로 뜻을 정하고, 객체지향 코드로 계산</b>합니다. 이 사이트에서도 그렇게 했습니다.</p>
+  <p lang="en">They are not rivals. In practice you <b>fix the meaning with an ontology and compute with OO code</b> — and so does this site.</p>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">① 온톨로지 → 클래스</span><span lang="en">① Ontology → classes</span></h4><p lang="ko">표준 온톨로지(CIM)에서 파이썬 클래스를 만들어 계산에 씀. <a href="project.html">pycim</a>이 CIM으로 조류계산 · OpenDSS 변환을 하는 방식.</p><p lang="en">Generate Python classes from a standard ontology (CIM) and compute with them — how <a href="project.html">pycim</a> runs load flow and OpenDSS export.</p></div>
+    <div class="card"><h4><span lang="ko">② 객체 → 트리플</span><span lang="en">② Objects → triples</span></h4><p lang="ko">계산 · 시뮬레이션 결과를 트리플로 내보내 다른 데이터와 합침. <a href="vpp-market.html">VPP 가상 시장</a>, <a href="safety-ontology.html">배전공사 안전</a>이 시뮬레이션 코드를 온톨로지로 옮긴 방식.</p><p lang="en">Export computation or simulation results as triples to merge with other data — how the <a href="vpp-market.html">VPP market</a> and <a href="safety-ontology.html">work safety</a> pages turn simulation code into ontologies.</p></div>
+    <div class="card"><h4><span lang="ko">③ 검증은 따로</span><span lang="en">③ Validate separately</span></h4><p lang="ko">열린 세계의 온톨로지에는 닫힌 세계의 검사 규칙(SHACL · Cypher 형상검증)을 덧붙여 데이터 품질을 지킴.</p><p lang="en">Add closed-world checks (SHACL, Cypher shape checks) on top of the open-world ontology to guard data quality.</p></div>
+  </div>
+  <h3><span lang="ko">온톨로지를 클래스로 옮길 때의 요령</span><span lang="en">Tips for mapping an ontology to classes</span></h3>
+  <ul lang="ko">
+    <li><b>IRI를 필드로 남기기</b>: 객체마다 <code>mrid</code> · <code>iri</code> 필드를 두어 프로그램 밖에서도 같은 개체로 찾을 수 있게 함 (pycim의 mRID)</li>
+    <li><b>모르는 값은 <code>Optional</code></b>: 열린 세계에서 온 데이터는 언제든 비어 있을 수 있음</li>
+    <li><b>다중 분류는 믹스인이나 태그로</b>: 클래스 하나에 억지로 넣지 말고 <code>roles</code> 집합이나 믹스인 클래스로</li>
+    <li><b>관계는 한쪽만 저장하고 역방향은 계산</b>: <code>owl:inverseOf</code>처럼 양쪽을 따로 저장하면 어긋나기 쉬움</li>
+    <li><b>행동은 코드에, 사실은 그래프에</b>: 메서드를 온톨로지에 넣으려 하지 말 것</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Keep the IRI as a field</b>: give every object an <code>mrid</code>/<code>iri</code> so it can be found outside the program (pycim's mRID)</li>
+    <li><b>Unknown values are <code>Optional</code></b>: data from an open world can always be missing</li>
+    <li><b>Multiple classification via mixins or tags</b>: don't force one class — use a <code>roles</code> set or mixins</li>
+    <li><b>Store a relation on one side, compute the inverse</b>: storing both like <code>owl:inverseOf</code> drifts out of sync</li>
+    <li><b>Behaviour in code, facts in the graph</b>: don't try to put methods into the ontology</li>
+  </ul>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">객체지향 클래스는 <b>한 프로그램의 설계도</b>이고, 온톨로지는 <b>여러 프로그램이 함께 보는 사전</b>입니다. 설계도는 정확하게 움직이도록 엄격하고, 사전은 계속 새 뜻이 붙도록 열려 있습니다. 같은 단어(클래스 · 상속 · 관계)를 쓰지만, "적혀 있지 않은 것"과 "타입이 어긋난 것"을 대하는 태도가 정반대라는 것만 기억하면 대부분의 혼란을 피할 수 있습니다.</p><p lang="en">An OO class is <b>one program's blueprint</b>; an ontology is <b>a dictionary many programs read together</b>. The blueprint is strict so things run exactly; the dictionary stays open so new meaning can be added. They share words — class, inheritance, relation — but treat "what is not written" and "what has the wrong type" in opposite ways. Remember that and most confusion goes away.</p></div>
+</section>
+
+<section>
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li><a href="https://www.w3.org/TR/sw-oosd-primer/">W3C, "A Semantic Web Primer for Object-Oriented Software Developers"</a> (W3C Working Group Note, 2006)</li>
+    <li><a href="https://www.w3.org/TR/owl2-primer/">W3C, "OWL 2 Web Ontology Language Primer"</a></li>
+    <li><a href="https://www.w3.org/TR/shacl/">W3C, "Shapes Constraint Language (SHACL)"</a></li>
+  </ul>
+  <div class="pager"><a href="project.html"><span lang="ko">← 이전: 프로젝트 pycim</span><span lang="en">← Prev: Project pycim</span></a><a href="lab.html"><span lang="ko">다음: Cypher 실습 →</span><span lang="en">Next: Cypher lab →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

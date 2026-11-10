@@ -21,6 +21,7 @@ NAV = [
     ("menu", "gridMenu", "전력망 온톨로지", "Power Grid Ontology", [
         ("grid.html", "전력망 온톨로지", "Power grid ontology", "IEC CIM · 토폴로지 · 관련 표준", "IEC CIM · topology · related standards"),
         ("project.html", "pycim 프로젝트", "pycim project", "CIM을 파이썬 클래스로 · 조류계산 · CGMES", "CIM as Python classes · load flow · CGMES"),
+        ("ood.html", "온톨로지 vs. 객체지향 설계", "Ontology vs. OOD", "같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이", "One battery as Python and OWL · seven differences"),
         ("lab.html", "Cypher 실습 · 데이터 검증", "Cypher lab · data validation", "브라우저에서 Neo4j Cypher 질의 · 형상검증", "Neo4j Cypher in the browser · shape checks"),
         ("twin.html", "디지털 트윈", "Digital twin", "가상 대한민국 전력망 24시간", "Virtual Korean grid over 24 hours"),
         ("hr",),
