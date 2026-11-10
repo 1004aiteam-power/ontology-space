@@ -1,0 +1,93 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space) */
+/* 업무 흐름도 (work-graph.html) 전용. site.css 뒤에 불러옴: 위쪽 메뉴는 site.css, 본문(.wg 안)은 이 파일 */
+/* 레이아웃: 상단 요약 → 영역별 스윔레인 그래프(가로=선행 깊이) + 우측 상세 패널 → 영역 간 흐름 행렬 */
+:root{
+  --bg:#f4f6f9;--surface:#ffffff;--ink:#1b2130;--muted:#5d6678;--line:#d8dde6;--edge:#b3bbca;--accent:#1f4fd1;--fb:#d0581b;
+  --c-ST:#2f63c9;--c-BD:#b77806;--c-TD:#7546c4;--c-DM:#0f8a77;--c-PM:#55657d;--c-GV:#c2394a;--c-OC:#b8478a;--c-MS:#5f7d1f;--c-OP:#167fa6;
+  --sans:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic","Segoe UI",sans-serif;   /* 사이트 본문과 같은 글꼴 (외부 글꼴 서버를 쓰지 않음) */
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11141a;--surface:#191e27;--ink:#e5e9f0;--muted:#98a2b4;--line:#2b3240;--edge:#3e4757;--accent:#86a8ff;--fb:#ff9a5c;
+  --c-ST:#6f9bf0;--c-BD:#e0a83a;--c-TD:#a888ee;--c-DM:#3cc2aa;--c-PM:#93a3bb;--c-GV:#f07383;--c-OC:#e27fbd;--c-MS:#9fbf55;--c-OP:#4fb6dc;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11141a;--surface:#191e27;--ink:#e5e9f0;--muted:#98a2b4;--line:#2b3240;--edge:#3e4757;--accent:#86a8ff;--fb:#ff9a5c;
+  --c-ST:#6f9bf0;--c-BD:#e0a83a;--c-TD:#a888ee;--c-DM:#3cc2aa;--c-PM:#93a3bb;--c-GV:#f07383;--c-OC:#e27fbd;--c-MS:#9fbf55;--c-OP:#4fb6dc;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;word-break:normal}
+.wg{max-width:1400px;margin:0 auto;display:grid;gap:20px;
+  padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));padding-block:32px 48px}
+h1{font-size:1.6rem;font-weight:700;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:1.05rem;font-weight:700;margin:0 0 8px}
+.sub{color:var(--muted);margin:4px 0 0;max-width:70ch}
+.stats{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:12px;font-variant-numeric:tabular-nums}
+.stats b{font-size:1.15rem;margin-right:4px}
+.stats span{color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:3px 10px 3px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chip[aria-pressed="true"]{border-color:var(--ink);font-weight:600}
+.chip:focus-visible,.btn:focus-visible,input:focus-visible,.n:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:4px 10px;cursor:pointer}
+.btn:hover,.chip:hover{border-color:var(--muted)}
+.btn.primary{border-color:var(--accent);color:var(--accent);font-weight:600}
+input[type=search]{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:4px 10px;width:200px;max-width:100%}
+.spacer{flex:1}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
+.graph{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:auto;height:min(72vh,760px);min-width:0;position:relative}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0;max-height:min(72vh,760px);overflow:auto}
+@media (max-width:900px){.panel{max-height:none}}
+.panel .eyebrow{font-size:11.5px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.panel h3{font-size:1.1rem;margin:2px 0 10px;line-height:1.35}
+.code{font-family:var(--mono);font-size:12px}
+dl{display:grid;grid-template-columns:72px minmax(0,1fr);gap:6px 10px;margin:0 0 12px}
+dt{color:var(--muted);font-size:12.5px}
+dd{margin:0;font-size:13px}
+.links{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.link{font:inherit;font-size:12px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:5px;padding:2px 7px;cursor:pointer;text-align:left}
+.link:hover{border-color:var(--muted)}
+.link .code{margin-right:5px}
+.note{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+.path{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:s}
+.path li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:6px;align-items:baseline;font-size:13px}
+.path li::before{counter-increment:s;content:counter(s);color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums;text-align:right}
+svg text{font-family:var(--sans)}
+.n{cursor:pointer;transition:opacity .15s}
+.e{fill:none;stroke:var(--edge);stroke-width:1.1;transition:opacity .15s}
+.focus .n:not(.on):not(.near){opacity:.16}
+.focus .n.near{opacity:.55}
+.focus .e:not(.on){opacity:.07}
+.e.on{stroke:var(--accent);stroke-width:2}
+.n.sel rect.box{stroke-width:2.5}
+.f{fill:none;stroke:var(--fb);stroke-width:1.5;stroke-dasharray:6 4;opacity:0;pointer-events:none;transition:opacity .15s}
+.showfb .f{opacity:.9}
+.f.on{opacity:1;stroke-width:2.4}
+.btn[aria-pressed="true"]{border-color:var(--fb);color:var(--fb);font-weight:600}
+.badge{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:6px;color:var(--muted);vertical-align:middle}
+@media (prefers-reduced-motion:reduce){.n,.e,.f{transition:none}}
+.matrix-wrap{overflow-x:auto}
+table.mx{border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+.mx th,.mx td{border:1px solid var(--line);padding:5px 8px;text-align:center;min-width:44px}
+.mx th{font-weight:600;background:var(--surface)}
+.mx th.rh{text-align:left;white-space:nowrap}
+.mx td.diag{outline:1px dashed var(--muted);outline-offset:-3px}
+.cols{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+.insights{margin:0;padding-left:18px;display:grid;gap:6px;max-width:60ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.hint{font-size:12px;color:var(--muted)}
+.crumb{font-size:13px;color:var(--muted)}
+.crumb a{color:var(--accent);text-decoration:none}
+
+/* site.css 의 같은 이름 규칙이 본문에 번지지 않게 되돌림 (이 페이지의 본문 모양은 위 규칙만 따름) */
+.wg h1,.wg h2{line-height:1.55}
+#stats{display:flex;gap:6px 22px}
+#stats > div{background:none;border:0;border-radius:0;padding:0}
+#stats b{font-size:1.15rem}
+#stats span{display:inline;font-size:inherit}
+.wg li{margin:0}
+.wg table.mx{background:none;min-width:0}
+.wg .mx th,.wg .mx td{vertical-align:middle}
+.wg .card p.hint{font-size:12px;margin:12px 0}

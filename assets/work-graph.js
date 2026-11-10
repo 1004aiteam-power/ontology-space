@@ -1,0 +1,240 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
+// 업무 흐름도 (work-graph.html): 업무 149건 데이터와 스윔레인 그래프 · 상세 패널 · 영역 간 흐름 행렬
+const RAW = {"T":[{"c":"ST-1-1","d":"ST","m":"환경분석","n":"AI 동향 조사","lc":"기획","nt":"정기","cy":"분기","o":"전략기획","co":"AI엔지니어","out":"동향 리포트","kpi":"리포트 발간 건수","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-1-2","d":"ST","m":"환경분석","n":"경쟁사 벤치마킹","lc":"기획","nt":"정기","cy":"반기","o":"전략기획","co":"","out":"벤치마킹 보고서","kpi":"벤치마킹 대상 수","pre":["ST-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-1-3","d":"ST","m":"환경분석","n":"기술 성숙도 평가","lc":"기획","nt":"정기","cy":"연","o":"AI엔지니어","co":"전략기획","out":"기술 성숙도 맵","kpi":"평가 기술 수","pre":["ST-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-1-4","d":"ST","m":"환경분석","n":"현업 AI 수요 진단","lc":"기획","nt":"정기","cy":"연","o":"전략기획","co":"현업","out":"수요 진단서","kpi":"수요 접수 건수","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-2-1","d":"ST","m":"비전·중장기전략","n":"AI 비전 수립","lc":"기획","nt":"과제성","cy":"3년","o":"부서장","co":"전략기획","out":"비전·미션 선언문","kpi":"경영진 승인","pre":["ST-1-4"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-2-2","d":"ST","m":"비전·중장기전략","n":"중장기 로드맵 수립","lc":"기획","nt":"정기","cy":"연(롤링)","o":"전략기획","co":"부서장","out":"중장기 로드맵","kpi":"로드맵 이행률","pre":["ST-2-1","ST-1-3"],"risk":"","note":"","cond":"항상","fb":["ST-4-3"]},{"c":"ST-2-3","d":"ST","m":"비전·중장기전략","n":"목표·KPI 체계 설계","lc":"기획","nt":"정기","cy":"연","o":"전략기획","co":"부서장","out":"KPI 정의서","kpi":"KPI 확정 여부","pre":["ST-2-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-2-4","d":"ST","m":"비전·중장기전략","n":"전사 전략 정합성 검토","lc":"점검","nt":"정기","cy":"연","o":"부서장","co":"전략기획","out":"정합성 검토서","kpi":"지적사항 수","pre":["ST-2-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-3-1","d":"ST","m":"연간 사업계획","n":"연간 사업계획 수립","lc":"기획","nt":"정기","cy":"연","o":"전략기획","co":"전 역할","out":"연간 사업계획서","kpi":"기한 내 승인","pre":["ST-2-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-3-2","d":"ST","m":"연간 사업계획","n":"과제 후보 발굴(과제풀 관리)","lc":"기획","nt":"정기","cy":"분기","o":"전략기획","co":"현업","out":"과제풀 리스트","kpi":"신규 후보 과제 수","pre":["ST-1-4","BD-1-2","BD-3-4"],"risk":"","note":"","cond":"항상","fb":["OP-4-2","BD-2-5"]},{"c":"ST-3-3","d":"ST","m":"연간 사업계획","n":"과제 우선순위 평가","lc":"기획","nt":"정기","cy":"반기","o":"전략기획","co":"부서장","out":"우선순위 평가표","kpi":"평가 완료율","pre":["ST-3-2","BD-1-3"],"risk":"","note":"","cond":"항상","fb":["MS-1-3"]},{"c":"ST-3-4","d":"ST","m":"연간 사업계획","n":"예산 편성안 작성","lc":"기획","nt":"정기","cy":"연","o":"경영지원","co":"전략기획","out":"예산 편성안","kpi":"예산 확보율","pre":["ST-3-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"ST-4-1","d":"ST","m":"성과관리(부서 단위)","n":"분기 성과 점검(부서)","lc":"점검","nt":"정기","cy":"분기","o":"전략기획","co":"PM","out":"분기 성과 보고서","kpi":"부서 KPI 달성률","pre":["PM-5-1"],"risk":"","note":"경계①: PM-5 과제 현황을 입력으로 받아 부서 KPI 관점에서 평가","cond":"항상","fb":["OP-2-1","OP-4-3"]},{"c":"ST-4-2","d":"ST","m":"성과관리(부서 단위)","n":"연간 성과 평가(부서)","lc":"점검","nt":"정기","cy":"연","o":"부서장","co":"전략기획","out":"연간 성과 평가서","kpi":"부서 KPI 달성률","pre":["ST-4-1"],"risk":"","note":"경계①","cond":"항상","fb":[]},{"c":"ST-4-3","d":"ST","m":"성과관리(부서 단위)","n":"전략 조정·환류","lc":"점검","nt":"정기","cy":"반기","o":"부서장","co":"전략기획","out":"전략 조정안","kpi":"조정 반영률","pre":["ST-4-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-1-1","d":"BD","m":"수요발굴","n":"현업 인터뷰·워크숍","lc":"기획","nt":"수시","cy":"수시","o":"전략기획","co":"현업","out":"인터뷰 기록","kpi":"워크숍 개최 수","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-1-2","d":"BD","m":"수요발굴","n":"유스케이스 정의","lc":"기획","nt":"과제성","cy":"과제별","o":"전략기획","co":"AI엔지니어","out":"유스케이스 정의서","kpi":"정의 유스케이스 수","pre":["BD-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-1-3","d":"BD","m":"수요발굴","n":"비즈니스 케이스(ROI) 작성","lc":"기획","nt":"과제성","cy":"과제별","o":"전략기획","co":"경영지원","out":"비즈니스 케이스","kpi":"예상 ROI","pre":["BD-1-2"],"risk":"효과 과대추정","note":"","cond":"항상","fb":[]},{"c":"BD-2-1","d":"BD","m":"PoC·파일럿","n":"PoC 계획","lc":"착수","nt":"과제성","cy":"과제별","o":"PM","co":"AI엔지니어","out":"PoC 계획서","kpi":"계획 승인","pre":["ST-3-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-2-2","d":"BD","m":"PoC·파일럿","n":"PoC 수행","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"데이터엔지니어","out":"프로토타입","kpi":"기한 준수율","pre":["BD-2-1","DM-1-2"],"risk":"데이터 부족","note":"","cond":"항상","fb":[]},{"c":"BD-2-3","d":"BD","m":"PoC·파일럿","n":"PoC 결과 평가·Go/No-go","lc":"점검","nt":"과제성","cy":"과제별","o":"부서장","co":"PM","out":"PoC 평가보고서","kpi":"본사업 전환율","pre":["BD-2-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-2-4","d":"BD","m":"PoC·파일럿","n":"파일럿 운영","lc":"실행","nt":"과제성","cy":"과제별","o":"PM","co":"현업","out":"파일럿 결과보고서","kpi":"사용자 만족도","pre":["BD-2-3"],"risk":"현업 이탈","note":"","cond":"Go 판정 과제","fb":[]},{"c":"BD-3-1","d":"BD","m":"사업화·확산","n":"확산 계획 수립","lc":"기획","nt":"과제성","cy":"과제별","o":"전략기획","co":"PM","out":"확산 계획서","kpi":"대상 부서 수","pre":["BD-2-4"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-3-2","d":"BD","m":"사업화·확산","n":"현업 이관·적용","lc":"실행","nt":"과제성","cy":"과제별","o":"PM","co":"운영","out":"이관 확인서","kpi":"이관 완료율","pre":["BD-3-1","OP-1-2"],"risk":"운영 공백","note":"","cond":"항상","fb":[]},{"c":"BD-3-3","d":"BD","m":"사업화·확산","n":"전사 확산 지원","lc":"실행","nt":"정기","cy":"수시","o":"전략기획","co":"현업","out":"확산 현황판","kpi":"활성 사용자 수","pre":["BD-3-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-3-4","d":"BD","m":"사업화·확산","n":"사내 아이디어 공모","lc":"기획","nt":"정기","cy":"연","o":"전략기획","co":"","out":"공모 결과","kpi":"응모 건수","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-4-1","d":"BD","m":"대외협력","n":"산학연 협력","lc":"실행","nt":"수시","cy":"수시","o":"전략기획","co":"AI엔지니어","out":"협약서(MOU)","kpi":"협력 과제 수","pre":["ST-2-2"],"risk":"기술 유출","note":"","cond":"항상","fb":[]},{"c":"BD-4-2","d":"BD","m":"대외협력","n":"스타트업·파트너 발굴","lc":"기획","nt":"수시","cy":"수시","o":"전략기획","co":"경영지원","out":"파트너 리스트","kpi":"협업 건수","pre":["ST-2-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-4-3","d":"BD","m":"대외협력","n":"정부과제 수주","lc":"실행","nt":"수시","cy":"수시","o":"전략기획","co":"PM","out":"사업 제안서","kpi":"수주 금액","pre":["ST-3-1"],"risk":"사업비 정산","note":"","cond":"정부 공모 시","fb":[]},{"c":"BD-4-4","d":"BD","m":"대외협력","n":"컨퍼런스·세미나 대응","lc":"실행","nt":"수시","cy":"수시","o":"전략기획","co":"AI엔지니어","out":"발표자료","kpi":"참가·발표 건수","pre":["GV-1-2"],"risk":"대외비 노출","note":"","cond":"항상","fb":[]},{"c":"BD-5-1","d":"BD","m":"홍보","n":"사내 홍보","lc":"실행","nt":"정기","cy":"월","o":"전략기획","co":"","out":"뉴스레터","kpi":"조회수","pre":["OC-4-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"BD-5-2","d":"BD","m":"홍보","n":"보도자료 작성","lc":"실행","nt":"수시","cy":"수시","o":"전략기획","co":"홍보팀","out":"보도자료","kpi":"보도 건수","pre":["BD-5-3"],"risk":"평판","note":"","cond":"항상","fb":[]},{"c":"BD-5-3","d":"BD","m":"홍보","n":"성공사례집 발간","lc":"종료","nt":"정기","cy":"연","o":"전략기획","co":"PM","out":"성공사례집","kpi":"수록 사례 수","pre":["PM-4-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"TD-1-1","d":"TD","m":"아키텍처·플랫폼","n":"플랫폼 아키텍처 설계","lc":"기획","nt":"과제성","cy":"연","o":"AI엔지니어","co":"데이터엔지니어","out":"아키텍처 설계서","kpi":"설계 승인","pre":["ST-2-2"],"risk":"벤더 종속","note":"","cond":"항상","fb":[]},{"c":"TD-1-2","d":"TD","m":"아키텍처·플랫폼","n":"기술스택 선정","lc":"기획","nt":"정기","cy":"연","o":"AI엔지니어","co":"경영지원","out":"기술스택 표준","kpi":"표준 준수율","pre":["TD-1-1"],"risk":"라이선스","note":"","cond":"항상","fb":[]},{"c":"TD-1-3","d":"TD","m":"아키텍처·플랫폼","n":"인프라(GPU·클라우드) 구축","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"경영지원","out":"인프라 구성도","kpi":"가용률","pre":["TD-1-2","MS-2-3"],"risk":"비용 초과","note":"","cond":"항상","fb":[]},{"c":"TD-2-1","d":"TD","m":"모델 개발","n":"문제·데이터 요구 정의","lc":"착수","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"현업","out":"요구정의서","kpi":"요구 확정","pre":["BD-1-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"TD-2-2","d":"TD","m":"모델 개발","n":"모델 학습·튜닝","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"","out":"학습된 모델","kpi":"목표 성능 달성","pre":["TD-2-1","DM-2-1","TD-4-4"],"risk":"과적합","note":"","cond":"항상","fb":[]},{"c":"TD-2-3","d":"TD","m":"모델 개발","n":"모델 평가","lc":"점검","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"거버넌스","out":"모델 평가 보고서","kpi":"정확도·F1 등","pre":["TD-2-2"],"risk":"편향","note":"","cond":"항상","fb":[]},{"c":"TD-2-4","d":"TD","m":"모델 개발","n":"모델 문서화(Model Card)","lc":"종료","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"거버넌스","out":"Model Card","kpi":"문서화율","pre":["TD-2-3"],"risk":"설명 부족","note":"","cond":"항상","fb":[]},{"c":"TD-3-1","d":"TD","m":"생성형 AI","n":"LLM 선정·평가","lc":"기획","nt":"정기","cy":"반기","o":"AI엔지니어","co":"거버넌스","out":"LLM 평가표","kpi":"평가 모델 수","pre":["TD-5-2"],"risk":"라이선스·데이터 유출","note":"","cond":"항상","fb":[]},{"c":"TD-3-2","d":"TD","m":"생성형 AI","n":"프롬프트 엔지니어링","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"현업","out":"프롬프트 라이브러리","kpi":"응답 품질 점수","pre":["TD-3-1"],"risk":"프롬프트 인젝션","note":"","cond":"항상","fb":[]},{"c":"TD-3-3","d":"TD","m":"생성형 AI","n":"RAG 구축","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"데이터엔지니어","out":"RAG 시스템","kpi":"검색 정확도","pre":["TD-3-1","DM-2-1"],"risk":"환각","note":"","cond":"항상","fb":[]},{"c":"TD-3-4","d":"TD","m":"생성형 AI","n":"AI 에이전트 개발","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"현업","out":"AI 에이전트","kpi":"업무 자동화율","pre":["TD-3-2"],"risk":"오작동·권한 남용","note":"","cond":"다단계 자동화 필요 시","fb":[]},{"c":"TD-3-5","d":"TD","m":"생성형 AI","n":"파인튜닝","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"데이터엔지니어","out":"파인튜닝 모델","kpi":"성능 개선폭","pre":["TD-3-1","DM-1-4"],"risk":"학습데이터 개인정보","note":"","cond":"범용 모델 성능 부족 시","fb":[]},{"c":"TD-4-1","d":"TD","m":"MLOps(구축)","n":"ML 파이프라인 구축","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"데이터엔지니어","out":"ML 파이프라인","kpi":"자동화 단계 비율","pre":["TD-1-3"],"risk":"","note":"경계③: 구축은 TD, 운영 중 반복 실행은 OP-3-3","cond":"항상","fb":[]},{"c":"TD-4-2","d":"TD","m":"MLOps(구축)","n":"모델 최초 배포","lc":"실행","nt":"과제성","cy":"과제별","o":"AI엔지니어","co":"운영","out":"배포 기록","kpi":"배포 리드타임","pre":["TD-2-3","TD-4-1"],"risk":"배포 장애","note":"경계③: 최초 배포까지 TD, 이후 운영 이관","cond":"항상","fb":[]},{"c":"TD-4-3","d":"TD","m":"MLOps(구축)","n":"모델 레지스트리·버전관리","lc":"운영","nt":"정기","cy":"상시","o":"AI엔지니어","co":"","out":"모델 레지스트리","kpi":"등록률","pre":["TD-4-1"],"risk":"추적성 상실","note":"","cond":"항상","fb":[]},{"c":"TD-4-4","d":"TD","m":"MLOps(구축)","n":"실험관리","lc":"실행","nt":"정기","cy":"상시","o":"AI엔지니어","co":"","out":"실험 로그","kpi":"재현 가능률","pre":["TD-1-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"TD-5-1","d":"TD","m":"연구","n":"신기술 리서치","lc":"기획","nt":"정기","cy":"월","o":"AI엔지니어","co":"전략기획","out":"리서치 노트","kpi":"리서치 건수","pre":["ST-1-1","BD-4-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"TD-5-2","d":"TD","m":"연구","n":"벤치마크 검증","lc":"점검","nt":"수시","cy":"수시","o":"AI엔지니어","co":"","out":"벤치마크 결과","kpi":"검증 건수","pre":["TD-5-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"TD-5-3","d":"TD","m":"연구","n":"특허·논문","lc":"종료","nt":"수시","cy":"수시","o":"AI엔지니어","co":"법무","out":"특허 출원서·논문","kpi":"출원·게재 건수","pre":["TD-5-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-1-1","d":"DM","m":"데이터 확보","n":"데이터 수요 파악","lc":"기획","nt":"과제성","cy":"과제별","o":"데이터엔지니어","co":"AI엔지니어","out":"데이터 요구 목록","kpi":"수요 충족률","pre":["TD-2-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-1-2","d":"DM","m":"데이터 확보","n":"내부 데이터 수집","lc":"실행","nt":"과제성","cy":"과제별","o":"데이터엔지니어","co":"현업","out":"수집 데이터셋","kpi":"수집 리드타임","pre":["DM-1-1","DM-4-2"],"risk":"개인정보","note":"","cond":"항상","fb":[]},{"c":"DM-1-3","d":"DM","m":"데이터 확보","n":"외부 데이터 구매·제휴","lc":"실행","nt":"수시","cy":"수시","o":"데이터엔지니어","co":"경영지원","out":"데이터 구매계약","kpi":"확보 데이터 수","pre":["DM-1-1","MS-2-3"],"risk":"저작권","note":"","cond":"내부 데이터 부족 시","fb":[]},{"c":"DM-1-4","d":"DM","m":"데이터 확보","n":"데이터 라벨링","lc":"실행","nt":"과제성","cy":"과제별","o":"데이터엔지니어","co":"외주","out":"라벨링 데이터셋","kpi":"라벨 정확도","pre":["DM-1-2"],"risk":"품질 편차","note":"","cond":"항상","fb":[]},{"c":"DM-2-1","d":"DM","m":"데이터 처리","n":"정제·전처리","lc":"실행","nt":"과제성","cy":"과제별","o":"데이터엔지니어","co":"","out":"정제 데이터셋","kpi":"결측·오류율","pre":["DM-1-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-2-2","d":"DM","m":"데이터 처리","n":"피처 엔지니어링","lc":"실행","nt":"과제성","cy":"과제별","o":"데이터엔지니어","co":"AI엔지니어","out":"피처 정의서","kpi":"피처 재사용률","pre":["DM-2-1"],"risk":"데이터 누수","note":"","cond":"항상","fb":[]},{"c":"DM-2-3","d":"DM","m":"데이터 처리","n":"합성데이터 생성","lc":"실행","nt":"수시","cy":"수시","o":"데이터엔지니어","co":"거버넌스","out":"합성 데이터셋","kpi":"유용성 점수","pre":["DM-2-1"],"risk":"재식별","note":"","cond":"실데이터 사용 제한 시","fb":[]},{"c":"DM-3-1","d":"DM","m":"데이터 품질","n":"데이터 품질 기준 수립","lc":"기획","nt":"정기","cy":"연","o":"데이터엔지니어","co":"거버넌스","out":"품질 기준서","kpi":"기준 적용률","pre":["DM-4-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-3-2","d":"DM","m":"데이터 품질","n":"데이터 품질 점검","lc":"점검","nt":"정기","cy":"월","o":"데이터엔지니어","co":"","out":"품질 점검 결과","kpi":"품질 지수","pre":["DM-3-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-3-3","d":"DM","m":"데이터 품질","n":"데이터 이슈 관리","lc":"운영","nt":"수시","cy":"수시","o":"데이터엔지니어","co":"현업","out":"이슈 관리대장","kpi":"이슈 해결 기간","pre":["DM-3-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-4-1","d":"DM","m":"데이터 거버넌스(운영)","n":"카탈로그·메타데이터 관리","lc":"운영","nt":"정기","cy":"상시","o":"데이터엔지니어","co":"","out":"데이터 카탈로그","kpi":"등록률","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-4-2","d":"DM","m":"데이터 거버넌스(운영)","n":"데이터 접근권한 부여·관리","lc":"운영","nt":"정기","cy":"수시","o":"데이터엔지니어","co":"거버넌스","out":"권한 관리대장","kpi":"처리 기간","pre":["GV-4-2"],"risk":"권한 남용","note":"경계②: 권한 부여·회수 실무는 DM, 정책·점검은 GV-4-2","cond":"항상","fb":[]},{"c":"DM-4-3","d":"DM","m":"데이터 거버넌스(운영)","n":"데이터 표준 관리","lc":"기획","nt":"정기","cy":"연","o":"데이터엔지니어","co":"거버넌스","out":"데이터 표준 정의서","kpi":"표준 준수율","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"DM-4-4","d":"DM","m":"데이터 거버넌스(운영)","n":"데이터 보존·폐기","lc":"종료","nt":"정기","cy":"반기","o":"데이터엔지니어","co":"거버넌스","out":"폐기 확인서","kpi":"기한 내 폐기율","pre":["DM-4-1"],"risk":"과다 보존","note":"","cond":"항상","fb":[]},{"c":"PM-1-1","d":"PM","m":"착수","n":"과제 정의서(차터) 작성","lc":"착수","nt":"과제성","cy":"과제별","o":"PM","co":"부서장","out":"과제 차터","kpi":"승인 리드타임","pre":["ST-3-3","BD-4-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-1-2","d":"PM","m":"착수","n":"이해관계자 식별","lc":"착수","nt":"과제성","cy":"과제별","o":"PM","co":"","out":"이해관계자 맵","kpi":"","pre":["PM-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-1-3","d":"PM","m":"착수","n":"팀 구성","lc":"착수","nt":"과제성","cy":"과제별","o":"PM","co":"부서장","out":"팀 구성표(R&R)","kpi":"적기 투입률","pre":["PM-1-1"],"risk":"핵심인력 부족","note":"","cond":"항상","fb":[]},{"c":"PM-1-4","d":"PM","m":"착수","n":"킥오프","lc":"착수","nt":"과제성","cy":"과제별","o":"PM","co":"전 역할","out":"킥오프 자료","kpi":"개최 여부","pre":["PM-1-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-2-1","d":"PM","m":"계획","n":"WBS·일정 수립","lc":"기획","nt":"과제성","cy":"과제별","o":"PM","co":"","out":"WBS·일정표","kpi":"일정 준수율","pre":["PM-1-4"],"risk":"일정 지연","note":"","cond":"항상","fb":[]},{"c":"PM-2-2","d":"PM","m":"계획","n":"범위 정의","lc":"기획","nt":"과제성","cy":"과제별","o":"PM","co":"현업","out":"범위 기술서","kpi":"범위 변경 건수","pre":["PM-1-4"],"risk":"범위 확장","note":"","cond":"항상","fb":[]},{"c":"PM-2-3","d":"PM","m":"계획","n":"자원 계획","lc":"기획","nt":"과제성","cy":"과제별","o":"PM","co":"경영지원","out":"자원 계획서","kpi":"예산 대비 집행률","pre":["PM-2-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-2-4","d":"PM","m":"계획","n":"위험 계획","lc":"기획","nt":"과제성","cy":"과제별","o":"PM","co":"거버넌스","out":"위험 관리대장","kpi":"식별 위험 수","pre":["PM-2-2","GV-3-1"],"risk":"","note":"","cond":"항상","fb":["PM-4-2"]},{"c":"PM-3-1","d":"PM","m":"실행·통제","n":"진척 관리","lc":"실행","nt":"정기","cy":"주","o":"PM","co":"","out":"진척 현황표","kpi":"진척률(SPI)","pre":["PM-2-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-3-2","d":"PM","m":"실행·통제","n":"이슈·변경 관리","lc":"실행","nt":"수시","cy":"수시","o":"PM","co":"부서장","out":"이슈·변경 대장","kpi":"이슈 해결 기간","pre":["PM-3-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-3-3","d":"PM","m":"실행·통제","n":"품질 관리","lc":"점검","nt":"정기","cy":"과제별","o":"PM","co":"AI엔지니어","out":"품질 점검표","kpi":"결함 수","pre":["PM-2-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-3-4","d":"PM","m":"실행·통제","n":"정기 보고","lc":"실행","nt":"정기","cy":"주·월","o":"PM","co":"","out":"주간·월간 보고서","kpi":"보고 적시율","pre":["PM-3-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-4-1","d":"PM","m":"종료","n":"결과 검수","lc":"종료","nt":"과제성","cy":"과제별","o":"PM","co":"현업","out":"검수 확인서","kpi":"검수 통과율","pre":["PM-3-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-4-2","d":"PM","m":"종료","n":"교훈(Lessons Learned) 정리","lc":"종료","nt":"과제성","cy":"과제별","o":"PM","co":"전 역할","out":"교훈 기록","kpi":"등록 건수","pre":["PM-4-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"PM-4-3","d":"PM","m":"종료","n":"산출물 이관·아카이빙","lc":"종료","nt":"과제성","cy":"과제별","o":"PM","co":"경영지원","out":"산출물 목록","kpi":"이관 완료율","pre":["PM-4-1","MS-5-1"],"risk":"산출물 유실","note":"","cond":"항상","fb":[]},{"c":"PM-5-1","d":"PM","m":"포트폴리오(과제 단위)","n":"과제 포트폴리오 현황 관리","lc":"점검","nt":"정기","cy":"월","o":"PM","co":"전략기획","out":"포트폴리오 현황판","kpi":"정상 진행 과제 비율","pre":["PM-3-4"],"risk":"","note":"경계①: 개별 과제 상태 관리. 결과를 ST-4로 전달","cond":"항상","fb":[]},{"c":"PM-5-2","d":"PM","m":"포트폴리오(과제 단위)","n":"과제 간 자원 배분 조정","lc":"점검","nt":"정기","cy":"분기","o":"부서장","co":"PM","out":"자원 조정안","kpi":"인력 가동률","pre":["PM-5-1"],"risk":"","note":"경계①","cond":"항상","fb":[]},{"c":"PM-5-3","d":"PM","m":"포트폴리오(과제 단위)","n":"과제 중단·통합 결정","lc":"점검","nt":"수시","cy":"수시","o":"부서장","co":"전략기획","out":"의사결정 기록","kpi":"","pre":["PM-5-1"],"risk":"매몰비용","note":"","cond":"성과 미달·환경 변화 시","fb":[]},{"c":"GV-1-1","d":"GV","m":"정책·규정","n":"AI 윤리원칙 수립","lc":"기획","nt":"과제성","cy":"2~3년","o":"거버넌스","co":"부서장","out":"AI 윤리원칙","kpi":"전사 공표","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"GV-1-2","d":"GV","m":"정책·규정","n":"AI 사용 가이드라인","lc":"기획","nt":"정기","cy":"연","o":"거버넌스","co":"AI엔지니어","out":"사용 가이드라인","kpi":"임직원 인지율","pre":["GV-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"GV-1-3","d":"GV","m":"정책·규정","n":"내부 규정 제·개정","lc":"기획","nt":"정기","cy":"연","o":"거버넌스","co":"법무","out":"규정 개정안","kpi":"개정 적시율","pre":["GV-2-1"],"risk":"규정 공백","note":"","cond":"항상","fb":["GV-4-3"]},{"c":"GV-2-1","d":"GV","m":"법규 준수","n":"AI 법규 모니터링","lc":"점검","nt":"정기","cy":"월","o":"거버넌스","co":"법무","out":"법규 동향 리포트","kpi":"대응 누락 건수","pre":[],"risk":"규제 위반","note":"","cond":"항상","fb":[]},{"c":"GV-2-2","d":"GV","m":"법규 준수","n":"개인정보 영향평가","lc":"점검","nt":"과제성","cy":"과제별","o":"거버넌스","co":"데이터엔지니어","out":"영향평가서","kpi":"평가 수행률","pre":["DM-1-1"],"risk":"개인정보 침해","note":"","cond":"개인정보 처리 시","fb":[]},{"c":"GV-2-3","d":"GV","m":"법규 준수","n":"저작권·라이선스 검토","lc":"점검","nt":"과제성","cy":"과제별","o":"거버넌스","co":"법무","out":"검토 의견서","kpi":"검토 수행률","pre":["TD-3-1","DM-1-3"],"risk":"저작권 분쟁","note":"","cond":"외부 모델·데이터 사용 시","fb":[]},{"c":"GV-3-1","d":"GV","m":"리스크 관리","n":"AI 리스크 식별·등급 분류","lc":"점검","nt":"과제성","cy":"과제별","o":"거버넌스","co":"PM","out":"리스크 등급표","kpi":"분류 완료율","pre":["BD-1-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"GV-3-2","d":"GV","m":"리스크 관리","n":"편향·공정성 점검","lc":"점검","nt":"과제성","cy":"과제별","o":"거버넌스","co":"AI엔지니어","out":"공정성 점검 결과","kpi":"편향 지표","pre":["TD-2-3"],"risk":"차별","note":"","cond":"사람 대상 판단·추천 AI","fb":[]},{"c":"GV-3-3","d":"GV","m":"리스크 관리","n":"설명가능성 검토","lc":"점검","nt":"과제성","cy":"과제별","o":"거버넌스","co":"AI엔지니어","out":"설명가능성 검토서","kpi":"고위험 과제 검토율","pre":["TD-2-3"],"risk":"설명 불가","note":"","cond":"고위험 AI","fb":[]},{"c":"GV-3-4","d":"GV","m":"리스크 관리","n":"리스크 대응","lc":"실행","nt":"수시","cy":"수시","o":"거버넌스","co":"PM","out":"대응 조치 결과","kpi":"조치 완료율","pre":["GV-3-1"],"risk":"","note":"","cond":"항상","fb":["GV-5-2","OP-3-1"]},{"c":"GV-4-1","d":"GV","m":"보안(정책·통제)","n":"AI 보안 점검","lc":"점검","nt":"정기","cy":"분기","o":"거버넌스","co":"보안팀","out":"보안 점검 보고서","kpi":"취약점 조치율","pre":["TD-4-2"],"risk":"프롬프트 인젝션·데이터 유출","note":"","cond":"항상","fb":[]},{"c":"GV-4-2","d":"GV","m":"보안(정책·통제)","n":"접근통제 정책 수립·점검","lc":"점검","nt":"정기","cy":"반기","o":"거버넌스","co":"데이터엔지니어","out":"접근통제 정책·점검 결과","kpi":"부적정 권한 수","pre":["GV-1-3"],"risk":"권한 남용","note":"경계②: 정책 수립과 사후 점검만 담당, 실무 권한 처리는 DM-4-2","cond":"항상","fb":[]},{"c":"GV-4-3","d":"GV","m":"보안(정책·통제)","n":"보안사고 대응","lc":"실행","nt":"수시","cy":"수시","o":"거버넌스","co":"운영","out":"사고 보고서","kpi":"대응 시간","pre":["GV-4-1"],"risk":"2차 피해","note":"","cond":"항상","fb":[]},{"c":"GV-5-1","d":"GV","m":"검증·감사","n":"독립 모델 검증","lc":"점검","nt":"과제성","cy":"과제별","o":"거버넌스","co":"","out":"모델 검증 보고서","kpi":"고위험 모델 검증률","pre":["TD-2-4"],"risk":"","note":"","cond":"고위험 AI","fb":[]},{"c":"GV-5-2","d":"GV","m":"검증·감사","n":"내부감사 대응","lc":"점검","nt":"정기","cy":"연","o":"거버넌스","co":"경영지원","out":"감사 대응자료","kpi":"지적사항 수","pre":["GV-1-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"GV-5-3","d":"GV","m":"검증·감사","n":"인증(ISO/IEC 42001) 대응","lc":"점검","nt":"과제성","cy":"3년","o":"거버넌스","co":"전 역할","out":"인증서","kpi":"인증 취득·유지","pre":["GV-1-3"],"risk":"부적합 판정","note":"","cond":"인증 추진 시","fb":[]},{"c":"OC-1-1","d":"OC","m":"조직설계","n":"조직·R&R 설계","lc":"기획","nt":"정기","cy":"연","o":"부서장","co":"경영지원","out":"조직도·R&R표","kpi":"","pre":["ST-2-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-1-2","d":"OC","m":"조직설계","n":"직무 정의","lc":"기획","nt":"정기","cy":"연","o":"부서장","co":"인사팀","out":"직무기술서","kpi":"","pre":["OC-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-1-3","d":"OC","m":"조직설계","n":"협업체계 설계","lc":"기획","nt":"과제성","cy":"연","o":"부서장","co":"전략기획","out":"협업체계 정의서","kpi":"협업 과제 수","pre":["OC-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-2-1","d":"OC","m":"인력관리","n":"채용 계획·수행","lc":"실행","nt":"정기","cy":"연·수시","o":"부서장","co":"인사팀","out":"채용 계획서","kpi":"충원율","pre":["OC-1-2"],"risk":"인재 확보 실패","note":"","cond":"항상","fb":[]},{"c":"OC-2-2","d":"OC","m":"인력관리","n":"평가·보상 협의","lc":"점검","nt":"정기","cy":"연","o":"부서장","co":"인사팀","out":"평가 결과","kpi":"핵심인재 유지율","pre":["ST-4-2"],"risk":"이직","note":"","cond":"항상","fb":[]},{"c":"OC-2-3","d":"OC","m":"인력관리","n":"온보딩","lc":"실행","nt":"수시","cy":"수시","o":"부서장","co":"전 역할","out":"온보딩 체크리스트","kpi":"적응 기간","pre":["OC-2-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-3-1","d":"OC","m":"교육","n":"교육체계 수립","lc":"기획","nt":"정기","cy":"연","o":"전략기획","co":"인사팀","out":"교육 로드맵","kpi":"","pre":["ST-2-2"],"risk":"","note":"","cond":"항상","fb":["OC-3-4"]},{"c":"OC-3-2","d":"OC","m":"교육","n":"전사 AI 리터러시 교육","lc":"실행","nt":"정기","cy":"분기","o":"전략기획","co":"AI엔지니어","out":"교육 과정·자료","kpi":"수료 인원","pre":["OC-3-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-3-3","d":"OC","m":"교육","n":"전문가 심화교육","lc":"실행","nt":"정기","cy":"반기","o":"부서장","co":"AI엔지니어","out":"교육 이수 기록","kpi":"인당 교육시간","pre":["OC-3-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-3-4","d":"OC","m":"교육","n":"교육 효과 측정","lc":"점검","nt":"정기","cy":"반기","o":"전략기획","co":"","out":"효과 측정 보고서","kpi":"만족도·활용도","pre":["OC-3-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-4-1","d":"OC","m":"변화관리","n":"AI 활용 문화 확산","lc":"실행","nt":"정기","cy":"상시","o":"전략기획","co":"","out":"캠페인 계획","kpi":"임직원 AI 활용률","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-4-2","d":"OC","m":"변화관리","n":"챔피언 네트워크 운영","lc":"운영","nt":"정기","cy":"월","o":"전략기획","co":"현업","out":"챔피언 활동 기록","kpi":"활동 챔피언 수","pre":["OC-4-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-4-3","d":"OC","m":"변화관리","n":"현업 저항 관리","lc":"실행","nt":"수시","cy":"수시","o":"PM","co":"현업","out":"변화관리 계획","kpi":"현업 수용도","pre":["BD-3-2"],"risk":"도입 실패","note":"","cond":"항상","fb":[]},{"c":"OC-5-1","d":"OC","m":"지식관리","n":"지식베이스 구축·운영","lc":"운영","nt":"정기","cy":"상시","o":"전략기획","co":"전 역할","out":"지식베이스","kpi":"등록·조회 수","pre":["PM-4-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OC-5-2","d":"OC","m":"지식관리","n":"사내 커뮤니티 운영","lc":"운영","nt":"정기","cy":"월","o":"전략기획","co":"","out":"사내 커뮤니티","kpi":"활성 회원 수","pre":["OC-5-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-1-1","d":"MS","m":"예산·재무","n":"예산 집행 관리","lc":"운영","nt":"정기","cy":"월","o":"경영지원","co":"PM","out":"예산 집행 현황","kpi":"집행률","pre":["ST-3-4"],"risk":"예산 초과·불용","note":"","cond":"항상","fb":[]},{"c":"MS-1-2","d":"MS","m":"예산·재무","n":"비용 정산","lc":"운영","nt":"정기","cy":"월","o":"경영지원","co":"","out":"정산서","kpi":"정산 적시율","pre":["MS-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-1-3","d":"MS","m":"예산·재무","n":"투자효과 분석","lc":"점검","nt":"정기","cy":"연","o":"경영지원","co":"전략기획","out":"ROI 분석 보고서","kpi":"실현 ROI","pre":["BD-1-3","ST-4-2"],"risk":"","note":"","cond":"항상","fb":["OP-2-3","PM-4-4"]},{"c":"MS-2-1","d":"MS","m":"구매·계약","n":"구매 요청","lc":"실행","nt":"수시","cy":"수시","o":"경영지원","co":"PM","out":"구매요청서","kpi":"처리 기간","pre":["PM-2-3","MS-5-2"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-2-2","d":"MS","m":"구매·계약","n":"벤더 선정(RFP·평가)","lc":"실행","nt":"과제성","cy":"과제별","o":"경영지원","co":"AI엔지니어","out":"RFP·평가표","kpi":"선정 기간","pre":["MS-2-1","BD-4-2"],"risk":"공정성 시비","note":"","cond":"항상","fb":["MS-3-1"]},{"c":"MS-2-3","d":"MS","m":"구매·계약","n":"계약 체결","lc":"실행","nt":"과제성","cy":"과제별","o":"경영지원","co":"법무","out":"계약서","kpi":"기한 내 체결","pre":["MS-2-2"],"risk":"불리한 조항","note":"","cond":"항상","fb":[]},{"c":"MS-2-4","d":"MS","m":"구매·계약","n":"SW 라이선스 관리","lc":"운영","nt":"정기","cy":"분기","o":"경영지원","co":"AI엔지니어","out":"라이선스 대장","kpi":"미사용 라이선스 비율","pre":["MS-2-3"],"risk":"라이선스 위반","note":"","cond":"항상","fb":[]},{"c":"MS-3-1","d":"MS","m":"벤더관리","n":"벤더 성과 평가","lc":"점검","nt":"정기","cy":"반기","o":"경영지원","co":"PM","out":"벤더 평가표","kpi":"평가 점수","pre":["MS-2-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-3-2","d":"MS","m":"벤더관리","n":"SLA 관리","lc":"점검","nt":"정기","cy":"월","o":"경영지원","co":"운영","out":"SLA 보고서","kpi":"SLA 준수율","pre":["MS-2-3"],"risk":"서비스 중단","note":"","cond":"항상","fb":[]},{"c":"MS-3-3","d":"MS","m":"벤더관리","n":"외주 인력 관리","lc":"운영","nt":"정기","cy":"월","o":"경영지원","co":"PM","out":"외주 인력 현황","kpi":"","pre":["MS-2-3"],"risk":"불법파견","note":"","cond":"항상","fb":[]},{"c":"MS-4-1","d":"MS","m":"회의·보고","n":"경영진 보고","lc":"실행","nt":"정기","cy":"월","o":"부서장","co":"전략기획","out":"경영진 보고자료","kpi":"","pre":["ST-4-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-4-2","d":"MS","m":"회의·보고","n":"부서 회의 운영","lc":"운영","nt":"정기","cy":"주","o":"경영지원","co":"","out":"회의록","kpi":"","pre":["OC-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-4-3","d":"MS","m":"회의·보고","n":"AI위원회 운영","lc":"운영","nt":"정기","cy":"분기","o":"거버넌스","co":"부서장","out":"위원회 의결서","kpi":"안건 처리율","pre":["GV-3-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-5-1","d":"MS","m":"문서·행정","n":"문서 관리","lc":"운영","nt":"정기","cy":"상시","o":"경영지원","co":"전 역할","out":"문서 관리대장","kpi":"표준 준수율","pre":[],"risk":"기밀 유출","note":"","cond":"항상","fb":[]},{"c":"MS-5-2","d":"MS","m":"문서·행정","n":"결재·공문 처리","lc":"운영","nt":"정기","cy":"수시","o":"경영지원","co":"","out":"결재 문서","kpi":"처리 기간","pre":[],"risk":"","note":"","cond":"항상","fb":[]},{"c":"MS-5-3","d":"MS","m":"문서·행정","n":"자산 관리","lc":"운영","nt":"정기","cy":"반기","o":"경영지원","co":"AI엔지니어","out":"자산 대장","kpi":"실사 일치율","pre":["TD-1-3"],"risk":"자산 유실","note":"","cond":"항상","fb":[]},{"c":"OP-1-1","d":"OP","m":"서비스 운영","n":"서비스 오픈·전환","lc":"실행","nt":"과제성","cy":"과제별","o":"운영","co":"AI엔지니어","out":"오픈 체크리스트","kpi":"무장애 오픈","pre":["TD-4-2"],"risk":"전환 장애","note":"","cond":"항상","fb":[]},{"c":"OP-1-2","d":"OP","m":"서비스 운영","n":"운영 매뉴얼 작성","lc":"운영","nt":"과제성","cy":"과제별","o":"운영","co":"AI엔지니어","out":"운영 매뉴얼","kpi":"작성 완료율","pre":["OP-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OP-1-3","d":"OP","m":"서비스 운영","n":"사용자 계정 관리","lc":"운영","nt":"정기","cy":"수시","o":"운영","co":"","out":"계정 관리대장","kpi":"처리 기간","pre":["OP-1-1"],"risk":"권한 남용","note":"","cond":"항상","fb":[]},{"c":"OP-2-1","d":"OP","m":"모니터링","n":"모델 성능 모니터링","lc":"운영","nt":"정기","cy":"일","o":"운영","co":"AI엔지니어","out":"성능 대시보드","kpi":"성능 기준 유지율","pre":["TD-4-2"],"risk":"성능 저하","note":"","cond":"항상","fb":[]},{"c":"OP-2-2","d":"OP","m":"모니터링","n":"드리프트 탐지","lc":"운영","nt":"정기","cy":"주","o":"운영","co":"데이터엔지니어","out":"드리프트 리포트","kpi":"탐지 리드타임","pre":["OP-2-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OP-2-3","d":"OP","m":"모니터링","n":"비용(토큰·GPU) 모니터링","lc":"운영","nt":"정기","cy":"월","o":"운영","co":"경영지원","out":"비용 리포트","kpi":"처리 건당 비용","pre":["OP-1-1"],"risk":"비용 폭증","note":"","cond":"항상","fb":[]},{"c":"OP-2-4","d":"OP","m":"모니터링","n":"인프라 모니터링","lc":"운영","nt":"정기","cy":"상시","o":"운영","co":"AI엔지니어","out":"인프라 대시보드","kpi":"가용률","pre":["TD-1-3"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OP-3-1","d":"OP","m":"장애·변경(운영)","n":"장애 대응","lc":"운영","nt":"수시","cy":"수시","o":"운영","co":"AI엔지니어","out":"장애 보고서","kpi":"MTTR","pre":["OP-2-4"],"risk":"서비스 중단","note":"","cond":"항상","fb":[]},{"c":"OP-3-2","d":"OP","m":"장애·변경(운영)","n":"변경 관리","lc":"운영","nt":"수시","cy":"수시","o":"운영","co":"AI엔지니어","out":"변경 요청서","kpi":"변경 성공률","pre":["OP-1-2"],"risk":"변경 장애","note":"","cond":"항상","fb":[]},{"c":"OP-3-3","d":"OP","m":"장애·변경(운영)","n":"재학습·모델 교체","lc":"운영","nt":"정기","cy":"분기","o":"운영","co":"AI엔지니어","out":"재학습 기록","kpi":"재학습 후 성능","pre":["OP-2-2","TD-4-1","OP-3-2"],"risk":"성능 역행","note":"경계③: TD-4-1 파이프라인을 활용한 운영 중 반복 실행","cond":"항상","fb":[]},{"c":"OP-4-1","d":"OP","m":"사용자 지원","n":"헬프데스크","lc":"운영","nt":"정기","cy":"상시","o":"운영","co":"","out":"문의 처리대장","kpi":"응답 시간","pre":["OP-1-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OP-4-2","d":"OP","m":"사용자 지원","n":"피드백 수집·반영","lc":"운영","nt":"정기","cy":"월","o":"운영","co":"PM","out":"개선 요청 목록","kpi":"반영률","pre":["OP-4-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OP-4-3","d":"OP","m":"사용자 지원","n":"만족도 조사","lc":"점검","nt":"정기","cy":"반기","o":"운영","co":"전략기획","out":"만족도 조사 결과","kpi":"만족도 점수","pre":["OP-4-1"],"risk":"","note":"","cond":"항상","fb":[]},{"c":"OP-5-1","d":"OP","m":"폐기","n":"서비스 종료","lc":"종료","nt":"과제성","cy":"과제별","o":"운영","co":"PM","out":"종료 계획·공지","kpi":"계획 대비 종료","pre":["PM-5-3"],"risk":"사용자 혼란","note":"","cond":"서비스 종료 결정 시","fb":[]},{"c":"OP-5-2","d":"OP","m":"폐기","n":"모델 폐기·아카이빙","lc":"종료","nt":"과제성","cy":"과제별","o":"운영","co":"AI엔지니어","out":"폐기 기록","kpi":"폐기 완료율","pre":["OP-5-1"],"risk":"재현 불가","note":"","cond":"서비스 종료 결정 시","fb":[]},{"c":"BD-2-5","d":"BD","m":"PoC·파일럿","n":"PoC 종료·자산화","lc":"종료","nt":"과제성","cy":"과제별","o":"PM","co":"AI엔지니어","out":"PoC 종료보고서·재사용 자산 목록","kpi":"자산 재사용률","pre":["BD-2-3"],"risk":"","note":"v0.2 추가: No-go 과제도 데이터·코드·교훈을 남기도록 종료 절차 보완","cond":"항상","fb":[]},{"c":"PM-4-4","d":"PM","m":"종료","n":"사후 효과 검증(Benefit Realization)","lc":"점검","nt":"정기","cy":"반기","o":"PM","co":"현업","out":"효과 검증 보고서","kpi":"계획 대비 실현 효과","pre":["BD-3-2","OP-2-1"],"risk":"효과 미실현","note":"v0.2 추가: 도입 후 실제 효과를 측정해 투자효과 분석과 성과평가로 환류","cond":"항상","fb":[]},{"c":"GV-3-5","d":"GV","m":"리스크 관리","n":"AI 서비스 인벤토리 관리","lc":"운영","nt":"정기","cy":"분기","o":"거버넌스","co":"운영","out":"AI 인벤토리(목록·위험등급)","kpi":"등록 누락 건수","pre":["GV-3-1","OP-1-1"],"risk":"미등록 AI(Shadow AI)","note":"v0.2 추가: 전사 AI 사용 현황과 위험등급을 한곳에서 관리. 규제 대응의 기준 목록","cond":"항상","fb":[]}],"FB":[["OP-2-1","ST-4-1","운영 성능 지표가 부서 성과 점검 입력"],["OP-4-3","ST-4-1","사용자 만족도가 성과 점검 입력"],["OP-2-3","MS-1-3","실제 운영비가 투자효과 분석 입력"],["PM-4-4","MS-1-3","실현 효과가 ROI 분석 입력"],["MS-1-3","ST-3-3","ROI 결과가 다음 우선순위 평가에 반영"],["ST-4-3","ST-2-2","전략 조정이 로드맵 롤링에 반영"],["PM-4-2","PM-2-4","교훈이 다음 과제 위험 계획에 반영"],["OP-4-2","ST-3-2","개선 요청이 신규 과제 후보가 됨"],["GV-4-3","GV-1-3","보안사고 원인이 규정 개정으로 이어짐"],["GV-5-2","GV-3-4","감사 지적이 리스크 대응 과제가 됨"],["OC-3-4","OC-3-1","교육 효과가 다음 교육체계에 반영"],["MS-3-1","MS-2-2","벤더 평가가 다음 선정에 반영"],["OP-3-1","GV-3-4","반복 장애가 리스크 대응 대상이 됨"],["BD-2-5","ST-3-2","보류 PoC가 과제 풀로 복귀"]]}; const DATA = RAW.T; const FB = RAW.FB;
+const DOM = {ST:"전략·기획",BD:"사업개발·확산",TD:"AI 기술개발",DM:"데이터 관리",PM:"과제·프로젝트 관리",GV:"AI 거버넌스·리스크",OC:"조직·역량",MS:"경영지원",OP:"운영·유지보수"};
+const ORDER = Object.keys(DOM);
+const idx = {}; DATA.forEach(t => { idx[t.c] = t; t.succ = []; });
+DATA.forEach(t => t.pre.forEach(p => idx[p].succ.push(t.c)));
+const memo = {};
+const depth = c => memo[c] ?? (memo[c] = idx[c].pre.length ? 1 + Math.max(...idx[c].pre.map(depth)) : 0);
+DATA.forEach(t => t.depth = depth(t.c));
+const maxD = Math.max(...DATA.map(t => t.depth));
+const edges = []; DATA.forEach(t => t.pre.forEach(p => edges.push([p, t.c])));
+const isolated = DATA.filter(t => !t.pre.length && !t.succ.length).map(t => t.c);
+
+// longest path
+let end = DATA.reduce((a, b) => b.depth > a.depth ? b : a);
+const longest = [end.c];
+while (idx[longest[0]].pre.length) {
+  const cur = idx[longest[0]];
+  longest.unshift(cur.pre.find(p => idx[p].depth === cur.depth - 1));
+}
+
+// layout
+const NW = 150, NH = 42, COL = 186, ROW = 52, LW = 128, TOP = 30, PAD = 12;
+const pos = {}; const lanes = []; let y = TOP;
+ORDER.forEach(d => {
+  const cols = {};
+  DATA.filter(t => t.d === d).sort((a, b) => a.c.localeCompare(b.c, 'en', {numeric: true}))
+    .forEach(t => (cols[t.depth] ||= []).push(t));
+  const rows = Math.max(...Object.values(cols).map(a => a.length));
+  Object.entries(cols).forEach(([dp, arr]) => arr.forEach((t, i) => pos[t.c] = {x: LW + 16 + dp * COL, y: y + PAD + i * ROW}));
+  const h = rows * ROW + PAD * 2 - (ROW - NH);
+  lanes.push({d, y, h}); y += h;
+});
+const W = LW + 16 + (maxD + 1) * COL, H = y + 8;
+
+const svg = document.getElementById('g');
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+const clip = (s, n) => [...s].length > n ? [...s].slice(0, n - 1).join('') + '…' : s;
+let html = '';
+lanes.forEach((l, i) => {
+  html += `<rect x="0" y="${l.y}" width="${W}" height="${l.h}" style="fill:${i % 2 ? 'var(--surface)' : 'color-mix(in srgb,var(--bg) 60%,var(--surface))'}"/>`;
+});
+for (let dp = 0; dp <= maxD; dp++) html += `<text x="${LW + 16 + dp * COL + NW / 2}" y="19" text-anchor="middle" style="fill:var(--muted);font-size:11px;font-family:var(--mono)">${dp}</text>`;
+html += '<g id="eg">';
+edges.forEach(([a, b], i) => {
+  const p = pos[a], q = pos[b];
+  const x1 = p.x + NW, y1 = p.y + NH / 2, x2 = q.x, y2 = q.y + NH / 2, dx = Math.max(36, (x2 - x1) / 2);
+  html += `<path class="e" data-i="${i}" d="M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}"/>`;
+});
+html += '</g><g id="fg">';
+FB.forEach(([a, b], i) => {
+  const p = pos[a], q = pos[b];
+  const x1 = p.x + NW / 2, y1 = p.y + NH, x2 = q.x + NW / 2, y2 = q.y + NH, dip = 46 + Math.min(120, Math.abs(x1 - x2) / 12);
+  html += `<path class="f" d="M${x1},${y1} C${x1},${Math.max(y1, y2) + dip} ${x2},${Math.max(y1, y2) + dip} ${x2},${y2}"/>`;
+});
+html += '</g><g id="ng">';
+DATA.forEach(t => {
+  const p = pos[t.c], col = `var(--c-${t.d})`;
+  const iso = isolated.includes(t.c);
+  html += `<g class="n" data-c="${t.c}" tabindex="0" role="button" aria-label="${esc(t.c + ' ' + t.n)}" transform="translate(${p.x},${p.y})">
+    <title>${esc(t.c + ' ' + t.n)}</title>
+    <rect class="box" width="${NW}" height="${NH}" rx="6" style="fill:color-mix(in srgb,${col} 11%,var(--surface));stroke:${col};stroke-width:1.2${iso ? ';stroke-dasharray:4 3' : ''}"/>
+    <text x="9" y="16" style="fill:${col};font-family:var(--mono);font-size:10.5px">${t.c}</text>
+    <text x="9" y="33" style="fill:var(--ink);font-size:12px">${esc(clip(t.n, 12))}</text></g>`;
+});
+html += '</g><g id="lg">';
+lanes.forEach(l => {
+  html += `<rect x="0" y="${l.y}" width="${LW}" height="${l.h}" style="fill:var(--surface);stroke:var(--line)"/>
+    <circle cx="14" cy="${l.y + 18}" r="5" style="fill:var(--c-${l.d})"/>
+    <text x="25" y="${l.y + 22}" style="fill:var(--ink);font-size:12.5px;font-weight:600">${DOM[l.d]}</text>
+    <text x="25" y="${l.y + 39}" style="fill:var(--muted);font-size:11px;font-family:var(--mono)">${l.d} · ${DATA.filter(t => t.d === l.d).length}건</text>`;
+});
+html += `<rect x="0" y="0" width="${LW}" height="${TOP}" style="fill:var(--surface)"/><text x="12" y="19" style="fill:var(--muted);font-size:11px">선행 깊이 →</text></g>`;
+svg.innerHTML = html;
+svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+const sc = document.getElementById('sc'), lg = document.getElementById('lg');
+let zoom = 0.8;
+function setZoom(z) {
+  zoom = Math.min(1.6, Math.max(0.25, z));
+  svg.setAttribute('width', W * zoom); svg.setAttribute('height', H * zoom); syncLabels();
+}
+function syncLabels() { lg.setAttribute('transform', `translate(${sc.scrollLeft / zoom},0)`); }
+sc.addEventListener('scroll', syncLabels, {passive: true});
+document.getElementById('zIn').onclick = () => setZoom(zoom * 1.2);
+document.getElementById('zOut').onclick = () => setZoom(zoom / 1.2);
+document.getElementById('zFit').onclick = () => setZoom(Math.min((sc.clientWidth - 4) / W, (sc.clientHeight - 4) / H));
+
+const nodeEls = {}; svg.querySelectorAll('.n').forEach(g => nodeEls[g.dataset.c] = g);
+const edgeEls = [...svg.querySelectorAll('.e')];
+const fbEls = [...svg.querySelectorAll('.f')];
+const NEW = new Set(DATA.filter(t => t.note.startsWith('v0.2')).map(t => t.c));
+
+function walk(c, key, acc = new Set()) { idx[c][key].forEach(x => { if (!acc.has(x)) { acc.add(x); walk(x, key, acc); } }); return acc; }
+
+function apply(on, onEdges, near = new Set(), sel = null, onFb = null) {
+  fbEls.forEach((e, i) => e.classList.toggle('on', !!onFb && onFb(FB[i])));
+  svg.classList.toggle('focus', !!on);
+  Object.entries(nodeEls).forEach(([c, g]) => {
+    g.classList.toggle('on', !!on && on.has(c));
+    g.classList.toggle('near', near.has(c));
+    g.classList.toggle('sel', c === sel);
+  });
+  edgeEls.forEach((e, i) => e.classList.toggle('on', !!onEdges && onEdges(edges[i])));
+  // draw highlighted edges on top
+  const eg = document.getElementById('eg');
+  edgeEls.filter(e => e.classList.contains('on')).forEach(e => eg.appendChild(e));
+}
+
+const panel = document.getElementById('panel');
+const linkBtn = c => `<button class="link" type="button" data-go="${c}"><span class="code" style="color:var(--c-${idx[c].d})">${c}</span>${esc(idx[c].n)}</button>`;
+panel.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) select(b.dataset.go, true); });
+
+function scrollTo(c) {
+  const p = pos[c];
+  sc.scrollTo({left: Math.max(0, p.x * zoom - sc.clientWidth / 2), top: Math.max(0, p.y * zoom - sc.clientHeight / 2), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+}
+
+let mode = null;
+function select(c, scroll) {
+  mode = 'node'; setChips(null); setFb(false);
+  const t = idx[c], up = walk(c, 'pre'), down = walk(c, 'succ');
+  const U = new Set([...up, c]), D = new Set([...down, c]);
+  const fin = FB.filter(f => f[1] === c), fout = FB.filter(f => f[0] === c);
+  apply(new Set([...U, ...D, ...fin.map(f => f[0]), ...fout.map(f => f[1])]), ([a, b]) => (U.has(a) && U.has(b)) || (D.has(a) && D.has(b)), new Set(), c, ([a, b]) => a === c || b === c);
+  const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
+  panel.innerHTML = `<div class="eyebrow" style="color:var(--c-${t.d})">${DOM[t.d]} · ${esc(t.m)}</div>
+    <h3><span class="code">${t.c}</span>${NEW.has(t.c) ? '<span class="badge">v0.2 추가</span>' : ''}<br>${esc(t.n)}</h3>
+    <dl>${row('생애주기', t.lc)}${row('성격·주기', t.nt + ' · ' + t.cy)}${t.cond !== '항상' ? row('적용 조건', t.cond) : ''}${row('주관', t.o)}${row('협업', t.co)}${row('산출물', t.out)}${row('KPI', t.kpi)}${row('리스크', t.risk)}</dl>
+    <div class="eyebrow">바로 앞 업무 ${t.pre.length}건</div>
+    <div class="links">${t.pre.map(linkBtn).join('') || '<span class="hint">없음. 흐름의 출발점입니다.</span>'}</div>
+    <div class="eyebrow">바로 뒤 업무 ${t.succ.length}건</div>
+    <div class="links">${t.succ.map(linkBtn).join('') || '<span class="hint">없음. 흐름의 끝점입니다.</span>'}</div>
+    ${fin.length || fout.length ? `<div class="eyebrow" style="color:var(--fb)">환류 받음 ${fin.length} · 보냄 ${fout.length}</div><div class="links">${[...fin.map(f => f[0]), ...fout.map(f => f[1])].map(linkBtn).join('')}</div>` : ''}
+    <p class="hint">전체 흐름으로 보면 상위 ${up.size}건, 하위 ${down.size}건과 이어집니다.</p>
+    ${t.note ? `<p class="note">${esc(t.note)}</p>` : ''}`;
+  if (scroll) scrollTo(c);
+}
+
+function showPath(scroll) {
+  mode = 'path'; setChips(null); setFb(false);
+  const S = new Set(longest), pairs = new Set(longest.slice(1).map((c, i) => longest[i] + '>' + c));
+  apply(S, ([a, b]) => pairs.has(a + '>' + b));
+  panel.innerHTML = `<div class="eyebrow">최장 흐름 · ${longest.length}단계</div>
+    <h3>${esc(idx[longest[0]].n)}에서 ${esc(idx[longest[longest.length-1]].n)}까지</h3>
+    <p class="hint" style="margin-top:-4px">이 사슬의 업무가 하나라도 늦어지면 끝 업무가 같이 밀립니다. 일정 관리의 기준선으로 쓸 수 있습니다.</p>
+    <ol class="path">${longest.map(c => `<li><span>${linkBtn(c)}</span></li>`).join('')}</ol>`;
+  if (scroll) scrollTo(longest[0]);
+}
+
+const btnFb = document.getElementById('btnFb');
+function setFb(v) { svg.classList.toggle('showfb', v); btnFb.setAttribute('aria-pressed', v); }
+function showFb() {
+  mode = 'fb'; setChips(null); setFb(true);
+  const S = new Set(FB.flat().filter(x => idx[x]));
+  apply(S, () => false, new Set(), null, () => true);
+  panel.innerHTML = `<div class="eyebrow" style="color:var(--fb)">환류 · ${FB.length}건</div>
+    <h3>결과가 앞 단계로 되돌아가는 연결</h3>
+    <p class="hint" style="margin-top:-4px">선행 관계와 달리 순서를 강제하지 않습니다. 운영·성과·감사 결과가 다음 계획에 반영되는 통로입니다.</p>
+    <ol class="path">${FB.map(([a, b, w]) => `<li><span>${linkBtn(a)} → ${linkBtn(b)}<br><span class="hint">${esc(w)}</span></span></li>`).join('')}</ol>`;
+}
+
+function showDomain(d) {
+  mode = 'dom'; setFb(false);
+  const S = new Set(DATA.filter(t => t.d === d).map(t => t.c)), near = new Set();
+  edges.forEach(([a, b]) => { if (S.has(a) && !S.has(b)) near.add(b); if (S.has(b) && !S.has(a)) near.add(a); });
+  apply(S, ([a, b]) => S.has(a) || S.has(b), near);
+  const inn = edges.filter(([a, b]) => !S.has(a) && S.has(b)), out = edges.filter(([a, b]) => S.has(a) && !S.has(b));
+  const tally = arr => Object.entries(arr.reduce((m, k) => (m[k] = (m[k] || 0) + 1, m), {})).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${DOM[k]} ${v}`).join(', ') || '없음';
+  panel.innerHTML = `<div class="eyebrow" style="color:var(--c-${d})">영역 강조</div>
+    <h3>${DOM[d]}</h3>
+    <dl><dt>단위업무</dt><dd>${S.size}건</dd>
+    <dt>들어오는 흐름</dt><dd>${inn.length}건 (${tally(inn.map(e => idx[e[0]].d))})</dd>
+    <dt>나가는 흐름</dt><dd>${out.length}건 (${tally(out.map(e => idx[e[1]].d))})</dd></dl>
+    <p class="hint">흐리게 표시된 업무는 이 영역과 직접 이어진 다른 영역의 업무입니다.</p>`;
+}
+
+function clearAll() {
+  mode = null; setChips(null); setFb(false); apply(null, null);
+  panel.innerHTML = `<div class="eyebrow">사용법</div><h3>업무를 눌러 흐름을 따라가 보세요</h3>
+    <p class="hint">업무를 누르면 상위·하위 흐름이 강조되고 여기에 속성이 표시됩니다. 위의 영역 칩을 누르면 해당 영역과 이어진 흐름만 남습니다.</p>`;
+}
+
+svg.addEventListener('click', e => { const g = e.target.closest('.n'); if (g) select(g.dataset.c); });
+svg.addEventListener('keydown', e => { const g = e.target.closest('.n'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(g.dataset.c); } });
+
+// chips
+const chipsEl = document.getElementById('chips');
+chipsEl.innerHTML = ORDER.map(d => `<button class="chip" type="button" data-d="${d}" aria-pressed="false"><i style="background:var(--c-${d})"></i>${DOM[d]}</button>`).join('');
+function setChips(d) { chipsEl.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.d === d)); }
+chipsEl.addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  if (b.getAttribute('aria-pressed') === 'true') return clearAll();
+  setChips(b.dataset.d); showDomain(b.dataset.d);
+});
+document.getElementById('btnPath').onclick = () => showPath(true);
+btnFb.onclick = () => { if (btnFb.getAttribute('aria-pressed') === 'true') { setFb(false); clearAll(); } else showFb(); };
+document.getElementById('btnClear').onclick = clearAll;
+const q = document.getElementById('q');
+q.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const s = q.value.trim().toLowerCase(); if (!s) return;
+  const hit = DATA.find(t => t.c.toLowerCase() === s) || DATA.find(t => t.n.toLowerCase().includes(s) || t.c.toLowerCase().includes(s));
+  if (hit) select(hit.c, true);
+});
+
+// stats
+document.getElementById('stats').innerHTML = [
+  [DATA.length, '단위업무'], [edges.length, '선행 관계'], [FB.length, '환류 관계'], [longest.length, '단계 최장 흐름']
+].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('');
+
+// matrix
+const M = {}; ORDER.forEach(a => { M[a] = {}; ORDER.forEach(b => M[a][b] = 0); });
+edges.forEach(([a, b]) => M[idx[a].d][idx[b].d]++);
+const mmax = Math.max(...ORDER.flatMap(a => ORDER.map(b => M[a][b])));
+document.getElementById('mx').innerHTML = `<tr><th>선행 \\ 후행</th>${ORDER.map(d => `<th title="${DOM[d]}" style="color:var(--c-${d})">${d}</th>`).join('')}</tr>` +
+  ORDER.map(a => `<tr><th class="rh"><span style="color:var(--c-${a})">${a}</span> ${DOM[a]}</th>${ORDER.map(b => {
+    const v = M[a][b]; const pct = v ? Math.round(12 + 60 * v / mmax) : 0;
+    return `<td class="${a === b ? 'diag' : ''}" style="background:color-mix(in srgb,var(--accent) ${pct}%,var(--surface));${pct > 45 ? 'color:var(--surface);font-weight:600' : v ? '' : 'color:var(--muted)'}">${v || '·'}</td>`;
+  }).join('')}</tr>`).join('');
+
+// insights
+const cross = []; ORDER.forEach(a => ORDER.forEach(b => { if (a !== b && M[a][b]) cross.push([a, b, M[a][b]]); }));
+cross.sort((x, y) => y[2] - x[2]);
+const inDeg = d => ORDER.reduce((s, a) => s + (a !== d ? M[a][d] : 0), 0);
+const outDeg = d => ORDER.reduce((s, b) => s + (b !== d ? M[d][b] : 0), 0);
+const hub = ORDER.slice().sort((a, b) => (inDeg(b) + outDeg(b)) - (inDeg(a) + outDeg(a)))[0];
+const lastStart = longest[0], lastEnd = longest[longest.length - 1];
+document.getElementById('ins').innerHTML = [
+  `영역을 넘는 흐름 중 가장 굵은 것은 <b>${DOM[cross[0][0]]} → ${DOM[cross[0][1]]}</b>(${cross[0][2]}건)와 <b>${DOM[cross[1][0]]} → ${DOM[cross[1][1]]}</b>(${cross[1][2]}건)입니다.`,
+  `<b>${DOM[hub]}</b> 영역이 다른 영역과 가장 많이 이어진 허브입니다(들어옴 ${inDeg(hub)}, 나감 ${outDeg(hub)}). 이 영역 담당자가 병목이 되지 않게 살펴볼 필요가 있습니다.`,
+  `최장 흐름은 <b>${idx[lastStart].n}</b>에서 <b>${idx[lastEnd].n}</b>까지 ${longest.length}단계입니다. 신규 AI 서비스 하나가 수요 발굴부터 전사 확산까지 거치는 기본 경로로 볼 수 있습니다.`,
+  `환류 ${FB.length}건 중 ${FB.filter(f => idx[f[1]].d === 'ST' || idx[f[1]].d === 'MS').length}건이 전략·기획과 경영지원으로 돌아갑니다. 운영 결과가 다음 해 우선순위와 투자효과 분석에 반영되는 구조입니다.`,
+  `독립 업무는 ${isolated.length}건입니다. v0.1의 15건을 모두 흐름에 연결했습니다.`
+].map(s => `<li>${s}</li>`).join('');
+
+setZoom(0.8);
+showPath(false);

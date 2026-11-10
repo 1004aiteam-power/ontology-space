@@ -90,6 +90,11 @@ OG_DEFAULT = "assets/og/site.jpg"
 NOINDEX = {"404.html"}   # 검색 대상이 아닌 페이지: canonical · sitemap 에서 빼고 noindex 를 붙임
 
 
+def has_en(s: str) -> bool:
+    """영어 본문이 있는 페이지인가 (한국어만 있는 페이지에는 영어 주소를 알리지 않음)."""
+    return '<meta name="title-en"' in s
+
+
 def head_meta(page: str, s: str) -> str:
     title = re.search(r'<meta name="title-ko" content="([^"]*)"', s) or re.search(r"<title>([^<]*)</title>", s)
     desc = re.search(r'<meta name="description" content="([^"]*)"', s)
@@ -100,12 +105,13 @@ def head_meta(page: str, s: str) -> str:
     if page in NOINDEX:
         seo = ['<meta name="robots" content="noindex">']
     else:
-        seo = [
-            f'<link rel="canonical" href="{url}">',
-            f'<link rel="alternate" hreflang="ko" href="{url}">',
-            f'<link rel="alternate" hreflang="en" href="{url}?lang=en">',
-            f'<link rel="alternate" hreflang="x-default" href="{url}">',
-        ]
+        seo = [f'<link rel="canonical" href="{url}">']
+        if has_en(s):
+            seo += [
+                f'<link rel="alternate" hreflang="ko" href="{url}">',
+                f'<link rel="alternate" hreflang="en" href="{url}?lang=en">',
+                f'<link rel="alternate" hreflang="x-default" href="{url}">',
+            ]
     return "\n".join([
         "<!-- head:meta (tools/build_nav.py) -->",
         '<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">',
@@ -118,7 +124,7 @@ def head_meta(page: str, s: str) -> str:
         f'<meta property="og:url" content="{url}">',
         f'<meta property="og:image" content="{img}">',
         '<meta property="og:locale" content="ko_KR">',
-        '<meta property="og:locale:alternate" content="en_US">',
+        *(['<meta property="og:locale:alternate" content="en_US">'] if has_en(s) else []),
         '<meta name="twitter:card" content="summary_large_image">',
         "<!-- /head:meta -->",
     ])
@@ -134,8 +140,8 @@ def label(ko: str, en: str) -> str:
     return f'<span lang="ko">{ko}</span><span lang="en">{en}</span>'
 
 
-# 여러 메뉴에 들어 있는 페이지는 이 메뉴의 버튼만 강조 (링크 표시는 양쪽 다). 지금은 중복 없음.
-PRIMARY: dict[str, str] = {}
+# 여러 메뉴에 들어 있는 페이지는 이 메뉴의 버튼만 강조 (링크 표시는 양쪽 다). 메뉴에 없는 페이지는 여기 적은 메뉴의 버튼을 강조.
+PRIMARY: dict[str, str] = {"work-graph.html": "studioMenu"}
 
 
 def build(page: str) -> str:
@@ -237,10 +243,9 @@ def sitemap(pages: list[str]) -> str:
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
     for p in ["index.html"] + [p for p in pages if p != "index.html"]:
         url = SITE + ("" if p == "index.html" else p)
-        out += ["  <url>", f"    <loc>{url}</loc>",
-                f'    <xhtml:link rel="alternate" hreflang="ko" href="{url}"/>',
-                f'    <xhtml:link rel="alternate" hreflang="en" href="{url}?lang=en"/>',
-                "  </url>"]
+        alt = [f'    <xhtml:link rel="alternate" hreflang="ko" href="{url}"/>',
+               f'    <xhtml:link rel="alternate" hreflang="en" href="{url}?lang=en"/>'] if has_en((ROOT / p).read_text(encoding="utf-8")) else []
+        out += ["  <url>", f"    <loc>{url}</loc>", *alt, "  </url>"]
     return "\n".join(out + ["</urlset>"]) + "\n"
 
 
