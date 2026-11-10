@@ -210,6 +210,63 @@
   </div>
 </section>
 
+<section id="vpp-revenue">
+  <h2><span lang="ko">VPP 사업자는 어떻게 돈을 버나</span><span lang="en">How a VPP operator makes money</span></h2>
+  <p class="meta" lang="ko">⚠ 이 절도 제가 이해한 내용을 정리한 분석입니다. 제도별 정산 단가 · 참여 조건 · 수수료 수준은 바뀌거나 계약마다 다르므로 공식 자료와 실제 계약을 확인하세요.</p>
+  <p class="meta" lang="en">⚠ This section is also my own analysis. Unit prices, eligibility and fee levels change or differ by contract — check official sources and real contracts.</p>
+  <p lang="ko">VPP 사업자(중개사업자 · 수요관리사업자)는 발전소를 직접 갖지 않는 경우가 많습니다. 남의 작은 설비를 묶어 <b>대신 입찰 · 예측 · 정산</b>해 주고, 그 결과 생긴 수익의 일부를 가져가는 구조입니다. 그래서 수익은 "어디서 돈이 들어오나"와 "그중 사업자 몫이 얼마나"로 나눠 봐야 합니다.</p>
+  <p lang="en">A VPP operator (aggregator / demand-response provider) often owns no plant. It bundles other people's small resources, <b>bids, forecasts and settles on their behalf</b>, and keeps part of the resulting revenue. So look at it in two parts: where money comes in, and how much of it the operator keeps.</p>
+
+  <h3><span lang="ko">① 들어오는 돈: 수익원 6가지</span><span lang="en">① Money in: six revenue streams</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">수익원</span><span lang="en">Stream</span></th><th><span lang="ko">어떻게 받나</span><span lang="en">How it is earned</span></th><th><span lang="ko">주로 해당하는 자원</span><span lang="en">Main resources</span></th><th><span lang="ko">사업자 몫</span><span lang="en">Operator's share</span></th></tr>
+    <tr><td><b><span lang="ko">전력 판매 (SMP)</span><span lang="en">Energy sales (SMP)</span></b></td><td><span lang="ko">묶은 발전량 × SMP. 시장에서 받아 자원 소유자에게 나눔</span><span lang="en">Aggregated output × SMP, collected and passed to owners</span></td><td><span lang="ko">태양광 · 풍력</span><span lang="en">Solar, wind</span></td><td><span lang="ko">대부분 소유자 몫. 사업자는 중개 수수료</span><span lang="en">Mostly the owner's; operator takes a fee</span></td></tr>
+    <tr><td><b>REC</b></td><td><span lang="ko">재생에너지 공급인증서 판매를 대행</span><span lang="en">Selling renewable certificates on the owner's behalf</span></td><td><span lang="ko">태양광 · 풍력</span><span lang="en">Solar, wind</span></td><td><span lang="ko">대행 수수료</span><span lang="en">Agency fee</span></td></tr>
+    <tr><td><b><span lang="ko">발전량 예측 정산금</span><span lang="en">Forecast-accuracy payment</span></b></td><td><span lang="ko">하루 전 예측이 정해진 오차 안에 들면 kWh당 정산금</span><span lang="en">Per-kWh payment when day-ahead forecasts fall within the error band</span></td><td><span lang="ko">재생에너지 묶음 전체</span><span lang="en">The whole renewable portfolio</span></td><td><span lang="ko"><b>사업자의 핵심 수익</b> (예측 실력이 그대로 돈이 됨)</span><span lang="en"><b>The operator's core income</b> (skill turns straight into money)</span></td></tr>
+    <tr><td><b><span lang="ko">수요반응 (DR)</span><span lang="en">Demand response</span></b></td><td><span lang="ko">줄일 수 있는 용량을 등록해 받는 기본 대가 + 실제로 줄인 양에 대한 대가</span><span lang="en">A standing payment for registered reducible capacity + payment for actual reductions</span></td><td><span lang="ko">공장 · 건물 · 전기차 충전</span><span lang="en">Factories, buildings, EV charging</span></td><td><span lang="ko">고객과 나눔 (계약 비율)</span><span lang="en">Shared with customers by contract</span></td></tr>
+    <tr><td><b><span lang="ko">ESS 시간 이동</span><span lang="en">Battery time-shifting</span></b></td><td><span lang="ko">SMP가 싼 시간에 충전하고 비싼 시간에 방전해 차익을 냄 (제도 · 설비 위치에 따라 가능 범위가 다름)</span><span lang="en">Charge when SMP is low, discharge when high (scope depends on rules and where the battery sits)</span></td><td>ESS</td><td><span lang="ko">운영 대가 또는 차익 공유</span><span lang="en">Operating fee or shared spread</span></td></tr>
+    <tr><td><b><span lang="ko">보조서비스 · 유연성</span><span lang="en">Ancillary / flexibility</span></b></td><td><span lang="ko">주파수 조정 · 예비력 · 출력 조절 능력에 대한 대가 (시범 · 개편 중인 영역)</span><span lang="en">Payments for frequency, reserves, ramping (still being piloted and reformed)</span></td><td><span lang="ko">ESS · 전기차 · 수요반응</span><span lang="en">Batteries, EVs, DR</span></td><td><span lang="ko">앞으로 커질 영역</span><span lang="en">A growing area</span></td></tr>
+  </table></div>
+
+  <h3><span lang="ko">② 나가는 돈</span><span lang="en">② Money out</span></h3>
+  <ul lang="ko">
+    <li><b>자원 소유자 배분</b>: SMP · REC 수익의 대부분은 설비 주인에게 돌아갑니다.</li>
+    <li><b>예측 오차 · 약속 불이행 불이익</b>: 예측이 크게 틀리면 정산금을 못 받고, 제도에 따라 벌칙도 있습니다.</li>
+    <li><b>플랫폼 · 통신 · 계량</b>: 현장 게이트웨이, LTE 통신비, 예측 · 관제 시스템, 보안 비용</li>
+    <li><b>영업 · 관리</b>: 자원을 모으고 계약 · 정산 내역을 관리하는 인력</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Payouts to owners</b>: most SMP and REC revenue goes to the resource owners.</li>
+    <li><b>Forecast errors and shortfalls</b>: a bad forecast forfeits the payment, and some schemes penalise it.</li>
+    <li><b>Platform, communications, metering</b>: gateways, LTE fees, forecasting and control systems, security</li>
+    <li><b>Sales and administration</b>: recruiting resources, contracts, settlement statements</li>
+  </ul>
+  <div class="formula" lang="ko">VPP 사업자 이익 ≈ (전력 판매 + REC) × <b>중개 수수료율</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>예측 정산금</b> − 오차 불이익<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ DR · ESS · 보조서비스 수익 × 사업자 몫<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− 플랫폼 · 통신 · 운영비</div>
+  <div class="formula" lang="en">Operator profit ≈ (energy + REC) × <b>brokerage fee rate</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <b>forecast payments</b> − error penalties<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ DR, battery, ancillary revenue × operator share<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− platform, comms, operations</div>
+
+  <h3><span lang="ko">③ 예로 비교: 태양광만 vs 태양광 + ESS (가상 시장 하루)</span><span lang="en">③ Example: solar only vs solar + battery (one virtual day)</span></h3>
+  <p lang="ko"><a href="vpp-market.html">VPP 가상 전력시장</a>의 하루 결과입니다. 정산 규칙(오차 ±8% 안이면 4원/kWh 정산금, 넘으면 SMP의 30% 벌칙)은 설명용 가상 규칙입니다.</p>
+  <p lang="en">One day from the <a href="vpp-market.html">VPP virtual market</a>. The settlement rule (4 KRW/kWh inside a ±8% band, 30% of SMP penalty outside) is a made-up rule for illustration.</p>
+  <div class="tbl"><table>
+    <tr><th>VPP</th><th><span lang="ko">구성</span><span lang="en">Make-up</span></th><th><span lang="ko">실적</span><span lang="en">Output</span></th><th><span lang="ko">전력 판매 (SMP)</span><span lang="en">Energy (SMP)</span></th><th><span lang="ko">예측 정산금</span><span lang="en">Forecast payment</span></th><th><span lang="ko">오차 벌칙</span><span lang="en">Penalty</span></th><th><span lang="ko">정산금 − 벌칙</span><span lang="en">Payment − penalty</span></th></tr>
+    <tr><td><span lang="ko">01 햇살모아</span><span lang="en">01 Sunshine</span></td><td><span lang="ko">태양광 9</span><span lang="en">9 solar</span></td><td class="num">29.04 MWh</td><td class="num">3,152,742</td><td class="num">40,468</td><td class="num">73,643</td><td class="num"><b>−33,175</b></td></tr>
+    <tr><td><span lang="ko">02 빛고을</span><span lang="en">02 Bitgoeul</span></td><td><span lang="ko">태양광 6 + ESS 2</span><span lang="en">6 solar + 2 batteries</span></td><td class="num">23.93 MWh</td><td class="num">2,632,944</td><td class="num">93,900</td><td class="num">32,830</td><td class="num"><b>+61,070</b></td></tr>
+    <tr><td><span lang="ko">06 공장절전</span><span lang="en">06 FactoryFlex</span></td><td><span lang="ko">수요반응 7</span><span lang="en">7 DR</span></td><td class="num">8.56 MWh</td><td class="num">978,138</td><td class="num">34,240</td><td class="num">0</td><td class="num"><b>+34,240</b></td></tr>
+  </table></div>
+  <p class="meta" lang="ko">단위: 원 (가상). 전력 판매 수익은 대부분 자원 소유자에게 가므로, 사업자 실력의 차이는 오른쪽 두 칸에서 드러납니다.</p>
+  <p class="meta" lang="en">Units: KRW (virtual). Energy revenue mostly goes to owners, so the operator's skill shows in the two right-hand columns.</p>
+
+  <h3><span lang="ko">④ 분석: VPP 사업자의 수익을 가르는 것</span><span lang="en">④ Analysis: what decides an operator's profit</span></h3>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">1. 예측 정확도</span><span lang="en">1. Forecast accuracy</span></h4><p lang="ko">SMP 수익은 남의 몫이지만, 예측 정산금과 벌칙은 사업자 실력에서 나옵니다. 위 예에서 발전량이 더 적은 빛고을이 "정산금 − 벌칙"에서는 햇살모아보다 9만 원 이상 앞섭니다.</p><p lang="en">SMP revenue belongs to owners, but forecast payments and penalties come from the operator's skill. Above, Bitgoeul produces less yet beats Sunshine by over 90,000 KRW on payment minus penalty.</p></div>
+    <div class="card"><h4><span lang="ko">2. 자원을 섞는 능력</span><span lang="en">2. Mixing resources</span></h4><p lang="ko">ESS · 수요반응처럼 "말 잘 듣는" 자원이 있으면 구름 · 출력제한으로 생긴 오차를 메울 수 있습니다. 가상 시장에서 ESS가 있는 VPP는 오차 범위 안에 든 시간이 84.7%, 없는 VPP는 68.4%였습니다.</p><p lang="en">Obedient resources such as batteries and DR fill gaps from clouds and curtailment. In the virtual market, VPPs with a battery were in band 84.7% of hours versus 68.4% without.</p></div>
+    <div class="card"><h4><span lang="ko">3. 규모</span><span lang="en">3. Scale</span></h4><p lang="ko">자원이 많고 여러 지역에 흩어질수록 개별 오차가 서로 상쇄되고, 플랫폼 · 통신 같은 고정비가 kWh당 작아집니다.</p><p lang="en">More resources spread over more areas cancel individual errors and spread fixed platform costs over more kWh.</p></div>
+    <div class="card"><h4><span lang="ko">4. 위치(배전선로)</span><span lang="en">4. Location (feeder)</span></h4><p lang="ko">태양광이 몰린 선로는 한낮에 출력제한을 받기 쉽습니다. 어느 선로에 자원이 몰렸는지 아는 것이 위험 관리입니다. <a href="vpp-market.html">그래프 DB 페이지</a>의 Q3 · Q4가 바로 그 질문입니다.</p><p lang="en">Feeders crowded with solar are curtailed at midday. Knowing where resources cluster is risk management — exactly Q3 and Q4 on the <a href="vpp-market.html">graph DB page</a>.</p></div>
+    <div class="card"><h4><span lang="ko">5. 제도 변화</span><span lang="en">5. Rule changes</span></h4><p lang="ko">재생에너지 입찰, 실시간 시장, 보조서비스 시장이 넓어질수록 "유연하게 움직일 수 있는 능력"에 값이 붙어 VPP의 수익 기회가 커질 것으로 봅니다.</p><p lang="en">As renewable bidding, real-time and ancillary markets expand, flexibility gets priced, and I expect VPP revenue opportunities to grow.</p></div>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">VPP 사업자는 <b>전기를 파는 회사라기보다 "약속을 잘 지키게 해 주는" 회사</b>입니다. 전기 판매 대금은 대부분 설비 주인에게 가고, 사업자는 정확한 예측과 자원 조합으로 약속을 지켜서 받는 정산금, 그리고 중개 수수료로 돈을 법니다.</p><p lang="en">A VPP operator is less a company that sells electricity than one that <b>helps keep promises</b>. Energy revenue mostly goes to owners; the operator earns from payments for promises kept through good forecasts and resource mixes, plus brokerage fees.</p></div>
+</section>
+
 <section id="todo">
   <h2><span lang="ko">발전사업자가 해야 할 일 체크리스트</span><span lang="en">The generator's checklist</span></h2>
   <h3><span lang="ko">① 시장에 들어가기 전</span><span lang="en">① Before entering the market</span></h3>
