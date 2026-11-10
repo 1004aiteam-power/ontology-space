@@ -538,8 +538,8 @@ mark.uvar{background:color-mix(in srgb,var(--warm) 22%,transparent);color:inheri
 .fids thead th{background:transparent}
 
 /* 세계 항공 교통 페이지 */
-.fl-wrap{grid-template-columns:minmax(0,1fr);width:min(1400px,100vw - 32px)}
-@media (min-width:1000px){ .fl-wrap{grid-template-columns:minmax(0,1fr) 320px;align-items:start} }
+.sim-wrap.fl-wrap{grid-template-columns:minmax(0,1fr);width:min(1400px,100vw - 32px)}
+@media (min-width:1000px){ .sim-wrap.fl-wrap{grid-template-columns:minmax(0,1fr) 320px;align-items:start} }
 #flMap{width:100%;display:block;border-radius:12px;border:1px solid var(--line);background:#0a1624;touch-action:none;cursor:grab}
 .fl-search input{flex:1 1 220px;min-width:0;max-width:360px;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:6px 10px;font-size:14px}
 .fl-panel{display:grid;gap:10px;align-content:start}
@@ -680,3 +680,8 @@ nav .menu .menu-h{margin:4px 10px 0;font-size:11.5px;font-weight:700;color:var(-
   html.js nav.open .menu{position:static;min-width:0;background:none;border:0;border-left:2px solid var(--line);border-radius:0;box-shadow:none;
     margin:0 0 6px 12px;padding:2px 0 2px 6px}
 }
+
+/* 좁은 화면에서 페이지가 옆으로 밀리지 않게: 긴 인라인 코드는 줄바꿈, 선택 상자는 화면 너비까지만, 차트 범례는 여러 줄로 */
+:not(pre) > code{overflow-wrap:anywhere}
+select{max-width:100%}
+.chart-legend{flex-wrap:wrap}
