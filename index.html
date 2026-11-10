@@ -85,6 +85,13 @@
       <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
       <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
     </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="aiMenu" hidden>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <hr>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+    </div>
     <a href="bidding.html"><span lang="ko">내가 이해한 전력시장 입찰제도</span><span lang="en">Power market bidding, as I understand it</span></a>
   </nav>
   <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
@@ -173,6 +180,8 @@
   <p lang="en">Where the two agree and where they part is set out in detail in <a href="ood.html"><b>Ontology vs. object-oriented design</b></a>.</p>
   <p lang="ko">사람이 객체를 알아보는 방식과 같은 구조라면, <b>AI가 사람처럼 지식을 익히는 데에도 가장 좋은 바탕</b>이 될 것입니다. 수많은 글을 읽고 말을 배운 AI에게, 온톨로지는 "무엇이 무엇이고, 무엇과 어떻게 이어져 있는가"를 분명하게 알려 주는 지식의 뼈대입니다. 데이터는 계속 쌓이고 모델은 바뀌어도, 세상을 나누고 잇는 이 뼈대는 남습니다.</p>
   <p lang="en">And if it mirrors the way people recognise objects, it should also be <b>the best foundation for AI to acquire knowledge the way people do</b>. For an AI that learned language from vast amounts of text, an ontology is the skeleton of knowledge that says plainly what each thing is and how it connects to everything else. Data keeps piling up and models keep changing, but this skeleton — how the world is divided and joined — remains.</p>
+  <p lang="ko">이 주장을 실제로 보여 주는 시연은 <a href="ai.html"><b>AI × 온톨로지</b></a>에 있습니다. 자연어 질문을 그래프 질의로 바꿔 답하는 GraphRAG와, 고장 영향을 한 단계씩 따라가는 AI 에이전트입니다.</p>
+  <p lang="en">A demo of this claim is in <a href="ai.html"><b>AI × ontology</b></a>: GraphRAG answering questions through graph queries, and an AI agent tracing a failure step by step.</p>
   <p class="sig" lang="ko">— Ontology Space를 만든 이의 개인적인 의견입니다.</p>
   <p class="sig" lang="en">— A personal opinion of the author of Ontology Space.</p>
 </section>

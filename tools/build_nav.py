@@ -67,6 +67,12 @@ NAV = [
         ("hr",), ("h", "자연", "Nature"),
         ("eco-ontology.html", "단세포 생태계 온톨로지", "Cell Ecosystem Ontology", "시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프", "Simulation record → lineage, predation, evolution graph"),
     ]),
+    ("menu", "aiMenu", "AI × 온톨로지", "AI × Ontology", [
+        ("ai.html", "AI × 온톨로지 시연", "AI × ontology demo", "LLM만 · 문서 검색 · GraphRAG 비교", "LLM alone vs. RAG vs. GraphRAG"),
+        ("hr",),
+        ("ai.html#graphrag", "GraphRAG 시연", "GraphRAG demo", "자연어 질문 → Cypher → 그래프에서 답", "Question → Cypher → answer from the graph"),
+        ("ai.html#agent", "AI 에이전트 시연", "AI agent demo", "고장 영향을 단계별로 추론하는 에이전트", "An agent tracing a failure step by step"),
+    ]),
     ("bidding.html", "내가 이해한 전력시장 입찰제도", "Power market bidding, as I understand it"),
 ]
 

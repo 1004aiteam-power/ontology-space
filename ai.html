@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · AI and Ontology</title>
+<meta name="title-ko" content="Ontology Space · AI × 온톨로지 시연">
+<meta name="title-en" content="Ontology Space · AI × ontology demo">
+<meta name="description" content="온톨로지가 AI의 지식 바탕이 되는 모습을 시연: 자연어 질문을 Cypher로 바꿔 그래프에서 답하는 GraphRAG, 고장 영향을 단계별로 추론하는 AI 에이전트 (시연용, 실행 결과는 실제 그래프)">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · AI × 온톨로지 시연">
+<meta property="og:description" content="온톨로지가 AI의 지식 바탕이 되는 모습을 시연: 자연어 질문을 Cypher로 바꿔 그래프에서 답하는 GraphRAG, 고장 영향을 단계별로 추론하는 AI 에이전트 (시연용, 실행 결과는 실제 그래프)">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/ai.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=20261110a">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js"></script>
+<script src="assets/vendor/cytoscape.min.js"></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:780px}
+.ai3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+.ai3 .card{border-top:4px solid var(--line)} .ai3 .card.g{border-top-color:#1baf7a} .ai3 .card.w{border-top-color:#eda100} .ai3 .card.b{border-top-color:#eb6834}
+.ai3 .card h4{margin:0 0 6px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0;font-size:14px}
+.flow span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.flow span.o{border-color:#1baf7a;font-weight:700}
+.flow b{color:var(--muted)}
+.ai-qs{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.ai-qs button{text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:14.5px}
+.ai-qs button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.ai-bar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ai-bar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:13.5px}
+.ai-bar button.primary{border-color:var(--accent);color:var(--accent);font-weight:700}
+.ai-bar button:disabled{opacity:.4;cursor:default}
+.ai-steps{list-style:none;margin:12px 0;padding:0}
+.ai-steps > li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:4px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.ai-steps .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--code);color:var(--muted);font-weight:700;font-size:13px}
+.ai-steps li.on .n{background:var(--accent);color:#fff}
+.ai-steps li.now .n{box-shadow:0 0 0 4px var(--accent-soft)}
+.ai-steps li:not(.on) h4{color:var(--muted)}
+.ai-steps h4{margin:3px 0 6px}
+.ai-steps pre{font-size:12.5px}
+.ai-steps li.now .c{animation:aiIn .35s ease-out}
+@keyframes aiIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ai-steps li.now .c{animation:none}}
+.ai-q{font-size:18px;font-weight:700;margin:2px 0}
+.ai-vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.ai-vs > div{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--surface)}
+.ai-vs .good{border-left:5px solid #1baf7a} .ai-vs .bad{border-left:5px solid #eb6834}
+.ai-vs h4{margin:0 0 6px}
+@media (max-width:700px){.ai-vs{grid-template-columns:minmax(0,1fr)}}
+.ai-graph{height:440px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.ai-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted);margin:6px 0}
+.ai-legend span{display:inline-flex;align-items:center;gap:6px}
+.ai-legend i{display:inline-block;width:11px;height:11px;border-radius:50%}
+.ai-legend i.ring{background:transparent;border:3px solid #f59e0b}
+.think{margin:2px 0 6px;font-style:italic}
+.call{margin:4px 0}
+.obs{margin:6px 0 2px;font-weight:600}
+details summary{cursor:pointer;color:var(--muted);font-size:13.5px}
+.task{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;background:var(--surface);font-weight:600}
+.report{border:2px solid #1baf7a;border-radius:12px;padding:12px 18px;margin:14px 0;background:color-mix(in srgb,#1baf7a 7%,var(--surface))}
+.report h4{margin:0 0 6px}
+.report ol{margin:4px 0;padding-left:20px} .report li{margin:4px 0}
+</style>
+<script type="module" src="assets/ai/ai-app.js?v=20261110a"></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <nav>
+    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="aiMenu" hidden>
+      <a href="ai.html" aria-current="page"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <hr>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+    </div>
+    <a href="bidding.html"><span lang="ko">내가 이해한 전력시장 입찰제도</span><span lang="en">Power market bidding, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <div class="eyebrow">AI × ONTOLOGY · DEMO</div>
+  <h1><span lang="ko">AI가 온톨로지로<br>전력망을 이해하는 모습</span><span lang="en">Watching AI understand<br>the grid through an ontology</span></h1>
+  <p class="thesis" lang="ko">LLM은 말을 잘하지만 <b>우리 데이터는 모릅니다.</b><br>온톨로지는 AI에게 "무엇이 무엇이고, 무엇과 이어지는가"를 알려 주는 지도입니다.</p>
+  <p class="thesis" lang="en">An LLM speaks well but <b>does not know your data.</b><br>An ontology is the map that tells it what each thing is and how it connects.</p>
+  <p class="lead" lang="ko"><a href="index.html#why">소개 페이지</a>에서 "온톨로지는 AI가 지식을 익히는 가장 좋은 바탕"이라고 썼습니다. 이 페이지는 그 말을 두 가지 시연으로 보여 줍니다. 자연어 질문에 그래프로 답하는 <b>GraphRAG</b>와, 고장 영향을 한 단계씩 따라가는 <b>AI 에이전트</b>입니다.</p>
+  <p class="lead" lang="en">The <a href="index.html#why">intro page</a> claims that an ontology is the best foundation for AI to acquire knowledge. This page shows it in two demos: <b>GraphRAG</b>, answering natural-language questions from the graph, and an <b>AI agent</b> that traces a failure's impact step by step.</p>
+  <div class="notice"><b>⚠ <span lang="ko">시연용 페이지입니다</span><span lang="en">This is a demo</span></b>
+    <p lang="ko">이 페이지는 실제 LLM을 부르지 않습니다. <strong>AI가 하는 부분(Cypher 작성 · 생각 · 도구 선택)은 미리 작성한 예시</strong>입니다. 대신 <strong>Cypher 실행과 결과, 답과 보고서에 들어가는 이름 · 숫자는 브라우저에서 실제 그래프에 매번 계산</strong>합니다. 데이터는 모두 가상입니다.</p>
+    <p lang="en">This page calls no real LLM. <strong>The AI's part (writing Cypher, thinking, choosing tools) is pre-written.</strong> But <strong>the Cypher runs, and every name and number in the answers and report, are computed live on the real graph in your browser.</strong> All data is virtual.</p></div>
+  <p id="aiStatus" class="meta"></p>
+</div>
+
+<section id="why">
+  <h2><span lang="ko">같은 질문, 세 가지 방법</span><span lang="en">One question, three approaches</span></h2>
+  <div class="ai3">
+    <div class="card b"><h4>① <span lang="ko">LLM만</span><span lang="en">LLM alone</span></h4><p lang="ko">학습한 일반 지식으로 답합니다. 우리 회사 설비 · 선로 · 계약은 모르므로 그럴듯하게 <b>지어내거나</b> "확인이 필요하다"로 끝납니다.</p><p lang="en">Answers from general training. It does not know your assets, feeders or contracts, so it <b>makes things up</b> or ends with "you would need to check".</p></div>
+    <div class="card w"><h4>② <span lang="ko">문서 검색 (RAG)</span><span lang="en">Document search (RAG)</span></h4><p lang="ko">관련 문서 조각을 찾아 붙여 줍니다. 한 문서에 적힌 사실은 잘 찾지만, "선로 → 자원 → VPP"처럼 <b>여러 단계를 이어야 하는 질문</b>에는 약합니다.</p><p lang="en">Finds document chunks and pastes them in. Good for facts written in one place, weak on questions that must <b>chain several hops</b> such as feeder → resource → VPP.</p></div>
+    <div class="card g"><h4>③ <span lang="ko">온톨로지 + 그래프 (GraphRAG)</span><span lang="en">Ontology + graph (GraphRAG)</span></h4><p lang="ko">온톨로지가 정한 관계를 따라가는 <b>질의</b>를 만들고, 그 결과로만 답합니다. 답의 근거 경로를 보여 줄 수 있어 사람이 검증할 수 있습니다.</p><p lang="en">Writes a <b>query</b> that follows the relations the ontology defines, and answers only from the result. The evidence path can be shown, so people can check it.</p></div>
+  </div>
+  <div class="flow" lang="ko"><span>질문</span><b>→</b><span class="o">온톨로지 스키마</span><b>→</b><span>LLM이 Cypher 작성</span><b>→</b><span class="o">그래프 DB 실행</span><b>→</b><span>결과로만 답</span><b>→</b><span class="o">근거 경로</span></div>
+  <div class="flow" lang="en"><span>Question</span><b>→</b><span class="o">Ontology schema</span><b>→</b><span>LLM writes Cypher</span><b>→</b><span class="o">Run on graph DB</span><b>→</b><span>Answer from results</span><b>→</b><span class="o">Evidence path</span></div>
+  <p class="meta" lang="ko">초록 테두리 = 온톨로지와 그래프가 하는 일. LLM은 질문을 질의로 바꾸고, 결과를 사람의 말로 옮기는 일만 합니다.</p>
+  <p class="meta" lang="en">Green = the ontology and graph's job. The LLM only turns the question into a query and the result into plain words.</p>
+</section>
+
+<section id="graphrag">
+  <h2><span lang="ko">시연 1. GraphRAG: 질문에 그래프로 답하기</span><span lang="en">Demo 1. GraphRAG: answering from the graph</span></h2>
+  <p lang="ko"><a href="vpp-market.html">VPP 가상 전력시장</a>의 그래프(VPP 10개 · DER 81개 · 배전선로 15개 · 입찰 · 정산 · 출력제한 + 디지털 트윈 변전소)에 묻습니다. 질문을 고르고 한 단계씩 넘겨 보세요.</p>
+  <p lang="en">We ask the <a href="vpp-market.html">VPP virtual market</a> graph (10 VPPs, 81 DER, 15 feeders, bids, settlements, curtailments + digital-twin substations). Pick a question and step through.</p>
+  <div class="ai-qs" id="grQs"></div>
+  <div class="ai-bar"><button type="button" id="grNext" class="primary"><span lang="ko">다음 단계 ▶</span><span lang="en">Next step ▶</span></button><button type="button" id="grPlay">▶ <span lang="ko">자동 재생</span><span lang="en">Auto play</span></button><button type="button" id="grAll"><span lang="ko">한 번에 보기</span><span lang="en">Show all</span></button><button type="button" id="grReset"><span lang="ko">처음부터</span><span lang="en">Restart</span></button></div>
+  <ol class="ai-steps" id="grSteps"></ol>
+</section>
+
+<section id="agent">
+  <h2><span lang="ko">시연 2. AI 에이전트: 고장 영향을 단계별로 추론</span><span lang="en">Demo 2. AI agent: reasoning through a failure step by step</span></h2>
+  <p lang="ko">에이전트는 질문 하나로 끝내지 않고 <b>생각 → 도구 사용 → 관찰</b>을 되풀이합니다. 여기서 도구는 모두 <a href="asset.html">자산관리</a> · <a href="grid.html#feeder">배전선로</a> · <a href="impact.html">고장 영향</a> 온톨로지 위의 질의입니다. 에이전트는 <b>무엇을 물을지만 고르고, 답은 그래프가 냅니다.</b></p>
+  <p lang="en">An agent does not stop at one query: it loops <b>think → use a tool → observe</b>. Every tool here is a query over the <a href="asset.html">asset</a>, <a href="grid.html#feeder">feeder</a> and <a href="impact.html">failure impact</a> ontologies. The agent <b>only decides what to ask; the graph gives the answers.</b></p>
+  <p class="task" id="agTask"></p>
+  <div class="ai-bar"><button type="button" id="agNext" class="primary"><span lang="ko">다음 단계 ▶</span><span lang="en">Next step ▶</span></button><button type="button" id="agPlay">▶ <span lang="ko">자동 재생</span><span lang="en">Auto play</span></button><button type="button" id="agAll"><span lang="ko">한 번에 보기</span><span lang="en">Show all</span></button><button type="button" id="agReset"><span lang="ko">처음부터</span><span lang="en">Restart</span></button></div>
+  <ol class="ai-steps" id="agSteps"></ol>
+  <div id="agGraphWrap" hidden><h3><span lang="ko">에이전트가 지금까지 찾은 것</span><span lang="en">What the agent has found so far</span></h3><div class="ai-legend" id="agLegend"></div><div class="ai-graph" id="agGraph"></div></div>
+  <div class="report" id="agReport" hidden></div>
+</section>
+
+<section id="real">
+  <h2><span lang="ko">실제로 만든다면</span><span lang="en">Building it for real</span></h2>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">1. 스키마를 프롬프트에</span><span lang="en">1. Schema in the prompt</span></h4><p lang="ko">온톨로지에서 라벨 · 관계 · 뜻을 뽑아(시연 1의 2단계) 시스템 프롬프트에 넣고, 잘 된 질의 예시 몇 개를 함께 줍니다. 온톨로지가 바뀌면 프롬프트도 자동으로 바뀝니다.</p><p lang="en">Extract labels, relations and meanings from the ontology (step 2 of demo 1) into the system prompt, plus a few good example queries. Change the ontology and the prompt follows.</p></div>
+    <div class="card"><h4><span lang="ko">2. 질의는 읽기 전용으로</span><span lang="en">2. Read-only queries</span></h4><p lang="ko">LLM이 쓴 Cypher는 읽기 전용 권한으로만 실행합니다. 오류가 나면 오류 메시지를 돌려줘 한두 번 고치게 하고, 결과가 비면 "모름"이라고 답하게 합니다.</p><p lang="en">Run LLM-written Cypher with read-only rights. On an error, hand the message back for one or two fixes; on an empty result, answer "unknown".</p></div>
+    <div class="card"><h4><span lang="ko">3. 에이전트 도구 = 검증된 질의</span><span lang="en">3. Agent tools = vetted queries</span></h4><p lang="ko">자주 쓰는 질문(하류 추적, 연계 개폐기, 진단 이력)은 사람이 검증한 질의를 도구로 만들어 둡니다. LLM은 도구를 고르고 인자만 채우므로 실수가 줄어듭니다.</p><p lang="en">Turn frequent questions (downstream trace, tie switches, diagnoses) into human-vetted queries exposed as tools. The LLM only picks tools and fills arguments, so mistakes drop.</p></div>
+    <div class="card"><h4><span lang="ko">4. 평가와 근거</span><span lang="en">4. Evaluation and evidence</span></h4><p lang="ko">정답 질의가 있는 질문 세트로 정답률을 재고, 답마다 근거 노드 · 경로를 함께 보여 사람이 확인하게 합니다. 전력 설비 판단은 최종적으로 사람이 내립니다.</p><p lang="en">Measure accuracy on a question set with reference queries, and show evidence nodes and paths with every answer. Final decisions on grid assets stay with people.</p></div>
+  </div>
+  <div class="easy"><b>💡 <span lang="ko">이 시연이 보여 주는 것</span><span lang="en">What this demo shows</span></b><p lang="ko">AI가 똑똑해서 맞는 답을 내는 것이 아닙니다. <b>온톨로지가 "무엇이 무엇과 이어지는가"를 정해 두었기 때문에</b> 질문을 정확한 질의로 바꿀 수 있고, 답에 근거를 붙일 수 있습니다. 시연 1의 세 번째 질문처럼, 그래프에 없는 것(날씨)은 "모른다"고 말할 수 있다는 것도 중요합니다.</p><p lang="en">The AI is not right because it is clever. <b>It is right because the ontology fixed what connects to what</b>, so a question can become a precise query and an answer can carry evidence. Equally important, as in demo 1's third question, it can say "unknown" for what the graph does not hold (the weather).</p></div>
+  <div class="pager"><a href="ood.html"><span lang="ko">← 이전: 온톨로지 vs. 객체지향 설계</span><span lang="en">← Prev: Ontology vs. OOD</span></a><a href="vpp-market.html"><span lang="ko">다음: VPP 가상 전력시장 →</span><span lang="en">Next: VPP virtual market →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

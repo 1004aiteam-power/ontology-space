@@ -11,6 +11,7 @@
 | [docs/03-python-cim-design.md](docs/03-python-cim-design.md) | **프로젝트**: CIM을 파이썬 클래스로 설계 (`pycim`) |
 | [docs/04-physical-ai.md](docs/04-physical-ai.md) | Physical AI 개념·관련 기술과 NEAT 자율주행 시뮬레이션 |
 | [docs/05-digital-twin.md](docs/05-digital-twin.md) | 가상 대한민국 전력망 디지털 트윈 (⚠ 가상 데이터) |
+| [ai.html](ai.html) | AI × 온톨로지 시연: LLM만 · 문서 검색 · GraphRAG 비교, GraphRAG(질문 → 온톨로지 스키마 → Cypher → 실행 → 결과로만 답 → 근거 그래프), 고장 영향을 단계별로 추론하는 AI 에이전트. AI 부분은 미리 작성한 시연용 시나리오(`assets/ai/ai-scenarios.js`), Cypher 실행과 답의 숫자는 브라우저에서 실제 그래프로 계산 (⚠ 가상 데이터) |
 | [ood.html](ood.html) | 온톨로지 vs. 객체지향 설계(OOD): 같은 ESS를 파이썬 클래스와 OWL로 나란히 적고, 목적 · 열린 세계 · 다중 분류 · 독립 속성 · 전역 이름 · 스키마 변경 · domain/range 추론의 일곱 가지 차이와 함께 쓰는 법 |
 | [vpp.html](vpp.html) | VPP(가상발전소)·분산에너지 기본 개념: DER 종류, 예측 → 입찰 → 제어 → 정산, 관련 표준(IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP)과 국내외 제도, 기존 전력망·전기차 온톨로지와의 연결 |
 | [examples/vpp/](examples/vpp/) | VPP 가상 전력시장 (`vpp-market.html`): VPP 10개 · 중개사업자 · DER 81개(태양광 · 풍력 · ESS · 전기차 충전소 · 수요반응) · 22.9kV 배전선로 15개 → 디지털 트윈 154kV 변전소 5곳, 하루 전 시장 24시간 입찰 · 정산 · 배전운영자 출력제한. `assets/vpp/vpp-graph.js` → `build_vpp.mjs` → 스키마 `vpp-schema.ttl` · 개체 `vpp-market.ttl` · Neo4j 적재 스크립트 `neo4j/import.cypher`, 브라우저에서 속성 그래프(Cytoscape)와 Cypher 질의 (⚠ 가상 데이터) |
