@@ -9,7 +9,9 @@
   };
 
   // ---- 언어 ----
-  const initialLang = store.get('lang') || ((navigator.language || 'ko').startsWith('ko') ? 'ko' : 'en');
+  // 주소의 ?lang=en · ?lang=ko 가 가장 먼저 (검색엔진·공유 링크용 언어별 주소), 다음이 지난번 선택, 다음이 브라우저 언어
+  const urlLang = (() => { try { const v = new URLSearchParams(location.search).get('lang'); return v === 'ko' || v === 'en' ? v : null; } catch (e) { return null; } })();
+  const initialLang = urlLang || store.get('lang') || ((navigator.language || 'ko').startsWith('ko') ? 'ko' : 'en');
   function setLang(lang) {
     root.lang = lang;
     store.set('lang', lang);
@@ -30,7 +32,16 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     setLang(initialLang);
-    document.getElementById('langBtn')?.addEventListener('click', () => setLang(root.lang === 'ko' ? 'en' : 'ko'));
+    document.getElementById('langBtn')?.addEventListener('click', () => {
+      setLang(root.lang === 'ko' ? 'en' : 'ko');
+      if (urlLang) try {   // 주소에 ?lang= 이 남아 있으면 새로 고칠 때 되돌아가므로 지움
+        const u = new URL(location.href); u.searchParams.delete('lang'); history.replaceState(null, '', u);
+      } catch (e) {}
+    });
+    if (urlLang === 'en') {   // 영어 주소로 들어온 경우: 대표 주소도 영어 주소로
+      const c = document.querySelector('link[rel="canonical"]');
+      if (c) c.href = c.href.split('?')[0] + '?lang=en';
+    }
     document.getElementById('themeBtn')?.addEventListener('click', () => {
       const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
       root.dataset.theme = dark ? 'light' : 'dark';

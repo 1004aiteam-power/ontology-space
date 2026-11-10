@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://1004aiteam-power.github.io/ontology-space/sitemap.xml

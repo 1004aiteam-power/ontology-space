@@ -4,7 +4,9 @@
 
 메뉴를 바꿀 때는 이 파일의 NAV만 고치고 실행: python tools/build_nav.py
 현재 페이지의 링크에는 aria-current="page", 그 링크가 든 드롭다운 버튼에는 class="menu-btn current"를 붙인다.
-<head>에는 파비콘과 링크 공유 미리보기(Open Graph · Twitter 카드) 태그도 함께 넣는다 (페이지의 제목·설명에서 만듦).
+<head>에는 파비콘과 링크 공유 미리보기(Open Graph · Twitter 카드) 태그, 검색엔진용 대표 주소(canonical)와
+언어별 주소(hreflang: 영어는 ?lang=en)도 함께 넣는다 (페이지의 제목·설명에서 만듦).
+sitemap.xml 과 robots.txt 도 여기서 만든다 (404.html 은 검색 대상에서 뺌).
 """
 from __future__ import annotations
 
@@ -81,6 +83,7 @@ SITE = "https://1004aiteam-power.github.io/ontology-space/"
 # 공유 미리보기 이미지: 시뮬레이션 썸네일(tools/thumbs.cjs)이 있는 페이지는 그것, 나머지는 소개 페이지 화면
 OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem")}
 OG_DEFAULT = "assets/og/site.jpg"
+NOINDEX = {"404.html"}   # 검색 대상이 아닌 페이지: canonical · sitemap 에서 빼고 noindex 를 붙임
 
 
 def head_meta(page: str, s: str) -> str:
@@ -90,10 +93,20 @@ def head_meta(page: str, s: str) -> str:
     url = SITE + ("" if page == "index.html" else page)
     img = SITE + OG_IMAGE.get(page, OG_DEFAULT)
     q = lambda v: html.escape(html.unescape(v), quote=True)  # noqa: E731
+    if page in NOINDEX:
+        seo = ['<meta name="robots" content="noindex">']
+    else:
+        seo = [
+            f'<link rel="canonical" href="{url}">',
+            f'<link rel="alternate" hreflang="ko" href="{url}">',
+            f'<link rel="alternate" hreflang="en" href="{url}?lang=en">',
+            f'<link rel="alternate" hreflang="x-default" href="{url}">',
+        ]
     return "\n".join([
         "<!-- head:meta (tools/build_nav.py) -->",
         '<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">',
         '<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">',
+        *seo,
         '<meta property="og:type" content="website">',
         '<meta property="og:site_name" content="Ontology Space">',
         f'<meta property="og:title" content="{q(t)}">',
@@ -101,6 +114,7 @@ def head_meta(page: str, s: str) -> str:
         f'<meta property="og:url" content="{url}">',
         f'<meta property="og:image" content="{img}">',
         '<meta property="og:locale" content="ko_KR">',
+        '<meta property="og:locale:alternate" content="en_US">',
         '<meta name="twitter:card" content="summary_large_image">',
         "<!-- /head:meta -->",
     ])
@@ -148,8 +162,30 @@ def build(page: str) -> str:
     return "\n".join(out)
 
 
+def write_if_changed(path: Path, text: str) -> int:
+    if path.exists() and path.read_text(encoding="utf-8") == text:
+        return 0
+    path.write_text(text, encoding="utf-8")
+    return 1
+
+
+def sitemap(pages: list[str]) -> str:
+    out = ['<?xml version="1.0" encoding="UTF-8"?>',
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for p in ["index.html"] + [p for p in pages if p != "index.html"]:
+        url = SITE + ("" if p == "index.html" else p)
+        out += ["  <url>", f"    <loc>{url}</loc>",
+                f'    <xhtml:link rel="alternate" hreflang="ko" href="{url}"/>',
+                f'    <xhtml:link rel="alternate" hreflang="en" href="{url}?lang=en"/>',
+                "  </url>"]
+    return "\n".join(out + ["</urlset>"]) + "\n"
+
+
 def main() -> None:
     n = 0
+    pages = [f.name for f in sorted(ROOT.glob("*.html")) if f.name not in NOINDEX]
+    n += write_if_changed(ROOT / "sitemap.xml", sitemap(pages))
+    n += write_if_changed(ROOT / "robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n")
     for f in sorted(ROOT.glob("*.html")):
         s = f.read_text(encoding="utf-8")
         new = re.sub(r"[ \t]*<nav>.*?</nav>", lambda m: build(f.name), s, count=1, flags=re.S)
@@ -157,7 +193,7 @@ def main() -> None:
         if new != s:
             f.write_text(new, encoding="utf-8")
             n += 1
-    print(f"메뉴·head 태그를 다시 만든 페이지: {n}개")
+    print(f"메뉴·head 태그·sitemap을 다시 만든 파일: {n}개")
 
 
 if __name__ == "__main__":

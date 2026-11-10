@@ -42,4 +42,4 @@ jobs:
       - name: Menus and head tags are up to date
         run: |
           python tools/build_nav.py
-          git diff --exit-code -- '*.html' || { echo "::error::tools/build_nav.py 를 실행한 결과를 커밋하세요"; exit 1; }
+          git diff --exit-code || { echo "::error::tools/build_nav.py 를 실행한 결과를 커밋하세요"; exit 1; }
