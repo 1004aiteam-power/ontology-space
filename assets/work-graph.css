@@ -79,7 +79,7 @@ table.mx{border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
 .hint{font-size:12px;color:var(--muted)}
 .crumb{font-size:13px;color:var(--muted)}
-.crumb a{color:var(--accent);text-decoration:none}
+.crumb a{color:var(--accent);text-decoration:none;display:inline-block;padding:4px 0}
 
 /* site.css 의 같은 이름 규칙이 본문에 번지지 않게 되돌림 (이 페이지의 본문 모양은 위 규칙만 따름) */
 .wg h1,.wg h2{line-height:1.55}

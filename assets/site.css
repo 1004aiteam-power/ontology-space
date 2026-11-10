@@ -685,3 +685,25 @@ nav .menu .menu-h{margin:4px 10px 0;font-size:11.5px;font-weight:700;color:var(-
 :not(pre) > code{overflow-wrap:anywhere}
 select{max-width:100%}
 .chart-legend{flex-wrap:wrap}
+
+/* ---- 접근성 ---- */
+/* 본문 바로가기: 평소에는 화면 밖, Tab으로 초점이 오면 보임 */
+.skip{position:absolute;left:8px;top:-60px;z-index:100;background:var(--surface);color:var(--accent);border:2px solid var(--accent);border-radius:8px;padding:8px 14px;font-weight:600;text-decoration:none}
+.skip:focus{top:8px}
+main:focus{outline:none}
+/* 누르는 대상의 최소 크기 (WCAG 2.5.8: 24px). 손가락으로 쓰는 화면에서는 조금 더 크게 */
+input[type=checkbox],input[type=radio]{width:18px;height:18px;margin:3px 5px 3px 3px;vertical-align:middle;accent-color:var(--accent)}
+input[type=range]{min-height:24px}
+button,select,summary,.tools button{min-height:24px}
+header.top .tools button{min-height:30px}
+@media (pointer:coarse){
+  input[type=checkbox],input[type=radio]{width:24px;height:24px;margin:0 5px 0 0}
+  input[type=range]{min-height:32px}
+  button,select{min-height:32px}
+  nav .menu a{padding-top:10px;padding-bottom:10px}
+}
+/* 움직임 줄이기를 켠 사용자: 부드러운 스크롤 · 전환 효과 · 장식용 애니메이션을 끔 (시뮬레이션 화면은 사용자가 직접 재생) */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;animation-iteration-count:1 !important;scroll-behavior:auto !important}
+}

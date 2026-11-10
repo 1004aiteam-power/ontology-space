@@ -4,6 +4,7 @@
 
 메뉴를 바꿀 때는 이 파일의 NAV만 고치고 실행: python tools/build_nav.py
 현재 페이지의 링크에는 aria-current="page", 그 링크가 든 드롭다운 버튼에는 class="menu-btn current"를 붙인다.
+<body> 맨 앞에는 "본문 바로가기" 링크를 넣는다.
 <head>에는 파비콘과 링크 공유 미리보기(Open Graph · Twitter 카드) 태그, 검색엔진용 대표 주소(canonical)와
 언어별 주소(hreflang: 영어는 ?lang=en)도 함께 넣는다 (페이지의 제목·설명에서 만듦).
 sitemap.xml 과 robots.txt 도 여기서 만든다 (404.html 은 검색 대상에서 뺌).
@@ -231,6 +232,16 @@ def stamp_html(text: str) -> str:
     return HTML_REF.sub(ref, text)
 
 
+SKIP = '<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>'
+
+
+def add_skip_link(s: str) -> str:
+    """키보드·화면낭독기 사용자가 긴 메뉴를 건너뛸 수 있게: <body> 바로 뒤에 본문 바로가기 링크, <main>에 id="main"."""
+    s = re.sub(r'<a class="skip" href="#main">.*?</a>\n', "", s, flags=re.S)
+    s = re.sub(r"<body([^>]*)>\n", lambda m: f"<body{m.group(1)}>\n{SKIP}\n", s, count=1)
+    return re.sub(r"<main(?![^>]*\bid=)", '<main id="main"', s, count=1)
+
+
 def write_if_changed(path: Path, text: str) -> int:
     if path.exists() and path.read_text(encoding="utf-8") == text:
         return 0
@@ -262,7 +273,7 @@ def main() -> None:
     for f in sorted(ROOT.glob("*.html")):
         s = f.read_text(encoding="utf-8")
         new = re.sub(r"[ \t]*<nav>.*?</nav>", lambda m: build(f.name), s, count=1, flags=re.S)
-        new = stamp_html(add_head_meta(f.name, new))
+        new = stamp_html(add_skip_link(add_head_meta(f.name, new)))
         if new != s:
             f.write_text(new, encoding="utf-8")
             n += 1
