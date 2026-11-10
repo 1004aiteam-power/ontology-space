@@ -10,7 +10,7 @@
 // 을 세어 JSON으로 저장합니다. 손으로 적지 않고 파일에서 세므로, 온톨로지가 바뀌면 다시 실행만 하면 됩니다.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import init, { parse } from '../assets/vendor/oxigraph/web.js';
+import { parse } from '../assets/cypher/turtle.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', RDFS = 'http://www.w3.org/2000/01/rdf-schema#', OWL = 'http://www.w3.org/2002/07/owl#';
@@ -40,7 +40,6 @@ export const STANDARDS = [
 ];
 
 export async function buildMap() {
-  await init({ module_or_path: readFileSync(ROOT + 'assets/vendor/oxigraph/web_bg.wasm') });
   const quads = new Map(), owner = new Map();            // IRI → 그 IRI를 정의(rdf:type)한 온톨로지들
   for (const o of ONTOLOGIES) {
     const qs = o.files.flatMap(f => parse(readFileSync(ROOT + f, 'utf8'), { format: 'text/turtle', base_iri: 'http://example.org/base' }));
@@ -71,10 +70,9 @@ export async function buildMap() {
         if (term.termType !== 'NamedNode') continue;
         const iri = term.value, ow = owner.get(iri);
         if (ow && !ow.has(o.id)) {                      // 다른 온톨로지에서 정의된 것을 가리킴
-          const how = term === q.predicate ? 'reuses ' + local(iri) : local(p);
-          for (const b of ow) bump(links, o.id + '>' + b, how);
+          for (const b of ow) bump(links, o.id + '>' + b, local(p));   // 술어 자체를 가져다 쓴 경우도 그 술어 이름으로 셈
         } else if (!ow && std(iri) && !own.has(iri)) {
-          bump(uses, o.id + '>' + std(iri).id, term === q.predicate ? local(iri) : (p === TYPE ? 'a ' : p === RDFS + 'subClassOf' ? '⊑ ' : p === RDFS + 'subPropertyOf' ? '⊑ ' : '') + local(iri));
+          bump(uses, o.id + '>' + std(iri).id, (p === TYPE ? 'a ' : p === RDFS + 'subClassOf' ? '⊑ ' : p === RDFS + 'subPropertyOf' ? '⊑ ' : '') + local(iri));
         }
       }
     }

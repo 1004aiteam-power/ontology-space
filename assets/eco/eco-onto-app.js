@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 단세포 생태계 온톨로지 페이지: 시뮬레이션 실행 → 기록 → RDF → 속성 그래프 → 혈통 그림 · Cypher 질의
-// Oxigraph(WebAssembly)는 스키마 Turtle을 읽는 데에만 씀. 세포 트리플은 eco-graph.js가 바로 만듦
-import init, { parse } from '../vendor/oxigraph/web.js';
+// 스키마 Turtle은 cypher/turtle.js(N3.js)로 읽음. 세포 트리플은 eco-graph.js가 바로 만듦
+import { parse } from '../cypher/turtle.js';
 import { buildGraph } from '../cypher/graph.js';
 import { runCypher, show } from '../cypher/cypher.js';
 import { Recorder, ECO_CYPHER } from './eco-graph.js?v=20261107a';
@@ -14,7 +14,6 @@ const lang = () => document.documentElement.lang;
 let G = null, tbox = null, rec = null, preset = 0, busy = false;
 
 async function loadSchema() {
-  await init({ module_or_path: new URL('../vendor/oxigraph/web_bg.wasm', import.meta.url) });
   const r = await fetch(new URL('../../examples/ecosystem/eco-ontology.ttl', import.meta.url));
   if (!r.ok) throw new Error('eco-ontology.ttl: ' + r.status);
   tbox = parse(await r.text(), { format: 'text/turtle' });

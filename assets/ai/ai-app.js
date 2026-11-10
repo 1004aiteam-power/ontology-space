@@ -4,7 +4,7 @@
 //  - GraphRAG: 질문 → 온톨로지에서 꺼낸 스키마 → Cypher → 실행(실제) → 결과로 만든 답 → 근거 그래프
 //  - 에이전트: 생각 → 도구 호출(Cypher, 실제 실행) → 관찰 → … → 보고서
 // ⚠ AI가 쓰는 부분(Cypher · 생각 · 도구 선택)은 미리 작성한 시연용 예시. 실행 · 결과 · 답의 숫자는 매번 그래프에서 계산
-import init, { parse } from '../vendor/oxigraph/web.js';
+import { parse } from '../cypher/turtle.js';
 import { buildGraph, localName, relType } from '../cypher/graph.js';
 import { runCypher, show } from '../cypher/cypher.js';
 import { GRAPHRAG, AGENT, TOOLS, GRAPHRAG_FILES, AGENT_FILES, toEn } from './ai-scenarios.js?v=20261110a';
@@ -45,7 +45,6 @@ async function load(files) {
 async function build() {
   const t0 = performance.now();
   try {
-    await init({ module_or_path: new URL('../vendor/oxigraph/web_bg.wasm', import.meta.url) });
     [G1, G2] = await Promise.all([load(GRAPHRAG_FILES), load(AGENT_FILES)]);
     $('aiStatus').textContent = T({ ko: `그래프 준비: VPP 시장 그래프 노드 ${G1.nodes.length.toLocaleString()}개, 설비 · 배전선로 그래프 노드 ${G2.nodes.length.toLocaleString()}개 (${Math.round(performance.now() - t0)} ms)`,
       en: `Graphs ready: VPP market ${G1.nodes.length.toLocaleString()} nodes, assets & feeder ${G2.nodes.length.toLocaleString()} nodes (${Math.round(performance.now() - t0)} ms)` });

@@ -9,7 +9,7 @@ import { Recorder, ECO_CYPHER } from '../assets/eco/eco-graph.js';
 import { loadGraph } from '../tools/load.mjs';
 import { buildGraph } from '../assets/cypher/graph.js';
 import { runCypher } from '../assets/cypher/cypher.js';
-import init, { parse } from '../assets/vendor/oxigraph/web.js';
+import { parse } from '../assets/cypher/turtle.js';
 
 const rec = new Recorder({ seed: 3, years: 1 });
 rec.advance();
@@ -54,7 +54,6 @@ console.log('✓ deterministic: same seed → same triples');
 
 // 4) Turtle로 저장해 다시 읽어도 브라우저에서 바로 만든 그래프와 같다
 {
-  await init({ module_or_path: readFileSync(new URL('../assets/vendor/oxigraph/web_bg.wasm', import.meta.url)) });
   const tbox = parse(readFileSync(new URL('../examples/ecosystem/eco-ontology.ttl', import.meta.url), 'utf8'), { format: 'text/turtle' });
   const direct = buildGraph([...tbox, ...rec.toQuads()]);
   const f = join(mkdtempSync(join(tmpdir(), 'eco-')), 'run.ttl');

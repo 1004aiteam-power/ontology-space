@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 실습 페이지: RDF(Turtle) 데이터를 Neo4j식 속성 그래프로 불러와 브라우저 안에서 Cypher 실행 + Cytoscape로 지식 그래프 표시
-// Oxigraph(WebAssembly)는 Turtle 파일을 읽는 데에만 씁니다. 질의는 assets/cypher/cypher.js (Cypher 부분집합 엔진)
-import init, { parse } from './vendor/oxigraph/web.js';
+// Turtle 파일은 cypher/turtle.js(N3.js)로 읽습니다. 질의는 assets/cypher/cypher.js (Cypher 부분집합 엔진)
+import { parse } from './cypher/turtle.js';
 import { buildGraph } from './cypher/graph.js';
 import { runCypher, show } from './cypher/cypher.js';
 import { DATASETS, QUERIES } from './cypher/presets.js';
@@ -174,7 +174,6 @@ async function main() {
   $('layers').addEventListener('change', () => ready && drawGraph());
   $('relayout').addEventListener('click', () => ready && drawGraph());
   try {
-    await init({ module_or_path: new URL('./vendor/oxigraph/web_bg.wasm', import.meta.url) });
     ready = true;
     await loadDataset(current);
   } catch (e) {

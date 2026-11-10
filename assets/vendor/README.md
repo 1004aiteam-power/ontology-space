@@ -4,5 +4,5 @@
 
 | 파일 | 라이브러리 | 버전 | 라이선스 |
 |---|---|---|---|
-| `oxigraph/web.js`, `oxigraph/web_bg.wasm` | [Oxigraph](https://github.com/oxigraph/oxigraph) (SPARQL 엔진, WebAssembly) | 0.5.13 | MIT OR Apache-2.0 |
+| `n3/n3.esm.min.js` | [N3.js](https://github.com/rdfjs/N3.js) (Turtle 해석, `assets/cypher/turtle.js`가 사용) | 2.13.12 | MIT (`n3/LICENSE.md`) |
 | `cytoscape.min.js` | [Cytoscape.js](https://js.cytoscape.org/) (그래프 시각화) | 3.34.4 | MIT |

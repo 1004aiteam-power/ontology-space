@@ -2,8 +2,8 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // VPP 가상 전력시장 페이지: 시장 계산(vpp-graph.js) → 트리플 + 스키마 · 디지털 트윈 Turtle → 속성 그래프(그래프 DB)
 // → Cytoscape 그래프 · 노드 상세(그래프 DB 노드 ↔ 원본 Turtle) · 시간대별 입찰/실적 · Cypher 질의.
-// 화면에 보이는 숫자는 모두 그래프에 Cypher를 실행해 얻습니다. Oxigraph(WebAssembly)는 Turtle을 읽는 데에만 씀
-import init, { parse } from '../vendor/oxigraph/web.js';
+// 화면에 보이는 숫자는 모두 그래프에 Cypher를 실행해 얻습니다. Turtle은 cypher/turtle.js(N3.js)로 읽음
+import { parse } from '../cypher/turtle.js';
 import { buildGraph } from '../cypher/graph.js';
 import { runCypher, show } from '../cypher/cypher.js';
 import { triples, toQuads, turtleBlock, qname, VPPS, VPP_CYPHER, VPP_SCHEMA, LINKED_FILES, RULE } from './vpp-graph.js?v=20261109a';
@@ -44,7 +44,6 @@ const kindOf = (n) => KINDS.find(k => n.labelSet.has(k.label));
 async function build() {
   const t0 = performance.now();
   try {
-    await init({ module_or_path: new URL('../vendor/oxigraph/web_bg.wasm', import.meta.url) });
     const texts = await Promise.all([VPP_SCHEMA, ...LINKED_FILES].map(async f => {
       const r = await fetch(new URL('../../' + f, import.meta.url));
       if (!r.ok) throw new Error(f + ': ' + r.status);

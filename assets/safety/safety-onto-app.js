@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전공사 안전 온톨로지 페이지: 시뮬레이션 코드(safety.js) → 트리플 + 스키마 · 업무 · 자산관리 · 배전선로 · 고장 영향 Turtle
-// → 한 속성 그래프 → 현장별 단계 표 · Cypher 질의. Oxigraph(WebAssembly)는 Turtle을 읽는 데에만 씀
-import init, { parse } from '../vendor/oxigraph/web.js';
+// → 한 속성 그래프 → 현장별 단계 표 · Cypher 질의. Turtle은 cypher/turtle.js(N3.js)로 읽음
+import { parse } from '../cypher/turtle.js';
 import { buildGraph } from '../cypher/graph.js';
 import { runCypher, show } from '../cypher/cypher.js';
 import { toQuads, SAFETY_CYPHER, SAFETY_SCHEMA, LINKED_FILES } from './safety-graph.js?v=20261107a';
@@ -17,7 +17,6 @@ let G = null, preset = 0, scn = 'pole';
 async function build() {
   const t0 = performance.now();
   try {
-    await init({ module_or_path: new URL('../vendor/oxigraph/web_bg.wasm', import.meta.url) });
     const texts = await Promise.all([SAFETY_SCHEMA, ...LINKED_FILES].map(async f => {
       const r = await fetch(new URL('../../' + f, import.meta.url));
       if (!r.ok) throw new Error(f + ': ' + r.status);

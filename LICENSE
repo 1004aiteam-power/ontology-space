@@ -50,7 +50,7 @@ Commercial use or use under other terms requires separate permission from the co
 ======================================================================
 3. 제3자 구성요소 / Third-party components (원래 라이선스 유지 / original licenses)
 ======================================================================
-  - assets/vendor/oxigraph/            Oxigraph — MIT OR Apache-2.0
+  - assets/vendor/n3/                  N3.js — MIT (assets/vendor/n3/LICENSE.md)
   - assets/vendor/cytoscape.min.js     Cytoscape.js — MIT
   - examples/cgmes/CIGRE_MV/           cimpy sample data — Apache-2.0
                                        (examples/cgmes/LICENSE-cimpy-Apache-2.0)
