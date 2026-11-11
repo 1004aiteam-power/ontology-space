@@ -24,7 +24,12 @@ ROOT = Path(__file__).resolve().parents[1]
 # (href, 한국어, English, 한국어 설명, English description) — 설명이 None이면 위쪽 줄의 단순 링크
 # ("hr",) = 구분선, ("h", 한국어, English) = 메뉴 안의 작은 제목
 NAV = [
-    ("index.html", "소개", "Intro"),
+    ("menu", "introMenu", "소개", "Intro", [
+        ("index.html", "사이트 소개", "About this site", "전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기", "What is here · reading orders · simulations"),
+        ("ontology.html", "온톨로지 입문", "Ontology primer", "개념 · 구성요소 · RDF · OWL · Cypher · 식별자", "Concepts · building blocks · RDF · OWL · Cypher · identifiers"),
+        ("hr",),
+        ("index.html#why", "왜 온톨로지인가", "Why ontology", "만든 이의 생각", "A personal view"),
+    ]),
     ("menu", "gridMenu", "전력망 온톨로지", "Power Grid Ontology", [
         ("grid.html", "전력망 온톨로지", "Power grid ontology", "IEC CIM · 토폴로지 · 관련 표준", "IEC CIM · topology · related standards"),
         ("project.html", "pycim 프로젝트", "pycim project", "CIM을 파이썬 클래스로 · 조류계산 · CGMES", "CIM as Python classes · load flow · CGMES"),

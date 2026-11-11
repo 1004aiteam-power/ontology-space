@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ontology Space</title>
-<meta name="title-ko" content="Ontology Space · 온톨로지 소개">
-<meta name="title-en" content="Ontology Space · Introduction to Ontology">
-<meta name="description" content="온톨로지의 기본 개념, IEC CIM 기반 전력망 온톨로지, CIM 파이썬 프로젝트 pycim">
+<meta name="title-ko" content="Ontology Space · 온톨로지와 전력망">
+<meta name="title-en" content="Ontology Space · Ontology and the power grid">
+<meta name="description" content="온톨로지 입문, IEC CIM 기반 전력망 온톨로지와 pycim, VPP·분산에너지, 분야별 온톨로지 설계, AI × 온톨로지 시연, 브라우저 시뮬레이션을 한곳에 정리한 사이트">
 <!-- head:meta (tools/build_nav.py) -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -16,8 +16,8 @@
 <link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ontology Space">
-<meta property="og:title" content="Ontology Space · 온톨로지 소개">
-<meta property="og:description" content="온톨로지의 기본 개념, IEC CIM 기반 전력망 온톨로지, CIM 파이썬 프로젝트 pycim">
+<meta property="og:title" content="Ontology Space · 온톨로지와 전력망">
+<meta property="og:description" content="온톨로지 입문, IEC CIM 기반 전력망 온톨로지와 pycim, VPP·분산에너지, 분야별 온톨로지 설계, AI × 온톨로지 시연, 브라우저 시뮬레이션을 한곳에 정리한 사이트">
 <meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/">
 <meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
 <meta property="og:locale" content="ko_KR">
@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=97c8fb45">
+<link rel="stylesheet" href="assets/site.css?v=38e7a071">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
 </head>
@@ -34,7 +34,13 @@
 <header class="top"><div class="wrap">
   <a class="brand" href="index.html">Ontology Space</a>
   <nav>
-    <a href="index.html" aria-current="page"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html" aria-current="page"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
     <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu" id="gridMenu" hidden>
       <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
@@ -108,38 +114,94 @@
 <div class="hero">
   <div class="eyebrow">ONTOLOGY × POWER GRID</div>
   <h1><span lang="ko">온톨로지로 전력망을<br>기계가 이해하는 지식으로</span><span lang="en">Turning the power grid into<br>knowledge machines understand</span></h1>
-  <p class="lead" lang="ko">온톨로지의 기본 개념, IEC CIM 기반 전력망 온톨로지, 그리고 CIM을 파이썬 클래스로 설계하는 프로젝트 <b>pycim</b>을 소개합니다.</p>
-  <p class="lead" lang="en">An introduction to ontologies, the IEC CIM–based power grid ontology, and <b>pycim</b>, a project that designs CIM as Python classes.</p>
+  <p class="lead" lang="ko">온톨로지의 기본 개념에서 시작해 IEC CIM 기반 전력망 온톨로지, 파이썬 프로젝트 <b>pycim</b>, VPP · 분산에너지, 분야별 온톨로지 설계, AI와의 연결까지 직접 만들어 보며 정리한 곳입니다.</p>
+  <p class="lead" lang="en">Starting from what an ontology is, this site works through the IEC CIM–based power grid ontology, the Python project <b>pycim</b>, VPPs and distributed energy, ontology design in several fields, and the link to AI — all built hands-on.</p>
   <div class="grid hero-cards" style="margin-top:28px">
-    <a class="card" href="#what"><h4><span lang="ko">① 온톨로지 소개</span><span lang="en">① What is an ontology</span></h4>
-      <p lang="ko">개념, 구성요소, RDF · OWL · Cypher</p><p lang="en">Concepts, building blocks, RDF · OWL · Cypher</p>
-      <span class="more"><span><span lang="ko">이 페이지</span><span lang="en">This page</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="ontology.html"><h4><span lang="ko">① 온톨로지 입문</span><span lang="en">① Ontology primer</span></h4>
+      <p lang="ko">개념, 구성요소, RDF · OWL · Cypher, 식별자</p><p lang="en">Concepts, building blocks, RDF · OWL · Cypher, identifiers</p>
+      <span class="more"><span><span lang="ko">입문 페이지</span><span lang="en">Primer</span></span><span class="arr" aria-hidden="true">→</span></span></a>
     <a class="card" href="grid.html"><h4><span lang="ko">② 전력망 온톨로지</span><span lang="en">② Power grid ontology</span></h4>
-      <p lang="ko">IEC CIM, CGMES, 인터랙티브 단선도</p><p lang="en">IEC CIM, CGMES, interactive single-line diagram</p>
+      <p lang="ko">IEC CIM, CGMES, 인터랙티브 단선도, 고장 복구</p><p lang="en">IEC CIM, CGMES, interactive single-line diagram, fault restoration</p>
       <span class="more"><span><span lang="ko">전력망 페이지</span><span lang="en">Power Grid</span></span><span class="arr" aria-hidden="true">→</span></span></a>
     <a class="card" href="project.html"><h4><span lang="ko">③ 프로젝트 pycim</span><span lang="en">③ Project: pycim</span></h4>
       <p lang="ko">CIM 파이썬 클래스, pandapower · OpenDSS 변환</p><p lang="en">CIM in Python, export to pandapower · OpenDSS</p>
       <span class="more"><span><span lang="ko">프로젝트 페이지</span><span lang="en">Project</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="lab.html"><h4><span lang="ko">④ 실습</span><span lang="en">④ Lab</span></h4>
-      <p lang="ko">브라우저에서 Cypher 질의, 지식 그래프</p><p lang="en">Cypher queries in the browser, knowledge graph</p>
+    <a class="card" href="lab.html"><h4><span lang="ko">④ Cypher 실습</span><span lang="en">④ Cypher lab</span></h4>
+      <p lang="ko">브라우저에서 Cypher 질의, 데이터 검증, 지식 그래프</p><p lang="en">Cypher queries in the browser, data validation, knowledge graph</p>
       <span class="more"><span><span lang="ko">실습 페이지</span><span lang="en">Lab</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="physical-ai.html"><h4><span lang="ko">⑤ 피지컬 AI</span><span lang="en">⑤ Physical AI</span></h4>
-      <p lang="ko">개념, 관련 기술, 가상에서 운전을 배우는 NEAT 시뮬레이션</p><p lang="en">Concepts, key technologies, a NEAT car learning to drive in simulation</p>
-      <span class="more"><span><span lang="ko">피지컬 AI 페이지</span><span lang="en">Physical AI</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="twin.html"><h4><span lang="ko">⑥ 디지털 트윈</span><span lang="en">⑥ Digital Twin</span></h4>
+    <a class="card" href="twin.html"><h4><span lang="ko">⑤ 디지털 트윈</span><span lang="en">⑤ Digital Twin</span></h4>
       <p lang="ko">가상 대한민국 전력망의 24시간 상태를 지도 위에서 재생</p><p lang="en">Play 24 hours of a virtual Korean grid on a map</p>
       <span class="more"><span><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="vpp.html"><h4><span lang="ko">⑥ VPP · 분산에너지</span><span lang="en">⑥ VPP · DER</span></h4>
+      <p lang="ko">가상발전소 기본 개념, VPP 10개가 참여하는 가상 전력시장</p><p lang="en">Virtual power plant basics and a virtual market with ten VPPs</p>
+      <span class="more"><span><span lang="ko">VPP 페이지</span><span lang="en">VPP</span></span><span class="arr" aria-hidden="true">→</span></span></a>
     <a class="card" href="studio.html"><h4><span lang="ko">⑦ 온톨로지 설계실</span><span lang="en">⑦ Design Studio</span></h4>
-      <p lang="ko">분야별 온톨로지를 직접 설계하고 결정을 기록. 첫 사례: 업무 온톨로지</p><p lang="en">Designing ontologies field by field and recording the decisions. First case: work ontology</p>
+      <p lang="ko">업무 · 자산관리 · 도로 교통 · 전기차 충전 · 고장 영향 · 안전 · 생태계, 일곱 사례의 설계 결정</p><p lang="en">Seven cases with their design decisions: work, assets, roads, EV charging, failure impact, safety, an ecosystem</p>
       <span class="more"><span><span lang="ko">설계실</span><span lang="en">Design Studio</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="#sims"><h4><span lang="ko">⑧ 시뮬레이션</span><span lang="en">⑧ Simulations</span></h4>
+    <a class="card" href="ai.html"><h4><span lang="ko">⑧ AI × 온톨로지</span><span lang="en">⑧ AI × Ontology</span></h4>
+      <p lang="ko">LLM만 · 문서 검색 · GraphRAG 비교, 고장 영향을 추론하는 AI 에이전트</p><p lang="en">LLM alone vs. RAG vs. GraphRAG, and an agent tracing a failure</p>
+      <span class="more"><span><span lang="ko">시연 보기</span><span lang="en">See the demo</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="physical-ai.html"><h4><span lang="ko">⑨ 피지컬 AI</span><span lang="en">⑨ Physical AI</span></h4>
+      <p lang="ko">개념, 관련 기술, 가상에서 운전을 배우는 NEAT 시뮬레이션</p><p lang="en">Concepts, key technologies, a NEAT car learning to drive in simulation</p>
+      <span class="more"><span><span lang="ko">피지컬 AI 페이지</span><span lang="en">Physical AI</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="#sims"><h4><span lang="ko">⑩ 시뮬레이션</span><span lang="en">⑩ Simulations</span></h4>
       <p lang="ko">배전공사 안전 훈련, 교차로·공항·항공 교통, 단세포 생태계</p><p lang="en">Distribution work safety, intersection, airport and air traffic, a cell ecosystem</p>
       <span class="more"><span><span lang="ko">둘러보기</span><span lang="en">Browse</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="bidding.html"><h4><span lang="ko">⑪ 내가 이해한 전력시장</span><span lang="en">⑪ The power market, as I understand it</span></h4>
+      <p lang="ko">입찰 → SMP → 급전지시 → 정산, 발전사업자와 VPP 사업자의 수익 (개인 학습 노트)</p><p lang="en">Bidding → SMP → dispatch → settlement, and how generators and VPP operators earn (personal notes)</p>
+      <span class="more"><span><span lang="ko">노트 보기</span><span lang="en">Read the notes</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="ood.html"><h4><span lang="ko">⑫ 온톨로지 vs. 객체지향 설계</span><span lang="en">⑫ Ontology vs. OOD</span></h4>
+      <p lang="ko">같은 ESS를 파이썬 클래스와 OWL로, 일곱 가지 차이</p><p lang="en">One battery as Python and OWL, seven differences</p>
+      <span class="more"><span><span lang="ko">비교 보기</span><span lang="en">Compare</span></span><span class="arr" aria-hidden="true">→</span></span></a>
   </div>
-  <a class="card" href="ontology-map.html" style="display:block;margin-top:16px;border-color:var(--accent)"><h4 style="margin-top:0">🗺 <span lang="ko">처음이라면: 사이트 전체 온톨로지 지도</span><span lang="en">New here? The ontology map of the whole site</span></h4>
-    <p lang="ko">업무 · 전력설비 · 배전선로 · 디지털 트윈 · 전기차 · 고속도로 · 생태계, 온톨로지와 데이터 모델 9개가 서로 어떻게 이어지는지 한 장으로 봅니다.</p><p lang="en">Work, assets, feeders, the digital twin, EV charging, roads and an ecosystem: see how nine ontologies and data models connect, on one page.</p>
+  <a class="card" href="ontology-map.html" style="display:block;margin-top:16px;border-color:var(--accent)"><h4 style="margin-top:0">🗺 <span lang="ko">한눈에 보기: 사이트 전체 온톨로지 지도</span><span lang="en">At a glance: the ontology map of the whole site</span></h4>
+    <p lang="ko">업무 · 전력설비 · 변전소 · 배전선로 · 고장 영향 · 디지털 트윈 · 전기차 · 고속도로 · 안전 · VPP · 생태계, 온톨로지와 데이터 모델 11개가 서로 어떻게 이어지는지 한 장으로 봅니다.</p><p lang="en">Work, assets, a substation, feeders, failure impact, the digital twin, EV charging, roads, safety, VPPs and an ecosystem: see how eleven ontologies and data models connect, on one page.</p>
     <span class="more"><span lang="ko">지도 보기 →</span><span lang="en">Open the map →</span></span></a>
 </div>
+
+<section id="path">
+  <h2><span lang="ko">어디서부터 읽을까</span><span lang="en">Where to start</span></h2>
+  <p class="sub" lang="ko">관심에 따라 고른 읽는 순서입니다. 위에서부터 차례로 보면 됩니다.</p>
+  <p class="sub" lang="en">Reading orders picked by interest. Go from top to bottom.</p>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">처음이라면</span><span lang="en">New to ontologies</span></h4><p lang="ko">온톨로지가 무엇인지부터 직접 질의해 보기까지</p><p lang="en">From what an ontology is to running your own queries</p>
+      <ol class="path-list">
+      <li><a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span></a><span lang="ko">: 용어와 기술을 쉬운 비유로</span><span lang="en">: terms and technologies in plain language</span></li>
+      <li><a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span></a><span lang="ko">: 클래스 설계와 무엇이 다른가</span><span lang="en">: how it differs from class design</span></li>
+      <li><a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></a><span lang="ko">: 실제 표준(IEC CIM)에서는 어떻게 쓰이나</span><span lang="en">: how a real standard (IEC CIM) uses it</span></li>
+      <li><a href="lab.html"><span lang="ko">Cypher 실습</span><span lang="en">Cypher lab</span></a><span lang="ko">: 브라우저에서 직접 묻고 그래프로 보기</span><span lang="en">: ask questions in the browser and see the graph</span></li>
+      <li><a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span></a><span lang="ko">: 사이트의 온톨로지가 서로 이어지는 모습</span><span lang="en">: how the site's ontologies connect</span></li>
+      </ol></div>
+    <div class="card"><h4><span lang="ko">전력 분야에서 일한다면</span><span lang="en">If you work in power</span></h4><p lang="ko">설비 · 계통 데이터에서 시장까지</p><p lang="en">From equipment and network data to the market</p>
+      <ol class="path-list">
+      <li><a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></a><span lang="ko">: CIM · 토폴로지 · 배전선로 고장 복구</span><span lang="en">: CIM, topology, feeder fault restoration</span></li>
+      <li><a href="project.html"><span lang="ko">프로젝트 pycim</span><span lang="en">Project: pycim</span></a><span lang="ko">: CIM을 파이썬으로, 조류계산과 CGMES</span><span lang="en">: CIM in Python, load flow and CGMES</span></li>
+      <li><a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a><span lang="ko">: 가상 전국 전력망 24시간</span><span lang="en">: a virtual national grid over 24 hours</span></li>
+      <li><a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span></a><span lang="ko">: 설비 · 진단 · 위험도</span><span lang="en">: assets, diagnoses, risk</span></li>
+      <li><a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span></a><span lang="ko">: 고장이 어느 구간 · 고객에 미치나</span><span lang="en">: which sections and customers a failure reaches</span></li>
+      <li><a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span></a><span lang="ko">: 분산에너지자원과 운영 고리</span><span lang="en">: distributed resources and the operating loop</span></li>
+      <li><a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장</span><span lang="en">VPP virtual market</span></a><span lang="ko">: 입찰 · 정산을 그래프 DB로</span><span lang="en">: bids and settlements as a graph DB</span></li>
+      <li><a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span></a><span lang="ko">: 입찰에서 정산까지</span><span lang="en">: from bidding to settlement</span></li>
+      </ol></div>
+    <div class="card"><h4><span lang="ko">온톨로지를 직접 설계하려면</span><span lang="en">If you want to design one</span></h4><p lang="ko">설계 결정과 그 이유를 사례로</p><p lang="en">Design decisions and their reasons, case by case</p>
+      <ol class="path-list">
+      <li><a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span></a><span lang="ko">: 정답 없는 설계를 기록하는 방법</span><span lang="en">: how to record designs that have no single right answer</span></li>
+      <li><a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span></a><span lang="ko">: 업무 149개를 분류하고 잇기</span><span lang="en">: classifying and linking 149 tasks</span></li>
+      <li><a href="work-graph.html"><span lang="ko">업무 흐름도</span><span lang="en">Workflow map</span></a><span lang="ko">: 선행 관계를 한 장으로 (한국어)</span><span lang="en">: precedence on one page (Korean only)</span></li>
+      <li><a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span></a><span lang="ko">: 도로망과 24시간 차량 흐름</span><span lang="en">: a road network and 24 h of traffic</span></li>
+      <li><a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × grid: EV charging</span></a><span lang="ko">: 두 온톨로지를 잇기</span><span lang="en">: joining two ontologies</span></li>
+      <li><a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution work safety ontology</span></a><span lang="ko">: 시뮬레이션을 온톨로지로</span><span lang="en">: turning a simulation into an ontology</span></li>
+      <li><a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell ecosystem ontology</span></a><span lang="ko">: 시뮬레이션 기록을 그래프로</span><span lang="en">: a simulation record as a graph</span></li>
+      </ol></div>
+    <div class="card"><h4><span lang="ko">AI와의 연결이 궁금하다면</span><span lang="en">If you are here for AI</span></h4><p lang="ko">지식 그래프와 AI, 몸을 가진 AI</p><p lang="en">Knowledge graphs with AI, and AI with a body</p>
+      <ol class="path-list">
+      <li><a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span></a><span lang="ko">: 만든 이의 생각</span><span lang="en">: a personal view</span></li>
+      <li><a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span></a><span lang="ko">: GraphRAG와 AI 에이전트</span><span lang="en">: GraphRAG and an AI agent</span></li>
+      <li><a href="physical-ai.html"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a><span lang="ko">: 개념과 NEAT 자율주행</span><span lang="en">: concepts and NEAT self-driving</span></li>
+      <li><a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span></a><span lang="ko">: 진화로 게임을 배우는 뱀 150마리</span><span lang="en">: 150 snakes evolving to play</span></li>
+      </ol></div>
+  </div>
+</section>
 
 <section id="sims">
   <h2><span lang="ko">시뮬레이션 둘러보기</span><span lang="en">Simulations</span></h2>
@@ -192,190 +254,8 @@
   <p class="sig" lang="en">— A personal opinion of the author of Ontology Space.</p>
 </section>
 
-<section id="what">
-  <h2><span lang="ko">온톨로지란?</span><span lang="en">What is an ontology?</span></h2>
-  <p class="sub" lang="ko">철학의 "존재론"에서 온 말로, 정보과학에서는 도메인 지식을 형식적으로 정의한 모델을 뜻합니다.</p>
-  <p class="sub" lang="en">Borrowed from philosophy ("the study of being"), in computer science it means a formal model of domain knowledge.</p>
-  <blockquote lang="ko"><b>온톨로지</b>는 특정 도메인의 개념과 개념 사이의 관계를 사람과 기계가 함께 이해할 수 있도록 <b>명시적이고 형식적으로</b> 정의한 지식 모델입니다.<br><small>— Gruber (1993), “an explicit specification of a conceptualization”</small></blockquote>
-  <blockquote lang="en">An <b>ontology</b> is a knowledge model that defines the concepts of a domain and the relations between them <b>explicitly and formally</b>, so that both people and machines can understand them.<br><small>— Gruber (1993), “an explicit specification of a conceptualization”</small></blockquote>
-  <p lang="ko">쉽게 말하면 <b>"이 분야에서 쓰는 용어와, 그 용어들이 서로 어떻게 연결되는지에 대한 합의된 사전 + 규칙집"</b>입니다.</p>
-  <p lang="en">Put simply, it is <b>an agreed dictionary and rulebook of a field's terms and how they connect</b>.</p>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">사람은 "변압기는 변전소 안에 있고, 변전소는 전기를 바꾸는 곳"이라는 걸 그냥 압니다. 하지만 컴퓨터는 글자만 볼 뿐 그 뜻과 관계를 모릅니다. 온톨로지는 이런 <b>상식을 컴퓨터가 읽을 수 있게 적어 둔 "단어 사전 + 관계 지도"</b>입니다. 도서관이 책을 분류하고 "이 책은 저 책의 속편"이라고 적어 두는 것과 비슷합니다.</p><p lang="en">People simply know that "a transformer sits inside a substation". A computer only sees letters, not meaning. An ontology writes that <b>common sense down as a dictionary plus a map of relationships</b> a computer can read — like a library catalogue that also notes "this book is the sequel to that one".</p></div>
-  <h3><span lang="ko">왜 필요한가</span><span lang="en">Why it matters</span></h3>
-  <div class="grid">
-    <div class="card"><h4><span lang="ko">의미 통일</span><span lang="en">Shared meaning</span></h4>
-      <p lang="ko">시스템마다 "선로", "Line", "ACLineSegment"로 다르게 부르는 대상을 공통 어휘로 묶습니다.</p>
-      <p lang="en">One vocabulary for the thing systems call "선로", "Line" or "ACLineSegment".</p></div>
-    <div class="card"><h4><span lang="ko">데이터 연결</span><span lang="en">Connected data</span></h4>
-      <p lang="ko">흩어진 테이블과 파일을 하나의 지식 그래프로 연결합니다.</p>
-      <p lang="en">Scattered tables and files become one knowledge graph.</p></div>
-    <div class="card"><h4><span lang="ko">추론</span><span lang="en">Reasoning</span></h4>
-      <p lang="ko">코드 속에 숨어 있던 도메인 규칙을 모델에 드러내 새로운 사실을 도출합니다.</p>
-      <p lang="en">Domain rules hidden in code become explicit, so new facts can be inferred.</p></div>
-    <div class="card"><h4><span lang="ko">AI 연계</span><span lang="en">AI ready</span></h4>
-      <p lang="ko">LLM에 구조화된 도메인 지식을 제공합니다 (GraphRAG, 근거 기반 답변).</p>
-      <p lang="en">Gives LLMs structured domain knowledge (GraphRAG, grounded answers).</p></div>
-  </div>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>의미 통일</b>: 회사마다 같은 물건을 다른 이름으로 부를 때, 모두가 보는 <b>공용 사전</b>을 두는 것</li><li><b>데이터 연결</b>: 여러 엑셀 파일에 흩어진 정보를 <b>마인드맵 하나</b>로 이어 붙이는 것</li><li><b>추론</b>: "차단기는 개폐기다", "개폐기는 전기 설비다"를 알려 주면 "차단기는 전기 설비다"를 <b>스스로 알아내는 것</b></li><li><b>AI 연계</b>: AI가 아무렇게나 지어내지 않도록 <b>믿을 수 있는 참고서</b>를 쥐여 주는 것</li></ul><ul lang="en"><li><b>Shared meaning</b>: a <b>common dictionary</b> everyone uses, even if each company has its own word</li><li><b>Connected data</b>: stitching scattered spreadsheets into <b>one mind map</b></li><li><b>Reasoning</b>: told "a breaker is a switch" and "a switch is equipment", it <b>works out</b> "a breaker is equipment"</li><li><b>AI ready</b>: giving the AI a <b>trusted reference book</b> so it does not make things up</li></ul></div>
-</section>
-
-<section id="parts">
-  <h2><span lang="ko">구성요소</span><span lang="en">Building blocks</span></h2>
-  <p class="sub" lang="ko">스키마(TBox)와 데이터(ABox) 두 층으로 나눠 봅니다.</p>
-  <p class="sub" lang="en">Usually split into two layers: schema (TBox) and data (ABox).</p>
-  <div class="grid">
-    <div class="card"><h4><span lang="ko">클래스</span><span lang="en">Class</span></h4><p lang="ko">개념의 범주</p><p lang="en">A category of things</p>
-      <div class="ex" lang="ko">변압기, 변전소, 송전선로</div><div class="ex" lang="en">Transformer, Substation, Line</div></div>
-    <div class="card"><h4><span lang="ko">개체</span><span lang="en">Individual</span></h4><p lang="ko">클래스의 구체적 실체</p><p lang="en">A concrete instance</p>
-      <div class="ex" lang="ko">A변전소, M.Tr #1</div><div class="ex" lang="en">Substation A, M.Tr #1</div></div>
-    <div class="card"><h4><span lang="ko">속성</span><span lang="en">Property</span></h4><p lang="ko">개체 간 관계 또는 값</p><p lang="en">A relation or a value</p>
-      <div class="ex" lang="ko">설치위치, 정격용량 = 60 MVA</div><div class="ex" lang="en">located in, rated power = 60 MVA</div></div>
-    <div class="card"><h4><span lang="ko">계층</span><span lang="en">Hierarchy</span></h4><p lang="ko">상위-하위 개념 (<code>subClassOf</code>)</p><p lang="en">Super/sub classes (<code>subClassOf</code>)</p>
-      <div class="ex" lang="ko">차단기 ⊂ 개폐기 ⊂ 도전성 설비</div><div class="ex" lang="en">Breaker ⊂ Switch ⊂ ConductingEquipment</div></div>
-    <div class="card"><h4><span lang="ko">공리</span><span lang="en">Axiom</span></h4><p lang="ko">논리 규칙과 제약</p><p lang="en">Logical rules and constraints</p>
-      <div class="ex" lang="ko">모든 선로 구간은 단자 2개를 가진다</div><div class="ex" lang="en">Every line segment has two terminals</div></div>
-  </div>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>클래스 = 붕어빵 틀</b>, <b>개체 = 그 틀로 찍은 붕어빵 하나하나</b>. "변압기"는 틀, "A변전소의 M.Tr #1"은 실제 붕어빵입니다.</li><li><b>속성</b> = 붕어빵에 붙은 정보와 관계. "팥이 들었다"(값), "○○가게에서 샀다"(다른 것과의 관계)</li><li><b>계층</b> = 분류의 위아래. "붕어빵 ⊂ 빵 ⊂ 간식"처럼, 차단기는 개폐기의 한 종류</li><li><b>공리</b> = 반드시 지켜야 할 규칙. "모든 선로는 양 끝이 있다"</li><li><b>TBox</b>는 <b>설계도·규칙집</b>(어떤 종류가 있고 어떻게 연결되는지), <b>ABox</b>는 그 규칙대로 적은 <b>실제 장부</b>(어느 변전소에 어떤 설비가 있는지)</li></ul><ul lang="en"><li><b>Class = a cookie cutter</b>; <b>individual = each cookie</b> cut with it. "Transformer" is the cutter; "M.Tr #1 at Substation A" is a real cookie.</li><li><b>Property</b> = facts and links on a cookie: "has chocolate chips" (a value), "bought at shop X" (a link to something else)</li><li><b>Hierarchy</b> = levels of classification, like "cookie ⊂ baked goods ⊂ snacks"; a breaker is a kind of switch</li><li><b>Axiom</b> = a rule that must always hold: "every line has two ends"</li><li><b>TBox</b> is the <b>blueprint and rulebook</b> (what kinds exist and how they connect); <b>ABox</b> is the <b>actual ledger</b> written by those rules (which equipment is where)</li></ul></div>
-</section>
-
-<section id="stack">
-  <h2><span lang="ko">온톨로지 기술 스택</span><span lang="en">The ontology technology stack</span></h2>
-  <p class="sub" lang="ko">아래 층일수록 기본, 위로 갈수록 표현력과 활용도가 높아집니다.</p>
-  <p class="sub" lang="en">Lower layers are the foundation; higher layers add expressiveness.</p>
-  <div class="stack">
-    <div><b><span lang="ko">응용</span><span lang="en">Apps</span></b><span><span lang="ko">검색 · 추론 · AI · 시각화</span><span lang="en">search · reasoning · AI · visualization</span></span></div>
-    <div><b>Cypher</b><span><span lang="ko">질의 (Neo4j)</span><span lang="en">query (Neo4j)</span></span></div>
-    <div><b>OWL</b><span><span lang="ko">풍부한 논리 표현</span><span lang="en">rich logic</span></span></div>
-    <div><b>RDFS</b><span><span lang="ko">클래스·속성 계층</span><span lang="en">class &amp; property hierarchy</span></span></div>
-    <div><b>RDF</b><span><span lang="ko">주어–술어–목적어 트리플</span><span lang="en">subject–predicate–object triples</span></span></div>
-    <div><b>IRI</b><span><span lang="ko">전역 식별자</span><span lang="en">global identifiers</span></span></div>
-  </div>
-  <blockquote><p lang="ko"><b>질의는 Cypher로</b> — RDF의 W3C 표준 질의 언어는 SPARQL이지만, 현업에서 가장 많이 쓰는 그래프 DB가 <b>Neo4j</b>이므로 이 사이트의 질의는 모두 Neo4j의 <b>Cypher</b>(ISO 표준 GQL과 거의 같음)로 씁니다. RDF 데이터는 Neo4j에 불러올 때 클래스는 <b>라벨</b>, 값은 <b>속성</b>, 개체 사이의 연결은 <b>관계</b>가 됩니다.</p><p lang="en"><b>Queries in Cypher</b> — the W3C standard query language for RDF is SPARQL, but <b>Neo4j</b> is by far the most widely used graph database, so every query on this site is written in Neo4j's <b>Cypher</b> (close to the ISO GQL standard). When RDF is loaded into Neo4j, classes become <b>labels</b>, values become <b>properties</b> and links between individuals become <b>relationships</b>.</p></blockquote>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>IRI</b>: 세상의 모든 것에 붙이는 <b>겹치지 않는 이름표</b> (웹 주소처럼 생김)</li><li><b>RDF</b>: 모든 지식을 <b>"누가 – 어떻다 – 무엇을"</b> 짧은 문장으로 적는 방법</li><li><b>RDFS</b>: "차단기는 개폐기의 한 종류"처럼 <b>분류표</b>를 적는 방법</li><li><b>OWL</b>: "변압기는 권선이 2개 이상"처럼 더 <b>정교한 규칙</b>을 적는 방법</li><li><b>Cypher</b>: 그래프 DB(Neo4j)에 담긴 지식에 <b>질문하는 검색 언어</b>. 찾고 싶은 모양을 <code>(노드)-[관계]-&gt;(노드)</code>처럼 그려서 묻습니다</li><li>아래층이 단단해야 위층을 올릴 수 있는 <b>건물</b>처럼, 아래 기술 위에 위 기술이 쌓입니다.</li></ul><ul lang="en"><li><b>IRI</b>: a <b>unique name tag</b> for anything in the world (looks like a web address)</li><li><b>RDF</b>: writing all knowledge as tiny <b>"who – does what – to what"</b> sentences</li><li><b>RDFS</b>: writing a <b>classification chart</b>, e.g. "a breaker is a kind of switch"</li><li><b>OWL</b>: writing <b>finer rules</b>, e.g. "a transformer has at least two windings"</li><li><b>Cypher</b>: the <b>search language</b> for asking questions of that knowledge in a graph database (Neo4j); you draw the shape you want, like <code>(node)-[relationship]-&gt;(node)</code></li><li>Like a <b>building</b>, each layer stands on the one below it.</li></ul></div>
-  <h3><span lang="ko">RDF 트리플 (Turtle)</span><span lang="en">RDF triples (Turtle)</span></h3>
-<pre><code>ex:TR_1  a                                cim:PowerTransformer .
-ex:TR_1  cim:Equipment.EquipmentContainer  ex:SS_A .
-ex:TR_1  cim:IdentifiedObject.name         "M.Tr #1" .</code></pre>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">"M.Tr #1은 – 속해 있다 – A변전소에" 처럼 <b>주어·서술어·목적어 세 칸짜리 문장</b> 하나가 트리플입니다. 이런 문장이 수천 개 모이면, 같은 단어끼리 이어지면서 <b>거대한 그물(그래프)</b>이 됩니다. 표의 한 줄이 아니라 문장 하나하나가 데이터라서, 새로운 종류의 정보도 문장만 추가하면 됩니다.</p><p lang="en">A triple is one <b>three-part sentence: subject – verb – object</b>, e.g. "M.Tr #1 – belongs to – Substation A". Thousands of them, joined wherever they share a word, form a <b>giant web (graph)</b>. Because each sentence is data, adding a new kind of fact just means adding sentences — no table redesign.</p></div>
-  <h3><span lang="ko">Cypher 질의 (Neo4j)</span><span lang="en">Cypher query (Neo4j)</span></h3>
-<pre><code>MATCH (t:PowerTransformer)-[:EQUIPMENT_CONTAINER]->(s)
-RETURN s.name AS substation, t.name AS transformer</code></pre>
-
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">찾고 싶은 <b>모양을 그림처럼 적는 질문</b>입니다. <code>(t:PowerTransformer)</code>는 "변압기인 노드 t", <code>-[:EQUIPMENT_CONTAINER]-&gt;</code>는 "~에 속한다"는 화살표, <code>(s)</code>는 그 화살표가 가리키는 노드입니다. "<b>변압기가 어떤 변전소에 속해 있는 모양</b>을 모두 찾아서, 변전소 이름과 변압기 이름을 보여 줘"라는 뜻입니다. 엑셀 필터와 비슷하지만, 화살표를 이어 그리면 여러 단계를 건너가며 찾을 수 있습니다.</p><p lang="en">It is a question written as a <b>picture of the shape you want</b>. <code>(t:PowerTransformer)</code> is "a node t that is a transformer", <code>-[:EQUIPMENT_CONTAINER]-&gt;</code> is a "belongs to" arrow, and <code>(s)</code> is the node it points to: "find every <b>transformer that belongs to something</b> and show that container's name and the transformer's name". Like a spreadsheet filter, but chaining arrows lets you hop across many steps.</p></div>
-  <h3><span lang="ko">다른 데이터 모델과 비교</span><span lang="en">Compared with other data models</span></h3>
-  <div class="tbl" lang="ko"><table>
-    <tr><th>구분</th><th>관계형 DB</th><th>택소노미</th><th>온톨로지</th></tr>
-    <tr><td>구조</td><td>테이블, 고정 스키마</td><td>트리 계층</td><td>그래프, 유연한 스키마</td></tr>
-    <tr><td>관계 표현</td><td>외래키</td><td>상하위만</td><td>임의의 의미 있는 관계</td></tr>
-    <tr><td>추론</td><td>없음</td><td>제한적</td><td>논리 추론 가능</td></tr>
-    <tr><td>시스템 통합</td><td>매핑 작업 필요</td><td>어려움</td><td>IRI로 자연스럽게 연결</td></tr>
-  </table></div>
-  <div class="tbl" lang="en"><table>
-    <tr><th></th><th>Relational DB</th><th>Taxonomy</th><th>Ontology</th></tr>
-    <tr><td>Structure</td><td>Tables, fixed schema</td><td>Tree</td><td>Graph, flexible schema</td></tr>
-    <tr><td>Relations</td><td>Foreign keys</td><td>Parent/child only</td><td>Any meaningful relation</td></tr>
-    <tr><td>Reasoning</td><td>None</td><td>Limited</td><td>Logical inference</td></tr>
-    <tr><td>Integration</td><td>Needs mapping</td><td>Hard</td><td>Natural via IRIs</td></tr>
-  </table></div>
-
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li><b>관계형 DB</b> = 칸이 정해진 <b>엑셀 표</b>. 새 항목이 생기면 표를 다시 설계해야 함</li><li><b>택소노미</b> = <b>폴더 트리</b>나 족보. 위아래 관계만 표현</li><li><b>온톨로지</b> = 규칙이 있는 <b>마인드맵</b>. 무엇이든 어떤 관계로든 이을 수 있고, 규칙으로 새 사실도 알아냄</li></ul><ul lang="en"><li><b>Relational DB</b> = a <b>spreadsheet</b> with fixed columns; new kinds of data mean redesigning the table</li><li><b>Taxonomy</b> = a <b>folder tree</b> or family tree; only parent–child links</li><li><b>Ontology</b> = a <b>mind map with rules</b>; anything can link to anything, and rules reveal new facts</li></ul></div>
-  <h3><span lang="ko">구축 절차</span><span lang="en">How to build one</span></h3>
-  <ol lang="ko">
-    <li><b>범위 정의</b>: 답하려는 질문(Competency Questions) 작성</li>
-    <li><b>기존 온톨로지 재사용</b>: 전력 분야라면 IEC CIM부터 확인</li>
-    <li>핵심 용어 나열, 클래스와 속성 구분</li>
-    <li>클래스 계층 설계</li>
-    <li>속성과 제약 정의</li>
-    <li>개체(데이터) 입력</li>
-    <li><b>검증</b>: 추론기, Neo4j 제약조건과 Cypher 검사 질의로 확인 → <a href="lab.html#validate">실습</a></li>
-  </ol>
-  <ol lang="en">
-    <li><b>Scope</b>: write the questions it must answer (competency questions)</li>
-    <li><b>Reuse</b>: for power systems, start with IEC CIM</li>
-    <li>List key terms; separate classes from properties</li>
-    <li>Design the class hierarchy</li>
-    <li>Define properties and constraints</li>
-    <li>Add individuals (data)</li>
-    <li><b>Validate</b> with reasoners, Neo4j constraints and Cypher check queries → <a href="lab.html#validate">Lab</a></li>
-  </ol>
-
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">새로 입사한 회사의 <b>업무 용어집</b>을 만드는 과정과 같습니다. ① 무엇에 답하려는지 정하고 ② 이미 있는 용어집(전력은 IEC CIM)을 가져오고 ③ 용어를 나열해 ④ 큰 분류·작은 분류로 정리하고 ⑤ 용어 사이의 관계와 규칙을 적고 ⑥ 실제 사례를 채운 뒤 ⑦ 틀린 곳이 없는지 검사합니다.</p><p lang="en">It is like building a <b>glossary for a new workplace</b>: ① decide what questions it must answer, ② reuse an existing glossary (IEC CIM for power), ③ list the terms, ④ sort them into big and small categories, ⑤ write how terms relate and the rules, ⑥ fill in real examples, ⑦ check for mistakes.</p></div>
-  <h3><span lang="ko">주요 도구</span><span lang="en">Tools</span></h3>
-  <div class="tbl"><table>
-    <tr><th><span lang="ko">도구</span><span lang="en">Tool</span></th><th><span lang="ko">용도</span><span lang="en">Use</span></th></tr>
-    <tr><td>Protégé</td><td><span lang="ko">온톨로지 편집기 (Stanford, 무료)</span><span lang="en">Ontology editor (Stanford, free)</span></td></tr>
-    <tr><td>Neo4j</td><td><span lang="ko">그래프 DB, Cypher 질의 (이 사이트의 기준)</span><span lang="en">Graph database, Cypher queries (this site's default)</span></td></tr>
-    <tr><td>neosemantics (n10s)</td><td><span lang="ko">RDF·OWL을 Neo4j로 불러오고 내보내는 플러그인</span><span lang="en">Neo4j plugin to import and export RDF/OWL</span></td></tr>
-    <tr><td>GraphDB · Stardog · Virtuoso · Apache Jena</td><td><span lang="ko">트리플 스토어 (RDF 전용 DB)</span><span lang="en">Triple stores (RDF databases)</span></td></tr>
-    <tr><td>rdflib</td><td><span lang="ko">파이썬 RDF 처리</span><span lang="en">Python RDF</span></td></tr>
-  </table></div>
-</section>
-
-<section id="ids">
-  <h2><span lang="ko">식별자: IRI와 UUID</span><span lang="en">Identifiers: IRIs and UUIDs</span></h2>
-  <p class="sub" lang="ko">온톨로지에서 모든 개체는 <b>IRI(전역 식별자)</b>로 구별됩니다. 이름은 겹치고 바뀌지만, 식별자는 유일하고 바뀌지 않아야 합니다.</p>
-  <p class="sub" lang="en">Every resource in an ontology is identified by an <b>IRI</b>. Names collide and change; identifiers must be unique and stable.</p>
-  <blockquote lang="ko">"M.Tr #1"이라는 이름의 변압기는 전국 변전소마다 있습니다. 이름만으로는 어느 변압기인지 알 수 없고, 변전소 이름이 바뀌면 이름을 기준으로 한 연결이 모두 끊깁니다. 그래서 <b>이름은 속성으로, 식별은 IRI로</b> 합니다.</blockquote>
-  <blockquote lang="en">Almost every substation has a transformer named "M.Tr #1". A name cannot tell them apart, and renaming a substation breaks every link built on names. So: <b>names are properties; identity is the IRI</b>.</blockquote>
-
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko"><b>이름 vs 주민등록번호</b>입니다. "김민수"라는 이름은 전국에 수천 명이고 개명도 할 수 있지만, 주민등록번호는 한 사람에게 하나이고 평생 바뀌지 않습니다. 온톨로지에서도 설비를 <b>이름이 아니라 바뀌지 않는 번호(IRI)</b>로 구별합니다.</p><p lang="en">It is <b>name vs national ID number</b>. Thousands of people share a name, and names can change, but an ID number belongs to one person for life. Ontologies likewise identify things by an <b>unchanging number (IRI), not by name</b>.</p></div>
-  <h3><span lang="ko">IRI를 만드는 두 가지 방식</span><span lang="en">Two ways to mint IRIs</span></h3>
-  <div class="tbl" lang="ko"><table>
-    <tr><th>방식</th><th>예</th><th>장점</th><th>단점</th></tr>
-    <tr><td>의미 있는 경로</td><td><code>…/grid/SS_A/TR_1</code></td><td>사람이 읽기 쉬움</td><td>이름·소속이 바뀌면 IRI도 바뀌어야 함</td></tr>
-    <tr><td><b>불투명 ID (UUID)</b></td><td><code>urn:uuid:3f2b…</code></td><td>의미가 없어 바뀔 이유가 없음, 중앙 발급 없이 유일</td><td>사람이 읽기 어려움 → 이름은 별도 속성으로</td></tr>
-  </table></div>
-  <div class="tbl" lang="en"><table>
-    <tr><th>Style</th><th>Example</th><th>Pros</th><th>Cons</th></tr>
-    <tr><td>Meaningful path</td><td><code>…/grid/SS_A/TR_1</code></td><td>Human-readable</td><td>Must change when names or ownership change</td></tr>
-    <tr><td><b>Opaque ID (UUID)</b></td><td><code>urn:uuid:3f2b…</code></td><td>Carries no meaning, so never needs to change; unique without a central registry</td><td>Not human-readable → keep names as properties</td></tr>
-  </table></div>
-
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko"><b>집 주소 vs 평생 번호</b>입니다. "○○시 ○○동 3번지"처럼 뜻이 담긴 주소는 읽기 쉽지만 이사하면 바뀝니다. 아무 뜻 없는 번호는 외우기 어렵지만 이사를 가도 그대로입니다. 그래서 번호로 식별하고, 읽기 쉬운 이름은 따로 적어 둡니다.</p><p lang="en">It is <b>a street address vs a lifelong number</b>. A meaningful address is easy to read but changes when you move; a meaningless number is hard to remember but never changes. So we identify by number and keep the readable name alongside.</p></div>
-  <h3>UUID</h3>
-  <p lang="ko">128비트 식별자(RFC 9562, 구 RFC 4122)로, 중앙 발급 기관 없이 각 시스템이 따로 만들어도 사실상 충돌하지 않습니다. 용도에 따라 버전을 고릅니다.</p>
-  <p lang="en">A 128-bit identifier (RFC 9562, formerly RFC 4122). Independent systems can mint them without coordination and practically never collide. Pick the version by purpose.</p>
-  <div class="tbl" lang="ko"><table>
-    <tr><th>버전</th><th>만드는 방법</th><th>언제 쓰나</th></tr>
-    <tr><td><b>v4</b></td><td>무작위 (122비트)</td><td>새 객체를 처음 등록할 때. 가장 흔함</td></tr>
-    <tr><td><b>v5</b></td><td>네임스페이스 + 이름의 SHA-1 해시. <b>같은 입력 → 항상 같은 UUID</b></td><td>기존 코드(설비번호 등)가 있어 매번 같은 ID를 다시 만들어야 할 때</td></tr>
-    <tr><td><b>v7</b></td><td>시각(ms) + 무작위. 시간순 정렬됨</td><td>데이터베이스 기본키 (인덱스 효율)</td></tr>
-  </table></div>
-  <div class="tbl" lang="en"><table>
-    <tr><th>Version</th><th>How</th><th>When</th></tr>
-    <tr><td><b>v4</b></td><td>Random (122 bits)</td><td>Registering a new object. Most common</td></tr>
-    <tr><td><b>v5</b></td><td>SHA-1 of namespace + name. <b>Same input → same UUID</b></td><td>When an existing code (e.g. equipment number) must map to the same ID every time</td></tr>
-    <tr><td><b>v7</b></td><td>Timestamp (ms) + random; sortable</td><td>Database primary keys (index-friendly)</td></tr>
-  </table></div>
-
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><ul lang="ko"><li>UUID는 <code>3f2b9c1e-…</code>처럼 생긴 <b>아주 긴 번호표</b>입니다. 경우의 수가 워낙 많아서 전 세계가 따로 뽑아도 겹칠 일이 사실상 없습니다.</li><li><b>v4</b> = <b>제비뽑기</b>. 뽑을 때마다 새 번호</li><li><b>v5</b> = <b>도장</b>. 같은 재료(예: 기존 설비코드)를 넣으면 언제나 같은 번호가 찍힘</li><li><b>v7</b> = <b>번호표 기계</b>. 뽑은 순서대로 커지는 번호</li></ul><ul lang="en"><li>A UUID is a <b>very long ticket number</b> like <code>3f2b9c1e-…</code>. There are so many possibilities that the whole world can draw independently and practically never collide.</li><li><b>v4</b> = a <b>lottery draw</b>: a fresh number every time</li><li><b>v5</b> = a <b>rubber stamp</b>: the same input (e.g. an old equipment code) always stamps the same number</li><li><b>v7</b> = a <b>queue-ticket machine</b>: numbers grow in the order they are taken</li></ul></div>
-  <h3><span lang="ko">식별자 운영 원칙</span><span lang="en">Rules for identifiers</span></h3>
-  <ul lang="ko">
-    <li><b>한 번 발급하면 바꾸지 않는다.</b> 데이터를 다시 내보낼 때마다 ID가 바뀌면 시스템 간 연결과 이력이 모두 끊깁니다.</li>
-    <li><b>재사용하지 않는다.</b> 철거된 설비의 ID를 새 설비에 붙이지 않습니다.</li>
-    <li><b>ID에 의미를 넣지 않는다.</b> 위치, 전압, 소속은 속성으로 표현합니다.</li>
-    <li><b>매핑 테이블을 관리한다.</b> 기존 시스템의 코드(SCADA 포인트, GIS ID, 자산번호)와 UUID의 대응을 기록합니다.</li>
-  </ul>
-  <ul lang="en">
-    <li><b>Never change an issued ID.</b> If IDs change on every export, cross-system links and history break.</li>
-    <li><b>Never reuse.</b> A removed device's ID is not given to a new one.</li>
-    <li><b>Keep meaning out of IDs.</b> Location, voltage and ownership are properties.</li>
-    <li><b>Maintain a mapping table</b> between legacy codes (SCADA points, GIS IDs, asset numbers) and UUIDs.</li>
-  </ul>
-  <p lang="ko">전력 분야의 CIM에서는 이 식별자를 <b>mRID</b>라고 부릅니다. → <a href="grid.html#mrid">전력망 페이지의 mRID 설명</a></p>
-  <p lang="en">In the power-system CIM this identifier is the <b>mRID</b>. → <a href="grid.html#mrid">mRID on the Power Grid page</a></p>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">운동선수의 <b>영구결번</b>과 비슷합니다. 한 번 준 번호는 바꾸지 않고, 은퇴(철거)한 설비의 번호를 새 설비에 다시 주지 않습니다. 번호에 "154kV" 같은 뜻을 넣지 않는 이유는, 뜻이 바뀌면 번호도 바꿔야 하기 때문입니다. 다른 시스템이 쓰는 번호는 <b>별명 목록(매핑 테이블)</b>에 함께 적어 둡니다.</p><p lang="en">Think of a <b>retired jersey number</b>: an issued number never changes, and a removed device's number is never reused. We keep meaning (like "154 kV") out of the number because meaning can change. Numbers used by other systems go into an <b>alias list (mapping table)</b>.</p></div>
-</section>
-
 <section>
-  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
-  <ul>
-    <li><a href="https://www.w3.org/TR/rdf11-primer/">W3C RDF 1.1 Primer</a> · <a href="https://www.w3.org/TR/owl2-primer/">OWL 2 Primer</a></li>
-    <li>Noy &amp; McGuinness, <i>Ontology Development 101</i> (Stanford)</li>
-    <li><a href="https://protege.stanford.edu/">Protégé</a> · <a href="https://www.rfc-editor.org/rfc/rfc9562">RFC 9562 (UUID)</a> · <a href="https://www.w3.org/TR/cooluris/">W3C Cool URIs for the Semantic Web</a></li>
-    <li><span lang="ko">문서 원본</span><span lang="en">Source document</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/01-ontology-introduction.md">docs/01-ontology-introduction.md</a></li>
-  </ul>
-  <div class="pager"><span></span><a href="grid.html"><span lang="ko">다음: 전력망 온톨로지 →</span><span lang="en">Next: Power grid ontology →</span></a></div>
+  <div class="pager"><span></span><a href="ontology.html"><span lang="ko">다음: 온톨로지 입문 →</span><span lang="en">Next: Ontology primer →</span></a></div>
 </section>
 </main>
 

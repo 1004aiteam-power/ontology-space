@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=97c8fb45">
+<link rel="stylesheet" href="assets/site.css?v=38e7a071">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
 <script src="assets/feeder.js?v=e33d6977" defer></script>
@@ -36,7 +36,13 @@
 <header class="top"><div class="wrap">
   <a class="brand" href="index.html">Ontology Space</a>
   <nav>
-    <a href="index.html"><span lang="ko">소개</span><span lang="en">Intro</span></a>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
     <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu" id="gridMenu" hidden>
       <a href="grid.html" aria-current="page"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
@@ -427,7 +433,7 @@ RETURN DISTINCT e1.name AS a, e2.name AS b</code></pre>
     <li><a href="https://openenergyplatform.org/ontology/">Open Energy Ontology</a> · <a href="https://saref.etsi.org/saref4ener/">SAREF4ENER</a></li>
     <li><span lang="ko">문서 원본</span><span lang="en">Source document</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/docs/02-power-grid-ontology.md">docs/02-power-grid-ontology.md</a></li>
   </ul>
-  <div class="pager"><a href="index.html"><span lang="ko">← 이전: 온톨로지 소개</span><span lang="en">← Prev: Intro</span></a><a href="project.html"><span lang="ko">다음: 프로젝트 pycim →</span><span lang="en">Next: Project pycim →</span></a></div>
+  <div class="pager"><a href="ontology.html"><span lang="ko">← 이전: 온톨로지 입문</span><span lang="en">← Prev: Ontology primer</span></a><a href="project.html"><span lang="ko">다음: 프로젝트 pycim →</span><span lang="en">Next: Project pycim →</span></a></div>
 </section>
 </main>
 

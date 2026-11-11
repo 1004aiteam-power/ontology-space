@@ -707,3 +707,8 @@ header.top .tools button{min-height:30px}
   html{scroll-behavior:auto}
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;animation-iteration-count:1 !important;scroll-behavior:auto !important}
 }
+
+/* 소개 페이지: 읽는 순서 */
+.path-list{margin:10px 0 0;padding-left:22px;font-size:15px}
+.path-list li{margin:5px 0}
+.path-list li > span{color:var(--muted)}
