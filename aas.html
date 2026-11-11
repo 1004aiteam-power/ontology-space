@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · AAS와 온톨로지</title>
+<meta name="title-ko" content="Ontology Space · 자산관리셸(AAS)과 온톨로지">
+<meta name="title-en" content="Ontology Space · The Asset Administration Shell and ontologies">
+<meta name="description" content="자산관리셸(AAS, Asset Administration Shell)이란 무엇인가: 셸 · 서브모델 · 요소 · semanticId 구조와 표준, 온톨로지와의 관계, 가상 변압기 한 대의 AAS 데이터셋(JSON · RDF)을 자산관리 온톨로지와 이어 Cypher로 묻기 (가상 데이터)">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/aas.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/aas.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/aas.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/aas.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 자산관리셸(AAS)과 온톨로지">
+<meta property="og:description" content="자산관리셸(AAS, Asset Administration Shell)이란 무엇인가: 셸 · 서브모델 · 요소 · semanticId 구조와 표준, 온톨로지와의 관계, 가상 변압기 한 대의 AAS 데이터셋(JSON · RDF)을 자산관리 온톨로지와 이어 Cypher로 묻기 (가상 데이터)">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/aas.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=9cbb0f71">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/vendor/highlight.min.js?v=0f2dc760" defer></script>
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script src="assets/aas.js?v=cbfe47a0" defer></script>
+<style>
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:780px}
+.three{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+.three > div:last-child{grid-column:1 / -1}
+.three > div{min-width:0}
+.three h4{margin:0 0 6px;font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.three pre{margin:0;font-size:12px;overflow-x:auto}
+@media (max-width:900px){.three{grid-template-columns:minmax(0,1fr)}}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;color:#fff;background:#5d6370;white-space:nowrap}
+.tag.aas{background:#6250d6} .tag.on{background:#12805c} .tag.cim{background:#1f6feb} .tag.std{background:#b45309} .tag.own{background:#5d6370}
+.way{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:20px 0;border-top:1px solid var(--line)}
+.way .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:700;padding-top:3px}
+.way h3{margin:0 0 6px}
+.way p{margin:6px 0}
+.way pre{font-size:12.5px}
+@media (max-width:560px){.way{grid-template-columns:minmax(0,1fr)}}
+.aas-d .box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.aas-d .shell{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.aas-d .onto{fill:none;stroke:var(--ok);stroke-width:1.5;stroke-dasharray:5 4}
+.aas-d .ln{stroke:var(--muted);stroke-width:1.3;fill:none}
+.aas-d .sem{stroke:var(--ok);stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+.aas-d .t{font-weight:700}
+.aas-d .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+.aas-d .g{fill:var(--ok)}
+.aas-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:14px 0}
+.aas-stats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.aas-stats span{display:block;font-size:12px;color:var(--muted)}
+.aas-stats b{font-variant-numeric:tabular-nums;font-size:18px}
+.aas-x{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:14px;align-items:start;margin:12px 0}
+@media (max-width:900px){.aas-x{grid-template-columns:minmax(0,1fr)}}
+.aas-tree{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;max-height:640px;overflow:auto}
+.aas-tree ul{list-style:none;margin:0;padding:0 0 0 16px}
+.aas-tree > ul{padding:0}
+.aas-tree li{margin:0}
+.aas-tree button{display:flex;align-items:baseline;gap:6px;width:100%;min-height:28px;text-align:left;border:0;border-radius:6px;background:none;color:var(--text);font:13px/1.5 inherit;padding:3px 6px;cursor:pointer}
+.aas-tree button:hover{background:var(--code)}
+.aas-tree button[aria-current="true"]{background:var(--accent-soft);outline:1.5px solid var(--accent)}
+.aas-tree .k{font:11px ui-monospace,Menlo,Consolas,monospace;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px;flex:none}
+.aas-tree .n{font-weight:600;overflow-wrap:anywhere}
+.aas-tree .v{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.aas-tree .dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--line);align-self:center}
+.aas-tree .dot.on{background:#12805c} .aas-tree .dot.cim{background:#1f6feb} .aas-tree .dot.std{background:#b45309}
+.aas-detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.aas-detail h3{margin:0 0 2px;font-size:17px;overflow-wrap:anywhere}
+.aas-detail .path{font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere;margin:0 0 10px}
+.aas-detail dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;margin:0 0 10px;font-size:14px}
+.aas-detail dt{color:var(--muted)}
+.aas-detail dd{margin:0;overflow-wrap:anywhere}
+.aas-detail h4{margin:12px 0 4px;font-size:13px;color:var(--muted)}
+.aas-detail pre{margin:0;font-size:12px;max-height:260px;overflow:auto}
+.aas-detail .why{font-size:14px;margin:6px 0 0}
+.aas-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:6px 0}
+.aas-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+#aasCq details{border-top:1px solid var(--line);padding:4px 0}
+#aasCq summary{color:var(--text);font-size:15px}
+#aasCq .tbl{margin:6px 0 12px}
+#aasCq table{min-width:0;font-size:13px}
+#aasCq .note{font-size:14px;color:var(--muted);margin:2px 0 6px}
+.qa td:first-child{font-weight:600;white-space:nowrap}
+</style>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">NEAT 드론</span><span lang="en">NEAT Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="aas.html" aria-current="page"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="aiMenu" hidden>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <hr>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+    </div>
+    <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow">ASSET ADMINISTRATION SHELL</div>
+  <h1><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">The Asset Administration Shell and ontologies</span></h1>
+  <p class="thesis" lang="ko">AAS는 자산 한 대의 정보를 담아 주고받는 <b>표준 그릇</b>이고,<br>온톨로지는 그 안에 담긴 말의 <b>뜻을 정하고 서로 잇는 사전</b>입니다.</p>
+  <p class="thesis" lang="en">The AAS is a <b>standard container</b> for exchanging what is known about one asset.<br>An ontology is the <b>dictionary that fixes the meaning</b> of what is inside and links it.</p>
+  <p class="lead" lang="ko">자산관리셸(AAS, Asset Administration Shell)은 독일 인더스트리 4.0에서 나온 <b>디지털 트윈의 표준 형식</b>입니다. 이 페이지는 AAS가 무엇이고 어떻게 생겼는지, 온톨로지와 무엇이 같고 다른지를 정리하고, 이 사이트 <a href="asset.html">자산관리 온톨로지</a>의 주변압기 한 대를 실제 AAS 데이터셋(JSON · RDF)으로 만들어 두 가지를 이어 봅니다.</p>
+  <p class="lead" lang="en">The Asset Administration Shell (AAS) is the <b>standard format for a digital twin</b> that came out of Germany's Industrie 4.0. This page explains what an AAS is and how it is built, where it agrees with and differs from an ontology, and then turns one main transformer from this site's <a href="asset.html">asset-management ontology</a> into a real AAS dataset (JSON and RDF) and joins the two.</p>
+  <div class="notice">
+    <b>⚠ <span lang="ko">가상 데이터 · 개인 학습 정리</span><span lang="en">Fictional data · personal study notes</span></b>
+    <p lang="ko">데이터셋의 변전소 · 제작사 · 형식 · 진단값은 모두 지어낸 것입니다. AAS의 구조와 식별자는 IDTA 공개 사양(메타모델 V3.0)과 공개 템플릿에서 확인해 옮겼지만, 설명에는 만든 이의 해석이 섞여 있으니 실제 적용에는 <a href="#refs">원문</a>을 확인하세요.</p>
+    <p lang="en">The substation, manufacturer, type and diagnostic values in the dataset are all invented. The AAS structure and identifiers were checked against the public IDTA specification (metamodel V3.0) and public templates, but the explanations include the author's own reading — check the <a href="#refs">sources</a> before relying on them.</p>
+  </div>
+</div>
+
+<section id="what">
+  <h2><span lang="ko">AAS란 무엇인가</span><span lang="en">What an AAS is</span></h2>
+  <p lang="ko">공장의 모터, 변전소의 변압기, 소프트웨어 한 벌처럼 조직에 가치가 있는 것을 <b>자산(Asset)</b>이라 부릅니다. 자산마다 명판 · 기술 사양 · 도면 · 시험 성적서 · 정비 이력이 따라다니는데, 제작사마다 형식이 달라 받는 쪽에서 매번 다시 입력해야 했습니다. AAS는 이 정보를 <b>누가 만들어도 같은 구조</b>로 담도록 정한 것입니다. 자산과 그 관리셸을 한 쌍으로 묶은 것을 인더스트리 4.0에서는 <b>I4.0 컴포넌트</b>라고 부릅니다.</p>
+  <p lang="en">Anything of value to an organisation — a motor in a plant, a transformer in a substation, a piece of software — is an <b>asset</b>. Each one drags along a nameplate, technical data, drawings, test reports and a maintenance history, in a different format per manufacturer, so the receiver re-types it every time. The AAS fixes <b>one structure regardless of who produced it</b>. Industrie 4.0 calls the pair of an asset and its shell an <b>I4.0 component</b>.</p>
+
+  <div class="diagram aas-d" role="img" aria-label="AAS structure: asset, shell, submodels, elements and semanticId">
+  <svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="aasArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--muted)"/></marker>
+      <marker id="aasArrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--ok)"/></marker>
+    </defs>
+    <rect class="box" x="10" y="120" width="140" height="90" rx="8"/>
+    <text class="t" x="80" y="150" text-anchor="middle" lang="ko">자산 (실물)</text><text class="t" x="80" y="150" text-anchor="middle" lang="en">Asset (the thing)</text>
+    <text class="muted" x="80" y="172" text-anchor="middle" lang="ko">주변압기 #1 본체</text><text class="muted" x="80" y="172" text-anchor="middle" lang="en">Main transformer #1</text>
+    <text class="muted mono" x="80" y="192" text-anchor="middle">AS-TR-0007</text>
+    <path class="ln" d="M150,165H206" marker-start="url(#aasArr)"/>
+    <text class="muted mono" x="80" y="230" text-anchor="middle">↑ globalAssetId</text>
+
+    <rect class="shell" x="208" y="20" width="430" height="290" rx="10"/>
+    <text class="t" x="224" y="44" lang="ko">자산관리셸 (AssetAdministrationShell)</text><text class="t" x="224" y="44" lang="en">AssetAdministrationShell</text>
+    <text class="muted mono" x="224" y="62">id · idShort · assetInformation · submodels</text>
+    <g>
+      <rect class="box" x="224" y="76" width="190" height="50" rx="6"/><text class="t" x="236" y="97">Nameplate</text><text class="muted" x="236" y="115" lang="ko">명판: 제작사 · 형식 · 제작연도</text><text class="muted" x="236" y="115" lang="en">maker, type, year built</text>
+      <rect class="box" x="224" y="134" width="190" height="50" rx="6"/><text class="t" x="236" y="155">TechnicalData</text><text class="muted" x="236" y="173" lang="ko">정격 용량 · 전압 · 냉각 방식</text><text class="muted" x="236" y="173" lang="en">rated power, voltage, cooling</text>
+      <rect class="box" x="224" y="192" width="190" height="50" rx="6"/><text class="t" x="236" y="213">ConditionAndRisk</text><text class="muted" x="236" y="231" lang="ko">건전도 · 위험도 · 진단 기록</text><text class="muted" x="236" y="231" lang="en">health, risk, diagnoses</text>
+      <rect class="box" x="224" y="250" width="190" height="50" rx="6"/><text class="t" x="236" y="271">BillOfMaterial</text><text class="muted" x="236" y="289" lang="ko">부싱 · OLTC · 냉각장치 · 절연유</text><text class="muted" x="236" y="289" lang="en">bushing, OLTC, cooling, oil</text>
+    </g>
+    <text class="muted" x="430" y="92" lang="ko">서브모델 (Submodel)</text><text class="muted" x="430" y="92" lang="en">Submodels</text>
+    <path class="ln" d="M414,217H446" marker-end="url(#aasArr)"/>
+    <rect class="box" x="448" y="150" width="176" height="134" rx="6"/>
+    <text class="muted" x="460" y="170" lang="ko">서브모델 요소</text><text class="muted" x="460" y="170" lang="en">Submodel elements</text>
+    <text class="mono" x="460" y="193">HealthIndex = 53</text>
+    <text class="mono" x="460" y="213">RiskScore = 15</text>
+    <text class="mono" x="460" y="233">FunctionalLocation →</text>
+    <text class="mono" x="460" y="253">Diagnoses [5]</text>
+    <text class="muted mono" x="460" y="273">+ semanticId</text>
+
+    <path class="sem" d="M624,190H704" marker-end="url(#aasArrG)"/>
+    <text class="mono g" x="664" y="181" text-anchor="middle">semanticId</text>
+    <rect class="onto" x="706" y="60" width="184" height="230" rx="10"/>
+    <text class="t" x="798" y="86" text-anchor="middle" lang="ko">뜻이 사는 곳 (셸 밖)</text><text class="t" x="798" y="86" text-anchor="middle" lang="en">Where meaning lives</text>
+    <text x="798" y="118" text-anchor="middle">IEC CDD · ECLASS</text>
+    <text class="muted" x="798" y="136" text-anchor="middle" lang="ko">산업 공통 속성 사전</text><text class="muted" x="798" y="136" text-anchor="middle" lang="en">shared property dictionaries</text>
+    <text x="798" y="172" text-anchor="middle" lang="ko">온톨로지 (OWL)</text><text x="798" y="172" text-anchor="middle" lang="en">Ontologies (OWL)</text>
+    <text class="mono muted" x="798" y="190" text-anchor="middle">pam:healthIndex</text>
+    <text class="mono muted" x="798" y="208" text-anchor="middle">cim:…End.ratedS</text>
+    <text x="798" y="244" text-anchor="middle">ConceptDescription</text>
+    <text class="muted" x="798" y="262" text-anchor="middle" lang="ko">셸에 함께 넣는 용어 풀이</text><text class="muted" x="798" y="262" text-anchor="middle" lang="en">definitions shipped with the shell</text>
+  </svg>
+  </div>
+
+  <h3><span lang="ko">구성 요소</span><span lang="en">Building blocks</span></h3>
+  <div class="tbl"><table class="qa">
+    <tr><th><span lang="ko">요소</span><span lang="en">Element</span></th><th><span lang="ko">하는 일</span><span lang="en">What it does</span></th><th><span lang="ko">아래 데이터셋에서</span><span lang="en">In the dataset below</span></th></tr>
+    <tr><td>AssetAdministrationShell</td><td lang="ko">자산 하나의 정보 전체를 묶는 겉껍질. 전 세계에서 하나뿐인 <code>id</code>를 가집니다.</td><td lang="en">The wrapper around everything known about one asset. Has a globally unique <code>id</code>.</td><td><code>…/aas/shell/AS-TR-0007</code></td></tr>
+    <tr><td>AssetInformation</td><td lang="ko">이 셸이 <b>무엇에 대한 것인지</b>. 자산의 전역 식별자(<code>globalAssetId</code>), 업무 시스템별 번호(<code>specificAssetIds</code>), 형식(Type)인지 실물(Instance)인지(<code>assetKind</code>).</td><td lang="en"><b>What the shell is about</b>: the asset's global id (<code>globalAssetId</code>), ids used by other systems (<code>specificAssetIds</code>) and whether it is a type or an instance (<code>assetKind</code>).</td><td><code>Instance</code> · <span lang="ko">EAM 번호</span><span lang="en">EAM number</span></td></tr>
+    <tr><td>Submodel</td><td lang="ko">주제별 정보 묶음(명판, 기술 데이터, 문서, 탄소발자국 …). 셸과 따로 식별되어 <b>따로 주고받을 수 있습니다</b>. 자주 쓰는 주제는 IDTA가 <b>서브모델 템플릿</b>으로 표준화합니다.</td><td lang="en">A bundle of information on one topic (nameplate, technical data, documents, carbon footprint …). Identified separately, so it can be <b>exchanged on its own</b>. Common topics are standardised by IDTA as <b>submodel templates</b>.</td><td><span lang="ko">4개</span><span lang="en">4</span></td></tr>
+    <tr><td>SubmodelElement</td><td lang="ko">서브모델 안의 항목. 값 하나(<code>Property</code>), 다국어 글(<code>MultiLanguageProperty</code>), 범위(<code>Range</code>), 파일(<code>File</code> · <code>Blob</code>), 다른 것을 가리킴(<code>ReferenceElement</code> · <code>RelationshipElement</code>), 묶음(<code>SubmodelElementCollection</code> · <code>SubmodelElementList</code>), 부품(<code>Entity</code>), 기능(<code>Operation</code> · <code>Capability</code>), 이벤트(<code>BasicEventElement</code>).</td><td lang="en">An item inside a submodel: one value (<code>Property</code>), multilingual text (<code>MultiLanguageProperty</code>), a range (<code>Range</code>), files (<code>File</code>, <code>Blob</code>), pointers (<code>ReferenceElement</code>, <code>RelationshipElement</code>), groups (<code>SubmodelElementCollection</code>, <code>SubmodelElementList</code>), parts (<code>Entity</code>), functions (<code>Operation</code>, <code>Capability</code>) and events (<code>BasicEventElement</code>).</td><td><span lang="ko">62개 (여섯 종류)</span><span lang="en">62 (six kinds)</span></td></tr>
+    <tr><td>semanticId</td><td lang="ko">항목의 <b>뜻</b>을 가리키는 참조. 이름(<code>idShort</code>)은 제작사마다 달라도 semanticId가 같으면 같은 것으로 읽습니다. 보통 IEC CDD(IEC 61360) · ECLASS의 식별자나 IRI를 씁니다.</td><td lang="en">A reference to the item's <b>meaning</b>. Names (<code>idShort</code>) differ between vendors; equal semanticIds mean the same thing. Usually an IEC CDD (IEC 61360) or ECLASS identifier, or an IRI.</td><td>IEC CDD · <code>pam:</code> · <code>cim:</code></td></tr>
+    <tr><td>ConceptDescription</td><td lang="ko">뜻 풀이를 셸에 함께 실어 보내는 용어 설명(이름 · 정의 · 단위 · 자료형). <code>isCaseOf</code>로 바깥의 정의를 가리킬 수 있습니다.</td><td lang="en">A definition shipped along with the shell (name, definition, unit, data type). <code>isCaseOf</code> can point at an outside definition.</td><td><span lang="ko">5개</span><span lang="en">5</span></td></tr>
+    <tr><td>Reference</td><td lang="ko">무언가를 가리키는 방법. 셸 안의 것을 가리키면 <code>ModelReference</code>, 밖의 것을 가리키면 <code>ExternalReference</code>. 어느 쪽이든 <b>문자열 키의 목록</b>입니다.</td><td lang="en">How anything is pointed at: <code>ModelReference</code> for things inside the AAS world, <code>ExternalReference</code> for things outside. Either way it is a <b>list of string keys</b>.</td><td><span lang="ko">곳곳에</span><span lang="en">everywhere</span></td></tr>
+  </table></div>
+
+  <h3><span lang="ko">주고받는 세 가지 방식</span><span lang="en">Three ways to exchange it</span></h3>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">유형 1 · 파일</span><span lang="en">Type 1 · file</span></h4><p lang="ko">JSON · XML · RDF로 적거나, 문서와 도면까지 한 파일로 묶은 <code>.aasx</code> 꾸러미로 넘깁니다. 납품할 때 설비와 함께 건네는 방식.</p><p lang="en">Written as JSON, XML or RDF, or bundled with documents and drawings into one <code>.aasx</code> package — handed over together with the equipment.</p></div>
+    <div class="card"><h4><span lang="ko">유형 2 · 서버(API)</span><span lang="en">Type 2 · server (API)</span></h4><p lang="ko">셸이 서버에 살아 있고, 표준 REST API로 서브모델과 값을 읽고 씁니다. 운전 중인 설비의 현재 값을 볼 때.</p><p lang="en">The shell lives on a server; a standard REST API reads and writes submodels and values — for the live state of equipment in service.</p></div>
+    <div class="card"><h4><span lang="ko">유형 3 · 능동형</span><span lang="en">Type 3 · proactive</span></h4><p lang="ko">셸끼리 스스로 말을 걸고 협상합니다. 아직 연구 · 시범 단계에 가깝습니다.</p><p lang="en">Shells talk and negotiate with each other on their own initiative. Still closer to research and pilots.</p></div>
+  </div>
+
+  <h3><span lang="ko">관련 표준 · 사양</span><span lang="en">Standards and specifications</span></h3>
+  <div class="tbl"><table class="qa">
+    <tr><th><span lang="ko">문서</span><span lang="en">Document</span></th><th><span lang="ko">내용</span><span lang="en">Content</span></th></tr>
+    <tr><td>IEC 63278-1</td><td lang="ko">산업용 자산관리셸의 구조를 정한 국제 표준</td><td lang="en">International standard for the structure of the AAS for industrial applications</td></tr>
+    <tr><td>IDTA-01001 (Part 1)</td><td lang="ko">메타모델: 셸 · 서브모델 · 요소 · 참조의 정의와 제약, JSON · XML · RDF 대응. <b>이 페이지의 데이터셋은 V3.0 기준</b>(이후 개정판이 나와 있습니다)</td><td lang="en">Metamodel: shells, submodels, elements, references and their constraints, with JSON, XML and RDF mappings. <b>The dataset here follows V3.0</b> (later revisions exist)</td></tr>
+    <tr><td>IDTA-01002 (Part 2)</td><td lang="ko">API: 셸 · 서브모델 저장소와 레지스트리의 REST 인터페이스</td><td lang="en">API: REST interfaces for shell and submodel repositories and registries</td></tr>
+    <tr><td>IDTA-01003-a (Part 3a)</td><td lang="ko">IEC 61360 방식의 용어 설명 양식 (ConceptDescription의 내용)</td><td lang="en">The IEC 61360 data specification template (the content of a ConceptDescription)</td></tr>
+    <tr><td>IDTA-01004 (Part 4)</td><td lang="ko">보안: 누가 어떤 서브모델 · 요소를 볼 수 있는지</td><td lang="en">Security: who may see which submodels and elements</td></tr>
+    <tr><td>IDTA-01005 (Part 5)</td><td lang="ko">꾸러미 파일 형식 <code>.aasx</code></td><td lang="en">The <code>.aasx</code> package file format</td></tr>
+    <tr><td><span lang="ko">서브모델 템플릿</span><span lang="en">Submodel templates</span></td><td lang="ko">IDTA 02006 디지털 명판 · 02003 기술 데이터 · 02004 인수인계 문서 · 02008 시계열 데이터 · 02011 계층 구조(BOM) · 02023 탄소발자국 등. 아래 명판은 02006 V3.0의 식별자를 그대로 썼습니다(주소 등 일부 필수 항목은 생략한 축약본).</td><td lang="en">IDTA 02006 Digital Nameplate, 02003 Technical Data, 02004 Handover Documentation, 02008 Time Series Data, 02011 Hierarchical Structures (BOM), 02023 Carbon Footprint and more. The nameplate below uses the identifiers of 02006 V3.0 as they are (abridged: some mandatory items such as the address are left out).</td></tr>
+  </table></div>
+</section>
+
+<section id="onto">
+  <h2><span lang="ko">온톨로지와의 관계</span><span lang="en">How it relates to ontologies</span></h2>
+  <p lang="ko">둘 다 "기계가 읽는 정보 모델"이라 자주 섞여 불리지만 푸는 문제가 다릅니다. AAS는 <b>자산 한 대의 정보를 어떤 칸에 담아 건넬지</b>를 정하고, 온톨로지는 <b>그 칸의 말이 무엇을 뜻하고 다른 것과 어떻게 이어지는지</b>를 정합니다.</p>
+  <p lang="en">Both are "machine-readable information models", so they are often lumped together, but they solve different problems. The AAS decides <b>which slots carry one asset's information when it is handed over</b>; an ontology decides <b>what the words in those slots mean and how they connect to everything else</b>.</p>
+  <div class="tbl"><table class="qa">
+    <tr><th></th><th><span class="tag aas">AAS</span></th><th><span class="tag on"><span lang="ko">온톨로지 (RDF · OWL)</span><span lang="en">Ontology (RDF, OWL)</span></span></th></tr>
+    <tr><td><span lang="ko">목적</span><span lang="en">Purpose</span></td><td lang="ko">자산 정보를 회사 사이에 <b>같은 형식으로 교환</b></td><td lang="en"><b>Exchange</b> asset information between companies in one format</td><td lang="ko">개념과 관계의 <b>뜻을 정의</b>하고 여러 데이터를 연결 · 추론</td><td lang="en"><b>Define the meaning</b> of concepts and relations; link and reason over data</td></tr>
+    <tr><td><span lang="ko">중심</span><span lang="en">Centre</span></td><td lang="ko">자산 하나. 셸 하나가 자산 하나를 설명</td><td lang="en">One asset. One shell describes one asset</td><td lang="ko">중심이 없음. 무엇이든 주어가 되는 그래프</td><td lang="en">No centre. A graph where anything can be a subject</td></tr>
+    <tr><td><span lang="ko">모양</span><span lang="en">Shape</span></td><td lang="ko">나무(셸 → 서브모델 → 요소). 가로지르는 연결은 문자열 참조</td><td lang="en">A tree (shell → submodel → element). Cross-links are string references</td><td lang="ko">그물. 모든 연결이 IRI로 직접 이어짐</td><td lang="en">A web. Every link is a direct IRI connection</td></tr>
+    <tr><td><span lang="ko">틀</span><span lang="en">Schema</span></td><td lang="ko">고정된 메타모델 + 주제별 서브모델 템플릿</td><td lang="en">A fixed metamodel plus topic templates</td><td lang="ko">분야마다 정의하는 클래스 · 속성 · 공리</td><td lang="en">Classes, properties and axioms defined per domain</td></tr>
+    <tr><td><span lang="ko">뜻</span><span lang="en">Meaning</span></td><td lang="ko"><code>semanticId</code>로 <b>밖을 가리킴</b>. 뜻 자체는 셸 안에 없음</td><td lang="en"><b>Points outward</b> with <code>semanticId</code>; the meaning itself is not in the shell</td><td lang="ko">뜻을 <b>안에서 정의</b> (상위 개념, 정의역 · 치역, 제약)</td><td lang="en"><b>Defined inside</b> (superclasses, domain and range, restrictions)</td></tr>
+    <tr><td><span lang="ko">없는 정보</span><span lang="en">Missing data</span></td><td lang="ko">템플릿이 필수 · 선택을 정함. 빠지면 잘못된 것 (닫힌 세계에 가까움)</td><td lang="en">Templates say what is mandatory; missing means wrong (close to a closed world)</td><td lang="ko">적히지 않은 것은 모르는 것 (열린 세계)</td><td lang="en">Unstated means unknown (open world)</td></tr>
+    <tr><td><span lang="ko">추론</span><span lang="en">Reasoning</span></td><td lang="ko">없음. 적힌 그대로</td><td lang="en">None. What is written is what you get</td><td lang="ko">상위 클래스 · 역관계 · 전이 관계를 따라 새 사실 도출</td><td lang="en">New facts via superclasses, inverse and transitive relations</td></tr>
+    <tr><td><span lang="ko">쓰는 법</span><span lang="en">Access</span></td><td lang="ko">파일(<code>.aasx</code> · JSON) · REST API · 접근 권한</td><td lang="en">Files (<code>.aasx</code>, JSON), REST API, access control</td><td lang="ko">SPARQL · 그래프 DB(Cypher) 질의</td><td lang="en">SPARQL, graph databases (Cypher)</td></tr>
+    <tr><td><span lang="ko">잘하는 질문</span><span lang="en">Good at asking</span></td><td lang="ko">"이 변압기의 제작사 · 정격 · 최근 진단은?"</td><td lang="en">"Who made this transformer, what is its rating, what was the last diagnosis?"</td><td lang="ko">"위험도 높은 설비가 고장 나면 어느 고객이 정전되나?"</td><td lang="en">"If a high-risk asset fails, which customers lose supply?"</td></tr>
+  </table></div>
+  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">AAS는 설비마다 붙는 <b>표준 서류철</b>입니다. 어느 칸에 무엇을 넣는지가 정해져 있어 누구나 꺼내 볼 수 있습니다. 온톨로지는 서류철들에 적힌 낱말을 풀이하고 서로 이어 주는 <b>사전이자 지도</b>입니다. 서류철의 칸마다 "이 칸의 뜻은 사전의 이 낱말"이라고 적어 두는 것이 semanticId입니다.</p><p lang="en">An AAS is a <b>standard file folder</b> attached to each piece of equipment: the slots are fixed, so anyone can find things. An ontology is the <b>dictionary and map</b> that explains the words in those folders and connects them. A semanticId is the note on each slot saying "this slot means that word in the dictionary".</p></div>
+
+  <h3><span lang="ko">같은 사실 한 줄, 세 가지 모양</span><span lang="en">One fact, three shapes</span></h3>
+  <p lang="ko">"이 변압기의 건전도 지수는 53이다"를 AAS(JSON), AAS의 RDF 직렬화, 온톨로지로 각각 적으면 이렇습니다.</p>
+  <p lang="en">"This transformer's health index is 53", written as AAS JSON, as the AAS RDF serialisation, and as an ontology statement.</p>
+  <div class="three">
+    <div><h4><span class="tag aas">AAS · JSON</span></h4>
+<pre><code class="language-json">{ "idShort": "HealthIndex",
+  "semanticId": { "type": "ExternalReference",
+    "keys": [ { "type": "GlobalReference",
+      "value": "https://…/asset#healthIndex" } ] },
+  "valueType": "xs:decimal",
+  "value": "53",
+  "modelType": "Property" }</code></pre></div>
+    <div><h4><span class="tag aas">AAS · RDF</span></h4>
+<pre><code class="language-turtle">[ rdf:type aas:Property ;
+  &lt;…/Referable/idShort&gt; "HealthIndex" ;
+  &lt;…/HasSemantics/semanticId&gt; [
+    rdf:type aas:Reference ;
+    &lt;…/Reference/keys&gt; [ rdf:type aas:Key ;
+      &lt;…/Key/value&gt; "https://…/asset#healthIndex" ] ] ;
+  &lt;…/Property/valueType&gt; &lt;…/DataTypeDefXsd/Decimal&gt; ;
+  &lt;…/Property/value&gt; "53" ]</code></pre></div>
+    <div><h4><span class="tag on"><span lang="ko">온톨로지</span><span lang="en">Ontology</span></span></h4>
+<pre><code class="language-turtle">pam:AS_TR_0007 pam:healthIndex 53.0 .</code></pre>
+    <p class="sub" style="margin:8px 0 0" lang="ko">주어가 자산 자신이고, 술어가 곧 뜻입니다.</p><p class="sub" style="margin:8px 0 0" lang="en">The subject is the asset itself and the predicate <i>is</i> the meaning.</p></div>
+  </div>
+  <p lang="ko">가운데 칸이 중요합니다. <b>AAS를 RDF로 적는다고 온톨로지가 되지는 않습니다.</b> AAS RDF는 "idShort가 HealthIndex이고 값이 문자열 53인 Property가 있다"는 <b>서류철의 모양</b>을 그래프로 옮긴 것이지, "이 변압기의 건전도는 53"이라는 사실을 직접 말하지 않습니다. 뜻을 가리키는 semanticId도, 값도, 다른 서브모델을 가리키는 참조도 모두 문자열이라, 그대로는 다른 그래프와 선이 이어지지 않습니다.</p>
+  <p lang="en">The middle column matters. <b>Writing an AAS in RDF does not make it an ontology.</b> AAS RDF transcribes the <b>shape of the folder</b> — "there is a Property whose idShort is HealthIndex and whose value is the string 53" — rather than stating "this transformer's health index is 53". The semanticId, the value and the references to other submodels are all strings, so nothing links to another graph as it stands.</p>
+
+  <h3><span lang="ko">둘을 잇는 세 가지 방법</span><span lang="en">Three ways to connect the two</span></h3>
+  <div class="way"><div class="no">①</div><div><h3><span lang="ko">자산 식별자를 온톨로지의 개체 IRI로</span><span lang="en">Use the ontology individual's IRI as the asset id</span></h3>
+    <p lang="ko"><code>globalAssetId</code>에 온톨로지에서 이 자산을 가리키는 IRI를 그대로 씁니다. 셸과 온톨로지가 <b>같은 물건</b>을 말하고 있음을 알 수 있는 가장 단순한 고리입니다. 업무 시스템의 번호는 <code>specificAssetIds</code>에 둡니다.</p>
+    <p lang="en">Put the IRI that names this asset in the ontology straight into <code>globalAssetId</code>. It is the simplest hook that shows the shell and the ontology are talking about <b>the same thing</b>. Ids from business systems go in <code>specificAssetIds</code>.</p>
+<pre><code class="language-json">"assetInformation": { "assetKind": "Instance",
+  "globalAssetId": "https://1004aiteam-power.github.io/ontology-space/asset#AS_TR_0007",
+  "specificAssetIds": [ { "name": "eamNumber", "value": "EQ-TR-2015-0007" } ] }</code></pre></div></div>
+  <div class="way"><div class="no">②</div><div><h3><span lang="ko">semanticId를 온톨로지의 용어 IRI로</span><span lang="en">Point semanticIds at ontology terms</span></h3>
+    <p lang="ko">표준 사전(IEC CDD · ECLASS)에 있는 항목은 그 식별자를 쓰고, 사전에 없는 분야 고유 항목은 온톨로지의 속성 · 클래스 IRI를 semanticId로 씁니다. 여기서는 건전도 · 위험도는 자산관리 온톨로지(<code>pam:</code>), 정격 용량 · 전압은 IEC CIM(<code>cim:</code>)을 가리킵니다. 셸에 함께 싣는 ConceptDescription에는 <code>isCaseOf</code>로 같은 IRI를 적어, 받는 쪽이 정의와 단위를 바로 볼 수 있게 했습니다.</p>
+    <p lang="en">Items that exist in a standard dictionary (IEC CDD, ECLASS) use that identifier; domain-specific items use an ontology property or class IRI. Here health and risk point at the asset-management ontology (<code>pam:</code>) and rated power and voltage at IEC CIM (<code>cim:</code>). The ConceptDescriptions shipped with the shell carry the same IRI in <code>isCaseOf</code>, so a receiver sees the definition and unit at once.</p></div></div>
+  <div class="way"><div class="no">③</div><div><h3><span lang="ko">AAS를 RDF로 옮기고 다리를 놓아 한 그래프로</span><span lang="en">Serialise to RDF and bridge into one graph</span></h3>
+    <p lang="ko">AAS RDF를 온톨로지와 같은 그래프에 불러온 다음, 문자열로 적힌 참조 가운데 온톨로지에 <b>실제로 있는 개체</b>를 가리키는 것만 골라 진짜 연결로 적어 줍니다. 아래 데이터셋에서는 연결 15개(<code>aas-links.ttl</code>)가 그 다리입니다. 그러면 셸에서 출발해 온톨로지에만 있는 고장 모드 · 작업지시 · 설치 이력까지 한 번에 물을 수 있습니다.</p>
+    <p lang="en">Load the AAS RDF into the same graph as the ontology, then turn the string references that point at individuals <b>actually present</b> in the ontology into real links. In the dataset below 15 links (<code>aas-links.ttl</code>) form that bridge. A query can then start at the shell and reach failure modes, work orders and deployment history that exist only in the ontology.</p>
+<pre><code class="language-turtle">&lt;…/aas/shell/AS-TR-0007&gt; aasl:describes pam:AS_TR_0007 ;          # globalAssetId
+    aasl:hasSubmodel &lt;…/aas/sm/AS-TR-0007/ConditionAndRisk&gt; , … .   # submodels
+&lt;…/ConditionAndRisk#FunctionalLocation&gt; aasl:refersTo ex:TR_1 .   # ReferenceElement</code></pre></div></div>
+
+  <h3><span lang="ko">전력 분야에서: CIM과 AAS</span><span lang="en">In the power sector: CIM and the AAS</span></h3>
+  <p lang="ko">이 사이트가 다루는 IEC CIM은 <b>계통 관점</b>의 모델입니다. "주변압기 #1"이라는 <b>자리(기능 위치)</b>가 어디에 연결되어 있는지를 다룹니다. AAS는 <b>제품 관점</b>입니다. 그 자리에 놓인 <b>실물 한 대</b>가 누가 만든 어떤 형식이고 어떤 이력을 가졌는지를 제작사에서 운영자에게 넘깁니다. <a href="asset.html">자산관리 온톨로지</a>가 기능 위치와 물리 자산을 나눠 둔 덕분에 둘이 자연스럽게 이어집니다. 셸은 물리 자산(<code>pam:Asset</code>)에 붙고, 자산은 <code>pam:installedAt</code>으로 CIM의 설비를 가리킵니다. 변압기를 교체하면 셸은 새것으로 바뀌지만 자리와 계통 모델은 그대로입니다.</p>
+  <p lang="en">IEC CIM, which this site is built around, is the <b>system view</b>: where the <b>position</b> "main transformer #1" is connected. The AAS is the <b>product view</b>: who made the <b>physical unit</b> sitting in that position, what type it is and what has happened to it — handed from manufacturer to operator. Because the <a href="asset.html">asset-management ontology</a> separates functional locations from physical assets, the two meet cleanly: the shell attaches to the physical asset (<code>pam:Asset</code>) and the asset points at the CIM equipment through <code>pam:installedAt</code>. Replace the transformer and the shell changes, while the position and the network model stay.</p>
+</section>
+
+<section id="data">
+  <h2><span lang="ko">데이터셋: 주변압기 #1 본체의 자산관리셸</span><span lang="en">Dataset: the shell of main transformer #1</span></h2>
+  <p lang="ko">가상 A변전소 주변압기 #1 본체(<code>AS-TR-0007</code>) 한 대를 AAS 메타모델 V3.0의 JSON으로 적은 것입니다. 값은 새로 만들지 않고 자산관리 온톨로지의 원본 CSV와 계산값에서 가져왔고, 공개된 AAS JSON 스키마로 검사했습니다. 왼쪽에서 항목을 고르면 오른쪽에 그 항목의 뜻과 원본 JSON이 나옵니다.</p>
+  <p lang="en">One unit — main transformer #1 of virtual substation A (<code>AS-TR-0007</code>) — written as AAS metamodel V3.0 JSON. No value is new: everything comes from the asset-management ontology's source CSV files and computed values, and the result was validated against the public AAS JSON schema. Pick an item on the left to see its meaning and raw JSON on the right.</p>
+  <div class="aas-stats" id="aasStats"></div>
+  <div class="aas-legend" id="aasLegend"></div>
+  <div class="aas-x">
+    <div class="aas-tree" id="aasTree"><p class="sub" lang="ko">불러오는 중…</p><p class="sub" lang="en">Loading…</p></div>
+    <div class="aas-detail" id="aasDetail" aria-live="polite"></div>
+  </div>
+
+  <h3><span lang="ko">파일</span><span lang="en">Files</span></h3>
+  <p class="sub" lang="ko">저장소에서 바로 불러옵니다. 모두 <code>examples/aas/build_aas.py</code>가 만듭니다.</p>
+  <p class="sub" lang="en">Loaded live from the repository. All generated by <code>examples/aas/build_aas.py</code>.</p>
+  <div data-viewer>
+    <div class="tabs" role="tablist">
+      <button data-file="examples/aas/aas-mtr1.json">aas-mtr1.json</button>
+      <button data-file="examples/aas/aas-mtr1.ttl">aas-mtr1.ttl (AAS RDF)</button>
+      <button data-file="examples/aas/aas-links.ttl">aas-links.ttl</button>
+      <button data-file="examples/aas/queries.cypher">queries.cypher</button>
+      <button data-file="examples/aas/build_aas.py">build_aas.py</button>
+    </div>
+    <div class="viewer">
+      <div class="bar"><span class="path"></span><a class="gh" href="#"><span lang="ko">GitHub에서 보기</span><span lang="en">View on GitHub</span></a></div>
+      <pre><code class="nohighlight"></code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="ask">
+  <h2><span lang="ko">한 그래프로 합쳐 묻기 (Cypher)</span><span lang="en">Asking across one graph (Cypher)</span></h2>
+  <p lang="ko"><code>aas-mtr1.ttl</code>(AAS RDF), <code>aas-links.ttl</code>(다리), <code>asset-ontology.ttl</code>(자산관리 온톨로지)을 Neo4j에 불러올 때와 같은 방식(클래스 → 라벨, 값 → 속성, 연결 → 관계)으로 한 그래프에 합쳐, 빌드할 때 아래 질문을 실행한 결과입니다. Q1 · Q2는 AAS만으로 답하고, Q3 · Q4는 다리를 건너 온톨로지에만 있는 지식을 가져오며, Q5는 두 곳에 적힌 같은 값이 어긋나지 않았는지 확인합니다.</p>
+  <p lang="en"><code>aas-mtr1.ttl</code> (AAS RDF), <code>aas-links.ttl</code> (the bridge) and <code>asset-ontology.ttl</code> are merged into one graph the way Neo4j would load them (classes → labels, values → properties, links → relationships), and these questions are run at build time. Q1 and Q2 are answered by the AAS alone, Q3 and Q4 cross the bridge to knowledge that exists only in the ontology, and Q5 checks that values written in both places have not drifted apart.</p>
+  <div id="aasCq"></div>
+</section>
+
+<section id="design">
+  <h2><span lang="ko">설계 결정</span><span lang="en">Design decisions</span></h2>
+  <div class="way"><div class="no">D1</div><div><h3><span lang="ko">값은 한 곳에서 만들고 AAS는 내보내는 창구로</span><span lang="en">One source of truth; the AAS is an export</span></h3>
+    <p lang="ko">건전도 · 위험도는 자산관리 온톨로지 빌드가 계산하고, AAS는 그 결과를 읽어 적기만 합니다. 같은 값을 두 곳에서 따로 관리하면 반드시 어긋나므로, 어긋났는지 확인하는 질문(Q5)을 함께 두었습니다.</p>
+    <p lang="en">Health and risk are computed by the asset-ontology build; the AAS only writes down the result. Keeping one value in two places always drifts, so a question that detects drift (Q5) ships with it.</p></div></div>
+  <div class="way"><div class="no">D2</div><div><h3><span lang="ko">표준 사전에 있으면 그것을, 없으면 온톨로지를</span><span lang="en">Standard dictionary first, ontology where there is none</span></h3>
+    <p lang="ko">명판은 IDTA 템플릿의 IEC CDD 식별자를 그대로 써서 다른 회사의 도구도 읽을 수 있게 했습니다. 건전도처럼 표준 사전에 없는 항목만 온톨로지 IRI를 semanticId로 썼습니다. 온톨로지 IRI만 쓰면 이 사이트 밖에서는 아무도 뜻을 모릅니다.</p>
+    <p lang="en">The nameplate uses the IEC CDD identifiers of the IDTA template unchanged, so other vendors' tools can read it. Only items absent from standard dictionaries, such as the health index, use ontology IRIs. With ontology IRIs alone, nobody outside this site would know what anything means.</p></div></div>
+  <div class="way"><div class="no">D3</div><div><h3><span lang="ko">지식은 셸에 복사하지 않는다</span><span lang="en">Knowledge is not copied into the shell</span></h3>
+    <p lang="ko">고장 모드 · 점검 주기 · 작업지시 · 정전 영향은 셸에 넣지 않았습니다. 자산 한 대의 것이 아니라 여러 자산과 계통에 걸친 지식이기 때문입니다. 셸에는 그 자산의 사실만 두고, 나머지는 다리를 건너 온톨로지에서 묻습니다.</p>
+    <p lang="en">Failure modes, inspection cycles, work orders and outage impact are not in the shell: they are knowledge spanning many assets and the network, not facts about one unit. The shell holds the unit's own facts; the rest is asked across the bridge.</p></div></div>
+  <div class="way"><div class="no">D4</div><div><h3><span lang="ko">다리는 따로 둔 파일로</span><span lang="en">The bridge is a separate file</span></h3>
+    <p lang="ko">AAS RDF는 사양의 대응 규칙 그대로 두고, 연결은 <code>aas-links.ttl</code>에 따로 적었습니다. 표준 형식의 파일을 고치지 않아도 되고, 가리키는 IRI가 온톨로지에 없으면 빌드가 실패해 끊어진 참조를 바로 알 수 있습니다.</p>
+    <p lang="en">The AAS RDF stays exactly as the specification's mapping produces it; links live in <code>aas-links.ttl</code>. The standard-format file is never touched, and the build fails if a referenced IRI is missing from the ontology, so broken references surface immediately.</p></div></div>
+</section>
+
+<section id="refs">
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li><a href="https://industrialdigitaltwin.org/en/content-hub/aasspecifications">IDTA, "Specifications of the Asset Administration Shell"</a> (Part 1 Metamodel IDTA-01001 · Part 2 API · Part 3a · Part 4 · Part 5)</li>
+    <li><a href="https://github.com/admin-shell-io/aas-specs-metamodel">admin-shell-io/aas-specs-metamodel</a>: <span lang="ko">메타모델 사양 원문과 JSON · XML · RDF 스키마 (데이터셋 검사에 쓴 JSON 스키마, RDF 대응 예제)</span><span lang="en">the metamodel specification with JSON, XML and RDF schemas (the JSON schema used to validate the dataset, and the RDF mapping examples)</span></li>
+    <li><a href="https://github.com/admin-shell-io/submodel-templates">admin-shell-io/submodel-templates</a>: <span lang="ko">IDTA 서브모델 템플릿 (IDTA 02006 Digital Nameplate V3.0의 식별자를 옮김)</span><span lang="en">IDTA submodel templates (source of the IDTA 02006 Digital Nameplate V3.0 identifiers)</span></li>
+    <li>IEC 63278-1, "Asset Administration Shell for industrial applications – Part 1: Asset Administration Shell structure"</li>
+  </ul>
+  <p class="sub" lang="ko">확인한 날: 2026-11-11. 사양은 계속 개정되므로 판 번호를 확인하세요.</p>
+  <p class="sub" lang="en">Checked on 2026-11-11. The specifications keep being revised; check the version you need.</p>
+  <div class="pager"><a href="asset.html"><span lang="ko">← 전력설비 자산관리 온톨로지</span><span lang="en">← Power asset-management ontology</span></a><a href="impact.html"><span lang="ko">설비 고장 영향 분석 →</span><span lang="en">Failure impact analysis →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

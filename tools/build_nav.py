@@ -72,6 +72,7 @@ NAV = [
         ("hr",),
         ("work.html", "업무 온톨로지", "Work Ontology", "가상의 AI추진부 업무 149개", "149 tasks of a fictional department"),
         ("asset.html", "전력설비 자산관리", "Power Asset Management", "가상 A변전소 설비 · 진단 · 위험도", "Virtual substation: assets, diagnoses, risk"),
+        ("aas.html", "자산관리셸(AAS)과 온톨로지", "AAS and Ontologies", "AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋", "AAS structure · how it relates to ontologies · one transformer as an AAS dataset"),
         ("highway.html", "고속도로·국도 교통", "Road Traffic", "가상 고속도로·국도망 · 24시간 차량 흐름", "Virtual expressways &amp; national roads · 24 h traffic"),
         ("hr",),
         ("ev.html", "고속도로 × 전력망: 전기차 충전", "Roads × Grid: EV Charging", "휴게소 충전 수요 → 배전선로 → 변전소", "Rest-area charging → feeder → substation"),

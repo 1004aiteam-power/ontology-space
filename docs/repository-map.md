@@ -18,6 +18,7 @@
 | [bidding.html](../bidding.html) | 내가 이해한 전력시장: 변동비 반영시장(CBP)에서 공급가능용량 입찰 → SMP 결정 → 급전지시 → 계량 · 정산 흐름, 메리트 오더 체험(가상 값), 발전사업자 체크리스트 (⚠ 개인 학습 노트, 참고용) |
 | [examples/work/](../examples/work/) | 업무 온톨로지: 가상의 AI추진부 업무 149개를 분류한 엑셀 원본, OWL, Neo4j 스크립트 (⚠ 가상 부서) |
 | [examples/asset/](../examples/asset/) | 전력설비 자산관리 온톨로지: 원본 CSV → `build_asset_ontology.py` → OWL · Neo4j · Cypher 검증(`neo4j/checks.cypher`) (⚠ 가상 데이터) |
+| [examples/aas/](../examples/aas/) | 자산관리셸(AAS, Asset Administration Shell) 예제 (`aas.html`): 자산관리 온톨로지의 주변압기 본체 한 대를 AAS 메타모델 V3.0으로. `build_aas.py` → AAS 환경 JSON `aas-mtr1.json`(셸 1 · 서브모델 4 · 요소 62) · AAS RDF 직렬화 `aas-mtr1.ttl` · 온톨로지로 가는 다리 `aas-links.ttl`, 세 그래프를 합쳐 묻는 `queries.cypher` (⚠ 가상 데이터) |
 | [examples/asset/neo4j/checks.cypher](../examples/asset/neo4j/checks.cypher) | 자산관리 형상검증 (Neo4j · Cypher): 빈 설비 자리, 설치 기간 겹침, EAM 번호 형식, 근거 없는 작업지시 등 8개 규칙 |
 | [examples/highway/](../examples/highway/) | 가상 전국 고속도로·국도 온톨로지(OWL + GeoSPARQL)와 24시간 차량 흐름: 원본 CSV → `build_highway.py` (중력모형 수요 · 시간대별 이용자 균형 배정) (⚠ 가상 데이터) |
 | [examples/ev/](../examples/ev/) | 고속도로 × 전력망: 휴게소 전기차 충전 온톨로지. 24시간 교통량 → 충전 수요 → 22.9kV 배전선로 → 디지털 트윈 154kV 변전소, 세 그래프를 합친 Cypher 질의 (⚠ 가상 데이터) |
@@ -48,7 +49,7 @@
 | [examples/safety/](../examples/safety/) | 배전공사 안전 온톨로지: 안전 훈련 시뮬레이션(`assets/safety/safety.js`)의 현장 · 작업 단계 · 안전수칙 11 · 역할 · 훈련 오답 + 위험요인 → 스키마 `safety-schema.ttl` + 개체 `safety-steps.ttl` (`build_safety.mjs`, 브라우저와 같은 코드 `assets/safety/safety-graph.js`). 작업 단계 ⊑ 업무 온톨로지 `aipd:Task`(선행 · 리스크 · 생애주기), 작업 대상 설비 → 자산관리 자산 · 정비 흐름, 정전 작업 구간 → 배전선로 D/L #1 구간 · 개폐기 (`safety-ontology.html`, ⚠ 교육용 가상 현장) |
 | [examples/twin/](../examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
 | [examples/feeder/](../examples/feeder/) | A변전소 D/L #1 배전선로 상세: 구간 개폐기 6 · 연계 개폐기 4 · 분기점 3, pycim 모델 → CIM RDF · 웹 그림 데이터 · 모든 구간의 고장 복구(FLISR) 계획 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `neat-drone.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `safety-ontology.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 배전공사 안전 · 단세포 생태계), 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `neat-drone.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `aas.html` · `highway.html` · `ev.html` · `impact.html` · `safety-ontology.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 자산관리셸(AAS) · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 배전공사 안전 · 단세포 생태계), 한·영 전환) |
 
 ## 실행 명령 모음
 
@@ -78,6 +79,10 @@ python examples/feeder/build_feeder.py   # D/L #1 배전선로: 개폐 시나리
 
 ```bash
 python examples/asset/build_asset_ontology.py   # 전력설비 자산관리: 위험도 계산 · OWL/Neo4j 생성 · Cypher 검증
+```
+
+```bash
+python examples/aas/build_aas.py   # 자산관리셸(AAS): 변압기 한 대의 AAS JSON · RDF · 온톨로지 연결, 합친 그래프에 Cypher
 ```
 
 ```bash

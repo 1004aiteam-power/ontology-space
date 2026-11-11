@@ -1,0 +1,1838 @@
+{
+  "assetAdministrationShells": [
+    {
+      "idShort": "MTr1_AS_TR_0007",
+      "displayName": [
+        {
+          "language": "ko",
+          "text": "M.Tr #1 본체"
+        }
+      ],
+      "description": [
+        {
+          "language": "ko",
+          "text": "가상 A변전소 주변압기 #1 본체의 자산관리셸 (가상 데이터, 기준일 2026-11-03)"
+        }
+      ],
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/shell/AS-TR-0007",
+      "assetInformation": {
+        "assetKind": "Instance",
+        "globalAssetId": "https://1004aiteam-power.github.io/ontology-space/asset#AS_TR_0007",
+        "specificAssetIds": [
+          {
+            "name": "eamNumber",
+            "value": "EQ-TR-2015-0007",
+            "semanticId": {
+              "type": "ExternalReference",
+              "keys": [
+                {
+                  "type": "GlobalReference",
+                  "value": "https://1004aiteam-power.github.io/ontology-space/asset#eamNumber"
+                }
+              ]
+            }
+          }
+        ],
+        "assetType": "https://1004aiteam-power.github.io/ontology-space/asset#TransformerAsset"
+      },
+      "submodels": [
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/Nameplate"
+            }
+          ]
+        },
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/TechnicalData"
+            }
+          ]
+        },
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk"
+            }
+          ]
+        },
+        {
+          "type": "ModelReference",
+          "keys": [
+            {
+              "type": "Submodel",
+              "value": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial"
+            }
+          ]
+        }
+      ],
+      "modelType": "AssetAdministrationShell"
+    }
+  ],
+  "submodels": [
+    {
+      "idShort": "Nameplate",
+      "displayName": [
+        {
+          "language": "ko",
+          "text": "명판"
+        }
+      ],
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/Nameplate",
+      "kind": "Instance",
+      "semanticId": {
+        "type": "ExternalReference",
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://admin-shell.io/idta/nameplate/3/0/Nameplate"
+          }
+        ]
+      },
+      "submodelElements": [
+        {
+          "idShort": "URIOfTheProduct",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABN590#002"
+              }
+            ]
+          },
+          "valueType": "xs:anyURI",
+          "value": "https://1004aiteam-power.github.io/ontology-space/asset#AS_TR_0007",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "ManufacturerName",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA565#009"
+              }
+            ]
+          },
+          "value": [
+            {
+              "language": "ko",
+              "text": "가상전기"
+            }
+          ],
+          "modelType": "MultiLanguageProperty"
+        },
+        {
+          "idShort": "ManufacturerProductDesignation",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA567#009"
+              }
+            ]
+          },
+          "value": [
+            {
+              "language": "ko",
+              "text": "60MVA 154/22.9kV ONAN/ONAF 변압기"
+            }
+          ],
+          "modelType": "MultiLanguageProperty"
+        },
+        {
+          "idShort": "ManufacturerProductType",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA300#008"
+              }
+            ]
+          },
+          "valueType": "xs:string",
+          "value": "VT-60M154",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "OrderCodeOfManufacturer",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABA950#008"
+              }
+            ]
+          },
+          "valueType": "xs:string",
+          "value": "VT-60M154",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "YearOfConstruction",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABP000#002"
+              }
+            ]
+          },
+          "valueType": "xs:string",
+          "value": "2015",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "CountryOfOrigin",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0112/2///61987#ABP462#001"
+              }
+            ]
+          },
+          "valueType": "xs:string",
+          "value": "KR",
+          "modelType": "Property"
+        }
+      ],
+      "modelType": "Submodel"
+    },
+    {
+      "idShort": "TechnicalData",
+      "displayName": [
+        {
+          "language": "ko",
+          "text": "기술 데이터"
+        }
+      ],
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/TechnicalData",
+      "kind": "Instance",
+      "semanticId": {
+        "type": "ExternalReference",
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://1004aiteam-power.github.io/ontology-space/aas/semantics/TechnicalData/1/0"
+          }
+        ]
+      },
+      "submodelElements": [
+        {
+          "idShort": "RatedPower",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "정격 용량 (MVA)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedS"
+              }
+            ]
+          },
+          "valueType": "xs:decimal",
+          "value": "60",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "RatedVoltageHV",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "1차 정격 전압 (kV)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedU"
+              }
+            ]
+          },
+          "valueType": "xs:decimal",
+          "value": "154",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "RatedVoltageLV",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "2차 정격 전압 (kV)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedU"
+              }
+            ]
+          },
+          "valueType": "xs:decimal",
+          "value": "22.9",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "CoolingType",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "냉각 방식"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/aas/semantics/CoolingType"
+              }
+            ]
+          },
+          "valueType": "xs:string",
+          "value": "ONAN/ONAF",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "DesignLifeYears",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "설계 수명 (년)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#designLifeYears"
+              }
+            ]
+          },
+          "valueType": "xs:integer",
+          "value": "40",
+          "modelType": "Property"
+        }
+      ],
+      "modelType": "Submodel"
+    },
+    {
+      "idShort": "ConditionAndRisk",
+      "displayName": [
+        {
+          "language": "ko",
+          "text": "상태 · 위험도"
+        }
+      ],
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk",
+      "kind": "Instance",
+      "semanticId": {
+        "type": "ExternalReference",
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://1004aiteam-power.github.io/ontology-space/aas/semantics/ConditionAndRisk/1/0"
+          }
+        ]
+      },
+      "submodelElements": [
+        {
+          "idShort": "FunctionalLocation",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "현재 설치 위치 (전력망의 기능 위치)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#installedAt"
+              }
+            ]
+          },
+          "value": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "http://example.org/grid#TR_1"
+              }
+            ]
+          },
+          "modelType": "ReferenceElement"
+        },
+        {
+          "idShort": "EamNumber",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "EAM 설비번호"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#eamNumber"
+              }
+            ]
+          },
+          "valueType": "xs:string",
+          "value": "EQ-TR-2015-0007",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "Status",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "운전 상태"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#status"
+              }
+            ]
+          },
+          "valueType": "xs:string",
+          "value": "운전",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "HealthIndex",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "건전도 지수 (0~100)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#healthIndex"
+              }
+            ]
+          },
+          "valueType": "xs:decimal",
+          "value": "53",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "ProbabilityOfFailure",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "고장 가능성 (1~5)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#probabilityOfFailure"
+              }
+            ]
+          },
+          "valueType": "xs:integer",
+          "value": "3",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "ConsequenceOfFailure",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "고장 영향 (1~5)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#consequenceOfFailure"
+              }
+            ]
+          },
+          "valueType": "xs:integer",
+          "value": "5",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "RiskScore",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "위험도 (PoF × CoF)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#riskScore"
+              }
+            ]
+          },
+          "valueType": "xs:integer",
+          "value": "15",
+          "modelType": "Property"
+        },
+        {
+          "idShort": "Diagnoses",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "진단 기록"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+              }
+            ]
+          },
+          "orderRelevant": true,
+          "typeValueListElement": "SubmodelElementCollection",
+          "value": [
+            {
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                  }
+                ]
+              },
+              "value": [
+                {
+                  "idShort": "Record",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "온톨로지의 진단 기록"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#DG_02"
+                      }
+                    ]
+                  },
+                  "modelType": "ReferenceElement"
+                },
+                {
+                  "idShort": "Date",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단일"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#date"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:date",
+                  "value": "2026-03-10",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Method",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단 방법"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "절연유 특성시험",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#IN_04"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Finding",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "소견"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#finding"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "수분 18ppm, 절연파괴전압 52kV",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Judgement",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "판정"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#judgement"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "정상",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Normal"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            },
+            {
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                  }
+                ]
+              },
+              "value": [
+                {
+                  "idShort": "Record",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "온톨로지의 진단 기록"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#DG_01"
+                      }
+                    ]
+                  },
+                  "modelType": "ReferenceElement"
+                },
+                {
+                  "idShort": "Date",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단일"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#date"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:date",
+                  "value": "2026-09-15",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Method",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단 방법"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "유중가스분석(DGA)",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#IN_03"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Finding",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "소견"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#finding"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "TCG 820ppm, C2H2 2ppm (주의 기준 초과)",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Judgement",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "판정"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#judgement"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "주의",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Caution"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            },
+            {
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                  }
+                ]
+              },
+              "value": [
+                {
+                  "idShort": "Record",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "온톨로지의 진단 기록"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#DG_04"
+                      }
+                    ]
+                  },
+                  "modelType": "ReferenceElement"
+                },
+                {
+                  "idShort": "Date",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단일"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#date"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:date",
+                  "value": "2026-09-20",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Method",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단 방법"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "열화상 진단",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#IN_02"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Finding",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "소견"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#finding"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "최고 61℃, 이상 없음",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Judgement",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "판정"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#judgement"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "정상",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Normal"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            },
+            {
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                  }
+                ]
+              },
+              "value": [
+                {
+                  "idShort": "Record",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "온톨로지의 진단 기록"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#DG_13"
+                      }
+                    ]
+                  },
+                  "modelType": "ReferenceElement"
+                },
+                {
+                  "idShort": "Date",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단일"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#date"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:date",
+                  "value": "2026-10-28",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Method",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단 방법"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "순시점검",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#IN_01"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Finding",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "소견"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#finding"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "이상 없음",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Judgement",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "판정"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#judgement"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "정상",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Normal"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            },
+            {
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                  }
+                ]
+              },
+              "value": [
+                {
+                  "idShort": "Record",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "온톨로지의 진단 기록"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#DG_03"
+                      }
+                    ]
+                  },
+                  "modelType": "ReferenceElement"
+                },
+                {
+                  "idShort": "Date",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단일"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#date"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:date",
+                  "value": "2026-10-31",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Method",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "진단 방법"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "OLTC 동작횟수 확인",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#IN_05"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Finding",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "소견"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#finding"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "OLTC 정비 후 동작 68,400회 (정비 기준 60,000회)",
+                  "modelType": "Property"
+                },
+                {
+                  "idShort": "Judgement",
+                  "displayName": [
+                    {
+                      "language": "ko",
+                      "text": "판정"
+                    }
+                  ],
+                  "semanticId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#judgement"
+                      }
+                    ]
+                  },
+                  "valueType": "xs:string",
+                  "value": "주의",
+                  "valueId": {
+                    "type": "ExternalReference",
+                    "keys": [
+                      {
+                        "type": "GlobalReference",
+                        "value": "https://1004aiteam-power.github.io/ontology-space/asset#Caution"
+                      }
+                    ]
+                  },
+                  "modelType": "Property"
+                }
+              ],
+              "modelType": "SubmodelElementCollection"
+            }
+          ],
+          "modelType": "SubmodelElementList"
+        }
+      ],
+      "modelType": "Submodel"
+    },
+    {
+      "idShort": "BillOfMaterial",
+      "displayName": [
+        {
+          "language": "ko",
+          "text": "구성품"
+        }
+      ],
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial",
+      "kind": "Instance",
+      "semanticId": {
+        "type": "ExternalReference",
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://1004aiteam-power.github.io/ontology-space/aas/semantics/BillOfMaterial/1/0"
+          }
+        ]
+      },
+      "submodelElements": [
+        {
+          "idShort": "CP_TR7_BSH",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "154kV 부싱"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#Component"
+              }
+            ]
+          },
+          "statements": [
+            {
+              "idShort": "ComponentType",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "구성품 종류"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#componentType"
+                  }
+                ]
+              },
+              "valueType": "xs:string",
+              "value": "Bushing",
+              "valueId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CT_Bushing"
+                  }
+                ]
+              },
+              "modelType": "Property"
+            },
+            {
+              "idShort": "Record",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "온톨로지의 구성품 개체"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"
+                  }
+                ]
+              },
+              "value": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_BSH"
+                  }
+                ]
+              },
+              "modelType": "ReferenceElement"
+            }
+          ],
+          "entityType": "CoManagedEntity",
+          "modelType": "Entity"
+        },
+        {
+          "idShort": "CP_TR7_OLTC",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "부하시 탭절환기(OLTC)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#Component"
+              }
+            ]
+          },
+          "statements": [
+            {
+              "idShort": "ComponentType",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "구성품 종류"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#componentType"
+                  }
+                ]
+              },
+              "valueType": "xs:string",
+              "value": "TapChanger",
+              "valueId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CT_TapChanger"
+                  }
+                ]
+              },
+              "modelType": "Property"
+            },
+            {
+              "idShort": "Record",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "온톨로지의 구성품 개체"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"
+                  }
+                ]
+              },
+              "value": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_OLTC"
+                  }
+                ]
+              },
+              "modelType": "ReferenceElement"
+            }
+          ],
+          "entityType": "CoManagedEntity",
+          "modelType": "Entity"
+        },
+        {
+          "idShort": "CP_TR7_COOL",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "냉각장치(방열기·팬)"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#Component"
+              }
+            ]
+          },
+          "statements": [
+            {
+              "idShort": "ComponentType",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "구성품 종류"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#componentType"
+                  }
+                ]
+              },
+              "valueType": "xs:string",
+              "value": "CoolingUnit",
+              "valueId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CT_CoolingUnit"
+                  }
+                ]
+              },
+              "modelType": "Property"
+            },
+            {
+              "idShort": "Record",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "온톨로지의 구성품 개체"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"
+                  }
+                ]
+              },
+              "value": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_COOL"
+                  }
+                ]
+              },
+              "modelType": "ReferenceElement"
+            }
+          ],
+          "entityType": "CoManagedEntity",
+          "modelType": "Entity"
+        },
+        {
+          "idShort": "CP_TR7_OIL",
+          "displayName": [
+            {
+              "language": "ko",
+              "text": "절연유·권선 절연"
+            }
+          ],
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://1004aiteam-power.github.io/ontology-space/asset#Component"
+              }
+            ]
+          },
+          "statements": [
+            {
+              "idShort": "ComponentType",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "구성품 종류"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#componentType"
+                  }
+                ]
+              },
+              "valueType": "xs:string",
+              "value": "InsulatingOil",
+              "valueId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CT_InsulatingOil"
+                  }
+                ]
+              },
+              "modelType": "Property"
+            },
+            {
+              "idShort": "Record",
+              "displayName": [
+                {
+                  "language": "ko",
+                  "text": "온톨로지의 구성품 개체"
+                }
+              ],
+              "semanticId": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"
+                  }
+                ]
+              },
+              "value": {
+                "type": "ExternalReference",
+                "keys": [
+                  {
+                    "type": "GlobalReference",
+                    "value": "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_OIL"
+                  }
+                ]
+              },
+              "modelType": "ReferenceElement"
+            }
+          ],
+          "entityType": "CoManagedEntity",
+          "modelType": "Entity"
+        }
+      ],
+      "modelType": "Submodel"
+    }
+  ],
+  "conceptDescriptions": [
+    {
+      "idShort": "RatedPower",
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/cd/RatedPower",
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "preferredName": [
+              {
+                "language": "ko",
+                "text": "정격 용량"
+              }
+            ],
+            "unit": "MVA",
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "ko",
+                "text": "변압기 권선의 정격 피상전력. IEC CIM 의 PowerTransformerEnd.ratedS 와 같은 뜻."
+              }
+            ],
+            "modelType": "DataSpecificationIec61360"
+          }
+        }
+      ],
+      "isCaseOf": [
+        {
+          "type": "ExternalReference",
+          "keys": [
+            {
+              "type": "GlobalReference",
+              "value": "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedS"
+            }
+          ]
+        }
+      ],
+      "modelType": "ConceptDescription"
+    },
+    {
+      "idShort": "RatedVoltage",
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/cd/RatedVoltage",
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "preferredName": [
+              {
+                "language": "ko",
+                "text": "정격 전압"
+              }
+            ],
+            "unit": "kV",
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "ko",
+                "text": "변압기 권선의 정격 전압. IEC CIM 의 PowerTransformerEnd.ratedU 와 같은 뜻."
+              }
+            ],
+            "modelType": "DataSpecificationIec61360"
+          }
+        }
+      ],
+      "isCaseOf": [
+        {
+          "type": "ExternalReference",
+          "keys": [
+            {
+              "type": "GlobalReference",
+              "value": "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedU"
+            }
+          ]
+        }
+      ],
+      "modelType": "ConceptDescription"
+    },
+    {
+      "idShort": "HealthIndex",
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/cd/HealthIndex",
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "preferredName": [
+              {
+                "language": "ko",
+                "text": "건전도 지수"
+              }
+            ],
+            "dataType": "REAL_MEASURE",
+            "definition": [
+              {
+                "language": "ko",
+                "text": "경과연수와 최신 진단 판정으로 계산한 0~100 점수. 자산관리 온톨로지의 pam:healthIndex 와 같은 뜻."
+              }
+            ],
+            "modelType": "DataSpecificationIec61360"
+          }
+        }
+      ],
+      "isCaseOf": [
+        {
+          "type": "ExternalReference",
+          "keys": [
+            {
+              "type": "GlobalReference",
+              "value": "https://1004aiteam-power.github.io/ontology-space/asset#healthIndex"
+            }
+          ]
+        }
+      ],
+      "modelType": "ConceptDescription"
+    },
+    {
+      "idShort": "RiskScore",
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/cd/RiskScore",
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "preferredName": [
+              {
+                "language": "ko",
+                "text": "위험도"
+              }
+            ],
+            "dataType": "INTEGER_MEASURE",
+            "definition": [
+              {
+                "language": "ko",
+                "text": "고장 가능성(1~5) × 고장 영향(1~5). 자산관리 온톨로지의 pam:riskScore 와 같은 뜻."
+              }
+            ],
+            "modelType": "DataSpecificationIec61360"
+          }
+        }
+      ],
+      "isCaseOf": [
+        {
+          "type": "ExternalReference",
+          "keys": [
+            {
+              "type": "GlobalReference",
+              "value": "https://1004aiteam-power.github.io/ontology-space/asset#riskScore"
+            }
+          ]
+        }
+      ],
+      "modelType": "ConceptDescription"
+    },
+    {
+      "idShort": "DesignLifeYears",
+      "id": "https://1004aiteam-power.github.io/ontology-space/aas/cd/DesignLifeYears",
+      "embeddedDataSpecifications": [
+        {
+          "dataSpecification": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+              }
+            ]
+          },
+          "dataSpecificationContent": {
+            "preferredName": [
+              {
+                "language": "ko",
+                "text": "설계 수명"
+              }
+            ],
+            "unit": "a",
+            "dataType": "INTEGER_MEASURE",
+            "definition": [
+              {
+                "language": "ko",
+                "text": "제작사가 정한 설계 수명. 자산관리 온톨로지의 pam:designLifeYears 와 같은 뜻."
+              }
+            ],
+            "modelType": "DataSpecificationIec61360"
+          }
+        }
+      ],
+      "isCaseOf": [
+        {
+          "type": "ExternalReference",
+          "keys": [
+            {
+              "type": "GlobalReference",
+              "value": "https://1004aiteam-power.github.io/ontology-space/asset#designLifeYears"
+            }
+          ]
+        }
+      ],
+      "modelType": "ConceptDescription"
+    }
+  ]
+}

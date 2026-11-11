@@ -1,0 +1,40 @@
+# 다리: 자산관리셸(aas-mtr1.ttl) → 자산관리 온톨로지(examples/asset/asset-ontology.ttl) · 예제 변전소 (⚠ 가상 데이터)
+# examples/aas/build_aas.py 가 만든 파일. 손으로 고치지 마세요.
+@prefix aasl: <https://1004aiteam-power.github.io/ontology-space/aas/links#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://1004aiteam-power.github.io/ontology-space/aas/links> a owl:Ontology ; rdfs:label "자산관리셸 ↔ 온톨로지 연결"@ko .
+aasl:describes a owl:ObjectProperty ; rdfs:label "설명하는 자산"@ko ; rdfs:comment "AssetInformation.globalAssetId 가 가리키는 온톨로지의 자산 개체."@ko .
+aasl:hasSubmodel a owl:ObjectProperty ; rdfs:label "서브모델"@ko ; rdfs:comment "셸의 submodels 참조(문자열 키)를 실제 서브모델로 이은 것."@ko .
+aasl:ResolvedReference a owl:Class ; rdfs:label "풀어 낸 참조"@ko ; rdfs:comment "ReferenceElement 하나. AAS RDF 에서는 빈 노드라 밖에서 가리킬 수 없어, 서브모델과 idShort 경로로 다시 적는다."@ko .
+aasl:inSubmodel a owl:ObjectProperty ; rdfs:domain aasl:ResolvedReference ; rdfs:label "속한 서브모델"@ko .
+aasl:idShortPath a owl:DatatypeProperty ; rdfs:domain aasl:ResolvedReference ; rdfs:label "idShort 경로"@ko ; rdfs:comment "서브모델 안에서 요소를 찾아가는 경로 (AAS API 의 idShortPath 와 같은 표기)."@ko .
+aasl:refersTo a owl:ObjectProperty ; rdfs:domain aasl:ResolvedReference ; rdfs:label "가리키는 개체"@ko ; rdfs:comment "ReferenceElement 의 값이 가리키는 온톨로지 개체."@ko .
+
+<https://1004aiteam-power.github.io/ontology-space/aas/shell/AS-TR-0007> aasl:describes <https://1004aiteam-power.github.io/ontology-space/asset#AS_TR_0007> ;
+    aasl:hasSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/Nameplate> ,
+        <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/TechnicalData> ,
+        <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> ,
+        <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial> .
+
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk#FunctionalLocation> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> ; aasl:idShortPath "FunctionalLocation" ;
+    aasl:refersTo <http://example.org/grid#TR_1> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk#Diagnoses[0].Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> ; aasl:idShortPath "Diagnoses[0].Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#DG_02> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk#Diagnoses[1].Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> ; aasl:idShortPath "Diagnoses[1].Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#DG_01> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk#Diagnoses[2].Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> ; aasl:idShortPath "Diagnoses[2].Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#DG_04> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk#Diagnoses[3].Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> ; aasl:idShortPath "Diagnoses[3].Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#DG_13> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk#Diagnoses[4].Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> ; aasl:idShortPath "Diagnoses[4].Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#DG_03> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial#CP_TR7_BSH.Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial> ; aasl:idShortPath "CP_TR7_BSH.Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_BSH> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial#CP_TR7_OLTC.Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial> ; aasl:idShortPath "CP_TR7_OLTC.Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_OLTC> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial#CP_TR7_COOL.Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial> ; aasl:idShortPath "CP_TR7_COOL.Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_COOL> .
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial#CP_TR7_OIL.Record> a aasl:ResolvedReference ; aasl:inSubmodel <https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial> ; aasl:idShortPath "CP_TR7_OIL.Record" ;
+    aasl:refersTo <https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_OIL> .

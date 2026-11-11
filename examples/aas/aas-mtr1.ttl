@@ -1,0 +1,1722 @@
+# 자산관리셸 예제: 가상 A변전소 주변압기 #1 본체 (AS-TR-0007) — AAS 메타모델 V3.0 의 RDF 직렬화 (⚠ 가상 데이터)
+# examples/aas/build_aas.py 가 aas-mtr1.json 과 함께 만든 파일. 손으로 고치지 마세요.
+@prefix aas: <https://admin-shell.io/aas/3/0/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xs:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://1004aiteam-power.github.io/ontology-space/aas/shell/AS-TR-0007> rdf:type aas:AssetAdministrationShell ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "MTr1_AS_TR_0007"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Referable/displayName> [
+        rdf:type aas:LangStringNameType ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/text> "M.Tr #1 본체"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Referable/description> [
+        rdf:type aas:LangStringTextType ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/text> "가상 A변전소 주변압기 #1 본체의 자산관리셸 (가상 데이터, 기준일 2026-11-03)"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/shell/AS-TR-0007"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/AssetAdministrationShell/assetInformation> [
+        rdf:type aas:AssetInformation ;
+        <https://admin-shell.io/aas/3/0/AssetInformation/assetKind> <https://admin-shell.io/aas/3/0/AssetKind/Instance> ;
+        <https://admin-shell.io/aas/3/0/AssetInformation/globalAssetId> "https://1004aiteam-power.github.io/ontology-space/asset#AS_TR_0007"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/AssetInformation/specificAssetIds> [
+            rdf:type aas:SpecificAssetId ;
+            <https://admin-shell.io/aas/3/0/SpecificAssetId/name> "eamNumber"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/SpecificAssetId/value> "EQ-TR-2015-0007"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#eamNumber"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/AssetInformation/assetType> "https://1004aiteam-power.github.io/ontology-space/asset#TransformerAsset"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/AssetAdministrationShell/submodels> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ModelReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/Submodel> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/Nameplate"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/AssetAdministrationShell/submodels> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ModelReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/Submodel> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/TechnicalData"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/AssetAdministrationShell/submodels> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ModelReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/Submodel> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/AssetAdministrationShell/submodels> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ModelReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/Submodel> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial"^^xs:string ;
+        ] ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/Nameplate> rdf:type aas:Submodel ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "Nameplate"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Referable/displayName> [
+        rdf:type aas:LangStringNameType ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/text> "명판"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/Nameplate"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasKind/kind> <https://admin-shell.io/aas/3/0/ModellingKind/Instance> ;
+    <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://admin-shell.io/idta/nameplate/3/0/Nameplate"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "URIOfTheProduct"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "0112/2///61987#ABN590#002"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/AnyUri> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "https://1004aiteam-power.github.io/ontology-space/asset#AS_TR_0007"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:MultiLanguageProperty ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "ManufacturerName"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "0112/2///61987#ABA565#009"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/MultiLanguageProperty/value> [
+            rdf:type aas:LangStringTextType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "가상전기"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:MultiLanguageProperty ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "ManufacturerProductDesignation"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "0112/2///61987#ABA567#009"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/MultiLanguageProperty/value> [
+            rdf:type aas:LangStringTextType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "60MVA 154/22.9kV ONAN/ONAF 변압기"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "ManufacturerProductType"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "0112/2///61987#ABA300#008"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "VT-60M154"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "OrderCodeOfManufacturer"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "0112/2///61987#ABA950#008"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "VT-60M154"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "YearOfConstruction"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "0112/2///61987#ABP000#002"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "2015"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "CountryOfOrigin"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "0112/2///61987#ABP462#001"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "KR"^^xs:string ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/TechnicalData> rdf:type aas:Submodel ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "TechnicalData"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Referable/displayName> [
+        rdf:type aas:LangStringNameType ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/text> "기술 데이터"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/TechnicalData"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasKind/kind> <https://admin-shell.io/aas/3/0/ModellingKind/Instance> ;
+    <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/semantics/TechnicalData/1/0"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "RatedPower"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "정격 용량 (MVA)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedS"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Decimal> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "60"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "RatedVoltageHV"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "1차 정격 전압 (kV)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedU"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Decimal> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "154"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "RatedVoltageLV"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "2차 정격 전압 (kV)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedU"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Decimal> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "22.9"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "CoolingType"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "냉각 방식"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/semantics/CoolingType"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "ONAN/ONAF"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "DesignLifeYears"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "설계 수명 (년)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#designLifeYears"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Integer> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "40"^^xs:string ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk> rdf:type aas:Submodel ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "ConditionAndRisk"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Referable/displayName> [
+        rdf:type aas:LangStringNameType ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/text> "상태 · 위험도"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/ConditionAndRisk"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasKind/kind> <https://admin-shell.io/aas/3/0/ModellingKind/Instance> ;
+    <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/semantics/ConditionAndRisk/1/0"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:ReferenceElement ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "FunctionalLocation"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "현재 설치 위치 (전력망의 기능 위치)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#installedAt"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "http://example.org/grid#TR_1"^^xs:string ;
+            ] ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "EamNumber"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "EAM 설비번호"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#eamNumber"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "EQ-TR-2015-0007"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "Status"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "운전 상태"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#status"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "운전"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "HealthIndex"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "건전도 지수 (0~100)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#healthIndex"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Decimal> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "53"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "ProbabilityOfFailure"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "고장 가능성 (1~5)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#probabilityOfFailure"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Integer> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "3"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "ConsequenceOfFailure"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "고장 영향 (1~5)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#consequenceOfFailure"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Integer> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "5"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Property ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "RiskScore"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "위험도 (PoF × CoF)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#riskScore"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Integer> ;
+        <https://admin-shell.io/aas/3/0/Property/value> "15"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:SubmodelElementList ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "Diagnoses"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단 기록"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/SubmodelElementList/orderRelevant> "true"^^xs:boolean ;
+        <https://admin-shell.io/aas/3/0/SubmodelElementList/typeValueListElement> <https://admin-shell.io/aas/3/0/AasSubmodelElements/SubmodelElementCollection> ;
+        <https://admin-shell.io/aas/3/0/SubmodelElementList/value> [
+            rdf:type aas:SubmodelElementCollection ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:ReferenceElement ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 진단 기록"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#DG_02"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Date"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단일"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#date"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Date> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "2026-03-10"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Method"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단 방법"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "절연유 특성시험"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#IN_04"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Finding"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "소견"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#finding"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "수분 18ppm, 절연파괴전압 52kV"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Judgement"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "판정"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#judgement"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "정상"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Normal"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/SubmodelElementList/value> [
+            rdf:type aas:SubmodelElementCollection ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:ReferenceElement ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 진단 기록"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#DG_01"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Date"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단일"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#date"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Date> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "2026-09-15"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Method"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단 방법"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "유중가스분석(DGA)"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#IN_03"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Finding"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "소견"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#finding"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "TCG 820ppm, C2H2 2ppm (주의 기준 초과)"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Judgement"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "판정"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#judgement"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "주의"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Caution"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/SubmodelElementList/value> [
+            rdf:type aas:SubmodelElementCollection ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:ReferenceElement ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 진단 기록"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#DG_04"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Date"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단일"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#date"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Date> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "2026-09-20"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Method"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단 방법"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "열화상 진단"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#IN_02"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Finding"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "소견"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#finding"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "최고 61℃, 이상 없음"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Judgement"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "판정"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#judgement"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "정상"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Normal"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/SubmodelElementList/value> [
+            rdf:type aas:SubmodelElementCollection ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:ReferenceElement ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 진단 기록"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#DG_13"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Date"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단일"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#date"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Date> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "2026-10-28"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Method"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단 방법"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "순시점검"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#IN_01"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Finding"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "소견"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#finding"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "이상 없음"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Judgement"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "판정"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#judgement"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "정상"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Normal"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/SubmodelElementList/value> [
+            rdf:type aas:SubmodelElementCollection ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:ReferenceElement ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 진단 기록"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Diagnosis"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#DG_03"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Date"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단일"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#date"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/Date> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "2026-10-31"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Method"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "진단 방법"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#usesMethod"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "OLTC 동작횟수 확인"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#IN_05"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Finding"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "소견"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#finding"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "OLTC 정비 후 동작 68,400회 (정비 기준 60,000회)"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/SubmodelElementCollection/value> [
+                rdf:type aas:Property ;
+                <https://admin-shell.io/aas/3/0/Referable/idShort> "Judgement"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                    rdf:type aas:LangStringNameType ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                    <https://admin-shell.io/aas/3/0/AbstractLangString/text> "판정"^^xs:string ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#judgement"^^xs:string ;
+                    ] ;
+                ] ;
+                <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+                <https://admin-shell.io/aas/3/0/Property/value> "주의"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/Property/valueId> [
+                    rdf:type aas:Reference ;
+                    <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                    <https://admin-shell.io/aas/3/0/Reference/keys> [
+                        rdf:type aas:Key ;
+                        <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                        <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Caution"^^xs:string ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial> rdf:type aas:Submodel ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "BillOfMaterial"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Referable/displayName> [
+        rdf:type aas:LangStringNameType ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/AbstractLangString/text> "구성품"^^xs:string ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/sm/AS-TR-0007/BillOfMaterial"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasKind/kind> <https://admin-shell.io/aas/3/0/ModellingKind/Instance> ;
+    <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/aas/semantics/BillOfMaterial/1/0"^^xs:string ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Entity ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "CP_TR7_BSH"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "154kV 부싱"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Component"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:Property ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "ComponentType"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "구성품 종류"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#componentType"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+            <https://admin-shell.io/aas/3/0/Property/value> "Bushing"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Property/valueId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CT_Bushing"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:ReferenceElement ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 구성품 개체"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_BSH"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/entityType> <https://admin-shell.io/aas/3/0/EntityType/CoManagedEntity> ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Entity ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "CP_TR7_OLTC"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "부하시 탭절환기(OLTC)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Component"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:Property ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "ComponentType"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "구성품 종류"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#componentType"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+            <https://admin-shell.io/aas/3/0/Property/value> "TapChanger"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Property/valueId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CT_TapChanger"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:ReferenceElement ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 구성품 개체"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_OLTC"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/entityType> <https://admin-shell.io/aas/3/0/EntityType/CoManagedEntity> ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Entity ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "CP_TR7_COOL"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "냉각장치(방열기·팬)"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Component"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:Property ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "ComponentType"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "구성품 종류"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#componentType"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+            <https://admin-shell.io/aas/3/0/Property/value> "CoolingUnit"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Property/valueId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CT_CoolingUnit"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:ReferenceElement ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 구성품 개체"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_COOL"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/entityType> <https://admin-shell.io/aas/3/0/EntityType/CoManagedEntity> ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/Submodel/submodelElements> [
+        rdf:type aas:Entity ;
+        <https://admin-shell.io/aas/3/0/Referable/idShort> "CP_TR7_OIL"^^xs:string ;
+        <https://admin-shell.io/aas/3/0/Referable/displayName> [
+            rdf:type aas:LangStringNameType ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/AbstractLangString/text> "절연유·권선 절연"^^xs:string ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#Component"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:Property ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "ComponentType"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "구성품 종류"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#componentType"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/Property/valueType> <https://admin-shell.io/aas/3/0/DataTypeDefXsd/String> ;
+            <https://admin-shell.io/aas/3/0/Property/value> "InsulatingOil"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Property/valueId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CT_InsulatingOil"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/statements> [
+            rdf:type aas:ReferenceElement ;
+            <https://admin-shell.io/aas/3/0/Referable/idShort> "Record"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/Referable/displayName> [
+                rdf:type aas:LangStringNameType ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "온톨로지의 구성품 개체"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/HasSemantics/semanticId> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#hasComponent"^^xs:string ;
+                ] ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/ReferenceElement/value> [
+                rdf:type aas:Reference ;
+                <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+                <https://admin-shell.io/aas/3/0/Reference/keys> [
+                    rdf:type aas:Key ;
+                    <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                    <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#CP_TR7_OIL"^^xs:string ;
+                ] ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/Entity/entityType> <https://admin-shell.io/aas/3/0/EntityType/CoManagedEntity> ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/cd/RatedPower> rdf:type aas:ConceptDescription ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "RatedPower"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/cd/RatedPower"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasDataSpecification/embeddedDataSpecifications> [
+        rdf:type aas:EmbeddedDataSpecification ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecification> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecificationContent> [
+            rdf:type aas:DataSpecificationIec61360 ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/preferredName> [
+                rdf:type aas:LangStringPreferredNameTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "정격 용량"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/unit> "MVA"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/dataType> <https://admin-shell.io/aas/3/0/DataTypeIec61360/RealMeasure> ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/definition> [
+                rdf:type aas:LangStringDefinitionTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "변압기 권선의 정격 피상전력. IEC CIM 의 PowerTransformerEnd.ratedS 와 같은 뜻."^^xs:string ;
+            ] ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/ConceptDescription/isCaseOf> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedS"^^xs:string ;
+        ] ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/cd/RatedVoltage> rdf:type aas:ConceptDescription ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "RatedVoltage"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/cd/RatedVoltage"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasDataSpecification/embeddedDataSpecifications> [
+        rdf:type aas:EmbeddedDataSpecification ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecification> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecificationContent> [
+            rdf:type aas:DataSpecificationIec61360 ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/preferredName> [
+                rdf:type aas:LangStringPreferredNameTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "정격 전압"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/unit> "kV"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/dataType> <https://admin-shell.io/aas/3/0/DataTypeIec61360/RealMeasure> ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/definition> [
+                rdf:type aas:LangStringDefinitionTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "변압기 권선의 정격 전압. IEC CIM 의 PowerTransformerEnd.ratedU 와 같은 뜻."^^xs:string ;
+            ] ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/ConceptDescription/isCaseOf> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "http://iec.ch/TC57/CIM100#PowerTransformerEnd.ratedU"^^xs:string ;
+        ] ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/cd/HealthIndex> rdf:type aas:ConceptDescription ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "HealthIndex"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/cd/HealthIndex"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasDataSpecification/embeddedDataSpecifications> [
+        rdf:type aas:EmbeddedDataSpecification ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecification> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecificationContent> [
+            rdf:type aas:DataSpecificationIec61360 ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/preferredName> [
+                rdf:type aas:LangStringPreferredNameTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "건전도 지수"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/dataType> <https://admin-shell.io/aas/3/0/DataTypeIec61360/RealMeasure> ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/definition> [
+                rdf:type aas:LangStringDefinitionTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "경과연수와 최신 진단 판정으로 계산한 0~100 점수. 자산관리 온톨로지의 pam:healthIndex 와 같은 뜻."^^xs:string ;
+            ] ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/ConceptDescription/isCaseOf> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#healthIndex"^^xs:string ;
+        ] ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/cd/RiskScore> rdf:type aas:ConceptDescription ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "RiskScore"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/cd/RiskScore"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasDataSpecification/embeddedDataSpecifications> [
+        rdf:type aas:EmbeddedDataSpecification ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecification> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecificationContent> [
+            rdf:type aas:DataSpecificationIec61360 ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/preferredName> [
+                rdf:type aas:LangStringPreferredNameTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "위험도"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/dataType> <https://admin-shell.io/aas/3/0/DataTypeIec61360/IntegerMeasure> ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/definition> [
+                rdf:type aas:LangStringDefinitionTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "고장 가능성(1~5) × 고장 영향(1~5). 자산관리 온톨로지의 pam:riskScore 와 같은 뜻."^^xs:string ;
+            ] ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/ConceptDescription/isCaseOf> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#riskScore"^^xs:string ;
+        ] ;
+    ] ;
+.
+
+<https://1004aiteam-power.github.io/ontology-space/aas/cd/DesignLifeYears> rdf:type aas:ConceptDescription ;
+    <https://admin-shell.io/aas/3/0/Referable/idShort> "DesignLifeYears"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "https://1004aiteam-power.github.io/ontology-space/aas/cd/DesignLifeYears"^^xs:string ;
+    <https://admin-shell.io/aas/3/0/HasDataSpecification/embeddedDataSpecifications> [
+        rdf:type aas:EmbeddedDataSpecification ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecification> [
+            rdf:type aas:Reference ;
+            <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+            <https://admin-shell.io/aas/3/0/Reference/keys> [
+                rdf:type aas:Key ;
+                <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+                <https://admin-shell.io/aas/3/0/Key/value> "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"^^xs:string ;
+            ] ;
+        ] ;
+        <https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecificationContent> [
+            rdf:type aas:DataSpecificationIec61360 ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/preferredName> [
+                rdf:type aas:LangStringPreferredNameTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "설계 수명"^^xs:string ;
+            ] ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/unit> "a"^^xs:string ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/dataType> <https://admin-shell.io/aas/3/0/DataTypeIec61360/IntegerMeasure> ;
+            <https://admin-shell.io/aas/3/0/DataSpecificationIec61360/definition> [
+                rdf:type aas:LangStringDefinitionTypeIec61360 ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/language> "ko"^^xs:string ;
+                <https://admin-shell.io/aas/3/0/AbstractLangString/text> "제작사가 정한 설계 수명. 자산관리 온톨로지의 pam:designLifeYears 와 같은 뜻."^^xs:string ;
+            ] ;
+        ] ;
+    ] ;
+    <https://admin-shell.io/aas/3/0/ConceptDescription/isCaseOf> [
+        rdf:type aas:Reference ;
+        <https://admin-shell.io/aas/3/0/Reference/type> <https://admin-shell.io/aas/3/0/ReferenceTypes/ExternalReference> ;
+        <https://admin-shell.io/aas/3/0/Reference/keys> [
+            rdf:type aas:Key ;
+            <https://admin-shell.io/aas/3/0/Key/type> <https://admin-shell.io/aas/3/0/KeyTypes/GlobalReference> ;
+            <https://admin-shell.io/aas/3/0/Key/value> "https://1004aiteam-power.github.io/ontology-space/asset#designLifeYears"^^xs:string ;
+        ] ;
+    ] ;
+.
