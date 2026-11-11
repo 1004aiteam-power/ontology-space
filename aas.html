@@ -189,6 +189,20 @@
   </div>
 </div>
 
+<section id="analogy">
+  <h2><span lang="ko">먼저 비유로: 조직도 · 개인 기록부 · 발령 대장</span><span lang="en">First, an analogy: org chart, personal file, posting register</span></h2>
+  <p lang="ko">전력 분야에는 이미 IEC CIM이 있는데 AAS는 왜 또 필요할까요? 회사에 빗대면 둘이 다루는 대상이 다릅니다. CIM은 <b>자리</b>를, AAS는 그 자리에 앉은 <b>사람</b>을 적습니다.</p>
+  <p lang="en">The power sector already has IEC CIM, so why the AAS as well? In company terms they describe different things: CIM records the <b>position</b>, the AAS the <b>person</b> sitting in it.</p>
+  <div class="tbl"><table class="qa">
+    <tr><th></th><th><span lang="ko">회사에 빗대면</span><span lang="en">In a company</span></th><th><span lang="ko">전력 설비에서는</span><span lang="en">For power equipment</span></th></tr>
+    <tr><td><span class="tag cim">CIM</span></td><td lang="ko"><b>조직도와 직무기술서.</b> "영업1팀 팀장" 자리가 어느 본부 소속이고 누구에게 보고하는지. 사람이 바뀌어도 자리는 그대로</td><td lang="en"><b>The org chart and job descriptions.</b> Which division the post "Sales team 1 lead" belongs to and whom it reports to. The post stays when the person changes</td><td lang="ko">"주변압기 #1" 자리가 어느 변전소에 있고 어느 모선 · 선로에 연결되는지. 변압기를 교체해도 계통 모델은 그대로</td><td lang="en">Which substation the position "main transformer #1" is in and which busbars and lines it connects to. The network model stays when the transformer is replaced</td></tr>
+    <tr><td><span class="tag aas">AAS</span></td><td lang="ko"><b>사람을 따라다니는 개인 기록부.</b> 인적 사항 · 이력서 · 자격증 · 건강검진 결과. 부서를 옮겨도 그 사람을 따라감</td><td lang="en"><b>The personal file that follows the person.</b> Personal details, CV, certificates, health check results. It moves with the person between departments</td><td lang="ko">명판 · 기술 사양 · 시험 성적서 · 진단 기록. 다른 변전소로 옮겨도 그 변압기를 따라감</td><td lang="en">Nameplate, technical data, test reports, diagnoses. It moves with the transformer to another substation</td></tr>
+    <tr><td><span lang="ko">식별자</span><span lang="en">Identifiers</span></td><td lang="ko"><b>자리 번호와 사번.</b> 사원증에 적힌 번호</td><td lang="en"><b>Post number and employee number</b> — the number on the staff card</td><td lang="ko">자리는 CIM의 <code>mRID</code>, 실물은 AAS의 <code>globalAssetId</code></td><td lang="en">The position has CIM's <code>mRID</code>; the unit has the AAS <code>globalAssetId</code></td></tr>
+    <tr><td><span class="tag on"><span lang="ko">온톨로지</span><span lang="en">Ontology</span></span></td><td lang="ko"><b>발령 대장이자 용어 사전.</b> 누가 언제부터 언제까지 어느 자리에 있었는지, 그리고 기록부에 적힌 말의 뜻</td><td lang="en"><b>The posting register and the glossary.</b> Who held which post from when to when, and what the words in the files mean</td><td lang="ko">설치 이력(<code>pam:Deployment</code>)이 자산과 자리를 잇고, <code>semanticId</code>가 가리키는 용어의 뜻을 정함</td><td lang="en">The deployment history (<code>pam:Deployment</code>) links asset and position, and it defines the terms that <code>semanticId</code> points at</td></tr>
+  </table></div>
+  <div class="easy"><b>💡 <span lang="ko">한 줄로</span><span lang="en">In one line</span></b><p lang="ko"><b>CIM은 조직도</b>(자리와 연결), <b>AAS는 그 자리에 앉은 사람의 개인 기록부</b>, <b>온톨로지는 둘을 잇는 발령 대장이자 용어 사전</b>입니다. 셋은 서로 대신하지 않습니다.</p><p lang="en"><b>CIM is the org chart</b> (positions and connections), <b>the AAS is the personal file of whoever sits there</b>, and <b>the ontology is the posting register and glossary that joins them</b>. None replaces another.</p></div>
+</section>
+
 <section id="what">
   <h2><span lang="ko">AAS란 무엇인가</span><span lang="en">What an AAS is</span></h2>
   <p lang="ko">공장의 모터, 변전소의 변압기, 소프트웨어 한 벌처럼 조직에 가치가 있는 것을 <b>자산(Asset)</b>이라 부릅니다. 자산마다 명판 · 기술 사양 · 도면 · 시험 성적서 · 정비 이력이 따라다니는데, 제작사마다 형식이 달라 받는 쪽에서 매번 다시 입력해야 했습니다. AAS는 이 정보를 <b>누가 만들어도 같은 구조</b>로 담도록 정한 것입니다. 자산과 그 관리셸을 한 쌍으로 묶은 것을 인더스트리 4.0에서는 <b>I4.0 컴포넌트</b>라고 부릅니다.</p>
