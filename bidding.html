@@ -151,7 +151,8 @@
   <p class="lead" lang="en">How is electricity bought and sold? What does a power plant "bid" the day before, who sets the price and how, and what does a generator have to do every day? Notes from my own study, written as simply as I can.</p>
   <div class="notice"><b>⚠ <span lang="ko">개인 학습 노트입니다. 참고만 하세요</span><span lang="en">Personal study notes — for reference only</span></b>
     <p lang="ko">이 페이지는 제가 공부하며 <strong>이해한 내용</strong>과 인터넷에서 찾은 자료를 정리한 것으로, <strong>정확하지 않거나 최신이 아닐 수 있습니다.</strong> 시각 · 정산 항목 · 규칙은 단순하게 줄였고, 그래프의 숫자는 설명을 위한 가상 값입니다. 실제 업무에는 반드시 전력거래소의 <strong>전력시장운영규칙</strong>과 공식 자료를 확인하세요.</p>
-    <p lang="en">This page collects what I <strong>understood</strong> while studying, plus material found online. It <strong>may be inaccurate or out of date.</strong> Times, settlement items and rules are simplified, and chart numbers are made up for illustration. For real work, always check KPX's <strong>Market Operation Rules</strong> and official sources.</p></div>
+    <p lang="en">This page collects what I <strong>understood</strong> while studying, plus material found online. It <strong>may be inaccurate or out of date.</strong> Times, settlement items and rules are simplified, and chart numbers are made up for illustration. For real work, always check KPX's <strong>Market Operation Rules</strong> and official sources.</p>
+    <p class="meta"><span lang="ko"><b>작성 기준: 2026년 11월.</b> 확인할 공식 자료는 <a href="#sources">맨 아래 참고 자료</a>에 모았습니다.</span><span lang="en"><b>Written as of November 2026.</b> Official sources to check are listed under <a href="#sources">References</a> at the bottom.</span></p></div>
 </div>
 
 <section id="summary">
@@ -337,6 +338,23 @@
   <p lang="ko">재생에너지가 늘면서 "싼 순서대로 세우기"만으로는 부족해졌습니다. 그래서 재생에너지도 입찰하고 급전지시를 받게 하는 제도(제주에서 시범 시작), 하루 전보다 더 가까운 시점에 거래하는 실시간 시장, 유연성 · 예비력에 값을 매기는 보조서비스 시장 같은 개편이 논의 · 시행되고 있다고 이해하고 있습니다. 이런 변화가 <a href="vpp.html">VPP</a>가 주목받는 이유이기도 합니다.</p>
   <p lang="en">As renewables grow, "stack the cheapest first" is no longer enough. My understanding is that reforms are under discussion or rolling out: renewables bidding and receiving dispatch (piloted in Jeju), real-time markets closer to delivery than day-ahead, and ancillary-service markets that price flexibility and reserves. These changes are also why <a href="vpp.html">VPPs</a> are drawing attention.</p>
   <div class="easy"><b>💡 <span lang="ko">이 사이트의 다른 페이지와 이어 보기</span><span lang="en">Continue on this site</span></b><p lang="ko"><a href="vpp.html">VPP 기본 개념</a>에서 작은 설비를 묶어 입찰하는 방법을, <a href="vpp-market.html">VPP 가상 전력시장</a>에서 입찰 · 정산을 그래프 DB로 직접 물어보는 예를 볼 수 있습니다.</p><p lang="en">See <a href="vpp.html">VPP basics</a> for bidding small resources as one, and <a href="vpp-market.html">VPP virtual market</a> to query bids and settlements in a graph DB.</p></div>
+</section>
+
+<section id="sources">
+  <h2><span lang="ko">참고 자료 · 확인할 곳</span><span lang="en">References · where to check</span></h2>
+  <p class="sub" lang="ko">이 노트의 내용을 실제 규칙과 대조할 때 볼 공식 자료입니다. 이 페이지의 설명이 아래 자료와 다르면 아래 자료가 맞습니다.</p>
+  <p class="sub" lang="en">Official sources for checking these notes against the real rules. Where this page and the sources differ, the sources are right.</p>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">이 페이지의 내용</span><span lang="en">Topic on this page</span></th><th><span lang="ko">확인할 곳</span><span lang="en">Where to check</span></th></tr>
+    <tr><td><span lang="ko">입찰 · 가격결정 · 급전 · 계량 · 정산의 절차와 시각, 용량 · 제약 정산</span><span lang="en">Procedures and times for bidding, pricing, dispatch, metering and settlement; capacity and constraint payments</span></td><td><a href="https://www.kpx.or.kr/"><span lang="ko">전력거래소(KPX)</span><span lang="en">Korea Power Exchange (KPX)</span></a><span lang="ko">: 전력시장운영규칙 및 세부규정</span><span lang="en">: Market Operation Rules and detailed regulations</span></td></tr>
+    <tr><td><span lang="ko">실제 SMP · 수요 · 발전량 통계</span><span lang="en">Actual SMP, demand and generation statistics</span></td><td><a href="https://epsis.kpx.or.kr/"><span lang="ko">전력통계정보시스템(EPSIS)</span><span lang="en">Electric Power Statistics Information System (EPSIS)</span></a></td></tr>
+    <tr><td><span lang="ko">발전사업 허가, 전력시장 · 전력거래소, 소규모전력중개사업의 법적 근거</span><span lang="en">Generation licences, the market and KPX, the legal basis of small-scale brokerage</span></td><td><a href="https://www.law.go.kr/법령/전기사업법"><span lang="ko">전기사업법 (국가법령정보센터)</span><span lang="en">Electric Utility Act (Korean law database)</span></a></td></tr>
+    <tr><td><span lang="ko">RPS · REC</span><span lang="en">RPS and RECs</span></td><td><span lang="ko">신에너지 및 재생에너지 개발 · 이용 · 보급 촉진법</span><span lang="en">Act on the Promotion of the Development, Use and Diffusion of New and Renewable Energy</span> (<a href="https://www.law.go.kr/"><span lang="ko">국가법령정보센터에서 검색</span><span lang="en">search the Korean law database</span></a>)</td></tr>
+    <tr><td><span lang="ko">VPP(통합발전소) · 분산에너지 사업</span><span lang="en">VPPs (integrated power plants) and distributed-energy businesses</span></td><td><a href="https://www.law.go.kr/법령/분산에너지활성화특별법"><span lang="ko">분산에너지 활성화 특별법 (국가법령정보센터)</span><span lang="en">Distributed Energy Act (Korean law database)</span></a> · <a href="vpp.html#policy"><span lang="ko">이 사이트의 제도 표</span><span lang="en">this site's table of rules</span></a></td></tr>
+    <tr><td><span lang="ko">재생에너지 입찰 · 실시간시장 · 예비력시장 (제주 시범, 2024년 6월 시작)</span><span lang="en">Renewable bidding, real-time and reserve markets (Jeju pilot, from June 2024)</span></td><td><a href="https://www.kpx.or.kr/"><span lang="ko">전력거래소</span><span lang="en">KPX</span></a><span lang="ko">: 전력시장 제도개선 제주 시범사업 운영규칙</span><span lang="en">: operating rules for the Jeju market-reform pilot</span></td></tr>
+  </table></div>
+  <p class="meta" lang="ko">전력시장운영규칙의 최신본과 개정 이력은 전력거래소 누리집의 "전력시장운영규칙" 메뉴에 있습니다. 법령은 국가법령정보센터에서 현행 조문과 개정 이력을 볼 수 있습니다.</p>
+  <p class="meta" lang="en">The latest Market Operation Rules and their revision history are under the "Market Operation Rules" menu on the KPX site. Current text and amendment history of the laws are on the Korean law database.</p>
   <div class="pager"><a href="vpp-market.html"><span lang="ko">← 이전: VPP 가상 전력시장</span><span lang="en">← Prev: VPP virtual market</span></a><a href="index.html"><span lang="ko">처음으로 →</span><span lang="en">Home →</span></a></div>
 </section>
 </main>
