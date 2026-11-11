@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 # (href, 한국어, English, 한국어 설명, English description) — 설명이 None이면 위쪽 줄의 단순 링크
-# ("hr",) = 구분선, ("h", 한국어, English) = 메뉴 안의 작은 제목
+# ("hr",) = 구분선, ("h", 한국어, English) = 메뉴 안의 작은 제목, ("col",) = 여기서부터 다음 열 (긴 메뉴를 옆으로 나눔)
 NAV = [
     ("menu", "introMenu", "소개", "Intro", [
         ("index.html", "사이트 소개", "About this site", "전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기", "What is here · reading orders · simulations"),
@@ -68,18 +68,19 @@ NAV = [
         ("ecosystem.html", "단세포 생태계", "Cell Ecosystem", "초식·육식 세포의 포식자–피식자 개체수 주기 · 진화", "Predator–prey population cycles · evolution"),
     ]),
     ("menu", "studioMenu", "온톨로지 설계실", "Design Studio", [
+        ("h", "설계실", "Studio"),
         ("studio.html", "설계실 소개", "About the studio", "정답 없는 설계를 기록하는 곳", "Where design decisions are recorded"),
         ("ontology-map.html", "온톨로지 지도", "Ontology map", "사이트의 온톨로지가 서로 어떻게 이어지나", "How the site's ontologies connect"),
-        ("hr",),
-        ("work.html", "업무 온톨로지", "Work Ontology", "가상의 AI추진부 업무 149개", "149 tasks of a fictional department"),
-        ("asset.html", "전력설비 자산관리", "Power Asset Management", "가상 A변전소 설비 · 진단 · 위험도", "Virtual substation: assets, diagnoses, risk"),
-        ("highway.html", "고속도로·국도 교통", "Road Traffic", "가상 고속도로·국도망 · 24시간 차량 흐름", "Virtual expressways &amp; national roads · 24 h traffic"),
-        ("hr",),
-        ("ev.html", "고속도로 × 전력망: 전기차 충전", "Roads × Grid: EV Charging", "휴게소 충전 수요 → 배전선로 → 변전소", "Rest-area charging → feeder → substation"),
-        ("impact.html", "설비 고장 영향 분석", "Failure Impact Analysis", "자산 위험도 × 배전선로 · 고객 · 복구", "Asset risk × feeder · customers · restoration"),
-        ("safety-ontology.html", "배전공사 안전 온톨로지", "Distribution Work Safety Ontology", "현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로", "Field steps, rules, hazards → work, assets, feeder"),
+        ("hr",), ("h", "분야별 온톨로지", "Domain ontologies"),
+        ("work.html", "업무", "Work", "가상의 AI추진부 업무 149개", "149 tasks of a fictional department"),
+        ("asset.html", "전력설비 자산관리", "Power asset management", "가상 A변전소 설비 · 진단 · 위험도", "Virtual substation: assets, diagnoses, risk"),
+        ("highway.html", "고속도로·국도 교통", "Road traffic", "가상 고속도로·국도망 · 24시간 차량 흐름", "Virtual expressways &amp; national roads · 24 h traffic"),
+        ("col",), ("h", "온톨로지 잇기", "Connecting ontologies"),
+        ("ev.html", "전기차 충전", "EV charging", "고속도로 × 전력망 · 휴게소 → 변전소", "Roads × grid · rest area → substation"),
+        ("impact.html", "설비 고장 영향 분석", "Failure impact analysis", "자산 위험도 × 배전선로 · 고객 · 복구", "Asset risk × feeder · customers · restoration"),
+        ("safety-ontology.html", "배전공사 안전", "Distribution work safety", "현장 단계 · 수칙 · 위험요인 → 업무 · 자산", "Field steps, rules, hazards → work, assets"),
         ("hr",), ("h", "자연", "Nature"),
-        ("eco-ontology.html", "단세포 생태계 온톨로지", "Cell Ecosystem Ontology", "시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프", "Simulation record → lineage, predation, evolution graph"),
+        ("eco-ontology.html", "단세포 생태계", "Cell ecosystem", "시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프", "Simulation record → lineage, predation, evolution graph"),
     ]),
     ("menu", "aiMenu", "AI × 온톨로지", "AI × Ontology", [
         ("ai.html", "AI × 온톨로지 시연", "AI × ontology demo", "LLM만 · 문서 검색 · GraphRAG 비교", "LLM alone vs. RAG vs. GraphRAG"),
@@ -178,15 +179,22 @@ def build(page: str) -> str:
         here = mid == primary
         out.append(f'    <button type="button" class="menu-btn{" current" if here else ""}" aria-expanded="false" aria-controls="{mid}">'
                    f'{label(ko, en)}<span class="caret" aria-hidden="true">▾</span></button>')
-        out.append(f'    <div class="menu" id="{mid}" hidden>')
+        cols = any(e[0] == "col" for e in entries)
+        out.append(f'    <div class="menu{" cols" if cols else ""}" id="{mid}" hidden>')
+        if cols:
+            out.append('      <div class="menu-col">')
         for e in entries:
-            if e[0] == "hr":
+            if e[0] == "col":
+                out.append('      </div><div class="menu-col">')
+            elif e[0] == "hr":
                 out.append("      <hr>")
             elif e[0] == "h":
                 out.append(f'      <p class="menu-h">{label(e[1], e[2])}</p>')
             else:
                 href, ko2, en2, dko, den = e
                 out.append(f'      <a href="{href}"{cur(href)}>{label(ko2, en2)}<small lang="ko">{dko}</small><small lang="en">{den}</small></a>')
+        if cols:
+            out.append("      </div>")
         out.append("    </div>")
     out.append("  </nav>")
     return "\n".join(out)

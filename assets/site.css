@@ -306,6 +306,11 @@ html.hide-easy .easy{display:none}
 .menu{position:fixed;z-index:20;min-width:220px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
   box-shadow:0 8px 24px rgba(0,0,0,.12);padding:6px;display:flex;flex-direction:column;gap:2px}
 .menu[hidden]{display:none}
+/* 긴 메뉴: 화면보다 길면 메뉴 안에서 스크롤, 열로 나눈 메뉴(.cols)는 옆으로 나란히 */
+.menu{max-height:calc(100vh - 70px);max-height:calc(100dvh - 70px);overflow-y:auto;overscroll-behavior:contain}
+.menu.cols{flex-direction:row;gap:6px}
+.menu-col{display:flex;flex-direction:column;gap:2px;flex:1 1 0;min-width:250px}
+.menu-col + .menu-col{border-left:1px solid var(--line);padding-left:6px}
 nav .menu a{display:block;padding:8px 10px;border-radius:6px;font-size:14px;color:var(--text);white-space:normal;letter-spacing:0}
 nav .menu a small{display:block;color:var(--muted);font-size:12px}
 nav .menu a[aria-current="page"]{background:var(--code);font-weight:600}
@@ -678,7 +683,10 @@ nav .menu .menu-h{margin:4px 10px 0;font-size:11.5px;font-weight:700;color:var(-
   html.js nav.open > a,html.js nav.open > .menu-btn{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;
     font-size:16px;letter-spacing:0;padding:10px 10px;white-space:normal}
   html.js nav.open .menu{position:static;min-width:0;background:none;border:0;border-left:2px solid var(--line);border-radius:0;box-shadow:none;
-    margin:0 0 6px 12px;padding:2px 0 2px 6px}
+    margin:0 0 6px 12px;padding:2px 0 2px 6px;max-height:none;overflow:visible}
+  html.js nav.open .menu.cols{flex-direction:column}
+  html.js nav.open .menu-col{min-width:0}
+  html.js nav.open .menu-col + .menu-col{border-left:0;padding-left:0}
 }
 
 /* 좁은 화면에서 페이지가 옆으로 밀리지 않게: 긴 인라인 코드는 줄바꿈, 선택 상자는 화면 너비까지만, 차트 범례는 여러 줄로 */
