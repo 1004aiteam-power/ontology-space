@@ -274,25 +274,39 @@
 
 <section id="role">
   <h2><span lang="ko">AAS가 하는 큰 역할</span><span lang="en">What the AAS is really for</span></h2>
-  <p lang="ko">AAS를 "설비를 기술하는 용어의 통일"로 이해하기 쉽지만, 용어 통일은 절반이고 그나마 AAS가 직접 하는 일도 아닙니다. 뜻을 정하는 것은 IEC CDD · ECLASS 같은 사전과 온톨로지이고, AAS는 <code>semanticId</code>로 그 사전을 가리킬 뿐입니다. AAS 고유의 역할은 <b>설비 정보를 담는 그릇과 꺼내는 창구의 통일</b>입니다. 어떤 설비든 같은 구조(셸 → 서브모델 → 요소)로 담고, 같은 API로 꺼내고, 같은 파일(<code>.aasx</code>)로 넘깁니다.</p>
-  <p lang="en">It is tempting to read the AAS as "unifying the vocabulary that describes equipment", but vocabulary is only half of it — and not the half the AAS itself does. Meaning is fixed by dictionaries such as IEC CDD and ECLASS and by ontologies; the AAS merely points at them with <code>semanticId</code>. What the AAS itself unifies is <b>the container the information sits in and the door it comes out of</b>: any equipment in the same structure (shell → submodel → element), through the same API, in the same file (<code>.aasx</code>).</p>
+  <p class="thesis" lang="ko">AAS는 설비 정보의 <b>해상 컨테이너</b>입니다.</p>
+  <p class="thesis" lang="en">The AAS is the <b>shipping container</b> of equipment information.</p>
+  <p lang="ko">컨테이너가 나오기 전에는 화물마다 모양이 달라 항구마다 사람이 일일이 옮겨 실었습니다. 컨테이너는 화물을 바꾸지 않았습니다. <b>상자의 규격만 통일</b>했습니다. 그러자 어느 크레인, 어느 배, 어느 트럭이든 안에 무엇이 들었는지 몰라도 그대로 옮길 수 있게 됐습니다. 설비 정보의 지금 모습이 컨테이너 이전의 항구입니다.</p>
+  <p lang="en">Before the container, every cargo had its own shape and people re-stowed it by hand at every port. The container did not change the cargo. It <b>standardised only the box</b> — and then any crane, ship or truck could move it without knowing what was inside. Equipment information today is the port before the container.</p>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">지금: 사람이 옮겨 적는다</span><span lang="en">Today: people re-type it</span></h4>
+      <p lang="ko">변압기를 납품받으면 명판은 사진으로, 시험 성적서는 PDF로, 사양은 엑셀로, 도면은 CAD 파일로 옵니다. 담당자가 이것을 보고 자산관리 시스템에 손으로 입력합니다. 제작사가 바뀌면 양식도 바뀝니다. 20년 뒤 고장이 나면 그 서류부터 찾아야 합니다.</p>
+      <p lang="en">A transformer arrives with its nameplate as a photo, test reports as PDF, data as a spreadsheet and drawings as CAD files. Someone reads them and types them into the asset system. A different manufacturer means a different layout. Twenty years on, when it fails, the first job is finding those papers.</p></div>
+    <div class="card"><h4><span lang="ko">AAS: 기계가 그대로 싣고 내린다</span><span lang="en">With the AAS: machines load it as it is</span></h4>
+      <p lang="ko">변압기의 식별자(명판의 QR 등)로 그 변압기의 셸을 엽니다. 자산관리 시스템이 셸을 그대로 읽어 등록합니다. 어느 제작사 것이든 같은 방식입니다. 진단과 정비 기록도 그 셸에 계속 쌓여, 설비가 <b>자기 이력서를 들고 다니게</b> 됩니다.</p>
+      <p lang="en">The transformer's identifier (a QR code on the nameplate, say) opens its shell. The asset system reads the shell and registers it, the same way for every manufacturer. Diagnoses and maintenance keep accumulating in that shell, so the equipment <b>carries its own record with it</b>.</p></div>
+  </div>
+  <p lang="ko">그래서 AAS의 큰 역할은 용어의 통일이 아닙니다. <b>사람이 옮겨 적던 설비 정보를 기계가 그대로 싣고 내리게 만드는 것</b>입니다. 이 사이트의 데이터셋도 같은 일을 합니다. 변압기 한 대의 셸을 사람이 읽지 않고 그대로 그래프에 불러와 자산관리 온톨로지와 잇습니다.</p>
+  <p lang="en">So the big role of the AAS is not unifying vocabulary. It is <b>letting machines load and unload equipment information that people used to copy by hand</b>. The dataset on this page does exactly that: one transformer's shell is loaded into a graph without anyone reading it and joined to the asset-management ontology.</p>
+
+  <h3><span lang="ko">그럼 용어의 통일은?</span><span lang="en">And unifying the vocabulary?</span></h3>
+  <p lang="ko">그다음 문제이고, AAS가 아니라 <b>사전과 온톨로지</b>가 하는 일입니다. 컨테이너 규격이 같아도 송장에 적힌 품목 이름이 회사마다 다르면 세관에서 막힙니다. 품목 이름을 정해 둔 것이 IEC CDD · ECLASS 같은 사전과 온톨로지이고, 상자의 칸마다 붙인 품목 번호가 <code>semanticId</code>입니다.</p>
+  <p lang="en">That is the next problem, and it is the job of <b>dictionaries and ontologies</b>, not of the AAS. Even with identical containers, customs stops the cargo if every company names its goods differently on the waybill. The agreed names are dictionaries such as IEC CDD and ECLASS and ontologies; the item number stuck on each slot of the box is the <code>semanticId</code>.</p>
   <div class="tbl"><table class="qa">
-    <tr><th><span lang="ko">무엇을 통일하나</span><span lang="en">What is unified</span></th><th><span lang="ko">누가 하나</span><span lang="en">Who does it</span></th><th><span lang="ko">없으면</span><span lang="en">Without it</span></th></tr>
-    <tr><td><span lang="ko">그릇 · 창구</span><span lang="en">Container and door</span></td><td lang="ko"><b>AAS</b>: 메타모델, 서브모델 템플릿, API, 꾸러미 파일</td><td lang="en"><b>The AAS</b>: metamodel, submodel templates, API, package file</td><td lang="ko">제작사마다 형식이 달라 연동을 회사 수만큼 따로 만듦</td><td lang="en">Every vendor has its own format; one integration per company</td></tr>
-    <tr><td><span lang="ko">말의 뜻</span><span lang="en">Meaning of words</span></td><td lang="ko"><b>사전 · 온톨로지</b>: IEC CDD, ECLASS, IEC CIM, 분야 온톨로지</td><td lang="en"><b>Dictionaries and ontologies</b>: IEC CDD, ECLASS, IEC CIM, domain ontologies</td><td lang="ko">칸은 같아도 안에 적힌 말이 제각각이라 기계가 뜻을 모름</td><td lang="en">Same slots, different words inside; machines cannot tell what they mean</td></tr>
+    <tr><th></th><th><span lang="ko">통일하는 것</span><span lang="en">What it unifies</span></th><th><span lang="ko">이것만 있으면</span><span lang="en">With this alone</span></th></tr>
+    <tr><td><span class="tag aas">AAS</span> <span lang="ko">컨테이너</span><span lang="en">the container</span></td><td lang="ko">담는 구조, 꺼내는 API, 넘기는 파일</td><td lang="en">The structure, the API, the file</td><td lang="ko">옮길 수는 있지만 열어 봐도 뜻을 모릅니다</td><td lang="en">It moves, but nobody knows what the contents mean</td></tr>
+    <tr><td><span class="tag on"><span lang="ko">사전 · 온톨로지</span><span lang="en">Dictionary · ontology</span></span> <span lang="ko">품목 이름</span><span lang="en">the item names</span></td><td lang="ko">말의 뜻과 서로의 관계</td><td lang="en">What words mean and how they relate</td><td lang="ko">뜻은 알지만 매번 손으로 옮겨 실어야 합니다</td><td lang="en">The meaning is known, but everything is re-stowed by hand</td></tr>
   </table></div>
-  <p lang="ko">둘 중 하나만 있으면 상호운용이 되지 않습니다. 그릇의 통일에서 따라 나오는 실질적인 효과는 세 가지입니다.</p>
-  <p lang="en">Either one alone does not give interoperability. Three practical effects follow from unifying the container.</p>
-  <div class="way"><div class="no">①</div><div><h3><span lang="ko">회사 경계를 넘는 인수인계</span><span lang="en">Handover across company boundaries</span></h3>
-    <p lang="ko">제작사가 납품할 때 명판 · 사양 · 시험 성적서 · 도면을 셸로 넘기면, 운영자는 자산 대장에 다시 입력하지 않고 그대로 읽어 들입니다. 제작사가 100곳이어도 받는 쪽은 연동을 한 번만 만들면 됩니다. 전력 분야에서는 이것이 가장 현실적인 가치라고 봅니다.</p>
-    <p lang="en">When a manufacturer delivers the nameplate, technical data, test reports and drawings as a shell, the operator loads them instead of re-typing them into the asset register. With a hundred manufacturers the receiver still builds one integration. For the power sector this looks like the most realistic value.</p></div></div>
-  <div class="way"><div class="no">②</div><div><h3><span lang="ko">설비 한 대의 생애 기록</span><span lang="en">The life record of one unit</span></h3>
-    <p lang="ko">셸은 실물을 따라다니며 제작 → 설치 → 운전 → 정비 → 폐기의 이력을 한곳에 쌓습니다. 계통 모델(CIM)은 "자리"를 다루기 때문에 실물 한 대의 이력은 비어 있는데, 그 자리를 AAS가 채웁니다.</p>
-    <p lang="en">The shell travels with the physical unit and accumulates its history in one place: manufacture → installation → operation → maintenance → disposal. The network model (CIM) deals in positions, so the history of the physical unit is a gap there — the gap the AAS fills.</p></div></div>
-  <div class="way"><div class="no">③</div><div><h3><span lang="ko">규제 대응의 틀</span><span lang="en">A frame for regulation</span></h3>
-    <p lang="ko">IDTA는 탄소발자국(IDTA 02023)과 디지털 배터리 여권(IDTA 02035)을 서브모델 템플릿으로 내놓았습니다. 제품 정보를 정해진 형식으로 공개하라는 요구가 늘수록, 같은 그릇을 쓰는 쪽이 대응하기 쉽습니다. 어디까지 의무가 될지는 제도마다 다르니 해당 규정을 확인해야 합니다.</p>
-    <p lang="en">IDTA publishes submodel templates for the carbon footprint (IDTA 02023) and the digital battery passport (IDTA 02035). As demands to disclose product information in a fixed format grow, whoever already uses the common container responds more easily. How far any of this becomes mandatory depends on the regulation in question, so check the rule that applies.</p></div></div>
-  <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">AAS는 <b>"무엇을 어느 칸에 담아 어떻게 건넬지"</b>를 통일하고, 사전과 온톨로지는 <b>"그 칸에 적힌 말이 무슨 뜻인지"</b>를 통일합니다. 택배로 치면 AAS는 규격 상자와 송장 양식이고, 온톨로지는 품목 이름을 풀이한 사전입니다.</p><p lang="en">The AAS unifies <b>"what goes in which slot and how it is handed over"</b>; dictionaries and ontologies unify <b>"what the words in the slot mean"</b>. In parcel terms, the AAS is the standard box and waybill form; the ontology is the dictionary of what the item names mean.</p></div>
+
+  <h3><span lang="ko">컨테이너가 생기면 따라오는 것</span><span lang="en">What follows once the container exists</span></h3>
+  <ul>
+    <li lang="ko"><b>연동은 한 번만.</b> 제작사가 100곳이어도 받는 쪽은 셸을 읽는 방법 하나만 만들면 됩니다. 전력 분야에서는 납품 정보의 인수인계가 가장 현실적인 쓰임새라고 봅니다.</li>
+    <li lang="en"><b>One integration.</b> With a hundred manufacturers, the receiver still builds a single way of reading shells. For the power sector, handover of delivery information looks like the most realistic use.</li>
+    <li lang="ko"><b>설비 한 대의 생애 기록.</b> 계통 모델(CIM)은 "자리"를 다루기 때문에 실물 한 대의 이력이 비어 있습니다. 제작 → 설치 → 운전 → 정비 → 폐기를 따라다니는 셸이 그 빈 곳을 채웁니다.</li>
+    <li lang="en"><b>A life record per unit.</b> The network model (CIM) deals in positions, so the history of the physical unit is missing there. A shell that follows manufacture → installation → operation → maintenance → disposal fills that gap.</li>
+    <li lang="ko"><b>정해진 형식으로 공개하라는 요구에 대응.</b> IDTA는 탄소발자국(IDTA 02023)과 디지털 배터리 여권(IDTA 02035)을 서브모델 템플릿으로 내놓았습니다. 어디까지 의무인지는 제도마다 다르니 해당 규정을 확인해야 합니다.</li>
+    <li lang="en"><b>Answering demands to disclose in a fixed format.</b> IDTA publishes submodel templates for the carbon footprint (IDTA 02023) and the digital battery passport (IDTA 02035). How far this is mandatory depends on the regulation, so check the rule that applies.</li>
+  </ul>
 </section>
 
 <section id="onto">
