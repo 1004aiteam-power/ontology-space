@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { Population } from '../assets/physai/neat.js';
 import { makeTrack, Trainer, testRun, project } from '../assets/physai/sim.js';
 import { Snake, move, sense, playGame, Trainer as SnakeTrainer, GRID, SNAKE } from '../assets/physai/snake-sim.js';
+import { Drone, Course, step as droneStep, sense as droneSense, fly, flightFitness, Trainer as DroneTrainer, WORLD, DRONE } from '../assets/physai/drone-sim.js';
 
 // 1) NEAT가 은닉 노드가 필요한 XOR을 푼다 (구조 진화가 동작한다는 증거)
 const p = new Population({ popSize: 100, nInputs: 2, nOutputs: 1 });
@@ -80,4 +81,50 @@ console.log('✓ snake: wall/self collision, eating, starvation, seeded food');
   const again = playGame(ST.bestGame.genome, ST.bestGame.seed);
   assert.equal(again.score, ST.bestGame.score, 'replay is deterministic');
   console.log(`✓ snake training: ${ST.bestScore} food by generation ${ST.pop.generation}`);
+}
+
+// 6) 드론: 중력 · 추력 · 기울기 · 경유점 · 끝나는 조건 · 시드 코스
+{
+  const near = (a, b, e = 1e-9) => Math.abs(a - b) <= e;
+  const mk = () => new Drone(new Course(7));
+  const fall = mk(); for (let i = 0; i < 30; i++) droneStep(fall, 0, 0);            // 추력이 없으면 떨어진다 (기울지는 않음)
+  assert.ok(fall.y < WORLD.h / 2 - 3 && fall.vy < 0 && fall.th === 0 && near(fall.x, WORLD.w / 2));
+  const hover = mk(); for (let i = 0; i < 90; i++) droneStep(hover, 0.5, 0.5);        // 둘 다 50%면 제자리
+  assert.ok(near(hover.y, WORLD.h / 2, 1e-6) && near(hover.x, WORLD.w / 2) && hover.th === 0);
+  const up = mk(); for (let i = 0; i < 30; i++) droneStep(up, 1, 1);                   // 같은 세기로 더 세게 → 기울지 않고 올라감
+  assert.ok(up.y > WORLD.h / 2 + 3 && up.th === 0);
+  const right = mk(); for (let i = 0; i < 30; i++) droneStep(right, 0.6, 0.4);         // 왼쪽이 세면 오른쪽으로 기울고 오른쪽으로 간다
+  assert.ok(right.th > 0 && right.x > WORLD.w / 2 && right.vx > 0);
+  const left = mk(); for (let i = 0; i < 30; i++) droneStep(left, 0.4, 0.6);
+  assert.ok(near(left.th, -right.th) && near(left.x - WORLD.w / 2, -(right.x - WORLD.w / 2)), 'left/right are mirror images');
+  const flip = mk(); while (flip.alive) droneStep(flip, 1, 0);                         // 한쪽만 최대 → 뒤집히거나 밖으로
+  assert.ok(['flip', 'out'].includes(flip.cause));
+  const out = mk(); while (out.alive) droneStep(out, 0, 0);
+  assert.equal(out.cause, 'out');
+  const idle = mk(); while (idle.alive) droneStep(idle, 0.5, 0.5);                     // 떠 있기만 하면 15초 뒤 끝
+  assert.equal(idle.cause, 'starve'); assert.ok(near(idle.t, DRONE.starve, WORLD.dt));
+  assert.ok(flightFitness(idle) < 100, 'hovering alone earns less than one waypoint');
+
+  const d = mk(), p = d.target;                                                        // 경유점에 닿으면 점수가 오르고 다음 경유점으로
+  d.x = p.x - 1; d.y = p.y; droneStep(d, 0.5, 0.5);
+  assert.equal(d.score, 1); assert.notDeepEqual(d.target, p); assert.equal(d.since, 0);
+  const s = droneSense(mk());
+  assert.equal(s.length, 7); assert.ok(s.every(v => v >= -1 && v <= 1)); assert.deepEqual(s.slice(2), [0, 0, 0, 1, 0]);
+  const c1 = new Course(42), c2 = new Course(42), c3 = new Course(43);
+  assert.deepEqual([0, 1, 2, 3].map(i => c1.point(i)), [0, 1, 2, 3].map(i => c2.point(i)));
+  assert.notDeepEqual(c1.point(0), c3.point(0));
+  for (let i = 0; i < 20; i++) { const a = i ? c1.point(i - 1) : c1.start, b = c1.point(i); assert.ok(Math.hypot(a.x - b.x, a.y - b.y) >= 18, 'waypoints are not too close'); }
+  const windy = new Drone(new Course(7), null, 2); for (let i = 0; i < 30; i++) droneStep(windy, 0.5, 0.5);   // 옆바람은 오른쪽으로 민다
+  assert.ok(windy.x > WORLD.w / 2 + 0.5);
+}
+console.log('✓ drone: gravity, hover, tilt, flip, starvation, waypoints, seeded course, wind');
+
+// 7) 드론 학습: 40세대 안에 한 번의 비행에서 경유점 5개 이상 통과하는 개체가 나온다
+{
+  const DT = new DroneTrainer(Population, { popSize: 150, seed: 5 });
+  for (let g = 0; g < 40 && DT.bestScore < 5; g++) DT.runGeneration();
+  assert.ok(DT.bestScore >= 5, `drone best score ${DT.bestScore}`);
+  const again = fly(DT.bestFlight.genome, DT.bestFlight.seed);
+  assert.equal(again.score, DT.bestFlight.score, 'replay is deterministic');
+  console.log(`✓ drone training: ${DT.bestScore} waypoints by generation ${DT.pop.generation}`);
 }

@@ -712,3 +712,12 @@ header.top .tools button{min-height:30px}
 .path-list{margin:10px 0 0;padding-left:22px;font-size:15px}
 .path-list li{margin:5px 0}
 .path-list li > span{color:var(--muted)}
+
+/* NEAT 드론 페이지: 하늘(가로 100 : 세로 70)이 가운데, 옆 패널은 오른쪽 (스네이크 페이지와 같은 배치) */
+#sky{width:100%;display:block;border-radius:12px;border:1px solid var(--line);margin:0 auto;cursor:pointer;touch-action:manipulation}
+.drone-wrap .snake-main{width:100%}
+@media (min-width:1000px){
+  .drone-wrap{grid-template-columns:minmax(0,1fr) minmax(300px,360px)}
+  .drone-wrap .snake-main{grid-column:1;max-width:calc((100vh - 110px) * 10 / 7);justify-self:end}
+  .drone-wrap .snake-side{grid-column:2}
+}

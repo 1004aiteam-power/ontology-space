@@ -37,7 +37,7 @@
 | [tools/build_ontology_map.mjs](../tools/build_ontology_map.mjs) | 사이트 전체 온톨로지 지도 데이터(`assets/data/ontology-map.json`): Turtle 파일에서 온톨로지별 클래스·개체 수와 서로 가리키는 트리플(술어별 건수), 외부 표준 사용을 셈 (`ontology-map.html`) |
 | [tools/build_nav.py](../tools/build_nav.py) | 모든 페이지의 위쪽 메뉴와 파비콘·링크 공유 미리보기(Open Graph) 태그를 한 곳에서 만듦 (메뉴를 바꿀 때 이 파일만 고치고 실행). [tools/thumbs.cjs](../tools/thumbs.cjs): 소개 페이지 시뮬레이션 썸네일 생성 |
 | [tools/cypher.mjs](../tools/cypher.mjs) · [pycim/cypher.py](../pycim/cypher.py) | Neo4j 없이 Cypher 실행 (브라우저 실습과 같은 엔진): Turtle 불러오기 · 적재 스크립트 · 질의 · 형상검증. 빌드 스크립트와 테스트가 사용 |
-| [assets/physai/](../assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터, NEAT 스네이크 (`neat-snake.html`) |
+| [assets/physai/](../assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터, NEAT 스네이크 (`neat-snake.html`), NEAT 드론 (`neat-drone.html`: 좌우 프로펠러 추력으로 균형을 잡고 경유점을 통과) |
 | [assets/eco/](../assets/eco/) | 단세포 생태계: 초식·육식 세포의 개체 기반 포식자–피식자 시뮬레이션, 피난처·계절·진화 (`ecosystem.html`, 만든 이의 또 다른 관심사) |
 | [assets/traffic/](../assets/traffic/) | 교차로 신호: 위에서 본 4갈래 교차로, IDM 차량·좌회전 전용 신호·보행 신호, 고정 주기 vs 감응식 (`intersection.html`) |
 | [assets/cypher/](../assets/cypher/) | 브라우저 Cypher 실습: RDF(Turtle)를 Neo4j식 속성 그래프로 불러오기(클래스 → 라벨, 값 → 속성, 개체 연결 → 관계, neosemantics 방식)와 읽기 전용 Cypher 엔진(MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, 가변 길이 경로, 집계, EXISTS), 실습 예제 질의, 전기차·고장 영향 페이지의 역량 질문 (`lab.html`) |
@@ -48,7 +48,7 @@
 | [examples/safety/](../examples/safety/) | 배전공사 안전 온톨로지: 안전 훈련 시뮬레이션(`assets/safety/safety.js`)의 현장 · 작업 단계 · 안전수칙 11 · 역할 · 훈련 오답 + 위험요인 → 스키마 `safety-schema.ttl` + 개체 `safety-steps.ttl` (`build_safety.mjs`, 브라우저와 같은 코드 `assets/safety/safety-graph.js`). 작업 단계 ⊑ 업무 온톨로지 `aipd:Task`(선행 · 리스크 · 생애주기), 작업 대상 설비 → 자산관리 자산 · 정비 흐름, 정전 작업 구간 → 배전선로 D/L #1 구간 · 개폐기 (`safety-ontology.html`, ⚠ 교육용 가상 현장) |
 | [examples/twin/](../examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
 | [examples/feeder/](../examples/feeder/) | A변전소 D/L #1 배전선로 상세: 구간 개폐기 6 · 연계 개폐기 4 · 분기점 3, pycim 모델 → CIM RDF · 웹 그림 데이터 · 모든 구간의 고장 복구(FLISR) 계획 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `safety-ontology.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 배전공사 안전 · 단세포 생태계), 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `neat-drone.html` · `safety.html` · `ecosystem.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `highway.html` · `ev.html` · `impact.html` · `safety-ontology.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 배전공사 안전 · 단세포 생태계), 한·영 전환) |
 
 ## 실행 명령 모음
 

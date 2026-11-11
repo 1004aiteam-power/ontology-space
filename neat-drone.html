@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · NEAT Drone</title>
+<meta name="title-ko" content="Ontology Space · NEAT 드론">
+<meta name="title-en" content="Ontology Space · NEAT Drone">
+<meta name="description" content="NEAT 신경진화로 드론 150대가 좌우 프로펠러 추력만으로 균형을 잡고 경유점을 차례로 통과하는 법을 배우는 과정을 브라우저에서 직접 실행합니다">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/neat-drone.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/neat-drone.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/neat-drone.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/neat-drone.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · NEAT 드론">
+<meta property="og:description" content="NEAT 신경진화로 드론 150대가 좌우 프로펠러 추력만으로 균형을 잡고 경유점을 차례로 통과하는 법을 배우는 과정을 브라우저에서 직접 실행합니다">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/neat-drone.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=9cbb0f71">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/physai/drone-app.js?v=8d9b9171"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">NEAT 자율주행</span><span lang="en">NEAT Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">NEAT 스네이크</span><span lang="en">NEAT Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html" aria-current="page"><span lang="ko">NEAT 드론</span><span lang="en">NEAT Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="studioMenu" hidden>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work Ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power Asset Management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road Traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <hr>
+      <a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × Grid: EV Charging</span><small lang="ko">휴게소 충전 수요 → 배전선로 → 변전소</small><small lang="en">Rest-area charging → feeder → substation</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure Impact Analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution Work Safety Ontology</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산 · 배전선로</small><small lang="en">Field steps, rules, hazards → work, assets, feeder</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell Ecosystem Ontology</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="aiMenu" hidden>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <hr>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+    </div>
+    <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow">NEAT · DRONE</div>
+  <h1><span lang="ko">150대가 동시에 진화하며<br>나는 법을 배웁니다</span><span lang="en">150 drones evolve together<br>and learn to fly</span></h1>
+  <p class="lead" lang="ko"><a href="physical-ai.html#lab">NEAT 자율주행</a> · <a href="neat-snake.html">NEAT 스네이크</a>와 같은 NEAT 구현(<code>neat.js</code>)을 그대로 쓰는 세 번째 예제입니다. 자동차는 <b>어느 쪽으로 꺾을지</b>, 뱀은 <b>어느 칸으로 갈지</b>를 배웠습니다. 드론은 가만히 있으면 떨어지기 때문에 <b>균형을 잡으면서 이동하는 법</b>을 배워야 합니다. 조종할 수 있는 것은 좌우 프로펠러의 추력 두 개뿐입니다.</p>
+  <p class="lead" lang="en">A third example using the same NEAT implementation (<code>neat.js</code>) as <a href="physical-ai.html#lab">NEAT self-driving</a> and <a href="neat-snake.html">NEAT Snake</a>. The cars learned <b>which way to steer</b> and the snakes <b>which cell to move to</b>. A drone falls if it does nothing, so it has to learn <b>to keep its balance while moving</b> — with only two controls, the thrust of its left and right propellers.</p>
+</div>
+
+<section id="guide">
+  <div class="badge">GUIDE</div>
+  <h2><span lang="ko">처음 보는 분을 위한 안내</span><span lang="en">New here? Start with this</span></h2>
+  <p lang="ko">한 줄 요약: <b>드론에게 조종법을 가르쳐 주지 않고, 잘 난 드론끼리 자손을 낳게 해서 점점 잘 날게 만드는 실험</b>입니다. 진화가 한 바퀴 도는 과정(평가 → 선택 → 교차 · 변이)과 NEAT의 특징은 <a href="neat-snake.html#guide">스네이크 페이지의 안내</a>에 그림과 함께 있습니다.</p>
+  <p lang="en">In one line: <b>nobody teaches the drones how to fly — the better fliers have children, and the population gets better over time.</b> The evolution loop (evaluate → select → crossover and mutation) and what makes NEAT special are explained with diagrams in the <a href="neat-snake.html#guide">Snake page's guide</a>.</p>
+
+  <h3><span lang="ko">1. 프로펠러 두 개로 어떻게 움직이나</span><span lang="en">1. How two propellers move a drone</span></h3>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">둘 다 같은 세기</span><span lang="en">Both equal</span></h4><p lang="ko">기울지 않고 위아래로만 움직입니다. 둘 다 50%면 중력과 정확히 맞아 제자리에 떠 있고, 더 세면 올라가고 약하면 내려갑니다.</p><p lang="en">No tilt, only up and down. At 50% each the thrust exactly cancels gravity and the drone hovers; more climbs, less sinks.</p></div>
+    <div class="card"><h4><span lang="ko">왼쪽이 더 세면</span><span lang="en">Left stronger</span></h4><p lang="ko">오른쪽으로 기웁니다. 추력은 항상 몸체의 위쪽으로 밀기 때문에, 기울면 그쪽으로 밀려 갑니다. <b>옆으로 가려면 먼저 기울어야</b> 합니다.</p><p lang="en">The drone tilts to the right. Thrust always pushes along the body's "up", so a tilted drone is pushed sideways. <b>To go sideways it must tilt first.</b></p></div>
+    <div class="card"><h4><span lang="ko">그래서 어렵다</span><span lang="en">Why it is hard</span></h4><p lang="ko">기울면 위로 미는 힘이 줄어 떨어지기 시작하고, 너무 기울면 뒤집힙니다. 멈추려면 반대로 기울여 속도를 죽여야 합니다. 관성 때문에 <b>지금 한 조작의 결과가 조금 뒤에</b> 나타납니다.</p><p lang="en">Tilting reduces the upward push, so the drone starts to sink; tilt too far and it flips. Stopping means tilting the other way to kill the speed. Because of inertia, <b>the result of an action shows up a moment later</b>.</p></div>
+  </div>
+
+  <h3><span lang="ko">2. 아래 실습 화면 보는 법</span><span lang="en">2. How to read the lab below</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">화면</span><span lang="en">On screen</span></th><th><span lang="ko">의미</span><span lang="en">Meaning</span></th></tr>
+    <tr><td><span lang="ko">노란 후광의 드론</span><span lang="en">Drone with a yellow halo</span></td><td><span lang="ko">지금 가장 앞선 드론(또는 눌러서 고른 드론). 프로펠러 아래 주황 줄의 길이가 추력, 노란 선이 지나온 길</span><span lang="en">The drone furthest ahead right now (or the one you clicked). The orange streaks under the propellers show thrust; the yellow line is its path</span></td></tr>
+    <tr><td><span lang="ko">빨간 동그라미와 숫자</span><span lang="en">Red circles with numbers</span></td><td><span lang="ko">경유점과 순서. 진한 동그라미가 노란 드론의 다음 목표이고, 동그라미 안에 들어가면 통과</span><span lang="en">Waypoints and their order. The solid one is the yellow drone's next target; entering the circle counts as reaching it</span></td></tr>
+    <tr><td><span lang="ko">흐린 드론들</span><span lang="en">Faded drones</span></td><td><span lang="ko">같은 세대의 나머지 드론. 색 = 종. 서로 부딪히지 않고 각자 같은 코스를 납니다</span><span lang="en">The rest of the generation. Colour = species. They do not collide; each flies the same course on its own</span></td></tr>
+    <tr><td><span lang="ko">빨간 테두리</span><span lang="en">Red border</span></td><td><span lang="ko">하늘의 끝. 넘어가면 그 드론의 비행은 끝납니다</span><span lang="en">The edge of the sky. Crossing it ends that drone's flight</span></td></tr>
+    <tr><td><span lang="ko">오른쪽 신경망</span><span lang="en">Network panel</span></td><td><span lang="ko">노란 드론의 뇌. 왼쪽 7개가 드론이 느끼는 것, 오른쪽 2개가 프로펠러 추력</span><span lang="en">The yellow drone's brain: seven things it senses on the left, the two propeller thrusts on the right</span></td></tr>
+  </table></div>
+  <p lang="ko">이제 아래에서 <b>▶ 학습 시작</b>을 누르고, 배속을 올려 보세요. 처음 몇 세대는 거의 모두 떨어지거나 하늘 밖으로 날아가 버립니다.</p>
+  <p lang="en">Now press <b>▶ Train</b> below and raise the playback speed. In the first few generations nearly every drone falls or shoots out of the sky.</p>
+</section>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">NEAT 드론 시뮬레이션</span><span lang="en">NEAT drone simulation</span></h2>
+  <ol class="steps" lang="ko">
+    <li><b>세대 1</b>: 서로 다른 신경망을 가진 드론 150대가 하늘 한가운데에서 동시에 출발합니다.</li>
+    <li>경유점에 닿으면 다음 경유점이 나타납니다. 모두 끝나면 다른 코스로 다시 날아, <b>코스 3개</b>의 평균 점수(적합도)로 평가합니다.</li>
+    <li>점수가 높은 드론들이 부모가 되어 다음 세대를 만듭니다(교차·변이). 이 과정을 반복합니다.</li>
+  </ol>
+  <ol class="steps" lang="en">
+    <li><b>Generation 1</b>: 150 drones, each with its own neural network, take off together from the middle of the sky.</li>
+    <li>Reaching a waypoint reveals the next one. When everyone is done they fly another course, and each drone is scored by its average over <b>3 courses</b> (fitness).</li>
+    <li>The best drones breed the next generation (crossover and mutation), and the cycle repeats.</li>
+  </ol>
+
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="speedBtn"></button>
+    <button id="skipBtn"><span lang="ko">⏭ 이번 세대 바로 끝내기</span><span lang="en">⏭ Finish this generation</span></button>
+    <button id="replayBtn" disabled><span lang="ko">★ 최고 기록 다시 보기</span><span lang="en">★ Replay the record</span></button>
+    <select id="trials" aria-label="courses per generation">
+      <option value="1">1</option><option value="3" selected>3</option><option value="5">5</option>
+    </select>
+    <select id="wind" aria-label="side wind">
+      <option value="0" selected>0</option><option value="1">1</option><option value="2">2</option>
+    </select>
+    <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+  </div>
+
+  <div class="sim-wrap snake-wrap drone-wrap">
+    <div class="snake-main">
+      <canvas id="sky" aria-label="drone sky"></canvas>
+      <div id="replayEnd" class="success-bar" hidden>
+        <button id="replayAgainBtn" class="primary">↻ <span lang="ko">다시 보기</span><span lang="en">Replay again</span></button>
+        <button id="replayBackBtn"><span lang="ko">학습으로 돌아가기</span><span lang="en">Back to training</span></button>
+      </div>
+      <div id="speciesLegend" class="species-legend"></div>
+      <p class="meta" lang="ko">가로 100 m × 세로 70 m의 하늘을 옆에서 본 모습입니다. 150대가 모두 보이고, <b>노란 후광의 드론</b>이 지금 가장 앞선 드론입니다. 드론을 누르면 그 드론을 따라갑니다.</p>
+      <p class="meta" lang="en">A 100 m × 70 m sky seen from the side. All 150 drones are shown; the <b>drone with the yellow halo</b> is the one furthest ahead. Click a drone to follow it.</p>
+    </div>
+    <div class="snake-side">
+      <div class="panel">
+        <b><span lang="ko">노란 드론의 신경망 (실시간)</span><span lang="en">Yellow drone's network (live)</span></b>
+        <canvas id="net" aria-label="neural network"></canvas><p id="netInfo" class="meta"></p>
+      </div>
+      <div id="stats"></div>
+      <button id="saveBtn" class="panel" style="cursor:pointer;color:var(--text)"><span lang="ko">⬇ 최고 기록 유전체 저장 (JSON)</span><span lang="en">⬇ Save the record genome (JSON)</span></button>
+    </div>
+  </div>
+
+  <h3><span lang="ko">학습 곡선</span><span lang="en">Learning curve</span></h3>
+  <div class="panel chart-box">
+    <div class="chart-legend"><span><i style="background:#2a78d6"></i><span lang="ko">세대 최고 (한 번 비행의 경유점 수)</span><span lang="en">Best (waypoints in one flight)</span></span><span><i style="background:#eb6834"></i><span lang="ko">세대 평균 경유점 수</span><span lang="en">Mean waypoints per flight</span></span></div>
+    <canvas id="chart" aria-label="waypoints by generation"></canvas>
+    <div id="chartTip" hidden></div>
+    <p class="meta" lang="ko">적합도 = 경유점 × 100 + 다음 경유점에 가까워진 정도 × 60 + 버틴 시간(최대 20초) × 0.6 (코스 평균). 차트는 이해하기 쉽도록 경유점 수로 보여줍니다. 한 번의 비행은 최대 60초라서 경유점 수에는 상한이 있습니다.</p>
+    <p class="meta" lang="en">Fitness = waypoints × 100 + progress toward the next waypoint × 60 + time survived (up to 20 s) × 0.6, averaged over courses. The chart shows waypoint counts for readability. A flight lasts at most 60 s, so the count has a ceiling.</p>
+    <details><summary><span lang="ko">표로 보기 (최근 30세대)</span><span lang="en">View as table (last 30 generations)</span></summary><div class="tbl"><table id="histTable"></table></div></details>
+  </div>
+
+  <h3><span lang="ko">드론은 무엇을 느끼고, 무엇을 정하나</span><span lang="en">What the drone senses and decides</span></h3>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">구분</span><span lang="en">Part</span></th><th><span lang="ko">내용</span><span lang="en">Details</span></th></tr>
+    <tr><td><span lang="ko">입력 7개</span><span lang="en">7 inputs</span></td><td><span lang="ko">다음 경유점까지의 가로 · 세로 거리 2개 + 가로 · 세로 속도 2개 + 기울기(sin · cos) 2개 + 회전 속도 1개. 모두 대략 −1 ~ 1</span><span lang="en">Horizontal and vertical distance to the next waypoint (2) + horizontal and vertical speed (2) + tilt as sin and cos (2) + spin rate (1). All roughly −1 to 1</span></td></tr>
+    <tr><td><span lang="ko">출력 2개</span><span lang="en">2 outputs</span></td><td><span lang="ko">왼쪽 · 오른쪽 프로펠러 추력 0 ~ 100%. 추력의 합이 몸체 위쪽으로 미는 힘, 차이가 기울이는 힘</span><span lang="en">Left and right propeller thrust, 0–100%. Their sum pushes along the body's "up"; their difference tilts the drone</span></td></tr>
+    <tr><td><span lang="ko">물리</span><span lang="en">Physics</span></td><td><span lang="ko">중력 9.8 m/s², 프로펠러 둘 다 최대면 중력의 2배, 관성과 약한 공기저항. 물리 엔진 없이 식 몇 줄(<a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/drone-sim.js">drone-sim.js</a>의 <code>step</code>)</span><span lang="en">Gravity 9.8 m/s², both propellers at full give twice gravity, inertia and light air drag. No physics engine — a few lines of equations (<code>step</code> in <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/drone-sim.js">drone-sim.js</a>)</span></td></tr>
+    <tr><td><span lang="ko">끝나는 조건</span><span lang="en">Flight over</span></td><td><span lang="ko">하늘 밖으로 나감, 약 109° 넘게 기울어 뒤집힘, 15초 동안 경유점에 닿지 못함, 60초 경과</span><span lang="en">Leaving the sky, tilting past about 109° (flipped), 15 s without reaching a waypoint, or 60 s elapsed</span></td></tr>
+    <tr><td><span lang="ko">공정한 비교</span><span lang="en">Fair comparison</span></td><td><span lang="ko">같은 세대는 모두 같은 코스(시드)로 겨루고, 세대마다 코스가 바뀌어 특정 코스를 외우지 못함</span><span lang="en">Everyone in a generation flies the same courses (seeds); courses change every generation so none can be memorised</span></td></tr>
+  </table></div>
+
+  <blockquote lang="ko"><b>평가 방법과 변이 세기가 학습을 좌우합니다:</b> 처음 만든 설정에서는 60세대가 지나도 경유점 2 ~ 8개에 머물렀고 실행할 때마다 결과가 크게 달랐습니다. 세 가지를 바꾸자 달라졌습니다. ① 경유점에 닿지 못하고 버틸 수 있는 시간을 <b>8초 → 15초</b>로 늘렸습니다. 서툰 드론은 경유점까지 가는 데 오래 걸리는데, 8초에 끊으면 "조금 나은 드론"과 "전혀 못 나는 드론"의 점수가 구별되지 않습니다. ② 세대마다 평가하는 코스를 <b>2개 → 3개</b>로 늘렸습니다. 2개일 때는 그 세대의 코스에만 맞는 드론이 자주 부모로 뽑혀, 낯선 코스에서는 날지 못했습니다. ③ <b>변이를 약하게</b> 했습니다(가중치를 흔드는 세기 0.5 → 0.2). 균형 제어는 가중치가 조금만 틀어져도 추락하기 때문에, 자동차 · 뱀과 같은 세기로는 잘 나는 부모의 자손이 대부분 떨어졌습니다. 이 설정으로 열 번 실행해 보니 열 번 모두 20세대 안에 경유점 5개를 넘겼고, 100세대 뒤 처음 보는 코스 60번 가운데 59번을 60초 끝까지 날았습니다.</blockquote>
+  <blockquote lang="en"><b>How you evaluate, and how hard you mutate, decides what gets learned:</b> with the first settings the drones were still at 2–8 waypoints after 60 generations, and results varied a lot from run to run. Three changes fixed that. (1) The time allowed without reaching a waypoint went from <b>8 s to 15 s</b>. A clumsy drone takes a long time to get there; cutting it off at 8 s makes "slightly better" and "cannot fly at all" score the same. (2) The courses evaluated per generation went from <b>2 to 3</b>. With 2, drones that happened to suit that generation's courses were often picked as parents and then could not fly an unfamiliar course. (3) <b>Mutation was made gentler</b> (weight perturbation 0.5 → 0.2). Balance control breaks when a weight is slightly off, so with the strength used for the cars and snakes most children of a good flier simply fell. With these settings, ten runs out of ten passed 5 waypoints within 20 generations, and after 100 generations they flew the full 60 s on 59 of 60 courses they had never seen.</blockquote>
+
+  <h3><span lang="ko">직접 해 보기</span><span lang="en">Try it</span></h3>
+  <ul lang="ko">
+    <li><b>잘 나는 세대가 나온 뒤 바람을 켜 보세요.</b> 바람은 "처음부터" 없이 바로 바뀝니다(다음 코스부터 적용). 바람 없이 배운 드론이 처음 겪는 옆바람(1 m/s²)을 견디는지는 운에 달렸습니다. 열 번 학습시켜 보니 네 번은 그대로 잘 날았고, 여섯 번은 경유점에 거의 닿지 못했습니다. 바람 없는 코스에서는 점수가 같아도, 겪어 보지 않은 조건에서는 드론마다 다릅니다.</li>
+    <li><b>바람 속에서 계속 학습시키면</b> 몇 세대 안에 다시 잘 납니다. 반대로 처음부터 바람 속에서만 배운 드론은 바람을 끄면 대부분 못 납니다(열 번 중 아홉 번). 드론에게는 바람을 느끼는 입력이 없어서, "항상 조금 기울여 버틴다"를 신경망에 굳혀 버리기 때문입니다. 훈련한 환경과 다른 환경에서 성능이 떨어지는 이 문제는 <a href="physical-ai.html">피지컬 AI</a>에서 말하는 시뮬레이션과 현실의 차이(sim-to-real)와 같은 종류입니다.</li>
+    <li>"세대당 코스 1개"로 바꾸면 한 코스의 운에 좌우돼 학습 곡선이 들쭉날쭉해지고, 낯선 코스에서 못 나는 드론이 뽑히는 일이 늘어납니다(여섯 번 중 세 번).</li>
+    <li>"⬇ 유전체 저장"으로 받은 JSON에는 노드·연결·혁신 번호가 그대로 들어 있습니다. 잘 나는 드론도 대개 은닉 노드가 1 ~ 3개인 작은 신경망입니다.</li>
+  </ul>
+  <ul lang="en">
+    <li><b>Turn on the wind after a generation that flies well.</b> The wind changes immediately without a restart (it applies from the next course). Whether drones trained without wind can take their first side wind (1 m/s²) is down to luck: in ten training runs, four kept flying well and six hardly reached a waypoint. Drones that score the same on windless courses differ in conditions they have never met.</li>
+    <li><b>Keep training in the wind</b> and within a few generations they fly well again. The other way round, drones trained only in wind from the start mostly cannot fly with the wind off (nine runs out of ten). A drone has no input that senses wind, so the network hard-wires "always lean a little to hold position". Losing performance outside the conditions you trained in is the same kind of problem as the simulation-to-reality gap discussed under <a href="physical-ai.html">Physical AI</a>.</li>
+    <li>Switch to "1 course per generation" and the curve gets noisier — one lucky course decides the parents — and drones that cannot fly an unfamiliar course are picked more often (three runs out of six).</li>
+    <li>The JSON from "⬇ Save" contains the nodes, links and innovation numbers as they are. Even drones that fly well usually have a small network with 1–3 hidden nodes.</li>
+  </ul>
+
+  <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/neat.js">neat.js</a> (NEAT, <span lang="ko">자율주행 · 스네이크와 공용</span><span lang="en">shared with self-driving and Snake</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/drone-sim.js">drone-sim.js</a> (<span lang="ko">물리·센서·학습기</span><span lang="en">physics · sensors · trainer</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/drone-app.js">drone-app.js</a> (<span lang="ko">화면</span><span lang="en">UI</span>)</p>
+  <div class="pager"><a href="neat-snake.html"><span lang="ko">← NEAT 스네이크</span><span lang="en">← NEAT Snake</span></a><a href="twin.html"><span lang="ko">다음: 디지털 트윈 →</span><span lang="en">Next: Digital Twin →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
