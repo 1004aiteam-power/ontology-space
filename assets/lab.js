@@ -76,12 +76,12 @@ function runQuery() {
 const GROUPS = [
   { key: 'container', classes: ['Substation', 'VoltageLevel', 'Bay', 'Line'], color: '#8b5cf6', ko: '컨테이너', en: 'Container' },
   { key: 'equipment', classes: ['ACLineSegment', 'PowerTransformer', 'Breaker', 'Disconnector', 'LoadBreakSwitch', 'Switch', 'BusbarSection',
-      'EnergyConsumer', 'ConformLoad', 'NonConformLoad', 'ExternalNetworkInjection', 'SynchronousMachine'], color: '#b42318', ko: '설비', en: 'Equipment' },
+      'EnergyConsumer', 'ConformLoad', 'NonConformLoad', 'ExternalNetworkInjection', 'SynchronousMachine', 'PowerElectronicsConnection'], color: '#b42318', ko: '설비', en: 'Equipment' },
   { key: 'node', classes: ['ConnectivityNode', 'TopologicalNode'], color: '#1f6feb', ko: '노드', en: 'Node' },
   { key: 'terminal', classes: ['Terminal', 'PowerTransformerEnd'], color: '#c2410c', ko: '단자 · 권선단', en: 'Terminal · End' },
   { key: 'naming', classes: ['Name', 'NameType', 'NameTypeAuthority'], color: '#15803d', ko: '매핑 (Name)', en: 'Mapping (Name)' },
   { key: 'sv', classes: ['SvVoltage', 'SvPowerFlow'], color: '#0891b2', ko: 'SV 결과', en: 'SV results' },
-  { key: 'other', classes: ['BaseVoltage'], color: '#6b7280', ko: '기타', en: 'Other' }
+  { key: 'other', classes: ['BaseVoltage'], color: '#6b7280', ko: '기타', en: 'Other' }   // 위 묶음에 없는 클래스도 모두 여기로 (groupOf)
 ];
 const groupOf = cls => GROUPS.find(g => g.classes.includes(cls)) || GROUPS[GROUPS.length - 1];
 
@@ -157,6 +157,7 @@ function fillControls() {
   qs.innerHTML = QUERIES.map((q, i) => `<button data-i="${i}">${t(q)}</button>`).join('');
   qs.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { $('query').value = QUERIES[b.dataset.i].q; if (ready) runQuery(); }));
   $('legend').innerHTML = GROUPS.map(g => `<label><input type="checkbox" value="${g.key}"${['terminal', 'sv', 'naming'].includes(g.key) ? '' : ' checked'}> <i style="background:${g.color}"></i>${t(g)}</label>`).join('');
+  document.querySelectorAll('#legend label').forEach((l, i) => { l.title = GROUPS[i].classes.join(' · '); });   // 마우스를 올리면 그 묶음의 클래스 이름
 }
 
 async function main() {
