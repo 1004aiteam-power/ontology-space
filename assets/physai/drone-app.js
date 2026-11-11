@@ -177,10 +177,11 @@ function drawNetGraph(ctx, genome, net, box, thrust) {
   for (const n of genome.nodes.values()) if (n.type === 'out') depth.set(n.id, maxD);
   const cols = new Map();
   for (const n of genome.nodes.values()) { const d = depth.get(n.id); if (!cols.has(d)) cols.set(d, []); cols.get(d).push(n.id); }
-  const padL = 104, padR = 128, padV = 16, pos = new Map();
+  // 아래에서 위로: 입력(드론이 느끼는 것)이 맨 아래 줄, 출력(좌우 프로펠러 추력)이 맨 위 줄 — 드론의 프로펠러가 위에 있는 것과 같은 방향
+  const padH = 30, padT = 46, padB = 44, pos = new Map();
   for (const [d, ids] of cols) ids.forEach((id, i) => pos.set(id, {
-    x: box.x + padL + (box.w - padL - padR) * d / maxD,
-    y: box.y + padV + (box.h - 2 * padV) * (ids.length === 1 ? 0.5 : (d === maxD ? 0.3 + 0.4 * i / (ids.length - 1) : i / (ids.length - 1)))
+    x: box.x + padH + (box.w - 2 * padH) * (ids.length === 1 ? 0.5 : (d === maxD ? 0.25 + 0.5 * i / (ids.length - 1) : i / (ids.length - 1))),
+    y: box.y + box.h - padB - (box.h - padT - padB) * d / maxD
   }));
   const [pos1, neg1] = SERIES();
   for (const c of genome.conns.values()) {
@@ -206,12 +207,15 @@ function drawNetGraph(ctx, genome, net, box, thrust) {
     ctx.globalAlpha = Math.min(1, Math.abs(v)); ctx.fillStyle = v >= 0 ? pos1 : neg1; ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = css('--muted'); ctx.lineWidth = 1.2; ctx.stroke();
     ctx.fillStyle = css('--text');
-    if (n.type === 'in') { ctx.textAlign = 'right'; ctx.fillText(IN[n.id], p.x - 12, p.y); }
+    // 글자가 그림 밖으로 나가지 않게 가운데 정렬한 뒤 좌우 끝에서 안쪽으로 당김
+    const centered = (text, y) => { const w = ctx.measureText(text).width / 2; ctx.fillText(text, Math.max(box.x + w + 2, Math.min(box.x + box.w - w - 2, p.x)), y); };
+    ctx.textAlign = 'center';
+    if (n.type === 'in') centered(IN[n.id], p.y + (n.id % 2 ? 32 : 18));           // 이름이 겹치지 않게 두 줄로 엇갈림
     if (n.type === 'out') {
-      const f = thrust[n.id - nIn];
-      ctx.textAlign = 'left'; ctx.fillText(`${OUT[n.id - nIn]} ${Math.round(f * 100)}%`, p.x + 12, p.y - 8);
-      ctx.fillStyle = css('--line'); ctx.fillRect(p.x + 12, p.y + 4, 80, 6);                       // 추력 막대
-      ctx.fillStyle = 'rgb(249,115,22)'; ctx.fillRect(p.x + 12, p.y + 4, 80 * f, 6);
+      const f = thrust[n.id - nIn], bw = 80, bx = Math.max(box.x + 2, Math.min(box.x + box.w - bw - 2, p.x - bw / 2));
+      centered(`${OUT[n.id - nIn]} ${Math.round(f * 100)}%`, p.y - 32);
+      ctx.fillStyle = css('--line'); ctx.fillRect(bx, p.y - 22, bw, 6);                              // 추력 막대
+      ctx.fillStyle = 'rgb(249,115,22)'; ctx.fillRect(bx, p.y - 22, bw * f, 6);
     }
   }
 }
@@ -224,8 +228,8 @@ function drawNet() {
   const net = d.genome.network();
   if (!d.t) net.activate(sense(d));                      // 아직 한 틱도 안 지났으면 지금 입력으로 채움
   drawNetGraph(ctx, d.genome, net, { x: 0, y: 0, w: cw, h: ch }, [d.left, d.right]);
-  $('netInfo').textContent = t({ ko: `은닉 노드 ${d.genome.hidden}개 · 활성 연결 ${d.genome.enabledConns}개 — 파랑 = 양(+) 가중치, 주황 = 음(−) 가중치, 점선 = 꺼진 연결, 주황 막대 = 지금 추력`,
-                                 en: `${d.genome.hidden} hidden nodes · ${d.genome.enabledConns} active links — blue = positive weight, orange = negative, dashed = disabled, orange bar = thrust right now` });
+  $('netInfo').textContent = t({ ko: `은닉 노드 ${d.genome.hidden}개 · 활성 연결 ${d.genome.enabledConns}개 — 아래 = 입력, 위 = 출력 · 파랑 = 양(+) 가중치, 주황 = 음(−) 가중치, 점선 = 꺼진 연결, 주황 막대 = 지금 추력`,
+                                 en: `${d.genome.hidden} hidden nodes · ${d.genome.enabledConns} active links — inputs at the bottom, outputs at the top · blue = positive weight, orange = negative, dashed = disabled, orange bar = thrust right now` });
 }
 
 // ---- 학습 곡선: 세대별 한 번 비행 최다 경유점 / 평균 경유점 ------------------------------
