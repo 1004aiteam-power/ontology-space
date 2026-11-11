@@ -55,6 +55,13 @@ Commercial use or use under other terms requires separate permission from the co
   - assets/vendor/highlight.min.js     highlight.js — BSD-3-Clause (assets/vendor/highlight.LICENSE)
   - examples/cgmes/CIGRE_MV/           cimpy sample data — Apache-2.0
                                        (examples/cgmes/LICENSE-cimpy-Apache-2.0)
+  - aas.html "실제 제품의 예" / "A real product"
+                                       admin-shell-io/aasx-package-explorer 의 01_Festo.aasx.tree.txt 를
+                                       요약 · 인용 (summary and short quotation) — Apache-2.0,
+                                       Copyright (c) 2018-2021 Festo AG & Co. KG and others
+  - examples/aas/ 명판 식별자 / nameplate identifiers
+                                       IDTA 02006-3-0 Digital Nameplate template
+                                       (admin-shell-io/submodel-templates) — CC BY 4.0
   - examples/twin/korea_outline.geojson
                                        Natural Earth (public domain), via world-atlas (ISC)
 
