@@ -151,6 +151,9 @@
   <h2><span lang="ko">CIM 핵심 모델</span><span lang="en">The CIM core model</span></h2>
   <p class="sub" lang="ko">모든 객체는 <code>IdentifiedObject</code>(mRID, name)에서 시작합니다.</p>
   <p class="sub" lang="en">Everything starts from <code>IdentifiedObject</code> (mRID, name).</p>
+  <div class="easy"><b>💡 <span lang="ko">회사에 빗대면: CIM은 조직도</span><span lang="en">In company terms: CIM is the org chart</span></b>
+    <ul lang="ko"><li>CIM이 적는 것은 사람이 아니라 <b>자리</b>입니다. "주변압기 #1" 자리가 어느 변전소 · 전압계급 · 베이에 <b>소속</b>되고(조직도), 어느 모선 · 선로와 <b>연결</b>되며(보고 체계), 정격 용량 · 전압 · 임피던스가 얼마인지(<b>직무기술서</b>)를 정합니다.</li><li>그 자리에 앉은 <b>사람</b>, 즉 실물 한 대의 명판 · 시험 성적서 · 정비 이력은 <b>개인 기록부</b>에 해당하는 <a href="aas.html">자산관리셸(AAS)</a>이 담습니다.</li><li>누가 언제부터 어느 자리에 있었는지를 적는 <b>발령 대장</b>이 <a href="asset.html">자산관리 온톨로지</a>의 설치 이력입니다. 변압기를 교체하면 사람은 바뀌지만 자리와 조직도는 그대로입니다.</li></ul>
+    <ul lang="en"><li>CIM records the <b>position</b>, not the person: which substation, voltage level and bay "main transformer #1" <b>belongs to</b> (the org chart), which busbars and lines it <b>connects to</b> (the reporting lines), and its rated power, voltage and impedance (the <b>job description</b>).</li><li>The <b>person</b> in that post — one physical unit's nameplate, test reports and maintenance history — goes in the <b>personal file</b>, the <a href="aas.html">Asset Administration Shell (AAS)</a>.</li><li>The <b>posting register</b> of who held which post since when is the deployment history in the <a href="asset.html">asset-management ontology</a>. Replace the transformer and the person changes; the post and the org chart stay.</li></ul></div>
 <pre lang="ko"><code>IdentifiedObject
  └─ PowerSystemResource
      ├─ EquipmentContainer
