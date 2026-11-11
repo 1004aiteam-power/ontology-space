@@ -53,9 +53,9 @@ NAV = [
     ("menu", "physaiMenu", "피지컬 AI", "Physical AI", [
         ("physical-ai.html", "피지컬 AI 소개", "About Physical AI", "개념 · 관련 기술 · MuJoCo", "Concepts · key technologies · MuJoCo"),
         ("hr",),
-        ("physical-ai.html#lab", "NEAT 자율주행", "NEAT Self-driving", "150대가 진화하며 트랙 주행을 배움", "150 cars evolve to drive a track"),
-        ("neat-snake.html", "NEAT 스네이크", "NEAT Snake", "150마리가 진화하며 Snake 게임을 배움", "150 snakes evolve to play Snake"),
-        ("neat-drone.html", "NEAT 드론", "NEAT Drone", "150대가 진화하며 균형 잡고 경유점 비행을 배움", "150 drones evolve to balance and fly through waypoints"),
+        ("physical-ai.html#lab", "자율주행", "Self-driving", "150대가 진화하며 트랙 주행을 배움", "150 cars evolve to drive a track"),
+        ("neat-snake.html", "스네이크", "Snake", "150마리가 진화하며 Snake 게임을 배움", "150 snakes evolve to play Snake"),
+        ("neat-drone.html", "드론", "Drone", "150대가 진화하며 균형 잡고 경유점 비행을 배움", "150 drones evolve to balance and fly through waypoints"),
     ]),
     ("menu", "simMenu", "시뮬레이션", "Simulation", [
         ("h", "전력 현장 교육", "Power field training"),
