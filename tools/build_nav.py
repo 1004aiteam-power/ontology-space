@@ -103,7 +103,7 @@ BOOT = ("<script>(function(){var r=document.documentElement,l=null,s=null;"
 SITE = "https://1004aiteam-power.github.io/ontology-space/"
 # 공유 미리보기 이미지: 시뮬레이션 썸네일(tools/thumbs.cjs)이 있는 페이지는 그것, 나머지는 소개 페이지 화면
 OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem")}
-OG_IMAGE["neat-drone.html"] = "assets/thumbs/drone.jpg"
+OG_IMAGE.update({"neat-drone.html": "assets/thumbs/drone.jpg", "neat-snake.html": "assets/thumbs/neat-snake.jpg", "twin.html": "assets/thumbs/twin.jpg"})
 OG_DEFAULT = "assets/og/site.jpg"
 NOINDEX = {"404.html"}   # 검색 대상이 아닌 페이지: canonical · sitemap 에서 빼고 noindex 를 붙임
 

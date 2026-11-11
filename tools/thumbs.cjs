@@ -13,7 +13,16 @@ const PAGES = [
   ['flights', 'flights.html', 'flMap', async p => p.click('#playBtn'), 4000],
   ['ecosystem', 'ecosystem.html', 'dish', async p => p.click('#playBtn'), 6000],
   // 드론: 30세대를 화면 없이 넘긴 뒤(잘 나는 세대) 실제 속도로 몇 초 날린 장면
-  ['drone', 'neat-drone.html', 'sky', async p => { await p.click('#playBtn'); for (let i = 0; i < 30; i++) await p.click('#skipBtn'); }, 7000]
+  ['drone', 'neat-drone.html', 'sky', async p => { await p.click('#playBtn'); for (let i = 0; i < 30; i++) await p.click('#skipBtn'); }, 7000],
+  ['neat-drive', 'physical-ai.html', 'sim', async p => p.click('#playBtn'), 7000],
+  ['neat-snake', 'neat-snake.html', 'board', async p => { await p.click('#playBtn'); for (let i = 0; i < 10; i++) await p.click('#skipBtn'); }, 5000],
+  // 온톨로지 · 전력망 페이지 안의 재생형 시뮬레이션
+  ['twin', 'twin.html', 'map', async p => p.click('#playBtn'), 5000],
+  ['flisr', 'grid.html', 'flMap', async p => { await p.click('[data-fl-seg="BR2_1"]'); await p.click('#flPlay'); }, 3000],
+  ['highway', 'highway.html', 'hwMap', async p => p.click('#hwPlay'), 5000],
+  ['ev', 'ev.html', 'evMap', async p => p.click('#evPlay'), 5000],
+  ['impact', 'impact.html', 'imGraph', async p => p.click('#imPlay'), 4000],
+  ['merit', 'bidding.html', 'moChart', async p => p.check('#moSolar'), 800]
 ].filter(([name]) => process.argv.length < 3 || process.argv.slice(2).includes(name));
 
 (async () => {
