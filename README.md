@@ -59,7 +59,8 @@ node tools/check_pages.cjs   # 모든 페이지를 브라우저로 열어 스크
 
 스타일은 모든 페이지가 쓰는 것만 `assets/site.css`에 두고, 기능별 · 페이지별 모양은 `assets/css/`에 둡니다 (`sim.css` 시뮬레이션 공통, `doc.css` 온톨로지 문서 공통, 그 밖은 페이지 이름).
 여러 스크립트가 함께 쓰는 도우미는 `assets/lib/dom.js`에서 가져옵니다. 실행하지 않으면 GitHub Actions 검사가 실패합니다.
-메뉴 항목은 `tools/build_nav.py`의 `NAV`만 고치면 모든 페이지에 반영됩니다.
+메뉴 항목은 `tools/build_nav.py`의 `NAV`만, 머리말 · 꼬리말은 같은 파일의 `HEADER` · `FOOTER`만 고치면 모든 페이지에 반영됩니다.
+새 페이지에는 `<header class="top"></header>`와 `<footer></footer>`만 적어 두면 이 도구가 채웁니다.
 
 ## 라이선스
 

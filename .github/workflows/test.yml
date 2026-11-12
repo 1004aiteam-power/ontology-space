@@ -1,4 +1,4 @@
-# push · pull request마다 테스트를 돌리고, 메뉴·head 태그(tools/build_nav.py)가 최신인지 확인한다
+# push · pull request마다 테스트를 돌리고, 메뉴·head 태그(tools/build_nav.py)가 최신인지 확인하고, 모든 페이지를 브라우저로 열어 본다
 name: test
 
 on:
@@ -43,3 +43,19 @@ jobs:
         run: |
           python tools/build_nav.py
           git diff --exit-code || { echo "::error::tools/build_nav.py 를 실행한 결과를 커밋하세요"; exit 1; }
+
+  # 모든 페이지를 실제 브라우저로 열어 스크립트 오류 · 가로 밀림 · 불러오지 못한 파일을 확인
+  pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Open every page in a browser
+        run: node tools/check_pages.cjs
