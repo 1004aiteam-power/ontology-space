@@ -1,0 +1,13 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space) */
+/* vpp.html 에만 쓰는 모양 */
+.dc{margin:14px 0;max-width:860px}
+.dc svg{width:100%;height:auto;display:block}
+.dc .bx rect{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.dc .bx.gw rect{stroke:#1baf7a;stroke-width:2} .dc .bx.net rect{stroke:#eda100;stroke-width:2;stroke-dasharray:6 4} .dc .bx.pf rect{stroke:var(--accent);stroke-width:2.5} .dc .bx.op rect{stroke:var(--muted);stroke-width:2}
+.dc .t{fill:var(--text);font-size:13px;font-weight:700;text-anchor:middle}
+.dc .s{fill:var(--muted);font-size:11px;text-anchor:middle}
+.dc .hd{fill:var(--muted);font-size:12px;font-weight:700;text-anchor:middle}
+.dc .up{stroke:var(--accent);stroke-width:2;fill:none} .dc .dn{stroke:#eb6834;stroke-width:2;fill:none;stroke-dasharray:5 4}
+.dc .ahu{fill:var(--accent)} .dc .ahd{fill:#eb6834}
+.dc .lg{fill:var(--muted);font-size:12px}

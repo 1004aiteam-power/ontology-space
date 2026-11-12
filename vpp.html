@@ -26,20 +26,9 @@
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=729f3c47">
+<link rel="stylesheet" href="assets/css/vpp.css?v=4687c6b9">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
-<style>
-.dc{margin:14px 0;max-width:860px}
-.dc svg{width:100%;height:auto;display:block}
-.dc .bx rect{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
-.dc .bx.gw rect{stroke:#1baf7a;stroke-width:2} .dc .bx.net rect{stroke:#eda100;stroke-width:2;stroke-dasharray:6 4} .dc .bx.pf rect{stroke:var(--accent);stroke-width:2.5} .dc .bx.op rect{stroke:var(--muted);stroke-width:2}
-.dc .t{fill:var(--text);font-size:13px;font-weight:700;text-anchor:middle}
-.dc .s{fill:var(--muted);font-size:11px;text-anchor:middle}
-.dc .hd{fill:var(--muted);font-size:12px;font-weight:700;text-anchor:middle}
-.dc .up{stroke:var(--accent);stroke-width:2;fill:none} .dc .dn{stroke:#eb6834;stroke-width:2;fill:none;stroke-dasharray:5 4}
-.dc .ahu{fill:var(--accent)} .dc .ahd{fill:#eb6834}
-.dc .lg{fill:var(--muted);font-size:12px}
-</style>
 </head>
 <body>
 <a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>

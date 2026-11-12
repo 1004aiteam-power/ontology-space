@@ -1,0 +1,48 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space) */
+/* ai.html 에만 쓰는 모양 */
+.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:780px}
+.ai3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+.ai3 .card{border-top:4px solid var(--line)} .ai3 .card.g{border-top-color:#1baf7a} .ai3 .card.w{border-top-color:#eda100} .ai3 .card.b{border-top-color:#eb6834}
+.ai3 .card h4{margin:0 0 6px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0;font-size:14px}
+.flow span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.flow span.o{border-color:#1baf7a;font-weight:700}
+.flow b{color:var(--muted)}
+.ai-qs{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.ai-qs button{text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:14.5px}
+.ai-qs button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.ai-bar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ai-bar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:13.5px}
+.ai-bar button.primary{border-color:var(--accent);color:var(--accent);font-weight:700}
+.ai-bar button:disabled{opacity:.4;cursor:default}
+.ai-steps{list-style:none;margin:12px 0;padding:0}
+.ai-steps > li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:4px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.ai-steps .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--code);color:var(--muted);font-weight:700;font-size:13px}
+.ai-steps li.on .n{background:var(--accent);color:#fff}
+.ai-steps li.now .n{box-shadow:0 0 0 4px var(--accent-soft)}
+.ai-steps li:not(.on) h4{color:var(--muted)}
+.ai-steps h4{margin:3px 0 6px}
+.ai-steps pre{font-size:12.5px}
+.ai-steps li.now .c{animation:aiIn .35s ease-out}
+@keyframes aiIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ai-steps li.now .c{animation:none}}
+.ai-q{font-size:18px;font-weight:700;margin:2px 0}
+.ai-vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.ai-vs > div{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--surface)}
+.ai-vs .good{border-left:5px solid #1baf7a} .ai-vs .bad{border-left:5px solid #eb6834}
+.ai-vs h4{margin:0 0 6px}
+@media (max-width:700px){.ai-vs{grid-template-columns:minmax(0,1fr)}}
+.ai-graph{height:440px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.ai-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted);margin:6px 0}
+.ai-legend span{display:inline-flex;align-items:center;gap:6px}
+.ai-legend i{display:inline-block;width:11px;height:11px;border-radius:50%}
+.ai-legend i.ring{background:transparent;border:3px solid #f59e0b}
+.think{margin:2px 0 6px;font-style:italic}
+.call{margin:4px 0}
+.obs{margin:6px 0 2px;font-weight:600}
+details summary{cursor:pointer;color:var(--muted);font-size:13.5px}
+.task{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;background:var(--surface);font-weight:600}
+.report{border:2px solid #1baf7a;border-radius:12px;padding:12px 18px;margin:14px 0;background:color-mix(in srgb,#1baf7a 7%,var(--surface))}
+.report h4{margin:0 0 6px}
+.report ol{margin:4px 0;padding-left:20px} .report li{margin:4px 0}

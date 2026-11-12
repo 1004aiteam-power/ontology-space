@@ -26,48 +26,9 @@
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=729f3c47">
+<link rel="stylesheet" href="assets/css/work.css?v=1473ed22">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
-<style>
-/* 업무 온톨로지 페이지 전용 */
-.thesis{font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.5;margin:20px 0 8px;max-width:760px}
-.facts{display:flex;flex-wrap:wrap;gap:6px 28px;margin-top:24px;font-variant-numeric:tabular-nums}
-.facts b{font-size:22px;margin-right:6px}
-.facts span{color:var(--muted);font-size:14px}
-.terms{border-top:1px solid var(--line);margin:16px 0}
-.terms > div{display:grid;grid-template-columns:170px minmax(0,1fr);gap:4px 20px;padding:14px 0;border-bottom:1px solid var(--line)}
-.terms dt{font-weight:700}
-.terms dt small{display:block;font-weight:400;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
-.terms dd{margin:0}
-.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:24px 0;border-top:1px solid var(--line)}
-.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
-.decision h3{margin:0 0 6px}
-.decision p{margin:6px 0}
-.impl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
-.impl > div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;min-width:0}
-.impl b{display:block;font-size:12px;letter-spacing:.04em;color:var(--muted);margin-bottom:2px}
-.steps{list-style:none;margin:16px 0;padding:0;border-top:1px solid var(--line)}
-.steps li{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:4px 16px;padding:12px 0;border-bottom:1px solid var(--line);margin:0;align-items:baseline}
-.steps .n{color:var(--warm);font-weight:700}
-.steps .out{font-size:13px;color:var(--muted);text-align:right}
-.tag{display:inline-block;font-size:12px;font-weight:600;border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-right:6px;color:var(--muted)}
-.tag.ok{color:var(--ok);border-color:var(--ok)}
-.tag.no{color:var(--hv);border-color:var(--hv)}
-td.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
-.diagram .hub{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
-.diagram .box{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
-.diagram .edge{fill:none;stroke:var(--muted);stroke-width:1.3}
-.diagram .pre{fill:none;stroke:var(--accent);stroke-width:2}
-.diagram .fb{fill:none;stroke:var(--warm);stroke-width:2;stroke-dasharray:6 4}
-.diagram .b{font-weight:600}
-.diagram .pre-t{fill:var(--accent);font-weight:600}
-.diagram .fb-t{fill:var(--warm);font-weight:600}
-@media (max-width:560px){
-  .terms > div,.decision{grid-template-columns:minmax(0,1fr)}
-  .steps li{grid-template-columns:32px minmax(0,1fr)}
-  .steps .out{grid-column:2;text-align:left}
-}
-</style>
 </head>
 <body>
 <a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
