@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Particle Life</title>
+<meta name="title-ko" content="Ontology Space · 입자 생명">
+<meta name="title-en" content="Ontology Space · Particle Life">
+<meta name="description" content="끌림과 밀침을 적은 표 하나만으로 색색의 입자가 무리를 짓고, 맞물려 돌고, 서로 쫓아다니는 입자 생명(Particle Life) 시뮬레이션. 규칙 표를 직접 고쳐 가며 창발을 관찰합니다">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/particle-life.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/particle-life.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/particle-life.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/particle-life.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 입자 생명">
+<meta property="og:description" content="끌림과 밀침을 적은 표 하나만으로 색색의 입자가 무리를 짓고, 맞물려 돌고, 서로 쫓아다니는 입자 생명(Particle Life) 시뮬레이션. 규칙 표를 직접 고쳐 가며 창발을 관찰합니다">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/particle-life.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/thumbs/particle-life.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=729f3c47">
+<link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
+<link rel="stylesheet" href="assets/css/plife.css?v=023b9835">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/plife/plife-app.js?v=03840661"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html" aria-current="page"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 창발</small><small lang="en">Groups emerging from one attraction table</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="studioMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="aiMenu" hidden>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <hr>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+    </div>
+    <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">시뮬레이션 · 또 다른 관심사</span><span lang="en">SIMULATION · ANOTHER INTEREST</span></div>
+  <h1><span lang="ko">표 하나에서 태어나는<br>입자 생명</span><span lang="en">Particle Life:<br>born from a single table</span></h1>
+  <p class="lead" lang="ko">색이 다른 입자들이 있습니다. 정해 준 것은 <b>"어느 색이 어느 색에게 끌리고 밀리는가"를 적은 표 하나</b>뿐입니다. 그런데 실행하면 입자들이 덩어리를 이루고, 바람개비처럼 돌고, 서로 쫓아다니며, 살아 있는 것처럼 움직입니다. 표 어디에도 "무리를 지어라"는 말은 없습니다. 이렇게 단순한 규칙에서 예상 못 한 질서가 나타나는 것을 <b>창발(emergence)</b>이라고 합니다.</p>
+  <p class="lead" lang="en">There are particles of several colours. The only thing specified is <b>one table saying which colour is attracted to or repelled by which</b>. Run it and the particles clump, spin like pinwheels and chase each other, moving as if alive. Nothing in the table says "form a group". Order that nobody wrote down, appearing out of simple rules, is called <b>emergence</b>.</p>
+  <p class="meta" lang="ko">이 페이지는 온톨로지·전력과는 별개로, 만든 이의 또 다른 관심사인 생명 현상 시뮬레이션을 담았습니다. <a href="ecosystem.html">단세포 생태계</a>가 먹고 먹히는 관계를 다뤘다면, 여기서는 그보다 더 단순한 규칙에서 무엇이 나오는지를 봅니다.</p>
+  <p class="meta" lang="en">Separate from the ontology and power-grid material, this page reflects another interest of the author: simulating living systems. Where the <a href="ecosystem.html">cell ecosystem</a> is about eating and being eaten, this one asks what comes out of even simpler rules.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">입자 세계</span><span lang="en">The particle world</span></h2>
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="speedBtn"></button>
+    <select id="plPreset" aria-label="rules"></select>
+    <button id="plNew"><span lang="ko">🎲 새 무작위 규칙</span><span lang="en">🎲 New random rules</span></button>
+    <button id="plScatter"><span lang="ko">입자 다시 뿌리기</span><span lang="en">Scatter again</span></button>
+    <span class="meta" id="plSeed"></span>
+  </div>
+  <div class="ctrl">
+    <label class="speed-ctl"><span lang="ko">입자 수</span><span lang="en">Particles</span>
+      <input type="range" id="plN" min="200" max="2000" step="100" value="900" aria-label="particles"><output id="plNOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">종류 수</span><span lang="en">Types</span>
+      <input type="range" id="plTypes" min="2" max="6" step="1" value="5" aria-label="types"><output id="plTypesOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">작용 거리</span><span lang="en">Reach</span>
+      <input type="range" id="plRadius" min="6" max="20" step="1" value="12" aria-label="interaction radius"><output id="plRadiusOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">힘 세기</span><span lang="en">Force</span>
+      <input type="range" id="plStrength" min="2" max="20" step="1" value="10" aria-label="force strength"><output id="plStrengthOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">미끄러짐</span><span lang="en">Glide</span>
+      <input type="range" id="plSlip" min="0.02" max="0.2" step="0.01" value="0.04" aria-label="glide"><output id="plSlipOut"></output></label>
+  </div>
+
+  <div class="sim-wrap pl-wrap">
+    <canvas id="plView" aria-label="particle world"></canvas>
+    <div class="pl-side">
+      <div class="panel">
+        <b><span lang="ko">규칙 표 (눌러서 고치기)</span><span lang="en">Rule table (click to edit)</span></b>
+        <table class="pl-rules" id="plRules"></table>
+        <p class="pl-key"><span><i style="background:rgb(42,120,214)"></i><span lang="ko">끌림 (+)</span><span lang="en">attract (+)</span></span><span><i style="background:rgb(217,89,38)"></i><span lang="ko">밀침 (−)</span><span lang="en">repel (−)</span></span></p>
+        <p class="meta" lang="ko"><b style="display:inline">가로줄의 색이 세로줄의 색에게</b> 느끼는 힘입니다. 칸을 누르면 0.25씩 올라가고, Shift를 누른 채 누르거나 오른쪽 단추로 누르면 내려갑니다. 화살표 키 ↑ ↓ 로도 바꿀 수 있습니다.</p>
+        <p class="meta" lang="en">The force <b style="display:inline">the row colour feels towards the column colour</b>. Click a cell to raise it by 0.25; Shift-click or right-click to lower it. The ↑ ↓ arrow keys work too.</p>
+      </div>
+      <div id="plStats"></div>
+    </div>
+  </div>
+  <p class="meta" lang="ko">세계는 위아래와 좌우가 이어져 있어, 한쪽 끝으로 나간 입자는 반대쪽에서 들어옵니다. "🎲 새 무작위 규칙"을 누를 때마다 다른 세계가 나옵니다. 재미있는 규칙을 찾으면 "입자 다시 뿌리기"로 출발점을 바꿔도 같은 모양이 다시 생기는지 확인해 보세요.</p>
+  <p class="meta" lang="en">The world wraps around: a particle leaving one edge enters from the opposite one. Every press of "🎲 New random rules" gives a different world. When you find an interesting one, press "Scatter again" to see whether the same shapes come back from a different start.</p>
+</section>
+
+<section id="rule">
+  <h2><span lang="ko">규칙은 이것뿐입니다</span><span lang="en">This is the whole rule</span></h2>
+  <p lang="ko">입자 하나는 <b>작용 거리</b> 안에 있는 이웃만 봅니다. 이웃마다 아래 곡선대로 힘을 받고, 그 힘을 모두 더한 쪽으로 움직입니다. 마찰이 있어 힘이 없으면 곧 멈춥니다.</p>
+  <p lang="en">A particle looks only at neighbours within its <b>reach</b>. Each neighbour pushes or pulls it along the curve below; the particle moves the way the forces add up. Friction stops it soon after the forces vanish.</p>
+  <div class="diagram pl-force" role="img" aria-label="force as a function of distance">
+  <svg viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg">
+    <line class="ax" x1="70" y1="30" x2="70" y2="250"/><line class="zero" x1="70" y1="140" x2="610" y2="140"/>
+    <path class="rep" d="M70,240 L229,140"/><path class="att" d="M229,140 L414.5,40 L600,140"/><path class="neg" d="M229,140 L414.5,200 L600,140"/>
+    <text x="60" y="44" text-anchor="end">+1</text><text x="60" y="144" text-anchor="end">0</text><text x="60" y="244" text-anchor="end">−1</text>
+    <text x="24" y="100" class="muted" lang="ko">끌림</text><text x="18" y="100" class="muted" lang="en">attract</text>
+    <text x="24" y="200" class="muted" lang="ko">밀침</text><text x="24" y="200" class="muted" lang="en">repel</text>
+    <text x="70" y="272" text-anchor="middle" class="muted">0</text><text x="229" y="272" text-anchor="middle" class="muted" lang="ko">30%</text><text x="229" y="272" text-anchor="middle" class="muted" lang="en">30%</text>
+    <text x="600" y="272" text-anchor="middle" class="muted" lang="ko">작용 거리</text><text x="600" y="272" text-anchor="middle" class="muted" lang="en">reach</text>
+    <line class="zero" x1="229" y1="140" x2="229" y2="256"/><line class="zero" x1="600" y1="140" x2="600" y2="256"/>
+    <text x="96" y="176" lang="ko">너무 가까우면</text><text x="96" y="194" lang="ko">무조건 밀어냄</text>
+    <text x="96" y="176" lang="en">too close:</text><text x="96" y="194" lang="en">always pushed away</text>
+    <text x="430" y="52" lang="ko">표의 값이 +1 일 때</text><text x="430" y="52" lang="en">table value +1</text>
+    <text x="430" y="216" lang="ko">표의 값이 −0.6 일 때</text><text x="430" y="216" lang="en">table value −0.6</text>
+  </svg>
+  </div>
+  <ul>
+    <li lang="ko"><b>아주 가까우면 무조건 밀어냅니다.</b> 종류와 상관없습니다. 입자가 한 점에 겹치지 않고 서로 자리를 차지하게 만드는 힘입니다.</li>
+    <li lang="en"><b>Very close, always repel</b>, whatever the types. This keeps particles from piling onto one point and gives each one room.</li>
+    <li lang="ko"><b>그 바깥에서는 표의 값만큼 끌리거나 밀립니다.</b> 중간 거리에서 가장 세고, 작용 거리 끝에서 0이 됩니다. 그보다 먼 입자는 없는 것과 같습니다.</li>
+    <li lang="en"><b>Beyond that, attract or repel by the table value</b>: strongest at mid range, zero at the edge of the reach. Anything farther away does not exist as far as the particle is concerned.</li>
+    <li lang="ko"><b>표는 대칭이 아니어도 됩니다.</b> 빨강은 파랑에게 끌리는데 파랑은 빨강을 밀어낼 수 있습니다. 실제 물리에는 없는 일이고(작용과 반작용이 다릅니다), 바로 이것이 입자들을 살아 있는 것처럼 보이게 합니다.</li>
+    <li lang="en"><b>The table need not be symmetric.</b> Red may be drawn to blue while blue pushes red away. Real physics does not allow that (action and reaction differ), and it is exactly what makes the particles look alive.</li>
+  </ul>
+</section>
+
+<section id="try">
+  <h2><span lang="ko">이렇게 해 보세요</span><span lang="en">Things to try</span></h2>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">규칙</span><span lang="en">Rules</span></th><th><span lang="ko">표의 모양</span><span lang="en">The table</span></th><th><span lang="ko">나타나는 것</span><span lang="en">What appears</span></th></tr>
+    <tr><td><b><span lang="ko">규칙 없음</span><span lang="en">No rules</span></b></td><td lang="ko">모든 칸이 0</td><td lang="en">Every cell is 0</td><td lang="ko">가까이에서 밀어내는 힘만 남아 고르게 퍼진 뒤 멈춥니다. 비교의 기준입니다.</td><td lang="en">Only the close-range push remains: the particles spread out evenly and stop. This is the baseline.</td></tr>
+    <tr><td><b><span lang="ko">끼리끼리</span><span lang="en">Like attracts like</span></b></td><td lang="ko">대각선(같은 색)은 +, 나머지는 −</td><td lang="en">Diagonal (same colour) +, the rest −</td><td lang="ko">색깔별 작은 꽃송이 같은 덩어리가 생기고 서로 거리를 둔 채 멈춥니다. "같은 종류 이웃" 숫자가 올라가는 것을 보세요.</td><td lang="en">Small one-colour clumps like flower heads form, keep apart and come to rest. Watch "same-type neighbours" climb.</td></tr>
+    <tr><td><b><span lang="ko">바람개비</span><span lang="en">Pinwheels</span></b></td><td lang="ko">같은 색에 +, 다음 색에도 약하게 +</td><td lang="en">+ to the same colour, weak + to the next</td><td lang="ko">색 조각이 차례로 맞물린 덩어리가 생겨 바람개비처럼 돕니다. 각 색은 다음 색을 따라가는데 그 색은 돌아보지 않기 때문입니다.</td><td lang="en">Clumps of colour wedges in sequence form and spin like pinwheels: each colour follows the next, which does not look back.</td></tr>
+    <tr><td><b><span lang="ko">쫓고 쫓기기</span><span lang="en">Chase and flee</span></b></td><td lang="ko">다음 색에 +, 앞 색에 −</td><td lang="en">+ to the next colour, − to the previous</td><td lang="ko">멈추지 않고 돌아다니는 무리가 생깁니다. 평균 속력이 0으로 떨어지지 않습니다.</td><td lang="en">Groups that never settle and keep roaming. Mean speed does not fall to zero.</td></tr>
+    <tr><td><b><span lang="ko">무작위</span><span lang="en">Random</span></b></td><td lang="ko">모든 칸을 −1 ~ +1 에서 뽑음</td><td lang="en">Every cell drawn from −1 to +1</td><td lang="ko">무엇이 나올지 실행하기 전에는 알 수 없습니다. 세포처럼 막을 두른 덩어리, 도는 고리, 서로 잡아먹는 듯한 무리가 나오기도 합니다.</td><td lang="en">Nobody can say what will come out before running it: clumps with a membrane like cells, spinning rings, groups that seem to hunt one another.</td></tr>
+  </table></div>
+  <ol>
+    <li lang="ko"><b>대칭으로 만들어 보기.</b> "쫓고 쫓기기"에서 − 칸을 모두 맞은편과 같은 값으로 고치면 움직임이 잦아듭니다. 계속 움직이게 하던 것이 비대칭이었음을 알 수 있습니다.</li>
+    <li lang="en"><b>Make it symmetric.</b> In "Chase and flee", change every − cell to match its mirror cell and the motion dies down: the asymmetry was what kept things moving.</li>
+    <li lang="ko"><b>한 칸만 바꾸기.</b> 무작위 규칙에서 칸 하나의 부호만 뒤집어 보세요. 전체 모양이 완전히 달라지는 칸이 있고, 거의 영향이 없는 칸이 있습니다.</li>
+    <li lang="en"><b>Change one cell.</b> Flip the sign of a single cell in a random table. Some cells transform the whole picture; others barely matter.</li>
+    <li lang="ko"><b>작용 거리 줄이기.</b> 입자가 보는 범위가 좁아지면 큰 구조는 사라지고 작은 덩어리만 남습니다. 멀리 볼수록 큰 구조가 생깁니다.</li>
+    <li lang="en"><b>Shorten the reach.</b> With a narrower view, large structures vanish and only small clumps remain. The farther particles see, the larger the structures.</li>
+    <li lang="ko"><b>미끄러짐 키우기.</b> 마찰이 줄어 입자가 오래 미끄러집니다. 덩어리가 부딪혀 깨지고 다시 뭉치는, 더 격한 세계가 됩니다.</li>
+    <li lang="en"><b>Raise the glide.</b> Less friction, so particles coast longer. Clumps collide, break up and re-form in a rougher world.</li>
+  </ol>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">무엇을 보여 주는가</span><span lang="en">What this shows</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">창발: 전체는 부분의 합보다 많다</span><span lang="en">Emergence: more than the sum of the parts</span></h4>
+      <p lang="ko">입자 하나는 이웃 몇 개만 보고, 기억도 목표도 없습니다. 그런데 무리 수준에서는 막, 고리, 추격 같은 것이 생깁니다. 이런 성질은 입자 하나를 아무리 들여다봐도 찾을 수 없고, 여럿이 상호작용할 때만 나타납니다.</p>
+      <p lang="en">One particle sees a few neighbours and has neither memory nor goal. Yet at group level membranes, rings and pursuits appear. No amount of staring at a single particle reveals them; they exist only when many interact.</p></div>
+    <div class="card"><h4><span lang="ko">비대칭이 움직임을 만든다</span><span lang="en">Asymmetry makes motion</span></h4>
+      <p lang="ko">힘이 대칭이면 입자들은 편한 자리를 찾아 멈춥니다. 한쪽은 쫓고 한쪽은 달아나면 멈출 자리가 없어 계속 움직입니다. 실제 생명도 에너지를 계속 써서 평형에서 벗어나 있다는 점에서 닮았습니다. 다만 여기서는 그 에너지가 규칙에서 공짜로 나옵니다.</p>
+      <p lang="en">With symmetric forces the particles find a comfortable arrangement and stop. When one side chases and the other flees there is no resting place. Living things are similar in staying away from equilibrium by spending energy all the time — though here that energy comes free from the rules.</p></div>
+    <div class="card"><h4><span lang="ko">예측할 수 없지만 무작위는 아니다</span><span lang="en">Unpredictable, yet not random</span></h4>
+      <p lang="ko">같은 규칙 번호는 언제나 같은 세계를 만듭니다. 모든 것이 정해져 있는데도, 표만 보고 결과를 맞히기는 어렵습니다. 알아내는 가장 빠른 방법이 직접 돌려 보는 것이라는 점이 이런 시스템의 특징입니다.</p>
+      <p lang="en">The same rule-set number always makes the same world. Everything is determined, and still the outcome is hard to read off the table. That the quickest way to find out is to run it is characteristic of such systems.</p></div>
+    <div class="card"><h4><span lang="ko">생명의 모형은 아닙니다</span><span lang="en">It is not a model of life</span></h4>
+      <p lang="ko">입자는 먹지도, 번식하지도, 진화하지도 않습니다. 세포처럼 보이는 덩어리는 겉모습이 닮았을 뿐입니다. 이 시뮬레이션이 말해 주는 것은 "생명이 이렇게 생겼다"가 아니라 "복잡해 보이는 모습에 복잡한 설계가 꼭 필요한 것은 아니다"입니다.</p>
+      <p lang="en">The particles do not eat, reproduce or evolve. Clumps that look like cells only look like them. What the simulation says is not "this is how life arose" but "complex-looking behaviour does not have to come from a complex design".</p></div>
+  </div>
+</section>
+
+<section id="refs">
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=S9iS9_xQtZ8">"The Emergent World of Particle Life: Clusters, Interaction Matrices, and Digital Complexity"</a> (YouTube): <span lang="ko">이 페이지를 만들게 된 영상</span><span lang="en">the video that prompted this page</span></li>
+    <li>Jeffrey Ventrella, <a href="https://ventrella.com/Clusters/">"Clusters"</a>: <span lang="ko">종류별 끌림 · 밀침 표로 움직이는 입자라는 생각의 출발점</span><span lang="en">the origin of the idea of particles driven by a per-type attraction table</span></li>
+    <li>Tom Mohr, <a href="https://github.com/tom-mohr/particle-life-app">particle-life-app</a>: <span lang="ko">널리 쓰이는 공개 구현. 이 페이지의 힘 곡선(가까이에서 밀침 + 삼각형)은 이 계열에서 흔히 쓰는 모양을 따랐습니다</span><span lang="en">a widely used open implementation. The force curve here (close-range push plus a triangle) follows the shape common in this family</span></li>
+  </ul>
+  <p class="meta" lang="ko">코드: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife.js">plife.js</a> (계산) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-app.js">plife-app.js</a> (화면). 위 자료의 코드를 가져오지 않고 새로 작성했습니다.</p>
+  <p class="meta" lang="en">Code: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife.js">plife.js</a> (simulation) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-app.js">plife-app.js</a> (display). Written from scratch, not copied from the sources above.</p>
+  <div class="pager"><a href="ecosystem.html"><span lang="ko">← 단세포 생태계</span><span lang="en">← Cell ecosystem</span></a><a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지 →</span><span lang="en">Cell ecosystem ontology →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

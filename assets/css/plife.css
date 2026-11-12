@@ -1,0 +1,28 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space) */
+/* particle-life.html 에만 쓰는 모양: 입자 화면, 규칙 표, 통계 */
+.pl-wrap{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);align-items:start}
+/* 넓은 화면: 입자 화면은 화면 높이 안에 들어오는 크기까지만 (가로 240 : 세로 150), 규칙 표와 통계는 오른쪽 */
+@media (min-width:1000px){ .pl-wrap{grid-template-columns:minmax(0,min(100%,calc((100vh - 110px) * 1.6))) 320px;justify-content:center} }
+#plView{width:100%;display:block;border-radius:12px;border:1px solid var(--line);background:#0b0f14}
+.pl-side{display:grid;gap:12px;align-content:start;min-width:0}
+.pl-side .panel b{display:block;margin-bottom:6px}
+.pl-rules{border-collapse:separate;border-spacing:3px;min-width:0;width:100%;table-layout:fixed}
+.pl-rules th,.pl-rules td{padding:0;border:0;background:none;text-align:center}
+.pl-rules th{width:26px;height:26px}
+.pl-rules th i{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.pl-rules button{width:100%;min-height:32px;border:1px solid var(--line);border-radius:6px;cursor:pointer;font:600 12px ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;color:#fff;padding:0}
+.pl-rules button.zero{color:var(--muted);background:var(--surface)}
+.pl-rules button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.pl-key{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:8px}
+.pl-key i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+#plStats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+#plStats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+#plStats span{display:block;font-size:12px;color:var(--muted)}
+#plStats b{font-variant-numeric:tabular-nums;font-size:16px}
+#plStats small{display:block;font-size:11.5px;color:var(--muted)}
+.pl-force .ax{stroke:var(--muted);stroke-width:1.2}
+.pl-force .zero{stroke:var(--line);stroke-width:1.2;stroke-dasharray:4 4}
+.pl-force .rep{fill:none;stroke:#d95926;stroke-width:3}
+.pl-force .att{fill:none;stroke:#2a78d6;stroke-width:3}
+.pl-force .neg{fill:none;stroke:#d95926;stroke-width:2;stroke-dasharray:6 4}
