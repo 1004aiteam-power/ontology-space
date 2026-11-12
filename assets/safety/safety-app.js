@@ -3,7 +3,7 @@
 // 배전 공사현장 안전 시뮬레이션 화면: 2D 캔버스 원근(pseudo-3D) 현장, 단계 목록·설명, 훈련(순서 맞히기) 모드
 //
 // 입체감: 비스듬히 내려다보는 원근 투영 · 면마다 햇빛 방향으로 명암 · 땅 위 그림자 · 먼 것부터 그리기 · 멀수록 대기색
-import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT, TX, TW, towerLeg, PULLEY } from './safety.js?v=a96c9949';
+import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT, TX, TW, towerLeg, PULLEY } from './safety.js?v=e1c9ea17';
 import { $, esc } from '../lib/dom.js?v=3b73d59c';
 
 const t = (o) => (o == null ? '' : window.t ? window.t(o) : o.ko);
