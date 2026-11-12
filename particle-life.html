@@ -6,7 +6,7 @@
 <title>Ontology Space · Particle Life</title>
 <meta name="title-ko" content="Ontology Space · 입자 생명">
 <meta name="title-en" content="Ontology Space · Particle Life">
-<meta name="description" content="끌림과 밀침을 적은 표 하나만으로 색색의 입자가 무리를 짓고, 맞물려 돌고, 서로 쫓아다니는 입자 생명(Particle Life) 시뮬레이션. 규칙 표를 직접 고쳐 가며 창발을 관찰합니다">
+<meta name="description" content="에너지 · 번식 · 유전을 더하면 그 표가 스스로 진화하는 살아 있는 세계까지. 끌림과 밀침을 적은 표 하나만으로 색색의 입자가 무리를 짓고, 맞물려 돌고, 서로 쫓아다니는 입자 생명(Particle Life) 시뮬레이션. 규칙 표를 직접 고쳐 가며 창발을 관찰합니다">
 <!-- head:meta (tools/build_nav.py) -->
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ontology Space">
 <meta property="og:title" content="Ontology Space · 입자 생명">
-<meta property="og:description" content="끌림과 밀침을 적은 표 하나만으로 색색의 입자가 무리를 짓고, 맞물려 돌고, 서로 쫓아다니는 입자 생명(Particle Life) 시뮬레이션. 규칙 표를 직접 고쳐 가며 창발을 관찰합니다">
+<meta property="og:description" content="에너지 · 번식 · 유전을 더하면 그 표가 스스로 진화하는 살아 있는 세계까지. 끌림과 밀침을 적은 표 하나만으로 색색의 입자가 무리를 짓고, 맞물려 돌고, 서로 쫓아다니는 입자 생명(Particle Life) 시뮬레이션. 규칙 표를 직접 고쳐 가며 창발을 관찰합니다">
 <meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/particle-life.html">
 <meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/thumbs/particle-life.jpg">
 <meta property="og:locale" content="ko_KR">
@@ -27,10 +27,10 @@
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=729f3c47">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
-<link rel="stylesheet" href="assets/css/plife.css?v=bb8f9941">
+<link rel="stylesheet" href="assets/css/plife.css?v=2ef3be8e">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
-<script type="module" src="assets/plife/plife-app.js?v=85704973"></script>
+<script type="module" src="assets/plife/plife-app.js?v=d938dd6c"></script>
 </head>
 <body>
 <a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
@@ -86,7 +86,7 @@
       <hr>
       <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
       <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
-      <a href="particle-life.html" aria-current="page"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 창발</small><small lang="en">Groups emerging from one attraction table</small></a>
+      <a href="particle-life.html" aria-current="page"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
     </div>
     <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu cols" id="studioMenu" hidden>
@@ -136,12 +136,19 @@
 <section id="lab">
   <div class="badge">LAB</div>
   <h2><span lang="ko">입자 세계</span><span lang="en">The particle world</span></h2>
+  <div class="ctrl pl-worlds" role="group" aria-label="world">
+    <button type="button" data-world="fixed" aria-pressed="true"><span lang="ko">고정 규칙 세계</span><span lang="en">Fixed-rule world</span><small lang="ko">사람이 정한 표 하나로 움직임</small><small lang="en">driven by one table set by hand</small></button>
+    <button type="button" data-world="living" aria-pressed="false"><span lang="ko">살아 있는 세계</span><span lang="en">Living world</span><small lang="ko">에너지 · 번식 · 죽음 · 유전: 표가 스스로 진화</small><small lang="en">energy, birth, death, heredity: the table evolves</small></button>
+  </div>
   <div class="ctrl">
     <button id="playBtn" class="primary"></button>
     <button id="speedBtn"></button>
-    <select id="plPreset" aria-label="rules"></select>
-    <button id="plNew"><span lang="ko">🎲 새 무작위 규칙</span><span lang="en">🎲 New random rules</span></button>
-    <button id="plScatter"><span lang="ko">입자 다시 뿌리기</span><span lang="en">Scatter again</span></button>
+    <select id="plPreset" aria-label="rules" data-only="fixed"></select>
+    <button id="plNew" data-only="fixed"><span lang="ko">🎲 새 무작위 규칙</span><span lang="en">🎲 New random rules</span></button>
+    <button id="plScatter" data-only="fixed"><span lang="ko">입자 다시 뿌리기</span><span lang="en">Scatter again</span></button>
+    <select id="plGenes" aria-label="starting genes" data-only="living" hidden></select>
+    <button id="plRestart" data-only="living" hidden><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+    <button id="plNewWorld" data-only="living" hidden><span lang="ko">🎲 다른 세계</span><span lang="en">🎲 Another world</span></button>
     <span class="meta" id="plSeed"></span>
   </div>
   <div class="ctrl">
@@ -155,27 +162,45 @@
       <input type="range" id="plStrength" min="2" max="20" step="1" value="10" aria-label="force strength"><output id="plStrengthOut"></output></label>
     <label class="speed-ctl"><span lang="ko">미끄러짐</span><span lang="en">Glide</span>
       <input type="range" id="plSlip" min="0.02" max="0.2" step="0.01" value="0.04" aria-label="glide"><output id="plSlipOut"></output></label>
+    <label class="speed-ctl" data-only="living" hidden><span lang="ko">돌연변이 크기</span><span lang="en">Mutation size</span>
+      <input type="range" id="plMut" min="0" max="0.2" step="0.01" value="0.08" aria-label="mutation size"><output id="plMutOut"></output></label>
+    <label class="speed-ctl" data-only="living" hidden><span lang="ko">빛의 양</span><span lang="en">Light</span>
+      <input type="range" id="plSun" min="0.3" max="1" step="0.05" value="0.55" aria-label="light"><output id="plSunOut"></output></label>
   </div>
 
   <div class="sim-wrap pl-wrap">
     <canvas id="plView" aria-label="particle world"></canvas>
     <div class="pl-side">
       <div class="panel">
-        <b><span lang="ko">규칙 표 (눌러서 고치기)</span><span lang="en">Rule table (click to edit)</span></b>
+        <b id="plRulesTitle"></b>
         <table class="pl-rules" id="plRules"></table>
-        <div class="ctrl pl-all">
+        <p class="pl-key" data-only="living" hidden><span id="plChain"></span></p>
+        <div class="ctrl pl-all" data-only="fixed">
           <button id="plRefresh"><span lang="ko">🎲 표 전체 새로 뽑기</span><span lang="en">🎲 Redraw the whole table</span></button>
           <button id="plZero"><span lang="ko">모두 0</span><span lang="en">All zero</span></button>
         </div>
         <p class="pl-key"><span><i style="background:rgb(42,120,214)"></i><span lang="ko">끌림 (+)</span><span lang="en">attract (+)</span></span><span><i style="background:rgb(217,89,38)"></i><span lang="ko">밀침 (−)</span><span lang="en">repel (−)</span></span></p>
-        <p class="meta" lang="ko"><b style="display:inline">가로줄의 색이 세로줄의 색에게</b> 느끼는 힘입니다. 칸을 누르면 0.25씩 올라가고, Shift를 누른 채 누르거나 오른쪽 단추로 누르면 내려갑니다. 화살표 키 ↑ ↓ 로도 바꿀 수 있습니다. <b style="display:inline">표 전체 새로 뽑기</b>는 모든 칸을 한꺼번에 새 값으로 바꾸고, 입자는 지금 자리에서 그대로 새 규칙을 따릅니다.</p>
-        <p class="meta" lang="en">The force <b style="display:inline">the row colour feels towards the column colour</b>. Click a cell to raise it by 0.25; Shift-click or right-click to lower it. The ↑ ↓ arrow keys work too. <b style="display:inline">Redraw the whole table</b> replaces every cell at once; the particles carry on from where they are under the new rules.</p>
+        <p class="meta" lang="ko" data-only="living" hidden>표의 값은 지금 살아 있는 입자들의 <b style="display:inline">유전자 평균</b>입니다. 아무도 고치지 않아도 세대가 지나면서 바뀝니다. <b style="display:inline">굵은 테두리</b>는 먹이 색 칸, <b style="display:inline">점선 테두리</b>는 포식자 색 칸입니다. 칸을 누르면 그 색 입자 모두의 유전자를 0.25씩 바꿔 끼어들 수 있고, 그 뒤는 다시 진화에 맡겨집니다.</p>
+        <p class="meta" lang="en" data-only="living" hidden>The values are the <b style="display:inline">mean genes</b> of the particles alive right now. They change over the generations with nobody editing them. A <b style="display:inline">thick border</b> marks the prey column, a <b style="display:inline">dashed border</b> the predator column. Clicking a cell shifts that gene by 0.25 in every particle of the colour — an intervention, after which evolution takes over again.</p>
+        <p class="meta" lang="ko" data-only="fixed"><b style="display:inline">가로줄의 색이 세로줄의 색에게</b> 느끼는 힘입니다. 칸을 누르면 0.25씩 올라가고, Shift를 누른 채 누르거나 오른쪽 단추로 누르면 내려갑니다. 화살표 키 ↑ ↓ 로도 바꿀 수 있습니다. <b style="display:inline">표 전체 새로 뽑기</b>는 모든 칸을 한꺼번에 새 값으로 바꾸고, 입자는 지금 자리에서 그대로 새 규칙을 따릅니다.</p>
+        <p class="meta" lang="en" data-only="fixed">The force <b style="display:inline">the row colour feels towards the column colour</b>. Click a cell to raise it by 0.25; Shift-click or right-click to lower it. The ↑ ↓ arrow keys work too. <b style="display:inline">Redraw the whole table</b> replaces every cell at once; the particles carry on from where they are under the new rules.</p>
       </div>
       <div id="plStats"></div>
+      <div class="panel chart-box" data-only="living" hidden>
+        <b><span lang="ko">색별 개체수</span><span lang="en">Population by colour</span></b>
+        <canvas id="plPop" class="pl-chart" aria-label="population by colour"></canvas>
+      </div>
+      <div class="panel chart-box" data-only="living" hidden>
+        <b><span lang="ko">유전자 평균: 누구에게 끌리고 밀리나</span><span lang="en">Mean genes: drawn to or pushed from whom</span></b>
+        <p class="pl-key" id="plTraitKey"></p>
+        <canvas id="plGene" class="pl-chart" aria-label="mean genes over time"></canvas>
+      </div>
     </div>
   </div>
-  <p class="meta" lang="ko">세계는 위아래와 좌우가 이어져 있어, 한쪽 끝으로 나간 입자는 반대쪽에서 들어옵니다. "🎲 새 무작위 규칙"을 누를 때마다 다른 세계가 나옵니다. 재미있는 규칙을 찾으면 "입자 다시 뿌리기"로 출발점을 바꿔도 같은 모양이 다시 생기는지 확인해 보세요.</p>
-  <p class="meta" lang="en">The world wraps around: a particle leaving one edge enters from the opposite one. Every press of "🎲 New random rules" gives a different world. When you find an interesting one, press "Scatter again" to see whether the same shapes come back from a different start.</p>
+  <p class="meta" lang="ko" data-only="living" hidden>옅은 입자는 에너지가 절반도 안 남은 배고픈 입자, 진한 입자는 곧 둘로 나뉠 입자입니다. 처음에는 유전자가 모두 0이라 아무 규칙 없이 흩어져 있다가, 배속 16×로 1만 틱쯤 지나면 오른쪽 그래프에서 <b>먹이 색에게 끌리는 유전자</b>가 올라가고 <b>포식자 색에게 끌리는 유전자</b>가 내려가는 것이 보입니다. 아무도 그렇게 정하지 않았습니다.</p>
+  <p class="meta" lang="en" data-only="living" hidden>Pale particles have less than half their energy left; bright ones are about to divide. Genes start at zero, so at first nothing has any rule; after about 10,000 ticks at 16×, the chart on the right shows the <b>pull towards prey</b> rising and the <b>pull towards the predator</b> falling. Nobody set it that way.</p>
+  <p class="meta" lang="ko" data-only="fixed">세계는 위아래와 좌우가 이어져 있어, 한쪽 끝으로 나간 입자는 반대쪽에서 들어옵니다. "🎲 새 무작위 규칙"을 누를 때마다 다른 세계가 나옵니다. 재미있는 규칙을 찾으면 "입자 다시 뿌리기"로 출발점을 바꿔도 같은 모양이 다시 생기는지 확인해 보세요.</p>
+  <p class="meta" lang="en" data-only="fixed">The world wraps around: a particle leaving one edge enters from the opposite one. Every press of "🎲 New random rules" gives a different world. When you find an interesting one, press "Scatter again" to see whether the same shapes come back from a different start.</p>
 </section>
 
 <section id="rule">
@@ -206,6 +231,31 @@
     <li lang="ko"><b>표는 대칭이 아니어도 됩니다.</b> 빨강은 파랑에게 끌리는데 파랑은 빨강을 밀어낼 수 있습니다. 실제 물리에는 없는 일이고(작용과 반작용이 다릅니다), 바로 이것이 입자들을 살아 있는 것처럼 보이게 합니다.</li>
     <li lang="en"><b>The table need not be symmetric.</b> Red may be drawn to blue while blue pushes red away. Real physics does not allow that (action and reaction differ), and it is exactly what makes the particles look alive.</li>
   </ul>
+</section>
+
+<section id="living">
+  <h2><span lang="ko">살아 있는 세계: 표가 스스로 진화한다</span><span lang="en">The living world: the table evolves by itself</span></h2>
+  <p lang="ko">고정 규칙 세계의 입자는 먹지도, 번식하지도, 죽지도 않습니다. 살아 있는 세계는 같은 힘의 규칙 위에 생명에 필요한 것 세 가지를 더했습니다.</p>
+  <p lang="en">Particles in the fixed-rule world neither eat, reproduce nor die. The living world adds three things life needs on top of the same force rule.</p>
+  <div class="tbl"><table>
+    <tr><th></th><th><span lang="ko">규칙</span><span lang="en">Rule</span></th><th><span lang="ko">왜 넣었나</span><span lang="en">Why</span></th></tr>
+    <tr><td><b><span lang="ko">① 에너지</span><span lang="en">① Energy</span></b></td><td lang="ko">빛에서 에너지를 얻고(주변이 붐빌수록 적게), 살아 있는 것만으로 쓰고, 빨리 움직일수록 더 씁니다. 그리고 <b>가는 나를, 나는 다를, 다는 가를 먹습니다</b>. 먹이 색에 아주 가까이 붙으면 그 입자의 에너지를 빼앗습니다.</td><td lang="en">Energy comes from light (less when crowded), is spent just by being alive, and more when moving fast. And <b>A eats B, B eats C, C eats A</b>: getting very close to a particle of the prey colour drains its energy.</td><td lang="ko">움직이는 힘이 더 이상 공짜가 아닙니다. 잘 먹는 입자와 못 먹는 입자의 차이가 생깁니다.</td><td lang="en">Motion is no longer free. Good and bad eaters start to differ.</td></tr>
+    <tr><td><b><span lang="ko">② 번식 · 죽음</span><span lang="en">② Birth · death</span></b></td><td lang="ko">에너지가 4에 이르면 둘로 나뉘고(에너지도 반씩), 0이 되면 사라집니다. 한 색이 모두 사라지면 바깥에서 몇 개가 들어옵니다.</td><td lang="en">At energy 4 a particle splits in two (sharing the energy); at 0 it disappears. If a colour dies out, a few arrive from outside.</td><td lang="ko">잘 먹은 입자가 더 많은 자손을 남깁니다. 이것이 선택입니다.</td><td lang="en">Well-fed particles leave more offspring. That is selection.</td></tr>
+    <tr><td><b><span lang="ko">③ 유전</span><span lang="en">③ Heredity</span></b></td><td lang="ko">규칙 표가 세계에 하나 있는 것이 아니라, <b>입자마다 자기 가로줄(유전자)</b>을 갖습니다. 나뉠 때 자식은 부모의 유전자를 조금 바뀐 채로(돌연변이) 물려받습니다.</td><td lang="en">There is no longer one table for the world: <b>each particle carries its own row (its genes)</b>. On division the child inherits the parent's genes, slightly changed (mutation).</td><td lang="ko">살아남는 데 유리한 유전자가 다음 세대에 늘어납니다. 이것이 진화입니다.</td><td lang="en">Genes that help survival become more common in the next generation. That is evolution.</td></tr>
+  </table></div>
+  <p lang="ko">그래서 화면의 규칙 표는 이제 사람이 정한 값이 아니라 <b>지금 살아 있는 입자들의 유전자 평균</b>입니다. 모두 0에서 시작해도, 시간이 지나면 다음과 같은 방향으로 바뀌는 경우가 많습니다.</p>
+  <p lang="en">So the rule table on screen is no longer set by hand: it is <b>the mean genes of the particles alive now</b>. Starting from all zeros, it usually drifts in these directions:</p>
+  <ul>
+    <li lang="ko"><b>먹이 색에게 끌림 (+)</b>: 먹이에게 다가가는 입자가 더 많이 먹고 더 많이 나뉩니다.</li>
+    <li lang="en"><b>Drawn to the prey colour (+)</b>: particles that approach prey eat more and divide more.</li>
+    <li lang="ko"><b>포식자 색에게 밀림 (−)</b>: 포식자에게서 멀어지는 입자가 덜 먹히고 오래 삽니다.</li>
+    <li lang="en"><b>Pushed from the predator colour (−)</b>: particles that move away from predators are eaten less and live longer.</li>
+    <li lang="ko"><b>같은 색에게 밀림 (−)</b>: 같은 색끼리 뭉치면 빛을 나눠 가져 배가 고파집니다. 흩어지는 쪽이 유리할 때가 많습니다.</li>
+    <li lang="en"><b>Pushed from the own colour (−)</b>: same-colour clumps share the light and go hungry, so spreading out often pays.</li>
+  </ul>
+  <p lang="ko">결과는 세계 번호마다 다르고, 늘 같은 방향으로 가지는 않습니다. 개체수가 크게 오르내리는 동안 유전자가 거꾸로 흘러가기도 하고, 한 색이 거의 사라졌다가 돌아오기도 합니다. <b>돌연변이 크기를 0</b>으로 하면 유전자가 처음 값에서 전혀 바뀌지 않습니다. 진화에는 선택(①②)과 변이(③)가 둘 다 필요하다는 것을 확인할 수 있습니다.</p>
+  <p lang="en">The outcome differs from world to world and does not always go the same way: genes can drift backwards while populations swing, and a colour may nearly vanish and come back. Set the <b>mutation size to 0</b> and the genes never leave their starting values — evolution needs both selection (①②) and variation (③).</p>
+  <div class="easy"><b>💡 <span lang="ko">무엇이 달라졌나</span><span lang="en">What changed</span></b><p lang="ko">고정 규칙 세계에서는 <b>사람이 표를 정하고</b> 입자가 그대로 따랐습니다. 살아 있는 세계에서는 <b>표가 입자 안에 있고</b>, 어떤 표가 남을지를 먹고 먹히는 결과가 정합니다. 그래도 이것은 생명의 모형이 아니라 "선택과 변이가 있으면 규칙이 스스로 다듬어진다"는 것을 보여 주는 장난감입니다. 실제 생물에는 훨씬 많은 것(대사 경로, 발생, 성, 환경 변화 …)이 있습니다.</p><p lang="en">In the fixed-rule world <b>a person sets the table</b> and the particles obey. In the living world <b>the table lives inside the particles</b>, and eating and being eaten decide which tables survive. It is still a toy, not a model of life: it shows that rules refine themselves once there is selection and variation. Real organisms have far more (metabolic pathways, development, sex, changing environments …).</p></div>
 </section>
 
 <section id="try">
@@ -243,8 +293,8 @@
       <p lang="ko">같은 규칙 번호는 언제나 같은 세계를 만듭니다. 모든 것이 정해져 있는데도, 표만 보고 결과를 맞히기는 어렵습니다. 알아내는 가장 빠른 방법이 직접 돌려 보는 것이라는 점이 이런 시스템의 특징입니다.</p>
       <p lang="en">The same rule-set number always makes the same world. Everything is determined, and still the outcome is hard to read off the table. That the quickest way to find out is to run it is characteristic of such systems.</p></div>
     <div class="card"><h4><span lang="ko">생명의 모형은 아닙니다</span><span lang="en">It is not a model of life</span></h4>
-      <p lang="ko">입자는 먹지도, 번식하지도, 진화하지도 않습니다. 세포처럼 보이는 덩어리는 겉모습이 닮았을 뿐입니다. 이 시뮬레이션이 말해 주는 것은 "생명이 이렇게 생겼다"가 아니라 "복잡해 보이는 모습에 복잡한 설계가 꼭 필요한 것은 아니다"입니다.</p>
-      <p lang="en">The particles do not eat, reproduce or evolve. Clumps that look like cells only look like them. What the simulation says is not "this is how life arose" but "complex-looking behaviour does not have to come from a complex design".</p></div>
+      <p lang="ko">고정 규칙 세계의 입자는 먹지도, 번식하지도, 진화하지도 않습니다. 세포처럼 보이는 덩어리는 겉모습이 닮았을 뿐입니다. 살아 있는 세계는 이 셋을 더했지만 여전히 아주 단순한 장난감입니다. 이 시뮬레이션이 말해 주는 것은 "생명이 이렇게 생겼다"가 아니라 "복잡해 보이는 모습에 복잡한 설계가 꼭 필요한 것은 아니다"입니다.</p>
+      <p lang="en">Particles in the fixed-rule world do not eat, reproduce or evolve; clumps that look like cells only look like them. The living world adds those three, and is still a very simple toy. What the simulation says is not "this is how life arose" but "complex-looking behaviour does not have to come from a complex design".</p></div>
   </div>
 </section>
 
@@ -255,8 +305,8 @@
     <li>Jeffrey Ventrella, <a href="https://ventrella.com/Clusters/">"Clusters"</a>: <span lang="ko">종류별 끌림 · 밀침 표로 움직이는 입자라는 생각의 출발점</span><span lang="en">the origin of the idea of particles driven by a per-type attraction table</span></li>
     <li>Tom Mohr, <a href="https://github.com/tom-mohr/particle-life-app">particle-life-app</a>: <span lang="ko">널리 쓰이는 공개 구현. 이 페이지의 힘 곡선(가까이에서 밀침 + 삼각형)은 이 계열에서 흔히 쓰는 모양을 따랐습니다</span><span lang="en">a widely used open implementation. The force curve here (close-range push plus a triangle) follows the shape common in this family</span></li>
   </ul>
-  <p class="meta" lang="ko">코드: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife.js">plife.js</a> (계산) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-app.js">plife-app.js</a> (화면). 위 자료의 코드를 가져오지 않고 새로 작성했습니다.</p>
-  <p class="meta" lang="en">Code: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife.js">plife.js</a> (simulation) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-app.js">plife-app.js</a> (display). Written from scratch, not copied from the sources above.</p>
+  <p class="meta" lang="ko">코드: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife.js">plife.js</a> (고정 규칙 세계) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-evo.js">plife-evo.js</a> (살아 있는 세계) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-app.js">plife-app.js</a> (화면). 위 자료의 코드를 가져오지 않고 새로 작성했습니다.</p>
+  <p class="meta" lang="en">Code: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife.js">plife.js</a> (fixed-rule world) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-evo.js">plife-evo.js</a> (living world) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/plife/plife-app.js">plife-app.js</a> (display). Written from scratch, not copied from the sources above.</p>
   <div class="pager"><a href="ecosystem.html"><span lang="ko">← 단세포 생태계</span><span lang="en">← Cell ecosystem</span></a><a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지 →</span><span lang="en">Cell ecosystem ontology →</span></a></div>
 </section>
 </main>

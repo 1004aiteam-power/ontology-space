@@ -58,3 +58,41 @@ assert.ok([...s.type].every(t => t < 5)); s.setTypes(2); assert.ok([...s.type].e
 for (let i = 0; i < 50; i++) s.step();
 assert.ok(s.x.every(Number.isFinite));
 console.log('✓ changing the particle count and the number of types keeps the simulation valid');
+
+// ---- 살아 있는 세계: 에너지 · 번식 · 죽음 · 유전 ---------------------------------------------------------------
+const { LivingWorld, CAP } = await import('../assets/plife/plife-evo.js');
+const live = (opts, steps) => { const w = new LivingWorld(opts); for (let i = 0; i < steps; i++) w.step(); return w; };
+
+// 먹이사슬 고리: 가 → 나 → 다 → 가
+const w0 = new LivingWorld({ types: 3 });
+assert.deepEqual([0, 1, 2].map(t => w0.prey(t)), [1, 2, 0]);
+assert.deepEqual([0, 1, 2].map(t => w0.predator(t)), [2, 0, 1]);
+assert.ok(w0.meanMatrix().flat().every(v => v === 0), 'blank genes start at zero');
+
+// 같은 번호면 같은 세계, 입자 수는 상한 안, 태어남 · 죽음이 실제로 일어남
+const l1 = live({ seed: 3 }, 3000), l2 = live({ seed: 3 }, 3000);
+assert.equal(l1.n, l2.n); assert.deepEqual([...l1.genes.slice(0, 30)], [...l2.genes.slice(0, 30)]);
+assert.ok(l1.n > 50 && l1.n <= CAP, `population stays alive and bounded: ${l1.n}`);
+assert.ok(l1.births > 300 && l1.deaths > 300, `births ${l1.births}, deaths ${l1.deaths}`);
+for (let i = 0; i < l1.n; i++) assert.ok(l1.e[i] > 0 && l1.e[i] < l1.opts.birth + 1e-6 && Number.isFinite(l1.x[i]));
+assert.ok([...l1.genes].every(v => v >= -1 && v <= 1));
+console.log(`✓ living world: food chain A→B→C→A, deterministic, ${l1.births} births and ${l1.deaths} deaths in 3,000 ticks, energies and genes in range`);
+
+// 진화: 유전자가 모두 0에서 시작해도 선택이 방향을 만든다 — 먹이에게 끌리고, 포식자에게서 밀린다
+for (const seed of [1, 2]) {
+  const w = live({ seed }, 10000), tr = w.traits();
+  assert.ok(tr.chase > 0.2, `seed ${seed}: drawn to prey ${tr.chase.toFixed(2)}`);
+  assert.ok(tr.flee < -0.1, `seed ${seed}: pushed from predator ${tr.flee.toFixed(2)}`);
+  assert.ok(tr.generation > 5, `seed ${seed}: generations ${tr.generation.toFixed(1)}`);
+  console.log(`✓ seed ${seed}: after 10,000 ticks genes evolved from zero — prey ${tr.chase.toFixed(2)}, predator ${tr.flee.toFixed(2)}, own colour ${tr.self.toFixed(2)} (generation ${tr.generation.toFixed(0)})`);
+}
+// 변이가 없으면 진화도 없다: 돌연변이 0 이면 유전자는 처음 값(0)에서 움직이지 않는다
+const still = live({ seed: 1, mutation: 0 }, 4000);
+assert.ok(still.meanMatrix().flat().every(v => v === 0) && still.births > 100, 'no mutation → no evolution, even with births');
+console.log('✓ with mutation 0 the genes never move (selection alone cannot invent variation)');
+
+// 끼어들기: 표의 칸을 누르면 그 색 입자 모두의 그 유전자가 바뀐다
+const nd = new LivingWorld({ seed: 4 });
+nd.nudge(0, 1, 0.25);
+assert.ok(Math.abs(nd.meanMatrix()[0][1] - 0.25) < 1e-6 && nd.meanMatrix()[1][0] === 0);
+console.log('✓ nudging a cell shifts that gene in every particle of the colour');

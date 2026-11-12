@@ -27,3 +27,14 @@
 .pl-force .att{fill:none;stroke:#2a78d6;stroke-width:3}
 .pl-force .neg{fill:none;stroke:#d95926;stroke-width:2;stroke-dasharray:6 4}
 .pl-all{margin:8px 0 0}
+/* 세계 고르기: 고정 규칙 · 살아 있는 세계 */
+.pl-worlds button{text-align:left;padding:8px 14px;line-height:1.35}
+.pl-worlds button small{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+.pl-worlds button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);font-weight:700}
+[data-only][hidden]{display:none !important}
+.pl-key i{border-radius:50%}
+.pl-rules button[data-rel="prey"]{border:2px solid var(--text)}
+.pl-rules button[data-rel="pred"]{border:2px dashed var(--text)}
+.pl-chart{width:100%;height:130px;display:block}
+#plStats b i{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 3px 0 6px}
+#plStats b i:first-child{margin-left:0}

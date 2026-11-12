@@ -67,7 +67,7 @@ NAV = [
         ("flights.html", "세계 항공 교통", "World Air Traffic", "세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤", "Domestic &amp; international flights on a world map · great circles · day and night"),
         ("hr",), ("h", "자연", "Nature"),
         ("ecosystem.html", "단세포 생태계", "Cell Ecosystem", "초식·육식 세포의 포식자–피식자 개체수 주기 · 진화", "Predator–prey population cycles · evolution"),
-        ("particle-life.html", "입자 생명", "Particle Life", "끌림 · 밀침 표 하나에서 생기는 무리 · 창발", "Groups emerging from one attraction table"),
+        ("particle-life.html", "입자 생명", "Particle Life", "끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계", "Groups from one attraction table · a world where it evolves"),
     ]),
     ("menu", "studioMenu", "온톨로지 설계실", "Design Studio", [
         ("h", "설계실", "Studio"),
