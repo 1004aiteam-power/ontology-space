@@ -12,6 +12,7 @@ const PAGES = [
   ['airport', 'airport.html', 'apView', async p => { await p.selectOption('#camSel', 'terminal'); await p.click('#playBtn'); }, 6000],
   ['flights', 'flights.html', 'flMap', async p => p.click('#playBtn'), 4000],
   ['ecosystem', 'ecosystem.html', 'dish', async p => p.click('#playBtn'), 6000],
+  ['tunneling', 'tunneling.html', 'tnView', async p => { await p.click('#playBtn'); }, 3200],
   ['particle-life', 'particle-life.html', 'plView', async p => { await p.click('#playBtn'); await p.click('#speedBtn'); await p.click('#speedBtn'); }, 9000],
   // 드론: 30세대를 화면 없이 넘긴 뒤(잘 나는 세대) 실제 속도로 몇 초 날린 장면
   ['drone', 'neat-drone.html', 'sky', async p => { await p.click('#playBtn'); for (let i = 0; i < 30; i++) await p.click('#skipBtn'); }, 7000],

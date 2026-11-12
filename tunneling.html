@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Quantum Tunnelling</title>
+<meta name="title-ko" content="Ontology Space · 양자 터널 효과">
+<meta name="title-en" content="Ontology Space · Quantum Tunnelling">
+<meta name="description" content="에너지가 모자란 전자가 벽을 뚫고 지나가는 양자 터널 효과를 1차원 슈뢰딩거 방정식으로 브라우저에서 직접 풀어 보는 시뮬레이션. 벽의 높이 · 두께와 전자의 에너지를 바꾸며 투과 확률을 이론값과 비교합니다">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/tunneling.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/tunneling.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/tunneling.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/tunneling.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 양자 터널 효과">
+<meta property="og:description" content="에너지가 모자란 전자가 벽을 뚫고 지나가는 양자 터널 효과를 1차원 슈뢰딩거 방정식으로 브라우저에서 직접 풀어 보는 시뮬레이션. 벽의 높이 · 두께와 전자의 에너지를 바꾸며 투과 확률을 이론값과 비교합니다">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/tunneling.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/thumbs/tunneling.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=729f3c47">
+<link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
+<link rel="stylesheet" href="assets/css/quantum.css?v=009708ff">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/quantum/tunnel-app.js?v=ecfb3321"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="simMenu" hidden>
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html" aria-current="page"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="studioMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="aiMenu" hidden>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <hr>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+    </div>
+    <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">시뮬레이션 · 양자 역학</span><span lang="en">SIMULATION · QUANTUM MECHANICS</span></div>
+  <h1><span lang="ko">벽을 뚫고 지나가는 전자:<br>양자 터널 효과</span><span lang="en">An electron through a wall:<br>quantum tunnelling</span></h1>
+  <p class="lead" lang="ko">공을 벽에 던지면, 벽을 넘을 만큼 세게 던지지 않는 한 반드시 튕겨 나옵니다. 그런데 전자는 다릅니다. <b>에너지가 모자라도 일부가 벽 건너편에 나타납니다.</b> 전자가 작은 공이 아니라 퍼져 있는 <b>파동</b>이기 때문입니다. 이 페이지는 전자 하나의 파동이 벽에 부딪히는 모습을 <b>슈뢰딩거 방정식</b>으로 직접 풀어 보여 줍니다.</p>
+  <p class="lead" lang="en">Throw a ball at a wall and, unless you throw it hard enough to clear it, it always bounces back. An electron is different: <b>even with too little energy, part of it shows up on the other side.</b> That is because an electron is not a tiny ball but a spread-out <b>wave</b>. This page solves the <b>Schrödinger equation</b> for one electron hitting a wall and shows what happens.</p>
+  <p class="meta" lang="ko">이 페이지는 온톨로지·전력과는 별개로, 만든 이의 또 다른 관심사인 자연 현상 시뮬레이션을 담았습니다.</p>
+  <p class="meta" lang="en">Separate from the ontology and power-grid material, this page reflects another interest of the author: simulating natural phenomena.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">전자 쏘기</span><span lang="en">Fire an electron</span></h2>
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="resetBtn"><span lang="ko">처음 자리로</span><span lang="en">Back to start</span></button>
+    <button id="speedBtn"></button>
+  </div>
+  <div class="ctrl" id="tnPresets" role="group" aria-label="presets"></div>
+  <div class="ctrl">
+    <label class="speed-ctl"><span lang="ko">전자 에너지</span><span lang="en">Electron energy</span>
+      <input type="range" id="tnE" min="0.5" max="11" step="0.1" value="5" aria-label="electron energy"><output id="tnEOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">벽 높이</span><span lang="en">Wall height</span>
+      <input type="range" id="tnV" min="0" max="11" step="0.1" value="6" aria-label="wall height"><output id="tnVOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">벽 두께</span><span lang="en">Wall thickness</span>
+      <input type="range" id="tnA" min="0.05" max="1.2" step="0.01" value="0.25" aria-label="wall thickness"><output id="tnAOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">묶음 폭</span><span lang="en">Packet width</span>
+      <input type="range" id="tnS" min="0.8" max="3" step="0.1" value="1.5" aria-label="packet width"><output id="tnSOut"></output></label>
+    <span class="meta" id="tnLambda"></span>
+  </div>
+  <div class="ctrl">
+    <label><input type="checkbox" id="tnZoom" checked> <span lang="ko">통과한 쪽 확대</span><span lang="en">Magnify the far side</span></label>
+    <label><input type="checkbox" id="tnRe" checked> <span lang="ko">파동(실수부) 보기</span><span lang="en">Show the wave (real part)</span></label>
+    <label><input type="checkbox" id="tnBall" checked> <span lang="ko">고전 입자 함께 보기</span><span lang="en">Show a classical particle</span></label>
+  </div>
+
+  <div class="sim-wrap tn-wrap">
+    <div>
+      <canvas id="tnView" aria-label="wave packet and wall"></canvas>
+      <p class="tn-key"><span><i style="background:rgba(42,120,214,.5)"></i><span lang="ko">전자가 있을 확률 |ψ|²</span><span lang="en">probability of finding the electron |ψ|²</span></span><span><i class="line" style="background:#8a63d2"></i><span lang="ko">파동의 실수부 Re ψ</span><span lang="en">real part of the wave Re ψ</span></span><span><i style="background:rgba(217,89,38,.45)"></i><span lang="ko">벽 (높이 = 넘는 데 필요한 에너지)</span><span lang="en">wall (height = energy needed to get over)</span></span><span><i class="dash"></i><span lang="ko">전자의 에너지</span><span lang="en">electron energy</span></span><span><i class="dot" style="background:#8a8f98"></i><span lang="ko">같은 에너지의 고전 입자</span><span lang="en">classical particle, same energy</span></span></p>
+    </div>
+    <div id="tnStats"></div>
+  </div>
+  <p class="meta" lang="ko">세로축은 에너지입니다. 파란 언덕은 전자의 에너지(점선) 높이에 그렸고, 언덕이 높은 곳일수록 전자를 발견할 확률이 큽니다. 벽에 부딪히면 대부분은 되돌아가지만, 벽 안에서 빠르게 줄어든 꼬리가 반대편으로 빠져나가 작은 언덕이 하나 더 생깁니다. 그 작은 언덕의 넓이가 <b>투과 확률</b>입니다.</p>
+  <p class="meta" lang="en">The vertical axis is energy. The blue hill is drawn at the electron's energy (dashed line); the higher the hill, the likelier the electron is found there. Hitting the wall, most of it turns back, but a tail that fades quickly inside the wall leaks out the far side and forms a second, small hill. The area of that small hill is the <b>transmission probability</b>.</p>
+</section>
+
+<section id="numbers">
+  <h2><span lang="ko">숫자로 보기: 무엇이 투과를 정하나</span><span lang="en">By the numbers: what decides tunnelling</span></h2>
+  <div class="grid two">
+    <div class="panel chart-box"><b><span lang="ko">벽 두께에 따라 (세로축 로그 눈금)</span><span lang="en">By wall thickness (log scale)</span></b>
+      <canvas id="tnWidth" class="tn-chart" aria-label="transmission by wall thickness"></canvas>
+      <p class="meta" lang="ko">전자의 에너지가 벽보다 낮으면, 두께가 조금만 늘어도 투과가 <b>수십 배씩</b> 줄어듭니다. 로그 눈금에서 거의 직선인 것은 지수적으로 줄어든다는 뜻입니다.</p>
+      <p class="meta" lang="en">When the electron has less energy than the wall, a little extra thickness cuts transmission by <b>tens of times</b>. A near-straight line on a log scale means exponential decay.</p></div>
+    <div class="panel chart-box"><b><span lang="ko">전자 에너지에 따라</span><span lang="en">By electron energy</span></b>
+      <canvas id="tnEnergy" class="tn-chart" aria-label="transmission by electron energy"></canvas>
+      <p class="meta" lang="ko">벽 높이(점선)보다 낮아도 0이 아니고, 높아도 100%가 아닙니다. 벽보다 높은 쪽에서 출렁이는 봉우리는 벽 안에서 파동이 딱 맞게 겹치는 <b>공명</b>입니다.</p>
+      <p class="meta" lang="en">Below the wall height (dashed) it is not zero; above it, not 100%. The ripples above the wall are <b>resonances</b>, where the wave fits the wall exactly.</p></div>
+  </div>
+  <p lang="ko">빨간 점이 지금 설정입니다. 곡선은 이론값이고, 위의 시뮬레이션은 같은 값을 방정식을 직접 풀어서 얻습니다. 둘이 맞는지는 테스트(<code>tests/tunnel.test.mjs</code>)가 여러 조건에서 확인합니다 (차이 3% 이내).</p>
+  <p lang="en">The red dot is the current setting. The curves are theory; the simulation above gets the same numbers by solving the equation directly. A test (<code>tests/tunnel.test.mjs</code>) checks that the two agree under several settings (within 3%).</p>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">왜 벽을 뚫고 지나가나</span><span lang="en">Why it gets through</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 전자는 파동이다</span><span lang="en">① An electron is a wave</span></h4>
+      <p lang="ko">양자 역학에서 전자는 파동 함수 ψ로 나타냅니다. ψ는 한 점에 있지 않고 퍼져 있으며, |ψ|²가 그곳에서 전자를 발견할 확률입니다. 이 파동이 시간에 따라 어떻게 변하는지 정한 것이 슈뢰딩거 방정식입니다.</p>
+      <p lang="en">In quantum mechanics an electron is described by a wavefunction ψ. It is spread out rather than at one point, and |ψ|² is the probability of finding the electron there. The Schrödinger equation says how this wave changes in time.</p></div>
+    <div class="card"><h4><span lang="ko">② 벽 안에서 파동은 끊기지 않고 줄어든다</span><span lang="en">② Inside the wall the wave fades, it does not stop</span></h4>
+      <p lang="ko">에너지가 벽보다 낮으면, 벽 안에서 파동은 출렁이지 못하고 <b>지수적으로 작아집니다</b>. 그러나 0이 되지는 않습니다. 벽이 얇으면 줄어든 꼬리가 건너편까지 닿아, 그곳에서 다시 출렁이는 파동이 됩니다.</p>
+      <p lang="en">With less energy than the wall, the wave cannot oscillate inside it and <b>shrinks exponentially</b> — but never to zero. If the wall is thin, the faded tail reaches the far side and becomes an oscillating wave again.</p></div>
+    <div class="card"><h4><span lang="ko">③ 측정하면 둘 중 하나</span><span lang="en">③ Measure it and you get one or the other</span></h4>
+      <p lang="ko">벽 양쪽에 언덕이 생겼다고 전자가 둘로 쪼개진 것은 아닙니다. 위치를 재면 전자 하나가 한쪽에서만 발견되고, 같은 실험을 여러 번 하면 투과 확률만큼의 비율로 건너편에서 발견됩니다.</p>
+      <p lang="en">Two hills does not mean the electron split in two. Measure its position and the one electron is found on one side only; repeat the experiment many times and it turns up on the far side as often as the transmission probability says.</p></div>
+    <div class="card"><h4><span lang="ko">④ 에너지가 넉넉해도 튕겨 나온다</span><span lang="en">④ Even with enough energy, some bounces back</span></h4>
+      <p lang="ko">반대로 벽보다 에너지가 높아도 일부는 반사됩니다. 고전 입자는 넘을 수 있으면 반드시 넘어가지만, 파동은 높이가 갑자기 바뀌는 곳에서 일부가 되돌아옵니다. "벽보다 높은 에너지" 단추로 확인해 보세요.</p>
+      <p lang="en">Conversely, with more energy than the wall, part is still reflected. A classical particle that can get over always does; a wave partly bounces wherever the height changes abruptly. Try the "Above the wall" button.</p></div>
+  </div>
+  <div class="tbl"><table>
+    <tr><th></th><th><span lang="ko">고전 입자 (공)</span><span lang="en">Classical particle (a ball)</span></th><th><span lang="ko">양자 입자 (전자)</span><span lang="en">Quantum particle (an electron)</span></th></tr>
+    <tr><td><span lang="ko">에너지 &lt; 벽</span><span lang="en">Energy &lt; wall</span></td><td lang="ko">100% 튕겨 나옴</td><td lang="en">100% bounces back</td><td lang="ko">대부분 튕기지만 <b>일부가 뚫고 지나감</b> (얇을수록, 에너지가 벽에 가까울수록 많이)</td><td lang="en">Mostly bounces, but <b>some gets through</b> (more for thinner walls and energies close to the top)</td></tr>
+    <tr><td><span lang="ko">에너지 &gt; 벽</span><span lang="en">Energy &gt; wall</span></td><td lang="ko">100% 넘어감</td><td lang="en">100% goes over</td><td lang="ko">대부분 넘어가지만 <b>일부가 반사</b>됨. 공명 조건에서는 100% 통과</td><td lang="en">Mostly goes over, but <b>some is reflected</b>; at resonance, 100% passes</td></tr>
+    <tr><td><span lang="ko">위치</span><span lang="en">Position</span></td><td lang="ko">한 점</td><td lang="en">One point</td><td lang="ko">퍼져 있는 확률 (재는 순간 한 점)</td><td lang="en">A spread-out probability (one point when measured)</td></tr>
+  </table></div>
+</section>
+
+<section id="real">
+  <h2><span lang="ko">실제로 어디에 있나</span><span lang="en">Where it happens for real</span></h2>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">주사 터널링 현미경 (STM)</span><span lang="en">Scanning tunnelling microscope</span></h4><p lang="ko">뾰족한 바늘과 시료 사이의 아주 좁은 틈을 전자가 터널로 건넙니다. 틈이 조금만 바뀌어도 전류가 크게 바뀌는 성질(왼쪽 곡선)을 이용해 원자 하나하나를 봅니다.</p><p lang="en">Electrons tunnel across a tiny gap between a sharp tip and a surface. Because the current changes enormously with the gap (the chart on the left), single atoms become visible.</p></div>
+    <div class="card"><h4><span lang="ko">플래시 메모리</span><span lang="en">Flash memory</span></h4><p lang="ko">USB 메모리와 SSD는 얇은 절연막 너머로 전자를 터널로 밀어 넣거나 빼내 0과 1을 저장합니다.</p><p lang="en">USB sticks and SSDs store 0s and 1s by pushing electrons through a thin insulating layer by tunnelling, and pulling them back out.</p></div>
+    <div class="card"><h4><span lang="ko">태양의 핵융합</span><span lang="en">Fusion in the Sun</span></h4><p lang="ko">태양 중심의 온도만으로는 원자핵끼리 밀어내는 힘을 넘기 어렵습니다. 그래도 핵융합이 일어나는 데 터널 효과가 큰 몫을 합니다.</p><p lang="en">The Sun's core temperature alone is not enough for nuclei to overcome their mutual repulsion; tunnelling plays a large part in making fusion happen anyway.</p></div>
+    <div class="card"><h4><span lang="ko">알파 붕괴</span><span lang="en">Alpha decay</span></h4><p lang="ko">무거운 원자핵에서 알파 입자가 빠져나오는 것도 핵을 둘러싼 벽을 터널로 지나가는 것으로 설명됩니다.</p><p lang="en">An alpha particle escaping a heavy nucleus is explained as tunnelling through the barrier around the nucleus.</p></div>
+  </div>
+</section>
+
+<section id="how">
+  <h2><span lang="ko">어떻게 계산하나 · 한계</span><span lang="en">How it is computed · limits</span></h2>
+  <ul>
+    <li lang="ko"><b>방정식</b>: iħ ∂ψ/∂t = −(ħ²/2m) ∂²ψ/∂x² + V(x)ψ. 전자 하나(질량 mₑ), 1차원, 네모난 벽 하나입니다.</li>
+    <li lang="en"><b>Equation</b>: iħ ∂ψ/∂t = −(ħ²/2m) ∂²ψ/∂x² + V(x)ψ — one electron (mass mₑ), one dimension, one rectangular wall.</li>
+    <li lang="ko"><b>단위</b>: 거리 nm, 에너지 eV, 시간 ħ/eV(≈ 0.658 fs). 이 단위에서 전자의 ħ²/2m = 0.0381 eV·nm²입니다. 그래서 화면의 숫자는 실제 전자와 같은 크기입니다.</li>
+    <li lang="en"><b>Units</b>: distance in nm, energy in eV, time in ħ/eV (≈ 0.658 fs). In these units ħ²/2m for an electron is 0.0381 eV·nm², so the numbers on screen are the size of a real electron.</li>
+    <li lang="ko"><b>풀이</b>: 2,048칸 격자에서 <b>분할 단계 푸리에법</b>을 씁니다. 퍼텐셜은 위치 공간에서, 운동 에너지는 고속 푸리에 변환(FFT)으로 운동량 공간에서 곱하는 것을 번갈아 합니다. 위상만 곱하므로 확률의 합이 1로 유지됩니다. 양 끝의 흡수 띠가 파동이 되돌아오지 않게 하고, 흡수된 양은 반사 · 투과에 각각 더합니다.</li>
+    <li lang="en"><b>Solver</b>: the <b>split-step Fourier method</b> on a 2,048-point grid, alternating the potential in position space with the kinetic energy in momentum space via the FFT. Each step only multiplies by phases, so total probability stays 1. Absorbing bands at both ends stop the wave from coming back, and what they absorb is added to the reflected or transmitted share.</li>
+    <li lang="ko"><b>이론값</b>: 평면파의 투과 공식 T = 1 / (1 + V₀² sinh²(κa) / 4E(V₀−E))를, 파동 묶음에 섞인 여러 에너지로 평균한 값입니다.</li>
+    <li lang="en"><b>Theory</b>: the plane-wave transmission T = 1 / (1 + V₀² sinh²(κa) / 4E(V₀−E)), averaged over the range of energies in the packet.</li>
+    <li lang="ko"><b>한계</b>: 상대론 효과, 스핀, 다른 전자와의 상호작용, 측정 과정은 넣지 않았습니다. 실제 장벽은 네모나지 않고, 실제 공간은 3차원입니다.</li>
+    <li lang="en"><b>Limits</b>: no relativity, no spin, no interaction with other electrons, no measurement process. Real barriers are not rectangular, and real space is three-dimensional.</li>
+  </ul>
+</section>
+
+<section id="refs">
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li>D. J. Griffiths, D. F. Schroeter, <i>Introduction to Quantum Mechanics</i> (3rd ed., Cambridge University Press, 2018): <span lang="ko">네모난 장벽의 투과 계수 (2장)</span><span lang="en">transmission through a rectangular barrier (chapter 2)</span></li>
+    <li><a href="https://en.wikipedia.org/wiki/Quantum_tunnelling">Wikipedia, "Quantum tunnelling"</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Split-step_method">Wikipedia, "Split-step method"</a>: <span lang="ko">계산 방법</span><span lang="en">the numerical method</span></li>
+  </ul>
+  <p class="meta" lang="ko">코드: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/quantum/tunnel.js">tunnel.js</a> (계산) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/quantum/tunnel-app.js">tunnel-app.js</a> (화면)</p>
+  <p class="meta" lang="en">Code: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/quantum/tunnel.js">tunnel.js</a> (computation) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/quantum/tunnel-app.js">tunnel-app.js</a> (display)</p>
+  <div class="pager"><a href="particle-life.html"><span lang="ko">← 입자 생명</span><span lang="en">← Particle Life</span></a><a href="ecosystem.html"><span lang="ko">단세포 생태계 →</span><span lang="en">Cell ecosystem →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

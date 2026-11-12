@@ -131,6 +131,11 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/studio.html?lang=en"/>
   </url>
   <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/tunneling.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/tunneling.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/tunneling.html?lang=en"/>
+  </url>
+  <url>
     <loc>https://1004aiteam-power.github.io/ontology-space/twin.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/twin.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/twin.html?lang=en"/>
