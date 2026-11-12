@@ -26,7 +26,8 @@
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=729f3c47">
-<link rel="stylesheet" href="assets/css/ood.css?v=e9117f56">
+<link rel="stylesheet" href="assets/css/doc.css?v=e5d511a7">
+<link rel="stylesheet" href="assets/css/ood.css?v=0343c286">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
 </head>
@@ -207,13 +208,13 @@ vpp:ESS_001 a vpp:BatterySystem ;
 <section id="diff">
   <h2><span lang="ko">일곱 가지 차이</span><span lang="en">Seven differences</span></h2>
 
-  <div class="diff"><div class="no">①</div><div><h3><span lang="ko">목적: 움직이는 프로그램 vs. 함께 쓰는 의미</span><span lang="en">Purpose: a running program vs. shared meaning</span></h3>
+  <div class="decision"><div class="no">①</div><div><h3><span lang="ko">목적: 움직이는 프로그램 vs. 함께 쓰는 의미</span><span lang="en">Purpose: a running program vs. shared meaning</span></h3>
     <p lang="ko">객체지향의 클래스는 <b>프로그램 안에서 일을 하기 위해</b> 존재합니다. 데이터와 함께 <b>메서드</b>(행동)를 묶고, 바깥에서 함부로 못 건드리게 <b>캡슐화</b>합니다. 온톨로지에는 메서드도 캡슐화도 없습니다. 모든 사실이 공개된 문장(트리플)이고, 목적은 <b>여러 시스템과 사람이 같은 뜻으로 데이터를 읽고 묻는 것</b>입니다.</p>
     <p lang="en">An OO class exists <b>to do work inside a program</b>: it bundles data with <b>methods</b> and <b>encapsulates</b> them. An ontology has neither methods nor encapsulation. Every fact is a public statement (triple), and the goal is that <b>many systems and people read and query the data with the same meaning</b>.</p>
     <p lang="ko">그래서 "ESS가 방전하면 충전 상태가 줄어든다"는 <b>계산</b>은 코드에, "ESS_001은 배터리이고 광주 D/L 2에 붙어 있다"는 <b>사실</b>은 온톨로지에 두는 것이 자연스럽습니다.</p>
     <p lang="en">So the <b>computation</b> "discharging lowers the state of charge" belongs in code, and the <b>fact</b> "ESS_001 is a battery on Gwangju D/L 2" belongs in the ontology.</p></div></div>
 
-  <div class="diff"><div class="no">②</div><div><h3><span lang="ko">닫힌 세계 vs. 열린 세계</span><span lang="en">Closed world vs. open world</span></h3>
+  <div class="decision"><div class="no">②</div><div><h3><span lang="ko">닫힌 세계 vs. 열린 세계</span><span lang="en">Closed world vs. open world</span></h3>
     <p lang="ko">프로그램과 데이터베이스는 <b>닫힌 세계 가정</b>(CWA)을 씁니다. 적혀 있지 않으면 <b>없는 것</b>입니다. 온톨로지(OWL)는 <b>열린 세계 가정</b>(OWA)을 씁니다. 적혀 있지 않으면 <b>모르는 것</b>입니다. 누군가 다른 파일에서 그 사실을 더할 수 있기 때문입니다.</p>
     <p lang="en">Programs and databases use the <b>closed-world assumption</b> (CWA): if it is not written, it is <b>false</b>. OWL uses the <b>open-world assumption</b> (OWA): if it is not written, it is <b>unknown</b> — someone may add it in another file.</p>
     <div class="tbl"><table class="qa">
@@ -228,7 +229,7 @@ vpp:ESS_001 a vpp:BatterySystem ;
     <p lang="ko">이 차이 때문에, "필수 값이 빠졌는지" 같은 <b>검사</b>는 OWL이 아니라 닫힌 세계로 읽는 별도 도구(SHACL, 또는 이 사이트의 <a href="lab.html">Cypher 형상검증</a>)로 합니다. 그래프 DB(Neo4j)에 올린 뒤 Cypher로 묻는 순간에는 다시 닫힌 세계가 된다는 점도 기억해 두면 좋습니다.</p>
     <p lang="en">That is why <b>checks</b> such as "is a required value missing?" are done not with OWL but with closed-world tools (SHACL, or this site's <a href="lab.html">Cypher shape checks</a>). Note also that once the data sits in a graph DB (Neo4j) and you query it with Cypher, you are back in a closed world.</p></div></div>
 
-  <div class="diff"><div class="no">③</div><div><h3><span lang="ko">클래스 소속: 태어날 때 고정 vs. 여럿 · 나중에 추론</span><span lang="en">Membership: fixed at birth vs. many, inferred later</span></h3>
+  <div class="decision"><div class="no">③</div><div><h3><span lang="ko">클래스 소속: 태어날 때 고정 vs. 여럿 · 나중에 추론</span><span lang="en">Membership: fixed at birth vs. many, inferred later</span></h3>
     <p lang="ko">객체는 만들어질 때 클래스 하나가 정해지고 바뀌지 않습니다. 여러 성격을 가지려면 다중 상속이나 인터페이스를 미리 설계해야 합니다. 온톨로지의 개체는 <b>여러 클래스에 동시에</b> 속할 수 있고, <b>조건을 만족하면 추론기가 분류</b>해 줍니다.</p>
     <p lang="en">An object gets one class when created, and it never changes; to wear several hats you must design multiple inheritance or interfaces up front. An individual can belong to <b>several classes at once</b>, and <b>a reasoner can classify it</b> when it meets a definition.</p>
 <pre><code># "1,000kW 이상인 배터리"를 정의 → 조건을 만족하는 개체는 자동으로 LargeBattery
@@ -240,7 +241,7 @@ vpp:LargeBattery owl:equivalentClass [ a owl:Class ;
     <p lang="ko">이 사이트의 그래프 DB에서 ESS 노드가 <code>:BatterySystem:DER:BatteryUnit</code> 라벨을 한꺼번에 가진 것도 같은 생각입니다. 파이썬이라면 <code>class BatterySystem(DER, BatteryUnit)</code>처럼 다중 상속을 설계해야 같은 효과가 납니다.</p>
     <p lang="en">The ESS nodes in this site's graph DB carrying <code>:BatterySystem:DER:BatteryUnit</code> at once is the same idea. In Python you would need to design multiple inheritance — <code>class BatterySystem(DER, BatteryUnit)</code> — to get the same effect.</p></div></div>
 
-  <div class="diff"><div class="no">④</div><div><h3><span lang="ko">속성이 클래스 밖에서 독립적으로 존재</span><span lang="en">Properties live on their own, outside classes</span></h3>
+  <div class="decision"><div class="no">④</div><div><h3><span lang="ko">속성이 클래스 밖에서 독립적으로 존재</span><span lang="en">Properties live on their own, outside classes</span></h3>
     <p lang="ko">객체지향에서 필드는 <b>클래스 안에</b> 선언됩니다. <code>DER.capacity_kw</code>와 <code>Feeder.capacity_kw</code>는 이름만 같은 별개의 것입니다. 온톨로지에서 속성은 <b>그 자체로 정의되는 1급 요소</b>라서, 여러 클래스가 같은 속성을 공유하고 속성끼리 관계도 가집니다.</p>
     <p lang="en">In OOD a field is declared <b>inside a class</b>; <code>DER.capacity_kw</code> and <code>Feeder.capacity_kw</code> merely share a name. In an ontology a property is <b>a first-class thing defined by itself</b>: many classes share it, and properties relate to each other.</p>
     <ul lang="ko">
@@ -256,19 +257,19 @@ vpp:LargeBattery owl:equivalentClass [ a owl:Class ;
     <p lang="ko">객체지향에서는 이런 규칙을 매번 코드로 짜야 합니다(역방향 참조를 양쪽에 유지하기, 재귀로 하류 찾기).</p>
     <p lang="en">In OOD each of these rules has to be coded by hand (keeping back-references in sync, recursing to find downstream).</p></div></div>
 
-  <div class="diff"><div class="no">⑤</div><div><h3><span lang="ko">이름: 프로그램 안 vs. 전 세계</span><span lang="en">Names: inside one program vs. worldwide</span></h3>
+  <div class="decision"><div class="no">⑤</div><div><h3><span lang="ko">이름: 프로그램 안 vs. 전 세계</span><span lang="en">Names: inside one program vs. worldwide</span></h3>
     <p lang="ko">객체의 정체성은 메모리 주소나 DB의 id입니다. 프로그램 밖으로 나가면 의미가 없고, 다른 시스템의 같은 설비와 이으려면 매핑 표가 필요합니다. 온톨로지의 개체는 <b>전역 IRI</b>를 가지므로, 다른 파일 · 다른 회사의 데이터가 같은 IRI를 쓰면 <b>그대로 합쳐집니다</b>. VPP 데이터가 디지털 트윈의 변전소 IRI를 가리키기만 했는데 두 그래프가 이어진 것이 그 예입니다.</p>
     <p lang="en">An object's identity is a memory address or a DB id: meaningless outside the program, so linking to the same asset in another system needs a mapping table. An individual has a <b>global IRI</b>, so data from other files or companies that use the same IRI <b>simply merges</b>. The VPP data pointing at the digital twin's substation IRIs — and the two graphs joining — is exactly that.</p>
     <p lang="ko">또 하나 다른 점은 OWL에 <b>"이름이 다르면 다른 것" 가정이 없다</b>는 것입니다(UNA 없음). SCADA 코드와 EAM 코드가 같은 변압기라면 <code>owl:sameAs</code>로 같다고 말할 수 있습니다. <a href="project.html">pycim</a>의 SCADA · EAM · GIS 코드 ↔ mRID 매핑 표가 객체지향 쪽에서 같은 문제를 푼 방식입니다.</p>
     <p lang="en">Another difference: OWL has <b>no "different names mean different things" assumption</b> (no UNA). If a SCADA code and an EAM code name the same transformer, <code>owl:sameAs</code> says so. The SCADA/EAM/GIS ↔ mRID mapping table in <a href="project.html">pycim</a> is how the OOD side solves the same problem.</p></div></div>
 
-  <div class="diff"><div class="no">⑥</div><div><h3><span lang="ko">스키마 변경: 코드 수정 · 이관 vs. 문장 추가</span><span lang="en">Schema change: refactor and migrate vs. add statements</span></h3>
+  <div class="decision"><div class="no">⑥</div><div><h3><span lang="ko">스키마 변경: 코드 수정 · 이관 vs. 문장 추가</span><span lang="en">Schema change: refactor and migrate vs. add statements</span></h3>
     <p lang="ko">클래스에 필드를 하나 더하려면 코드를 고치고, 다시 배포하고, 저장된 데이터를 이관해야 합니다. 온톨로지는 스키마도 데이터와 똑같은 트리플이라 <b>새 클래스 · 속성 · 상위 클래스를 문장으로 더하기만</b> 하면 됩니다. 기존 데이터는 그대로 두고 새 뜻을 덧붙일 수 있습니다(예: 나중에 <code>vpp:BatterySystem ⊑ ex:FlexibleResource</code>를 한 줄 추가).</p>
     <p lang="en">Adding a field to a class means editing code, redeploying and migrating stored data. In an ontology the schema is triples just like the data, so you <b>only add statements</b> — a new class, property or superclass — and leave existing data untouched (e.g. later add one line <code>vpp:BatterySystem ⊑ ex:FlexibleResource</code>).</p>
     <p lang="ko">그 대가로, 스키마가 너무 쉽게 바뀌므로 <b>누가 · 왜 바꿨는지 기록</b>하는 습관이 중요합니다. 이 사이트의 <a href="studio.html">온톨로지 설계실</a>이 설계 결정(D1, D2…)을 남기는 이유입니다.</p>
     <p lang="en">The price: because the schema changes so easily, <b>recording who changed what and why</b> matters. That is why this site's <a href="studio.html">Design Studio</a> keeps design decisions (D1, D2…).</p></div></div>
 
-  <div class="diff"><div class="no">⑦</div><div><h3><span lang="ko">domain · range는 "검사"가 아니라 "추론" (가장 흔한 실수)</span><span lang="en">domain and range infer — they do not check (the most common mistake)</span></h3>
+  <div class="decision"><div class="no">⑦</div><div><h3><span lang="ko">domain · range는 "검사"가 아니라 "추론" (가장 흔한 실수)</span><span lang="en">domain and range infer — they do not check (the most common mistake)</span></h3>
     <p lang="ko">객체지향의 타입 선언 <code>feeder: Feeder</code>는 <b>검사</b>입니다. 다른 타입을 넣으면 오류가 납니다(정적 타입 언어라면 컴파일 단계에서). 개발자는 <code>rdfs:range</code>도 그렇게 동작하리라 기대하지만, RDFS · OWL에서 range는 <b>"그러니 이것은 그 클래스다"라고 추론</b>합니다.</p>
     <p lang="en">The OO declaration <code>feeder: Feeder</code> is a <b>check</b>: put in the wrong type and you get an error (at compile time in a static language). Developers expect <code>rdfs:range</code> to behave the same, but in RDFS/OWL a range <b>infers "therefore this is of that class"</b>.</p>
 <pre><code>vpp:aggregates rdfs:range vpp:DER .

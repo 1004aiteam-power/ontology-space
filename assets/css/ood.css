@@ -11,11 +11,9 @@
 :root[data-theme="dark"] .tag.oo{background:#9085e9} :root[data-theme="dark"] .tag.on{background:#199e70}
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .tag.oo{background:#9085e9} :root:not([data-theme="light"]) .tag.on{background:#199e70} }
 @media (max-width:760px){.side{grid-template-columns:minmax(0,1fr)}}
-.diff{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:22px 0;border-top:1px solid var(--line)}
-.diff .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:700;padding-top:3px}
-.diff h3{margin:0 0 6px}
-.diff p{margin:6px 0}
-@media (max-width:560px){.diff{grid-template-columns:minmax(0,1fr)}}
+.decision{padding:22px 0}
+.decision .no{font-weight:700}
+@media (max-width:560px){.decision{grid-template-columns:minmax(0,1fr)}}
 .qa td:first-child{font-weight:600}
 .ok{color:#008300;font-weight:700} .ng{color:#c2410c;font-weight:700}
 :root[data-theme="dark"] .ok{color:#4ade80}

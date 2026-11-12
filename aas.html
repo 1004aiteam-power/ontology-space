@@ -26,7 +26,8 @@
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=729f3c47">
-<link rel="stylesheet" href="assets/css/aas.css?v=a3832368">
+<link rel="stylesheet" href="assets/css/doc.css?v=e5d511a7">
+<link rel="stylesheet" href="assets/css/aas.css?v=6f264fc9">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/vendor/highlight.min.js?v=0f2dc760" defer></script>
 <script src="assets/site.js?v=d70a462d" defer></script>
@@ -353,16 +354,16 @@
   <p lang="en">The middle column matters. <b>Writing an AAS in RDF does not make it an ontology.</b> AAS RDF transcribes the <b>shape of the folder</b> — "there is a Property whose idShort is HealthIndex and whose value is the string 53" — rather than stating "this transformer's health index is 53". The semanticId, the value and the references to other submodels are all strings, so nothing links to another graph as it stands.</p>
 
   <h3><span lang="ko">둘을 잇는 세 가지 방법</span><span lang="en">Three ways to connect the two</span></h3>
-  <div class="way"><div class="no">①</div><div><h3><span lang="ko">자산 식별자를 온톨로지의 개체 IRI로</span><span lang="en">Use the ontology individual's IRI as the asset id</span></h3>
+  <div class="decision"><div class="no">①</div><div><h3><span lang="ko">자산 식별자를 온톨로지의 개체 IRI로</span><span lang="en">Use the ontology individual's IRI as the asset id</span></h3>
     <p lang="ko"><code>globalAssetId</code>에 온톨로지에서 이 자산을 가리키는 IRI를 그대로 씁니다. 셸과 온톨로지가 <b>같은 물건</b>을 말하고 있음을 알 수 있는 가장 단순한 고리입니다. 업무 시스템의 번호는 <code>specificAssetIds</code>에 둡니다.</p>
     <p lang="en">Put the IRI that names this asset in the ontology straight into <code>globalAssetId</code>. It is the simplest hook that shows the shell and the ontology are talking about <b>the same thing</b>. Ids from business systems go in <code>specificAssetIds</code>.</p>
 <pre><code class="language-json">"assetInformation": { "assetKind": "Instance",
   "globalAssetId": "https://1004aiteam-power.github.io/ontology-space/asset#AS_TR_0007",
   "specificAssetIds": [ { "name": "eamNumber", "value": "EQ-TR-2015-0007" } ] }</code></pre></div></div>
-  <div class="way"><div class="no">②</div><div><h3><span lang="ko">semanticId를 온톨로지의 용어 IRI로</span><span lang="en">Point semanticIds at ontology terms</span></h3>
+  <div class="decision"><div class="no">②</div><div><h3><span lang="ko">semanticId를 온톨로지의 용어 IRI로</span><span lang="en">Point semanticIds at ontology terms</span></h3>
     <p lang="ko">표준 사전(IEC CDD · ECLASS)에 있는 항목은 그 식별자를 쓰고, 사전에 없는 분야 고유 항목은 온톨로지의 속성 · 클래스 IRI를 semanticId로 씁니다. 여기서는 건전도 · 위험도는 자산관리 온톨로지(<code>pam:</code>), 정격 용량 · 전압은 IEC CIM(<code>cim:</code>)을 가리킵니다. 셸에 함께 싣는 ConceptDescription에는 <code>isCaseOf</code>로 같은 IRI를 적어, 받는 쪽이 정의와 단위를 바로 볼 수 있게 했습니다.</p>
     <p lang="en">Items that exist in a standard dictionary (IEC CDD, ECLASS) use that identifier; domain-specific items use an ontology property or class IRI. Here health and risk point at the asset-management ontology (<code>pam:</code>) and rated power and voltage at IEC CIM (<code>cim:</code>). The ConceptDescriptions shipped with the shell carry the same IRI in <code>isCaseOf</code>, so a receiver sees the definition and unit at once.</p></div></div>
-  <div class="way"><div class="no">③</div><div><h3><span lang="ko">AAS를 RDF로 옮기고 다리를 놓아 한 그래프로</span><span lang="en">Serialise to RDF and bridge into one graph</span></h3>
+  <div class="decision"><div class="no">③</div><div><h3><span lang="ko">AAS를 RDF로 옮기고 다리를 놓아 한 그래프로</span><span lang="en">Serialise to RDF and bridge into one graph</span></h3>
     <p lang="ko">AAS RDF를 온톨로지와 같은 그래프에 불러온 다음, 문자열로 적힌 참조 가운데 온톨로지에 <b>실제로 있는 개체</b>를 가리키는 것만 골라 진짜 연결로 적어 줍니다. 아래 데이터셋에서는 연결 15개(<code>aas-links.ttl</code>)가 그 다리입니다. 그러면 셸에서 출발해 온톨로지에만 있는 고장 모드 · 작업지시 · 설치 이력까지 한 번에 물을 수 있습니다.</p>
     <p lang="en">Load the AAS RDF into the same graph as the ontology, then turn the string references that point at individuals <b>actually present</b> in the ontology into real links. In the dataset below 15 links (<code>aas-links.ttl</code>) form that bridge. A query can then start at the shell and reach failure modes, work orders and deployment history that exist only in the ontology.</p>
 <pre><code class="language-turtle">&lt;…/aas/shell/AS-TR-0007&gt; aasl:describes pam:AS_TR_0007 ;          # globalAssetId
@@ -412,16 +413,16 @@
 
 <section id="design">
   <h2><span lang="ko">설계 결정</span><span lang="en">Design decisions</span></h2>
-  <div class="way"><div class="no">D1</div><div><h3><span lang="ko">값은 한 곳에서 만들고 AAS는 내보내는 창구로</span><span lang="en">One source of truth; the AAS is an export</span></h3>
+  <div class="decision"><div class="no">D1</div><div><h3><span lang="ko">값은 한 곳에서 만들고 AAS는 내보내는 창구로</span><span lang="en">One source of truth; the AAS is an export</span></h3>
     <p lang="ko">건전도 · 위험도는 자산관리 온톨로지 빌드가 계산하고, AAS는 그 결과를 읽어 적기만 합니다. 같은 값을 두 곳에서 따로 관리하면 반드시 어긋나므로, 어긋났는지 확인하는 질문(Q5)을 함께 두었습니다.</p>
     <p lang="en">Health and risk are computed by the asset-ontology build; the AAS only writes down the result. Keeping one value in two places always drifts, so a question that detects drift (Q5) ships with it.</p></div></div>
-  <div class="way"><div class="no">D2</div><div><h3><span lang="ko">표준 사전에 있으면 그것을, 없으면 온톨로지를</span><span lang="en">Standard dictionary first, ontology where there is none</span></h3>
+  <div class="decision"><div class="no">D2</div><div><h3><span lang="ko">표준 사전에 있으면 그것을, 없으면 온톨로지를</span><span lang="en">Standard dictionary first, ontology where there is none</span></h3>
     <p lang="ko">명판은 IDTA 템플릿의 IEC CDD 식별자를 그대로 써서 다른 회사의 도구도 읽을 수 있게 했습니다. 건전도처럼 표준 사전에 없는 항목만 온톨로지 IRI를 semanticId로 썼습니다. 온톨로지 IRI만 쓰면 이 사이트 밖에서는 아무도 뜻을 모릅니다.</p>
     <p lang="en">The nameplate uses the IEC CDD identifiers of the IDTA template unchanged, so other vendors' tools can read it. Only items absent from standard dictionaries, such as the health index, use ontology IRIs. With ontology IRIs alone, nobody outside this site would know what anything means.</p></div></div>
-  <div class="way"><div class="no">D3</div><div><h3><span lang="ko">지식은 셸에 복사하지 않는다</span><span lang="en">Knowledge is not copied into the shell</span></h3>
+  <div class="decision"><div class="no">D3</div><div><h3><span lang="ko">지식은 셸에 복사하지 않는다</span><span lang="en">Knowledge is not copied into the shell</span></h3>
     <p lang="ko">고장 모드 · 점검 주기 · 작업지시 · 정전 영향은 셸에 넣지 않았습니다. 자산 한 대의 것이 아니라 여러 자산과 계통에 걸친 지식이기 때문입니다. 셸에는 그 자산의 사실만 두고, 나머지는 다리를 건너 온톨로지에서 묻습니다.</p>
     <p lang="en">Failure modes, inspection cycles, work orders and outage impact are not in the shell: they are knowledge spanning many assets and the network, not facts about one unit. The shell holds the unit's own facts; the rest is asked across the bridge.</p></div></div>
-  <div class="way"><div class="no">D4</div><div><h3><span lang="ko">다리는 따로 둔 파일로</span><span lang="en">The bridge is a separate file</span></h3>
+  <div class="decision"><div class="no">D4</div><div><h3><span lang="ko">다리는 따로 둔 파일로</span><span lang="en">The bridge is a separate file</span></h3>
     <p lang="ko">AAS RDF는 사양의 대응 규칙 그대로 두고, 연결은 <code>aas-links.ttl</code>에 따로 적었습니다. 표준 형식의 파일을 고치지 않아도 되고, 가리키는 IRI가 온톨로지에 없으면 빌드가 실패해 끊어진 참조를 바로 알 수 있습니다.</p>
     <p lang="en">The AAS RDF stays exactly as the specification's mapping produces it; links live in <code>aas-links.ttl</code>. The standard-format file is never touched, and the build fails if a referenced IRI is missing from the ontology, so broken references surface immediately.</p></div></div>
 </section>

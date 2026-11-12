@@ -12,7 +12,7 @@ This repository is released under two licenses. You may use it, but you must fol
 ======================================================================
 대상 / Applies to:
   pycim/  tests/  examples/**/*.py  shapes/
-  assets/site.js  assets/site.css  assets/lab.js  assets/physai/  assets/twin/
+  assets/site.js  assets/site.css  assets/lab.js  assets/lib/  assets/css/  assets/physai/  assets/twin/
 
 조건 / Conditions:
   - 저작권 표시와 라이선스 고지를 그대로 유지해야 합니다.

@@ -49,7 +49,16 @@ for t in tests/*.test.mjs; do node "$t"; done   # Node 테스트 (시뮬레이�
 python tools/build_nav.py   # 메뉴 · head 태그 · sitemap.xml · 스크립트 주소의 ?v= 를 다시 만듦
 ```
 
-페이지나 `assets/`의 스크립트 · 스타일을 고친 뒤에는 위 명령을 실행하고 결과를 함께 커밋합니다. 실행하지 않으면 GitHub Actions 검사가 실패합니다.
+페이지나 `assets/`의 스크립트 · 스타일을 고친 뒤에는 위 명령을 실행하고 결과를 함께 커밋합니다.
+
+```bash
+node tools/check_pages.cjs   # 모든 페이지를 브라우저로 열어 스크립트 오류 · 가로 밀림 확인 (Playwright 필요)
+```
+
+스타일 · 스크립트를 정리할 때는 고치기 전에 `--save 폴더`, 고친 뒤에 `--compare 폴더`로 화면이 그대로인지 비교합니다.
+
+스타일은 모든 페이지가 쓰는 것만 `assets/site.css`에 두고, 기능별 · 페이지별 모양은 `assets/css/`에 둡니다 (`sim.css` 시뮬레이션 공통, `doc.css` 온톨로지 문서 공통, 그 밖은 페이지 이름).
+여러 스크립트가 함께 쓰는 도우미는 `assets/lib/dom.js`에서 가져옵니다. 실행하지 않으면 GitHub Actions 검사가 실패합니다.
 메뉴 항목은 `tools/build_nav.py`의 `NAV`만 고치면 모든 페이지에 반영됩니다.
 
 ## 라이선스

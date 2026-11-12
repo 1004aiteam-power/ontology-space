@@ -37,6 +37,8 @@
 | [shapes/](../shapes/) | 형상검증 규칙(`cim-checks.cypher` · `highway-checks.cypher`, Neo4j Cypher)과 pycim 클래스 계층(`cim-classes.ttl`) |
 | [tools/build_ontology_map.mjs](../tools/build_ontology_map.mjs) | 사이트 전체 온톨로지 지도 데이터(`assets/data/ontology-map.json`): Turtle 파일에서 온톨로지별 클래스·개체 수와 서로 가리키는 트리플(술어별 건수), 외부 표준 사용을 셈 (`ontology-map.html`) |
 | [tools/build_nav.py](../tools/build_nav.py) | 모든 페이지의 위쪽 메뉴와 파비콘·링크 공유 미리보기(Open Graph) 태그를 한 곳에서 만듦 (메뉴를 바꿀 때 이 파일만 고치고 실행). [tools/thumbs.cjs](../tools/thumbs.cjs): 소개 페이지 시뮬레이션 썸네일 생성 |
+| [tools/check_pages.cjs](../tools/check_pages.cjs) | 화면 점검: 모든 페이지를 실제 브라우저(Playwright)로 열어 스크립트 오류 · 가로 밀림 · 불러오지 못한 파일을 확인. `--save` / `--compare` 로 정리 전후의 요소별 스타일을 비교 |
+| [assets/lib/dom.js](../assets/lib/dom.js) · [assets/css/](../assets/css/) | 페이지 스크립트가 함께 쓰는 도우미(`$` · `esc` · `T` · `css` · `dark` · `fit`)와 기능별 · 페이지별 스타일. `assets/site.css`에는 모든 페이지가 쓰는 것만 둠 (`sim.css` 시뮬레이션 공통 · `doc.css` 온톨로지 문서 공통 · 그 밖은 페이지 이름) |
 | [tools/cypher.mjs](../tools/cypher.mjs) · [pycim/cypher.py](../pycim/cypher.py) | Neo4j 없이 Cypher 실행 (브라우저 실습과 같은 엔진): Turtle 불러오기 · 적재 스크립트 · 질의 · 형상검증. 빌드 스크립트와 테스트가 사용 |
 | [assets/physai/](../assets/physai/) | 브라우저용 NEAT 구현과 자율주행 시뮬레이터, NEAT 스네이크 (`neat-snake.html`), NEAT 드론 (`neat-drone.html`: 좌우 프로펠러 추력으로 균형을 잡고 경유점을 통과) |
 | [assets/eco/](../assets/eco/) | 단세포 생태계: 초식·육식 세포의 개체 기반 포식자–피식자 시뮬레이션, 피난처·계절·진화 (`ecosystem.html`, 만든 이의 또 다른 관심사) |

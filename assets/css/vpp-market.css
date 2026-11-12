@@ -58,9 +58,4 @@ details.q{margin:6px 0 10px;font-size:14px} details.q summary{cursor:pointer;col
 .vp-clegend i.band{background:color-mix(in srgb,#eb6834 22%,transparent)}
 .vp-clegend .warnb{color:var(--text)}
 #vpSettle table{font-size:13px} #vpSettle td.num{text-align:right;font-variant-numeric:tabular-nums} #vpSettle tr.on td{background:var(--accent-soft);font-weight:600}
-.decision{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 16px;padding:20px 0;border-top:1px solid var(--line)}
-.decision .no{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--warm);font-weight:600;padding-top:3px}
-.decision h3{margin:0 0 6px} .decision p{margin:6px 0}
 @media (max-width:560px){.decision{grid-template-columns:minmax(0,1fr)}}
-#results .tbl{max-height:420px;overflow:auto}
-#results table{font-size:13px}
