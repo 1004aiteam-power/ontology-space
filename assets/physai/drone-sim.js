@@ -145,7 +145,8 @@ export class Trainer {
     // 변이를 약하게: 균형 제어는 가중치가 조금만 틀어져도 추락하므로, 기본값(세기 0.5 · 새 값으로 바꾸기 10%)으로는
     // 잘 나는 부모의 자손이 대부분 떨어진다. 약하게 하면 더 빨리 배우고 개체군 평균도 올라간다
     this.pop = new Population({ popSize: this.opts.popSize, nInputs: N_INPUTS, nOutputs: N_OUTPUTS, championPerGeneration: true,
-      weightPerturb: 0.2, weightReplaceRate: 0.03 });
+      weightPerturb: 0.2, weightReplaceRate: 0.03,
+      addNodeRate: 0.06 });   // 은닉 노드가 생길 확률을 기본값(3%)의 두 배로: 드론에서만, 신경망 구조가 자라는 모습이 더 자주 보이게
     this.bestScore = 0;       // 지금까지 한 번의 비행에서 통과한 최다 경유점
     this.bestFlight = null;   // { genome, seed, score, gen } 다시 보기용
     this.reset();

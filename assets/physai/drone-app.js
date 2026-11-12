@@ -2,7 +2,7 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // NEAT 드론 페이지: 150대가 한 하늘에서 동시에 진화하며 경유점 비행을 배우는 과정을 브라우저에서 실행·시각화
 import { Population } from './neat.js?v=a16de3e3';
-import { Trainer, WORLD, DRONE, stepDrone, sense, INPUT_LABELS, INPUT_LABELS_EN, OUTPUT_LABELS, OUTPUT_LABELS_EN } from './drone-sim.js?v=fcd8839c';
+import { Trainer, WORLD, DRONE, stepDrone, sense, INPUT_LABELS, INPUT_LABELS_EN, OUTPUT_LABELS, OUTPUT_LABELS_EN } from './drone-sim.js?v=ca2f4ebe';
 
 const $ = (id) => document.getElementById(id);
 const t = (o) => (window.t ? window.t(o) : o.ko);
