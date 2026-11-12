@@ -3,6 +3,7 @@
 // 고속도로 × 전력망: 휴게소 전기차 충전 수요를 24시간 교통량에서 계산해 배전선로·변전소 부하로 보여 준다 (⚠ 가상 데이터)
 // 데이터: assets/data/ev.json (examples/ev/build_ev.py). simulate() 는 build_ev.py 의 simulate() 와 같은 식이다.
 import { $, esc, T } from './lib/dom.js?v=3b73d59c';
+import { renderCq } from './cypher/cq-view.js?v=61f7818e';
 (function () {
   const NS = 'http://www.w3.org/2000/svg';
   const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.appendChild(e); return e; };
@@ -205,11 +206,7 @@ import { $, esc, T } from './lib/dom.js?v=3b73d59c';
   };
   const presetNow = () => Object.keys(PRESETS).find(k => Object.entries(PRESETS[k]).every(([a, b]) => Math.abs(P[a] - b) < 1e-9 || P[a] === b)) || '';
 
-  function cq() {
-    $('evCq').innerHTML = D.cq.map((c, i) => `<details${i === 0 ? ' open' : ''}><summary><b>Q${i + 1}.</b> ${esc(T(c.q, c.en))} <small class="muted">(${c.rows.length}${T('행', ' rows')})</small></summary>
-      <pre><code class="language-cypher">${esc(c.cypher)}</code></pre>
-      <div class="tbl"><table><tbody>${c.rows.map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('') || `<tr><td>${T('(결과 없음)', '(no rows)')}</td></tr>`}</tbody></table></div></details>`).join('');
-  }
+  function cq() { renderCq($('evCq'), D.cq, { empty: T('(결과 없음)', '(no rows)') }); }
 
   function stop() { if (timer) { clearInterval(timer); timer = null; } $('evPlay').textContent = '▶'; }
 

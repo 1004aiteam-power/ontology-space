@@ -3,6 +3,7 @@
 // 설비 고장 영향 분석: 자산 → 기능 위치 → D/L #1 구간 → 지역·고객, 연계 개폐기 절체 후 위험도 다시 매기기 (⚠ 가상 데이터)
 // 데이터: assets/data/impact.json (examples/impact/build_impact.py)
 import { $, esc, T } from './lib/dom.js?v=3b73d59c';
+import { renderCq } from './cypher/cq-view.js?v=61f7818e';
 (function () {
   const FCOL = { DL2: 'var(--fd-2)', DL3: 'var(--fd-3)', C11: 'var(--fd-4)', DL1: 'var(--fd-1)' };
   const LV = { '높음': ['hi', 'High'], '중간': ['mid', 'Medium'], '낮음': ['lo', 'Low'] };
@@ -296,11 +297,7 @@ import { $, esc, T } from './lib/dom.js?v=3b73d59c';
     }).join('');
   }
 
-  function cq() {
-    $('imCq').innerHTML = D.cq.map((c, i) => `<details${i === 0 ? ' open' : ''}><summary><b>Q${i + 1}.</b> ${esc(T(c.q, c.en))}</summary>
-      <pre><code class="language-cypher">${esc(c.cypher)}</code></pre>
-      <div class="tbl"><table><tbody>${c.rows.map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`).join('');
-  }
+  function cq() { renderCq($('imCq'), D.cq, { count: false }); }
 
   function render() {
     const st = draw();

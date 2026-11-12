@@ -4,9 +4,8 @@
 import { Population, Genome } from './neat.js?v=a16de3e3';
 import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEED } from './sim.js?v=e978db4e';   // ?v= 는 tools/build_nav.py 가 파일 내용으로 만듦
 import { $, css, dark } from '../lib/dom.js?v=3b73d59c';
+import { drawNetwork, SERIES } from './net-view.js?v=7ec0367a';
 
-// 차트 색상: dataviz 기준 팔레트 (라이트/다크 각각 색각 이상 검증 통과)
-const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 
 let trainer, running = false, speed = 1, mode = 'train', test = null;
 // 라운드 진행: 라운드 = NEAT의 한 세대. 2바퀴 완주한 차가 나오면 성공으로 멈춘다
@@ -141,52 +140,20 @@ const OUT_LABELS = { ko: ['조향'], en: ['Steer'] };
 
 // 신경망 그래프를 상자(box) 안에 그린다. mini = 주행 화면 오른쪽 아래의 작은 창
 function drawNetGraph(ctx, genome, net, box, mini = false) {
-  const cfg = genome.cfg, nIn = cfg.nInputs;
-  // 층 = 입력에서의 최장 경로
-  const depth = new Map(), on = [...genome.conns.values()].filter(c => c.on);
-  for (const id of genome.nodes.keys()) depth.set(id, id < nIn ? 0 : 1);
-  for (let it = 0; it < genome.nodes.size; it++) for (const c of on) if (depth.get(c.b) < depth.get(c.a) + 1 && genome.nodes.get(c.b).type !== 'out') depth.set(c.b, depth.get(c.a) + 1);
-  const maxD = Math.max(1, ...[...genome.nodes.values()].filter(n => n.type === 'hid').map(n => depth.get(n.id))) + 1;
-  for (const n of genome.nodes.values()) if (n.type === 'out') depth.set(n.id, maxD);
-  const cols = new Map();
-  for (const n of genome.nodes.values()) { const d = depth.get(n.id); if (!cols.has(d)) cols.set(d, []); cols.get(d).push(n.id); }
-  const padL = mini ? 10 : 58, padR = mini ? 40 : 64, padV = mini ? 8 : 16, pos = new Map();
-  for (const [d, ids] of cols) ids.forEach((id, i) => pos.set(id, {
-    x: box.x + padL + (box.w - padL - padR) * d / maxD,
-    y: box.y + padV + (box.h - 2 * padV) * (ids.length === 1 ? 0.5 : i / (ids.length - 1))
-  }));
-  const [pos1, neg1] = SERIES(), k = mini ? 0.5 : 1;
-  for (const c of genome.conns.values()) {
-    const a = pos.get(c.a), b = pos.get(c.b);
-    if (!a || !b || (mini && !c.on)) continue;
-    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-    if (!c.on) { ctx.setLineDash([3, 4]); ctx.strokeStyle = css('--line'); ctx.lineWidth = 1; }
-    else {
-      ctx.setLineDash([]); ctx.strokeStyle = c.w > 0 ? pos1 : neg1;
-      // 신호 세기(입력 활성값 × 가중치)가 클수록 진하게 → 주행 중 어떤 연결이 쓰이는지 보인다
-      const sig = Math.abs((net?.values.get(c.a) ?? 0.5) * c.w);
-      ctx.globalAlpha = mini ? 0.25 + Math.min(0.75, sig / 2) : 0.35 + Math.min(0.6, Math.abs(c.w) / 4);
-      ctx.lineWidth = Math.min(4, 0.6 + Math.abs(c.w)) * k;
+  const nIn = genome.cfg.nInputs, lang = window.currentLang?.() || 'ko';
+  drawNetwork(ctx, genome, net, box, {
+    mini, pad: mini ? { l: 10, r: 40, t: 8, b: 8 } : { l: 58, r: 64, t: 16, b: 16 },
+    font: mini ? '600 10px system-ui, sans-serif' : '11px system-ui, sans-serif',
+    // 큰 그림은 가중치가 클수록, 작은 그림은 지금 흐르는 신호가 셀수록 진하게 → 주행 중 어떤 연결이 쓰이는지 보인다
+    linkAlpha: (sig, w) => mini ? 0.25 + Math.min(0.75, sig / 2) : 0.35 + Math.min(0.6, Math.abs(w) / 4),
+    label: (n, p, v) => {
+      if (n.type === 'in' && !mini) { ctx.textAlign = 'right'; ctx.fillText(IN_LABELS[lang][n.id] ?? n.id, p.x - 12, p.y); }
+      if (n.type === 'out') {
+        ctx.textAlign = 'left';
+        ctx.fillText(mini ? (v >= 0 ? '→ ' : '← ') + Math.abs(v).toFixed(2) : OUT_LABELS[lang][n.id - nIn] + ' ' + v.toFixed(2), p.x + (mini ? 7 : 12), p.y);
+      }
     }
-    ctx.stroke(); ctx.globalAlpha = 1;
-  }
-  ctx.setLineDash([]);
-  const lang = window.currentLang?.() || 'ko';
-  ctx.font = mini ? '600 10px system-ui, sans-serif' : '11px system-ui, sans-serif'; ctx.textBaseline = 'middle';
-  for (const n of genome.nodes.values()) {
-    const p = pos.get(n.id), v = net?.values.get(n.id) ?? 0;
-    const r = (n.type === 'hid' ? 6 : 8) * (mini ? 0.55 : 1);
-    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7);
-    ctx.fillStyle = css('--surface'); ctx.fill();
-    ctx.globalAlpha = Math.min(1, Math.abs(v)); ctx.fillStyle = v >= 0 ? pos1 : neg1; ctx.fill(); ctx.globalAlpha = 1;
-    ctx.strokeStyle = css('--muted'); ctx.lineWidth = mini ? 0.8 : 1.2; ctx.stroke();
-    ctx.fillStyle = css('--text');
-    if (n.type === 'in' && !mini) { ctx.textAlign = 'right'; ctx.fillText(IN_LABELS[lang][n.id] ?? n.id, p.x - 12, p.y); }
-    if (n.type === 'out') {
-      ctx.textAlign = 'left';
-      ctx.fillText(mini ? (v >= 0 ? '→ ' : '← ') + Math.abs(v).toFixed(2) : OUT_LABELS[lang][n.id - nIn] + ' ' + v.toFixed(2), p.x + (mini ? 7 : 12), p.y);
-    }
-  }
+  });
 }
 
 function drawNet(genome, net) {

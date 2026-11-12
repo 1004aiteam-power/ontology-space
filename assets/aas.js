@@ -3,6 +3,7 @@
 // 자산관리셸(AAS) 데이터셋 탐색기: 셸 → 서브모델 → 요소 나무, 고른 항목의 뜻(semanticId) · 온톨로지 대응 · 원본 JSON (⚠ 가상 데이터)
 // 데이터: assets/data/aas.json (examples/aas/build_aas.py)
 import { $, esc, T } from './lib/dom.js?v=3b73d59c';
+import { renderCq } from './cypher/cq-view.js?v=61f7818e';
 (function () {
   const PAM = 'https://1004aiteam-power.github.io/ontology-space/asset#', CIM = 'http://iec.ch/TC57/CIM100#', GRID = 'http://example.org/grid#';
   const KIND = { AssetAdministrationShell: 'AAS', AssetInformation: 'Asset', Submodel: 'SM', Property: 'Prop', MultiLanguageProperty: 'MLP', ReferenceElement: 'Ref',
@@ -155,13 +156,9 @@ import { $, esc, T } from './lib/dom.js?v=3b73d59c';
         .map(([c, l]) => `<span><i style="background:${c}"></i>${l}</span>`).join('');
   }
 
-  function renderCq() {
-    $('aasCq').innerHTML = D.cq.map((c, i) => `<details${i === 2 ? ' open' : ''}><summary><b>Q${i + 1}.</b> ${esc(T(c.q, c.en))} <small class="muted">(${c.rows.length}${T('행', ' rows')})</small></summary>
-      <pre><code class="language-cypher">${esc(c.cypher)}</code></pre>
-      <div class="tbl"><table><thead><tr>${c.columns.map(k => `<th>${esc(k)}</th>`).join('')}</tr></thead><tbody>${c.rows.map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${c.columns.length}">${T('(결과 없음: 어긋난 값이 없습니다)', '(no rows: nothing has drifted)')}</td></tr>`}</tbody></table></div></details>`).join('');
-  }
+  function showCq() { renderCq($('aasCq'), D.cq, { open: 2, empty: T('(결과 없음: 어긋난 값이 없습니다)', '(no rows: nothing has drifted)') }); }
 
-  function renderAll() { renderStats(); renderTree(); renderDetail(); renderCq(); }
+  function renderAll() { renderStats(); renderTree(); renderDetail(); showCq(); }
 
   async function main() {
     if (!$('aasTree')) return;

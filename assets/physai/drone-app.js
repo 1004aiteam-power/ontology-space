@@ -4,9 +4,8 @@
 import { Population } from './neat.js?v=a16de3e3';
 import { Trainer, WORLD, DRONE, stepDrone, sense, INPUT_LABELS, INPUT_LABELS_EN, OUTPUT_LABELS, OUTPUT_LABELS_EN } from './drone-sim.js?v=ca2f4ebe';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
+import { drawNetwork, SERIES } from './net-view.js?v=7ec0367a';
 
-// 차트·신경망 색: 자율주행·스네이크 페이지와 같은 팔레트
-const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 const SPECIES_COLORS = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767'];
 const speciesColor = (id) => SPECIES_COLORS[((id % 8) + 8) % 8];
 const TARGET = '#e5484d', LEAD = '#facc15';
@@ -154,55 +153,25 @@ function legend() {
 
 // ---- 신경망 그리기 ----------------------------------------------------------------
 function drawNetGraph(ctx, genome, net, box, thrust) {
-  const cfg = genome.cfg, nIn = cfg.nInputs;
-  const depth = new Map(), on = [...genome.conns.values()].filter(c => c.on);
-  for (const id of genome.nodes.keys()) depth.set(id, id < nIn ? 0 : 1);
-  for (let it = 0; it < genome.nodes.size; it++) for (const c of on) if (depth.get(c.b) < depth.get(c.a) + 1 && genome.nodes.get(c.b).type !== 'out') depth.set(c.b, depth.get(c.a) + 1);
-  const maxD = Math.max(1, ...[...genome.nodes.values()].filter(n => n.type === 'hid').map(n => depth.get(n.id))) + 1;
-  for (const n of genome.nodes.values()) if (n.type === 'out') depth.set(n.id, maxD);
-  const cols = new Map();
-  for (const n of genome.nodes.values()) { const d = depth.get(n.id); if (!cols.has(d)) cols.set(d, []); cols.get(d).push(n.id); }
-  // 아래에서 위로: 입력(드론이 느끼는 것)이 맨 아래 줄, 출력(좌우 프로펠러 추력)이 맨 위 줄 — 드론의 프로펠러가 위에 있는 것과 같은 방향
-  const padH = 30, padT = 46, padB = 44, pos = new Map();
-  for (const [d, ids] of cols) ids.forEach((id, i) => pos.set(id, {
-    x: box.x + padH + (box.w - 2 * padH) * (ids.length === 1 ? 0.5 : (d === maxD ? 0.25 + 0.5 * i / (ids.length - 1) : i / (ids.length - 1))),
-    y: box.y + box.h - padB - (box.h - padT - padB) * d / maxD
-  }));
-  const [pos1, neg1] = SERIES();
-  for (const c of genome.conns.values()) {
-    const a = pos.get(c.a), b = pos.get(c.b);
-    if (!a || !b) continue;
-    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-    if (!c.on) { ctx.setLineDash([3, 4]); ctx.strokeStyle = css('--line'); ctx.lineWidth = 1; }
-    else {
-      ctx.setLineDash([]); ctx.strokeStyle = c.w > 0 ? pos1 : neg1;
-      const sig = Math.abs((net?.values.get(c.a) ?? 0.5) * c.w);       // 지금 흐르는 신호가 셀수록 진하게
-      ctx.globalAlpha = 0.15 + Math.min(0.85, sig / 2);
-      ctx.lineWidth = Math.min(4, 0.6 + Math.abs(c.w));
-    }
-    ctx.stroke(); ctx.globalAlpha = 1;
-  }
-  ctx.setLineDash([]);
+  const nIn = genome.cfg.nInputs;
   const en = (window.currentLang?.() || 'ko') === 'en', IN = en ? INPUT_LABELS_EN : INPUT_LABELS, OUT = en ? OUTPUT_LABELS_EN : OUTPUT_LABELS;
-  ctx.font = '12px system-ui, sans-serif'; ctx.textBaseline = 'middle';
-  for (const n of genome.nodes.values()) {
-    const p = pos.get(n.id), v = net?.values.get(n.id) ?? 0, r = n.type === 'hid' ? 6 : 8;
-    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7);
-    ctx.fillStyle = css('--surface'); ctx.fill();
-    ctx.globalAlpha = Math.min(1, Math.abs(v)); ctx.fillStyle = v >= 0 ? pos1 : neg1; ctx.fill(); ctx.globalAlpha = 1;
-    ctx.strokeStyle = css('--muted'); ctx.lineWidth = 1.2; ctx.stroke();
-    ctx.fillStyle = css('--text');
-    // 글자가 그림 밖으로 나가지 않게 가운데 정렬한 뒤 좌우 끝에서 안쪽으로 당김
-    const centered = (text, y) => { const w = ctx.measureText(text).width / 2; ctx.fillText(text, Math.max(box.x + w + 2, Math.min(box.x + box.w - w - 2, p.x)), y); };
-    ctx.textAlign = 'center';
-    if (n.type === 'in') centered(IN[n.id], p.y + (n.id % 2 ? 32 : 18));           // 이름이 겹치지 않게 두 줄로 엇갈림
-    if (n.type === 'out') {
-      const f = thrust[n.id - nIn], bw = 80, bx = Math.max(box.x + 2, Math.min(box.x + box.w - bw - 2, p.x - bw / 2));
-      centered(`${OUT[n.id - nIn]} ${Math.round(f * 100)}%`, p.y - 32);
-      ctx.fillStyle = css('--line'); ctx.fillRect(bx, p.y - 22, bw, 6);                              // 추력 막대
-      ctx.fillStyle = 'rgb(249,115,22)'; ctx.fillRect(bx, p.y - 22, bw * f, 6);
+  // 글자가 그림 밖으로 나가지 않게 가운데 정렬한 뒤 좌우 끝에서 안쪽으로 당김
+  const centered = (text, x, y) => { const w = ctx.measureText(text).width / 2; ctx.fillText(text, Math.max(box.x + w + 2, Math.min(box.x + box.w - w - 2, x)), y); };
+  // 아래에서 위로: 입력(드론이 느끼는 것)이 맨 아래 줄, 출력(좌우 프로펠러 추력)이 맨 위 줄 — 드론의 프로펠러가 위에 있는 것과 같은 방향
+  drawNetwork(ctx, genome, net, box, {
+    vertical: true, pad: { l: 30, r: 30, t: 46, b: 44 }, font: '12px system-ui, sans-serif',
+    across: (isOut, i, n) => (isOut ? 0.25 + 0.5 * i / (n - 1) : i / (n - 1)),
+    label: (n, p) => {
+      ctx.textAlign = 'center';
+      if (n.type === 'in') centered(IN[n.id], p.x, p.y + (n.id % 2 ? 32 : 18));           // 이름이 겹치지 않게 두 줄로 엇갈림
+      if (n.type === 'out') {
+        const f = thrust[n.id - nIn], bw = 80, bx = Math.max(box.x + 2, Math.min(box.x + box.w - bw - 2, p.x - bw / 2));
+        centered(`${OUT[n.id - nIn]} ${Math.round(f * 100)}%`, p.x, p.y - 32);
+        ctx.fillStyle = css('--line'); ctx.fillRect(bx, p.y - 22, bw, 6);                              // 추력 막대
+        ctx.fillStyle = 'rgb(249,115,22)'; ctx.fillRect(bx, p.y - 22, bw * f, 6);
+      }
     }
-  }
+  });
 }
 
 function drawNet() {
