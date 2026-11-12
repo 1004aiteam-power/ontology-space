@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
-"""모든 페이지의 위쪽 메뉴(<nav>)를 한 곳(아래 NAV)에서 다시 만든다.
+"""모든 페이지의 머리말(사이트 이름 · 위쪽 메뉴 · 언어/테마 버튼)과 꼬리말을 한 곳에서 다시 만든다.
+새 페이지를 만들 때는 <header class="top"></header> 와 <footer></footer> 만 적어 두면 이 도구가 채운다.
 
 메뉴를 바꿀 때는 이 파일의 NAV만 고치고 실행: python tools/build_nav.py
 현재 페이지의 링크에는 aria-current="page", 그 링크가 든 드롭다운 버튼에는 class="menu-btn current"를 붙인다.
@@ -263,6 +264,21 @@ def stamp_html(text: str) -> str:
     return HTML_REF.sub(ref, text)
 
 
+# ---- 머리말 · 꼬리말: 모든 페이지가 같은 것을 쓴다. 바꿀 때는 여기만 고치고 실행 ---------------------------------
+HEADER = ('<header class="top"><div class="wrap">\n'
+          '  <a class="brand" href="index.html">Ontology Space</a>\n'
+          '{nav}\n'
+          '  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>\n'
+          '</div></header>')
+FOOTER = '<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>'
+
+
+def add_frame(page: str, s: str) -> str:
+    """페이지의 <header class="top">…</header> 와 <footer>…</footer> 를 위 틀로 다시 쓴다 (메뉴 포함)."""
+    s = re.sub(r'<header class="top">.*?</header>', lambda m: HEADER.format(nav=build(page)), s, count=1, flags=re.S)
+    return re.sub(r"<footer>.*?</footer>", lambda m: FOOTER, s, count=1, flags=re.S)
+
+
 SKIP = '<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>'
 
 
@@ -303,8 +319,7 @@ def main() -> None:
             n += write_if_changed(f, stamp_js(rel, s))
     for f in sorted(ROOT.glob("*.html")):
         s = f.read_text(encoding="utf-8")
-        new = re.sub(r"[ \t]*<nav>.*?</nav>", lambda m: build(f.name), s, count=1, flags=re.S)
-        new = stamp_html(add_skip_link(add_head_meta(f.name, new)))
+        new = stamp_html(add_skip_link(add_head_meta(f.name, add_frame(f.name, s))))
         if new != s:
             f.write_text(new, encoding="utf-8")
             n += 1
