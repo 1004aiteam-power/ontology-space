@@ -1,0 +1,93 @@
+/* 인터랙티브 단선도 */
+.sld .eq{cursor:pointer}
+.sld .eq:hover .shape,.sld .eq.sel .shape{stroke:var(--warm);stroke-width:3}
+.sld [data-dep]{transition:opacity .2s, stroke .2s}
+.sld .off{opacity:.28}
+.sld .cb .shape{fill:var(--hv)}
+.sld .cb.mv .shape{fill:var(--mv)}
+.sld .cb.open .shape{fill:var(--surface)}
+.sld .volt{font-size:12px;font-weight:600;fill:var(--ok)}
+.sld .volt.out{fill:var(--muted)}
+.sld-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.sld-bar button{border:1px solid var(--line);background:var(--code);color:var(--text);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:13px}
+#info{margin-top:10px;min-height:52px;font-size:15px;color:var(--muted)}
+.fd-wrap{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;align-items:start}
+@media (max-width:860px){.fd-wrap{grid-template-columns:minmax(0,1fr)}}
+.fd-map svg{min-width:640px}
+.fd-side{display:grid;gap:10px;min-width:0}
+.fd-side .panel{font-size:14px}
+.fd-bus{fill:var(--mv)}
+.fd-cap{fill:var(--muted);font-size:12px}
+.fd-ln{stroke:var(--mv);stroke-width:3.5;stroke-linecap:round}
+.fd-ln.dead{stroke:var(--dead) !important;stroke-dasharray:5 5}
+.fd-ln.loop{stroke:var(--hv) !important;stroke-dasharray:8 4}
+.fd-ln.faulted{stroke:var(--hv) !important;stroke-width:5}
+.fd-ln.sel{stroke-width:6}
+.fd-hit{stroke:transparent;stroke-width:12;cursor:pointer}
+.fd-sw{cursor:pointer}
+.fd-sw .fd-stub{stroke:var(--node);stroke-width:2}
+.fd-sw .sym{fill:var(--surface);stroke:var(--node);stroke-width:2}
+.fd-sw.tie .sym{stroke-dasharray:3 2}
+.fd-sw.open .sym{fill:var(--surface) !important}
+.fd-sw.moved .sym{stroke-width:3.5}
+.fd-sw.sel .sym{stroke:var(--warm)}
+.fd-sw:focus-visible{outline:none}.fd-sw:focus-visible .sym{stroke:var(--accent);stroke-width:4}
+.fd-lbl{fill:var(--text);font-size:13px;font-weight:600}
+.fd-ld{cursor:pointer}
+.fd-ld .sym{fill:var(--surface);stroke:var(--node);stroke-width:1.2}
+.fd-ld.dead .sym{fill:var(--dead) !important;opacity:.5}
+.fd-ld.dead .fd-mw{text-decoration:line-through;fill:var(--muted)}
+.fd-mw{fill:var(--muted);font-size:12px}
+.fd-fault{font-size:24px}
+.fd-scen button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
+.fd-scen button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+#fdStatus .bad{color:var(--hv);font-weight:600}#fdStatus .ok{color:var(--ok);font-weight:600}
+.fd-bar{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin:4px 0 10px;font-size:13px}
+.fd-bar i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.fd-bar b{font-variant-numeric:tabular-nums}
+.fd-bar .track{grid-column:1/-1;height:7px;background:var(--code);border-radius:4px;overflow:hidden}
+.fd-bar .track div{height:100%}
+.fd-bar.over b{color:var(--hv)}
+.fd-info{color:var(--muted);font-size:13px}
+.fd-info b{color:var(--text)}
+
+/* 고장 복구(FLISR) 시뮬레이션 — grid.html#flisr */
+.fl-hit{cursor:crosshair}
+.fl-hit:focus-visible{outline:none;stroke:var(--accent);stroke-opacity:.35}
+.fl-zone{fill:none;stroke:var(--hv);stroke-width:1.5;stroke-dasharray:6 4}
+.fl-ring{fill:none;stroke:transparent;stroke-width:3}
+.fl-ring.on{stroke:var(--warm)}
+.fl-crit{fill:var(--hv);font-size:14px;font-weight:700}
+.fl-mode[aria-pressed="true"]{border-color:var(--accent) !important;color:var(--accent) !important;font-weight:600}
+.fl-try{font-size:13px}
+.fl-big{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.fl-big small{font-size:14px;font-weight:600;margin-left:4px}
+.fl-big.bad{color:var(--hv)} .fl-big.ok{color:var(--ok)}
+#flNow .fl-alert{color:var(--hv);font-size:13px;margin-top:4px}
+#flNow .muted,#flSteps .muted{color:var(--muted);font-size:13px}
+.fl-feed{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;margin-top:6px;font-variant-numeric:tabular-nums}
+.fl-feed i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
+.fl-where{margin:0 0 6px;font-size:14px}
+.fl-list{list-style:none;margin:0;padding:0;font-size:13px}
+.fl-list li{border-left:3px solid var(--line);padding:2px 0 2px 8px;margin:0 0 4px}
+.fl-list li.done{border-left-color:var(--muted)}
+.fl-list li.cur{border-left-color:var(--warm)}
+.fl-list button{all:unset;cursor:pointer;display:grid;grid-template-columns:44px 1fr auto;gap:6px;width:100%;align-items:baseline}
+.fl-list button:focus-visible{outline:2px solid var(--accent)}
+.fl-list .tm{color:var(--muted);font-variant-numeric:tabular-nums}
+.fl-list .dc{color:var(--muted);font-variant-numeric:tabular-nums}
+.fl-list li.cur .dc{color:var(--text);font-weight:600}
+.fl-desc{color:var(--muted);margin:4px 0 6px;line-height:1.55}
+.fl-desc code{font-size:12px}
+.fl-bottom{margin-top:16px;align-items:start}
+.fl-chart svg{width:100%;height:auto;display:block}
+.fl-ax{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.fl-step{fill:none;stroke-width:1.5;opacity:.55}
+.fl-step.cur{stroke-width:2.5;opacity:1}
+.fl-area{opacity:.06}
+.fl-area.auto{fill:var(--accent)} .fl-area.manual{fill:var(--warm)}
+.fl-area.cur{opacity:.16}
+.fl-now{stroke:var(--text);stroke-dasharray:3 3}
+.fl-cmi > div{margin:4px 0;font-variant-numeric:tabular-nums}
+.fl-cmi .sw{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:8px}
+.fl-cmi .muted{color:var(--muted)}

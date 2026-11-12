@@ -1,0 +1,26 @@
+/* Physical AI 페이지 */
+/* 시뮬레이션은 본문(960px)보다 넓게: 화면 폭에 맞춰 최대 1200px */
+.sim-wrap{display:grid;gap:14px;width:min(1200px,100vw - 32px);position:relative;left:50%;transform:translateX(-50%)}
+.chart-box{position:relative}
+#chartTip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;line-height:1.5;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+#chartTip i,.chart-legend i{display:inline-block;width:10px;height:3px;margin-right:6px;vertical-align:middle;border-radius:2px}
+.chart-legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:6px}
+
+.speed-ctl{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:4px 10px}
+.speed-ctl input[type=range]{width:140px;accent-color:var(--accent)}
+.speed-ctl output{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.2em;text-align:right}
+.eco-tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;line-height:1.5;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.eco-tip[hidden]{display:none}
+.eco-tip i{display:inline-block;width:10px;height:3px;margin-right:6px;vertical-align:middle;border-radius:2px}
+.legend-line{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px}
+.legend-line i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+.legend-line i.dot{border-radius:50%}
+.legend-line i.sq{width:6px;height:6px;vertical-align:1px}
+.legend-line i.ring{border:1.5px dashed var(--muted)}
+.legend-line i.fade{background:radial-gradient(circle,rgba(217,89,38,.6) 40%,transparent 41%);border:1px solid var(--muted)}
+.tr-chart{width:100%;height:220px;display:block}
+.legend-line[hidden]{display:none}
+.chart-legend{flex-wrap:wrap}
+
+/* NEAT 드론 페이지: 하늘(가로 100 : 세로 70)이 가운데, 옆 패널은 오른쪽 (스네이크 페이지와 같은 배치) */
+#sky{width:100%;display:block;border-radius:12px;border:1px solid var(--line);margin:0 auto;cursor:pointer;touch-action:manipulation}

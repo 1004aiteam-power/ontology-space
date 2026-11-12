@@ -1,0 +1,12 @@
+.lab-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.lab-bar select{padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text);font-size:14px;max-width:100%}
+.lab-bar .primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+#nodeInfo table{font-size:13px;min-width:0}
+#nodeInfo td{word-break:break-all}
+/* 실습: 데이터 검증 */
+details.chk{border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0;background:var(--surface)}
+details.chk summary{cursor:pointer;color:var(--text);font-size:14px;margin:0}
+details.chk.ok summary{color:var(--muted)}
+details.chk.bad{border-color:#e03131}
+details.chk.bad summary{color:#c92a2a}
+details.chk pre{margin:8px 0 4px}

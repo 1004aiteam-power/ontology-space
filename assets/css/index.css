@@ -1,0 +1,26 @@
+/* 소개 페이지 첫 화면의 카드 8개: 파란 링크 글씨는 카드 맨 아래, 화살표는 오른쪽 끝 */
+.hero-cards a.card{display:flex;flex-direction:column}
+.hero-cards a.card .more{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:12px}
+.hero-cards a.card .arr{font-size:16px;transition:transform .15s}
+.hero-cards a.card:hover .arr{transform:translateX(3px)}
+.opinion .quote{font-size:clamp(20px,3vw,27px);font-weight:700;line-height:1.5;margin:0;color:var(--text)}
+/* 소개 페이지: 시뮬레이션 둘러보기 */
+.sim-group{margin:22px 0 10px;font-size:15px;color:var(--muted)}
+.sim-cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.sim-card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.sim-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.sim-card img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-bottom:1px solid var(--line);background:var(--code)}
+.sim-card h4{margin:12px 14px 4px}
+.sim-card p{margin:0 14px 14px;color:var(--muted);font-size:14px}
+.sim-card.featured{display:grid;grid-template-columns:1fr}
+@media (min-width:760px){ .sim-card.featured{grid-template-columns:1.15fr 1fr;align-items:center} .sim-card.featured img{border-bottom:0;border-right:1px solid var(--line);height:100%} }
+.sim-card.featured > div{padding:16px 18px}
+.sim-card.featured h4{margin:6px 0 8px;font-size:20px}
+.sim-card.featured p{margin:0 0 12px}
+.sim-card .more{color:var(--accent);font-size:14px;font-weight:600}
+.sim-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--warm);border:1px solid var(--warm);border-radius:999px;padding:1px 9px}
+
+/* 소개 페이지: 읽는 순서 */
+.path-list{margin:10px 0 0;padding-left:22px;font-size:15px}
+.path-list li{margin:5px 0}
+.path-list li > span{color:var(--muted)}

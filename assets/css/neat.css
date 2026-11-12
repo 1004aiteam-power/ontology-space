@@ -1,0 +1,10 @@
+.pop-panel{display:flex;flex-direction:column;gap:6px}
+#popBoard{width:100%;height:60px;display:block}
+.species-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+.species-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;box-shadow:0 0 0 1px var(--line)}
+
+.success-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-top:10px;border:2px solid #22c55e;border-radius:10px}
+.success-bar[hidden]{display:none}
+.success-bar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px}
+.success-bar button.primary{background:#16a34a;border-color:#16a34a;color:#fff;font-weight:600}
+#popBoard{cursor:pointer}

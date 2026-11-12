@@ -1,0 +1,7 @@
+/* NEAT Snake (neat-snake.html) */
+.snake-wrap{grid-template-columns:1fr}
+@media (min-width:1000px){ .snake-wrap{width:calc(100vw - 32px);grid-template-columns:minmax(0,1fr) auto minmax(280px,1fr);align-items:start} .snake-main{grid-column:2} .snake-side{grid-column:3} }   /* 판은 가운데, 옆 패널은 오른쪽 여백 (생태계 화면과 같은 배치) */
+.snake-main{display:flex;flex-direction:column;gap:6px;min-width:0}
+.snake-side{display:grid;gap:12px;align-content:start}
+.snake-side #net{height:340px}
+.snake-side #stats{grid-template-columns:repeat(2,1fr)}

@@ -1,0 +1,6 @@
+.drone-wrap .snake-main{width:100%}
+@media (min-width:1000px){
+  .drone-wrap{grid-template-columns:minmax(0,1fr) minmax(300px,360px)}
+  .drone-wrap .snake-main{grid-column:1;max-width:calc((100vh - 110px) * 10 / 7);justify-self:end}
+  .drone-wrap .snake-side{grid-column:2}
+}

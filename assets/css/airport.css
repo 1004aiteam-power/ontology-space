@@ -1,0 +1,34 @@
+/* 공항 이착륙 페이지 */
+.ap-wrap{grid-template-columns:1fr;width:min(1400px,100vw - 32px)}
+#apView{width:100%;display:block;border-radius:12px;border:1px solid var(--line);background:#0f1620;touch-action:none;cursor:grab}
+#apView:active{cursor:grabbing}
+.ap-boards{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:980px){ .ap-boards{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} }
+.fids{background:#0f1620;color:#e8edf3;border:1px solid #243041;border-radius:10px;padding:10px 12px;font-variant-numeric:tabular-nums}
+.fids h4{margin:0 0 6px;color:#f5c518;font-size:15px;letter-spacing:.04em}
+.fids-scroll{overflow-x:auto}
+.fids table{min-width:520px;width:100%;background:transparent;font-size:13px;border-collapse:collapse}
+.fids th,.fids td{border:none;border-bottom:1px solid rgba(255,255,255,.08);padding:5px 6px;white-space:nowrap}
+.fids th{color:#f5c518;font-weight:600;font-size:12px}
+.fids td i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:0}
+.fids td.chg{color:#ffb454}
+.fids tr[data-f]{cursor:pointer}
+.fids tr[data-f]:hover td{background:rgba(255,255,255,.05)}
+.fids tr.sel td{background:rgba(245,197,24,.18)}
+.fids tr.done td{color:#8b97a8}
+.fids .st{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;background:rgba(255,255,255,.08)}
+.fids .st.go{background:rgba(34,197,94,.18);color:#5ee08f}
+.fids .st.warn{background:rgba(245,179,1,.18);color:#ffcf4d}
+.fids .st.bad{background:rgba(239,68,68,.2);color:#ff8a80}
+.fids .st.done{background:transparent;color:#8b97a8}
+.fids .st.sched{background:transparent;color:#c8d1dc}
+#apStats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media (min-width:760px){ #apStats{grid-template-columns:repeat(6,1fr)} }
+#apStats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+#apStats span{display:block;font-size:12px;color:var(--muted)}
+#apStats b{font-variant-numeric:tabular-nums;font-size:16px}
+#apStats small{display:block;font-size:11.5px;color:var(--muted)}
+.chart-key{display:flex;flex-wrap:wrap;gap:4px 14px;margin:4px 0 6px}
+.chart-key i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.chart-key i.dash{height:0;border-top:2px dashed var(--text);border-radius:0;vertical-align:3px}
+.fids thead th{background:transparent}

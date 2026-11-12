@@ -1,0 +1,28 @@
+/* 단세포 생태계 (ecosystem.html) */
+.eco-wrap{grid-template-columns:1fr}
+/* 접시는 브라우저 폭의 절반 (3:2 비율로 화면 높이에도 들어오게) · 가운데 정렬, 작은 시계열은 오른쪽 여백 아래쪽 */
+@media (min-width:960px){
+  .eco-wrap{width:calc(100vw - 32px);grid-template-columns:minmax(0,1fr) min(50vw, calc((100vh - 90px) * 1.5)) minmax(0,1fr);align-items:end}
+  .eco-wrap #dish{grid-column:2}
+  .eco-wrap .eco-mini{grid-column:3;width:min(300px,100%)}
+}
+#dish{width:100%;display:block;border-radius:12px;border:1px solid var(--line);cursor:crosshair}
+.eco-mini{padding:10px}
+.eco-mini b{font-size:13px}
+.eco-mini .chart-legend{font-size:11.5px;gap:4px 10px;margin:2px 0 0}
+.eco-chart.mini{height:170px}
+.eco-below{margin-top:8px}
+@media (min-width:700px){ #ecoStats{grid-template-columns:repeat(3,1fr) !important} }
+#ecoStats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+#ecoStats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+#ecoStats span{display:block;font-size:12px;color:var(--muted)}
+#ecoStats span i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
+#ecoStats b{font-variant-numeric:tabular-nums;font-size:15px}
+#ecoStats small{display:block;font-size:11.5px;color:var(--muted)}
+.eco-chart{width:100%;height:260px;display:block}
+.eco-chart.small{height:190px}
+.add-btn i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+.ctrl .add-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.legend-line i.sed{background:rgba(150,110,60,.35);border:1px dashed rgba(130,95,50,.7)}
+.eco-sub{margin:22px 0 10px;font-size:16px}
+.season-key i.sk{width:16px;height:10px;border-radius:2px;background:linear-gradient(90deg,rgba(25,158,112,.25) 25%,rgba(201,133,0,.3) 25% 50%,rgba(217,89,38,.25) 50% 75%,rgba(57,135,229,.3) 75%)}
