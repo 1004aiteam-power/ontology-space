@@ -27,10 +27,10 @@
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=729f3c47">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
-<link rel="stylesheet" href="assets/css/plife.css?v=023b9835">
+<link rel="stylesheet" href="assets/css/plife.css?v=bb8f9941">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
-<script type="module" src="assets/plife/plife-app.js?v=03840661"></script>
+<script type="module" src="assets/plife/plife-app.js?v=85704973"></script>
 </head>
 <body>
 <a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
@@ -163,9 +163,13 @@
       <div class="panel">
         <b><span lang="ko">규칙 표 (눌러서 고치기)</span><span lang="en">Rule table (click to edit)</span></b>
         <table class="pl-rules" id="plRules"></table>
+        <div class="ctrl pl-all">
+          <button id="plRefresh"><span lang="ko">🎲 표 전체 새로 뽑기</span><span lang="en">🎲 Redraw the whole table</span></button>
+          <button id="plZero"><span lang="ko">모두 0</span><span lang="en">All zero</span></button>
+        </div>
         <p class="pl-key"><span><i style="background:rgb(42,120,214)"></i><span lang="ko">끌림 (+)</span><span lang="en">attract (+)</span></span><span><i style="background:rgb(217,89,38)"></i><span lang="ko">밀침 (−)</span><span lang="en">repel (−)</span></span></p>
-        <p class="meta" lang="ko"><b style="display:inline">가로줄의 색이 세로줄의 색에게</b> 느끼는 힘입니다. 칸을 누르면 0.25씩 올라가고, Shift를 누른 채 누르거나 오른쪽 단추로 누르면 내려갑니다. 화살표 키 ↑ ↓ 로도 바꿀 수 있습니다.</p>
-        <p class="meta" lang="en">The force <b style="display:inline">the row colour feels towards the column colour</b>. Click a cell to raise it by 0.25; Shift-click or right-click to lower it. The ↑ ↓ arrow keys work too.</p>
+        <p class="meta" lang="ko"><b style="display:inline">가로줄의 색이 세로줄의 색에게</b> 느끼는 힘입니다. 칸을 누르면 0.25씩 올라가고, Shift를 누른 채 누르거나 오른쪽 단추로 누르면 내려갑니다. 화살표 키 ↑ ↓ 로도 바꿀 수 있습니다. <b style="display:inline">표 전체 새로 뽑기</b>는 모든 칸을 한꺼번에 새 값으로 바꾸고, 입자는 지금 자리에서 그대로 새 규칙을 따릅니다.</p>
+        <p class="meta" lang="en">The force <b style="display:inline">the row colour feels towards the column colour</b>. Click a cell to raise it by 0.25; Shift-click or right-click to lower it. The ↑ ↓ arrow keys work too. <b style="display:inline">Redraw the whole table</b> replaces every cell at once; the particles carry on from where they are under the new rules.</p>
       </div>
       <div id="plStats"></div>
     </div>

@@ -41,7 +41,7 @@ function rules() {
     h += `<tr><th scope="row" title="${nm[i]}">${dot(i)}</th>`;
     for (let j = 0; j < k; j++) {
       const v = sim.matrix[i][j], label = t({ ko: `${nm[i]}가 ${nm[j]}에게 느끼는 힘 ${v.toFixed(2)}`, en: `force ${nm[i]} feels towards ${nm[j]}: ${v.toFixed(2)}` });
-      h += `<td><button type="button" data-i="${i}" data-j="${j}" class="${v === 0 ? 'zero' : ''}" style="${v === 0 ? '' : `background:${cellColor(v)}`}" aria-label="${label}" title="${label}">${v > 0 ? '+' : ''}${v.toFixed(2).replace(/0$/, '').replace(/\.$/, '')}</button></td>`;
+      h += `<td><button type="button" data-i="${i}" data-j="${j}" class="${v === 0 ? 'zero' : ''}" style="${v === 0 ? '' : `background:${cellColor(v)}`}" aria-label="${label}" title="${label}">${v > 0 ? '+' : ''}${v.toFixed(2).replace(/\.?0+$/, '')}</button></td>`;
     }
     h += '</tr>';
   }
@@ -103,6 +103,9 @@ function main() {
   $('speedBtn').addEventListener('click', () => { speedIdx = (speedIdx + 1) % SPEEDS.length; labels(); });
   $('plPreset').addEventListener('change', e => { if (e.target.value) applyPreset(e.target.value); });
   $('plNew').addEventListener('click', () => { seed++; applyPreset('random'); });                       // 새 무작위 규칙
+  // 표 전체를 한꺼번에: 새 무작위 값으로 (입자는 지금 자리에서 그대로 이어감), 또는 모두 0 으로
+  $('plRefresh').addEventListener('click', () => { seed++; sim.setPreset('random', seed); $('plPreset').value = 'random'; rules(); labels(); });
+  $('plZero').addEventListener('click', () => { sim.setPreset('none', seed); $('plPreset').value = 'none'; rules(); labels(); });
   $('plScatter').addEventListener('click', () => { sim.scatter(); frame.drawn = false; });              // 같은 규칙, 입자만 다시
   $('plN').addEventListener('input', e => { sim.setCount(+e.target.value); labels(); frame.drawn = false; });
   $('plTypes').addEventListener('input', e => { sim.setTypes(+e.target.value); if ($('plPreset').value) sim.setPreset($('plPreset').value, seed); rules(); labels(); frame.drawn = false; });
