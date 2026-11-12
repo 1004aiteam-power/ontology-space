@@ -2,10 +2,7 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 디지털 트윈: 가상 대한민국 전력망 24시간 상태를 지도 위에 재생
 // 데이터: assets/data/twin.json (examples/twin/build_korea_twin.py 가 pycim → pandapower 로 계산)
-const $ = (id) => document.getElementById(id);
-const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const dark = () => document.documentElement.dataset.theme === 'dark' ||
-  (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+import { $, esc, css, dark } from '../lib/dom.js?v=3b73d59c';
 const NS = 'http://www.w3.org/2000/svg';
 const el = (tag, attrs = {}, parent) => {
   const e = document.createElementNS(NS, tag);
@@ -13,7 +10,6 @@ const el = (tag, attrs = {}, parent) => {
   if (parent) parent.appendChild(e);
   return e;
 };
-const esc = (s) => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 
 // 발전원 색: dataviz 팔레트 1~4번 슬롯 (라이트/다크 각각 검증)
 const TYPES = ['nuclear', 'coal', 'lng', 'wind', 'solar'];          // 누적 순서 (색은 아래 고정 슬롯)

@@ -4,14 +4,13 @@
 //
 // 입체감: 비스듬히 내려다보는 원근 투영 · 면마다 햇빛 방향으로 명암 · 땅 위 그림자 · 먼 것부터 그리기 · 멀수록 대기색
 import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT, TX, TW, towerLeg, PULLEY } from './safety.js?v=a96c9949';
+import { $, esc } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
 const t = (o) => (o == null ? '' : window.t ? window.t(o) : o.ko);
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
 const rgb = (c, al = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${al})`;
 const hex = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
-const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 const SPEEDS = [1, 2, 4, 8];
 let sim, scenario = 'pole', scene = 'pole', mode = 'watch', running = false, speedIdx = 1, acc = 0, lastT = 0, hold = 0;

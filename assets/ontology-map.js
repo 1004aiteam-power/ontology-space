@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 사이트 전체 온톨로지 지도: assets/data/ontology-map.json (tools/build_ontology_map.mjs가 Turtle 파일에서 셈)을 그림으로
+import { $, esc } from './lib/dom.js?v=3b73d59c';
 (() => {
-  const $ = (id) => document.getElementById(id);
-  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const T = (o) => window.t(o);
   const L = (x) => T({ ko: x.ko, en: x.en });
   // 자리 (viewBox 1200 × 610). VPP 가상 전력시장은 오른쪽 끝(디지털 트윈 위 오른쪽). 배전공사 안전이 가운데에서 업무 · 자산관리 · 배전선로 · 변전소 · 고장 영향과 잇고, 교통은 오른쪽, 자연은 왼쪽 아래

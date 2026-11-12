@@ -3,12 +3,8 @@
 // NEAT Snake 페이지: 150마리가 동시에 진화하며 Snake를 배우는 과정을 브라우저에서 실행·시각화
 import { Population } from './neat.js?v=a16de3e3';   // ?v= 는 tools/build_nav.py 가 파일 내용으로 만듦
 import { Trainer, Snake, GRID, SNAKE, stepSnake, sense, INPUT_LABELS, INPUT_LABELS_EN } from './snake-sim.js?v=da9d5017';
+import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const t = (o) => (window.t ? window.t(o) : o.ko);
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const dark = () => document.documentElement.dataset.theme === 'dark' ||
-  (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 // 차트·신경망 색: 자율주행 페이지와 같은 팔레트
 const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 const SPECIES_COLORS = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767'];
@@ -24,17 +20,6 @@ let hoverGen = null;
 const SPEEDS = [{ sps: 12, label: '1×' }, { sps: 48, label: '4×' }, { sps: 200, label: '16×' }, { sps: 'max', label: 'max' }];
 
 // ---- 캔버스 공통 -------------------------------------------------------------------
-function fit(canvas, aspect) {
-  const dpr = window.devicePixelRatio || 1, cw = canvas.clientWidth;
-  const ch = aspect ? cw * aspect : canvas.clientHeight;
-  if (aspect) canvas.style.height = ch + 'px';
-  if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)) {
-    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
-  }
-  const ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { ctx, cw, ch };
-}
 
 // ---- 게임판 그리기 ------------------------------------------------------------------
 function drawBoard(ctx, s, x0, y0, size, opt = {}) {

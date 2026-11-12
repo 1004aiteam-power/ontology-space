@@ -2,12 +2,8 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 교차로 신호 페이지: 위에서 내려다본 교차로, 신호 현시, 대기열·지체 그래프
 import { Intersection, PHASES, GEO, ARMS, AXIS, pointAt } from './traffic.js?v=3897f5af';
+import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const t = (o) => (window.t ? window.t(o) : o.ko);
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const dark = () => document.documentElement.dataset.theme === 'dark' ||
-  (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 // 출발 방향별 차량 색 (dataviz 검증: 밝은·어두운 배경 모두 통과)
 const ARM_COL = () => ({ N: dark() ? '#3987e5' : '#2a78d6', E: '#d95926', S: '#199e70', W: '#9085e9' });
 const ARM_NAME = { N: { ko: '북쪽', en: 'North' }, E: { ko: '동쪽', en: 'East' }, S: { ko: '남쪽', en: 'South' }, W: { ko: '서쪽', en: 'West' } };
@@ -24,17 +20,6 @@ let sim, running = false, speedIdx = 1, acc = 0, lastT = 0;
 const VIEW = 48;                            // 화면 가운데에서 ±48m
 
 // ---- 캔버스 공통 -------------------------------------------------------------------
-function fit(canvas, aspect) {
-  const dpr = window.devicePixelRatio || 1, cw = canvas.clientWidth;
-  const ch = aspect ? cw * aspect : canvas.clientHeight;
-  if (aspect) canvas.style.height = ch + 'px';
-  if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)) {
-    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
-  }
-  const ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { ctx, cw, ch };
-}
 
 // ---- 교차로 그리기 (위에서 내려다본 모습) ------------------------------------------------
 function drawRoad(ctx) {

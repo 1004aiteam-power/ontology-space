@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 전력설비 자산관리 페이지: 위험도 지도(PoF × CoF)와 자산 상세 (⚠ 가상 데이터)
+import { esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
   const $ = (s) => document.querySelector(s);
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const T = (ko, en) => (window.t ? window.t({ ko, en }) : ko);
   let D, spare = false, sel = 'AS-TR-0007';
 
   const SHORT = { 'AS-TR-0007': 'M.Tr', 'AS-CB-0123': 'CB154', 'AS-CB-0457': 'CB22', 'AS-LN-0031': 'T/L' };

@@ -7,10 +7,8 @@
 //  - 고도 = 그림자와의 거리: 항공기 아래 땅에 그림자를 그리고, 높을수록 그림자가 멀어지고 옅어짐
 //  - 먼 것부터 그리기, 거리에 따라 대기색으로 흐려짐, 시간에 따라 낮·노을·밤 조명
 import { Airport, GEO, CATS, AIRLINES, PROFILE } from './airport.js?v=cda93957';
+import { $, t, css } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const t = (o) => (window.t ? window.t(o) : o.ko);
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
 const rgb = (c, al = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${al})`;

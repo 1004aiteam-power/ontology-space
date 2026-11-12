@@ -7,10 +7,9 @@ import { buildGraph } from './cypher/graph.js?v=3901bd2d';
 import { runCypher, show } from './cypher/cypher.js?v=429e52a6';
 import { DATASETS, QUERIES } from './cypher/presets.js?v=49736877';
 import { parseChecks } from './cypher/script.js?v=b2b731a7';
+import { $, esc } from './lib/dom.js?v=3b73d59c';
 
 const SHORT = [['http://iec.ch/TC57/CIM100#', 'cim:'], ['http://example.org/grid#', 'ex:']];
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let G, cy, current = 'full', ready = false, CHECKS = null;
 
 function short(v) {

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 프로젝트 페이지: UUID v4 · v5 · v7 과 현재 시각(나노초)을 브라우저에서 직접 만들어 보기
+import { $ } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (id) => document.getElementById(id);
   const hex = (bytes) => Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
   const fmt = (h) => `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
   const parse = (u) => Uint8Array.from(u.replace(/-/g, '').match(/../g), x => parseInt(x, 16));

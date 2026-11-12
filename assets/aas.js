@@ -2,10 +2,8 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 자산관리셸(AAS) 데이터셋 탐색기: 셸 → 서브모델 → 요소 나무, 고른 항목의 뜻(semanticId) · 온톨로지 대응 · 원본 JSON (⚠ 가상 데이터)
 // 데이터: assets/data/aas.json (examples/aas/build_aas.py)
+import { $, esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (id) => document.getElementById(id);
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const T = (ko, en) => (window.t ? window.t({ ko, en }) : ko);
   const PAM = 'https://1004aiteam-power.github.io/ontology-space/asset#', CIM = 'http://iec.ch/TC57/CIM100#', GRID = 'http://example.org/grid#';
   const KIND = { AssetAdministrationShell: 'AAS', AssetInformation: 'Asset', Submodel: 'SM', Property: 'Prop', MultiLanguageProperty: 'MLP', ReferenceElement: 'Ref',
     SubmodelElementCollection: 'SMC', SubmodelElementList: 'SML', Entity: 'Ent', ConceptDescription: 'CD' };

@@ -7,9 +7,8 @@ import { parse } from '../cypher/turtle.js?v=dd7711a6';
 import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
 import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
 import { triples, toQuads, turtleBlock, qname, VPPS, VPP_CYPHER, VPP_SCHEMA, LINKED_FILES, RULE } from './vpp-graph.js?v=ee95d81f';
+import { $, esc, css, dark } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const T = (o) => window.t(o);
 const en = () => document.documentElement.lang === 'en';
 const L = () => (en() ? '_en' : '');
@@ -33,8 +32,6 @@ const PAL = {
   light: ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300', '#6250d6'],
   dark: ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9']
 };
-const dark = () => document.documentElement.dataset.theme === 'dark' || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
-const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 function colorOf(k) {
   if (k.slot >= 0) return PAL[dark() ? 'dark' : 'light'][k.slot];
   return k.slot === -1 ? (dark() ? '#8b93a1' : '#5d6370') : k.slot === -2 ? (dark() ? '#c7ccd4' : '#2b2f36') : (dark() ? '#6b717c' : '#a3a8b1');

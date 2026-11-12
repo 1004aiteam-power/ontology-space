@@ -2,12 +2,10 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 고속도로 × 전력망: 휴게소 전기차 충전 수요를 24시간 교통량에서 계산해 배전선로·변전소 부하로 보여 준다 (⚠ 가상 데이터)
 // 데이터: assets/data/ev.json (examples/ev/build_ev.py). simulate() 는 build_ev.py 의 simulate() 와 같은 식이다.
+import { $, esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (id) => document.getElementById(id);
   const NS = 'http://www.w3.org/2000/svg';
   const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.appendChild(e); return e; };
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const T = (ko, en) => (window.t ? window.t({ ko, en }) : ko);
   const L = (o, k = 'ko', e = 'en') => T(o[k], o[e]);
   const f1 = (v) => v.toFixed(1), f2 = (v) => v.toFixed(2);
 

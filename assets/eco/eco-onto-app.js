@@ -6,9 +6,8 @@ import { parse } from '../cypher/turtle.js?v=dd7711a6';
 import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
 import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
 import { Recorder, ECO_CYPHER } from './eco-graph.js?v=208ed727';
+import { $, esc } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const T = (o) => window.t(o);
 const lang = () => document.documentElement.lang;
 let G = null, tbox = null, rec = null, preset = 0, busy = false;

@@ -7,9 +7,8 @@ import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
 import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
 import { toQuads, SAFETY_CYPHER, SAFETY_SCHEMA, LINKED_FILES } from './safety-graph.js?v=ffc76238';
 import { SCENARIOS } from './safety.js?v=a96c9949';
+import { $, esc } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const T = (o) => window.t(o);
 const en = () => document.documentElement.lang === 'en';
 let G = null, preset = 0, scn = 'pole';

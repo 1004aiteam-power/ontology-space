@@ -2,12 +2,10 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 전력망 페이지: D/L #1 고장 복구(FLISR) 시뮬레이션 — 고장 구간을 누르면 트립 → 분리 → 상위 복구 → 하위 절체 → 수리를 재생 (⚠ 가상 데이터)
 // 복구 순서는 examples/feeder/build_feeder.py 의 flisr_plan() 이 계산해 assets/data/feeder.json 의 flisr 에 넣는다. 여기서는 재생만 한다.
+import { $, esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (id) => document.getElementById(id);
   const NS = 'http://www.w3.org/2000/svg';
   const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.appendChild(e); return e; };
-  const T = (ko, en) => (window.t ? window.t({ ko, en }) : ko);
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const FCOL = { DL1: 'var(--fd-1)', DL2: 'var(--fd-2)', DL3: 'var(--fd-3)', C11: 'var(--fd-4)' };
   const fmt = (n) => Math.round(n).toLocaleString();
 

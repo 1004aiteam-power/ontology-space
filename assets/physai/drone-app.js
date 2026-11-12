@@ -3,12 +3,8 @@
 // NEAT 드론 페이지: 150대가 한 하늘에서 동시에 진화하며 경유점 비행을 배우는 과정을 브라우저에서 실행·시각화
 import { Population } from './neat.js?v=a16de3e3';
 import { Trainer, WORLD, DRONE, stepDrone, sense, INPUT_LABELS, INPUT_LABELS_EN, OUTPUT_LABELS, OUTPUT_LABELS_EN } from './drone-sim.js?v=ca2f4ebe';
+import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const t = (o) => (window.t ? window.t(o) : o.ko);
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const dark = () => document.documentElement.dataset.theme === 'dark' ||
-  (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 // 차트·신경망 색: 자율주행·스네이크 페이지와 같은 팔레트
 const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 const SPECIES_COLORS = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767'];
@@ -26,17 +22,6 @@ const SPEEDS = [{ sps: 1 / WORLD.dt, label: '1×' }, { sps: 4 / WORLD.dt, label:
 const POP_SIZE = 150;
 
 // ---- 캔버스 공통 -------------------------------------------------------------------
-function fit(canvas, aspect) {
-  const dpr = window.devicePixelRatio || 1, cw = canvas.clientWidth;
-  const ch = aspect ? cw * aspect : canvas.clientHeight;
-  if (aspect) canvas.style.height = ch + 'px';
-  if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)) {
-    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
-  }
-  const ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { ctx, cw, ch };
-}
 
 // ---- 하늘 그리기 -------------------------------------------------------------------
 // 세계 좌표(m, y 위쪽 +) → 화면 좌표(px, y 아래쪽 +)

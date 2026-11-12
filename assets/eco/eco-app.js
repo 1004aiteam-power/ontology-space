@@ -2,12 +2,8 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 단세포 생태계 페이지: 배양 접시 · 개체수 그래프 · 형질 진화
 import { Ecosystem, WORLD } from './ecosim.js?v=61384595';
+import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const t = (o) => (window.t ? window.t(o) : o.ko);
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const dark = () => document.documentElement.dataset.theme === 'dark' ||
-  (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 // 계열 색 (dataviz 검증: 밝은·어두운 배경 모두 색각 이상 구분 통과, 먹이는 밝은 배경 대비가 낮아 직접 라벨 + 표 제공)
 const COL = { food: '#c98500', herb: '#199e70', carn: '#d95926' };
 const NAME = {
@@ -27,17 +23,6 @@ let effects = [];           // { x, y, kind, type, life }
 const hover = {};           // 차트별 마우스 위치
 
 // ---- 캔버스 공통 -------------------------------------------------------------------
-function fit(canvas, aspect) {
-  const dpr = window.devicePixelRatio || 1, cw = canvas.clientWidth;
-  const ch = aspect ? cw * aspect : canvas.clientHeight;
-  if (aspect) canvas.style.height = ch + 'px';
-  if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)) {
-    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
-  }
-  const ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { ctx, cw, ch };
-}
 
 // ---- 배양 접시 ---------------------------------------------------------------------
 function drawDish() {

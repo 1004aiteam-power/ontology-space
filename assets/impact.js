@@ -2,10 +2,8 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 설비 고장 영향 분석: 자산 → 기능 위치 → D/L #1 구간 → 지역·고객, 연계 개폐기 절체 후 위험도 다시 매기기 (⚠ 가상 데이터)
 // 데이터: assets/data/impact.json (examples/impact/build_impact.py)
+import { $, esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (id) => document.getElementById(id);
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const T = (ko, en) => (window.t ? window.t({ ko, en }) : ko);
   const FCOL = { DL2: 'var(--fd-2)', DL3: 'var(--fd-3)', C11: 'var(--fd-4)', DL1: 'var(--fd-1)' };
   const LV = { '높음': ['hi', 'High'], '중간': ['mid', 'Medium'], '낮음': ['lo', 'Low'] };
   const lvText = (l) => T(l, LV[l][1]);

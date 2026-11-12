@@ -2,12 +2,10 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 가상 전국 고속도로: 24시간 차량 흐름을 지도 위에 재생 (⚠ 가상 데이터)
 // 데이터: assets/data/highway.json (examples/highway/build_highway.py 가 수요 → 이용자 균형 배정으로 계산)
+import { $, esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (id) => document.getElementById(id);
   const NS = 'http://www.w3.org/2000/svg';
   const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.appendChild(e); return e; };
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const T = (ko, en) => (window.t ? window.t({ ko, en }) : ko);
   const lang = () => (document.documentElement.lang === 'en' ? 'en' : 'ko');
 
   let D, tod = 8, playing = false, speed = 1, last = 0, scen = 'BASE', sel = null, od = 'SEOUL-BUSAN', proj;

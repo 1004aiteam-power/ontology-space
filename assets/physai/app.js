@@ -3,11 +3,8 @@
 // Physical AI 페이지: NEAT 자율주행 학습을 브라우저에서 실행·시각화
 import { Population, Genome } from './neat.js?v=a16de3e3';
 import { Trainer, Car, makeTrack, stepCar, maxStepsFor, testRun, RADAR, WORLD, CAR_SPEED } from './sim.js?v=e978db4e';   // ?v= 는 tools/build_nav.py 가 파일 내용으로 만듦
+import { $, css, dark } from '../lib/dom.js?v=3b73d59c';
 
-const $ = (id) => document.getElementById(id);
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const dark = () => document.documentElement.dataset.theme === 'dark' ||
-  (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 // 차트 색상: dataviz 기준 팔레트 (라이트/다크 각각 색각 이상 검증 통과)
 const SERIES = () => dark() ? ['#3987e5', '#d95926'] : ['#2a78d6', '#eb6834'];
 

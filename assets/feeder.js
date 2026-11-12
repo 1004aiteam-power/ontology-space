@@ -2,12 +2,10 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 전력망 페이지: D/L #1 배전선로 상세 — 개폐기를 눌러 가압 범위·공급 선로·부하율·루프를 다시 계산 (⚠ 가상 데이터)
 // 데이터: assets/data/feeder.json (examples/feeder/build_feeder.py 가 pycim 모델에서 생성)
+import { $, esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (id) => document.getElementById(id);
   const NS = 'http://www.w3.org/2000/svg';
   const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.appendChild(e); return e; };
-  const T = (ko, en) => (window.t ? window.t({ ko, en }) : ko);
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const FCOL = { DL1: 'var(--fd-1)', DL2: 'var(--fd-2)', DL3: 'var(--fd-3)', C11: 'var(--fd-4)' };
 
   let D, open = {}, sel = null, fault = null, scen = 'normal';
