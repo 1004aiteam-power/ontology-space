@@ -305,6 +305,47 @@ RETURN s.name AS substation, t.name AS transformer</code></pre>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">운동선수의 <b>영구결번</b>과 비슷합니다. 한 번 준 번호는 바꾸지 않고, 은퇴(철거)한 설비의 번호를 새 설비에 다시 주지 않습니다. 번호에 "154kV" 같은 뜻을 넣지 않는 이유는, 뜻이 바뀌면 번호도 바꿔야 하기 때문입니다. 다른 시스템이 쓰는 번호는 <b>별명 목록(매핑 테이블)</b>에 함께 적어 둡니다.</p><p lang="en">Think of a <b>retired jersey number</b>: an issued number never changes, and a removed device's number is never reused. We keep meaning (like "154 kV") out of the number because meaning can change. Numbers used by other systems go into an <b>alias list (mapping table)</b>.</p></div>
 </section>
 
+<section id="kids">
+  <h2><span lang="ko">아직도 도저히 이해가 안 된다면? 여기를 보세요</span><span lang="en">Still lost? Start here</span></h2>
+  <p class="sub" lang="ko">아이도 알 수 있는 이야기로 RDF · RDFS · OWL · SHACL의 역할을 다시 설명합니다. 주인공은 "철수네 강아지"입니다.</p>
+  <p class="sub" lang="en">The same four layers (RDF, RDFS, OWL, SHACL) retold so a child could follow. Our hero is "Chul-su's puppy".</p>
+
+  <h3><span lang="ko">1. RDF — 사실 한 줄 적기</span><span lang="en">1. RDF: write one fact</span></h3>
+  <p lang="ko">"누가 – 무엇을 – 무엇에게" 세 칸으로 사실을 적습니다.</p>
+  <p lang="en">A fact is written in three slots: who – does what – to whom.</p>
+  <pre><code>철수  키운다  뽀삐
+뽀삐  종류는  강아지</code></pre>
+
+  <h3><span lang="ko">2. RDFS — 분류표 만들기</span><span lang="en">2. RDFS: make a classification chart</span></h3>
+  <p lang="ko">"강아지는 동물의 한 종류", "키운다는 사람이 동물에게 하는 일"이라고 적어 두면, 컴퓨터는 <b>뽀삐가 동물</b>이라는 것도 압니다.</p>
+  <p lang="en">Write "a puppy is a kind of animal" and "keeping is something a person does to an animal", and the computer knows <b>Poppy is an animal</b> too.</p>
+
+  <h3><span lang="ko">3. OWL — 규칙으로 추리하기</span><span lang="en">3. OWL: reason with rules</span></h3>
+  <p lang="ko">"키운다의 반대말은 주인이다", "강아지와 고양이는 절대 같은 동물이 아니다" 같은 정교한 규칙을 적습니다. 그러면 적지 않은 사실도 스스로 찾아냅니다: <b>"뽀삐의 주인은 철수구나!"</b></p>
+  <p lang="en">Write finer rules such as "the opposite of keeps is is-owned-by" and "a dog is never a cat". The computer then finds facts nobody wrote down: <b>"Poppy's owner is Chul-su!"</b></p>
+
+  <h3><span lang="ko">4. SHACL — 숙제 검사하기</span><span lang="en">4. SHACL: check the homework</span></h3>
+  <p lang="ko">"강아지는 이름이 꼭 있어야 한다", "나이는 숫자여야 한다"처럼 데이터가 규칙을 지켰는지 검사합니다. 이름 없는 강아지를 넣으면 "빠졌어요!" 하고 알려 줍니다.</p>
+  <p lang="en">Checks that data follows the rules: "a puppy must have a name", "age must be a number". Add a nameless puppy and it says "something is missing!"</p>
+
+  <div class="tbl" lang="ko"><table>
+    <tr><th>이름</th><th>비유</th><th>하는 일</th></tr>
+    <tr><td><b>RDF</b></td><td>사실을 적는 공책</td><td>연결을 적는다</td></tr>
+    <tr><td><b>RDFS</b></td><td>분류표</td><td>종류와 상속을 정한다</td></tr>
+    <tr><td><b>OWL</b></td><td>추리하는 탐정</td><td>없는 정보를 <b>추리</b>한다</td></tr>
+    <tr><td><b>SHACL</b></td><td>숙제 검사 선생님</td><td>있는 정보가 맞는지 <b>검사</b>한다</td></tr>
+  </table></div>
+  <div class="tbl" lang="en"><table>
+    <tr><th>Name</th><th>Think of it as</th><th>Job</th></tr>
+    <tr><td><b>RDF</b></td><td>a notebook of facts</td><td>records connections</td></tr>
+    <tr><td><b>RDFS</b></td><td>a classification chart</td><td>defines kinds and inheritance</td></tr>
+    <tr><td><b>OWL</b></td><td>a detective</td><td><b>infers</b> missing information</td></tr>
+    <tr><td><b>SHACL</b></td><td>a homework-checking teacher</td><td><b>validates</b> the information you have</td></tr>
+  </table></div>
+
+  <div class="easy"><b>💡 <span lang="ko">한 줄로</span><span lang="en">In one line</span></b><p lang="ko">OWL은 <b>없는 정보를 추리</b>하고, SHACL은 <b>있는 정보가 맞는지 검사</b>합니다. 이 차이가 둘의 핵심입니다.</p><p lang="en">OWL <b>infers what is missing</b>; SHACL <b>checks what is there</b>. That difference is the heart of it.</p></div>
+</section>
+
 <section>
   <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
   <ul>
