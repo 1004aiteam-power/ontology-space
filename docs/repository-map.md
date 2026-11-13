@@ -44,6 +44,7 @@
 | [assets/eco/](../assets/eco/) | 단세포 생태계: 초식·육식 세포의 개체 기반 포식자–피식자 시뮬레이션, 피난처·계절·진화 (`ecosystem.html`, 만든 이의 또 다른 관심사) |
 | [assets/plife/](../assets/plife/) | 입자 생명(Particle Life): 종류별 끌림 · 밀침 표 하나로 움직이는 입자들이 무리를 짓고 돌고 쫓아다니는 창발 시뮬레이션. 규칙 표를 눌러 고치고, 시드로 같은 세계를 다시 만듦. "살아 있는 세계"는 에너지(빛 · 먹이사슬 가→나→다→가) · 번식 · 죽음 · 유전(입자마다 자기 규칙 줄, 나뉠 때 돌연변이)을 더해 규칙 표가 스스로 진화 (`particle-life.html`, 고정 규칙 `plife.js` · 살아 있는 세계 `plife-evo.js` · 화면 `plife-app.js`) |
 | [assets/quantum/](../assets/quantum/) | 양자 터널 효과: 1차원 시간 의존 슈뢰딩거 방정식을 분할 단계 푸리에법(FFT)으로 풀어 전자 파동 묶음이 네모난 벽을 지나가는 모습. 단위 nm · eV · fs, 투과 확률을 이론값(평면파 공식의 파동 묶음 평균)과 비교 (`tunneling.html`, 계산 `tunnel.js` · 화면 `tunnel-app.js`) |
+| [assets/nbody/](../assets/nbody/) | 별과 행성의 탄생: 회전하는 먼지 구름이 별과 행성이 되는 2차원 N체 시뮬레이션. 단위 AU · 태양 질량 · 년(G = 4π²), 립프로그 적분 · 충돌 병합(질량 · 운동량 보존) · 가스 항력 · 얼음선 · 가스 거인 성장 · 쌍성 (`star-formation.html`, 계산 `nbody.js` · 화면 `nbody-app.js`) |
 | [assets/traffic/](../assets/traffic/) | 교차로 신호: 위에서 본 4갈래 교차로, IDM 차량·좌회전 전용 신호·보행 신호, 고정 주기 vs 감응식 (`intersection.html`) |
 | [assets/cypher/](../assets/cypher/) | 브라우저 Cypher 실습: RDF(Turtle)를 Neo4j식 속성 그래프로 불러오기(클래스 → 라벨, 값 → 속성, 개체 연결 → 관계, neosemantics 방식)와 읽기 전용 Cypher 엔진(MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, 가변 길이 경로, 집계, EXISTS), 실습 예제 질의, 전기차·고장 영향 페이지의 역량 질문 (`lab.html`) |
 | [assets/safety/](../assets/safety/) | 배전공사 안전 훈련 (`safety.js` 가 `core.js` 공통 · `scn-pole.js` · `scn-manhole.js` · `scn-transformer.js` · `scn-tower.js` 시나리오를 묶음): 가상 현장 네 곳(가공 전주 애자·완금 교체 정전 작업 · 주상변압기 교체(COS 개방, 본선 활선) · 지중 맨홀 밀폐공간 작업 · 송전 철탑 승탑)에서 작업자 5명이 "생명을 지키는 안전수칙 11"에 따라 TBM부터 철수까지 안전조치를 단계별로 진행, 순서 맞히기 훈련 모드(강사용 시작 단계 선택, 결과 인쇄·PDF, 브라우저 기록), 매 틱 안전 규칙 확인, 2D 캔버스 원근(pseudo-3D) 화면 (`safety.html`, ⚠ 교육용 가상 현장) |
@@ -53,7 +54,7 @@
 | [examples/safety/](../examples/safety/) | 배전공사 안전 온톨로지: 안전 훈련 시뮬레이션(`assets/safety/safety.js`)의 현장 · 작업 단계 · 안전수칙 11 · 역할 · 훈련 오답 + 위험요인 → 스키마 `safety-schema.ttl` + 개체 `safety-steps.ttl` (`build_safety.mjs`, 브라우저와 같은 코드 `assets/safety/safety-graph.js`). 작업 단계 ⊑ 업무 온톨로지 `aipd:Task`(선행 · 리스크 · 생애주기), 작업 대상 설비 → 자산관리 자산 · 정비 흐름, 정전 작업 구간 → 배전선로 D/L #1 구간 · 개폐기 (`safety-ontology.html`, ⚠ 교육용 가상 현장) |
 | [examples/twin/](../examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
 | [examples/feeder/](../examples/feeder/) | A변전소 D/L #1 배전선로 상세: 구간 개폐기 6 · 연계 개폐기 4 · 분기점 3, pycim 모델 → CIM RDF · 웹 그림 데이터 · 모든 구간의 고장 복구(FLISR) 계획 (⚠ 가상 데이터) |
-| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `neat-drone.html` · `safety.html` · `ecosystem.html` · `particle-life.html` · `tunneling.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `aas.html` · `highway.html` · `ev.html` · `impact.html` · `safety-ontology.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 · 자산관리셸(AAS) 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 배전공사 안전 · 단세포 생태계), 한·영 전환) |
+| `index.html` · `grid.html` · `project.html` · `lab.html` · `physical-ai.html` · `neat-snake.html` · `neat-drone.html` · `safety.html` · `ecosystem.html` · `particle-life.html` · `tunneling.html` · `star-formation.html` · `intersection.html` · `airport.html` · `flights.html` · `twin.html` · `studio.html` · `work.html` · `work-graph.html` · `asset.html` · `aas.html` · `highway.html` · `ev.html` · `impact.html` · `safety-ontology.html` · `eco-ontology.html` · `ontology-map.html` · `assets/` | GitHub Pages 웹사이트 (소개 / 전력망(배전선로 고장 복구 시뮬레이션 · 자산관리셸(AAS) 포함) / 프로젝트 / 실습 / 피지컬 AI(NEAT 자율주행 · NEAT 스네이크) / 시뮬레이션(배전공사 안전 훈련 · 단세포 생태계 · 교차로 신호 · 공항 이착륙 · 세계 항공 교통) / 디지털 트윈 / 온톨로지 설계실(업무 · 전력설비 자산관리 · 고속도로·국도 교통 · 전기차 충전 · 설비 고장 영향 분석 · 배전공사 안전 · 단세포 생태계), 한·영 전환) |
 
 ## 실행 명령 모음
 
@@ -122,6 +123,7 @@ node tests/physai.test.mjs           # Physical AI 시뮬레이션 테스트
 node tests/ecosim.test.mjs           # 단세포 생태계 시뮬레이션 테스트
 node tests/plife.test.mjs            # 입자 생명 시뮬레이션 테스트
 node tests/tunnel.test.mjs           # 양자 터널 효과: 확률 보존 · 이론값과 3% 이내
+node tests/nbody.test.mjs            # 별과 행성의 탄생: 질량 · 각운동량 보존 · 별 점화 · 회전 0이면 행성 없음 · 얼음선 효과
 ```
 
 ```bash

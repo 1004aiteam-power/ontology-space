@@ -1,0 +1,22 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space) */
+/* star-formation.html 에만 쓰는 모양: 원반 화면, 숫자, 반장축 그림, 기록 */
+.nb-wrap{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);align-items:start}
+@media (min-width:1000px){ .nb-wrap{grid-template-columns:minmax(0,1fr) 300px} }
+#nbView{width:100%;display:block;border-radius:12px;border:1px solid var(--line);background:#080b17}
+#nbStats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;align-content:start}
+#nbStats div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+#nbStats span{display:block;font-size:12px;color:var(--muted)}
+#nbStats b{font-variant-numeric:tabular-nums;font-size:18px}
+#nbStats small{display:block;font-size:11.5px;color:var(--muted)}
+#nbPresets{display:flex;flex-wrap:wrap;gap:6px}
+#nbPresets button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.nb-chart{width:100%;display:block}
+.nb-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.nb-legend i.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+#nbLog{list-style:none;margin:8px 0 0;padding:0;font-size:13px;display:grid;gap:4px;max-height:170px;overflow:auto}
+#nbLog li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+#nbLog li[data-type="ignite"]{border-color:#e0a94a}
+#nbLog:empty::after{content:"–";color:var(--muted)}
+.nb-group{margin:8px 0 2px;font-size:13px;font-weight:700;color:var(--muted)}
+.ctrl select{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:4px 8px}

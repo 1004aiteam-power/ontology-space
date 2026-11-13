@@ -69,6 +69,7 @@ NAV = [
         ("ecosystem.html", "단세포 생태계", "Cell Ecosystem", "초식·육식 세포의 포식자–피식자 개체수 주기 · 진화", "Predator–prey population cycles · evolution"),
         ("particle-life.html", "입자 생명", "Particle Life", "끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계", "Groups from one attraction table · a world where it evolves"),
         ("tunneling.html", "양자 터널 효과", "Quantum Tunnelling", "에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식", "An electron through a wall · the Schrödinger equation"),
+        ("star-formation.html", "별과 행성의 탄생", "Birth of Stars and Planets", "회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기", "A spinning dust cloud becomes a star and planets · frost line · change the conditions"),
     ]),
     ("menu", "studioMenu", "온톨로지 설계실", "Design Studio", [
         ("h", "설계실", "Studio"),
@@ -108,7 +109,7 @@ BOOT = ("<script>(function(){var r=document.documentElement,l=null,s=null;"
 
 SITE = "https://1004aiteam-power.github.io/ontology-space/"
 # 공유 미리보기 이미지: 시뮬레이션 썸네일(tools/thumbs.cjs)이 있는 페이지는 그것, 나머지는 소개 페이지 화면
-OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem", "particle-life", "tunneling")}
+OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem", "particle-life", "tunneling", "star-formation")}
 OG_IMAGE.update({"neat-drone.html": "assets/thumbs/drone.jpg", "neat-snake.html": "assets/thumbs/neat-snake.jpg", "twin.html": "assets/thumbs/twin.jpg"})
 OG_DEFAULT = "assets/og/site.jpg"
 NOINDEX = {"404.html"}   # 검색 대상이 아닌 페이지: canonical · sitemap 에서 빼고 noindex 를 붙임
