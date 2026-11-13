@@ -65,7 +65,7 @@ NAV = [
         ("intersection.html", "교차로 신호", "Intersection", "위에서 본 교차로 · 차량·좌회전·보행 신호", "Top-down junction · through, left &amp; walk signals"),
         ("airport.html", "공항 이착륙", "Airport Runways", "평행 활주로 2개 · 도착·출발 안내판 · 입체 시점", "Two parallel runways · arrival &amp; departure boards · 3D-style view"),
         ("flights.html", "세계 항공 교통", "World Air Traffic", "세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤", "Domestic &amp; international flights on a world map · great circles · day and night"),
-        ("hr",), ("h", "자연", "Nature"),
+        ("col",), ("h", "자연", "Nature"),
         ("ecosystem.html", "단세포 생태계", "Cell Ecosystem", "초식·육식 세포의 포식자–피식자 개체수 주기 · 진화", "Predator–prey population cycles · evolution"),
         ("particle-life.html", "입자 생명", "Particle Life", "끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계", "Groups from one attraction table · a world where it evolves"),
         ("tunneling.html", "양자 터널 효과", "Quantum Tunnelling", "에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식", "An electron through a wall · the Schrödinger equation"),
