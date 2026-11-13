@@ -2,7 +2,7 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전공사 안전 시뮬레이션 테스트 — 실행: node tests/safety.test.mjs
 import assert from 'node:assert/strict';
-import { SafetySim, SCENARIOS, RULES, quizOptions, gasOK, boomFK, boomIK, STOW } from '../assets/safety/safety.js';
+import { SafetySim, SCENARIOS, RULES, quizOptions, gasOK, boomFK, boomIK, STOW, WIRE, targetSag } from '../assets/safety/safety.js';
 
 // 단계를 차례로 돌림 (skip: 건너뛸 단계 id)
 function run(scenario, skip = []) {
@@ -35,6 +35,13 @@ for (const sc of Object.keys(SCENARIOS)) {
     assert.deepEqual([s.w.cos.closed, s.w.cos.tag, s.w.txGround, s.w.txEarth, s.w.hvCover], [true, false, false, false, 0], 'cut-out closed, earth and covers removed');
     assert.deepEqual([s.w.txOld.state, s.w.load.state], ['aside', 'pole'], 'old transformer down, new one mounted');
     assert.equal(s.w.truck.present, false, 'truck left');
+  } else if (sc === 'wire') {
+    const w = s.w;
+    assert.deepEqual([w.wr.pulley, w.wr.drum, w.wr.winch, w.wr.oldTied, w.wr.newTied, w.wr.jumper, w.wr.locked, w.wr.pull, w.wr.linked], [[false, false], false, false, false, true, true, true, 1, true], 'new wire tied in and jumpered, blocks drum and winch removed');
+    assert.ok(Math.abs(w.wr.sag - w.wr.target) <= w.wr.tol, `sag ${w.wr.sag.toFixed(3)} within ${w.wr.tol} of the target ${w.wr.target.toFixed(3)}`);
+    assert.deepEqual([w.wg, w.tested.gnd], [[false, false], true], 'span earths removed');
+    assert.deepEqual([w.truck.present, w.truck2.present], [false, false], 'both trucks left');
+    assert.ok(Object.values(w.people).every(p => !p.inBucket && p.ppe.helmet), 'nobody left in a bucket, everyone in PPE');
   } else if (sc === 'tower') {
     assert.deepEqual([s.w.people.B.z, s.w.arrester, s.w.lanyard, s.w.bag.state], [0, false, false, 'ground'], 'climber down, unclipped on the ground, bag down');
   } else {
@@ -71,7 +78,28 @@ caught('tx', ['txearth'], 8);      // 검전·접지 없이 변압기에 손
 caught('tx', ['hvcover'], 8);      // 충전부 방호 없이 변압기에 손
 caught('tower', ['lifeline'], 11); // 점검하지 않은 추락방지 와이어로 승탑
 caught('tower', ['tieoff'], 7);    // 작업 위치에서 랜야드 없이 작업
-console.log('✓ skipping chocks, outriggers, earthing, testing, covers, tripod, zone, cut-out, wire check or tie-off is caught');
+caught('wire', ['chocks'], 2);     // 두 작업차 모두 고임목
+caught('wire', ['outrig'], 2);
+caught('wire', ['earth'], 8);      // 원방 접지 없이 양단 접지 · 작업
+caught('wire', ['wground'], 8);    // 양단 검전 · 접지 없이 전선에 손
+caught('wire', ['pulley'], 3);     // 활차 없이 전선을 풀고 견인
+caught('wire', ['link'], 3);       // 연결 · 윈치 · 드럼 없이 견인
+caught('wire', ['sag'], 11);       // 이도를 맞추지 않고 결속
+caught('wire', ['remove'], 8);     // 활차 · 드럼 · 윈치를 둔 채 송전
+console.log('✓ skipping chocks, outriggers, earthing, testing, covers, tripod, zone, cut-out, wire check, tie-off, blocks, joint, sag or rigging removal is caught');
+
+// 3b) 전선 교체: 이도 계산
+{
+  assert.ok(Math.abs(targetSag(15) - 0.5) < 1e-12, 'reference sag at 15 °C');
+  assert.ok(targetSag(35) > targetSag(15) && targetSag(15) > targetSag(-5), 'warmer → more sag');
+  const per = (targetSag(25) - targetSag(15)) / 10;
+  assert.ok(per > 0.005 && per < 0.012, `about 9 mm per °C for a 35 m span (${(per * 1000).toFixed(1)} mm)`);
+  assert.ok(targetSag(15, 70) > targetSag(15, 35) - 1e-12, 'a longer span sags at least as much per degree');
+  const L = (D, S) => S + 8 * D * D / (3 * S);                           // 길이 = 경간 + 8D²/3S
+  const dL = L(targetSag(30), 35) - L(targetSag(0), 35);
+  assert.ok(Math.abs(dL / L(0.5, 35) / 30 - 19e-6) < 4e-6, 'sag change matches thermal expansion 19e-6 /°C');
+  console.log('✓ wire: sag target follows temperature and the thermal-expansion relation');
+}
 
 // 4) 맨홀: 처음 공기는 부적정, 환기 뒤 적정
 {

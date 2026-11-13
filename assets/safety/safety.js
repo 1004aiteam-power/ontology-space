@@ -11,19 +11,22 @@
 
 // 파일 구성: core.js (공통) · scn-pole.js · scn-manhole.js · scn-transformer.js · scn-tower.js (시나리오) · 이 파일 (시나리오 목록 · 시뮬레이터 · 훈련 보기)
 
-import { GEO, bucketPos, hookXY, L, dist2, inPoly, act } from './core.js?v=a3a7c3c2';
-import { poleWorld, person, poleSteps } from './scn-pole.js?v=9f79de89';
-import { gasOK, GAS_GOOD, manholeWorld, manholeSteps } from './scn-manhole.js?v=087db54d';
-import { TX, txWorld, txSteps } from './scn-transformer.js?v=a45545bf';
-import { TW, towerLeg, PULLEY, towerWorld, towerSteps } from './scn-tower.js?v=f2381739';
-export * from './core.js?v=a3a7c3c2';
-export { GAS_LIMIT, gasOK } from './scn-manhole.js?v=087db54d';
-export { TX } from './scn-transformer.js?v=a45545bf';
-export { TW, towerLeg, PULLEY } from './scn-tower.js?v=f2381739';
+import { GEO, bucketPos, hookXY, L, dist2, inPoly, act } from './core.js?v=96dbb605';
+import { poleWorld, person, poleSteps } from './scn-pole.js?v=36fdb56d';
+import { gasOK, GAS_GOOD, manholeWorld, manholeSteps } from './scn-manhole.js?v=68cafd92';
+import { TX, txWorld, txSteps } from './scn-transformer.js?v=164c2460';
+import { TW, towerLeg, PULLEY, towerWorld, towerSteps } from './scn-tower.js?v=eb17081f';
+import { WIRE, targetSag, wireZ, wireWorld, wireSteps } from './scn-wire.js?v=b7d1748a';
+export * from './core.js?v=96dbb605';
+export { GAS_LIMIT, gasOK } from './scn-manhole.js?v=68cafd92';
+export { TX } from './scn-transformer.js?v=164c2460';
+export { TW, towerLeg, PULLEY } from './scn-tower.js?v=eb17081f';
+export { WIRE, targetSag, wireZ } from './scn-wire.js?v=b7d1748a';
 
 export const SCENARIOS = {
   pole: { scene: 'pole', title: L('가공 배전 애자·완금 교체 (정전 작업)', 'Overhead line: replace insulators & crossarm (de-energised)'), world: poleWorld, steps: poleSteps },
   tx: { scene: 'pole', title: L('배전 변압기 교체 (COS 개방, 본선 활선)', 'Distribution: replace a pole transformer (cut-out open, main line live)'), world: txWorld, steps: txSteps },
+  wire: { scene: 'pole', title: L('가공 배전 전선 교체 · 한 경간 (정전 작업)', 'Overhead line: replace the wire in one span (de-energised)'), world: wireWorld, steps: wireSteps },
   manhole: { scene: 'manhole', title: L('지중 배전 맨홀 작업 (밀폐공간)', 'Underground: manhole work (confined space)'), world: manholeWorld, steps: manholeSteps },
   tower: { scene: 'tower', title: L('송전 철탑 승탑 (추락방지)', 'Transmission: climbing a tower (fall arrest)'), world: towerWorld, steps: towerSteps }
 };
@@ -82,7 +85,7 @@ export class SafetySim {
       }
     }
     for (const p of Object.values(W.people)) if (!p._busy) { p.anim = 'idle'; p.stick = null; }
-    if (W.people.B.inBucket) { const T = bucketPos(W.truck); Object.assign(W.people.B, { x: T[0], y: T[1], z: T[2] }); }
+    for (const p of Object.values(W.people)) if (p.inBucket) { const T = bucketPos(p.rig === 2 ? W.truck2 : W.truck); Object.assign(p, { x: T[0], y: T[1], z: T[2] }); }
     for (const p of Object.values(W.people)) p._busy = false;
     this.movePeds(dt);
     this.check();
@@ -130,7 +133,8 @@ export class SafetySim {
       const last = this.violations[this.violations.length - 1];
       if (!last || last.msg !== msg || this.t - last.t > 1) this.violations.push({ t: this.t, rule, msg, step: this.step?.id });
     };
-    if (this.scene === 'pole') {
+    if (this.scenario === 'wire') this.checkWire(v);
+    else if (this.scene === 'pole') {
       const tr = W.truck, T = bucketPos(tr), up = T[2] > 4.2;
       if (up && !(tr.chocks.every(Boolean) && tr.outrig >= 1)) v(2, 'boom up without 4 chocks and full outriggers');
       if (up && !(W.people.B.inBucket && W.people.B.hooked)) v(7, 'boom up without hooked worker');
@@ -179,9 +183,41 @@ export class SafetySim {
       if (k) for (const key of ['o2', 'h2s', 'co']) g[key] += (GAS_GOOD[key] - g[key]) * k;
     }
     for (const q of this.peds) {
-      const inside = this.scene === 'tower' ? Math.hypot(q.x - TW.x, q.y - TW.y) < 9 : inPoly([q.x, q.y], this.scene === 'pole' ? G.zone : G.mhZone);
+      const inside = this.scene === 'tower' ? Math.hypot(q.x - TW.x, q.y - TW.y) < 9 : inPoly([q.x, q.y], this.scene === 'pole' ? (W.zone || G.zone) : G.mhZone);
       if (inside) v(5, 'pedestrian inside work zone');
     }
+  }
+  // 전선 교체 (한 경간): 작업차 두 대 · 양단 접지 · 견인 · 이도
+  checkWire(v) {
+    const W = this.w, G = GEO, wr = W.wr;
+    let aloft = false;
+    for (const [tr, who, px] of [[W.truck, 'B', WIRE.x0], [W.truck2, 'F', WIRE.x1]]) {
+      if (!tr.present) continue;
+      const P = W.people[who], T = bucketPos(tr), up = T[2] > 4.2;
+      if (up) aloft = true;
+      if (up && !(tr.chocks.every(Boolean) && tr.outrig >= 1)) v(2, 'boom up without 4 chocks and full outriggers');
+      if (up && !(P.inBucket && P.hooked)) v(7, 'boom up without hooked worker');
+      if (tr.moving && P.inBucket) v(7, 'truck moving with a person in the bucket');
+      if (tr.moving && tr.outrig > 0) v(4, 'truck moving with outriggers out');
+      if (tr.moving === -1 && dist2([W.people.E.x, W.people.E.y], G.guideSpot) > 0.5) v(5, 'reversing without the guide in position');
+      if (tr.moving && Object.values(W.people).some(p => !p.inCab && !p.inBucket && Math.abs(p.y - tr.y) < 1.7 && Math.abs(p.x - tr.c) < G.truckLen / 2 + 0.6)) v(5, 'person in the path of the moving truck');
+      if (P.inBucket) {                                                      // 손이 고압선 1.2 m 이내 → 그 전주의 검전 · 접지가 끝나 있어야 함
+        const hand = [T[0] + Math.cos(tr.boom.slew) * 0.5, T[1] + Math.sin(tr.boom.slew) * 0.5, T[2] + 1.2];
+        const nearHV = G.phaseY.some(y => Math.hypot(hand[1] - y, hand[2] - G.armZ) < 1.2 && Math.abs(hand[0] - px) < 3);
+        const i = px === WIRE.x0 ? 0 : 1;
+        if (nearHV && !(W.tested.gnd && (i ? W.tested.w1 : W.tested.w0) && W.wg[i] && !W.sw.closed)) v(8, 'hands near HV before test & earth');
+      }
+    }
+    if (W.ground.line > 0 && !(W.ground.earth && W.tested.gnd && !W.sw.closed)) v(8, 'earth clamp without earth end / test / open switch');
+    if (W.sw.closed && (W.ground.line > 0 || W.wg[0] || W.wg[1] || aloft)) v(8, 'line energised with earth on or worker aloft');
+    if (W.sw.closed && (wr.pulley[0] || wr.pulley[1] || wr.drum || wr.winch)) v(8, 'line energised with rigging still on it');
+    if (!wr.oldTied && !(wr.pulley[0] && wr.pulley[1] && W.wg[0] && W.wg[1]) && !wr.newTied) v(3, 'wire released before blocks and both earths');
+    if (wr.pulling) {
+      if (!(wr.pulley[0] && wr.pulley[1] && wr.linked && wr.drum && wr.winch)) v(3, 'pulling before blocks, joint, drum and winch are ready');
+      for (const [k, p] of Object.entries(W.people)) if (!p.inBucket && !p.inCab && p.x > 1 && p.x < 34 && Math.abs(p.y - G.poleY) < 3.2) v(6, `person ${k} under the wire being pulled`);
+    }
+    if (wr.newTied && !wr.locked) v(11, 'tied in before the sag was set');
+    if (wr.locked && Math.abs(wr.sag - wr.target) > wr.tol + 1e-9) v(11, 'sag out of tolerance when locked');
   }
   // 변압기 교체: 본선·COS 전원측은 살아 있음
   checkTx(v, T, up) {

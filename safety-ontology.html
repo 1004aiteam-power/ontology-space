@@ -31,7 +31,7 @@
 <link rel="stylesheet" href="assets/css/safety-ontology.css?v=eb33601e">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
-<script type="module" src="assets/safety/safety-onto-app.js?v=4ee0666c"></script>
+<script type="module" src="assets/safety/safety-onto-app.js?v=f592c719"></script>
 </head>
 <body>
 <a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
@@ -79,7 +79,7 @@
     <div class="menu cols" id="simMenu" hidden>
       <div class="menu-col">
       <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
-      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, transformer, manhole & tower sites · printable training record</small></a>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
       <hr>
       <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
       <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
@@ -133,8 +133,8 @@
   <h1><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution work safety ontology</span></h1>
   <p class="thesis" lang="ko">시뮬레이션은 안전조치를 <b>어떤 순서로</b> 하는지 보여 줍니다.<br>온톨로지는 그 단계가 <b>어떤 업무</b>이고, <b>어떤 설비</b>를 다루며, <b>어느 선로</b>를 끊는지 잇습니다.</p>
   <p class="thesis" lang="en">The simulation shows <b>in what order</b> the safety steps go.<br>The ontology ties each step to <b>a task</b>, <b>an asset</b> and <b>the line section</b> it cuts.</p>
-  <p class="lead" lang="ko"><a href="safety.html">배전공사 안전 훈련 시뮬레이션</a>의 현장 네 곳, 작업 단계, "생명을 지키는 안전수칙 11", 작업자 역할, 훈련 오답을 시뮬레이션 코드에서 그대로 읽어 온톨로지로 옮겼습니다. 그리고 세 갈래로 다른 온톨로지와 이었습니다: 작업 단계는 <a href="work.html">업무 온톨로지</a>의 단위업무, 작업 대상 설비는 <a href="asset.html">전력설비 자산관리</a>의 자산, 정전 작업 구간은 <a href="grid.html#feeder">배전선로 D/L #1</a>의 구간과 개폐기입니다.</p>
-  <p class="lead" lang="en">The four sites, work steps, "Golden Rules 11", crew roles and training wrong answers of the <a href="safety.html">distribution work safety simulation</a> are read straight from the simulation code and turned into an ontology, then joined to three others: work steps are tasks of the <a href="work.html">work ontology</a>, target equipment is an asset in <a href="asset.html">power asset management</a>, and the outage section is a section and switch of <a href="grid.html#feeder">feeder D/L #1</a>.</p>
+  <p class="lead" lang="ko"><a href="safety.html">배전공사 안전 훈련 시뮬레이션</a>의 현장 다섯 곳, 작업 단계, "생명을 지키는 안전수칙 11", 작업자 역할, 훈련 오답을 시뮬레이션 코드에서 그대로 읽어 온톨로지로 옮겼습니다. 그리고 세 갈래로 다른 온톨로지와 이었습니다: 작업 단계는 <a href="work.html">업무 온톨로지</a>의 단위업무, 작업 대상 설비는 <a href="asset.html">전력설비 자산관리</a>의 자산, 정전 작업 구간은 <a href="grid.html#feeder">배전선로 D/L #1</a>의 구간과 개폐기입니다.</p>
+  <p class="lead" lang="en">The five sites, work steps, "Golden Rules 11", crew roles and training wrong answers of the <a href="safety.html">distribution work safety simulation</a> are read straight from the simulation code and turned into an ontology, then joined to three others: work steps are tasks of the <a href="work.html">work ontology</a>, target equipment is an asset in <a href="asset.html">power asset management</a>, and the outage section is a section and switch of <a href="grid.html#feeder">feeder D/L #1</a>.</p>
   <div class="notice"><b>⚠ <span lang="ko">교육용 가상 현장입니다</span><span lang="en">A virtual site for training</span></b>
     <p lang="ko">현장 · 설비 · 선로 구간 · 고객은 모두 가상 데이터입니다. 위험요인과 정비 흐름 대응은 이 사이트가 정한 교육용 분류이며, 실제 작업은 소속 기관의 작업기준·안전수칙을 따르세요.</p>
     <p lang="en">Sites, equipment, line sections and customers are all virtual. The hazard and workflow mappings are a teaching classification made for this site; real work follows your organisation's own standards and safety rules.</p></div>
@@ -214,7 +214,7 @@ sf:AS_PL_0601 pam:installedAt ex:_756664b6-… .</code></pre></div>
   <p lang="en">What already exists in the simulation code (<code>assets/safety/safety.js</code>) is carried over as is; only what is missing (hazards, equipment, line sections) is added. Change a step or rule in the simulation and just re-run <code>build_safety.mjs</code>.</p>
   <div class="tbl"><table>
     <tr><th><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></th><th><span lang="ko">코드</span><span lang="en">Code</span></th><th><span lang="ko">온톨로지</span><span lang="en">Ontology</span></th></tr>
-    <tr><td><span lang="ko">현장 네 곳</span><span lang="en">Four sites</span></td><td><code>SCENARIOS</code></td><td><code>sf:WorkScenario</code></td></tr>
+    <tr><td><span lang="ko">현장 다섯 곳</span><span lang="en">Five sites</span></td><td><code>SCENARIOS</code></td><td><code>sf:WorkScenario</code></td></tr>
     <tr><td><span lang="ko">안전조치 단계 (TBM → 철수)</span><span lang="en">Safety steps (TBM → tear-down)</span></td><td><code>steps()</code>, <code>id</code>, <code>title</code>, <code>what</code>, <code>why</code></td><td><code>sf:WorkStep</code> ⊑ <code>aipd:Task</code>, <code>aipd:precedes</code>, <code>sf:instruction</code>, <code>sf:reason</code></td></tr>
     <tr><td><span lang="ko">생명을 지키는 안전수칙 11</span><span lang="en">Golden Rules 11</span></td><td><code>RULES</code>, <code>step.rules</code></td><td><code>sf:SafetyRule</code>, <code>sf:appliesRule</code></td></tr>
     <tr><td><span lang="ko">작업자 5명의 역할</span><span lang="en">Five crew roles</span></td><td><code>ROLES</code>, <span lang="ko">할 일의 담당자(<code>w</code>)</span><span lang="en">task owner (<code>w</code>)</span></td><td><code>sf:CrewRole</code> ⊑ <code>aipd:Role</code>, <code>sf:involves</code></td></tr>

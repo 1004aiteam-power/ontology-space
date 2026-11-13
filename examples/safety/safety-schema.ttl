@@ -40,6 +40,7 @@ sf:UnsafeChoice a owl:Class ; rdfs:label "잘못된 선택"@ko, "Unsafe choice"@
     rdfs:comment "순서 맞히기 훈련의 오답: 현장에서 흔히 하는 잘못과 그것이 어기는 수칙."@ko .
 sf:PoleAsset a owl:Class ; rdfs:subClassOf pam:Asset ; rdfs:label "전주 자산"@ko, "Pole asset"@en .
 sf:TowerAsset a owl:Class ; rdfs:subClassOf pam:Asset ; rdfs:label "송전 철탑 자산"@ko, "Tower asset"@en .
+sf:WireAsset a owl:Class ; rdfs:subClassOf pam:ConductorAsset ; rdfs:label "가공 전선 자산"@ko, "Overhead conductor asset"@en .
 sf:CableAsset a owl:Class ; rdfs:subClassOf pam:ConductorAsset ; rdfs:label "지중 케이블 자산"@ko, "Underground cable asset"@en .
 sf:WorkStep owl:disjointWith sf:SafetyRule, sf:Hazard, sf:CrewRole, sf:UnsafeChoice .
 

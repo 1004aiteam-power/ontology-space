@@ -5,8 +5,8 @@
 import { parse } from '../cypher/turtle.js?v=dd7711a6';
 import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
 import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
-import { toQuads, SAFETY_CYPHER, SAFETY_SCHEMA, LINKED_FILES } from './safety-graph.js?v=9d01fe05';
-import { SCENARIOS } from './safety.js?v=e1c9ea17';
+import { toQuads, SAFETY_CYPHER, SAFETY_SCHEMA, LINKED_FILES } from './safety-graph.js?v=aea79ac0';
+import { SCENARIOS } from './safety.js?v=c575fd35';
 import { $, esc } from '../lib/dom.js?v=3b73d59c';
 
 const T = (o) => window.t(o);

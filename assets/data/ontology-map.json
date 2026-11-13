@@ -140,12 +140,12 @@
     "examples/safety/safety-schema.ttl",
     "examples/safety/safety-steps.ttl"
    ],
-   "triples": 1798,
-   "classes": 9,
+   "triples": 2478,
+   "classes": 10,
    "objectProps": 16,
    "dataProps": 8,
-   "individuals": 174,
-   "classesUsed": 12
+   "individuals": 235,
+   "classesUsed": 13
   },
   {
    "id": "vpp",
@@ -217,19 +217,19 @@
   {
    "from": "safety",
    "to": "work",
-   "n": 197,
+   "n": 287,
    "via": [
     {
      "p": "inStage",
-     "n": 86
+     "n": 124
     },
     {
      "p": "hasRisk",
-     "n": 68
+     "n": 102
     },
     {
      "p": "precedes",
-     "n": 39
+     "n": 57
     },
     {
      "p": "subClassOf",
@@ -244,11 +244,11 @@
   {
    "from": "safety",
    "to": "asset",
-   "n": 74,
+   "n": 97,
    "via": [
     {
      "p": "inWorkflow",
-     "n": 43
+     "n": 62
     },
     {
      "p": "range",
@@ -260,19 +260,19 @@
     },
     {
      "p": "code",
-     "n": 4
+     "n": 5
     },
     {
      "p": "installedAt",
-     "n": 4
+     "n": 5
     },
     {
      "p": "maintenanceTask",
-     "n": 4
+     "n": 5
     },
     {
      "p": "subClassOf",
-     "n": 3
+     "n": 4
     },
     {
      "p": "hasComponent",
@@ -372,6 +372,33 @@
    ]
   },
   {
+   "from": "safety",
+   "to": "feeder",
+   "n": 12,
+   "via": [
+    {
+     "p": "installedAt",
+     "n": 4
+    },
+    {
+     "p": "workSection",
+     "n": 4
+    },
+    {
+     "p": "isolatedBy",
+     "n": 2
+    },
+    {
+     "p": "liveNearby",
+     "n": 1
+    },
+    {
+     "p": "interruptsLoad",
+     "n": 1
+    }
+   ]
+  },
+  {
    "from": "asset",
    "to": "substation",
    "n": 9,
@@ -383,33 +410,6 @@
     {
      "p": "installedAt",
      "n": 4
-    }
-   ]
-  },
-  {
-   "from": "safety",
-   "to": "feeder",
-   "n": 9,
-   "via": [
-    {
-     "p": "installedAt",
-     "n": 3
-    },
-    {
-     "p": "workSection",
-     "n": 3
-    },
-    {
-     "p": "isolatedBy",
-     "n": 1
-    },
-    {
-     "p": "liveNearby",
-     "n": 1
-    },
-    {
-     "p": "interruptsLoad",
-     "n": 1
     }
    ]
   },

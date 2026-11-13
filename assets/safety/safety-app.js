@@ -3,7 +3,7 @@
 // 배전 공사현장 안전 시뮬레이션 화면: 2D 캔버스 원근(pseudo-3D) 현장, 단계 목록·설명, 훈련(순서 맞히기) 모드
 //
 // 입체감: 비스듬히 내려다보는 원근 투영 · 면마다 햇빛 방향으로 명암 · 땅 위 그림자 · 먼 것부터 그리기 · 멀수록 대기색
-import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT, TX, TW, towerLeg, PULLEY } from './safety.js?v=e1c9ea17';
+import { SafetySim, SCENARIOS, ROLES, RULES, GEO, boomFK, bucketPos, hookXY, quizOptions, gasOK, GAS_LIMIT, TX, TW, towerLeg, PULLEY, WIRE, wireZ, targetSag } from './safety.js?v=c575fd35';
 import { $, esc } from '../lib/dom.js?v=3b73d59c';
 
 const t = (o) => (o == null ? '' : window.t ? window.t(o) : o.ko);
@@ -40,8 +40,21 @@ const CAMS = {
   tzone: { tx: 0, ty: 17, tz: 2, yaw: 0.2, pitch: 0.55, dist: 48 },
   tbase: { tx: -4, ty: 14.5, tz: 2.5, yaw: 0.4, pitch: 0.28, dist: 22 },
   tclimb: { tx: -2, ty: 17, tz: 17, yaw: 0.4, pitch: 0.1, dist: 54 },
-  ttop: { tx: -3.2, ty: 16.8, tz: 22.5, yaw: 0.55, pitch: 0.1, dist: 12 }
+  ttop: { tx: -3.2, ty: 16.8, tz: 22.5, yaw: 0.55, pitch: 0.1, dist: 12 },
+  wsite: { tx: 17.5, ty: 3, tz: 4.5, yaw: 0.28, pitch: 0.3, dist: 66 },
+  wzone: { tx: 17.5, ty: 3, tz: 1, yaw: 0.12, pitch: 0.66, dist: 74 },
+  wenter: { tx: 10, ty: 2, tz: 1.2, yaw: -0.35, pitch: 0.4, dist: 58 },
+  wtruck2: { tx: 35.5, ty: 2, tz: 1.4, yaw: 0.75, pitch: 0.42, dist: 20 },
+  wp0: { tx: -0.8, ty: 4.4, tz: 9.8, yaw: 0.55, pitch: 0.14, dist: 15 },
+  wp1: { tx: 34.2, ty: 4.4, tz: 9.8, yaw: 0.55, pitch: 0.14, dist: 15 },
+  wspan: { tx: 17.5, ty: 4.5, tz: 8.5, yaw: 0.3, pitch: 0.1, dist: 50 },
+  wdrum: { tx: -4.5, ty: 4.4, tz: 4, yaw: 0.5, pitch: 0.3, dist: 22 },
+  wwinch: { tx: 38, ty: 4.4, tz: 4, yaw: 0.2, pitch: 0.3, dist: 24 }
 };
+// 전선 교체 현장은 단계 id 가 같아도(zone · finish …) 보여 줄 곳이 다르다
+const WIRE_CAM = { tbm: 'board', ppe: 'board', zone: 'wzone', trucks: 'wenter', chocks: 'wsite', outrig: 'wsite', switch: 'sw', earth: 'gnd', harness: 'wsite', wground: 'wspan',
+  pulley: 'wp0', detach: 'wspan', link: 'wdrum', pull: 'wspan', sag: 'wspan', tie: 'wp0', jumper: 'wp1', remove: 'wsite', finish: 'wsite' };
+const stepCam = (id) => (scenario === 'wire' && WIRE_CAM[id]) || STEP_CAM[id];
 const STEP_CAM = {
   tbm: 'board', ppe: 'board', zone: 'zone', reverse: 'reverse', chocks: 'truck', outrig: 'truck', switch: 'sw', earth: 'gnd',
   harness: 'lift', test: 'bucket', cover: 'bucket', lift: 'lift', finish: 'wide',
@@ -50,6 +63,9 @@ const STEP_CAM = {
   ttbm: 'tboard', tppe: 'tboard', tzone: 'tzone', lifeline: 'tbase', climb: 'tclimb', tieoff: 'ttop', hoist: 'tclimb', twork: 'ttop', tdown: 'tclimb'
 };
 const CAM_LIST = {
+  wire: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['wsite', { ko: '시점: 작업 현장 전체', en: 'View: whole site' }], ['wspan', { ko: '시점: 한 경간', en: 'View: the span' }],
+    ['wp0', { ko: '시점: 0번 전주 (버킷)', en: 'View: pole 0 (bucket)' }], ['wp1', { ko: '시점: 35번 전주 (버킷)', en: 'View: pole 35 (bucket)' }], ['wdrum', { ko: '시점: 신전선 드럼', en: 'View: new-wire drum' }],
+    ['wwinch', { ko: '시점: 윈치', en: 'View: winch' }], ['wtruck2', { ko: '시점: 2호차', en: 'View: truck 2' }], ['truck', { ko: '시점: 1호차', en: 'View: truck 1' }], ['gnd', { ko: '시점: 접지 전주 (-35)', en: 'View: earthing pole (-35)' }], ['sw', { ko: '시점: 개폐기 전주 (-70)', en: 'View: switch pole (-70)' }]],
   pole: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['site', { ko: '시점: 작업 현장', en: 'View: work site' }], ['bucket', { ko: '시점: 버킷', en: 'View: bucket' }],
     ['truck', { ko: '시점: 작업차', en: 'View: truck' }], ['gnd', { ko: '시점: 접지 전주 (-35)', en: 'View: earthing pole (-35)' }], ['sw', { ko: '시점: 개폐기 전주 (-70)', en: 'View: switch pole (-70)' }], ['wide', { ko: '시점: 거리 전체', en: 'View: whole street' }]],
   tx: [['auto', { ko: '시점: 자동 (단계 따라가기)', en: 'View: auto (follow steps)' }], ['site', { ko: '시점: 작업 현장', en: 'View: work site' }], ['txv', { ko: '시점: 변압기', en: 'View: transformer' }],
@@ -196,7 +212,7 @@ function drawZoneFloor(ctx) {
   }
   if (scene === 'pole') {
     const all = W.cones.filter(c => c.side !== 4).every(c => c.placed);
-    if (all) fillPoly(ctx, GEO.zone.map(p => [...p, 0.035]), 'rgba(255,140,40,.13)');
+    if (all) fillPoly(ctx, (W.zone || GEO.zone).map(p => [...p, 0.035]), 'rgba(255,140,40,.13)');
     const tr = W.truck;
     if ((W.load.state === 'hook' || W.txOld?.state === 'hook') && tr.hookDrop < 0.97) { const h = hookXY(tr); dangerCircle(ctx, h[0], h[1], GEO.fallR); }
     if (W.ground.earth) {                                    // 접지봉
@@ -288,7 +304,7 @@ function drawPoles(ctx, now) {
   const wires = [];
   for (let i = 0; i < WIRE_POLES.length - 1; i++) {
     const xa = WIRE_POLES[i], xb = WIRE_POLES[i + 1], live = hvLive(xb);
-    for (const py of G.phaseY) wires.push({ xa, xb, y: py, z: G.armZ + 0.26, sag: 0.55, kind: 'hv', live });
+    if (!(scenario === 'wire' && xa === WIRE.x0 && xb === WIRE.x1)) for (const py of G.phaseY) wires.push({ xa, xb, y: py, z: G.armZ + 0.26, sag: 0.55, kind: 'hv', live });
     wires.push({ xa, xb, y: G.neutralY, z: G.neutralZ, sag: 0.5, kind: 'n', live: false });
   }
   const N = 8;
@@ -326,6 +342,57 @@ function drawPoles(ctx, now) {
 }
 
 // ---- 변압기 교체: 주상변압기 · COS · 리드선 · 방호 커버 · 접지 ----------------------------------
+
+// ---- 전선 교체: 한 경간 · 활차 · 드럼 · 윈치 · 양단 접지 -------------------------------------
+const WCOL = { old: [96, 88, 80], new: [208, 215, 223] };
+function drawWireGear(ctx, now) {
+  const W = sim.w, wr = W.wr, G = GEO, x0 = WIRE.x0, x1 = WIRE.x1, span = WIRE.span, N = 14, live = W.sw.closed;
+  // 한 경간의 세 상: 이음매(그립)를 경계로 폴대 쪽은 신전선, 윈치 쪽은 구전선
+  for (const py of G.phaseY) {
+    const P = (u) => [x0 + span * u, py, wireZ(u, wr.sag)];
+    for (let k = 0; k < N; k++) {
+      const a = P(k / N), b = P((k + 1) / N), m = P((k + 0.5) / N), isNew = (k + 0.5) / N < wr.pull, base = isNew ? WCOL.new : WCOL.old;
+      push(m[0], m[1], m[2], c => {
+        line3(c, [a, b], rgb(fog(base, depth(...m))), Math.max(1, (isNew ? 0.04 : 0.036) * pxPerM(...m)));
+        if (showPower) {
+          if (live) { line3(c, [a, b], 'rgba(255,90,40,.55)', Math.max(1.6, 0.07 * pxPerM(...m))); line3(c, [a, b], 'rgba(255,230,140,.95)', Math.max(1, 0.035 * pxPerM(...m)), [4, 10], -now / 30); }
+          else line3(c, [a, b], 'rgba(60,140,255,.5)', Math.max(1.4, 0.06 * pxPerM(...m)));
+        }
+      });
+    }
+    if (wr.linked && wr.pull < 1) { const q = P(wr.pull), q2 = P(Math.min(1, wr.pull + 0.012)); push(q[0], q[1], q[2], c => rod(c, q, q2, 0.2, '#f08c00', 'butt')); }   // 연결 그립
+    for (const [i, px] of [[0, x0], [1, x1]]) {
+      const tied = wr.oldTied || wr.newTied;
+      if (tied) push(px, py, G.armZ + 0.3, c => rod(c, [px, py, G.armZ + 0.2], [px, py, G.armZ + 0.27], 0.2, '#ffd43b', 'butt'));                    // 바인드
+      if (wr.pulley[i]) push(px, py, G.armZ + 0.4, c => { rod(c, [px, py, G.armZ + 0.3], [px, py, G.armZ + 0.4], 0.36, '#f59f00', 'butt'); rod(c, [px, py, G.armZ + 0.34], [px, py, G.armZ + 0.37], 0.12, '#343a40', 'butt'); });   // 활차
+      if (W.wg[i]) push(px, py, G.armZ - 0.4, c => line3(c, [[px, py, G.armZ + 0.26], [px + 0.6, 4.1, 1.2]], '#2b8a3e', Math.max(1.6, 0.06 * pxPerM(px, py, G.armZ))));  // 양단 접지선
+    }
+  }
+  for (const [i, px] of [[0, x0], [1, x1]]) if (W.wg[i]) push(px + 0.6, 4.1, 0.5, c => rod(c, [px + 0.6, 4.1, 0], [px + 0.6, 4.1, 1.25], 0.07, '#2b8a3e'));
+  // 신전선 드럼 스탠드
+  const [dx, dy] = WIRE.drum, [wx, wy] = WIRE.winch;
+  if (wr.drum) {
+    push(dx, dy, 0.9, c => {
+      drawShadow(c, dx, dy, 1.1, 0.2);
+      for (const s of [-1, 1]) box(c, { x: dx, y: dy + s * 0.62, hx: 0.12, hy: 0.06, z0: 0, z1: 1.5, col: [70, 76, 84] });
+      box(c, { x: dx, y: dy, hx: 0.2, hy: 0.5, z0: 0.82, z1: 0.92, col: [70, 76, 84] });
+      for (const s of [-1, 1]) disc(c, dx, dy + s * 0.46, 0.95, 0.78, 'y', '#9aa3ad');
+      box(c, { x: dx, y: dy, hx: 0.55, hy: 0.44, z0: 0.62, z1: 1.28, col: wr.pull >= 1 ? [120, 124, 130] : [60, 66, 74] });
+    });
+    if (wr.linked && wr.pull < 1) push(dx, dy, 2, c => line3(c, [[dx, dy, 1.3], [-2.2, 5.0, 7.5], [x0 - 0.3, G.phaseY[1], G.armZ + 0.36]], rgb(WCOL.new), 1.4));
+  }
+  // 윈치 (견인기)
+  if (wr.winch) {
+    push(wx, wy, 0.8, c => {
+      drawShadow(c, wx, wy, 1.4, 0.2);
+      box(c, { x: wx, y: wy, hx: 0.9, hy: 0.7, z0: 0.15, z1: 0.95, col: [217, 120, 38], edge: true });
+      box(c, { x: wx, y: wy, hx: 0.5, hy: 0.7, z0: 0.95, z1: 1.45, col: [72, 78, 86], edge: true });
+      const blink = (Math.floor(now / 300) % 2) === 0 && wr.pulling, s = project(wx, wy, 1.62);
+      if (s) { c.fillStyle = blink ? '#ffb000' : '#7a5200'; c.beginPath(); c.arc(s[0], s[1], Math.max(2, 0.14 * pxPerM(wx, wy, 1.6)), 0, 7); c.fill(); }
+    });
+    if (wr.pull < 1) push(wx, wy, 2, c => line3(c, [[wx, wy, 1.0], [x1 + 2.5, 5.0, 7.5], [x1 + 0.3, G.phaseY[1], G.armZ + 0.36]], rgb(WCOL.old), 1.4));
+  }
+}
 function drawTransformer(c, x, y, z0, old) {
   const body = old ? [128, 116, 100] : [168, 178, 186];
   box(c, { x, y, hx: 0.36, hy: 0.36, z0, z1: z0 + 1.15, col: body, edge: true });
@@ -427,8 +494,8 @@ function drawTower(ctx, now) {
 }
 
 // ---- 작업차 ------------------------------------------------------------------------
-function drawTruck(ctx, now) {
-  const tr = sim.w.truck; if (!tr.present) return;
+function drawTruck(ctx, now, tr = sim.w.truck, who = 'B') {
+  if (!tr || !tr.present) return;
   const c0 = tr.c, y = tr.y, G = GEO, half = G.truckLen / 2;
   const red = COL.red, white = [236, 238, 240], glass = [60, 80, 100], dark = [44, 46, 50];
   push(c0, y, 1.4, c => {
@@ -463,7 +530,7 @@ function drawTruck(ctx, now) {
     const B = [c0 - G.ttBack, y, G.ttZ];
     box(c, { x: B[0], y, hx: 0.55, hy: 0.55, z0: 1.55, z1: G.ttZ, col: [210, 212, 216], edge: true });
     // 적재된 자재
-    if (sim.w.load.state === 'bed') drawLoad(c, c0 - 0.4, y, 1.6, sim.w.load.kind);
+    if (sim.w.load.state === 'bed' && tr === sim.w.truck && scenario !== 'wire') drawLoad(c, c0 - 0.4, y, 1.6, sim.w.load.kind);
   });
   // 붐 · 버킷 (따로 넣어 사람·전선과 섞여 그려지게)
   const { B, E, T } = boomFK(tr);
@@ -477,10 +544,10 @@ function drawTruck(ctx, now) {
     if (fade) c.restore();
   }));
   push(E[0], E[1], E[2], c => { const s = project(...E); if (s) { c.fillStyle = '#868e96'; c.beginPath(); c.arc(s[0], s[1], Math.max(2, 0.25 * pxPerM(...E)), 0, 7); c.fill(); } });
-  const slew = tr.boom.slew, B2 = sim.w.people.B;
+  const slew = tr.boom.slew, B2 = sim.w.people[who];
   push(T[0], T[1], T[2] + 0.5, c => {
     // 버킷 안 작업자 → 버킷 → 지브·훅
-    if (B2.inBucket) drawPerson(c, 'B', B2, now);
+    if (B2.inBucket) drawPerson(c, who, B2, now);
     box(c, { x: T[0], y: T[1], hx: 0.45, hy: 0.45, yaw: slew, z0: T[2], z1: T[2] + 1.05, col: [244, 244, 244], edge: true, faces: { top: [60, 60, 60] } });
     rod(c, [T[0], T[1], T[2] + 1.05], [T[0], T[1], T[2] + 1.1], 0.95, '#f59f00', 'butt');
     const hx = hookXY(tr), jz = T[2] + 1.7;
@@ -710,6 +777,17 @@ function drawOverlay(ctx) {
       if (W.people.B.z > 2) { const f = towerLeg(0); tag(f[0], f[1] - 3, 0.1, t({ ko: '승탑 중 하부 출입금지', en: 'Keep clear below the climber' }), '#c92a2a'); }
       tag(TW.x + 9, TW.y, TW.armZ[0] - 1, t({ ko: '154kV 송전선: 충전 (가상)', en: '154 kV lines: live (virtual)' }), '#c92a2a');
     }
+    if (scenario === 'wire') {
+      const wr = W.wr, A = WIRE;
+      tag(GEO.swX, GEO.poleY, GEO.poleH + 1, W.sw.closed ? t({ ko: '개폐기: 투입(ON)', en: 'Switch: closed' }) : t({ ko: '개폐기: 개방(OFF)', en: 'Switch: open' }), W.sw.closed ? '#c92a2a' : '#2f9e44');
+      tag(GEO.gndX, GEO.poleY, GEO.poleH + 1, t({ ko: '원방 접지 전주 (-35)', en: 'Remote earth (-35)' }) + (W.ground.line ? ' ✓' : ''), W.ground.line ? '#2b8a3e' : '#495057');
+      tag(A.x0, GEO.poleY, GEO.poleH + 1, t({ ko: '0번 전주', en: 'Pole 0' }) + (W.wg[0] ? t({ ko: ' · 접지 ✓', en: ' · earthed ✓' }) : ''), W.wg[0] ? '#2b8a3e' : '#495057');
+      tag(A.x1, GEO.poleY, GEO.poleH + 1, t({ ko: '35번 전주', en: 'Pole 35' }) + (W.wg[1] ? t({ ko: ' · 접지 ✓', en: ' · earthed ✓' }) : ''), W.wg[1] ? '#2b8a3e' : '#495057');
+      if (wr.drum) tag(A.drum[0], A.drum[1], 2.2, t({ ko: '신전선 드럼', en: 'New-wire drum' }), '#495057');
+      if (wr.winch) tag(A.winch[0], A.winch[1], 2.4, t({ ko: '윈치(견인기)', en: 'Winch' }) + (wr.pulling ? ` · ${wr.tension.toFixed(1)} kN` : ''), wr.pulling ? '#e8590c' : '#495057');
+      if (wr.pulling) tag(17.5, GEO.poleY, 3, t({ ko: '견인 중: 경간 아래 출입금지', en: 'Pulling: keep out under the span' }), '#c92a2a');
+      if (wr.pull >= 1 || wr.sag !== A.sagOld) tag(17.5, GEO.phaseY[1], wireZ(0.5, wr.sag) - 0.5, t({ ko: `이도 ${wr.sag.toFixed(2)} m · 목표 ${wr.target.toFixed(2)} m`, en: `sag ${wr.sag.toFixed(2)} m · target ${wr.target.toFixed(2)} m` }), wr.locked ? '#2b8a3e' : '#1971c2');
+    }
     if (scenario === 'pole') {
       tag(GEO.swX, GEO.poleY, GEO.poleH + 1, W.sw.closed ? t({ ko: '개폐기: 투입(ON)', en: 'Switch: closed' }) : t({ ko: '개폐기: 개방(OFF)', en: 'Switch: open' }), W.sw.closed ? '#c92a2a' : '#2f9e44');
       tag(GEO.gndX, GEO.poleY, GEO.poleH + 1, t({ ko: '접지 전주 (-35)', en: 'Earthing pole (-35)' }) + (W.ground.line ? ' ✓' : ''), W.ground.line ? '#2b8a3e' : '#495057');
@@ -787,7 +865,7 @@ function activeWorker(now) {
   return eye.who || 'A';
 }
 function stepFocus() {
-  const c = CAMS[camMode === 'auto' || camMode.startsWith('eye') ? (sim.step ? STEP_CAM[sim.step.id] : ({ pole: 'site', manhole: 'mzone', tower: 'tclimb' }[scene])) : camMode] || CAMS.site;
+  const c = CAMS[camMode === 'auto' || camMode.startsWith('eye') ? (sim.step ? stepCam(sim.step.id) : ({ pole: 'site', manhole: 'mzone', tower: 'tclimb' }[scene])) : camMode] || CAMS.site;
   return [c.tx, c.ty, c.tz];
 }
 const chest = (p) => [p.x, p.y, (p.z || 0) + 1.2];
@@ -799,13 +877,13 @@ function eyeCamera(now) {
   if (camMode === 'eyeA') F = wk !== 'A' ? (P[wk].stick ? along(P[wk]) : chest(P[wk])) : (P.A.stick ? along(P.A) : stepFocus());
   else if (me.stick) F = along(me);
   else if (scene === 'tower' && me.z > 1) F = [TW.x, TW.y, me.z + 1.4];   // 철탑 위: 철탑 안쪽, 손 높이
-  else if (me.inBucket) { const sl = sim.w.truck.boom.slew; F = [me.x + Math.cos(sl) * 2.2, me.y + Math.sin(sl) * 2.2, me.z + 1.7]; }   // 버킷 안: 손이 향하는 쪽
+  else if (me.inBucket) { const sl = (me.rig === 2 ? sim.w.truck2 : sim.w.truck).boom.slew; F = [me.x + Math.cos(sl) * 2.2, me.y + Math.sin(sl) * 2.2, me.z + 1.7]; }   // 버킷 안: 손이 향하는 쪽
   else F = stepFocus();
   let ux = F[0] - me.x, uy = F[1] - me.y, L = Math.hypot(ux, uy);
   if (L < 0.3) { ux = 0; uy = 1; L = 1; }
   ux /= L; uy /= L;
   // 옆으로 비켜설 방향: 작업차(붐)에서 먼 쪽
-  const back = eye.back * (camMode === 'eyeA' ? 1.4 : 1), tr = sim.w.truck;
+  const back = eye.back * (camMode === 'eyeA' ? 1.4 : 1), tr = me.rig === 2 ? sim.w.truck2 : sim.w.truck;
   let side = me.inBucket ? 1.1 : 0.9;
   if (tr.present && !me.inBucket) {
     const dTo = (sg) => Math.hypot(me.x - ux * back - uy * side * sg - tr.c, me.y - uy * back + ux * side * sg - tr.y);
@@ -840,7 +918,7 @@ function drawScene(now) {
   drawGround(ctx);
   drawZoneFloor(ctx);
   D = [];
-  drawStatic(ctx); drawPoles(ctx, now); drawTxGear(ctx, now); drawTower(ctx, now); drawTruck(ctx, now); drawVan(ctx, now); drawManhole(ctx, now); drawCones(ctx); drawPeople(ctx, now);
+  drawStatic(ctx); drawPoles(ctx, now); drawTxGear(ctx, now); drawTower(ctx, now); drawTruck(ctx, now); if (sim.w.truck2) drawTruck(ctx, now, sim.w.truck2, 'F'); if (scenario === 'wire') drawWireGear(ctx, now); drawVan(ctx, now); drawManhole(ctx, now); drawCones(ctx); drawPeople(ctx, now);
   D.sort((a, b) => b.d - a.d);
   for (const it of D) it.f(ctx);
   drawOverlay(ctx);
@@ -848,6 +926,7 @@ function drawScene(now) {
 
 // ---- 진행 · 훈련 ----------------------------------------------------------------------
 function frame(now) {
+  wireUi();
   const dt = Math.min(0.1, (now - (lastT || now)) / 1000); lastT = now;
   if (running && !quiz) {
     if (sim.lanes && !sim.stepDone()) {
@@ -867,7 +946,7 @@ function frame(now) {
 }
 function startNext() {
   if (!sim.begin()) return;
-  hold = 0; if (camMode === 'auto') camGoal = { ...CAMS[STEP_CAM[sim.step.id]] };
+  hold = 0; if (camMode === 'auto') camGoal = { ...CAMS[stepCam(sim.step.id)] };
   panel(); label();
 }
 function askQuiz() {
@@ -926,11 +1005,13 @@ function printRecord() {
 function restart(i = 0) {
   scene = SCENARIOS[scenario].scene;
   sim = i > 0 ? SafetySim.jumpTo({ scenario }, i) : new SafetySim({ scenario });
+  wireMsg = null;
+  if (scenario === 'wire') { sim.w.wr.manual = $('wireManual').checked; sim.w.tempC = +$('wireTemp').value; sim.w.wr.target = targetSag(sim.w.tempC); }
   quiz = null; hold = 0; acc = 0;
   if (i === 0 || mode === 'quiz') score = { first: 0, total: 0, mistakes: [], from: mode === 'quiz' ? i : 0, saved: false };
-  if (i > 0 && mode === 'quiz') { running = true; if (camMode === 'auto') camGoal = { ...CAMS[STEP_CAM[sim.steps[i].id]] }; }   // 강사용: i단계부터 문제 시작 (앞 단계는 자동 진행)
-  else if (i > 0) { sim.begin(i); running = true; if (camMode === 'auto') camGoal = { ...CAMS[STEP_CAM[sim.step.id]] }; }
-  else { running = mode === 'quiz'; camGoal = { ...CAMS[{ pole: 'board', manhole: 'mboard', tower: 'tboard' }[scene]] }; }
+  if (i > 0 && mode === 'quiz') { running = true; if (camMode === 'auto') camGoal = { ...CAMS[stepCam(sim.steps[i].id)] }; }   // 강사용: i단계부터 문제 시작 (앞 단계는 자동 진행)
+  else if (i > 0) { sim.begin(i); running = true; if (camMode === 'auto') camGoal = { ...CAMS[stepCam(sim.step.id)] }; }
+  else { running = mode === 'quiz'; camGoal = { ...CAMS[(scenario === 'wire' ? 'board' : { pole: 'board', manhole: 'mboard', tower: 'tboard' }[scene])] }; }
   panel(); label();
 }
 
@@ -964,7 +1045,7 @@ function panel() {
     card = `<div class="sf-card"><div class="sf-eyebrow">${t(SCENARIOS[scenario].title)}</div>
       <h4>${mode === 'quiz' ? t({ ko: '순서 맞히기 훈련', en: 'Sequence training' }) : t({ ko: '▶ 시작을 누르세요', en: 'Press ▶ Start' })}</h4>
       <p>${mode === 'quiz' ? t({ ko: '단계마다 보기 3개 중 올바른 안전조치를 고르면 현장이 진행됩니다. 틀리면 왜 위험한지 알려 줍니다.', en: 'At each step pick the right safety action out of three; the site then carries on. A wrong pick explains why it is unsafe.' })
-        : t({ ko: '작업자 5명이 안전조치를 순서대로 진행합니다. 왼쪽 목록을 누르면 그 단계로 바로 갈 수 있습니다.', en: 'Five workers carry out the safety steps in order. Click a step in the list to jump to it.' })}</p>${historyHtml()}</div>`;
+        : t({ ko: `작업자 ${Object.keys(sim.w.people).length}명이 안전조치를 순서대로 진행합니다. 왼쪽 목록을 누르면 그 단계로 바로 갈 수 있습니다.`, en: `${Object.keys(sim.w.people).length} workers carry out the safety steps in order. Click a step in the list to jump to it.` })}</p>${historyHtml()}</div>`;
   } else {
     const s = sim.step;
     card = `<div class="sf-card"><div class="sf-eyebrow">${t({ ko: '단계', en: 'Step' })} ${cur + 1} / ${steps.length} ${doneCur ? '· ✓' : ''}</div>
@@ -981,6 +1062,7 @@ function label() {
   $('labelsBtn').textContent = showLabels ? t({ ko: '이름표 숨기기', en: 'Hide labels' }) : t({ ko: '이름표 보기', en: 'Show labels' });
   $('powerBtn').textContent = showPower ? t({ ko: '전기 흐름 숨기기', en: 'Hide power flow' }) : t({ ko: '전기 흐름 보기', en: 'Show power flow' });
   $('powerBtn').hidden = scene === 'manhole';
+  $('wireCtl').hidden = scenario !== 'wire';
   const opts = (id, list, v0) => { const el = $(id), v = v0 ?? (el.value || list[0][0]); el.innerHTML = list.map(([k, o]) => `<option value="${k}">${t(o)}</option>`).join(''); el.value = list.some(l => l[0] === v) ? v : list[0][0]; };
   opts('scnSel', Object.entries(SCENARIOS).map(([k, s]) => [k, s.title]), scenario);
   opts('modeSel', [['watch', { ko: '보기: 자동 진행', en: 'Watch: auto play' }], ['quiz', { ko: '훈련: 다음 조치 고르기', en: 'Train: pick the next step' }]], mode);
@@ -1013,7 +1095,35 @@ function bindCamera() {
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('contextmenu', e => e.preventDefault());
   cv.addEventListener('wheel', e => { e.preventDefault(); camGoal = null; if (camMode.startsWith('eye')) { eye.back = clamp(eye.back * Math.exp(e.deltaY * 0.001), 0.6, 8); return; } cam.dist = clamp(cam.dist * Math.exp(e.deltaY * 0.001), 5, 160); }, { passive: false });
-  cv.addEventListener('dblclick', () => { if (camMode.startsWith('eye')) { Object.assign(eye, { yaw: 0, pitch: 0, back: 1.4 }); return; } camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? STEP_CAM[sim.step.id] : 'site') : camMode] }; });
+  cv.addEventListener('dblclick', () => { if (camMode.startsWith('eye')) { Object.assign(eye, { yaw: 0, pitch: 0, back: 1.4 }); return; } camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? stepCam(sim.step.id) : 'site') : camMode] }; });
+}
+// ---- 전선 교체: 기온 · 이도 직접 맞추기 ---------------------------------------------------
+let wireMsg = null;
+function wireUi() {
+  if (scenario !== 'wire' || !sim) return;
+  const W = sim.w, wr = W.wr, atSag = sim.step?.id === 'sag' && !sim.stepDone(), manual = wr.manual && atSag && !wr.locked;
+  $('wireTempOut').textContent = `${W.tempC} ℃`;
+  if (document.activeElement?.id !== 'wireTemp') $('wireTemp').value = W.tempC;
+  $('wireSagOut').textContent = `${wr.sag.toFixed(2)} m`;
+  if (document.activeElement?.id !== 'wireSag') $('wireSag').value = wr.sag;
+  $('wireSag').disabled = !manual; $('wireLock').disabled = !manual;
+  $('wireTemp').disabled = wr.locked;
+  const hint = wr.manual
+    ? (atSag ? t({ ko: `슬라이더로 이도를 ${wr.target.toFixed(2)} m (±${wr.tol.toFixed(2)})에 맞춘 뒤 고정하세요.`, en: `Set the sag to ${wr.target.toFixed(2)} m (±${wr.tol.toFixed(2)}) with the slider, then lock.` })
+        : t({ ko: '"이도 조정" 단계에서 직접 맞춥니다.', en: 'You set it at the "Adjust the sag" step.' }))
+    : t({ ko: `이 기온의 목표 이도: ${wr.target.toFixed(2)} m (±${wr.tol.toFixed(2)})`, en: `Target sag at this temperature: ${wr.target.toFixed(2)} m (±${wr.tol.toFixed(2)})` });
+  $('wireMsg').textContent = (wireMsg && (manual || wr.locked) ? wireMsg + ' ' : '') + (wr.locked ? '' : hint);
+}
+function bindWire() {
+  $('wireTemp').addEventListener('input', () => { if (!sim?.w.wr || sim.w.wr.locked) return; sim.w.tempC = +$('wireTemp').value; sim.w.wr.target = targetSag(sim.w.tempC); wireMsg = null; wireUi(); });
+  $('wireManual').addEventListener('change', () => { if (sim?.w.wr) { sim.w.wr.manual = $('wireManual').checked; wireMsg = null; wireUi(); } });
+  $('wireSag').addEventListener('input', () => { const wr = sim?.w.wr; if (wr && wr.manual && !wr.locked) { wr.sag = +$('wireSag').value; wireMsg = null; wireUi(); } });
+  $('wireLock').addEventListener('click', () => {
+    const wr = sim.w.wr, err = wr.sag - wr.target;
+    if (Math.abs(err) <= wr.tol) { wr.locked = true; wireMsg = t({ ko: '✓ 허용 오차 이내. 장력을 고정했습니다.', en: '✓ Within tolerance — tension locked.' }); }
+    else wireMsg = err > 0 ? t({ ko: '✗ 너무 처졌습니다. 더 당겨 이도를 줄이세요.', en: '✗ Too slack — take up more tension.' }) : t({ ko: '✗ 너무 팽팽합니다. 장력을 풀어 이도를 늘리세요.', en: '✗ Too tight — ease the tension.' });
+    wireUi();
+  });
 }
 function bind() {
   $('playBtn').addEventListener('click', () => {
@@ -1039,7 +1149,7 @@ function bind() {
     camMode = $('camSel').value;
     Object.assign(eye, { yaw: 0, pitch: 0, back: 1.4, who: null });
     if (camMode.startsWith('eye')) { camGoal = null; return; }
-    camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? STEP_CAM[sim.step.id] : ({ pole: 'site', manhole: 'mzone', tower: 'tclimb' }[scene])) : camMode] };
+    camGoal = { ...CAMS[camMode === 'auto' ? (sim.step ? stepCam(sim.step.id) : ({ pole: 'site', manhole: 'mzone', tower: 'tclimb' }[scene])) : camMode] };
   });
   $('sfPanel').addEventListener('click', e => {
     const b = e.target.closest('button[data-k]'); if (b && quiz) { answer(+b.dataset.k); return; }
@@ -1061,6 +1171,6 @@ function bind() {
 function main() {
   const q = new URLSearchParams(location.search);
   if (SCENARIOS[q.get('s')]) scenario = q.get('s');
-  label(); bind(); restart(); requestAnimationFrame(frame);
+  label(); bind(); bindWire(); restart(); requestAnimationFrame(frame);
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', main); else main();

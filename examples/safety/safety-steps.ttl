@@ -1,5 +1,5 @@
 # 배전공사 안전 온톨로지 — 개체 데이터. 만든 곳: examples/safety/build_safety.mjs (원본: assets/safety/safety.js)
-# 시나리오 4 · 작업 단계 43 · 수칙 11 · 위험요인 9 · 역할 13 · 잘못된 선택 86. 스키마는 safety-schema.ttl
+# 시나리오 5 · 작업 단계 62 · 수칙 11 · 위험요인 9 · 역할 17 · 잘못된 선택 124. 스키마는 safety-schema.ttl
 # ⚠ 교육용 가상 현장입니다. 설비 · 선로 구간은 가상 데이터이며, 실제 작업은 소속 기관의 작업기준·안전수칙을 따르세요.
 @prefix sf: <https://1004aiteam-power.github.io/ontology-space/safety#> .
 @prefix aipd: <https://example.org/ai-promotion-dept/ontology#> .
@@ -127,6 +127,18 @@ sf:RoleSafetyWatcher a sf:CrewRole ;
 sf:RoleAccessControl a sf:CrewRole ;
     rdfs:label "출입 통제"@ko ;
     rdfs:label "Access control"@en .
+sf:RoleBucketLineworker a sf:CrewRole ;
+    rdfs:label "버킷 작업자 (0번 전주)"@ko ;
+    rdfs:label "Bucket lineworker (pole 0)"@en .
+sf:RoleGroundWorkerTruckDriver a sf:CrewRole ;
+    rdfs:label "지상 작업자·1호차 운전원"@ko ;
+    rdfs:label "Ground worker / truck 1 driver"@en .
+sf:RoleTruckDriverTestingEarthing a sf:CrewRole ;
+    rdfs:label "2호차 운전원·검전·접지"@ko ;
+    rdfs:label "Truck 2 driver · testing & earthing"@en .
+sf:RoleBucketLineworker a sf:CrewRole ;
+    rdfs:label "버킷 작업자 (35번 전주)"@ko ;
+    rdfs:label "Bucket lineworker (pole 35)"@en .
 sf:RoleEntrant a sf:CrewRole ;
     rdfs:label "입조 작업자"@ko ;
     rdfs:label "Entrant"@en .
@@ -1006,6 +1018,670 @@ sf:tx_txfinish_x2 a sf:UnsafeChoice ;
     sf:violates sf:Rule08 ;
     sf:violates sf:Rule11 ;
     sf:violates sf:Rule05 .
+sf:Scenario_wire a sf:WorkScenario ;
+    sf:scenarioId "wire" ;
+    rdfs:label "가공 배전 전선 교체 · 한 경간 (정전 작업)"@ko ;
+    rdfs:label "Overhead line: replace the wire in one span (de-energised)"@en .
+sf:AS_WR_0602 a sf:WireAsset ;
+    pam:code "AS-WR-0602" ;
+    rdfs:label "D/L #1 6구간 가공 전선 · 0↔35번 전주 한 경간 (가상)"@ko ;
+    rdfs:label "Overhead conductors, one span (poles 0 to 35) on D/L #1 section 6 (virtual)"@en ;
+    pam:installedAt ex:_756664b6-b373-5677-98ab-854ba7714b9f .
+sf:Scenario_wire sf:targetAsset sf:AS_WR_0602 ;
+    sf:maintenanceTask pam:MT_09 ;
+    sf:workSection ex:_756664b6-b373-5677-98ab-854ba7714b9f ;
+    sf:isolatedBy ex:_a1e1b903-48f9-5256-8862-92c891050074 ;
+    sf:lineDeEnergised true ;
+    sf:firstStep sf:wire_tbm .
+sf:wire_tbm a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "tbm" ;
+    sf:stepNo 1 ;
+    rdfs:label "작업 전 TBM · 작업계획서 확인 (구간, 전선 규격, 이도 기준표)"@ko ;
+    rdfs:label "Pre-work TBM · check the plan (section, conductor, sag table)"@en ;
+    sf:instruction "작업책임자가 작업계획서로 작업 구간(0번 ↔ 35번 전주 한 경간), 교체할 전선 규격, 정전 구간, 현재 기온에 맞는 목표 이도, 각자 역할을 설명합니다. 계획서에 없는 방법으로 바꾸지 않습니다."@ko ;
+    sf:instruction "The supervisor walks the crew through the plan: the span (pole 0 to pole 35), the new conductor, the outage section, the target sag for today's temperature and each role. No method outside the plan."@en ;
+    sf:reason "전선 교체는 장비·인원이 양쪽 전주와 지상에 흩어져 하는 작업이라, 신호와 역할이 어긋나면 한 사람의 실수가 곧바로 사고가 됩니다."@ko ;
+    sf:reason "Wire replacement spreads people and machines over two poles and the ground; a mismatch in signals or roles turns one slip into an accident."@en ;
+    sf:appliesRule sf:Rule03 ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Plan ;
+    aipd:precedes sf:wire_ppe .
+sf:wire_tbm_x1 a sf:UnsafeChoice ;
+    rdfs:label "경험이 많으니 계획서 없이 평소 하던 순서대로 시작한다"@ko ;
+    rdfs:label "We are experienced — start in the usual order without the plan"@en ;
+    sf:explanation "작업 구간과 정전 범위, 목표 이도를 모두가 같게 알고 있어야 합니다. 경험은 TBM을 생략할 이유가 아닙니다. (수칙 3)"@ko ;
+    sf:explanation "Everyone must hold the same idea of the span, outage and target sag. Experience is no reason to skip the TBM. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_tbm ;
+    sf:violates sf:Rule03 .
+sf:wire_tbm_x2 a sf:UnsafeChoice ;
+    rdfs:label "이도는 현장에서 눈대중으로 맞추기로 하고 기준표는 보지 않는다"@ko ;
+    rdfs:label "Judge the sag by eye on site; skip the table"@en ;
+    sf:explanation "이도는 기온에 따라 달라지는 시공 품질 기준입니다. 계획서의 기준표로 맞춥니다. (수칙 3)"@ko ;
+    sf:explanation "Sag is a quality limit that changes with temperature. Use the table in the plan. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_tbm ;
+    sf:violates sf:Rule03 .
+sf:wire_ppe a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "ppe" ;
+    sf:stepNo 2 ;
+    rdfs:label "개인 안전장구 착용"@ko ;
+    rdfs:label "Put on personal protective equipment"@en ;
+    sf:instruction "안전모(턱끈 체결)·절연장갑·안전화·반사조끼를 착용하고, 버킷 작업자는 그네식 안전대를 맵니다. 작업책임자가 서로의 착용 상태를 확인합니다."@ko ;
+    sf:instruction "Hard hat with chin strap, insulating gloves, safety boots, hi-vis vest; the bucket worker puts on a full-body harness. The supervisor checks everyone."@en ;
+    sf:reason "장구는 사고가 났을 때 생사를 가르는 마지막 방어선입니다."@ko ;
+    sf:reason "PPE is the last line of defence when everything else has failed."@en ;
+    sf:appliesRule sf:Rule01 ;
+    aipd:hasRisk sf:HazardStruck ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_zone .
+sf:wire_ppe_x1 a sf:UnsafeChoice ;
+    rdfs:label "지상 작업자는 높은 곳에 안 올라가니 안전모를 쓰지 않는다"@ko ;
+    rdfs:label "Ground workers stay low, so they skip the hard hat"@en ;
+    sf:explanation "지상 작업자는 위에서 떨어지는 공구·자재에 가장 많이 다칩니다. (수칙 1)"@ko ;
+    sf:explanation "Ground workers are the ones hit by dropped tools and parts. (Rule 1)"@en ;
+    sf:mistakeAt sf:wire_ppe ;
+    sf:violates sf:Rule01 .
+sf:wire_ppe_x2 a sf:UnsafeChoice ;
+    rdfs:label "정전 작업이니 절연장갑은 필요 없다"@ko ;
+    rdfs:label "It is a dead-line job, so insulating gloves are unnecessary"@en ;
+    sf:explanation "검전 전에는 충전 상태로 간주합니다. 역송전·오조작도 있습니다. (수칙 1, 8)"@ko ;
+    sf:explanation "Treat it as live until tested; back-feed and wrong switching happen. (Rules 1, 8)"@en ;
+    sf:mistakeAt sf:wire_ppe ;
+    sf:violates sf:Rule01 ;
+    sf:violates sf:Rule08 .
+sf:wire_zone a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "zone" ;
+    sf:stepNo 3 ;
+    rdfs:label "작업구역 설정 · 한 경간 아래 출입금지 · 보행 통로 확보"@ko ;
+    rdfs:label "Set up the work zone · keep out under the span · keep a walkway"@en ;
+    sf:instruction "전선을 끌어당기는 동안 전선이 처지거나 튈 수 있는 한 경간 전체와 양쪽 작업차 주변을 라바콘과 안전띠로 막습니다. 보도 바깥쪽에 보행 통로를 남겨 시민이 작업구역에 들어오지 않게 합니다."@ko ;
+    sf:instruction "Cones and tape close off the whole span, where wire may sag or whip while it is pulled, and the area around both trucks. A walkway stays open on the outer sidewalk."@en ;
+    sf:reason "당기는 전선은 갑자기 걸리거나 끊어지면 반동으로 튑니다. 구간 아래에 사람이 있으면 피할 수 없습니다."@ko ;
+    sf:reason "A wire under tension that snags or breaks whips back. Anyone under the span cannot get out of the way."@en ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_trucks .
+sf:wire_zone_x1 a sf:UnsafeChoice ;
+    rdfs:label "전주 두 곳 주변만 막고 경간 가운데는 열어 둔다"@ko ;
+    rdfs:label "Block only around the two poles and leave mid-span open"@en ;
+    sf:explanation "전선이 처지고 튀는 곳은 전주 주변이 아니라 한 경간 전체입니다. (수칙 5)"@ko ;
+    sf:explanation "The wire sags and whips along the whole span, not just at the poles. (Rule 5)"@en ;
+    sf:mistakeAt sf:wire_zone ;
+    sf:violates sf:Rule05 .
+sf:wire_zone_x2 a sf:UnsafeChoice ;
+    rdfs:label "시민이 많이 다니니 견인은 퇴근 시간 뒤로 미루고 구역은 느슨하게 둔다"@ko ;
+    rdfs:label "The sidewalk is busy — keep the zone loose and pull later"@en ;
+    sf:explanation "통행량 때문에 구역을 느슨하게 두면 안 됩니다. 구역은 그대로 막고 보행 통로를 안전하게 따로 둡니다. (수칙 5)"@ko ;
+    sf:explanation "Heavy foot traffic is no reason for a loose zone. Close it properly and keep a separate safe walkway. (Rule 5)"@en ;
+    sf:mistakeAt sf:wire_zone ;
+    sf:violates sf:Rule05 .
+sf:wire_trucks a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "trucks" ;
+    sf:stepNo 4 ;
+    rdfs:label "작업차 두 대 진입 · 후진은 전담 유도자"@ko ;
+    rdfs:label "Bring in both trucks · dedicated guide when reversing"@en ;
+    sf:instruction "2호차가 먼저 35번 전주까지 전진해 정차하고, 1호차가 이어서 0번 전주 옆으로 와 후진으로 자리를 맞춥니다. 신호수(전담 유도자)는 운전석에서 보이는 옆쪽에 서서 신호봉으로 유도합니다."@ko ;
+    sf:instruction "Truck 2 drives ahead to pole 35 and stops; truck 1 follows and reverses into place at pole 0. The dedicated guide stands to the side, in the driver's view, with a baton."@en ;
+    sf:reason "작업차가 두 대면 차량끼리, 차량과 사람 사이의 사각지대가 둘이 됩니다. 후진은 반드시 유도자 신호에 따릅니다."@ko ;
+    sf:reason "Two trucks mean two sets of blind spots. Reversing always follows the guide's signal."@en ;
+    sf:appliesRule sf:Rule05 ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_chocks .
+sf:wire_trucks_x1 a sf:UnsafeChoice ;
+    rdfs:label "두 대 모두 운전원이 후사경만 보고 각자 알아서 자리를 잡는다"@ko ;
+    rdfs:label "Both drivers set up on their own, using mirrors only"@en ;
+    sf:explanation "후진에는 전담 유도자가 있어야 하고, 두 대가 같은 차로를 쓰면 순서도 정해야 합니다. (수칙 5)"@ko ;
+    sf:explanation "Reversing needs a dedicated guide, and two trucks in one lane need an agreed order. (Rule 5)"@en ;
+    sf:mistakeAt sf:wire_trucks ;
+    sf:violates sf:Rule05 .
+sf:wire_trucks_x2 a sf:UnsafeChoice ;
+    rdfs:label "유도자가 두 차 사이에 서서 양쪽 차를 한꺼번에 유도한다"@ko ;
+    rdfs:label "The guide stands between the trucks and signals both at once"@en ;
+    sf:explanation "차 사이는 끼임 위치입니다. 차마다 운전원이 볼 수 있는 옆쪽에 서서 한 대씩 유도합니다. (수칙 5)"@ko ;
+    sf:explanation "Between two trucks is a crush point. Guide one truck at a time from a visible spot at its side. (Rule 5)"@en ;
+    sf:mistakeAt sf:wire_trucks ;
+    sf:violates sf:Rule05 .
+sf:wire_chocks a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "chocks" ;
+    sf:stepNo 5 ;
+    rdfs:label "두 작업차 모두 고임목 4개 이상 설치"@ko ;
+    rdfs:label "Chock both trucks (4 or more each)"@en ;
+    sf:instruction "1호차와 2호차 각각 주차 브레이크를 채우고 앞·뒤 바퀴 양쪽에 고임목을 받쳐 차량이 밀리지 않게 합니다."@ko ;
+    sf:instruction "On each truck, set the parking brake and chock front and rear wheels on both sides."@en ;
+    sf:reason "붐을 올리면 무게중심이 바뀌어 평지에서도 차량이 밀릴 수 있습니다. 두 번째 차도 똑같이 합니다."@ko ;
+    sf:reason "Raising the boom shifts the centre of gravity, even on flat ground. The second truck is no exception."@en ;
+    sf:appliesRule sf:Rule02 ;
+    aipd:hasRisk sf:HazardRollaway ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_outrig .
+sf:wire_chocks_x1 a sf:UnsafeChoice ;
+    rdfs:label "1호차만 고임목을 받치고 2호차는 같은 도로라 생략한다"@ko ;
+    rdfs:label "Chock truck 1 only; truck 2 is on the same road"@en ;
+    sf:explanation "차량마다 붐 하중이 따로 걸립니다. 작업차 한 대마다 4개 이상입니다. (수칙 2)"@ko ;
+    sf:explanation "Each truck carries its own boom load. Every truck needs 4 or more. (Rule 2)"@en ;
+    sf:mistakeAt sf:wire_chocks ;
+    sf:violates sf:Rule02 .
+sf:wire_chocks_x2 a sf:UnsafeChoice ;
+    rdfs:label "시간이 없으니 고임목은 버킷을 올린 뒤에 받친다"@ko ;
+    rdfs:label "No time — chock after the bucket is up"@en ;
+    sf:explanation "붐이 움직이기 시작하면 가장 많이 밀립니다. 올리기 전에 받칩니다. (수칙 2)"@ko ;
+    sf:explanation "The truck creeps most as the boom starts to move. Chock before lifting. (Rule 2)"@en ;
+    sf:mistakeAt sf:wire_chocks ;
+    sf:violates sf:Rule02 .
+sf:wire_outrig a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "outrig" ;
+    sf:stepNo 6 ;
+    rdfs:label "두 작업차 아웃트리거 전개 · 받침판 설치 (전도방지)"@ko ;
+    rdfs:label "Deploy outriggers on pads, both trucks (anti-tip)"@en ;
+    sf:instruction "받침판을 깔고 아웃트리거를 끝까지 펼쳐 차체를 받칩니다. 수평계로 기울기를 확인합니다. 두 대 모두 같은 방법입니다."@ko ;
+    sf:instruction "Lay pads, extend the outriggers fully and check the level gauge. Both trucks the same way."@en ;
+    sf:reason "아웃트리거가 덜 펴지거나 받침판이 없으면 붐이 기울 때 차량이 넘어갑니다. 전선 장력이 걸리면 더 위험합니다."@ko ;
+    sf:reason "Half-extended outriggers or no pads let the truck roll over when the boom leans; wire tension makes it worse."@en ;
+    sf:appliesRule sf:Rule04 ;
+    aipd:hasRisk sf:HazardTipOver ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_switch .
+sf:wire_outrig_x1 a sf:UnsafeChoice ;
+    rdfs:label "2호차 자리가 좁으니 아웃트리거를 반만 펴고 작업한다"@ko ;
+    rdfs:label "Truck 2 has little room — extend halfway"@en ;
+    sf:explanation "반만 펴면 전도 한계가 크게 줄어듭니다. 자리가 없으면 위치·방법을 다시 정합니다. (수칙 4)"@ko ;
+    sf:explanation "Half extension slashes the tip limit. If there is no room, re-plan the position. (Rule 4)"@en ;
+    sf:mistakeAt sf:wire_outrig ;
+    sf:violates sf:Rule04 .
+sf:wire_outrig_x2 a sf:UnsafeChoice ;
+    rdfs:label "받침판 없이 보도블록 위에 바로 내린다"@ko ;
+    rdfs:label "Set the feet straight on paving, no pads"@en ;
+    sf:explanation "보도블록·맨홀 뚜껑·연약지반은 꺼질 수 있습니다. 받침판으로 하중을 분산합니다. (수칙 4)"@ko ;
+    sf:explanation "Paving, covers and soft ground can sink. Pads spread the load. (Rule 4)"@en ;
+    sf:mistakeAt sf:wire_outrig ;
+    sf:violates sf:Rule04 .
+sf:wire_switch a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "switch" ;
+    sf:stepNo 7 ;
+    rdfs:label "개폐기 개방 — 절연 조작봉 사용"@ko ;
+    rdfs:label "Open the switch with an insulated hot stick"@en ;
+    sf:instruction "작업책임자가 정전 구간 전원측 개폐기(-70 전주)를 절연장갑을 끼고 절연 조작봉으로 개방하고, \"작업 중 조작금지\" 표찰을 겁니다."@ko ;
+    sf:instruction "The supervisor opens the source-side switch on pole -70 with insulating gloves and an insulated hot stick, then hangs a \"Do not operate — work in progress\" tag."@en ;
+    sf:reason "맨손이나 아무 막대로 조작하면 아크·감전 위험이 있습니다. 표찰이 없으면 다른 사람이 다시 투입할 수 있습니다."@ko ;
+    sf:reason "Bare hands or improvised poles risk arc and shock. Without a tag someone may close it again."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_earth .
+sf:wire_switch_x1 a sf:UnsafeChoice ;
+    rdfs:label "가까이 있는 일반 막대로 개폐기 손잡이를 당긴다"@ko ;
+    rdfs:label "Pull the switch handle with any pole lying around"@en ;
+    sf:explanation "적정 공구(절연 조작봉)가 아니면 감전·아크에 노출됩니다. (수칙 11 배전)"@ko ;
+    sf:explanation "Without the proper insulated tool you are exposed to shock and arc. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:wire_switch ;
+    sf:violates sf:Rule11 .
+sf:wire_switch_x2 a sf:UnsafeChoice ;
+    rdfs:label "개폐기를 열지 않고 활선 상태로 바로 교체 작업을 한다"@ko ;
+    rdfs:label "Skip the switching and replace parts live"@en ;
+    sf:explanation "계획은 정전 작업입니다. 활선 작업으로 바꾸는 것은 공법 임의변경입니다. (수칙 3, 8)"@ko ;
+    sf:explanation "The plan is dead-line work. Working live is an unauthorised method change. (Rules 3, 8)"@en ;
+    sf:mistakeAt sf:wire_switch ;
+    sf:violates sf:Rule03 ;
+    sf:violates sf:Rule08 .
+sf:wire_earth a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "earth" ;
+    sf:stepNo 8 ;
+    rdfs:label "원방 검전 → 접지 (작업 구간에서 한 경간 이상 떨어진 -35 전주)"@ko ;
+    rdfs:label "Test, then earth at pole -35 (a span clear of the work)"@en ;
+    sf:instruction "-35 전주에서 접지봉을 박고 접지선의 대지측을 먼저 연결합니다. 검전기로 세 상 모두 무전압을 확인한 뒤 접지 클램프를 선로 측에 겁니다."@ko ;
+    sf:instruction "At pole -35: drive the earth rod, connect the earth end first, prove all three phases dead with a detector, then clamp the line end."@en ;
+    sf:reason "검전 없이 접지하면 충전 선로를 단락시킵니다. 오조작·역송전이 와도 접지가 작업자를 지켜 줍니다."@ko ;
+    sf:reason "Earthing a live line is a short circuit. The earth protects you if wrong switching or back-feed comes later."@en ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_harness .
+sf:wire_earth_x1 a sf:UnsafeChoice ;
+    rdfs:label "개폐기를 열었으니 검전 없이 바로 접지 클램프를 건다"@ko ;
+    rdfs:label "The switch is open, so clamp the earth without testing"@en ;
+    sf:explanation "다른 전원·오조작으로 살아 있을 수 있습니다. 검전 → 접지 순서는 바꿀 수 없습니다. (수칙 8)"@ko ;
+    sf:explanation "Another source or wrong switching may keep it live. Test before earth, always. (Rule 8)"@en ;
+    sf:mistakeAt sf:wire_earth ;
+    sf:violates sf:Rule08 .
+sf:wire_earth_x2 a sf:UnsafeChoice ;
+    rdfs:label "작업 구간 양단은 어차피 가까우니 -35 접지만으로 충분하다고 본다"@ko ;
+    rdfs:label "-35 is enough; the span ends are close anyway"@en ;
+    sf:explanation "원방 접지와 별개로 작업 구간 양단에서도 검전하고 접지합니다. 이어지는 다음 단계들이 그것입니다. (수칙 8)"@ko ;
+    sf:explanation "Besides this remote earth, test and earth at both span ends too, which the next steps do. (Rule 8)"@en ;
+    sf:mistakeAt sf:wire_earth ;
+    sf:violates sf:Rule08 .
+sf:wire_harness a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "harness" ;
+    sf:stepNo 9 ;
+    rdfs:label "두 버킷 작업자 안전고리 체결 → 각 전주로 상승"@ko ;
+    rdfs:label "Both bucket workers clip in → rise to their poles"@en ;
+    sf:instruction "버킷 작업자(0번 쪽 B, 35번 쪽 F)가 버킷에 타 안전대 고리를 걸고, 각 차량의 담당자가 확인한 뒤에 붐을 올립니다. 먼저 충전부와 거리를 둔 위치에 세웁니다."@ko ;
+    sf:instruction "Each bucket worker (B at pole 0, F at pole 35) steps in and clips the lanyard; only after the ground person at that truck checks does the boom go up, first to a spot clear of the conductors."@en ;
+    sf:reason "고리를 걸지 않은 안전대는 소용이 없습니다. 두 사람 모두, 올라가기 전에 서로 다른 사람이 확인합니다."@ko ;
+    sf:reason "An unclipped harness does nothing. A second person checks each worker before lifting."@en ;
+    sf:appliesRule sf:Rule07 ;
+    aipd:hasRisk sf:HazardFall ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_wground .
+sf:wire_harness_x1 a sf:UnsafeChoice ;
+    rdfs:label "올라가서 안전고리를 걸기로 하고 먼저 상승한다"@ko ;
+    rdfs:label "Go up first and clip in at height"@en ;
+    sf:explanation "붐이 움직이는 순간이 가장 흔들립니다. 탑승 즉시, 상승 전에 체결합니다. (수칙 7)"@ko ;
+    sf:explanation "The bucket jolts most as the boom starts. Clip in on boarding, before lifting. (Rule 7)"@en ;
+    sf:mistakeAt sf:wire_harness ;
+    sf:violates sf:Rule07 .
+sf:wire_harness_x2 a sf:UnsafeChoice ;
+    rdfs:label "한 사람이 두 전주를 오가며 안전고리를 확인한다"@ko ;
+    rdfs:label "One person checks both workers, walking between the poles"@en ;
+    sf:explanation "두 작업차가 35 m 떨어져 있어, 담당자가 자리를 비운 쪽은 확인 없이 올라갑니다. 차량마다 확인자를 둡니다. (수칙 7)"@ko ;
+    sf:explanation "The trucks are 35 m apart, so the unattended one goes up unchecked. Each truck has its own checker. (Rule 7)"@en ;
+    sf:mistakeAt sf:wire_harness ;
+    sf:violates sf:Rule07 .
+sf:wire_wground a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "wground" ;
+    sf:stepNo 10 ;
+    rdfs:label "작업 구간 양단 검전 → 접지 (0번 · 35번 전주)"@ko ;
+    rdfs:label "Test, then earth at both span ends (poles 0 and 35)"@en ;
+    sf:instruction "두 버킷 작업자가 각자 전주에서 세 상을 다시 검전하고, 무전압이면 접지 클램프를 겁니다. 두 전주가 모두 접지되어야 전선을 풀기 시작합니다."@ko ;
+    sf:instruction "Each bucket worker re-tests all three phases at their own pole and, if dead, clamps the earth. Only when both poles are earthed does anyone touch the wire."@en ;
+    sf:reason "작업 구간 가까이에 다른 전원이나 유도전압이 있을 수 있습니다. 양단 접지는 구간 전체를 같은 전위로 묶어 줍니다."@ko ;
+    sf:reason "There may be another source or induced voltage near the span. Earthing both ends ties the whole section to the same potential."@en ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_04 ;
+    aipd:inStage aipd:Stage_Initiate ;
+    aipd:precedes sf:wire_pulley .
+sf:wire_wground_x1 a sf:UnsafeChoice ;
+    rdfs:label "한쪽 전주만 접지하고 반대쪽은 전선을 풀면서 접지하기로 한다"@ko ;
+    rdfs:label "Earth one pole and earth the other while releasing the wire"@en ;
+    sf:explanation "전선을 만지기 전에 양단이 모두 검전·접지되어 있어야 합니다. (수칙 8)"@ko ;
+    sf:explanation "Both ends must be tested and earthed before anyone touches the wire. (Rule 8)"@en ;
+    sf:mistakeAt sf:wire_wground ;
+    sf:violates sf:Rule08 .
+sf:wire_wground_x2 a sf:UnsafeChoice ;
+    rdfs:label "-35 전주에서 검전했으니 여기서는 검전 없이 접지만 한다"@ko ;
+    rdfs:label "Already tested at -35, so just clamp the earths"@en ;
+    sf:explanation "작업 위치에서 다시 확인해야 다른 전원이 없음을 알 수 있습니다. (수칙 8)"@ko ;
+    sf:explanation "Only a test at the work point proves no other source reaches it. (Rule 8)"@en ;
+    sf:mistakeAt sf:wire_wground ;
+    sf:violates sf:Rule08 .
+sf:wire_pulley a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "pulley" ;
+    sf:stepNo 11 ;
+    rdfs:label "활차(풀리) 설치 — 완금에 세 상 모두"@ko ;
+    rdfs:label "Fit the stringing blocks (pulleys) on the crossarm"@en ;
+    sf:instruction "버킷을 작업 위치로 올려 각 전주 완금에 활차를 설치합니다. 전선이 애자에서 내려와도 활차 위에서 미끄러지며 지나가도록 하는 장치입니다."@ko ;
+    sf:instruction "Raise the bucket to the work position and fit a stringing block on each phase of the crossarm. The wire will ride on it and slide through once it leaves the insulator."@en ;
+    sf:reason "활차 없이 전선을 풀면 전선이 완금·전주를 긁어 손상시키고, 끌 때 걸려 튈 수 있습니다."@ko ;
+    sf:reason "Without blocks the wire scrapes the arm and pole and can snag and whip when pulled."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_detach .
+sf:wire_pulley_x1 a sf:UnsafeChoice ;
+    rdfs:label "활차를 건너뛰고 전선을 애자 위에 얹은 채 그대로 끈다"@ko ;
+    rdfs:label "Skip the blocks and drag the wire along the insulators"@en ;
+    sf:explanation "애자와 완금이 상하고 전선이 걸려 튑니다. 활차를 먼저 설치합니다. (수칙 11 배전)"@ko ;
+    sf:explanation "Insulators and arms get damaged and the wire can snag and whip. Fit the blocks first. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:wire_pulley ;
+    sf:violates sf:Rule11 .
+sf:wire_pulley_x2 a sf:UnsafeChoice ;
+    rdfs:label "활차는 지상에서 던져 올려 전주 위 작업자가 받는다"@ko ;
+    rdfs:label "Throw the blocks up from the ground for the worker to catch"@en ;
+    sf:explanation "던진 공구는 낙하물이 됩니다. 자재는 버킷에 담거나 인양 로프로 올립니다. (수칙 6)"@ko ;
+    sf:explanation "A thrown tool is a falling object. Carry it in the bucket or hoist it on a line. (Rule 6)"@en ;
+    sf:mistakeAt sf:wire_pulley ;
+    sf:violates sf:Rule06 .
+sf:wire_detach a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "detach" ;
+    sf:stepNo 12 ;
+    rdfs:label "구전선 분리 — 바인드를 풀어 활차에 올림"@ko ;
+    rdfs:label "Release the old wire: undo the ties and lay it on the blocks"@en ;
+    sf:instruction "애자 목에 묶인 바인드선(또는 클램프)을 풀어 구전선을 활차 위로 옮깁니다. 활차에 올라간 전선은 양 끝 전주에서만 지지됩니다."@ko ;
+    sf:instruction "Undo the ties (or clamps) on the insulator necks and lift the old wire onto the blocks. It is now held only at the two poles."@en ;
+    sf:reason "활차에 올리기 전에 먼저 풀면 전선이 도로·보도 위로 늘어집니다. 활차 설치와 양단 접지가 끝난 뒤에만 합니다."@ko ;
+    sf:reason "Release it before it sits on a block and it falls across the road and sidewalk. Only after blocks are fitted and both ends earthed."@en ;
+    sf:appliesRule sf:Rule03 ;
+    sf:appliesRule sf:Rule08 ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    aipd:hasRisk sf:HazardShock ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_link .
+sf:wire_detach_x1 a sf:UnsafeChoice ;
+    rdfs:label "전선이 무거우니 한 전주의 바인드만 먼저 풀고 반대쪽은 나중에 푼다"@ko ;
+    rdfs:label "Free one pole first and the other later"@en ;
+    sf:explanation "한쪽만 풀리면 전선이 다른 쪽 전주를 끌어당깁니다. 양 끝을 함께 활차에 올립니다. (수칙 3)"@ko ;
+    sf:explanation "With one end free the wire pulls at the other pole. Move both ends onto the blocks together. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_detach ;
+    sf:violates sf:Rule03 .
+sf:wire_detach_x2 a sf:UnsafeChoice ;
+    rdfs:label "활차 설치가 늦어지니 바인드를 먼저 풀어 두고 활차는 나중에 건다"@ko ;
+    rdfs:label "Undo the ties now and fit the blocks later"@en ;
+    sf:explanation "활차 없이 풀린 전선은 처져 도로를 덮습니다. 순서는 활차 → 분리입니다. (수칙 3)"@ko ;
+    sf:explanation "A freed wire with no block sags over the road. The order is blocks, then release. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_detach ;
+    sf:violates sf:Rule03 .
+sf:wire_link a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "link" ;
+    sf:stepNo 13 ;
+    rdfs:label "신전선 연결 — 드럼 스탠드, 윈치, 구전선과 신전선 연결"@ko ;
+    rdfs:label "Connect the new wire: drum stand, winch, join old and new"@en ;
+    sf:instruction "0번 전주 아래에 신전선 드럼을 스탠드에 걸어 제동을 겁니다. 35번 전주 너머에는 윈치를 세우고 구전선 끝을 물립니다. 0번 쪽에서 구전선 끝과 신전선 끝을 연결 그립으로 잇고, 연결부가 활차를 통과할 수 있는지 확인합니다."@ko ;
+    sf:instruction "Set the new-wire drum on its stand with the brake on, below pole 0. Set the winch beyond pole 35 and attach the old wire's far end. At pole 0 join the old and new wire ends with a grip and check the joint can pass the blocks."@en ;
+    sf:reason "연결 그립이 풀리거나 활차에 걸리면 견인 중에 전선이 튑니다. 견인 전에 연결부를 반드시 확인합니다."@ko ;
+    sf:reason "A grip that slips or jams in a block makes the wire whip while pulled. Check the joint before any pull."@en ;
+    sf:appliesRule sf:Rule03 ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_pull .
+sf:wire_link_x1 a sf:UnsafeChoice ;
+    rdfs:label "연결 그립은 눈으로만 대충 보고 바로 견인을 시작한다"@ko ;
+    rdfs:label "Glance at the grip and start pulling"@en ;
+    sf:explanation "견인 중 그립이 풀리면 전선이 반동으로 튑니다. 연결부는 손으로 당겨 확인합니다. (수칙 3)"@ko ;
+    sf:explanation "A grip that opens under load lets the wire whip back. Pull-test the joint by hand. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_link ;
+    sf:violates sf:Rule03 .
+sf:wire_link_x2 a sf:UnsafeChoice ;
+    rdfs:label "드럼 제동은 견인 중에 필요할 때 걸면 된다"@ko ;
+    rdfs:label "Apply the drum brake only when needed during the pull"@en ;
+    sf:explanation "드럼이 제멋대로 풀리면 전선이 엉킵니다. 제동은 견인 전에 걸고 속도를 조절합니다. (수칙 11 배전)"@ko ;
+    sf:explanation "A free-running drum tangles the wire. Brake first and control the speed. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:wire_link ;
+    sf:violates sf:Rule03 .
+sf:wire_pull a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "pull" ;
+    sf:stepNo 14 ;
+    rdfs:label "견인 가선 — 하부 출입금지 · 장력 감시 · 무전 신호"@ko ;
+    rdfs:label "Pull the new wire in — keep clear below, watch tension, radio signals"@en ;
+    sf:instruction "모든 지상 인원이 경간 아래에서 벗어난 것을 확인한 뒤, 윈치로 구전선을 천천히 당겨 신전선을 끌어옵니다. 버킷 작업자는 활차의 연결부 통과를 지켜보고, 이상이 있으면 무전으로 즉시 정지를 외칩니다."@ko ;
+    sf:instruction "Once everyone on the ground is out from under the span, the winch slowly draws the old wire in, pulling the new one through. The bucket workers watch the joint pass each block and call \"stop\" on the radio at any sign of trouble."@en ;
+    sf:reason "장력이 걸린 전선이 걸려 끊어지면 채찍처럼 튑니다. 지상 인원이 경간 아래에 없고 정지 신호가 즉시 통해야 합니다."@ko ;
+    sf:reason "A wire under tension that snags and breaks whips like a lash. Nobody may be under the span, and a stop call must work at once."@en ;
+    sf:appliesRule sf:Rule05 ;
+    sf:appliesRule sf:Rule06 ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_sag .
+sf:wire_pull_x1 a sf:UnsafeChoice ;
+    rdfs:label "속도를 내려고 지상 작업자가 전선을 따라 걸으며 손으로 잡아 준다"@ko ;
+    rdfs:label "Ground workers walk beside the wire and steady it by hand"@en ;
+    sf:explanation "전선이 걸려 끊어지면 반동에 맞습니다. 경간 아래 접근 금지, 전선은 활차와 윈치가 지나게 합니다. (수칙 5, 6)"@ko ;
+    sf:explanation "If it snags and breaks, whoever is holding it is hit. Nobody under or near the span; let the blocks and winch do it. (Rules 5, 6)"@en ;
+    sf:mistakeAt sf:wire_pull ;
+    sf:violates sf:Rule05 ;
+    sf:violates sf:Rule06 .
+sf:wire_pull_x2 a sf:UnsafeChoice ;
+    rdfs:label "연결부가 활차를 지나는 순간에도 속도를 줄이지 않는다"@ko ;
+    rdfs:label "Keep the speed up as the joint passes the blocks"@en ;
+    sf:explanation "연결부는 걸리기 쉬운 곳입니다. 통과할 때는 속도를 늦추고 버킷 작업자가 확인합니다. (수칙 3)"@ko ;
+    sf:explanation "The joint is where it jams. Slow down as it passes and let the bucket worker watch it. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_pull ;
+    sf:violates sf:Rule03 .
+sf:wire_sag a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "sag" ;
+    sf:stepNo 15 ;
+    rdfs:label "이도 조정 — 기온에 맞는 처짐 양으로"@ko ;
+    rdfs:label "Adjust the sag to suit the temperature"@en ;
+    sf:instruction "새 전선을 당겨 장력을 풀고 처짐(이도)을 계획서 기준표의 목표값에 맞춥니다. 기온이 높으면 전선이 늘어 더 처지게 하고, 낮으면 덜 처지게 합니다. 허용 오차 안에 들어온 뒤에 장력을 고정합니다."@ko ;
+    sf:instruction "Slack the new wire off to the sag in the plan table. In warm weather the wire has stretched, so allow more sag; in cold, less. Lock the tension only once it is within tolerance."@en ;
+    sf:reason "너무 팽팽하면 겨울에 끊어지거나 전주에 무리가 가고, 너무 처지면 바람에 전선끼리 닿거나 지상고가 모자랍니다."@ko ;
+    sf:reason "Too tight and the wire may snap in the cold or overload the pole; too slack and wind brings the wires together or they hang too low."@en ;
+    sf:appliesRule sf:Rule03 ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardMiscoordination ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_tie .
+sf:wire_sag_x1 a sf:UnsafeChoice ;
+    rdfs:label "여름이든 겨울이든 같은 처짐으로 맞춘다"@ko ;
+    rdfs:label "Use the same sag in summer and winter"@en ;
+    sf:explanation "전선은 온도에 따라 길이가 변하므로 기온별 기준표의 이도로 맞춥니다. (수칙 3)"@ko ;
+    sf:explanation "The wire changes length with temperature, so use the sag for today's temperature from the table. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_sag ;
+    sf:violates sf:Rule03 .
+sf:wire_sag_x2 a sf:UnsafeChoice ;
+    rdfs:label "팽팽할수록 안전하니 최대한 당겨서 고정한다"@ko ;
+    rdfs:label "Tighter is safer — pull as hard as possible and lock it"@en ;
+    sf:explanation "과장력은 겨울에 전선과 전주를 상하게 합니다. 이도는 클수록도 작을수록도 아닌 기준값입니다. (수칙 3)"@ko ;
+    sf:explanation "Over-tension damages wire and pole in the cold. Sag has a target value, neither as big nor as small as possible. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_sag ;
+    sf:violates sf:Rule03 .
+sf:wire_tie a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "tie" ;
+    sf:stepNo 16 ;
+    rdfs:label "결속 — 이도를 확인한 뒤 애자에 고정"@ko ;
+    rdfs:label "Tie in: fix the wire to the insulators once the sag is checked"@en ;
+    sf:instruction "이도가 확인되면 활차 위의 전선을 애자 위로 내려 바인드선(또는 클램프)으로 결속합니다. 활차는 아직 떼지 않고 결속이 끝난 뒤에 철거합니다."@ko ;
+    sf:instruction "With the sag confirmed, lower the wire from the blocks onto the insulators and tie (or clamp) it. The blocks stay on until the ties are done."@en ;
+    sf:reason "이도를 확인하기 전에 고정하면 다시 풀어야 하고, 그동안 전선이 풀린 채 남습니다."@ko ;
+    sf:reason "Tie before the sag is checked and it has to be undone, leaving the wire loose meanwhile."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_jumper .
+sf:wire_tie_x1 a sf:UnsafeChoice ;
+    rdfs:label "이도 확인은 나중에 하기로 하고 일단 애자에 결속한다"@ko ;
+    rdfs:label "Tie in first, check the sag later"@en ;
+    sf:explanation "결속은 이도 확인 뒤입니다. 순서가 바뀌면 다시 풀고 묶는 동안 위험이 반복됩니다. (수칙 11 배전)"@ko ;
+    sf:explanation "Tying comes after the sag check. Reverse it and the risk repeats while you undo and redo. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:wire_tie ;
+    sf:violates sf:Rule11 .
+sf:wire_tie_x2 a sf:UnsafeChoice ;
+    rdfs:label "활차를 먼저 떼어 내 버리고 그다음에 결속한다"@ko ;
+    rdfs:label "Remove the blocks first, then tie in"@en ;
+    sf:explanation "활차를 떼면 전선이 아직 고정되지 않은 채로 매달립니다. 결속 뒤에 철거합니다. (수칙 3)"@ko ;
+    sf:explanation "Take the blocks off and the wire hangs untied. Remove them after tying in. (Rule 3)"@en ;
+    sf:mistakeAt sf:wire_tie ;
+    sf:violates sf:Rule03 .
+sf:wire_jumper a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "jumper" ;
+    sf:stepNo 17 ;
+    rdfs:label "점퍼선 접속 · 압축 슬리브 작업"@ko ;
+    rdfs:label "Connect the jumpers and crimp the sleeves"@en ;
+    sf:instruction "전주 위에서 새 전선과 이웃 경간 전선을 점퍼선으로 잇고, 압축 슬리브를 규정 압력으로 압축합니다. 접속 부위를 방호 커버로 덮습니다."@ko ;
+    sf:instruction "At the pole top, join the new wire to the next span's wire with jumpers, crimp the sleeves to the specified pressure and cover the joints."@en ;
+    sf:reason "접속부는 전선에서 가장 약한 곳입니다. 압축이 부족하면 나중에 발열·단선으로 정전이 납니다."@ko ;
+    sf:reason "A joint is the weakest point of a line. An under-crimped sleeve later overheats or breaks and causes an outage."@en ;
+    sf:appliesRule sf:Rule11 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardArc ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_remove .
+sf:wire_jumper_x1 a sf:UnsafeChoice ;
+    rdfs:label "압축기 대신 일반 공구로 슬리브를 조여 둔다"@ko ;
+    rdfs:label "Tighten the sleeves with ordinary pliers"@en ;
+    sf:explanation "규정 압력으로 압축해야 접속 저항과 강도가 보장됩니다. 적정 공구를 씁니다. (수칙 11 배전)"@ko ;
+    sf:explanation "Only a proper crimp at the specified pressure gives the resistance and strength. Use the right tool. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:wire_jumper ;
+    sf:violates sf:Rule11 .
+sf:wire_jumper_x2 a sf:UnsafeChoice ;
+    rdfs:label "접속 부위는 커버 없이 두어도 전선과 같으니 그대로 둔다"@ko ;
+    rdfs:label "Leave the joint uncovered, it is just wire"@en ;
+    sf:explanation "접속부는 접촉·부식에 가장 약합니다. 규정대로 커버를 덮습니다. (수칙 11 배전)"@ko ;
+    sf:explanation "A joint is most prone to contact and corrosion. Cover it as specified. (Rule 11, distribution)"@en ;
+    sf:mistakeAt sf:wire_jumper ;
+    sf:violates sf:Rule11 .
+sf:wire_remove a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "remove" ;
+    sf:stepNo 18 ;
+    rdfs:label "활차 · 드럼 · 윈치 철거, 공구 회수"@ko ;
+    rdfs:label "Take down the blocks, drum and winch; collect the tools"@en ;
+    sf:instruction "버킷 작업자가 활차를 떼어 버킷에 담아 내리고, 지상에서는 드럼 스탠드와 윈치를 철거합니다. 전주 위에 남은 공구·바인드 조각이 없는지 확인합니다."@ko ;
+    sf:instruction "The bucket workers take the blocks off and carry them down in the bucket. On the ground the drum stand and winch come away. Check nothing is left on the poles."@en ;
+    sf:reason "전주 위에 남은 공구나 활차는 송전 뒤 떨어지거나 선로에 닿는 고장 원인이 됩니다."@ko ;
+    sf:reason "A tool or block left on a pole falls or touches the line after the power is back on."@en ;
+    sf:appliesRule sf:Rule06 ;
+    aipd:hasRisk sf:HazardStruck ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_05 ;
+    aipd:inStage aipd:Stage_Execute ;
+    aipd:precedes sf:wire_finish .
+sf:wire_remove_x1 a sf:UnsafeChoice ;
+    rdfs:label "활차는 송전한 뒤에 다음 작업 때 떼기로 하고 그대로 둔다"@ko ;
+    rdfs:label "Leave the blocks and take them off on the next job"@en ;
+    sf:explanation "활차를 단 채로 송전하면 접촉·낙하 사고가 납니다. 송전 전에 모두 철거합니다. (수칙 8)"@ko ;
+    sf:explanation "Energising with rigging still on the line risks contact and drops. Remove everything before power. (Rule 8)"@en ;
+    sf:mistakeAt sf:wire_remove ;
+    sf:violates sf:Rule08 .
+sf:wire_remove_x2 a sf:UnsafeChoice ;
+    rdfs:label "공구는 전주 아래로 던져 내리고 나중에 줍는다"@ko ;
+    rdfs:label "Throw the tools down and pick them up later"@en ;
+    sf:explanation "던진 공구는 낙하물입니다. 버킷에 담아 내립니다. (수칙 6)"@ko ;
+    sf:explanation "A thrown tool is a falling object. Bring tools down in the bucket. (Rule 6)"@en ;
+    sf:mistakeAt sf:wire_remove ;
+    sf:violates sf:Rule06 .
+sf:wire_finish a sf:WorkStep ;
+    sf:inScenario sf:Scenario_wire ;
+    sf:stepId "finish" ;
+    sf:stepNo 19 ;
+    rdfs:label "작업 완료 · 역순 철수 (양단 접지 해제 → 원방 접지 해제 → 개폐기 투입)"@ko ;
+    rdfs:label "Finish · tear down in reverse (span earths → remote earth → switch)"@en ;
+    sf:instruction "버킷 작업자가 양단 접지를 풀고(선로 측 먼저, 대지측 나중) 내려옵니다 → -35 전주 접지를 풉니다 → 인원·공구를 확인한 뒤 개폐기를 투입합니다 → 두 작업차의 아웃트리거와 고임목, 라바콘을 회수하고 유도자 신호로 출발합니다."@ko ;
+    sf:instruction "The bucket workers remove the span earths (line end first, earth end last) and come down → the earth at -35 is removed → count people and tools, then close the switch → stow outriggers and chocks on both trucks, collect cones and leave under the guide's signal."@en ;
+    sf:reason "송전 전에 인원과 접지, 남은 장비를 모두 확인하지 않으면 접지를 단 채 송전하거나 사람이 남은 채 송전합니다."@ko ;
+    sf:reason "Skip the count and you may re-energise with an earth on, rigging left on the line or a worker aloft."@en ;
+    sf:appliesRule sf:Rule08 ;
+    sf:appliesRule sf:Rule05 ;
+    sf:appliesRule sf:Rule02 ;
+    sf:appliesRule sf:Rule04 ;
+    aipd:hasRisk sf:HazardShock ;
+    aipd:hasRisk sf:HazardVehicle ;
+    aipd:hasRisk sf:HazardStruck ;
+    aipd:hasRisk sf:HazardRollaway ;
+    aipd:hasRisk sf:HazardTipOver ;
+    sf:involves sf:RoleSupervisor ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:involves sf:RoleGroundWorkerTruckDriver ;
+    sf:involves sf:RoleTruckDriverTestingEarthing ;
+    sf:involves sf:RoleSignaller ;
+    sf:involves sf:RoleBucketLineworker ;
+    sf:inWorkflow pam:WF_07 ;
+    aipd:inStage aipd:Stage_Close .
+sf:wire_finish_x1 a sf:UnsafeChoice ;
+    rdfs:label "양단 접지를 단 채로 먼저 개폐기를 투입한다"@ko ;
+    rdfs:label "Close the switch while the span earths are still on"@en ;
+    sf:explanation "접지를 단 채 송전하면 지락·아크 사고가 납니다. 접지 제거와 인원 확인 후에 송전합니다. (수칙 8)"@ko ;
+    sf:explanation "Re-energising into an earth causes a fault and arc. Remove earths and count people first. (Rule 8)"@en ;
+    sf:mistakeAt sf:wire_finish ;
+    sf:violates sf:Rule08 .
+sf:wire_finish_x2 a sf:UnsafeChoice ;
+    rdfs:label "붐을 올린 채로 아웃트리거부터 거둔다"@ko ;
+    rdfs:label "Retract the outriggers while the boom is still up"@en ;
+    sf:explanation "붐이 펼쳐진 상태에서 아웃트리거를 거두면 바로 전도됩니다. 붐 수납이 먼저입니다. (수칙 4)"@ko ;
+    sf:explanation "Retracting with the boom out tips the truck immediately. Stow the boom first. (Rule 4)"@en ;
+    sf:mistakeAt sf:wire_finish ;
+    sf:violates sf:Rule04 .
 sf:Scenario_manhole a sf:WorkScenario ;
     sf:scenarioId "manhole" ;
     rdfs:label "지중 배전 맨홀 작업 (밀폐공간)"@ko ;

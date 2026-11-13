@@ -47,6 +47,14 @@ export const ROLES = {
     D: { ko: '안전 감시자', en: 'Safety watcher', col: '#9085e9' },
     E: { ko: '출입 통제', en: 'Access control', col: '#d4a106' }
   },
+  wire: {
+    A: { ko: '작업책임자', en: 'Supervisor', col: '#2a78d6' },
+    B: { ko: '버킷 작업자 (0번 전주)', en: 'Bucket lineworker (pole 0)', col: '#d95926' },
+    C: { ko: '지상 작업자·1호차 운전원', en: 'Ground worker / truck 1 driver', col: '#199e70' },
+    D: { ko: '2호차 운전원·검전·접지', en: 'Truck 2 driver · testing & earthing', col: '#9085e9' },
+    E: { ko: '신호수(유도자)', en: 'Signaller (guide)', col: '#d4a106' },
+    F: { ko: '버킷 작업자 (35번 전주)', en: 'Bucket lineworker (pole 35)', col: '#e64980' }
+  },
   manhole: {
     A: { ko: '작업책임자', en: 'Supervisor', col: '#2a78d6' },
     B: { ko: '입조 작업자', en: 'Entrant', col: '#d95926' },

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전공사 안전 시뮬레이션 — 시나리오: 지중 배전 맨홀 (밀폐공간) (safety.js 가 이 파일들을 묶어 내보낸다)
-import { GEO, STOW, L, dist2, conesAround, go, act, say, until, set, wait } from './core.js?v=a3a7c3c2';
-import { person } from './scn-pole.js?v=9f79de89';
+import { GEO, STOW, L, dist2, conesAround, go, act, say, until, set, wait } from './core.js?v=96dbb605';
+import { person } from './scn-pole.js?v=36fdb56d';
 
 // ---- 시나리오: 지중 배전 맨홀 ---------------------------------------------------------------
 const GAS_BAD = { o2: 17.2, h2s: 14, co: 22 };

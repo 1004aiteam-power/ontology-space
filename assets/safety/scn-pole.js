@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전공사 안전 시뮬레이션 — 시나리오: 가공 배전 애자 · 완금 교체 (정전 작업) (safety.js 가 이 파일들을 묶어 내보낸다)
-import { GEO, boomIK, STOW, BUCKET, lerpJ, L, dist2, ease, go, act, say, tween, until, set, wait } from './core.js?v=a3a7c3c2';
+import { GEO, boomIK, STOW, BUCKET, lerpJ, L, dist2, ease, go, act, say, tween, until, set, wait } from './core.js?v=96dbb605';
 
 // ---- 시나리오: 가공 배전 애자·완금 교체 ----------------------------------------------------
 export function poleWorld() {

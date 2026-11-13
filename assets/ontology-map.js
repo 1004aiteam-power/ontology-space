@@ -114,7 +114,7 @@ import { $, esc } from './lib/dom.js?v=3b73d59c';
 
   document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const r = await fetch('assets/data/ontology-map.json?v=c7e0378d');
+      const r = await fetch('assets/data/ontology-map.json?v=542849d7');
       D = await r.json();
     } catch (e) { $('omSide').textContent = '⚠ ' + e.message; return; }
     const svg = $('omSvg');

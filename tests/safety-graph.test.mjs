@@ -76,7 +76,8 @@ for (const c of SAFETY_CYPHER) {
   const [q1, q2, q3, q4] = SAFETY_CYPHER.map(c => q(c.q));
   assert.deepEqual(q1.map(r => r[0]), [1, 2, 3, 4, 5, 6, 7, 8], 'harness comes after the 8 set-up steps');
   assert.deepEqual(q2.map(r => [r[1], r[3], r[4]]), [['D/L #1 Z6 (S5 뒤)', 290, '연계 개폐기 T3 (D/L #2)'], ['D/L #1 Z7 (S6 뒤)', 230, '연계 개폐기 T4 (C변전소)']]);
-  assert.equal(q3.length, 4);
+  assert.equal(q3.length, 5);
+  assert.deepEqual(q3.find(r => r[1] === 'AS-WR-0602').slice(3, 5), ['도체 보수', []], 'wire replacement links to the conductor repair task');
   assert.equal(q3.find(r => r[1] === 'AS-TW-0017')[5], 'B-A 154kV 가공도체');
   assert.deepEqual(q4[0].slice(1, 4), ['아라 병원', 3, true]);
 }

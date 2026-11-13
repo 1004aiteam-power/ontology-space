@@ -60,7 +60,7 @@ NAV = [
     ]),
     ("menu", "simMenu", "시뮬레이션", "Simulation", [
         ("h", "전력 현장 교육", "Power field training"),
-        ("safety.html", "배전공사 안전 훈련", "Distribution Work Safety", "전주·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄", "Pole, transformer, manhole & tower sites · printable training record"),
+        ("safety.html", "배전공사 안전 훈련", "Distribution Work Safety", "전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄", "Pole, wire replacement, transformer, manhole & tower sites · printable training record"),
         ("hr",), ("h", "교통", "Traffic"),
         ("intersection.html", "교차로 신호", "Intersection", "위에서 본 교차로 · 차량·좌회전·보행 신호", "Top-down junction · through, left &amp; walk signals"),
         ("airport.html", "공항 이착륙", "Airport Runways", "평행 활주로 2개 · 도착·출발 안내판 · 입체 시점", "Two parallel runways · arrival &amp; departure boards · 3D-style view"),

@@ -2,7 +2,7 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전공사 안전 훈련 시뮬레이션(safety.js) → 안전 온톨로지 개체 데이터 (스키마: examples/safety/safety-schema.ttl)
 //
-//  시뮬레이션에 이미 있는 것    수칙 11개(RULES) · 시나리오 4개 · 작업 단계 · 역할 · 훈련 오답(wrong)과 그 이유
+//  시뮬레이션에 이미 있는 것    수칙 11개(RULES) · 시나리오 5개 · 작업 단계 · 역할 · 훈련 오답(wrong)과 그 이유
 //  여기서 덧붙이는 것          위험요인(HAZARDS)과 수칙별 위험요인, 단계 → 자산관리 정비 흐름(WF), 현장 → 설비 · 배전선로
 //
 //  triples()  [주어, 술어, 목적어] (목적어는 IRI 문자열 또는 { v, dt | lang } 리터럴)
@@ -11,7 +11,7 @@
 // 브라우저(safety-ontology.html)와 빌드 스크립트(examples/safety/build_safety.mjs), 테스트가 같이 씀
 //
 // ⚠ 교육용 가상 현장입니다. 설비 · 선로 구간은 가상 배전선로(D/L #1)와 가상 A변전소 데이터입니다.
-import { SCENARIOS, ROLES, RULES } from './safety.js?v=e1c9ea17';
+import { SCENARIOS, ROLES, RULES } from './safety.js?v=c575fd35';
 
 export const SF = 'https://1004aiteam-power.github.io/ontology-space/safety#';
 const AIPD = 'https://example.org/ai-promotion-dept/ontology#';
@@ -45,7 +45,7 @@ const RULE_HAZARDS_AT = {
 export const ruleHazards = (scenario, rule) => RULE_HAZARDS_AT[scenario]?.[rule] || RULE_HAZARDS[rule];
 
 // 단계 → 자산관리 온톨로지의 정비 업무 흐름 (pam:WF_04 작업 허가·안전조치 · WF_05 작업 수행 · WF_07 재가압·복구)
-const DOING = new Set(['lift', 'txlift', 'enter', 'climb', 'tieoff', 'hoist', 'twork', 'mfinish', 'tdown']);
+const DOING = new Set(['lift', 'txlift', 'enter', 'climb', 'tieoff', 'hoist', 'twork', 'mfinish', 'tdown', 'pulley', 'detach', 'link', 'pull', 'sag', 'tie', 'jumper', 'remove']);
 const RESTORE = new Set(['finish', 'txfinish']);
 export const stepWorkflow = (id) => (RESTORE.has(id) ? 'WF_07' : DOING.has(id) ? 'WF_05' : 'WF_04');
 
@@ -63,6 +63,10 @@ export const SITES = {
     asset: { id: 'AS_PL_0601', cls: SF + 'PoleAsset', code: 'AS-PL-0601', ko: 'D/L #1 6구간 전주 (가상)', en: 'Pole on D/L #1 section 6 (virtual)', at: EX + FEEDER.main6,
       parts: [{ id: 'CP_PL0601_INS', ko: '현수애자', en: 'Suspension insulators', type: 'CT_Insulator' }, { id: 'CP_PL0601_ARM', ko: '완금', en: 'Crossarm', type: 'CT_Crossarm' }] },
     task: PAM + 'MT_10', section: EX + FEEDER.main6, isolate: EX + FEEDER.S5, lineDead: true
+  },
+  wire: {
+    asset: { id: 'AS_WR_0602', cls: SF + 'WireAsset', code: 'AS-WR-0602', ko: 'D/L #1 6구간 가공 전선 · 0↔35번 전주 한 경간 (가상)', en: 'Overhead conductors, one span (poles 0 to 35) on D/L #1 section 6 (virtual)', at: EX + FEEDER.main6, parts: [] },
+    task: PAM + 'MT_09', section: EX + FEEDER.main6, isolate: EX + FEEDER.S5, lineDead: true
   },
   tx: {
     asset: { id: 'AS_TR_P0021', cls: PAM + 'TransformerAsset', code: 'AS-TR-P0021', ko: '주상변압기 (분기선 2, 가상)', en: 'Pole transformer on branch 2 (virtual)', at: EX + FEEDER.br2end, parts: [] },

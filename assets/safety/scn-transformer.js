@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 배전공사 안전 시뮬레이션 — 시나리오: 배전 변압기 교체 (COS 개방, 본선 활선 유지) (safety.js 가 이 파일들을 묶어 내보낸다)
-import { GEO, boomIK, STOW, lerpJ, L, ease, go, act, say, tween, until, set } from './core.js?v=a3a7c3c2';
-import { poleWorld, person, poleSteps } from './scn-pole.js?v=9f79de89';
+import { GEO, boomIK, STOW, lerpJ, L, ease, go, act, say, tween, until, set } from './core.js?v=96dbb605';
+import { poleWorld, person, poleSteps } from './scn-pole.js?v=36fdb56d';
 
 // ---- 시나리오: 배전 변압기 교체 (COS 개방, 본선 활선 유지) ----------------------------------------
 // 전주 현장(작업차·고임목·아웃트리거)은 위 시나리오와 같고, 정전 범위는 COS로 변압기만 끊는다.
