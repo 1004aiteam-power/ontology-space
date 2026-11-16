@@ -6,7 +6,7 @@
 //  - 도로: 방향마다 2차로. 안쪽(0) = 좌회전 전용, 바깥쪽(1) = 직진·우회전
 //  - 차량: IDM(지능형 운전자 모델). 차로마다 앞에서부터 줄을 세워 앞차를 바로 찾는다
 //  - 교차로 통과: 정지선 → 교차로 안 곡선 → 다음 도로의 정해 둔 차로. 들어갈 자리가 없으면 교차로에 들어가지 않음(꼬리 물기 금지)
-//  - 경로: 출입구에서 목적지 출입구를 무작위로 정하고, 혼잡을 반영한 '남은 시간' 표로 교차로마다 좌·직·우를 고름
+//  - 경로: 출입구에서 목적지 출입구를 무작위로 정하고(일부는 도시 안 경유지에 들렀다 감), 혼잡을 반영한 '남은 시간' 표로 교차로마다 좌·직·우를 고름
 //  - 신호: 4현시(남북 직진 → 남북 좌회전 → 동서 직진 → 동서 좌회전), 황색 3초 + 전적색 2초
 //      fixed 고정 주기 · wave 녹색 물결(동서 방향 연동) · actuated 감응식(교차로마다 대기 차량에 맞춰 연장·생략)
 //  - 자율주행차(AV): 차간 시간이 짧고 출발 반응이 빠르며, 신호 정보(V2I)로 녹색이 켜질 때에 맞춰 속도를 줄여 다가감
@@ -23,13 +23,14 @@ export const PHASES = [
   { axis: 'EW', move: 'T', label: { ko: '동서 직진', en: 'E–W through' } },
   { axis: 'EW', move: 'L', label: { ko: '동서 좌회전', en: 'E–W left' } }
 ];
-const TURN_PEN = { T: 8, L: 18, R: 4 };     // 경로 고를 때 회전마다 더하는 예상 신호 대기 (초)
+const TURN_PEN = { T: 8, L: 14, R: 4 };     // 경로 고를 때 회전마다 더하는 예상 신호 대기 (초)
 
 export const DEFAULTS = {
   seed: 1,
   inflow: 2400,             // 도시 전체로 들어오는 교통량 (대/시)
   bias: 0,                  // 0 = 고르게, 1 = 출근 쏠림 (동쪽 → 서쪽)
   av: 0.2,                  // 자율주행차 비율
+  local: 0.5,               // 도시 안 경유지(가게 · 회사 …)에 들렀다 나가는 차의 비율. 나머지는 그냥 지나감
   mode: 'fixed',            // fixed | wave | actuated
   green: 24, left: 10,      // 고정 · 물결 신호의 직진 · 좌회전 녹색 (초)
   yellow: 3, allRed: 2,
@@ -129,7 +130,7 @@ export class City {
     Object.assign(this, buildNetwork());
     this.t = 0; this.nextId = 1;
     this.inBox = [];                                              // 교차로 안을 지나는 차
-    this.spawned = 0; this.exited = 0; this.blocked = 0; this.redRuns = 0; this.wrongExit = 0;
+    this.spawned = 0; this.exited = 0; this.blocked = 0; this.redRuns = 0; this.wrongExit = 0; this.visits = 0;
     this.done = [];                                               // 빠져나간 차 { t, time, free, delay, stops, av }
     this.inLog = []; this.outLog = [];                            // 들어온 · 나간 시각 (분당 유입 · 유출)
     this.history = [];
@@ -236,12 +237,26 @@ export class City {
       }
       return dist;
     });
+    // 경유지(교차로)까지 남은 시간 표: 그 교차로로 들어가는 도로에서 출발
+    this.costNode = this.nodes.map(n => {
+      const dist = new Float64Array(this.links.length).fill(Infinity), done = new Uint8Array(this.links.length);
+      for (const l of n.in) dist[l.id] = tt[l.id];
+      for (;;) {
+        let best = -1, bd = Infinity;
+        for (let i = 0; i < dist.length; i++) if (!done[i] && dist[i] < bd) { bd = dist[i]; best = i; }
+        if (best < 0) break;
+        done[best] = 1;
+        const m = this.links[best];
+        for (const l of m.prev) { const c = tt[l.id] + TURN_PEN[turnOf(l.d, m.d)] + bd; if (c < dist[l.id]) dist[l.id] = c; }
+      }
+      return dist;
+    });
     this.routedT = this.t;
   }
   // 그 도로의 끝 교차로에서 어디로 갈지 · 어느 차로로 갈지
   plan(car, link) {
     if (link.to < 0) { car.next = null; car.move = null; return link.lanes[link.lanes[0].cars.length <= link.lanes[1].cars.length ? 0 : 1]; }
-    const cost = this.cost[car.dest];
+    const cost = car.via != null && link.to !== car.via ? this.costNode[car.via] : this.cost[car.dest];   // 경유지 교차로에 닿으면 그다음부터는 출구로
     let best = null, bc = Infinity;
     for (const m of link.next) {
       const c = TURN_PEN[turnOf(link.d, m.d)] + cost[m.id] + car.noise * this.rand();
@@ -254,11 +269,13 @@ export class City {
   // 따라가기 화면용: 지금 있는 도로부터 출구까지 남은 경로 (지금 계산한 '남은 시간' 표대로)
   routeAhead(car) {
     const out = [];
-    let l = car.box ? car.toLane.link : car.link, guard = 0;
+    let l = car.box ? car.toLane.link : car.link, guard = 0, via = car.via;
+    if (car.box && car.node === via) via = null;
     while (l && guard++ < 40) {
       out.push(l);
       if (l.to < 0) break;
-      const cost = this.cost[car.dest];
+      if (l.to === via) { via = null; out.via = l.to; }
+      const cost = via != null ? this.costNode[via] : this.cost[car.dest];
       let best = null, bc = Infinity;
       for (const m of l.next) { const c = TURN_PEN[turnOf(l.d, m.d)] + cost[m.id]; if (c < bc) { bc = c; best = m; } }
       l = best;
@@ -283,6 +300,9 @@ export class City {
       for (const h of this.gates) { if (h === g) continue; r -= h.wOut; if (r <= 0) { car.dest = h.id; break; } }
       car.dest ??= this.gates[(g.id + 1) % this.gates.length].id;
       car.src = g.id;
+      if (this.rand() < this.o.local) {                        // 도시 안 경유지: 들어온 교차로가 아닌 곳 아무 데나
+        do car.via = Math.floor(this.rand() * this.nodes.length); while (car.via === g.node);
+      }
       const lane = this.plan(car, g.inn), tail = lane.cars[lane.cars.length - 1];
       if (tail && tail.s < this.o.len + 6) { this.blocked++; continue; }      // 입구가 막힘 → 도시 밖에서 대기
       g.queue--;
@@ -309,7 +329,7 @@ export class City {
   }
   peekLane(car) {                                               // 다음 도로에서 쓸 차로 (그 끝에서의 회전을 미리 정해 둠)
     if (car.peek == null || car.peekFor !== car.next.id) {
-      const tmp = { dest: car.dest, noise: car.noise };
+      const tmp = { dest: car.dest, noise: car.noise, via: car.link && car.link.to === car.via ? null : car.via };
       car.peek = this.plan(tmp, car.next).k; car.peekFor = car.next.id; car.peekNext = tmp.next; car.peekMove = tmp.move;
     }
     return car.peek;
@@ -355,6 +375,7 @@ export class City {
         if (this.signal(this.nodes[l.to], l, car.move) === 'R') this.redRuns++;      // 테스트용: 적신호에 들어가면 셈 (0이어야 함)
         const k = this.peekLane(car), toLane = car.next.lanes[k];
         car.box = boxPath(lane, toLane); car.bs = over; car.fromLane = lane; car.toLane = toLane; car.node = l.to;
+        if (car.via === l.to) { car.via = null; this.visits++; }
         toLane.res++;
         this.inBox.push(car);
       }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 도시 교통망 페이지: 위에서 본 도시 · 조절 · 대시보드(숫자, 시간 그래프, 자율주행 비교, 출입구) · 자율주행차 따라가기
-import { City, DEFAULTS, GEO, N, PHASES, lanePoint } from './city.js?v=f47a5117';
+import { City, DEFAULTS, GEO, N, PHASES, lanePoint } from './city.js?v=9866ed9b';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
 const SPEEDS = [1, 2, 5, 10, 20];
@@ -24,7 +24,7 @@ const f0 = (v) => (Number.isFinite(v) ? v.toFixed(0) : '–');
 const f1 = (v) => (Number.isFinite(v) ? v.toFixed(1) : '–');
 
 function settings() {
-  return { inflow: num('cvIn'), av: num('cvAv') / 100, bias: num('cvBias') / 100, mode: $('cvMode').value, green: num('cvGreen'), left: num('cvLeft') };
+  return { inflow: num('cvIn'), av: num('cvAv') / 100, local: num('cvLocal') / 100, bias: num('cvBias') / 100, mode: $('cvMode').value, green: num('cvGreen'), left: num('cvLeft') };
 }
 function build() {
   sim = new City({ seed, ...settings() });
@@ -144,6 +144,8 @@ function sensor(ctx, X, Y, S) {
       notes.push(t({ ko: `다음 교차로: ${car.move === 'L' ? '좌회전' : car.move === 'R' ? '우회전' : '직진'}`, en: `next junction: ${car.move === 'L' ? 'left' : car.move === 'R' ? 'right' : 'straight'}` }));
     } else notes.push(t({ ko: '도시를 빠져나가는 중', en: 'leaving the city' }));
   } else notes.push(t({ ko: '교차로 통과 중', en: 'crossing the junction' }));
+  if (car.via != null) { const v = sim.nodes[car.via]; notes.push(t({ ko: `경유지: 교차로 (${v.i + 1}, ${v.j + 1})에 들렀다 출구로`, en: `stop in town: junction (${v.i + 1}, ${v.j + 1}), then the exit` })); ctx.strokeStyle = '#1baf7a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(v.x), Y(v.y), Math.max(6, 9 * S), 0, 7); ctx.stroke(); }
+  else notes.push(t({ ko: '목적지: 출구로 바로', en: 'heading straight for the exit' }));
   notes.unshift(t({ ko: `자율주행차 #${car.id} · ${kmh(car.v)} km/h`, en: `Autonomous car #${car.id} · ${kmh(car.v)} km/h` }));
   ctx.font = '12px system-ui, sans-serif'; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
   const w = Math.max(...notes.map(s => ctx.measureText(s).width)) + 16, h = notes.length * 17 + 10, bx = 8, by = 34;
@@ -252,6 +254,7 @@ function labels() {
   $('cvInOut').textContent = `${num('cvIn')} ${t({ ko: '대/시', en: 'cars/h' })}`;
   $('cvAvOut').textContent = `${num('cvAv')}%`;
   $('cvBiasOut').textContent = `${num('cvBias')}%`;
+  $('cvLocalOut').textContent = `${num('cvLocal')}%`;
   $('cvGreenOut').textContent = `${num('cvGreen')}${t({ ko: '초', en: ' s' })}`;
   $('cvLeftOut').textContent = `${num('cvLeft')}${t({ ko: '초', en: ' s' })}`;
   $('cvTiming').hidden = $('cvMode').value === 'actuated';
@@ -288,13 +291,13 @@ function main() {
   $('speedBtn').addEventListener('click', () => { speedIdx = (speedIdx + 1) % SPEEDS.length; labels(); });
   $('seedBtn').addEventListener('click', () => { seed = seed % 99 + 1; build(); running = true; labels(); });
   $('followBtn').addEventListener('click', () => { if (follow) follow = null; else startFollow(); labels(); });
-  for (const id of ['cvIn', 'cvAv', 'cvBias', 'cvGreen', 'cvLeft']) $(id).addEventListener('input', () => { sim.configure(settings()); labels(); });
+  for (const id of ['cvIn', 'cvAv', 'cvLocal', 'cvBias', 'cvGreen', 'cvLeft']) $(id).addEventListener('input', () => { sim.configure(settings()); labels(); });
   $('cvMode').addEventListener('change', () => { sim.configure(settings()); labels(); });
   for (const id of ['cvHeat', 'cvSig']) $(id).addEventListener('change', draw);
   $('cvPresets').addEventListener('click', e => {
     const b = e.target.closest('button[data-preset]'); if (!b) return;
     const o = { ...DEFAULTS, ...PRESETS[b.dataset.preset].o };
-    $('cvIn').value = o.inflow; $('cvAv').value = Math.round(o.av * 100); $('cvBias').value = Math.round(o.bias * 100); $('cvMode').value = o.mode;
+    $('cvIn').value = o.inflow; $('cvAv').value = Math.round(o.av * 100); $('cvLocal').value = Math.round(o.local * 100); $('cvBias').value = Math.round(o.bias * 100); $('cvMode').value = o.mode;
     $('cvGreen').value = o.green; $('cvLeft').value = o.left;
     build(); running = true; labels();
   });

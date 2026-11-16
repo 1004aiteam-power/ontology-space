@@ -79,3 +79,18 @@ for (const mode of ['fixed', 'wave', 'actuated']) {
   c.run(1); assert.equal(c.signal(n, l, 'T'), 'G', 'green right after');
   console.log(`✓ V2I time-to-green (${tg.toFixed(1)} s) matches the signal`);
 }
+
+// 8) 도시 안에 들르는 차가 있으면 가운데 교차로에서도 좌회전이 흔함 (그냥 지나가는 차만 있을 때보다 많음)
+{
+  const inner = (n) => n.i > 0 && n.i < N - 1 && n.j > 0 && n.j < N - 1;
+  const count = (local) => {
+    const c = new City({ local, seed: 6 }), k = { L: 0, all: 0 }, orig = c.stepCars.bind(c);
+    c.stepCars = function (dt) { const before = new Set(this.inBox); orig(dt); for (const car of this.inBox) if (!before.has(car) && inner(this.nodes[car.node])) { k.all++; if (car.box.move === 'L') k.L++; } };
+    c.run(1500);
+    return { ...k, visits: c.visits, wrong: c.wrongExit };
+  };
+  const thru = count(0), local = count(0.5);
+  assert.equal(local.wrong, 0); assert.ok(local.visits > 300, `cars visit their stop in town (${local.visits})`);
+  assert.ok(local.L > thru.L * 1.5 && local.L / local.all > 0.12, `left turns mid-town: ${local.L} of ${local.all} with stops vs ${thru.L} of ${thru.all} through only`);
+  console.log(`✓ left turns at the 25 inner junctions: ${thru.L} (through traffic only) → ${local.L} (half the cars stop in town)`);
+}
