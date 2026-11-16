@@ -131,6 +131,7 @@ export class City {
     this.t = 0; this.nextId = 1;
     this.inBox = [];                                              // 교차로 안을 지나는 차
     this.spawned = 0; this.exited = 0; this.blocked = 0; this.redRuns = 0; this.wrongExit = 0; this.visits = 0;
+    this.probeWait = null; this.probeLog = []; this.probeN = 0;      // 시험 차량: 왼쪽 아래 → 오른쪽 위
     this.done = [];                                               // 빠져나간 차 { t, time, free, delay, stops, av }
     this.inLog = []; this.outLog = [];                            // 들어온 · 나간 시각 (분당 유입 · 유출)
     this.history = [];
@@ -288,8 +289,36 @@ export class City {
     return [p[0], p[1], Math.atan2(d[1], d[0])];
   }
 
+  // ---- 시험 차량: 왼쪽 아래 모서리 출입구(남쪽) → 오른쪽 위 모서리 출입구(북쪽) ----
+  probeGates() {
+    const sw = this.gates.find(g => g.node === (N - 1) * N && g.side === 'S'), ne = this.gates.find(g => g.node === N - 1 && g.side === 'N');
+    return { from: sw, to: ne };
+  }
+  // 보내기: 입구가 막혀 있으면 자리가 날 때까지 맨 앞에서 기다림
+  sendProbe({ av = false } = {}) {
+    if (this.probeWait || this.probe) return null;
+    const { from, to } = this.probeGates();
+    const car = { id: this.nextId++, av, probe: ++this.probeN, s: 0, v: this.o.v0 * 0.6, acc: 0, t0: this.t, dist: 0, stops: 0, stopped: false, hold: 0, noise: 4,
+      dest: to.id, src: from.id, via: null, setup: { inflow: this.o.inflow, mode: this.o.mode, avShare: this.o.av } };
+    this.probeWait = car;
+    return car;
+  }
+  probeStatus() {
+    const c = this.probe || this.probeWait;
+    if (!c) return null;
+    return { car: c, waiting: !this.probe, time: this.t - c.t0, dist: c.dist, stops: c.stops, v: c.v };
+  }
+
   // ---- 차량 ----
   spawn() {
+    if (this.probeWait) {                                       // 시험 차량을 먼저 넣음
+      const car = this.probeWait, g = this.gates[car.src], lane = this.plan(car, g.inn), tail = lane.cars[lane.cars.length - 1];
+      if (!tail || tail.s >= this.o.len + 6) {
+        car.lane = lane; car.link = g.inn; car.v = tail ? Math.min(car.v, tail.v) : car.v;
+        lane.cars.push(car); this.spawned++; g.inCount++; this.inLog.push(this.t);
+        this.probe = car; this.probeWait = null;
+      }
+    }
     for (const g of this.gates) {
       while (this.t >= g.nextT) { g.queue++; g.nextT = this.expo(g.rate) + (g.nextT - this.t); }
       if (!g.queue) continue;
@@ -408,6 +437,7 @@ export class City {
   finish(car) {
     const time = this.t - car.t0, free = car.dist / this.o.v0;
     this.done.push({ t: this.t, time, free, delay: Math.max(0, time - free), stops: car.stops, av: car.av });
+    if (car.probe) { this.probeLog.push({ n: car.probe, av: car.av, start: car.t0, time, free, dist: car.dist, stops: car.stops, ...car.setup }); this.probe = null; }
     this.exited++; this.gates[car.dest].outCount++; this.outLog.push(this.t);
   }
 

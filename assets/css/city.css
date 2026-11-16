@@ -33,3 +33,9 @@
 .cv-bar b{font-variant-numeric:tabular-nums;text-align:right}
 #cvGates td,#cvGates th{text-align:right} #cvGates td:first-child,#cvGates th:first-child{text-align:left}
 #cvTiming[hidden]{display:none}
+.cv-probe{background:var(--surface);border:1px solid var(--line);border-left:4px solid #e64980;border-radius:8px;padding:8px 10px;font-size:13px}
+.cv-probe:empty{display:none}
+.cv-probe b.big{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.cv-probe span{color:var(--muted)}
+#cvProbeLog td,#cvProbeLog th{text-align:right;white-space:nowrap} #cvProbeLog td:nth-child(2),#cvProbeLog th:nth-child(2),#cvProbeLog td:nth-child(5),#cvProbeLog th:nth-child(5){text-align:left}
+#cvProbeLog td.bar{width:40%;text-align:left} #cvProbeLog td.bar i{display:inline-block;height:10px;border-radius:0 4px 4px 0;background:#e64980;vertical-align:middle}

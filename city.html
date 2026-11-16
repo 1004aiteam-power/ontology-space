@@ -27,10 +27,10 @@
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=729f3c47">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
-<link rel="stylesheet" href="assets/css/city.css?v=eab3b81b">
+<link rel="stylesheet" href="assets/css/city.css?v=e12bfa2d">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
-<script type="module" src="assets/city/city-app.js?v=b0828952"></script>
+<script type="module" src="assets/city/city-app.js?v=7b90114b"></script>
 </head>
 <body>
 <a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
@@ -146,6 +146,13 @@
     <button id="seedBtn"></button>
     <button id="followBtn"></button>
   </div>
+  <div class="ctrl">
+    <button id="probeBtn"></button>
+    <label class="speed-ctl"><span lang="ko">시험 차량</span><span lang="en">Test car</span>
+      <select id="probeType" aria-label="test car type"><option value="human">일반차 / Human-driven</option><option value="av">자율주행차 / Autonomous</option></select></label>
+    <span class="meta" lang="ko">왼쪽 아래 모서리(남쪽 입구)에서 오른쪽 위 모서리(북쪽 출구)까지 한 대를 보내 걸리는 시간을 잽니다.</span>
+    <span class="meta" lang="en">Send one car from the bottom-left corner (south gate) to the top-right corner (north gate) and time it.</span>
+  </div>
   <div class="ctrl" id="cvPresets" role="group" aria-label="presets"></div>
   <div class="ctrl">
     <label class="speed-ctl"><span lang="ko">유입량</span><span lang="en">Inflow</span>
@@ -178,6 +185,7 @@
     </div>
     <div class="cv-side">
       <div id="cvStats"></div>
+      <div id="cvProbe" class="cv-probe"></div>
       <p id="cvNode"><span lang="ko">교차로를 누르면 그 교차로의 신호와 대기 차량이 보입니다.</span><span lang="en">Click a junction to see its signal and queues.</span></p>
     </div>
   </div>
@@ -203,6 +211,10 @@
       <p class="meta" lang="ko">자율주행차는 차간 시간이 짧고 출발이 빠르며, 신호 정보를 받아 녹색에 맞춰 다가갑니다. 비율을 바꿔 차이를 비교해 보세요.</p><p class="meta" lang="en">Autonomous cars follow closer, start faster and use signal data to arrive on green. Change the share and compare.</p></div>
     <div id="cvTip" hidden></div>
   </div>
+  <h3><span lang="ko">시험 차량 기록 (왼쪽 아래 → 오른쪽 위)</span><span lang="en">Test-car runs (bottom-left → top-right)</span></h3>
+  <p class="meta" lang="ko">같은 길이라도 그때의 교통량 · 신호 · 차종에 따라 걸리는 시간이 다릅니다. 조건을 바꿔 가며 여러 번 보내 비교해 보세요. 한 번 결과는 운(신호를 몇 번 만났는지)에 따라 크게 흔들리므로 여러 번의 평균으로 보는 것이 좋습니다.</p>
+  <p class="meta" lang="en">The same trip takes different times with different traffic, signals and car type. Send several under different settings and compare. One run swings a lot with luck (how many reds it meets), so look at the average of several.</p>
+  <div class="tbl"><table id="cvProbeLog"></table></div>
   <h3><span lang="ko">출입구별 유입 · 유출</span><span lang="en">Inflow and outflow by gate side</span></h3>
   <div class="tbl"><table id="cvGates"></table></div>
 </section>

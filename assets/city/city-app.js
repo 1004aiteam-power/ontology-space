@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 도시 교통망 페이지: 위에서 본 도시 · 조절 · 대시보드(숫자, 시간 그래프, 자율주행 비교, 출입구) · 자율주행차 따라가기
-import { City, DEFAULTS, GEO, N, PHASES, lanePoint } from './city.js?v=9866ed9b';
+import { City, DEFAULTS, GEO, N, PHASES, lanePoint } from './city.js?v=d197b60e';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
 const SPEEDS = [1, 2, 5, 10, 20];
@@ -15,7 +15,9 @@ const PRESETS = {
 };
 const HUMAN_COLS = ['#d9dde3', '#b9c0ca', '#f1f3f5', '#9aa3ad', '#c7b9a6', '#e8e0d0'];
 
-let sim, running = false, speedIdx = 1, seed = 1, acc = 0, last = 0, follow = null, picked = null, hover = null;
+let sim, running = false, speedIdx = 1, seed = 1, acc = 0, last = 0, follow = null, picked = null, hover = null, followProbe = false;
+const PROBE_COL = '#e64980';
+const mmss = (s) => (Number.isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}` : '–');
 const view = { cx: 3 * GEO.block, cy: 3 * GEO.block, s: 1, fitted: false };
 const num = (id) => +$(id).value;
 const flag = (id) => $(id).checked;
@@ -28,8 +30,8 @@ function settings() {
 }
 function build() {
   sim = new City({ seed, ...settings() });
-  follow = null; picked = null; acc = 0;
-  labels(); stats(); charts(); compare(); gates();
+  follow = null; picked = null; acc = 0; followProbe = false;
+  labels(); stats(); charts(); compare(); gates(); probePanel();
 }
 
 // ---- 위에서 본 도시 ---------------------------------------------------------------------
@@ -87,10 +89,25 @@ function draw() {
     g.addColorStop(0, `rgba(217,72,15,${0.25 + 0.45 * k})`); g.addColorStop(1, 'rgba(217,72,15,0)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X(n.x), Y(n.y), r, 0, 7); ctx.fill();
   }
+  // 시험 차량: 출발 · 도착 깃발과 남은 경로
+  {
+    const { from, to } = sim.probeGates(), flagAt = (g, label) => {
+      const x = X(g.x), y = Y(g.y); ctx.fillStyle = PROBE_COL; ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill();
+      ctx.font = '600 11px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      const w = ctx.measureText(label).width + 10; ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.fillRect(x - w / 2, y - 24, w, 16); ctx.fillStyle = '#a61e4d'; ctx.fillText(label, x, y - 10);
+    };
+    flagAt(from, t({ ko: '출발', en: 'Start' })); flagAt(to, t({ ko: '도착', en: 'Finish' }));
+    const pc = sim.probe;
+    if (pc && pc !== follow) {
+      ctx.strokeStyle = 'rgba(230,73,128,.55)'; ctx.lineWidth = Math.max(2, 1.2 * S); ctx.setLineDash([6, 4]); ctx.beginPath();
+      sim.routeAhead(pc).forEach((l, i) => { const k = i === 0 && !pc.box ? pc.lane.k : 1, p0 = lanePoint(l.lanes[k], i === 0 && !pc.box ? pc.s : 0), p1 = lanePoint(l.lanes[k], l.len); if (i === 0) ctx.moveTo(X(p0[0]), Y(p0[1])); else ctx.lineTo(X(p0[0]), Y(p0[1])); ctx.lineTo(X(p1[0]), Y(p1[1])); });
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+  }
   // 따라가는 차의 남은 경로
   if (follow) {
     const route = sim.routeAhead(follow);
-    ctx.strokeStyle = 'rgba(27,175,122,.55)'; ctx.lineWidth = Math.max(2, 1.2 * S); ctx.setLineDash([]);
+    ctx.strokeStyle = follow.probe ? 'rgba(230,73,128,.6)' : 'rgba(27,175,122,.55)'; ctx.lineWidth = Math.max(2, 1.2 * S); ctx.setLineDash([]);
     ctx.beginPath();
     route.forEach((l, i) => { const k = i === 0 && !follow.box ? follow.lane.k : 1, p0 = lanePoint(l.lanes[k], i === 0 && !follow.box ? follow.s : 0), p1 = lanePoint(l.lanes[k], l.len); if (i === 0) ctx.moveTo(X(p0[0]), Y(p0[1])); else ctx.lineTo(X(p0[0]), Y(p0[1])); ctx.lineTo(X(p1[0]), Y(p1[1])); });
     ctx.stroke();
@@ -109,8 +126,9 @@ function draw() {
     const [x, y, a] = sim.carPos(car), sx = X(x), sy = Y(y);
     if (sx < -10 || sy < -10 || sx > cw + 10 || sy > ch + 10) continue;
     ctx.save(); ctx.translate(sx, sy); ctx.rotate(a);
-    ctx.fillStyle = car.av ? '#1baf7a' : HUMAN_COLS[car.id % HUMAN_COLS.length];
-    ctx.fillRect(-cl / 2, -cwid / 2, cl, cwid);
+    ctx.fillStyle = car.probe ? PROBE_COL : car.av ? '#1baf7a' : HUMAN_COLS[car.id % HUMAN_COLS.length];
+    if (car.probe) { ctx.save(); ctx.scale(1.5, 1.5); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.fillRect(-cl / 2, -cwid / 2, cl, cwid); ctx.strokeRect(-cl / 2, -cwid / 2, cl, cwid); ctx.restore(); }
+    else ctx.fillRect(-cl / 2, -cwid / 2, cl, cwid);
     if (S > 1.5) { ctx.fillStyle = 'rgba(20,30,40,.55)'; ctx.fillRect(cl * 0.08, -cwid / 2 + 0.25 * S, cl * 0.22, cwid - 0.5 * S); }
     if (car === follow) { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.strokeRect(-cl / 2 - 1.5, -cwid / 2 - 1.5, cl + 3, cwid + 3); }
     ctx.restore();
@@ -126,7 +144,7 @@ function draw() {
 }
 function sensor(ctx, X, Y, S) {
   const car = follow, [x, y] = sim.carPos(car), R = 40;
-  ctx.strokeStyle = 'rgba(27,175,122,.8)'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
+  ctx.strokeStyle = car.probe ? 'rgba(230,73,128,.85)' : 'rgba(27,175,122,.8)'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
   ctx.beginPath(); ctx.arc(X(x), Y(y), R * S, 0, 7); ctx.stroke(); ctx.setLineDash([]);
   ctx.fillStyle = 'rgba(27,175,122,.08)'; ctx.fill();
   const notes = [];
@@ -146,7 +164,8 @@ function sensor(ctx, X, Y, S) {
   } else notes.push(t({ ko: '교차로 통과 중', en: 'crossing the junction' }));
   if (car.via != null) { const v = sim.nodes[car.via]; notes.push(t({ ko: `경유지: 교차로 (${v.i + 1}, ${v.j + 1})에 들렀다 출구로`, en: `stop in town: junction (${v.i + 1}, ${v.j + 1}), then the exit` })); ctx.strokeStyle = '#1baf7a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(v.x), Y(v.y), Math.max(6, 9 * S), 0, 7); ctx.stroke(); }
   else notes.push(t({ ko: '목적지: 출구로 바로', en: 'heading straight for the exit' }));
-  notes.unshift(t({ ko: `자율주행차 #${car.id} · ${kmh(car.v)} km/h`, en: `Autonomous car #${car.id} · ${kmh(car.v)} km/h` }));
+  const kind = car.av ? t({ ko: '자율주행차', en: 'Autonomous car' }) : t({ ko: '일반차', en: 'Human-driven car' });
+  notes.unshift(car.probe ? t({ ko: `시험 차량 ${car.probe}호 (${kind}) · ${kmh(car.v)} km/h · ${mmss(sim.t - car.t0)}`, en: `Test car no. ${car.probe} (${kind}) · ${kmh(car.v)} km/h · ${mmss(sim.t - car.t0)}` }) : `${kind} #${car.id} · ${kmh(car.v)} km/h`);
   ctx.font = '12px system-ui, sans-serif'; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
   const w = Math.max(...notes.map(s => ctx.measureText(s).width)) + 16, h = notes.length * 17 + 10, bx = 8, by = 34;
   ctx.fillStyle = 'rgba(10,30,24,.82)'; ctx.fillRect(bx, by, w, h);
@@ -237,6 +256,31 @@ function compare() {
     return `<div class="cv-cmp"><p>${r.k}</p>${bar(r.a, 'av', t({ ko: '자율주행', en: 'Autonomous' }))}${bar(r.h, 'hu', t({ ko: '일반', en: 'Human' }))}</div>`;
   }).join('');
 }
+// 시험 차량: 지금 상태 · 마지막 결과
+function probePanel() {
+  const st = sim.probeStatus(), lastR = sim.probeLog[sim.probeLog.length - 1], el = $('cvProbe');
+  if (st) {
+    const kind = st.car.av ? t({ ko: '자율주행차', en: 'autonomous' }) : t({ ko: '일반차', en: 'human-driven' });
+    let left = '';
+    if (!st.waiting) { const r = sim.routeAhead(st.car); let m = r.reduce((s, l) => s + l.len, 0) - (st.car.box ? 0 : st.car.s); left = t({ ko: ` · 남은 거리 약 ${Math.max(0, m).toFixed(0)} m`, en: ` · about ${Math.max(0, m).toFixed(0)} m to go` }); }
+    el.innerHTML = `<span>${t({ ko: `시험 차량 ${st.car.probe}호 (${kind})`, en: `Test car no. ${st.car.probe} (${kind})` })}</span><b class="big">${mmss(st.time)}</b>` +
+      (st.waiting ? t({ ko: '입구가 막혀 도시 밖에서 기다리는 중', en: 'waiting outside — the entrance is full' })
+        : t({ ko: `${(st.dist / 1000).toFixed(2)} km 달림 · 정지 ${st.stops}번 · ${kmh(st.v)} km/h`, en: `${(st.dist / 1000).toFixed(2)} km · ${st.stops} stops · ${kmh(st.v)} km/h` }) + left);
+  } else if (lastR) {
+    el.innerHTML = `<span>${t({ ko: `시험 차량 ${lastR.n}호 도착`, en: `Test car no. ${lastR.n} arrived` })}</span><b class="big">${mmss(lastR.time)}</b>` +
+      t({ ko: `신호 · 차가 없을 때 최소 ${mmss(lastR.free)} · 지연 ${mmss(lastR.time - lastR.free)} · 정지 ${lastR.stops}번`, en: `minimum with no signals or traffic ${mmss(lastR.free)} · delay ${mmss(lastR.time - lastR.free)} · ${lastR.stops} stops` });
+  } else el.innerHTML = '';
+}
+function probeLog() {
+  const L = sim.probeLog; probeLog.n = L.length;
+  const modes = { fixed: t({ ko: '고정 주기', en: 'fixed' }), wave: t({ ko: '녹색 물결', en: 'green wave' }), actuated: t({ ko: '감응식', en: 'actuated' }) };
+  if (!L.length) { $('cvProbeLog').innerHTML = `<tr><td>${t({ ko: '아직 기록이 없습니다. 위의 "🚩 시험 차량 보내기"를 눌러 보세요.', en: 'No runs yet. Press "🚩 Send a test car" above.' })}</td></tr>`; return; }
+  const mx = Math.max(...L.map(r => r.time));
+  const avg = (f) => { const a = L.filter(f); return a.length ? a.reduce((s, r) => s + r.time, 0) / a.length : NaN; };
+  $('cvProbeLog').innerHTML = `<tr><th>#</th><th>${t({ ko: '차종', en: 'Car' })}</th><th>${t({ ko: '유입량', en: 'Inflow' })}</th><th>${t({ ko: '자율주행 비율', en: 'Autonomous' })}</th><th>${t({ ko: '신호', en: 'Signals' })}</th><th>${t({ ko: '걸린 시간', en: 'Time' })}</th><th></th><th>${t({ ko: '정지', en: 'Stops' })}</th></tr>` +
+    L.map(r => `<tr><td>${r.n}</td><td>${r.av ? t({ ko: '자율주행', en: 'Autonomous' }) : t({ ko: '일반', en: 'Human' })}</td><td>${r.inflow}</td><td>${Math.round(r.avShare * 100)}%</td><td>${modes[r.mode]}</td><td><b>${mmss(r.time)}</b></td><td class="bar"><i style="width:${Math.max(2, 100 * r.time / mx)}%"></i></td><td>${r.stops}</td></tr>`).join('') +
+    `<tr><td colspan="5">${t({ ko: '평균: 일반차', en: 'Average: human' })} ${mmss(avg(r => !r.av))} · ${t({ ko: '자율주행차', en: 'autonomous' })} ${mmss(avg(r => r.av))}</td><td colspan="3">${t({ ko: '최소(신호 · 차 없음)', en: 'Minimum (no signals, no traffic)' })} ${mmss(L[0].free)}</td></tr>`;
+}
 function gates() {
   const sides = ['N', 'E', 'S', 'W'], name = { N: t({ ko: '북쪽', en: 'North' }), E: t({ ko: '동쪽', en: 'East' }), S: t({ ko: '남쪽', en: 'South' }), W: t({ ko: '서쪽', en: 'West' }) };
   const sum = (s, k) => sim.gates.filter(g => g.side === s).reduce((a, g) => a + g[k], 0);
@@ -250,6 +294,8 @@ function labels() {
   $('playBtn').textContent = running ? t({ ko: '⏸ 일시정지', en: '⏸ Pause' }) : t({ ko: '▶ 시작', en: '▶ Start' });
   $('speedBtn').textContent = t({ ko: '배속', en: 'Speed' }) + ` ${SPEEDS[speedIdx]}×`;
   $('seedBtn').textContent = t({ ko: '🎲 다른 도시', en: '🎲 Another city' }) + ` #${seed}`;
+  $('probeBtn').textContent = sim.probe || sim.probeWait ? t({ ko: '🚩 시험 차량 달리는 중…', en: '🚩 Test car on its way…' }) : t({ ko: '🚩 시험 차량 보내기', en: '🚩 Send a test car' });
+  $('probeBtn').disabled = !!(sim.probe || sim.probeWait);
   $('followBtn').textContent = follow ? t({ ko: '따라가기 멈춤', en: 'Stop following' }) : t({ ko: '🚘 자율주행차 따라가기', en: '🚘 Follow an autonomous car' });
   $('cvInOut').textContent = `${num('cvIn')} ${t({ ko: '대/시', en: 'cars/h' })}`;
   $('cvAvOut').textContent = `${num('cvAv')}%`;
@@ -276,9 +322,15 @@ function frame(now) {
     acc += dtReal * SPEEDS[speedIdx];
     const t0 = performance.now();
     while (acc >= sim.o.dt) { sim.step(); acc -= sim.o.dt; if (performance.now() - t0 > FRAME_BUDGET) { acc = 0; break; } }
-    if (follow && ![...sim.cars()].includes(follow)) { $('cvNote').textContent = t({ ko: `자율주행차 #${follow.id}가 도시를 빠져나갔습니다.`, en: `Autonomous car #${follow.id} has left the city.` }); follow = null; labels(); }
+    if (followProbe && sim.probe) { follow = sim.probe; followProbe = false; view.s = Math.max(view.s, 2.4); labels(); }
+    if (follow && ![...sim.cars()].includes(follow)) {
+      const r = follow.probe ? sim.probeLog[sim.probeLog.length - 1] : null;
+      $('cvNote').textContent = r ? t({ ko: `시험 차량 ${r.n}호가 도착했습니다: ${mmss(r.time)} 걸림 (정지 ${r.stops}번).`, en: `Test car no. ${r.n} arrived in ${mmss(r.time)} (${r.stops} stops).` })
+        : t({ ko: `차 #${follow.id}가 도시를 빠져나갔습니다.`, en: `Car #${follow.id} has left the city.` });
+      follow = null; view.fitted = false; labels(); probePanel(); probeLog();
+    }
     frame.n = (frame.n || 0) + 1;
-    if (frame.n % 15 === 0) { stats(); charts(); compare(); gates(); }
+    if (frame.n % 15 === 0) { stats(); charts(); compare(); gates(); probePanel(); if (sim.probeLog.length !== probeLog.n) probeLog(); }
   }
   draw();
   requestAnimationFrame(frame);
@@ -291,6 +343,7 @@ function main() {
   $('speedBtn').addEventListener('click', () => { speedIdx = (speedIdx + 1) % SPEEDS.length; labels(); });
   $('seedBtn').addEventListener('click', () => { seed = seed % 99 + 1; build(); running = true; labels(); });
   $('followBtn').addEventListener('click', () => { if (follow) follow = null; else startFollow(); labels(); });
+  $('probeBtn').addEventListener('click', () => { if (sim.sendProbe({ av: $('probeType').value === 'av' })) { followProbe = true; running = true; $('cvNote').textContent = ''; } labels(); probePanel(); });
   for (const id of ['cvIn', 'cvAv', 'cvLocal', 'cvBias', 'cvGreen', 'cvLeft']) $(id).addEventListener('input', () => { sim.configure(settings()); labels(); });
   $('cvMode').addEventListener('change', () => { sim.configure(settings()); labels(); });
   for (const id of ['cvHeat', 'cvSig']) $(id).addEventListener('change', draw);
@@ -324,7 +377,7 @@ function main() {
     el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); hover = { id: C.id, x: e.clientX - r.left }; charts(); });
     el.addEventListener('pointerleave', () => { hover = null; charts(); });
   }
-  document.addEventListener('langchange', () => { labels(); stats(); charts(); compare(); gates(); });
+  document.addEventListener('langchange', () => { labels(); stats(); charts(); compare(); gates(); probePanel(); probeLog(); });
   addEventListener('resize', () => { view.fitted = false; charts(); });
   $('themeBtn')?.addEventListener('click', () => setTimeout(charts, 0));
   requestAnimationFrame(frame);

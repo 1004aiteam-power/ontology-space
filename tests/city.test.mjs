@@ -94,3 +94,21 @@ for (const mode of ['fixed', 'wave', 'actuated']) {
   assert.ok(local.L > thru.L * 1.5 && local.L / local.all > 0.12, `left turns mid-town: ${local.L} of ${local.all} with stops vs ${thru.L} of ${thru.all} through only`);
   console.log(`✓ left turns at the 25 inner junctions: ${thru.L} (through traffic only) → ${local.L} (half the cars stop in town)`);
 }
+
+// 9) 시험 차량: 왼쪽 아래 → 오른쪽 위로 가서 기록이 남고, 걸린 시간은 신호 · 차가 없을 때의 최소 시간보다 길며, 교통량이 많을수록 대체로 길다
+{
+  const runs = (inflow) => {
+    const c = new City({ inflow, seed: 8 });
+    c.run(400);
+    const out = [];
+    for (let k = 0; k < 3; k++) { assert.ok(c.sendProbe({ av: false })); assert.equal(c.sendProbe(), null, 'one test car at a time'); let n = 0; while ((c.probe || c.probeWait) && n++ < 40000) c.step(); out.push(c.probeLog[k]); }
+    assert.equal(c.wrongExit, 0);
+    return out;
+  };
+  const light = runs(800), heavy = runs(6000), mean = (a) => a.reduce((s, r) => s + r.time, 0) / a.length;
+  const { from, to } = new City().probeGates();
+  assert.deepEqual([from.side, from.node, to.side, to.node], ['S', (N - 1) * N, 'N', N - 1], 'from the bottom-left corner to the top-right corner');
+  for (const r of [...light, ...heavy]) { assert.ok(r.time > r.free && r.dist > 2 * 6 * 110, `run ${r.n}: ${r.time.toFixed(0)} s > minimum ${r.free.toFixed(0)} s over ${r.dist.toFixed(0)} m`); }
+  assert.ok(mean(heavy) > mean(light), `heavier traffic, longer trip (${mean(light).toFixed(0)} s → ${mean(heavy).toFixed(0)} s)`);
+  console.log(`✓ test car bottom-left → top-right: ${mean(light).toFixed(0)} s on average at 800 cars/h, ${mean(heavy).toFixed(0)} s at 6000 (minimum ${light[0].free.toFixed(0)} s)`);
+}
