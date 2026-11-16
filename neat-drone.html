@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=716f9b0c">
+<link rel="stylesheet" href="assets/site.css?v=ff047c05">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
 <link rel="stylesheet" href="assets/css/neat.css?v=a7a62fb5">
 <link rel="stylesheet" href="assets/css/snake.css?v=78f1097c">
@@ -133,7 +133,7 @@
 <main id="main" class="wrap">
 <div class="hero">
   <div class="eyebrow">NEAT · DRONE</div>
-  <h1><span lang="ko">150대가 동시에 진화하며<br>나는 법을 배웁니다</span><span lang="en">150 drones evolve together<br>and learn to fly</span></h1>
+  <h1><span class="h1ic" aria-hidden="true">🚁</span> <span lang="ko">150대가 동시에 진화하며<br>나는 법을 배웁니다</span><span lang="en">150 drones evolve together<br>and learn to fly</span></h1>
   <p class="lead" lang="ko"><b>NEAT</b>(NeuroEvolution of Augmenting Topologies: 신경망의 구조와 가중치를 함께 진화시키는 알고리즘)를 이용한 시뮬레이션입니다. <a href="physical-ai.html#lab">자율주행</a> · <a href="neat-snake.html">스네이크</a>와 같은 NEAT 구현(<code>neat.js</code>)을 그대로 쓰는 세 번째 예제입니다. 자동차는 <b>어느 쪽으로 꺾을지</b>, 뱀은 <b>어느 칸으로 갈지</b>를 배웠습니다. 드론은 가만히 있으면 떨어지기 때문에 <b>균형을 잡으면서 이동하는 법</b>을 배워야 합니다. 조종할 수 있는 것은 좌우 프로펠러의 추력 두 개뿐입니다.</p>
   <p class="lead" lang="en">This simulation uses <b>NEAT</b> (NeuroEvolution of Augmenting Topologies: an algorithm that evolves both the structure and the weights of neural networks). It is the third example built on the same NEAT implementation (<code>neat.js</code>) as <a href="physical-ai.html#lab">self-driving</a> and <a href="neat-snake.html">Snake</a>. The cars learned <b>which way to steer</b> and the snakes <b>which cell to move to</b>. A drone falls if it does nothing, so it has to learn <b>to keep its balance while moving</b> — with only two controls, the thrust of its left and right propellers.</p>
 </div>

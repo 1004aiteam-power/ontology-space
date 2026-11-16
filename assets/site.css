@@ -316,3 +316,53 @@ h2::before{content:"✦ ";color:var(--accent);font-size:.8em}
 .card{transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-2px);box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 14%,transparent)}
 .hero-cards .card h4 .ic{display:inline-block;margin-right:4px}
+
+/* 페이지 · 메뉴 아이콘 */
+.h1ic{margin-right:.15em}
+.menu a[href="index.html"]>span[lang]::before{content:"🏠 "}
+.menu a[href="ontology.html"]>span[lang]::before{content:"📚 "}
+.menu a[href="grid.html"]>span[lang]::before{content:"⚡ "}
+.menu a[href="project.html"]>span[lang]::before{content:"🐍 "}
+.menu a[href="ood.html"]>span[lang]::before{content:"⚖️ "}
+.menu a[href="aas.html"]>span[lang]::before{content:"🏷️ "}
+.menu a[href="lab.html"]>span[lang]::before{content:"🔍 "}
+.menu a[href="twin.html"]>span[lang]::before{content:"🛰️ "}
+.menu a[href="vpp.html"]>span[lang]::before{content:"🔋 "}
+.menu a[href="vpp-market.html"]>span[lang]::before{content:"🏪 "}
+.menu a[href="physical-ai.html"]>span[lang]::before{content:"🦾 "}
+.menu a[href="neat-snake.html"]>span[lang]::before{content:"🐍 "}
+.menu a[href="neat-drone.html"]>span[lang]::before{content:"🚁 "}
+.menu a[href="safety.html"]>span[lang]::before{content:"👷 "}
+.menu a[href="intersection.html"]>span[lang]::before{content:"🚦 "}
+.menu a[href="airport.html"]>span[lang]::before{content:"✈️ "}
+.menu a[href="flights.html"]>span[lang]::before{content:"🌍 "}
+.menu a[href="city.html"]>span[lang]::before{content:"🏙️ "}
+.menu a[href="ecosystem.html"]>span[lang]::before{content:"🦠 "}
+.menu a[href="particle-life.html"]>span[lang]::before{content:"✨ "}
+.menu a[href="tunneling.html"]>span[lang]::before{content:"⚛️ "}
+.menu a[href="star-formation.html"]>span[lang]::before{content:"🌌 "}
+.menu a[href="studio.html"]>span[lang]::before{content:"🧩 "}
+.menu a[href="ontology-map.html"]>span[lang]::before{content:"🗺️ "}
+.menu a[href="work.html"]>span[lang]::before{content:"🗂️ "}
+.menu a[href="highway.html"]>span[lang]::before{content:"🛣️ "}
+.menu a[href="ev.html"]>span[lang]::before{content:"🔌 "}
+.menu a[href="asset.html"]>span[lang]::before{content:"🔧 "}
+.menu a[href="impact.html"]>span[lang]::before{content:"💥 "}
+.menu a[href="safety-ontology.html"]>span[lang]::before{content:"🦺 "}
+.menu a[href="eco-ontology.html"]>span[lang]::before{content:"🧬 "}
+.menu a[href="ai.html"]>span[lang]::before{content:"🤖 "}
+.menu a[href="bidding.html"]>span[lang]::before{content:"💹 "}
+.menu-btn[aria-controls="introMenu"]>span[lang]::before{content:"🏠 "}
+.menu-btn[aria-controls="gridMenu"]>span[lang]::before{content:"⚡ "}
+.menu-btn[aria-controls="vppMenu"]>span[lang]::before{content:"🔋 "}
+.menu-btn[aria-controls="physaiMenu"]>span[lang]::before{content:"🦾 "}
+.menu-btn[aria-controls="simMenu"]>span[lang]::before{content:"🎮 "}
+.menu-btn[aria-controls="studioMenu"]>span[lang]::before{content:"🧩 "}
+.menu-btn[aria-controls="aiMenu"]>span[lang]::before{content:"🤖 "}
+.menu a[href="grid.html#flisr"]>span[lang]::before{content:"🔌 "}
+.menu a[href="index.html#why"]>span[lang]::before{content:"💭 "}
+.menu a[href="ai.html#graphrag"]>span[lang]::before{content:"🕸️ "}
+.menu a[href="ai.html#agent"]>span[lang]::before{content:"🕵️ "}
+.menu a[href="physical-ai.html#lab"]>span[lang]::before{content:"🚗 "}
+.menu a[href^="vpp.html#"]>span[lang]::before{content:"▫️ "}
+nav>a[href="bidding.html"]>span[lang]::before{content:"💹 "}

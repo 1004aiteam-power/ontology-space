@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=716f9b0c">
+<link rel="stylesheet" href="assets/site.css?v=ff047c05">
 <link rel="stylesheet" href="assets/css/lab.css?v=44c10a36">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
@@ -131,7 +131,7 @@
 <main id="main" class="wrap">
 <div class="hero">
   <div class="eyebrow">HANDS-ON</div>
-  <h1><span lang="ko">직접 질의하고, 그래프로 보기</span><span lang="en">Query it, see it as a graph</span></h1>
+  <h1><span class="h1ic" aria-hidden="true">🔍</span> <span lang="ko">직접 질의하고, 그래프로 보기</span><span lang="en">Query it, see it as a graph</span></h1>
   <p class="lead" lang="ko">전력망 데이터를 브라우저 안에서 <b>Cypher</b>(Neo4j의 질의 언어)로 다룹니다. 서버 없이, RDF(Turtle) 파일을 Neo4j에 불러온 것과 같은 <b>속성 그래프</b>로 바꿔 메모리에 올리고, 작은 Cypher 엔진이 질의를 실행합니다.</p>
   <p class="lead" lang="en">Query grid data in your browser with <b>Cypher</b>, Neo4j's query language. No server: the RDF (Turtle) files are turned into the same <b>property graph</b> you would get by loading them into Neo4j, and a small Cypher engine runs your queries in memory.</p>
   <blockquote><p lang="ko"><b>RDF를 Neo4j처럼 불러오기</b> — 클래스(<code>rdf:type</code>)는 <b>라벨</b>이 되고 상위 클래스도 라벨로 함께 붙습니다(예: <code>:Breaker:ProtectedSwitch:Switch:ConductingEquipment</code>). 값은 <b>속성</b>(<code>cim:IdentifiedObject.name</code> → <code>name</code>), 개체를 가리키는 속성은 <b>관계</b>(<code>cim:Terminal.ConductingEquipment</code> → <code>:CONDUCTING_EQUIPMENT</code>)가 되고, 원래 IRI는 <code>uri</code> 속성에 남습니다. Neo4j의 neosemantics(n10s) 플러그인으로 불러올 때와 같은 생각이며, 이름은 n10s의 매핑 기능(<code>n10s.mapping.add</code>)으로 짧게 바꾼 모양입니다. 이 실습 엔진은 읽기 질의(MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, 가변 길이 경로, 집계, EXISTS)를 지원합니다.</p><p lang="en"><b>Loading RDF the Neo4j way</b> — classes (<code>rdf:type</code>) become <b>labels</b>, with parent classes added as labels too (e.g. <code>:Breaker:ProtectedSwitch:Switch:ConductingEquipment</code>). Values become <b>properties</b> (<code>cim:IdentifiedObject.name</code> → <code>name</code>), links to other individuals become <b>relationships</b> (<code>cim:Terminal.ConductingEquipment</code> → <code>:CONDUCTING_EQUIPMENT</code>), and the original IRI stays in a <code>uri</code> property — the same idea as Neo4j's neosemantics (n10s) plugin, with names shortened the way n10s's mapping feature (<code>n10s.mapping.add</code>) does. The lab engine supports read queries: MATCH · OPTIONAL MATCH · WHERE · WITH · UNWIND · RETURN, variable-length paths, aggregation and EXISTS.</p></blockquote>
