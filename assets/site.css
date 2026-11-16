@@ -302,3 +302,17 @@ header.top .tools button{min-height:30px}
   html{scroll-behavior:auto}
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;animation-iteration-count:1 !important;scroll-behavior:auto !important}
 }
+
+/* 장식: 배경 그림 · 아이콘 (모든 페이지 공통) */
+body{background-image:
+  radial-gradient(circle at 12% 8%,color-mix(in srgb,var(--accent) 10%,transparent) 0,transparent 38%),
+  radial-gradient(circle at 92% 30%,color-mix(in srgb,var(--warm) 9%,transparent) 0,transparent 34%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='none' stroke='%23808a99' stroke-opacity='.16' stroke-width='1.2'%3E%3Ccircle cx='20' cy='20' r='4'/%3E%3Ccircle cx='96' cy='34' r='3'/%3E%3Ccircle cx='60' cy='92' r='4'/%3E%3Cpath d='M20 20L96 34L60 92Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment:fixed,fixed,scroll}
+.hero{position:relative}
+.hero::after{content:"⚡🕸️🤖";position:absolute;right:0;top:30px;font-size:clamp(34px,7vw,72px);letter-spacing:.15em;opacity:.18;pointer-events:none;transform:rotate(-6deg)}
+.brand::before{content:"🌐 "}
+h2::before{content:"✦ ";color:var(--accent);font-size:.8em}
+.card{transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 14%,transparent)}
+.hero-cards .card h4 .ic{display:inline-block;margin-right:4px}
