@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 도시 교통망 페이지: 위에서 본 도시 · 조절 · 대시보드(숫자, 시간 그래프, 자율주행 비교, 출입구) · 자율주행차 따라가기
-import { City, DEFAULTS, GEO, N, PHASES, lanePoint } from './city.js?v=d197b60e';
+import { City, DEFAULTS, GEO, N, PHASES, lanePoint, XS, YS, SPAN } from './city.js?v=d34525a7';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
 const SPEEDS = [1, 2, 5, 10, 20];
@@ -18,7 +18,7 @@ const HUMAN_COLS = ['#d9dde3', '#b9c0ca', '#f1f3f5', '#9aa3ad', '#c7b9a6', '#e8e
 let sim, running = false, speedIdx = 1, seed = 1, acc = 0, last = 0, follow = null, picked = null, hover = null, followProbe = false;
 const PROBE_COL = '#e64980';
 const mmss = (s) => (Number.isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}` : '–');
-const view = { cx: 3 * GEO.block, cy: 3 * GEO.block, s: 1, fitted: false };
+const view = { cx: SPAN / 2, cy: SPAN / 2, s: 1, fitted: false };
 const num = (id) => +$(id).value;
 const flag = (id) => $(id).checked;
 const kmh = (v) => (Number.isFinite(v) ? (v * 3.6).toFixed(0) : '–');
@@ -36,8 +36,8 @@ function build() {
 
 // ---- 위에서 본 도시 ---------------------------------------------------------------------
 function fitView(cw, ch) {
-  const span = (N - 1) * GEO.block + 2 * GEO.gate + 20;
-  view.s = Math.min(cw, ch) / span; view.cx = 3 * GEO.block; view.cy = 3 * GEO.block; view.fitted = true;
+  const span = SPAN + 2 * GEO.gate + 70;                      // 출발 · 도착 깃발 글자까지 보이게
+  view.s = Math.min(cw, ch) / span; view.cx = SPAN / 2; view.cy = SPAN / 2; view.fitted = true;
 }
 const toScr = (x, y, cw, ch) => [cw / 2 + (x - view.cx) * view.s, ch / 2 + (y - view.cy) * view.s];
 
@@ -48,25 +48,27 @@ function draw() {
     const p = sim.carPos(follow); view.cx += (p[0] - view.cx) * 0.15; view.cy += (p[1] - view.cy) * 0.15;
   }
   const S = view.s, X = (x) => cw / 2 + (x - view.cx) * S, Y = (y) => ch / 2 + (y - view.cy) * S;
-  const B = GEO.block, half = 2 * GEO.laneW, dk = dark();
+  const half = 2 * GEO.laneW, dk = dark();
   ctx.fillStyle = dk ? '#1d2620' : '#cfd8c4'; ctx.fillRect(0, 0, cw, ch);
   // 블록 (보도 + 건물)
   for (let j = 0; j < N - 1; j++) for (let i = 0; i < N - 1; i++) {
-    const x0 = i * B + half, y0 = j * B + half, w = B - 2 * half;
-    ctx.fillStyle = dk ? '#3a3d42' : '#e4e1da'; ctx.fillRect(X(x0), Y(y0), w * S, w * S);
-    const inset = 4, bw = (w - 2 * inset - 4) / 2;
-    for (let q = 0; q < 4; q++) {
-      const bx = x0 + inset + (q % 2) * (bw + 4), by = y0 + inset + Math.floor(q / 2) * (bw + 4), h = ((i * 7 + j * 3 + q * 5) % 5) / 5;
+    const x0 = XS[i] + half, y0 = YS[j] + half, w = XS[i + 1] - XS[i] - 2 * half, hgt = YS[j + 1] - YS[j] - 2 * half;
+    ctx.fillStyle = dk ? '#3a3d42' : '#e4e1da'; ctx.fillRect(X(x0), Y(y0), w * S, hgt * S);
+    // 건물: 블록 크기에 맞춰 가로 · 세로 개수를 다르게 (블록마다 모양이 달라 보이게)
+    const inset = 4, gap = 4, nx = Math.max(1, Math.round(w / 42)), ny = Math.max(1, Math.round(hgt / 42));
+    const bw = (w - 2 * inset - (nx - 1) * gap) / nx, bh = (hgt - 2 * inset - (ny - 1) * gap) / ny;
+    for (let a = 0; a < nx; a++) for (let b = 0; b < ny; b++) {
+      const bx = x0 + inset + a * (bw + gap), by = y0 + inset + b * (bh + gap), h = ((i * 7 + j * 3 + a * 5 + b * 3) % 5) / 5;
       ctx.fillStyle = dk ? `rgb(${52 + h * 26},${56 + h * 26},${64 + h * 26})` : `rgb(${196 - h * 40},${198 - h * 38},${204 - h * 34})`;
-      ctx.fillRect(X(bx), Y(by), bw * S, bw * S);
+      ctx.fillRect(X(bx), Y(by), bw * S, bh * S);
     }
   }
   // 도로 (출입구 도로 포함)
   ctx.fillStyle = dk ? '#2b2e33' : '#5a5f67';
-  const lo = -GEO.gate, hi = (N - 1) * B + GEO.gate;
+  const lo = -GEO.gate, hi = SPAN + GEO.gate;
   for (let k = 0; k < N; k++) {
-    ctx.fillRect(X(lo), Y(k * B - half), (hi - lo) * S, 2 * half * S);
-    ctx.fillRect(X(k * B - half), Y(lo), 2 * half * S, (hi - lo) * S);
+    ctx.fillRect(X(lo), Y(YS[k] - half), (hi - lo) * S, 2 * half * S);
+    ctx.fillRect(X(XS[k] - half), Y(lo), 2 * half * S, (hi - lo) * S);
   }
   // 차선: 중앙선(황색) · 차로 경계(흰 점선) · 정지선 (가까이 볼 때만)
   if (S > 0.55) {

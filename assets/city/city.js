@@ -2,7 +2,8 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 도시 교통망 시뮬레이션 코어 (화면 없이 동작 → 테스트 가능). 단위: 미터, 초. 화면 좌표(y 아래쪽), 우측통행
 //
-//  - 6×6 블록 격자 도시: 교차로 7×7 = 49개, 블록 한 변 110 m. 가장자리 28곳에 도시 밖과 이어지는 출입구
+//  - 6×6 블록 격자 도시: 교차로 7×7 = 49개, 전체 660 m × 660 m. 블록은 가로 80~150 m · 세로 80~140 m의 직사각형으로 제각각.
+//    가장자리 28곳에 도시 밖과 이어지는 출입구
 //  - 도로: 방향마다 2차로. 안쪽(0) = 좌회전 전용, 바깥쪽(1) = 직진·우회전
 //  - 차량: IDM(지능형 운전자 모델). 차로마다 앞에서부터 줄을 세워 앞차를 바로 찾는다
 //  - 교차로 통과: 정지선 → 교차로 안 곡선 → 다음 도로의 정해 둔 차로. 들어갈 자리가 없으면 교차로에 들어가지 않음(꼬리 물기 금지)
@@ -14,7 +15,12 @@
 // ⚠ 교육용 단순 모델입니다. 실제 교통 설계 · 신호 운영 기준을 대신하지 않습니다.
 
 export const N = 7;                         // 교차로 가로 · 세로 개수 (블록 6×6)
-export const GEO = { block: 110, laneW: 3.5, setback: 11, gate: 95 };
+export const GEO = { laneW: 3.5, setback: 11, gate: 95 };
+// 블록 폭(동서) · 높이(남북). 합은 둘 다 660 m (예전 정사각형 110 m × 6과 같은 크기)
+export const GAPS_X = [90, 140, 100, 150, 80, 100], GAPS_Y = [120, 80, 130, 90, 140, 100];
+const cum = (g) => g.reduce((a, d) => (a.push(a[a.length - 1] + d), a), [0]);
+export const XS = cum(GAPS_X), YS = cum(GAPS_Y);                 // 교차로 x · y 좌표
+export const SPAN = XS[XS.length - 1];
 export const DIRS = { E: [1, 0], W: [-1, 0], N: [0, -1], S: [0, 1] };
 const OPP = { E: 'W', W: 'E', N: 'S', S: 'N' };
 export const PHASES = [
@@ -64,8 +70,8 @@ export function turnOf(dIn, dOut) {
 
 // ---- 도로망 ----------------------------------------------------------------------------
 export function buildNetwork() {
-  const B = GEO.block, SB = GEO.setback, nodes = [], links = [], gates = [];
-  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) nodes.push({ id: j * N + i, i, j, x: i * B, y: j * B, in: [], out: [] });
+  const SB = GEO.setback, nodes = [], links = [], gates = [];
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) nodes.push({ id: j * N + i, i, j, x: XS[i], y: YS[j], in: [], out: [] });
   const addLink = (from, to, a, b, d, gate = null) => {
     const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
     const l = { id: links.length, from, to, a, b, d, dk: dirKey(d), len, gate, lanes: [] };
@@ -150,7 +156,7 @@ export class City {
     const wIn = this.gates.reduce((s, g) => s + g.wIn, 0);
     for (const g of this.gates) { const r = o.inflow * g.wIn / wIn; if (r !== g.rate) { g.rate = r; g.nextT = this.expo(r); } }
     this.cycle = 2 * (o.green + o.left) + 4 * (o.yellow + o.allRed);
-    for (const n of this.nodes) n.offset = o.mode === 'wave' ? (n.i * GEO.block / o.vWave) % this.cycle : 0;
+    for (const n of this.nodes) n.offset = o.mode === 'wave' ? (n.x / o.vWave) % this.cycle : 0;
     if (o.mode === 'actuated' && prevMode !== 'actuated') for (const n of this.nodes) Object.assign(n, { stageT: 0, target: o.actuated.minT, lastDet: 0, stage: n.stage || 'green' });
     this.mode = o.mode;
     this.updateSignals(0);
