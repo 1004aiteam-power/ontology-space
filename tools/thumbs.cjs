@@ -11,6 +11,7 @@ const PAGES = [
   ['intersection', 'intersection.html', 'view', async p => p.click('#playBtn'), 6000],
   ['airport', 'airport.html', 'apView', async p => { await p.selectOption('#camSel', 'terminal'); await p.click('#playBtn'); }, 6000],
   ['flights', 'flights.html', 'flMap', async p => p.click('#playBtn'), 4000],
+  ['city', 'city.html', 'cvView', async p => { await p.click('[data-preset="rush"]'); await p.click('#speedBtn'); await p.click('#speedBtn'); await p.click('#speedBtn'); }, 12000],
   ['ecosystem', 'ecosystem.html', 'dish', async p => p.click('#playBtn'), 6000],
   ['tunneling', 'tunneling.html', 'tnView', async p => { await p.click('#playBtn'); }, 3200],
   ['star-formation', 'star-formation.html', 'nbView', async p => { await p.click('#playBtn'); await p.click('#speedBtn'); await p.click('#speedBtn'); }, 14000],

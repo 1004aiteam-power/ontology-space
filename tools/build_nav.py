@@ -65,6 +65,7 @@ NAV = [
         ("intersection.html", "교차로 신호", "Intersection", "위에서 본 교차로 · 차량·좌회전·보행 신호", "Top-down junction · through, left &amp; walk signals"),
         ("airport.html", "공항 이착륙", "Airport Runways", "평행 활주로 2개 · 도착·출발 안내판 · 입체 시점", "Two parallel runways · arrival &amp; departure boards · 3D-style view"),
         ("flights.html", "세계 항공 교통", "World Air Traffic", "세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤", "Domestic &amp; international flights on a world map · great circles · day and night"),
+        ("city.html", "도시 교통망", "City Traffic Network", "6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드", "6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard"),
         ("col",), ("h", "자연", "Nature"),
         ("ecosystem.html", "단세포 생태계", "Cell Ecosystem", "초식·육식 세포의 포식자–피식자 개체수 주기 · 진화", "Predator–prey population cycles · evolution"),
         ("particle-life.html", "입자 생명", "Particle Life", "끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계", "Groups from one attraction table · a world where it evolves"),
@@ -109,7 +110,7 @@ BOOT = ("<script>(function(){var r=document.documentElement,l=null,s=null;"
 
 SITE = "https://1004aiteam-power.github.io/ontology-space/"
 # 공유 미리보기 이미지: 시뮬레이션 썸네일(tools/thumbs.cjs)이 있는 페이지는 그것, 나머지는 소개 페이지 화면
-OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem", "particle-life", "tunneling", "star-formation")}
+OG_IMAGE = {f"{n}.html": f"assets/thumbs/{n}.jpg" for n in ("safety", "intersection", "airport", "flights", "ecosystem", "particle-life", "tunneling", "star-formation", "city")}
 OG_IMAGE.update({"neat-drone.html": "assets/thumbs/drone.jpg", "neat-snake.html": "assets/thumbs/neat-snake.jpg", "twin.html": "assets/thumbs/twin.jpg"})
 OG_DEFAULT = "assets/og/site.jpg"
 NOINDEX = {"404.html"}   # 검색 대상이 아닌 페이지: canonical · sitemap 에서 빼고 noindex 를 붙임

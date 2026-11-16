@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · City Traffic Network</title>
+<meta name="title-ko" content="Ontology Space · 도시 교통망">
+<meta name="title-en" content="Ontology Space · City Traffic Network">
+<meta name="description" content="6×6 블록 가상 도시를 위에서 보는 교통 시뮬레이션. 교차로 49곳의 신호등과 차로를 따라 좌·직·우회전 차량이 흐르고, 무작위 유입·유출, 자율주행차 비율, 신호 방식(고정·녹색 물결·감응식)을 바꾸며 대시보드로 유입·유출·지연을 비교">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/city.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/city.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/city.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/city.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 도시 교통망">
+<meta property="og:description" content="6×6 블록 가상 도시를 위에서 보는 교통 시뮬레이션. 교차로 49곳의 신호등과 차로를 따라 좌·직·우회전 차량이 흐르고, 무작위 유입·유출, 자율주행차 비율, 신호 방식(고정·녹색 물결·감응식)을 바꾸며 대시보드로 유입·유출·지연을 비교">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/city.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/thumbs/city.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=729f3c47">
+<link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
+<link rel="stylesheet" href="assets/css/city.css?v=eab3b81b">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/city/city-app.js?v=a2e46462"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="gridMenu"><span lang="ko">전력망 온톨로지</span><span lang="en">Power Grid Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gridMenu" hidden>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="vppMenu"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="vppMenu" hidden>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="physaiMenu"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="physaiMenu" hidden>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      <hr>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html" aria-current="page"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="studioMenu"><span lang="ko">온톨로지 설계실</span><span lang="en">Design Studio</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="studioMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="aiMenu" hidden>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <hr>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+    </div>
+    <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span></a>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">시뮬레이션 · 교통</span><span lang="en">SIMULATION · TRAFFIC</span></div>
+  <h1><span lang="ko">신호등과 자율주행차가 있는<br>도시 교통망</span><span lang="en">A city road network<br>with signals and autonomous cars</span></h1>
+  <p class="lead" lang="ko">가로세로 6블록짜리 가상 도시를 위에서 내려다봅니다. 교차로 49곳에 신호등이 있고, 차들은 차로를 지키며 좌회전 · 직진 · 우회전으로 도시를 지나갑니다. 도시 바깥 28곳의 출입구에서 차가 <b>무작위로 들어오고 무작위 목적지로 나갑니다.</b> 자율주행차의 비율과 신호 방식을 바꾸며 <b>유입 · 유출 · 지연</b>이 어떻게 달라지는지 대시보드로 확인해 보세요.</p>
+  <p class="lead" lang="en">A virtual city six blocks on each side, seen from above. Forty-nine junctions have signals; cars keep to their lanes and turn left, go straight or turn right. Cars <b>arrive at random from 28 gates on the edge and leave for random destinations.</b> Change the share of autonomous cars and the signal plan, and watch <b>inflow, outflow and delay</b> on the dashboard.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">도시</span><span lang="en">The city</span></h2>
+  <div class="ctrl">
+    <button id="playBtn" class="primary"></button>
+    <button id="resetBtn"><span lang="ko">처음부터</span><span lang="en">Restart</span></button>
+    <button id="speedBtn"></button>
+    <button id="seedBtn"></button>
+    <button id="followBtn"></button>
+  </div>
+  <div class="ctrl" id="cvPresets" role="group" aria-label="presets"></div>
+  <div class="ctrl">
+    <label class="speed-ctl"><span lang="ko">유입량</span><span lang="en">Inflow</span>
+      <input type="range" id="cvIn" min="500" max="8000" step="100" value="2400" aria-label="inflow"><output id="cvInOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">자율주행차 비율</span><span lang="en">Autonomous share</span>
+      <input type="range" id="cvAv" min="0" max="100" step="5" value="20" aria-label="autonomous share"><output id="cvAvOut"></output></label>
+    <label class="speed-ctl"><span lang="ko">출근 쏠림 (동→서)</span><span lang="en">Rush bias (E→W)</span>
+      <input type="range" id="cvBias" min="0" max="100" step="10" value="0" aria-label="rush bias"><output id="cvBiasOut"></output></label>
+  </div>
+  <div class="ctrl">
+    <label class="speed-ctl"><span lang="ko">신호 방식</span><span lang="en">Signal plan</span>
+      <select id="cvMode" aria-label="signal plan"><option value="fixed">고정 주기 / Fixed time</option><option value="wave">녹색 물결 (동서 연동) / Green wave (E–W)</option><option value="actuated">감응식 / Actuated</option></select></label>
+    <span id="cvTiming">
+      <label class="speed-ctl"><span lang="ko">직진 녹색</span><span lang="en">Through green</span>
+        <input type="range" id="cvGreen" min="10" max="45" step="1" value="24" aria-label="through green"><output id="cvGreenOut"></output></label>
+      <label class="speed-ctl"><span lang="ko">좌회전 녹색</span><span lang="en">Left green</span>
+        <input type="range" id="cvLeft" min="5" max="20" step="1" value="10" aria-label="left green"><output id="cvLeftOut"></output></label>
+    </span>
+    <label><input type="checkbox" id="cvHeat" checked> <span lang="ko">혼잡 지도</span><span lang="en">Congestion map</span></label>
+    <label><input type="checkbox" id="cvSig" checked> <span lang="ko">신호등</span><span lang="en">Signals</span></label>
+  </div>
+
+  <div class="sim-wrap cv-wrap">
+    <div>
+      <canvas id="cvView" aria-label="city road network seen from above"></canvas>
+      <p class="cv-legend" id="cvLegend"></p>
+      <p class="meta" id="cvNote"></p>
+    </div>
+    <div class="cv-side">
+      <div id="cvStats"></div>
+      <p id="cvNode"><span lang="ko">교차로를 누르면 그 교차로의 신호와 대기 차량이 보입니다.</span><span lang="en">Click a junction to see its signal and queues.</span></p>
+    </div>
+  </div>
+  <p class="meta" lang="ko">휠: 확대 · 드래그: 이동 · 더블클릭: 도시 전체 · 교차로 클릭: 그 교차로 정보. 차 한 대가 4.5 m이고 블록 한 변이 110 m입니다. 시간은 실제와 같은 속도(1×)에서 시작합니다.</p>
+  <p class="meta" lang="en">Wheel: zoom · drag: pan · double-click: whole city · click a junction: its details. A car is 4.5 m and a block is 110 m on a side. Time starts at real speed (1×).</p>
+</section>
+
+<section id="dash">
+  <h2><span lang="ko">대시보드</span><span lang="en">Dashboard</span></h2>
+  <div class="grid two cv-charts">
+    <div class="panel chart-box"><b><span lang="ko">유입 · 유출 (최근 1분, 대)</span><span lang="en">Inflow · outflow (last minute, cars)</span></b>
+      <p class="cv-key"><span><i style="background:var(--cv-in)"></i><span lang="ko">유입</span><span lang="en">Inflow</span></span><span><i style="background:var(--cv-out)"></i><span lang="ko">유출</span><span lang="en">Outflow</span></span></p>
+      <canvas id="cvFlow" class="cv-chart" aria-label="inflow and outflow over time"></canvas>
+      <p class="meta" lang="ko">유입이 유출보다 계속 크면 도시 안에 차가 쌓이고 있다는 뜻입니다.</p><p class="meta" lang="en">If inflow stays above outflow, cars are piling up inside the city.</p></div>
+    <div class="panel chart-box"><b><span lang="ko">도시 안 차량 수</span><span lang="en">Cars in the city</span></b>
+      <canvas id="cvCount" class="cv-chart" aria-label="cars in the city over time"></canvas>
+      <p class="meta" lang="ko">평평해지면 들어오는 만큼 나가는 균형 상태입니다.</p><p class="meta" lang="en">A flat line means as many leave as arrive.</p></div>
+    <div class="panel chart-box"><b><span lang="ko">평균 속도 (km/h)</span><span lang="en">Average speed (km/h)</span></b>
+      <canvas id="cvSpeed" class="cv-chart" aria-label="average speed over time"></canvas>
+      <p class="meta" lang="ko">신호에 멈춰 있는 차까지 포함한 도시 안 모든 차의 평균입니다.</p><p class="meta" lang="en">The mean over every car in the city, including those stopped at signals.</p></div>
+    <div class="panel"><b><span lang="ko">자율주행차 vs 일반차 (최근 5분 완료한 통행)</span><span lang="en">Autonomous vs human-driven (trips finished in the last 5 min)</span></b>
+      <div id="cvCompare"></div>
+      <p class="meta" lang="ko">자율주행차는 차간 시간이 짧고 출발이 빠르며, 신호 정보를 받아 녹색에 맞춰 다가갑니다. 비율을 바꿔 차이를 비교해 보세요.</p><p class="meta" lang="en">Autonomous cars follow closer, start faster and use signal data to arrive on green. Change the share and compare.</p></div>
+    <div id="cvTip" hidden></div>
+  </div>
+  <h3><span lang="ko">출입구별 유입 · 유출</span><span lang="en">Inflow and outflow by gate side</span></h3>
+  <div class="tbl"><table id="cvGates"></table></div>
+</section>
+
+<section id="how">
+  <h2><span lang="ko">무엇을 바꾸면 무엇이 달라지나</span><span lang="en">What each setting changes</span></h2>
+  <div class="tbl"><table>
+    <tr><th><span lang="ko">조절</span><span lang="en">Setting</span></th><th><span lang="ko">이렇게 해 보세요</span><span lang="en">Try this</span></th></tr>
+    <tr><td><b><span lang="ko">유입량</span><span lang="en">Inflow</span></b></td><td lang="ko">시간당 4,000대를 넘기면 교차로마다 줄이 길어지고, 6,000대 근처에서는 도시 밖에서 들어오지 못하고 기다리는 차가 생깁니다.</td><td lang="en">Above about 4,000 cars/h queues grow at every junction; near 6,000 cars start waiting outside the city.</td></tr>
+    <tr><td><b><span lang="ko">자율주행차 비율</span><span lang="en">Autonomous share</span></b></td><td lang="ko">같은 수요에서 0% → 100%로 올리면 평균 지연과 정지 횟수가 줄어듭니다. 차간 시간이 짧아 녹색 한 번에 더 많이 지나가고, 출발 반응이 빨라 손실 시간이 줄기 때문입니다.</td><td lang="en">At the same demand, going from 0% to 100% cuts delay and stops: shorter gaps let more cars through each green, and quicker starts waste less of it.</td></tr>
+    <tr><td><b><span lang="ko">출근 쏠림</span><span lang="en">Rush bias</span></b></td><td lang="ko">동쪽 출입구에서 많이 들어와 서쪽으로 나갑니다. 혼잡 지도가 도시 가운데 동서 방향으로 붉어지는 것을 볼 수 있습니다.</td><td lang="en">Most cars enter in the east and leave in the west; the congestion map reddens along the east–west corridors.</td></tr>
+    <tr><td><b><span lang="ko">신호 방식</span><span lang="en">Signal plan</span></b></td><td lang="ko"><b>고정 주기</b>는 수요와 상관없이 같은 시간을 줍니다. <b>녹색 물결</b>은 동쪽으로 갈수록 녹색이 조금씩 늦게 켜져 동쪽으로 가는 차가 연달아 녹색을 만나게 합니다. <b>감응식</b>은 기다리는 차가 있으면 녹색을 늘리고 없으면 일찍 넘기거나 건너뛰어, 수요가 적을 때 특히 지연이 크게 줄어듭니다.</td><td lang="en"><b>Fixed time</b> gives the same split whatever the demand. <b>Green wave</b> starts the green a little later at each junction eastward, so eastbound platoons meet green after green. <b>Actuated</b> extends green while cars are waiting and skips it when nobody is, which cuts delay sharply in light traffic.</td></tr>
+  </table></div>
+
+  <h2><span lang="ko">어떻게 계산하나 · 한계</span><span lang="en">How it is computed · limits</span></h2>
+  <ul>
+    <li lang="ko"><b>도로</b>: 방향마다 2차로이며 안쪽은 좌회전 전용, 바깥쪽은 직진 · 우회전입니다. 교차로마다 4현시(남북 직진 → 남북 좌회전 → 동서 직진 → 동서 좌회전)이고, 현시 사이에 황색 3초와 전적색 2초가 있습니다. 우회전은 직진 현시에 함께 갑니다.</li>
+    <li lang="en"><b>Roads</b>: two lanes each way, inner for left turns only, outer for straight and right. Every junction runs four phases (N–S through → N–S left → E–W through → E–W left) with 3 s amber and 2 s all-red between them. Right turns go with the through phase.</li>
+    <li lang="ko"><b>차량</b>: 앞차와 정지선까지의 거리로 가감속을 정하는 <b>IDM(지능형 운전자 모델)</b>입니다. 일반차는 차간 시간 1.5초 · 출발 반응 1.1초, 자율주행차는 0.8초 · 0.2초로 두었습니다. 자율주행차는 고정 · 물결 신호에서 녹색까지 남은 시간(V2I)을 받아 녹색이 켜질 때 정지선에 닿도록 미리 속도를 줄입니다. 나갈 차로에 자리가 없으면 교차로에 들어가지 않습니다(꼬리 물기 금지).</li>
+    <li lang="en"><b>Cars</b>: the <b>Intelligent Driver Model</b> sets acceleration from the gap to the car or stop line ahead. Human drivers keep a 1.5 s time gap and take 1.1 s to start; autonomous cars 0.8 s and 0.2 s. With fixed or wave signals, autonomous cars receive the time to green (V2I) and slow early to reach the stop line as it turns green. No car enters a junction without room on the far side (no blocking the box).</li>
+    <li lang="ko"><b>경로</b>: 들어올 때 목적지 출입구를 무작위로 정하고, 20초마다 다시 계산하는 '출구까지 남은 시간' 표(혼잡 반영)로 교차로마다 좌 · 직 · 우를 고릅니다. 같은 길로 몰리지 않게 약간의 무작위를 섞었습니다.</li>
+    <li lang="en"><b>Routes</b>: each car picks a random destination gate on entry, then chooses left, straight or right at every junction from a "time to exit" table that is recomputed every 20 s with congestion. A little randomness keeps everyone from taking the same road.</li>
+    <li lang="ko"><b>테스트</b>(<code>tests/city.test.mjs</code>): 교차하는 방향의 동시 녹색 0회, 적신호 진입 0회, 차로 안 겹침 0회, 목적지가 아닌 출구로 나가는 차 0대, 들어온 차 = 나간 차 + 안에 있는 차, 자율주행 100%에서 지연 · 정지 감소, 감응식이 한산할 때 지연 감소, V2I 시간이 실제 녹색과 맞는지를 확인합니다.</li>
+    <li lang="en"><b>Tests</b> (<code>tests/city.test.mjs</code>): no crossing greens, no red-light entries, no overlapping cars, nobody leaving by the wrong gate, cars in = cars out + cars inside, less delay and fewer stops at 100% autonomous, less delay with actuated signals in light traffic, and V2I timing that matches the real green.</li>
+    <li lang="ko"><b>한계</b>: 보행자, 버스 정류장, 주차, 차로 변경 경쟁, 사고, 날씨는 넣지 않았습니다. 차로는 도로에 들어설 때 정해 두고 바꾸지 않습니다. 교육용 단순 모델이며 실제 교통 설계 · 신호 운영 기준을 대신하지 않습니다.</li>
+    <li lang="en"><b>Limits</b>: no pedestrians, bus stops, parking, competitive lane changes, crashes or weather. A car picks its lane when it enters a road and keeps it. This is a simple teaching model, not a substitute for real traffic design or signal timing standards.</li>
+  </ul>
+</section>
+
+<section id="refs">
+  <h2><span lang="ko">참고 자료</span><span lang="en">References</span></h2>
+  <ul>
+    <li>M. Treiber, A. Hennecke, D. Helbing, "Congested traffic states in empirical observations and microscopic simulations", <i>Physical Review E</i> 62 (2000): <span lang="ko">IDM</span><span lang="en">the IDM</span></li>
+    <li><a href="https://en.wikipedia.org/wiki/Green_wave">Wikipedia, "Green wave"</a> · <a href="https://en.wikipedia.org/wiki/Vehicle-to-everything">"Vehicle-to-everything"</a></li>
+  </ul>
+  <p class="meta" lang="ko">코드: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/city/city.js">city.js</a> (계산) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/city/city-app.js">city-app.js</a> (화면) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/tests/city.test.mjs">city.test.mjs</a> (테스트). 교차로 하나를 자세히 보려면 <a href="intersection.html">교차로 신호</a> 시뮬레이션을 보세요.</p>
+  <p class="meta" lang="en">Code: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/city/city.js">city.js</a> (computation) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/city/city-app.js">city-app.js</a> (screen) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/tests/city.test.mjs">city.test.mjs</a> (tests). For one junction in detail, see the <a href="intersection.html">intersection</a> simulation.</p>
+  <div class="pager"><a href="intersection.html"><span lang="ko">← 교차로 신호</span><span lang="en">← Intersection</span></a><a href="airport.html"><span lang="ko">공항 이착륙 →</span><span lang="en">Airport runways →</span></a></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
