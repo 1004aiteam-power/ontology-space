@@ -83,6 +83,10 @@ NAV = [
         ('h', '피지컬 AI', 'Physical AI'),
         ('physical-ai.html', '피지컬 AI 소개', 'About Physical AI', '개념 · 관련 기술 · MuJoCo', 'Concepts · key technologies · MuJoCo'),
     ]),
+    ("menu", 'netMenu', '네트워크 스택', 'Network Stack', [
+        ('packet.html', '패킷 조립 과정', 'From data to packets', '데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬', 'Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums'),
+        ('tcp.html', 'TCP 연결 · 재전송', 'TCP connection and retransmission', '3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료', '3-way handshake · seq/ack · loss and retransmission · 4-way close'),
+    ]),
     ("menu", 'simMenu', '시뮬레이션', 'Simulation', [
         ('h', '전력 현장 교육', 'Power field training'),
         ('safety.html', '배전공사 안전 훈련', 'Distribution Work Safety', '전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄', 'Pole, wire replacement, transformer, manhole & tower sites · printable training record'),

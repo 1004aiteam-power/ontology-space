@@ -106,6 +106,11 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/ood.html?lang=en"/>
   </url>
   <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/packet.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/packet.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/packet.html?lang=en"/>
+  </url>
+  <url>
     <loc>https://1004aiteam-power.github.io/ontology-space/particle-life.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/particle-life.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/particle-life.html?lang=en"/>
@@ -139,6 +144,11 @@
     <loc>https://1004aiteam-power.github.io/ontology-space/studio.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/studio.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/studio.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/tcp.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/tcp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/tcp.html?lang=en"/>
   </url>
   <url>
     <loc>https://1004aiteam-power.github.io/ontology-space/tunneling.html</loc>

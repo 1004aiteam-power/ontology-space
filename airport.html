@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=eff7dec5">
+<link rel="stylesheet" href="assets/site.css?v=d4bfa2b5">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
 <link rel="stylesheet" href="assets/css/airport.css?v=94abe65b">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
@@ -101,6 +101,11 @@
       <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
       <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
       </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
     </div>
     <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu cols" id="simMenu" hidden>

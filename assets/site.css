@@ -354,6 +354,9 @@ h2::before{content:"✦ ";color:var(--accent);font-size:.8em}
 .menu a[href="bidding.html"]>span[lang]::before{content:"💹 "}
 .menu-btn[aria-controls="introMenu"]>span[lang]::before{content:"🏠 "}
 .menu-btn[aria-controls="powerMenu"]>span[lang]::before{content:"⚡ "}
+.menu-btn[aria-controls="netMenu"]>span[lang]::before{content:"📡 "}
+.menu a[href="packet.html"]>span[lang]::before{content:"📦 "}
+.menu a[href="tcp.html"]>span[lang]::before{content:"🤝 "}
 .menu-btn[aria-controls="simMenu"]>span[lang]::before{content:"🎮 "}
 .menu-btn[aria-controls="aiMenu"]>span[lang]::before{content:"🤖 "}
 .menu a[href="grid.html#flisr"]>span[lang]::before{content:"🔌 "}
