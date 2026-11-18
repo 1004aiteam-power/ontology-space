@@ -66,6 +66,11 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/highway.html?lang=en"/>
   </url>
   <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/http.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/http.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/http.html?lang=en"/>
+  </url>
+  <url>
     <loc>https://1004aiteam-power.github.io/ontology-space/impact.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/impact.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/impact.html?lang=en"/>
@@ -134,6 +139,11 @@
     <loc>https://1004aiteam-power.github.io/ontology-space/safety.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/safety.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/safety.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/socket.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/socket.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/socket.html?lang=en"/>
   </url>
   <url>
     <loc>https://1004aiteam-power.github.io/ontology-space/star-formation.html</loc>

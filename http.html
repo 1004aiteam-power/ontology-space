@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · HTTP</title>
+<meta name="title-ko" content="Ontology Space · HTTP 통신">
+<meta name="title-en" content="Ontology Space · HTTP">
+<meta name="description" content="HTTP 요청과 응답이 줄 끝(CRLF)까지 어떤 글자인지 직접 만들어 보내며 확인하고, 상태 코드 · 헤더 · 리다이렉트 · 캐시(304)를 체험하는 실습. HTTP/1.0 · 1.1 · 2 · 3이 같은 자원을 받는 시간이 왜 다른지도 비교합니다">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/http.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/http.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/http.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/http.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · HTTP 통신">
+<meta property="og:description" content="HTTP 요청과 응답이 줄 끝(CRLF)까지 어떤 글자인지 직접 만들어 보내며 확인하고, 상태 코드 · 헤더 · 리다이렉트 · 캐시(304)를 체험하는 실습. HTTP/1.0 · 1.1 · 2 · 3이 같은 자원을 받는 시간이 왜 다른지도 비교합니다">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/http.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=279ba8fe">
+<link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
+<link rel="stylesheet" href="assets/css/net.css?v=481314d2">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/net/http-app.js?v=fbfd2924"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="http.html" aria-current="page"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">네트워크 스택 · HTTP</span><span lang="en">NETWORK STACK · HTTP</span></div>
+  <h1><span class="h1ic" aria-hidden="true">🌐</span> <span lang="ko">소켓 위를 오가는 글자:<br>HTTP</span><span lang="en">The text that travels over a socket:<br>HTTP</span></h1>
+  <p class="lead" lang="ko">웹 브라우저와 서버가 주고받는 것은 사실 <b>줄 단위로 적은 글자</b>입니다. 첫 줄에 "무엇을 달라", 그 아래 몇 줄의 부가 정보(헤더), 빈 줄, 그리고 본문. 요청을 직접 만들어 보내고, 서버가 되돌린 응답을 줄 끝 문자까지 그대로 읽어 봅니다.</p>
+  <p class="lead" lang="en">What a web browser and server exchange is really <b>text written in lines</b>: a first line saying "give me this", a few lines of extra information (headers), a blank line, then the body. Build a request yourself, send it, and read the server's reply exactly as it is, down to the line endings.</p>
+  <p class="meta" lang="ko">서버는 이 페이지 안의 데모용 가짜입니다 (실제 네트워크 없음). 메시지를 만들고 해석하는 규칙과 응답 코드는 <code>tests/net.test.mjs</code>로 확인합니다. 시간 비교는 대역폭 · 혼잡 제어 · 캐시를 뺀 단순 모형입니다.</p>
+  <p class="meta" lang="en">The server is a demo fake inside this page (no real network). The rules for building and reading messages and the response codes are checked in <code>tests/net.test.mjs</code>. The timing comparison is a simple model without bandwidth, congestion control or caching.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB 1</div>
+  <h2><span lang="ko">요청을 만들어 보내기</span><span lang="en">Build and send a request</span></h2>
+  <div class="net-presets" id="hPresets" role="group" aria-label="presets"></div>
+  <div class="net-form">
+    <label><span lang="ko">메서드</span><span lang="en">Method</span>
+      <select id="hMethod"><option>GET</option><option>HEAD</option><option>POST</option><option>PUT</option><option>DELETE</option></select></label>
+    <label><span lang="ko">주소 (경로 + 질의)</span><span lang="en">Target (path + query)</span><input id="hTarget" value="/" autocomplete="off" spellcheck="false"></label>
+    <label><span lang="ko">버전</span><span lang="en">Version</span>
+      <select id="hVersion"><option>HTTP/1.1</option><option>HTTP/1.0</option></select></label>
+  </div>
+  <div class="http-grid">
+    <label class="net-text-label"><span lang="ko">헤더 (한 줄에 하나, "이름: 값")</span><span lang="en">Headers (one per line, "Name: value")</span>
+      <textarea id="hHeaders" class="net-text" spellcheck="false"></textarea></label>
+    <label class="net-text-label"><span lang="ko">본문 (POST · PUT에서)</span><span lang="en">Body (for POST / PUT)</span>
+      <textarea id="hBody" class="net-text" spellcheck="false"></textarea></label>
+  </div>
+  <div class="ctrl"><label><input type="checkbox" id="hAuto" checked> <span lang="ko">본문이 있으면 Content-Length를 자동으로 (바이트 수)</span><span lang="en">Add Content-Length automatically for a body (in bytes)</span></label></div>
+
+  <div class="http-grid">
+    <div><h3><span lang="ko">요청 (클라이언트 → 서버)</span><span lang="en">Request (client → server)</span></h3><pre class="m-pre" id="hReq"></pre></div>
+    <div><h3><span lang="ko">응답 (서버 → 클라이언트)</span><span lang="en">Response (server → client)</span></h3><pre class="m-pre" id="hRes"></pre></div>
+  </div>
+  <p class="st-cap" id="hMeaning"></p>
+  <div class="ctrl"><button type="button" id="hFollow" hidden><span lang="ko">↪ Location 주소로 다시 요청하기</span><span lang="en">↪ Request the Location address</span></button></div>
+  <p id="hSizes"></p>
+  <p class="meta" lang="ko">각 줄 끝의 흐린 ␍␊는 줄바꿈 문자 CRLF(0D 0A)입니다. 빈 줄이 헤더의 끝이라는 표시이고, 본문의 길이는 <code>Content-Length</code>가 알려 줍니다 (한글은 한 글자가 3바이트이니 글자 수와 다릅니다). 시도해 볼 만한 것: "Host 빠짐" → HTTP/1.1에서는 400, 버전을 HTTP/1.0으로 바꾸면 통과. "조건부 요청"과 "리다이렉트 따라가기".</p>
+  <p class="meta" lang="en">The faint ␍␊ at each line end is the CRLF line break (0D 0A). The blank line marks the end of the headers and <code>Content-Length</code> gives the body length (a Korean character is 3 bytes, so it differs from the character count). Worth trying: "Missing Host" → 400 in HTTP/1.1, passes if you switch the version to HTTP/1.0; "Conditional (cache)"; and following the redirect.</p>
+</section>
+
+<section id="speed">
+  <div class="badge">LAB 2</div>
+  <h2><span lang="ko">버전마다 왜 시간이 다른가</span><span lang="en">Why the versions take different times</span></h2>
+  <p lang="ko">한 서버에서 같은 크기의 자원 여러 개(HTML · CSS · 이미지 …)를 받을 때, 시간은 대부분 <b>왕복(RTT)을 몇 번 기다리느냐</b>로 갈립니다. 아래 막대는 연결 준비와 요청·응답에 필요한 왕복 횟수로 계산한 값입니다.</p>
+  <p lang="en">When you fetch many resources of the same size (HTML, CSS, images …) from one server, the time is mostly decided by <b>how many round trips (RTT) you wait for</b>. The bars below are computed from the round trips needed for setup and for requests and responses.</p>
+  <div class="net-form">
+    <label><span lang="ko">받을 자원 수</span><span lang="en">Resources to fetch</span><input type="range" id="cN" min="1" max="40" value="12" aria-label="resources"><output id="cNOut"></output></label>
+    <label><span lang="ko">왕복 시간 (RTT)</span><span lang="en">Round-trip time (RTT)</span><input type="range" id="cRtt" min="10" max="300" step="10" value="80" aria-label="RTT"><output id="cRttOut"></output></label>
+    <label><span lang="ko">브라우저가 여는 연결 수 (1.x)</span><span lang="en">Connections the browser opens (1.x)</span><input type="range" id="cPar" min="1" max="8" value="6" aria-label="connections"><output id="cParOut"></output></label>
+    <label><span lang="ko">서버 처리 시간 (요청당)</span><span lang="en">Server time (per request)</span><input type="range" id="cThink" min="0" max="100" step="5" value="10" aria-label="server time"><output id="cThinkOut"></output></label>
+    <label><span lang="ko">암호화</span><span lang="en">Encryption</span>
+      <select id="cTls"><option value="1.3">HTTPS (TLS 1.3)</option><option value="1.2">HTTPS (TLS 1.2)</option><option value="none">HTTP (암호화 없음 / none)</option></select></label>
+  </div>
+  <div id="cBars"></div>
+  <h3><span lang="ko">첫 요청 하나가 겪는 일</span><span lang="en">What the first request goes through</span></h3>
+  <div class="ctrl"><label><input type="checkbox" id="cDns" checked> <span lang="ko">DNS 조회 포함 (이름 → IP 주소, 한 번의 왕복으로 가정)</span><span lang="en">Include DNS (name → IP address, assumed one round trip)</span></label></div>
+  <div id="cTime"></div>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">알아 둘 원리</span><span lang="en">Principles worth knowing</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 글자로 된 요청-응답</span><span lang="en">① Text, request and response</span></h4>
+      <p lang="ko">HTTP/1.x는 사람이 읽을 수 있는 글자입니다: <b>시작 줄</b>(<code>GET / HTTP/1.1</code>) + <b>헤더</b> + <b>빈 줄</b> + <b>본문</b>. 서버는 요청에 응답하기만 하고, 먼저 말을 걸지 않습니다. 그리고 각 요청은 서로 독립이라 서버는 이전 요청을 기억하지 않습니다(stateless). 로그인 상태를 유지하려면 쿠키 같은 헤더에 신분표를 실어 매번 보냅니다.</p>
+      <p lang="en">HTTP/1.x is human-readable text: a <b>start line</b> (<code>GET / HTTP/1.1</code>), <b>headers</b>, a <b>blank line</b> and a <b>body</b>. The server only answers; it never speaks first. Each request is independent, so the server remembers nothing of earlier ones (stateless). To stay logged in, a token such as a cookie rides in a header on every request.</p></div>
+    <div class="card"><h4><span lang="ko">② 메서드: 하려는 일</span><span lang="en">② Methods: the intended action</span></h4>
+      <p lang="ko"><b>GET</b>은 읽기만 하고, <b>HEAD</b>는 본문 없이 헤더만 받습니다. <b>POST</b>는 새 것을 만들거나 처리를 시키고, <b>PUT</b>은 통째로 바꾸며, <b>DELETE</b>는 지웁니다. GET · PUT · DELETE는 <b>여러 번 보내도 결과가 같습니다(멱등)</b>. 그래서 응답이 늦어 다시 보내도 안전합니다. POST는 멱등이 아니어서 두 번 보내면 두 개가 생길 수 있습니다.</p>
+      <p lang="en"><b>GET</b> only reads and <b>HEAD</b> gets headers without a body. <b>POST</b> creates or triggers processing, <b>PUT</b> replaces wholesale and <b>DELETE</b> removes. GET, PUT and DELETE are <b>idempotent</b>: sending them several times has the same result, so a retry after a slow response is safe. POST is not, and two sends may create two things.</p></div>
+    <div class="card"><h4><span lang="ko">③ 상태 코드: 첫 숫자만 봐도</span><span lang="en">③ Status codes: the first digit says a lot</span></h4>
+      <p lang="ko"><b>2xx</b> 성공, <b>3xx</b> 다른 곳을 보라(301 영구 이동, 304 바뀐 것 없음), <b>4xx</b> 요청한 쪽의 잘못(400 형식, 401 인증, 403 권한, 404 없음, 405 허용 안 된 메서드), <b>5xx</b> 서버의 잘못(500 내부 오류, 503 일시 불능). 위 프리셋으로 하나씩 만나 보세요. 클라이언트는 4xx를 그대로 다시 보내도 소용없고, 5xx나 네트워크 오류는 잠시 뒤 재시도할 만하다는 식으로 대응이 달라집니다.</p>
+      <p lang="en"><b>2xx</b> success, <b>3xx</b> look elsewhere (301 moved, 304 unchanged), <b>4xx</b> the caller's fault (400 malformed, 401 authentication, 403 permission, 404 missing, 405 method not allowed), <b>5xx</b> the server's fault (500 internal error, 503 unavailable). Meet them one by one with the presets above. Clients react differently: resending a 4xx as-is is pointless, while a 5xx or network error is worth retrying later.</p></div>
+    <div class="card"><h4><span lang="ko">④ 헤더가 하는 일</span><span lang="en">④ What headers do</span></h4>
+      <p lang="ko"><b>Host</b>: 한 IP의 서버가 여러 사이트를 맡을 때 어느 사이트인지 가리킵니다(HTTP/1.1 필수). <b>Content-Type · Content-Length</b>: 본문이 무엇이고 몇 바이트인지, 곧 <a href="socket.html">TCP 바이트 스트림에서 메시지의 경계</a>를 정하는 규칙입니다. 길이를 모를 때는 <code>Transfer-Encoding: chunked</code>로 조각마다 길이를 적어 보냅니다. <b>ETag · If-None-Match · Cache-Control</b>: 캐시. 위 "조건부 요청"이 바로 304를 받는 경우입니다.</p>
+      <p lang="en"><b>Host</b> names the site when one IP serves many (required in HTTP/1.1). <b>Content-Type and Content-Length</b> say what the body is and how many bytes — the rule that sets <a href="socket.html">message boundaries in a TCP byte stream</a>. When the length is unknown, <code>Transfer-Encoding: chunked</code> writes a length before each chunk. <b>ETag, If-None-Match, Cache-Control</b> handle caching; the "Conditional" preset above is a 304.</p></div>
+    <div class="card"><h4><span lang="ko">⑤ 연결 재사용과 줄 서기 문제</span><span lang="en">⑤ Reusing connections and the queue problem</span></h4>
+      <p lang="ko">HTTP/1.0은 요청마다 TCP 연결을 새로 열고 닫아, 자원 하나에도 handshake 왕복이 붙었습니다. HTTP/1.1은 <b>keep-alive</b>가 기본이라 연결을 이어 쓰지만, 한 연결에서는 앞 응답이 끝나야 다음 응답이 갈 수 있어(<b>head-of-line blocking</b>) 브라우저가 서버마다 연결을 6개쯤 병렬로 엽니다. 위 비교에서 "연결 수" 막대를 움직여 보세요.</p>
+      <p lang="en">HTTP/1.0 opened and closed a TCP connection per request, adding a handshake round trip even for one resource. HTTP/1.1 makes <b>keep-alive</b> the default and reuses connections, but on one connection the next response must wait for the previous one (<b>head-of-line blocking</b>), so browsers open about six in parallel per server. Move the "connections" slider in the comparison above.</p></div>
+    <div class="card"><h4><span lang="ko">⑥ HTTP/2와 HTTP/3</span><span lang="en">⑥ HTTP/2 and HTTP/3</span></h4>
+      <p lang="ko"><b>HTTP/2</b>는 글자 대신 이진 프레임을 쓰고, 한 연결 안에서 여러 요청을 <b>스트림으로 동시에</b> 보내며(다중화), 헤더를 압축합니다. 그러나 밑의 TCP가 패킷 하나를 잃으면 모든 스트림이 같이 멈춥니다. <b>HTTP/3</b>는 TCP 대신 UDP 위의 <b>QUIC</b>을 써서 스트림별로 손실을 따로 복구하고, 연결 준비와 TLS 1.3을 한 번의 왕복으로 합치며, 접속한 적 있는 서버에는 0-RTT로 바로 요청합니다. 의미(메서드 · 상태 코드 · 헤더)는 세 버전이 같고 <b>전달 방식</b>만 바뀝니다.</p>
+      <p lang="en"><b>HTTP/2</b> uses binary frames instead of text, sends many requests <b>concurrently as streams</b> on one connection (multiplexing) and compresses headers. But if the TCP underneath loses a packet, every stream stalls together. <b>HTTP/3</b> runs over <b>QUIC</b> on UDP: it recovers loss per stream, merges connection setup and TLS 1.3 into one round trip, and may send 0-RTT to a server seen before. The meaning (methods, status codes, headers) is the same in all three; only the <b>delivery</b> changes.</p></div>
+    <div class="card"><h4><span lang="ko">⑦ HTTPS: 사이에 낀 TLS</span><span lang="en">⑦ HTTPS: TLS in the middle</span></h4>
+      <p lang="ko">HTTPS는 HTTP 메시지를 바꾸지 않습니다. 소켓과 HTTP 사이에 <b>TLS</b>가 끼어 메시지를 암호화할 뿐입니다. 처음 연결할 때 TCP handshake 뒤에 TLS 협상(1.3은 1왕복, 1.2는 2왕복)이 더해지고, 서버 신원은 인증서로 확인합니다. 위 시간 비교에서 암호화 선택을 바꿔 보면 그 비용이 보입니다. 이 페이지가 보여 주는 글자는 암호화하기 <b>전</b>의 모습입니다.</p>
+      <p lang="en">HTTPS does not change the HTTP message. <b>TLS</b> sits between the socket and HTTP and merely encrypts it. A fresh connection adds a TLS negotiation after the TCP handshake (one round trip in 1.3, two in 1.2) and the server's identity is checked with a certificate. Change the encryption option in the timing comparison to see that cost. The text shown on this page is the message <b>before</b> encryption.</p></div>
+    <div class="card"><h4><span lang="ko">⑧ 이 모형이 생략한 것</span><span lang="en">⑧ What this model leaves out</span></h4>
+      <p lang="ko">쿠키 · 압축(<code>Content-Encoding</code>) · 청크 전송 · 범위 요청 · 대용량 전송에서의 대역폭 · TCP 혼잡 제어 · 서버의 병렬 처리 · DNS 캐시는 넣지 않았습니다. 그래서 시간 비교의 절대값이 아니라 <b>"왕복을 몇 번 기다리는가"라는 구조의 차이</b>를 보세요. 실제 값은 Chrome 개발자 도구의 Network 탭에서 재 볼 수 있습니다.</p>
+      <p lang="en">Not included: cookies, compression (<code>Content-Encoding</code>), chunked transfer, range requests, bandwidth in large transfers, TCP congestion control, server concurrency and DNS caching. Read the timing comparison not as absolute values but as the <b>structural difference in how many round trips you wait for</b>. Real numbers can be measured in the Network tab of Chrome's developer tools.</p></div>
+  </div>
+  <p lang="ko">전력·에너지 분야의 통신도 이 위에 있습니다. IEEE 2030.5(스마트 에너지 프로파일)는 HTTP(S)로 자원을 읽고 쓰는 REST 방식이고, OpenADR 3.0도 REST/JSON, OCPP-J(전기차 충전)는 HTTP로 시작해 연결을 WebSocket으로 바꿔 양방향 메시지를 주고받습니다. 목록은 <a href="vpp.html#standards">통신 · 데이터 표준</a>에 있습니다.</p>
+  <p lang="en">Energy-sector communication sits on this too. IEEE 2030.5 (Smart Energy Profile) is a REST style that reads and writes resources over HTTP(S), OpenADR 3.0 is REST/JSON as well, and OCPP-J (EV charging) starts with HTTP and upgrades the connection to a WebSocket for two-way messages. They are listed in <a href="vpp.html#standards">Standards</a>.</p>
+  <div class="pager"><a href="socket.html"><span lang="ko">← 소켓 통신</span><span lang="en">← Sockets</span></a><span></span></div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

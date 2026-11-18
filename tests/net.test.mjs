@@ -56,3 +56,88 @@ const d1 = simulate({ drops: ['D1#1'], window: 4, segments: 6 });
 assert.ok(d1.packets.some(k => k.reason === 'fast') && d1.delivered, 'three duplicate ACKs trigger a fast retransmit');
 assert.deepEqual(simulate({ loss: 0.2, seed: 7 }).packets, simulate({ loss: 0.2, seed: 7 }).packets, 'same seed, same run');
 console.log('✓ the TCP model delivers everything in order, recovers from loss, and closes both ends');
+
+// 4) 소켓 모형: 호출 순서 · 오류 · 바이트 스트림 성질
+import { Net, Runner, scenario } from '../assets/net/socket.js';
+{
+  const n = new Net();
+  const bad = n.connect('A', n.socket('A').fd, 'S', 8080);
+  assert.equal(bad.errno, 'ECONNREFUSED', 'connect without a listener is refused');
+  const s = n.socket('S').fd;
+  assert.equal(n.listen('S', s, 5).errno, 'EINVAL', 'listen before bind');
+  assert.ok(n.bind('S', s, 8080).ok);
+  assert.equal(n.bind('S', n.socket('S').fd, 8080).errno, 'EADDRINUSE', 'port already taken');
+  assert.equal(n.accept('S', s).errno, 'EINVAL', 'accept before listen');
+  assert.ok(n.listen('S', s, 1).ok);
+  assert.ok(n.accept('S', s).blocked, 'accept blocks with an empty queue');
+  const c1 = n.socket('A').fd, c2 = n.socket('A').fd, c3 = n.socket('A').fd;
+  const r1 = n.connect('A', c1, 'S', 8080);
+  assert.ok(r1.ok && r1.woke && r1.woke.fd > s, 'the blocked accept wakes up with a NEW fd');
+  const cs = r1.woke.fd;
+  assert.notEqual(r1.woke.fd, s, 'listening socket and connection socket are different');
+  assert.ok(n.connect('A', c2, 'S', 8080).ok);
+  assert.equal(n.connect('A', c3, 'S', 8080).errno, 'ETIMEDOUT', 'queue (backlog 1) is full');
+  assert.equal(n.get('A', c1).local.port, 49153, 'the refused attempt already used 49152'); assert.equal(n.get('A', c2).local.port, 49154, 'OS hands out ephemeral ports one after another');
+  n.send('A', c1, 'ab'); n.send('A', c1, 'cd');
+  assert.deepEqual(n.recv('S', cs, 3), { ok: true, data: 'abc', left: 1 }, 'a stream: message boundaries are lost, reads can be partial');
+  assert.equal(n.recv('S', cs, 9).data, 'd');
+  assert.ok(n.recv('S', cs, 9).blocked, 'nothing left: blocks');
+  n.close('A', c1);
+  assert.equal(n.recv('S', cs, 9).eof, true, 'peer closed: recv returns 0 bytes (EOF)');
+  assert.equal(n.send('S', cs, 'x').errno, 'EPIPE');
+}
+for (const [id, opts] of [['echo', { recv: 1024 }], ['echo', { recv: 5 }], ['two', {}], ['errors', {}]]) {
+  const r = new Runner(scenario(id, opts)); while (!r.done) r.next();
+  assert.ok(r.out.every(o => o && (id === 'errors' || !o.error)), `${id}: no unexpected error`);
+  if (id === 'echo') {
+    const got = r.out.filter((o, i) => r.steps[i].kind === 'recv' && r.steps[i].code.includes('conn') && o.r.data).map(o => o.r.data).join('');
+    assert.equal(got, 'Hello, socket!', `echo (recv ${opts.recv}): both send() calls arrive as one byte stream`);
+    assert.ok(r.out[3].woke, 'the accept row is annotated when it wakes');
+    if (opts.recv === 5) assert.ok(r.steps.some(s => s.again), 'a small recv buffer needs more than one recv');
+  }
+  if (id === 'two') assert.notEqual(r.ctx.conn1, r.ctx.conn2, 'two clients, two connection sockets, one listening port');
+  if (id === 'errors') assert.deepEqual(r.out.map(o => o.error || ''), ['ECONNREFUSED', '', '', 'EADDRINUSE', 'EINVAL', '', '', 'ETIMEDOUT', ''].slice(0, r.out.length), 'each failure shows its errno');
+}
+{ const a = new Runner(scenario('echo')); for (let i = 0; i < 6; i++) a.next(); const b = a.goto(3); assert.equal(b.i, 3); assert.equal(b.net.snapshot('S').length, 1, 'goto replays deterministically'); }
+console.log('✓ the socket model follows socket/bind/listen/accept/connect, reports the real errors, and behaves as a byte stream');
+
+// 5) HTTP: 메시지 조립 · 해석 · 가짜 서버 · 시간 모형
+import { buildRequest, parseRequest, parseResponse, serve, compare, timeline, segmentsFor, byteLen } from '../assets/net/http.js';
+{
+  const q = buildRequest({ method: 'POST', target: '/api/items', headers: [{ name: 'Host', value: 'example.com' }, { name: 'Content-Type', value: 'application/json' }], body: '{"a":"한"}' });
+  assert.equal(q.raw, 'POST /api/items HTTP/1.1\r\nHost: example.com\r\nContent-Type: application/json\r\nContent-Length: 11\r\n\r\n{"a":"한"}', 'Content-Length counts BYTES, not characters');
+  assert.equal(byteLen('한'), 3);
+  const back = parseRequest(q.raw);
+  assert.deepEqual([back.method, back.target, back.version, back.body], ['POST', '/api/items', 'HTTP/1.1', '{"a":"한"}']);
+  assert.equal(parseRequest('GET / HTTP/1.1\r\nHost: x').error, 'incomplete', 'headers not finished: not a request yet');
+  assert.equal(parseRequest('GARBAGE\r\n\r\n').error, 'start-line');
+  const get = (m, t, hs = [{ name: 'Host', value: 'e.com' }], body = '', v = 'HTTP/1.1') => parseResponse(serve(parseRequest(buildRequest({ method: m, target: t, version: v, headers: hs, body }).raw)).raw);
+  assert.equal(get('GET', '/').status, 200);
+  assert.equal(get('GET', '/api/hello?name=Ann').body, '{"message":"Hello, Ann!"}');
+  assert.equal(get('GET', '/', [{ name: 'Host', value: 'e.com' }, { name: 'If-None-Match', value: '"v1"' }]).status, 304);
+  assert.equal(get('GET', '/', []).status, 400, 'HTTP/1.1 without Host is refused');
+  assert.equal(get('GET', '/', [], '', 'HTTP/1.0').status, 200, 'HTTP/1.0 needs no Host');
+  const red = get('GET', '/old'); assert.deepEqual([red.status, red.headers.find(h => h.name === 'Location').value], [301, '/new']);
+  assert.equal(get('GET', '/nope').status, 404);
+  assert.equal(get('POST', '/').status, 405);
+  assert.equal(get('GET', '/secret').status, 401);
+  assert.equal(get('GET', '/secret', [{ name: 'Host', value: 'e' }, { name: 'Authorization', value: 'Basic eDp5' }]).status, 200);
+  assert.equal(get('GET', '/error').status, 500);
+  const json = [{ name: 'Host', value: 'e' }, { name: 'Content-Type', value: 'application/json' }];
+  assert.equal(get('POST', '/api/items', json, '{"name":"a"}').status, 201);
+  assert.equal(get('POST', '/api/items', [{ name: 'Host', value: 'e' }], '{"name":"a"}').status, 415);
+  assert.equal(get('POST', '/api/items', json, '').status, 400);
+  assert.equal(get('POST', '/api/items', json, '{oops').status, 400);
+  assert.equal(get('DELETE', '/api/items/1').status, 204);
+  const h = get('HEAD', '/'), g = get('GET', '/');
+  assert.equal(h.body, '', 'HEAD has no body'); assert.equal(h.headers.find(x => x.name === 'Content-Length').value, g.headers.find(x => x.name === 'Content-Length').value, 'but reports the length GET would send');
+  assert.equal(g.headers.find(x => x.name === 'Content-Length').value, String(byteLen(g.body)));
+  assert.equal(segmentsFor(1460), 1); assert.equal(segmentsFor(1461), 2);
+  console.log('✓ HTTP messages are built and parsed correctly, and the demo server answers with the right status codes');
+  const c = Object.fromEntries(compare({ n: 12, rtt: 100, parallel: 6, tls: '1.3', think: 10 }).map(r => [r.id, r]));
+  assert.ok(c.h10.ms >= c.h11.ms && c.h11.ms >= c.h2.ms && c.h2.ms >= c.h3.ms && c.h3.ms >= c.h3z.ms, 'each newer version is no slower');
+  assert.equal(c.h10.setup, 4, '12 resources over 6 connections = 2 rounds, each with TCP + TLS 1.3 setup');
+  assert.equal(compare({ n: 1 }).find(r => r.id === 'h10').ms, compare({ n: 1 }).find(r => r.id === 'h11').ms, 'one resource: reuse cannot help');
+  assert.equal(timeline({ rtt: 50, tls: '1.2', think: 5, dns: true }).reduce((s, x) => s + x.ms, 0), 50 + 50 + 100 + 55);
+  console.log('✓ the version comparison and the request timeline follow their formulas');
+}
