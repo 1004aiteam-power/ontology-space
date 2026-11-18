@@ -87,6 +87,7 @@ NAV = [
         ('packet.html', '패킷 조립 과정', 'From data to packets', '데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬', 'Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums'),
         ('tcp.html', 'TCP 연결 · 재전송', 'TCP connection and retransmission', '3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료', '3-way handshake · seq/ack · loss and retransmission · 4-way close'),
         ('socket.html', '소켓 통신', 'Sockets', 'socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열', 'socket · bind · listen · accept · connect · the kernel\'s fd table and accept queue'),
+        ('concurrency.html', '동시 접속 처리', 'Handling many connections', '프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교', 'Processes, threads, thread pools, event loops (epoll), async — history and comparison'),
         ('http.html', 'HTTP 통신', 'HTTP', '요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교', 'Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing'),
     ]),
     ("menu", 'simMenu', '시뮬레이션', 'Simulation', [

@@ -141,3 +141,29 @@ import { buildRequest, parseRequest, parseResponse, serve, compare, timeline, se
   assert.equal(timeline({ rtt: 50, tls: '1.2', think: 5, dns: true }).reduce((s, x) => s + x.ms, 0), 50 + 50 + 100 + 55);
   console.log('✓ the version comparison and the request timeline follow their formulas');
 }
+
+// 6) 동시 접속 처리 모형: 방식마다 달라지는 성질
+import { makeLoad, simulate as sim, compareAll, MODELS } from '../assets/net/concurrency.js';
+{
+  const by = (load, opt) => Object.fromEntries(compareAll(load, opt).map(r => [r.model, r]));
+  const load = makeLoad({ n: 24 });
+  for (const m of MODELS) {
+    const r = sim(m, load, {});
+    assert.ok(r.stats.finished, `${m}: every connection is served`);
+    r.reqs.forEach((q, i) => assert.ok(q.end - q.arrive >= load[i].cpu + load[i].io - 1e-9, `${m}: no request finishes faster than its own work`));
+  }
+  assert.deepEqual(compareAll(load, {}).map(r => r.stats), compareAll(load, {}).map(r => r.stats), 'deterministic');
+  const slow = by(makeLoad({ n: 40, slowRatio: 0.5, slowIo: 1500 }), {});
+  assert.ok(slow.iter.stats.avg > 5 * slow.thread.stats.avg, 'one-at-a-time collapses when clients are slow');
+  assert.ok(slow.pool.stats.avg > 2 * slow.async.stats.avg, 'a thread pool is exhausted by slow I/O: workers sit blocked');
+  assert.ok(slow.event.stats.avg < slow.pool.stats.avg && Math.abs(slow.async.stats.avg - slow.thread.stats.avg) / slow.thread.stats.avg < 0.05, 'waiting costs nothing in event-driven / async models');
+  const heavy = by(makeLoad({ n: 24, cpu: 80, io: 0, slowRatio: 0 }), {});
+  assert.ok(Math.abs(heavy.event.stats.avg - heavy.iter.stats.avg) < 1, 'one event loop is one core: CPU-heavy work blocks everyone');
+  assert.ok(heavy.multi.stats.avg < heavy.event.stats.avg / 3 && heavy.async.stats.avg < heavy.event.stats.avg / 2, 'more loops / cores spread CPU work');
+  const flood = by(makeLoad({ n: 60, spread: 100, io: 200, slowRatio: 0 }), { limit: 20 });
+  assert.ok(flood.thread.stats.peak <= 20 && flood.fork.stats.peak <= 20 && flood.pool.stats.peak <= 8, 'worker limits are respected');
+  assert.ok(flood.async.stats.memKB < flood.event.stats.memKB && flood.event.stats.memKB < flood.thread.stats.memKB && flood.thread.stats.memKB < flood.fork.stats.memKB, 'memory: coroutine < event connection < thread < process');
+  assert.ok(flood.async.stats.avg < flood.thread.stats.avg, 'with a cap, connections beyond it wait in the queue');
+  assert.ok(by(makeLoad({ n: 60, spread: 100, io: 200, slowRatio: 0 }), { limit: 1000 }).thread.stats.avg <= flood.thread.stats.avg, 'raising the cap removes that queue');
+}
+console.log('✓ the concurrency model shows each design\'s strengths and limits (blocking, CPU-bound, many connections, memory)');

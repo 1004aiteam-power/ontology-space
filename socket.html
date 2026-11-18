@@ -25,9 +25,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=279ba8fe">
+<link rel="stylesheet" href="assets/site.css?v=32356da7">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
-<link rel="stylesheet" href="assets/css/net.css?v=481314d2">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
 <script type="module" src="assets/net/socket-app.js?v=b35abf88"></script>
@@ -107,6 +107,7 @@
       <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
       <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
       <a href="socket.html" aria-current="page"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
       <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
     </div>
     <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
@@ -192,12 +193,12 @@
       <p lang="ko"><code>send()</code>는 데이터를 커널의 송신 버퍼에 맡기면 돌아옵니다. 실제 전송, 번호 매기기, 재전송은 그 뒤에 커널이 합니다. 상대 프로그램이 읽었는지까지 알려면 응용 프로토콜의 응답(예: HTTP의 상태 줄)이 있어야 합니다. 상대가 먼저 닫았을 때 <code>recv()</code>가 0바이트(EOF)를 돌려주는 것, 닫힌 연결에 <code>send()</code>하면 오류(EPIPE)가 나는 것도 같은 맥락입니다.</p>
       <p lang="en"><code>send()</code> returns once the data is handed to the kernel's send buffer; the real transmission, numbering and retransmission come later. Knowing the peer program actually read it takes a reply in the application protocol (e.g. HTTP's status line). Likewise, <code>recv()</code> returns 0 bytes (EOF) when the peer closed first, and <code>send()</code> on a closed connection fails with EPIPE.</p></div>
     <div class="card"><h4><span lang="ko">⑥ 멈추는 호출과 안 멈추는 호출</span><span lang="en">⑥ Blocking and non-blocking</span></h4>
-      <p lang="ko"><code>accept()</code>와 <code>recv()</code>는 기본적으로 <b>데이터가 올 때까지 프로그램을 멈춥니다</b>(blocking). 위 시나리오에서 ⏳가 그 모습입니다. 연결이 수천 개면 스레드를 그만큼 두는 대신, 여러 소켓을 한꺼번에 감시하다 준비된 것만 처리하는 <code>select</code> · <code>epoll</code> · 비동기 I/O(asyncio, Node.js, Netty)를 씁니다. 이 모형은 가장 단순한 blocking 방식만 다룹니다.</p>
-      <p lang="en"><code>accept()</code> and <code>recv()</code> by default <b>pause the program until data arrives</b> (blocking) — the ⏳ above. With thousands of connections, instead of one thread each, servers watch many sockets at once and handle only the ready ones with <code>select</code>, <code>epoll</code> or async I/O (asyncio, Node.js, Netty). This model covers only the simplest, blocking style.</p></div>
+      <p lang="ko"><code>accept()</code>와 <code>recv()</code>는 기본적으로 <b>데이터가 올 때까지 프로그램을 멈춥니다</b>(blocking). 위 시나리오에서 ⏳가 그 모습입니다. 연결이 수천 개면 스레드를 그만큼 두는 대신, 여러 소켓을 한꺼번에 감시하다 준비된 것만 처리하는 <code>select</code> · <code>epoll</code> · 비동기 I/O(asyncio, Node.js, Netty)를 씁니다. 이 모형은 가장 단순한 blocking 방식만 다룹니다. 그 선택지들은 <a href="concurrency.html">동시 접속 처리</a>에서 비교합니다.</p>
+      <p lang="en"><code>accept()</code> and <code>recv()</code> by default <b>pause the program until data arrives</b> (blocking) — the ⏳ above. With thousands of connections, instead of one thread each, servers watch many sockets at once and handle only the ready ones with <code>select</code>, <code>epoll</code> or async I/O (asyncio, Node.js, Netty). This model covers only the simplest, blocking style; the alternatives are compared in <a href="concurrency.html">Handling many connections</a>.</p></div>
   </div>
   <p lang="ko">HTTP 서버도 결국 이 호출 순서를 따르는 프로그램입니다: <code>accept()</code>한 소켓에서 <code>recv()</code>로 요청 글자를 읽고 <code>send()</code>로 응답 글자를 돌려줄 뿐입니다. 그 글자의 모양은 다음 페이지에서 봅니다. 전력 분야의 OCPP(전기차 충전)나 IEC 61850 MMS, DNP3도 같은 소켓 위에서 각자의 메시지 규칙을 얹은 것입니다.</p>
   <p lang="en">An HTTP server is, in the end, a program following this call order: it <code>recv()</code>s the request text from an <code>accept()</code>ed socket and <code>send()</code>s the response text back. The next page looks at the shape of that text. In power systems, OCPP (EV charging), IEC 61850 MMS and DNP3 are likewise their own message rules laid on these same sockets.</p>
-  <div class="pager"><a href="tcp.html"><span lang="ko">← TCP 연결 · 재전송</span><span lang="en">← TCP connection and retransmission</span></a><a href="http.html"><span lang="ko">HTTP →</span><span lang="en">HTTP →</span></a></div>
+  <div class="pager"><a href="tcp.html"><span lang="ko">← TCP 연결 · 재전송</span><span lang="en">← TCP connection and retransmission</span></a><a href="concurrency.html"><span lang="ko">동시 접속 처리 →</span><span lang="en">Handling many connections →</span></a></div>
 </section>
 </main>
 
