@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Recent trends</title>
+<meta name="title-ko" content="Ontology Space · 최근 흐름">
+<meta name="title-en" content="Ontology Space · Recent trends">
+<meta name="description" content="표에서 API를 자동으로 만드는 방식(PostgREST·Supabase), 서버리스 DB와 HTTP 드라이버, 변경 구독(CDC), 그리고 AI 에이전트가 DB에 접근할 때의 안전 점검(guardrail)까지 최근 DB 접근 방식을 직접 실험하며 정리합니다.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/db-modern.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/db-modern.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/db-modern.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/db-modern.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 최근 흐름">
+<meta property="og:description" content="표에서 API를 자동으로 만드는 방식(PostgREST·Supabase), 서버리스 DB와 HTTP 드라이버, 변경 구독(CDC), 그리고 AI 에이전트가 DB에 접근할 때의 안전 점검(guardrail)까지 최근 DB 접근 방식을 직접 실험하며 정리합니다.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/db-modern.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/db.css?v=4795c93e">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/db/db-modern-app.js?v=bf966de0"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html" aria-current="page"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">데이터베이스 접근 · 최근 흐름</span><span lang="en">DATABASE ACCESS · RECENT TRENDS</span></div>
+  <h1><span class="h1ic" aria-hidden="true">🤖</span> <span lang="ko">서비스 코드 없이, 에이전트에게도:<br>최근의 접근 방식</span><span lang="en">Without service code, even for agents:<br>recent ways of access</span></h1>
+  <p class="lead" lang="ko">앞 계단들이 <b>사람이 짠 코드</b>가 DB에 닿는 길이었다면, 최근에는 <b>도구가 API를 자동으로 만들고</b>, 서버리스 환경이 <b>HTTP로 질의</b>하게 하고, <b>AI 에이전트</b>가 새로운 호출자로 등장했습니다. 길은 새로워졌지만 <b>누가 DB 계정을 쥐는가 · 어디서 권한을 강제하는가</b>라는 질문은 그대로입니다.</p>
+  <p class="lead" lang="en">Earlier rungs were roads by which <b>human-written code</b> reached the DB. Recently <b>tools generate APIs automatically</b>, serverless environments <b>query over HTTP</b>, and <b>AI agents</b> have appeared as a new kind of caller. The roads are new, but the questions stay the same: <b>who holds the DB account, and where are permissions enforced</b>.</p>
+  <p class="meta" lang="ko">실습은 이 페이지 안의 작은 SQL 엔진으로 실제 실행하지만, 자연어 → SQL 부분은 LLM이 아니라 규칙으로 흉내 낸 대역입니다. 변환 · 안전 점검 규칙은 <code>tests/db.test.mjs</code>로 확인합니다. 제품 설명은 정확하지 않을 수 있으니 공식 문서를 확인하세요.</p>
+  <p class="meta" lang="en">The labs really run on the small SQL engine in this page, but the natural language → SQL part is a rule-based stand-in, not an LLM. <code>tests/db.test.mjs</code> checks the translation and safety rules. Product descriptions may be inaccurate; check the official documents.</p>
+</div>
+
+<section id="auto">
+  <div class="badge">LAB 1</div>
+  <h2><span lang="ko">표를 만들면 API가 생긴다: 자동 생성 API</span><span lang="en">Make a table and an API appears: auto-generated APIs</span></h2>
+  <p lang="ko">PostgREST · Supabase · Hasura 같은 도구는 DB의 <b>표 구조를 읽어 REST(또는 GraphQL) API를 자동으로 만들어</b> 줍니다. 서비스 코드를 짜지 않고, 주소의 <code>type=eq.transformer</code> 같은 조건이 SQL로 번역됩니다. 주소를 고쳐 보내 보세요.</p>
+  <p lang="en">Tools such as PostgREST, Supabase and Hasura <b>read the DB's table structure and generate a REST (or GraphQL) API automatically</b>. No service code is written; conditions in the address, like <code>type=eq.transformer</code>, are translated to SQL. Edit the address and send it.</p>
+  <div class="net-presets" id="pPresets" role="group" aria-label="examples"></div>
+  <div class="net-form"><label style="grid-column:1/-1"><span lang="ko">GET 주소</span><span lang="en">GET address</span><input id="pUrl" autocomplete="off" spellcheck="false"></label></div>
+  <div class="http-grid">
+    <div><h3><span lang="ko">번역된 SQL</span><span lang="en">The translated SQL</span></h3><pre class="m-pre" id="pSql"></pre></div>
+    <div><h3 id="pStatus"></h3><pre class="m-pre g-out" id="pRes"></pre></div>
+  </div>
+  <p class="st-cap" id="pNote"></p>
+</section>
+
+<section id="agent">
+  <div class="badge">LAB 2</div>
+  <h2><span lang="ko">AI 에이전트가 DB를 쓸 때: 초안 → 점검 → 실행</span><span lang="en">When an AI agent uses the DB: draft → check → run</span></h2>
+  <p lang="ko">에이전트는 자연어 질문을 받아 SQL <b>초안</b>을 만들고, 도구(MCP 등)를 통해 실행합니다. 초안은 틀리거나, 프롬프트 인젝션에 속아 위험할 수 있으므로 <b>실행 전에 점검</b>합니다: 문장 하나 · SELECT만 · 허용된 표만 · 행 수 상한. 질문을 골라 보세요. (초안을 만드는 부분은 LLM이 아니라 <b>규칙으로 흉내 낸 대역</b>입니다.)</p>
+  <p lang="en">An agent takes a natural-language question, writes a SQL <b>draft</b> and runs it through a tool (MCP and the like). A draft can be wrong, or dangerous if prompt injection fooled the agent, so it is <b>checked before running</b>: one statement, SELECT only, allow-listed tables, a row cap. Pick a question. (The draft step is a <b>rule-based stand-in</b>, not an LLM.)</p>
+  <div class="net-presets" id="aPresets" role="group" aria-label="questions"></div>
+  <div class="net-form"><label style="grid-column:1/-1"><span lang="ko">질문</span><span lang="en">Question</span><input id="aQ" autocomplete="off" spellcheck="false"></label></div>
+  <ol class="ag-steps">
+    <li><h4><span lang="ko">① SQL 초안 (LLM 대역)</span><span lang="en">① Draft SQL (LLM stand-in)</span></h4><pre class="m-pre" id="aDraft"></pre></li>
+    <li><h4><span lang="ko">② 안전 점검 (guardrail)</span><span lang="en">② Safety check (guardrail)</span></h4><div id="aGuard"></div></li>
+    <li><h4><span lang="ko">③ 실행 결과</span><span lang="en">③ Result</span></h4><pre class="m-pre" id="aFinal"></pre><div id="aRes"></div></li>
+  </ol>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">에이전트에게 주는 도구 (MCP 예)</span><span lang="en">A tool handed to the agent (an MCP example)</span></h4><pre class="drv-code"><code>{
+  "name": "query_assets",
+  "description": "Read-only SQL over assets and substations. Max 50 rows.",
+  "inputSchema": {
+    "type": "object",
+    "properties": { "sql": { "type": "string" } },
+    "required": ["sql"]
+  }
+}</code></pre><p lang="ko">에이전트는 이 설명만 보고 도구를 부릅니다. 점검은 <b>도구 안(서버 쪽)</b>에서 하므로 에이전트가 속아도 한계를 넘지 못합니다.</p><p lang="en">The agent sees only this description when calling the tool. The check runs <b>inside the tool (server side)</b>, so even a fooled agent cannot exceed the limits.</p></div>
+    <div class="card"><h4><span lang="ko">시맨틱 레이어: 말뜻을 정해 주기</span><span lang="en">A semantic layer: fixing what words mean</span></h4><pre class="drv-code"><code>metric  asset_health  = avg(assets.health)
+dim     substation    = substations.name
+rule    "위험 설비 / risky asset" = health &lt; 60</code></pre><p lang="ko">"위험 설비"가 무엇인지, "건전도"를 어떻게 집계하는지를 <b>미리 정의</b>해 두면 에이전트가 매번 다르게 추측하지 않습니다. 이 사이트의 <a href="ontology-map.html">온톨로지</a>가 하는 일과 같은 종류입니다.</p><p lang="en">Defining <b>in advance</b> what a "risky asset" is and how "health" aggregates stops the agent guessing differently each time. It is the same kind of job the site's <a href="ontology-map.html">ontologies</a> do.</p></div>
+  </div>
+</section>
+
+<section id="map">
+  <h2><span lang="ko">최근 선택지 한눈에</span><span lang="en">Recent options at a glance</span></h2>
+  <div class="net-scroll"><table class="net-tab" id="mapTab"></table></div>
+  <p class="meta" lang="ko">제품 이름과 기능은 빠르게 바뀌므로 도입 전에 각 공식 문서로 확인하세요. 아래 표는 "무엇을 대표하는 방식인가"를 보이려는 예시입니다.</p>
+  <p class="meta" lang="en">Product names and features change fast, so check each official document before adopting. The table gives examples of "what each approach stands for".</p>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">알아 둘 원리</span><span lang="en">Principles worth knowing</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 서비스 코드를 줄이는 방향</span><span lang="en">① Toward writing less service code</span></h4>
+      <p lang="ko">앞 페이지의 REST 서비스는 CRUD 코드가 거의 같은 모양으로 반복됩니다. <b>BaaS</b>(Backend as a Service: Supabase · Firebase 등)와 자동 생성 API는 그 반복을 도구가 맡습니다. 표를 만들면 API · 인증 · 파일 저장 · 실시간 구독이 따라옵니다. 작은 팀이 빨리 만들기에 좋고, 업무 규칙이 복잡해지면 그 부분만 직접 만든 서비스(함수)로 보완합니다.</p>
+      <p lang="en">The REST service of the previous page repeats near-identical CRUD code. <b>BaaS</b> (Backend as a Service: Supabase, Firebase and the like) and auto-generated APIs hand that repetition to a tool. Make a table and the API, authentication, file storage and live subscriptions follow. Good for a small team building fast; when business rules grow complex, only that part is supplemented by your own service (function).</p></div>
+    <div class="card"><h4><span lang="ko">② 권한은 DB 안으로: 행 단위 보안(RLS)</span><span lang="en">② Permissions move into the DB: row-level security (RLS)</span></h4>
+      <p lang="ko">브라우저가 API를 거쳐 DB에 거의 직접 닿으므로 "누가 어느 행을 보는가"를 <b>DB가 직접 강제</b>해야 합니다. PostgreSQL의 RLS는 표마다 <code>USING (owner = current_user)</code> 같은 정책을 걸어, 질의가 어떤 경로로 오든 보이는 행을 걸러 냅니다. 이는 앞 페이지의 "서비스가 권한을 확인한다"를 <b>DB 쪽으로 옮긴 것</b>입니다. 정책을 빠뜨린 표는 곧바로 노출되므로, 새 표는 기본으로 닫고 시작하세요.</p>
+      <p lang="en">Because the browser reaches the DB almost directly through the API, <b>the DB itself must enforce</b> "who sees which rows". PostgreSQL RLS attaches policies such as <code>USING (owner = current_user)</code> to each table, filtering visible rows however the query arrived. It is the previous page's "the service checks permissions" <b>moved into the DB</b>. A table without a policy is exposed at once, so start new tables closed by default.</p></div>
+    <div class="card"><h4><span lang="ko">③ 서버리스 DB와 HTTP로 묻기</span><span lang="en">③ Serverless DBs and querying over HTTP</span></h4>
+      <p lang="ko">서버리스 환경(함수가 요청 때만 잠깐 떴다 사라짐)은 <a href="db-wire.html">TCP 연결과 풀</a>을 오래 유지하기 어렵고, 연결 수가 순식간에 폭증합니다. 그래서 <b>HTTP · WebSocket으로 질의하는 드라이버</b>(Neon · Turso/libSQL · Cloudflare D1 · AWS Aurora Data API 등)와 앞단 연결 중계가 나왔습니다. 호출은 여전히 SQL이지만 통로가 소켓 프로토콜에서 HTTP 요청으로 바뀐 것입니다. 연결을 맺는 대신 요청마다 묻고 끝내므로, 함수가 늘어도 DB 연결 수가 폭증하지 않습니다.</p>
+      <p lang="en">Serverless environments (functions that appear for a request and vanish) cannot keep <a href="db-wire.html">TCP connections and pools</a> alive, and connection counts spike instantly. Hence <b>drivers that query over HTTP or WebSocket</b> (Neon, Turso/libSQL, Cloudflare D1, AWS Aurora Data API and others) plus connection proxies in front. The call is still SQL, but the channel changed from a socket protocol to an HTTP request. Asking per request instead of holding a connection keeps connection counts from spiking as functions multiply.</p></div>
+    <div class="card"><h4><span lang="ko">④ 엣지와 복제본: 가까운 곳에서 읽기</span><span lang="en">④ Edge and replicas: reading nearby</span></h4>
+      <p lang="ko">사용자가 전 세계에 있으면 DB가 한 곳에만 있을 때 먼 사용자는 왕복이 깁니다. <b>읽기 복제본</b>을 여러 지역에 두거나 엣지에 캐시를 두어 <b>읽기는 가까운 곳, 쓰기는 한 곳</b>으로 처리합니다. 대가는 복제 지연으로 잠깐 낡은 값을 읽을 수 있다는 점입니다(자기가 방금 쓴 값은 쓰기 쪽에서 읽도록 라우팅하는 식으로 보완).</p>
+      <p lang="en">With users worldwide, one DB location means long round trips for distant users. Place <b>read replicas</b> in several regions or caches at the edge to <b>read nearby and write in one place</b>. The price is replication lag that can briefly serve stale values (mitigated by routing reads of something you just wrote to the write side).</p></div>
+    <div class="card"><h4><span lang="ko">⑤ 변경을 구독한다: CDC</span><span lang="en">⑤ Subscribing to changes: CDC</span></h4>
+      <p lang="ko">"가져오기(요청-응답)" 대신 DB의 <b>변경 기록(WAL)을 흘려 받는</b> 방식입니다(<a href="db-file.html">WAL 실험</a>의 그 로그). Debezium 같은 도구가 변경을 이벤트로 바꿔 메시지 큐 · 검색 엔진 · 캐시 · 분석 DB로 보냅니다. 실시간 화면 갱신, 다른 시스템과 동기화, 감사 기록에 쓰입니다. 접근의 방향이 "내가 묻는다"에서 "바뀌면 알려 준다"로 뒤집힌 셈입니다.</p>
+      <p lang="en">Instead of "fetching (request-response)" you <b>receive the DB's change log (WAL)</b> as a stream (the log from the <a href="db-file.html">WAL lab</a>). Tools like Debezium turn changes into events sent to message queues, search engines, caches and analytics DBs, used for live screen updates, syncing other systems and audit trails. Access flips from "I ask" to "tell me when it changes".</p></div>
+    <div class="card"><h4><span lang="ko">⑥ AI 에이전트의 접근: 새 호출자</span><span lang="en">⑥ AI agents: a new kind of caller</span></h4>
+      <p lang="ko">에이전트는 사람처럼 <b>그때그때 묻고</b>, 사람과 달리 <b>빠르고 대량으로, 속을 수 있습니다</b>(문서 안의 숨은 지시에 따라 행동하는 프롬프트 인젝션). 그래서 DB 계정을 주지 않고 <b>좁은 도구</b>(MCP 서버)를 주며, 도구 쪽에서 읽기 전용 · 허용 표 · 행 상한 · 감사 로그를 강제합니다(LAB 2). 에이전트가 쓰기를 해야 한다면 도구를 잘게 나눠(<code>set_health(id, value)</code>) 범위를 좁히고 사람 승인 단계를 둡니다.</p>
+      <p lang="en">An agent <b>asks on the fly</b> like a person but unlike a person is <b>fast, high-volume and can be fooled</b> (prompt injection: acting on hidden instructions inside a document). So do not give it a DB account; give it a <b>narrow tool</b> (an MCP server) that enforces read-only, allow-listed tables, a row cap and audit logs (Lab 2). If an agent must write, split tools finely (<code>set_health(id, value)</code>) to narrow the scope and add a human approval step.</p></div>
+    <div class="card"><h4><span lang="ko">⑦ 의미로 찾기: 벡터와 GraphRAG</span><span lang="en">⑦ Finding by meaning: vectors and GraphRAG</span></h4>
+      <p lang="ko">문서를 질문과 의미가 가까운 순으로 찾는 <b>벡터 검색</b>(RAG)이 AI 응용의 기본 접근이 되었고, 관계를 따라가며 답을 모으는 <b>GraphRAG</b>가 그 위에 얹힙니다. 이 사이트의 <a href="ai.html">AI × 온톨로지 시연</a>이 LLM만 · 문서 검색 · GraphRAG를 비교하며, 자연어 질문이 <a href="lab.html">Cypher</a>로 바뀌어 그래프에서 답을 얻는 과정도 거기 있습니다. 앞의 <a href="db-map.html">지도</a>에서 본 벡터 · 그래프 모양이 이렇게 접근의 새 통로가 됩니다.</p>
+      <p lang="en"><b>Vector search</b> (RAG), which finds documents closest in meaning to the question, has become the basic access path in AI applications, with <b>GraphRAG</b>, collecting answers by following relationships, layered on top. This site's <a href="ai.html">AI × ontology demo</a> compares LLM alone, document search and GraphRAG, including natural-language questions becoming <a href="lab.html">Cypher</a> to get answers from a graph. The vector and graph shapes of the <a href="db-map.html">map</a> thus become new channels of access.</p></div>
+    <div class="card"><h4><span lang="ko">⑧ 이 모형이 생략한 것</span><span lang="en">⑧ What this model leaves out</span></h4>
+      <p lang="ko">주소 번역은 PostgREST의 일부 문법(select · 필터 · order · limit · 한 단계 포함)만 흉내 냈고 RLS는 없습니다. 자연어 → SQL은 LLM이 아니라 키워드 규칙이며, 실제 에이전트는 스키마 설명을 읽고 훨씬 다양하게(그리고 틀리게) 씁니다. 점검 규칙도 한 예일 뿐 실제로는 열 단위 제한 · 비용 한도 · 감사까지 둡니다.</p>
+      <p lang="en">The address translation mimics only part of PostgREST's syntax (select, filters, order, limit, one level of embedding) and has no RLS. Natural language → SQL is keyword rules, not an LLM; a real agent reads schema descriptions and writes far more varied (and wrong) SQL. The check rules are only an example; real ones add column limits, cost caps and auditing.</p></div>
+  </div>
+</section>
+
+<div class="pager"><a href="db-graphql.html"><span lang="ko">← GraphQL · 데이터 API</span><span lang="en">← GraphQL and data APIs</span></a><a href="db-choose.html"><span lang="ko">정리: 선택 기준 →</span><span lang="en">Wrap-up: how to choose →</span></a></div>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

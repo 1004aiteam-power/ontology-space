@@ -51,6 +51,7 @@
 | [assets/safety/](../assets/safety/) | 배전공사 안전 훈련 (`safety.js` 가 `core.js` 공통 · `scn-pole.js` · `scn-wire.js` · `scn-manhole.js` · `scn-transformer.js` · `scn-tower.js` 시나리오를 묶음): 가상 현장 다섯 곳(가공 전주 애자·완금 교체 정전 작업 · 가공 전선 교체 한 경간(작업차 두 대 · 활차 · 윈치 견인 · 기온별 이도 조정) · 주상변압기 교체(COS 개방, 본선 활선) · 지중 맨홀 밀폐공간 작업 · 송전 철탑 승탑)에서 작업자 5~6명이 "생명을 지키는 안전수칙 11"에 따라 TBM부터 철수까지 안전조치를 단계별로 진행, 순서 맞히기 훈련 모드(강사용 시작 단계 선택, 결과 인쇄·PDF, 브라우저 기록), 매 틱 안전 규칙 확인, 2D 캔버스 원근(pseudo-3D) 화면 (`safety.html`, ⚠ 교육용 가상 현장) |
 | [assets/airport/](../assets/airport/) | 공항 이착륙: 가상 공항의 평행 활주로 2개 혼합 운영, 하루 전체 운항 일정, 후류 간격·복행·지상 이동, 도착·출발 안내판과 2D 캔버스 원근(pseudo-3D) 화면 (`airport.html`, ⚠ 가상 공항·항공사) |
 | [assets/flights/](../assets/flights/) | 세계 항공 교통: 실제 주요 공항 176곳 · 가상 항공사의 하루 약 1만 편, 대권 항로·고도·편서풍, 국내선/국제선, 낮·밤 경계를 그린 메르카토르 세계 지도 (`flights.html`, 지도 데이터는 [examples/flights/build_world_map.mjs](../examples/flights/build_world_map.mjs)로 Natural Earth에서 생성, ⚠ 가상 데이터: 공항 이름·위치만 실제이고 항공사·편명·운항 일정·항공기 위치는 모두 가상, 실제 항공편 추적 아님) |
+| [assets/db/](../assets/db/) | 데이터베이스 접근 메뉴 (`db-map.html` · `db-file.html` · `db-wire.html` · `db-driver.html` · `db-orm.html` · `db-service.html` · `db-graphql.html` · `db-modern.html` · `db-choose.html`): 같은 가상 데이터(변전소 3 · 설비 12)로 파일 직접 접근 → 와이어 프로토콜 → 드라이버 → ORM → REST → GraphQL → 자동 생성 API · AI 에이전트까지 접근 방식을 한 계단씩. `minisql.js`(브라우저 안의 작은 SQL 엔진) 위에 `storage.js`(페이지 · B+트리 · WAL) · `wire.js`(PostgreSQL 메시지 바이트 · 커넥션 풀) · `driver.js`(SQL 인젝션 · 트랜잭션) · `orm.js`(쿼리 빌더 · N+1) · `service.js`(REST 서비스) · `gql.js`(GraphQL) · `modern.js`(자동 생성 API · 에이전트 안전 점검) · `choose.js`(선택 도우미) · `models.js`(데이터 모델 지도). 화면은 `db-*-app.js` |
 | [examples/ecosystem/](../examples/ecosystem/) | 단세포 생태계 온톨로지: 시뮬레이션 한 번의 세포 기록(분열·포식·죽음·피난처·계절) → OWL 스키마 `eco-ontology.ttl` + 개체 `eco-run-seed1.ttl` (`build_eco.mjs`, 브라우저와 같은 코드 `assets/eco/eco-graph.js`), 혈통·진화·피난처·계절 Cypher 질문 (`eco-ontology.html`, ⚠ 시뮬레이션 속 가상 생물) |
 | [examples/safety/](../examples/safety/) | 배전공사 안전 온톨로지: 안전 훈련 시뮬레이션(`assets/safety/safety.js`)의 현장 · 작업 단계 · 안전수칙 11 · 역할 · 훈련 오답 + 위험요인 → 스키마 `safety-schema.ttl` + 개체 `safety-steps.ttl` (`build_safety.mjs`, 브라우저와 같은 코드 `assets/safety/safety-graph.js`). 작업 단계 ⊑ 업무 온톨로지 `aipd:Task`(선행 · 리스크 · 생애주기), 작업 대상 설비 → 자산관리 자산 · 정비 흐름, 정전 작업 구간 → 배전선로 D/L #1 구간 · 개폐기 (`safety-ontology.html`, ⚠ 교육용 가상 현장) |
 | [examples/twin/](../examples/twin/) | 가상 대한민국 전력망: CIM 모델 생성 → 24시간 조류계산 (⚠ 가상 데이터) |
@@ -135,6 +136,7 @@ node tests/cypher.test.mjs           # 브라우저 Cypher 엔진 · 실습 예�
 node tests/traffic.test.mjs          # 교차로 신호 시뮬레이션 테스트
 node tests/airport.test.mjs          # 공항 이착륙 시뮬레이션 테스트
 node tests/flights.test.mjs          # 세계 항공 교통 시뮬레이션 테스트
+node tests/db.test.mjs               # 데이터베이스 접근: 미니 SQL 엔진 · 페이지/B+트리/WAL · PostgreSQL 메시지 바이트 · 인젝션 · N+1 · REST · GraphQL · 안전 점검 · 선택 규칙
 ```
 
 [Protégé](https://protege.stanford.edu/)로 `.ttl` 파일을 열어 클래스 계층과 개체를 시각적으로 볼 수도 있습니다.

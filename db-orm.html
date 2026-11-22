@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Query builders and ORMs</title>
+<meta name="title-ko" content="Ontology Space · 쿼리 빌더 · ORM">
+<meta name="title-en" content="Ontology Space · Query builders and ORMs">
+<meta name="description" content="쿼리 빌더와 ORM이 코드를 SQL과 바인딩 값으로 바꾸는 과정, 보이지 않는 질의가 쌓이는 N+1 문제와 세 가지 불러오기 방식(지연·IN·JOIN)의 질의 수 차이를 직접 실험합니다.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/db-orm.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/db-orm.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/db-orm.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/db-orm.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 쿼리 빌더 · ORM">
+<meta property="og:description" content="쿼리 빌더와 ORM이 코드를 SQL과 바인딩 값으로 바꾸는 과정, 보이지 않는 질의가 쌓이는 N+1 문제와 세 가지 불러오기 방식(지연·IN·JOIN)의 질의 수 차이를 직접 실험합니다.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/db-orm.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/db.css?v=4795c93e">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/db/db-orm-app.js?v=36977a43"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html" aria-current="page"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">데이터베이스 접근 · 쿼리 빌더 · ORM</span><span lang="en">DATABASE ACCESS · QUERY BUILDERS AND ORMS</span></div>
+  <h1><span class="h1ic" aria-hidden="true">🧱</span> <span lang="ko">SQL을 코드로 감싸기:<br>쿼리 빌더와 ORM</span><span lang="en">Wrapping SQL in code:<br>query builders and ORMs</span></h1>
+  <p class="lead" lang="ko">SQL을 글자로 쓰는 일은 반복이 많고 실수하기 쉽습니다. <b>쿼리 빌더</b>는 SQL을 코드로 조립하게 하고, <b>ORM</b>은 표의 행을 객체로 다루게 합니다. 편해진 만큼 <b>어떤 SQL이 나가는지 안 보이는</b> 대가가 따르고, 그 대표가 N+1 문제입니다.</p>
+  <p class="lead" lang="en">Writing SQL as text is repetitive and error-prone. A <b>query builder</b> lets you assemble SQL in code, and an <b>ORM</b> lets you handle table rows as objects. The price of that comfort is <b>not seeing which SQL goes out</b>, and the classic case is the N+1 problem.</p>
+  <p class="meta" lang="ko">여기의 빌더 · 불러오기 코드는 설명용 최소 구현이고, 실행은 이 페이지 안의 작은 SQL 엔진이 합니다. 세 방식의 결과가 같다는 것과 질의 횟수는 <code>tests/db.test.mjs</code>로 확인합니다. 시간 계산은 왕복 횟수만 센 단순 모형입니다.</p>
+  <p class="meta" lang="en">The builder and loading code here are minimal teaching implementations, run by the small SQL engine in this page. <code>tests/db.test.mjs</code> checks that the three styles give the same result and counts their queries. The timing is a simple model counting round trips only.</p>
+</div>
+
+<section id="builder">
+  <div class="badge">LAB 1</div>
+  <h2><span lang="ko">코드가 SQL이 되는 과정</span><span lang="en">How code becomes SQL</span></h2>
+  <p lang="ko">조건을 고르면 <b>쿼리 빌더</b> 코드가 만들어지고, 그것이 <b>SQL과 바인딩 값</b>으로 바뀌어 실행됩니다. ORM은 이 위에 한 겹 더 얹어 "표 행"을 <b>객체</b>로 돌려줍니다. 어떤 표기든 결국 DB에는 아래 SQL이 갑니다.</p>
+  <p lang="en">Pick conditions and <b>query-builder</b> code is composed, then turned into <b>SQL plus bound values</b> and run. An ORM adds one more layer, returning "table rows" as <b>objects</b>. Whatever the notation, it is the SQL below that reaches the DB.</p>
+  <div class="net-form">
+    <label><span lang="ko">종류</span><span lang="en">Type</span><select id="bType"><option value="">(any)</option><option>transformer</option><option>breaker</option><option>cable</option><option>relay</option></select></label>
+    <label><span lang="ko">최소 건전도</span><span lang="en">Minimum health</span><input type="range" id="bMin" min="0" max="100" step="5" value="60" aria-label="min health"><output id="bMinOut"></output></label>
+    <label><span lang="ko">정렬</span><span lang="en">Order</span><select id="bOrd"><option value="">(none)</option><option value="DESC">health DESC</option><option value="ASC">health ASC</option></select></label>
+    <label><span lang="ko">개수 제한</span><span lang="en">Limit</span><select id="bLim"><option value="">(none)</option><option>3</option><option>5</option></select></label>
+  </div>
+  <div class="http-grid">
+    <div><h3><span lang="ko">쿼리 빌더 (코드)</span><span lang="en">Query builder (code)</span></h3><pre class="m-pre" id="bCode"></pre>
+      <h3><span lang="ko">ORM 표기 (Django 스타일 예)</span><span lang="en">ORM notation (Django-style example)</span></h3><pre class="m-pre" id="bOrm"></pre></div>
+    <div><h3><span lang="ko">DB로 가는 SQL</span><span lang="en">The SQL sent to the DB</span></h3><pre class="m-pre" id="bSql"></pre><div id="bRes"></div></div>
+  </div>
+</section>
+
+<section id="n1">
+  <div class="badge">LAB 2</div>
+  <h2><span lang="ko">N+1 문제: 보이지 않는 질의</span><span lang="en">The N+1 problem: invisible queries</span></h2>
+  <p lang="ko">"변전소 목록과 각 변전소의 설비를 함께 보여 줘". ORM에서는 <code>for s in substations: s.assets</code> 한 줄이지만, 기본 설정(지연 불러오기)에서는 <b>변전소마다 질의가 한 번씩</b> 나갑니다. 아래에서 세 방식이 실제로 보낸 SQL을 보고, 변전소가 늘면 어떻게 되는지 확인하세요.</p>
+  <p lang="en">"Show the substations, each with its assets." In an ORM it is one line, <code>for s in substations: s.assets</code>, but with the default (lazy loading) <b>one query goes out per substation</b>. See the SQL each of three styles really sent below, then watch what happens as substations multiply.</p>
+  <div class="grid" id="n1Real"></div>
+  <p class="st-cap" id="n1Same"></p>
+  <div class="net-form">
+    <label><span lang="ko">변전소 수 (N)</span><span lang="en">Number of substations (N)</span><input type="range" id="nN" min="1" max="200" value="50" aria-label="N"><output id="nNOut"></output></label>
+    <label><span lang="ko">DB까지 왕복 시간</span><span lang="en">Round trip to the DB</span><input type="range" id="nRtt" min="1" max="20" value="2" aria-label="rtt"><output id="nRttOut"></output></label>
+  </div>
+  <div id="nBars"></div>
+</section>
+
+<section id="styles">
+  <h2><span lang="ko">세 가지 스타일</span><span lang="en">Three styles</span></h2>
+  <div class="grid">
+    <div class="card"><h4><span lang="ko">쿼리 빌더</span><span lang="en">Query builder</span></h4><pre class="drv-code"><code>db.select("name")
+  .from("assets")
+  .where("health", "&gt;=", 70)</code></pre><p lang="ko">SQL을 코드로 조립. 결과는 단순한 행. 가볍고 SQL이 잘 보임 (Knex · SQLAlchemy Core · jOOQ).</p><p lang="en">SQL composed in code; results are plain rows. Light, and the SQL stays visible (Knex, SQLAlchemy Core, jOOQ).</p></div>
+    <div class="card"><h4>Active Record</h4><pre class="drv-code"><code>a = Asset.find("T1")
+a.health = 80
+a.save()          # 객체가 스스로 저장</code></pre><p lang="ko">객체 하나가 표의 한 행이고 저장도 스스로 함. 쉽고 빠르지만 객체가 DB 구조에 묶임 (Rails · Django).</p><p lang="en">An object is one table row and saves itself. Easy and fast, but the object is tied to the DB structure (Rails, Django).</p></div>
+    <div class="card"><h4>Data Mapper</h4><pre class="drv-code"><code>a = session.get(Asset, "T1")
+a.health = 80
+session.commit()  # 매퍼가 저장</code></pre><p lang="ko">객체는 DB를 모르고 별도의 매퍼가 변환. 업무 객체가 깨끗하지만 설정이 많음 (Hibernate · SQLAlchemy ORM).</p><p lang="en">Objects know nothing about the DB; a separate mapper converts. Clean domain objects but more setup (Hibernate, SQLAlchemy ORM).</p></div>
+  </div>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">알아 둘 원리</span><span lang="en">Principles worth knowing</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 왜 ORM이 생겼나</span><span lang="en">① Why ORMs arose</span></h4>
+      <p lang="ko">앞 단계(<a href="db-driver.html">드라이버</a>)에서는 SQL 글자를 직접 쓰고, 결과의 <b>열을 하나씩 꺼내 객체에 옮기는</b> 반복 코드가 끝없이 생깁니다. ORM(Object-Relational Mapping)은 이 변환과, 방언 차이, 기본 CRUD를 맡습니다. 객체는 <b>참조로 이어진 그물</b>이고 관계형 표는 <b>값으로 이어진 집합</b>이라 서로 맞지 않는데(임피던스 불일치), ORM은 그 틈을 메웁니다. 같은 ESS를 클래스와 OWL로 쓰는 차이는 <a href="ood.html">온톨로지 vs. 객체지향 설계</a>에 있습니다.</p>
+      <p lang="en">At the previous rung (<a href="db-driver.html">drivers</a>) you write SQL text and endless repetitive code <b>pulling columns out one by one into objects</b>. An ORM (Object-Relational Mapping) takes over that conversion, dialect differences and basic CRUD. Objects are <b>nets joined by references</b> while relational tables are <b>sets joined by values</b>, and they do not fit (the impedance mismatch); the ORM bridges the gap. How one battery looks as classes and as OWL is in <a href="ood.html">Ontology vs. OOD</a>.</p></div>
+    <div class="card"><h4><span lang="ko">② 쿼리 빌더는 SQL 조립기</span><span lang="en">② A query builder assembles SQL</span></h4>
+      <p lang="ko">빌더는 조건을 메서드로 받아 <b>SQL 글자와 바인딩 값을 따로</b> 만듭니다(LAB 1). 그래서 바인딩의 안전함이 기본으로 따라오고, 조건을 if문으로 붙였다 뗐다 하기 쉽습니다(검색 화면의 선택적 필터). 문자열 이어붙이기로 같은 일을 하다가 인젝션이 생기는 일을 구조적으로 막아 줍니다.</p>
+      <p lang="en">A builder takes conditions as methods and produces <b>SQL text and bound values separately</b> (Lab 1). So the safety of binding comes by default, and adding or dropping conditions with an if statement is easy (optional filters on a search screen). It structurally prevents the injection that string concatenation invites.</p></div>
+    <div class="card"><h4><span lang="ko">③ N+1과 불러오기 전략</span><span lang="en">③ N+1 and loading strategies</span></h4>
+      <p lang="ko">관계를 <b>쓰는 순간</b> 질의하는 지연 불러오기는 편하지만, 목록 × 관계에서 질의가 N+1번 나갑니다. 고치는 길은 세 가지입니다: <b>미리 한 번에 묶어 IN으로</b>(2번), <b>JOIN으로 한 번에</b>(1번 — 대신 부모 행이 자식 수만큼 반복되어 옵니다), 아니면 필요한 필드만 직접 SQL로. 개발 중에 <b>질의 수를 세는 습관</b>(로그 · 테스트에서 질의 수 상한)이 가장 확실한 방지책입니다.</p>
+      <p lang="en">Lazy loading, which queries <b>the moment you use a relation</b>, is convenient but issues N+1 queries for list × relation. Three fixes: <b>gather up front and use IN</b> (2 queries), <b>JOIN in one go</b> (1 query, though parent rows repeat once per child), or hand-written SQL for just the fields needed. The surest prevention is the <b>habit of counting queries</b> in development (logs, or a query-count cap in tests).</p></div>
+    <div class="card"><h4><span lang="ko">④ 작업 단위와 식별자 맵</span><span lang="en">④ Unit of work and identity map</span></h4>
+      <p lang="ko">성숙한 ORM(데이터 매퍼 계열)은 한 세션 안에서 같은 행은 <b>같은 객체</b>로 돌려주고(식별자 맵), 바뀐 객체를 모아 두었다가 commit 때 <b>필요한 UPDATE만 한꺼번에</b> 보냅니다(작업 단위). 편리하지만, 언제 SQL이 나가는지 코드에서 보이지 않아 놀라는 일이 생깁니다. <code>echo=True</code> 같은 SQL 로그를 켜 두고 개발하세요.</p>
+      <p lang="en">Mature ORMs (data-mapper family) return the same row as <b>the same object</b> within a session (identity map) and collect changed objects, sending <b>only the needed UPDATEs together</b> at commit (unit of work). Convenient, but the code does not show when SQL goes out, which causes surprises. Develop with SQL logging on, such as <code>echo=True</code>.</p></div>
+    <div class="card"><h4><span lang="ko">⑤ 스키마 변경: 마이그레이션</span><span lang="en">⑤ Schema changes: migrations</span></h4>
+      <p lang="ko">모델 코드를 고치면 DB 표도 바뀌어야 합니다. ORM 도구들은 변경을 <b>순서 있는 마이그레이션 파일</b>(열 추가, 인덱스 생성)로 남겨 개발 · 시험 · 운영 DB를 같은 상태로 맞춥니다. 운영에서는 큰 표의 열 추가가 오래 잠그지 않는지 따로 점검해야 합니다.</p>
+      <p lang="en">Changing model code means the DB tables must change too. ORM tooling records changes as <b>ordered migration files</b> (add a column, create an index) so development, test and production DBs reach the same state. In production, check separately that adding a column to a big table will not lock it for long.</p></div>
+    <div class="card"><h4><span lang="ko">⑥ 비상구: 직접 SQL</span><span lang="en">⑥ The escape hatch: raw SQL</span></h4>
+      <p lang="ko">복잡한 집계 · 보고서 · 대량 처리 · 방언 전용 기능은 ORM으로 쓰면 오히려 읽기 어렵고 느립니다. 대부분의 ORM이 <b>직접 SQL을 실행하는 문</b>을 열어 둡니다(바인딩은 그대로 사용). 한 프로젝트에서 평범한 CRUD는 ORM, 무거운 분석은 SQL로 섞어 쓰는 것이 흔한 모습입니다.</p>
+      <p lang="en">Complex aggregates, reports, bulk processing and dialect-only features are harder to read and slower through an ORM. Most ORMs leave <b>a door for running raw SQL</b> (still with binding). Ordinary CRUD in the ORM and heavy analysis in SQL, mixed in one project, is common.</p></div>
+    <div class="card"><h4><span lang="ko">⑦ 언제 ORM이 짐이 되나</span><span lang="en">⑦ When an ORM becomes a burden</span></h4>
+      <p lang="ko">데이터가 크고 질의가 복잡해 <b>생성된 SQL을 늘 들여다봐야</b> 할 때, 읽기 전용 분석 · 보고서 중심일 때, 팀이 SQL에 능숙하고 객체 모델이 얇을 때. 이때는 쿼리 빌더나 SQL 파일 + 얇은 매핑이 더 낫기도 합니다. 반대로 CRUD 위주의 업무 앱에서는 ORM이 생산성을 크게 올립니다.</p>
+      <p lang="en">When data is large and queries complex so that you <b>must always inspect the generated SQL</b>, when the work is read-only analysis and reports, or when the team is fluent in SQL and the object model is thin, a query builder or SQL files with a thin mapping may be better. In CRUD-heavy business apps, by contrast, an ORM raises productivity a lot.</p></div>
+    <div class="card"><h4><span lang="ko">⑧ 이 모형이 생략한 것</span><span lang="en">⑧ What this model leaves out</span></h4>
+      <p lang="ko">여기서는 질의 횟수와 왕복 시간만 셌습니다. 실제로는 DB 안에서 걸리는 시간 · 캐시 · 연결 풀 대기 · 객체 생성 비용이 더해지며, JOIN은 부모 행이 반복되어 전송량이 늘 수 있습니다. 변경 추적 · 캐스케이드 삭제 · 낙관적 잠금은 다루지 않았습니다.</p>
+      <p lang="en">Only query counts and round-trip time are counted here. In reality time inside the DB, caches, pool waits and object-creation cost add up, and a JOIN repeats parent rows and can enlarge the transfer. Change tracking, cascading deletes and optimistic locking are not covered.</p></div>
+  </div>
+</section>
+
+<div class="pager"><a href="db-driver.html"><span lang="ko">← 드라이버 · 표준 API</span><span lang="en">← Drivers and standard APIs</span></a><a href="db-service.html"><span lang="ko">서비스 계층: REST →</span><span lang="en">The service layer: REST →</span></a></div>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
