@@ -1,0 +1,54 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space) */
+/* 프로그래밍 언어 페이지(lang-*.html)에서 쓰는 모양. 공통 부품은 net.css 와 site.css 를 쓴다 */
+.lcode,.lout{margin:8px 0;padding:10px 12px;border-radius:8px;overflow-x:auto;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.lcode{background:var(--code);border:1px solid var(--line)}
+.lcode code{background:none;padding:0}
+.lout{background:#0f1115;color:#d7dae0;border:1px solid #2c3038;margin-top:-4px}
+.lout::before{content:"출력 / output";display:block;font:11px sans-serif;color:#8b93a1;margin-bottom:4px}
+.lout code{background:none;color:inherit;padding:0;white-space:pre}
+.ex-note{display:block;font-size:12.5px;color:var(--warm);margin-bottom:6px}
+.lc{margin:14px 0}
+.lc h4{font-size:16px;margin:0 0 6px}
+.lc p{color:var(--text);font-size:15px;margin:6px 0}
+.lc code{overflow-wrap:anywhere}
+.lc.pit{border-left:4px solid var(--warm)}
+.lt td:first-child{font-weight:600;white-space:nowrap}
+.lt td{white-space:normal;vertical-align:top}
+.lang-cols{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.lang-cols .ex{min-width:0}
+.lang-cols h4{margin:4px 0}
+.steps-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.steps-bar button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit;font-size:14px}
+.steps-bar button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.steps-bar button:disabled{opacity:.45;cursor:default}
+.demo-grid{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .demo-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} }
+.src-lines{margin:0;padding:8px 0;background:var(--code);border:1px solid var(--line);border-radius:8px;font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;list-style:none;counter-reset:l}
+.src-lines li{counter-increment:l;padding:0 10px 0 6px;white-space:pre-wrap;overflow-wrap:anywhere;border-left:3px solid transparent}
+.src-lines li::before{content:counter(l);display:inline-block;width:2em;color:var(--muted);text-align:right;margin-right:8px}
+.src-lines li.on{background:var(--accent-soft);border-left-color:var(--accent);font-weight:700}
+.src-lines li.done{opacity:.6}
+.state-box{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:10px 12px;min-width:0}
+.state-box h4{margin:0 0 6px;font-size:14px}
+.var-row,.obj-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:4px 0;font:13px ui-monospace,Menlo,monospace}
+.var-row b{min-width:5em}
+.oid{display:inline-block;padding:1px 8px;border-radius:999px;font-weight:700;color:#fff;font-size:12px}
+.obj-row .body{padding:2px 8px;border:1px solid var(--line);border-radius:6px;background:var(--code)}
+.out-log{margin:6px 0 0;padding:8px 10px;background:#0f1115;color:#d7dae0;border-radius:8px;font:12.5px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;min-height:2.4em}
+.note-box{margin:8px 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:14px}
+.note-box.bad{border-left-color:#d33;background:color-mix(in srgb,#d33 12%,var(--surface))}
+.note-box.good{border-left-color:#1f9d6b;background:color-mix(in srgb,#1f9d6b 12%,var(--surface))}
+.badge-v{font-size:11.5px;border:1px solid #1f9d6b;color:#1f9d6b;border-radius:999px;padding:0 8px;margin-left:6px;white-space:nowrap}
+
+/* Java HashMap 버킷 시연 */
+.jbuckets{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:4px;margin:6px 0}
+.jb{border:1px solid var(--line);border-radius:6px;padding:3px 4px;min-height:44px;background:var(--surface);font:12px ui-monospace,Menlo,monospace;min-width:0}
+.jb small{display:block;color:var(--muted);font-size:10.5px}
+.jb.hit{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.jb.chain{background:color-mix(in srgb,var(--warm) 10%,var(--surface))}
+.jn{display:block;padding:0 4px;margin:1px 0;border-radius:4px;background:var(--code);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jn.chk{background:color-mix(in srgb,var(--accent) 25%,transparent);font-weight:700}
+.jn.empty{background:none;color:var(--muted)}
+.net-form [hidden]{display:none !important}
+.net-form label.chk{flex-direction:row;align-items:center;gap:8px;color:var(--text)}

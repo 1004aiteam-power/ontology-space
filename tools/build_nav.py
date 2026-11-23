@@ -106,12 +106,6 @@ NAV = [
         ('h', '정리', 'Wrap-up'),
         ('db-choose.html', '정리: 선택 기준', 'Wrap-up: how to choose', '누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까', 'What to use by caller, shape and scale'),
     ]),
-    ("menu", 'gitMenu', 'Git 사용법', 'Git Usage', [
-        ('git-basics.html', 'Git 구조와 로컬 명령', 'Git model and local commands', '작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시', 'Working tree · stage · repository · add, commit, log, diff · hashes'),
-        ('git-branch.html', '브랜치 · 병합 · 충돌', 'Branches, merging and conflicts', 'switch · merge · rebase · cherry-pick · stash · 충돌 풀기', 'switch · merge · rebase · cherry-pick · stash · resolving conflicts'),
-        ('git-remote.html', 'GitHub와 함께', 'Working with GitHub', 'clone · fetch · pull · push · Pull Request 흐름 · 인증', 'clone · fetch · pull · push · the Pull Request flow · authentication'),
-        ('git-trouble.html', '장애 사례집', 'Troubleshooting cases', 'push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지', 'Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more'),
-    ]),
     ("menu", 'simMenu', '시뮬레이션', 'Simulation', [
         ('h', '전력 현장 교육', 'Power field training'),
         ('safety.html', '배전공사 안전 훈련', 'Distribution Work Safety', '전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄', 'Pole, wire replacement, transformer, manhole & tower sites · printable training record'),
@@ -132,6 +126,22 @@ NAV = [
         ('physical-ai.html#lab', '자율주행', 'Self-driving', '150대가 진화하며 트랙 주행을 배움', '150 cars evolve to drive a track'),
         ('neat-snake.html', '스네이크', 'Snake', '150마리가 진화하며 Snake 게임을 배움', '150 snakes evolve to play Snake'),
         ('neat-drone.html', '드론', 'Drone', '150대가 진화하며 균형 잡고 경유점 비행을 배움', '150 drones evolve to balance and fly through waypoints'),
+    ]),
+    ("menu", 'otherMenu', '기타 관심사', 'Other interests', [
+        ('h', 'Git 사용법', 'Git usage'),
+        ('git-basics.html', 'Git 구조와 로컬 명령', 'Git model and local commands', '작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시', 'Working tree · stage · repository · add, commit, log, diff · hashes'),
+        ('git-branch.html', '브랜치 · 병합 · 충돌', 'Branches, merging and conflicts', 'switch · merge · rebase · cherry-pick · stash · 충돌 풀기', 'switch · merge · rebase · cherry-pick · stash · resolving conflicts'),
+        ('git-remote.html', 'GitHub와 함께', 'Working with GitHub', 'clone · fetch · pull · push · Pull Request 흐름 · 인증', 'clone · fetch · pull · push · the Pull Request flow · authentication'),
+        ('git-trouble.html', '장애 사례집', 'Troubleshooting cases', 'push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지', 'Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more'),
+        ('col',),
+        ('h', '프로그래밍 언어 (중급)', 'Programming languages (intermediate)'),
+        ('lang-c.html', 'C 언어', 'C', '포인터 · 메모리 모델 · 전처리기 · 링크 · 정의되지 않은 동작', 'Pointers · memory model · preprocessor · linking · undefined behaviour'),
+        ('lang-cpp.html', 'C++', 'C++', 'RAII · 이동 의미론 · 템플릿 · STL · 스마트 포인터', 'RAII · move semantics · templates · STL · smart pointers'),
+        ('lang-java.html', 'Java', 'Java', 'JVM · 제네릭 · 컬렉션 · 스트림 · 동시성 · equals/hashCode', 'JVM · generics · collections · streams · concurrency · equals/hashCode'),
+        ('lang-r.html', 'R', 'R', '벡터화 · NA · data.frame · tidyverse · 통계 모델', 'Vectorisation · NA · data.frame · tidyverse · statistical models'),
+        ('lang-python.html', 'Python', 'Python', '객체 모델 · 제너레이터 · 데코레이터 · asyncio · 타입 힌트', 'Object model · generators · decorators · asyncio · type hints'),
+        ('hr',),
+        ('lang-compare.html', '언어 비교', 'Language comparison', '같은 문제를 5개 언어로 · 무엇을 고를까', 'One task in five languages · how to choose'),
     ]),
 ]
 

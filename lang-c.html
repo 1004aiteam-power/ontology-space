@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · C — intermediate concepts</title>
+<meta name="title-ko" content="Ontology Space · C 언어 — 중급 개념">
+<meta name="title-en" content="Ontology Space · C — intermediate concepts">
+<meta name="description" content="C 언어 중급 개념을 실제로 컴파일·실행한 코드로 설명합니다: 스택·힙·정적 메모리, 포인터와 배열, malloc/free, 문자열, 구조체와 함수 포인터, 전처리기와 링크, 정의되지 않은 동작, 비트 연산, 오류 처리와 흔한 함정, 메모리 오류 시연.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/lang-c.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-c.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-c.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/lang-c.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · C 언어 — 중급 개념">
+<meta property="og:description" content="C 언어 중급 개념을 실제로 컴파일·실행한 코드로 설명합니다: 스택·힙·정적 메모리, 포인터와 배열, malloc/free, 문자열, 구조체와 함수 포인터, 전처리기와 링크, 정의되지 않은 동작, 비트 연산, 오류 처리와 흔한 함정, 메모리 오류 시연.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/lang-c.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/lang.css?v=d79c459c">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script src="assets/vendor/highlight.min.js?v=0f2dc760" defer></script>
+<script type="module" src="assets/lang/lang-c-app.js?v=2ed7ad98"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="otherMenu"><span lang="ko">기타 관심사</span><span lang="en">Other interests</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="otherMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">Git 사용법</span><span lang="en">Git usage</span></p>
+      <a href="git-basics.html"><span lang="ko">Git 구조와 로컬 명령</span><span lang="en">Git model and local commands</span><small lang="ko">작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시</small><small lang="en">Working tree · stage · repository · add, commit, log, diff · hashes</small></a>
+      <a href="git-branch.html"><span lang="ko">브랜치 · 병합 · 충돌</span><span lang="en">Branches, merging and conflicts</span><small lang="ko">switch · merge · rebase · cherry-pick · stash · 충돌 풀기</small><small lang="en">switch · merge · rebase · cherry-pick · stash · resolving conflicts</small></a>
+      <a href="git-remote.html"><span lang="ko">GitHub와 함께</span><span lang="en">Working with GitHub</span><small lang="ko">clone · fetch · pull · push · Pull Request 흐름 · 인증</small><small lang="en">clone · fetch · pull · push · the Pull Request flow · authentication</small></a>
+      <a href="git-trouble.html"><span lang="ko">장애 사례집</span><span lang="en">Troubleshooting cases</span><small lang="ko">push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지</small><small lang="en">Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">프로그래밍 언어 (중급)</span><span lang="en">Programming languages (intermediate)</span></p>
+      <a href="lang-c.html" aria-current="page"><span lang="ko">C 언어</span><span lang="en">C</span><small lang="ko">포인터 · 메모리 모델 · 전처리기 · 링크 · 정의되지 않은 동작</small><small lang="en">Pointers · memory model · preprocessor · linking · undefined behaviour</small></a>
+      <a href="lang-cpp.html"><span lang="ko">C++</span><span lang="en">C++</span><small lang="ko">RAII · 이동 의미론 · 템플릿 · STL · 스마트 포인터</small><small lang="en">RAII · move semantics · templates · STL · smart pointers</small></a>
+      <a href="lang-java.html"><span lang="ko">Java</span><span lang="en">Java</span><small lang="ko">JVM · 제네릭 · 컬렉션 · 스트림 · 동시성 · equals/hashCode</small><small lang="en">JVM · generics · collections · streams · concurrency · equals/hashCode</small></a>
+      <a href="lang-r.html"><span lang="ko">R</span><span lang="en">R</span><small lang="ko">벡터화 · NA · data.frame · tidyverse · 통계 모델</small><small lang="en">Vectorisation · NA · data.frame · tidyverse · statistical models</small></a>
+      <a href="lang-python.html"><span lang="ko">Python</span><span lang="en">Python</span><small lang="ko">객체 모델 · 제너레이터 · 데코레이터 · asyncio · 타입 힌트</small><small lang="en">Object model · generators · decorators · asyncio · type hints</small></a>
+      <hr>
+      <a href="lang-compare.html"><span lang="ko">언어 비교</span><span lang="en">Language comparison</span><small lang="ko">같은 문제를 5개 언어로 · 무엇을 고를까</small><small lang="en">One task in five languages · how to choose</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">기타 관심사 · 프로그래밍 언어</span><span lang="en">OTHER INTERESTS · PROGRAMMING LANGUAGES</span></div>
+  <h1><span class="h1ic" aria-hidden="true">⚙️</span> <span lang="ko">C 언어: 메모리를 직접 쥔다는 것</span><span lang="en">C: holding the memory yourself</span></h1>
+  <p class="lead" lang="ko">C 는 운영체제와 데이터베이스, 다른 언어의 런타임까지 밑바닥을 이루는 언어입니다. 가장 빠르고 하드웨어에 가까운 대신 <b>메모리를 직접 관리</b>하고 모든 책임이 프로그래머에게 있습니다. 문법 입문은 건너뛰고 <b>포인터 · 메모리 수명 · 정의되지 않은 동작</b>처럼 중급의 문턱이 되는 개념을 컴파일해 본 코드로 설명합니다.</p>
+  <p class="lead" lang="en">C forms the bottom layer of operating systems, databases and other languages' runtimes. It is the fastest and closest to the hardware, but you <b>manage memory yourself</b> and all responsibility rests on the programmer. Skipping syntax basics, this page explains the concepts that form the intermediate threshold — <b>pointers, memory lifetime and undefined behaviour</b> — with code that was actually compiled.</p>
+  <p class="meta" lang="ko">코드와 출력은 제작 환경(gcc 13, Linux 64비트)에서 실행한 결과입니다. 크기 · 오류 문구는 플랫폼과 컴파일러 버전에 따라 다를 수 있습니다. 시연은 개념 설명용 모형입니다.</p>
+  <p class="meta" lang="en">Code and output come from running gcc 13 on 64-bit Linux in the authoring environment; sizes and error wording may differ by platform and compiler version. The demo is a conceptual model.</p>
+</div>
+
+<section id="overview">
+  <h2><span lang="ko">한눈에: C 는 어떤 언어인가</span><span lang="en">At a glance: what kind of language is C</span></h2>
+  <div class="net-scroll"><table class="net-tab lt"><thead><tr><th><span lang="ko">항목</span><span lang="en">Item</span></th><th><span lang="ko">C</span><span lang="en">C</span></th></tr></thead><tbody><tr><td><span lang="ko">주된 용도</span><span lang="en">Main uses</span></td><td><span lang="ko">운영체제 · 임베디드 · 드라이버 · 데이터베이스 · 네트워크 장비 · 다른 언어의 런타임 · 성능이 중요한 라이브러리</span><span lang="en">Operating systems, embedded, drivers, databases, network equipment, other languages' runtimes, performance-critical libraries</span></td></tr><tr><td><span lang="ko">실행 방식</span><span lang="en">Execution</span></td><td><span lang="ko"><b>컴파일</b>: 소스 → (전처리 → 컴파일 → 어셈블 → 링크) → 기계어 실행 파일. 런타임 · 가상 머신 없음</span><span lang="en"><b>Compiled</b>: source → (preprocess → compile → assemble → link) → a machine-code executable. No runtime or VM</span></td></tr><tr><td><span lang="ko">타입</span><span lang="en">Typing</span></td><td><span lang="ko"><b>정적 · 약한 타입</b>: 컴파일 때 타입이 정해지지만 암시적 변환이 많고 포인터 캐스트로 우회 가능</span><span lang="en"><b>Static, weak</b>: types are fixed at compile time but there are many implicit conversions and pointer casts can bypass them</span></td></tr><tr><td><span lang="ko">메모리</span><span lang="en">Memory</span></td><td><span lang="ko"><b>수동 관리</b>: 스택(자동) · 힙(<code>malloc</code>/<code>free</code>) · 정적. 경계 검사 · GC 없음 → 가장 빠르지만 가장 위험</span><span lang="en"><b>Manual</b>: stack (automatic), heap (<code>malloc</code>/<code>free</code>), static. No bounds checks, no GC → fastest and riskiest</span></td></tr><tr><td><span lang="ko">동시성</span><span lang="en">Concurrency</span></td><td><span lang="ko">언어 기능은 거의 없고 <b>POSIX 스레드(pthreads)</b> · C11 <code>&lt;threads.h&gt;</code> · 원자적 연산</span><span lang="en">Little in the language itself: <b>POSIX threads (pthreads)</b>, C11 <code>&lt;threads.h&gt;</code>, atomics</span></td></tr><tr><td><span lang="ko">강점</span><span lang="en">Strengths</span></td><td><span lang="ko">하드웨어에 가까운 제어, 예측 가능한 성능, 작은 실행 파일, 어디서나 있는 컴파일러, 모든 언어가 C ABI 로 연결</span><span lang="en">Close control of hardware, predictable performance, tiny binaries, compilers everywhere, every language can call the C ABI</span></td></tr><tr><td><span lang="ko">약점</span><span lang="en">Weaknesses</span></td><td><span lang="ko">메모리 안전성 버그(보안 취약점의 큰 부분), 문자열 · 컨테이너가 빈약, 모듈 · 패키지 관리 부재</span><span lang="en">Memory-safety bugs (a large share of security holes), weak strings and containers, no module or package management</span></td></tr></tbody></table></div>
+  <p class="meta"><span lang="ko">이 페이지의 코드는 <b>gcc 13 (C17, <code>-Wall -Wextra</code>)</b>로 컴파일해 실행한 실제 출력입니다. <code>tests/lang.test.mjs</code>가 다시 컴파일 · 실행해 일치를 확인합니다. mac 의 <code>clang</code>에서도 같은 코드가 동작합니다(<code>gcc</code> 명령이 clang 으로 연결됨).</span><span lang="en">The code on this page was compiled with <b>gcc 13 (C17, <code>-Wall -Wextra</code>)</b> and run for real. <code>tests/lang.test.mjs</code> recompiles and reruns it to check it matches. The same code works with a Mac's <code>clang</code> (the <code>gcc</code> command maps to clang there).</span></p>
+</section>
+
+<section id="demo">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">시연: 스택과 힙, 포인터가 가리키는 곳</span><span lang="en">Demo: the stack, the heap and where pointers point</span></h2>
+  <p lang="ko">시나리오를 고르고 <b>다음 ▶</b>으로 한 줄씩 실행하세요. 왼쪽이 코드, 오른쪽이 <b>스택 변수</b>와 <b>힙 블록</b>입니다. 문제가 생기는 줄에서 어떤 종류의 오류인지 알려 줍니다. 이 판정은 같은 코드를 <b>AddressSanitizer</b>(gcc 의 메모리 오류 검출기)로 돌려 얻는 보고와 같은 종류인지 테스트가 확인합니다.</p>
+  <p lang="en">Pick a scenario and run one line at a time with <b>Next ▶</b>. The left is the code; the right shows <b>stack variables</b> and <b>heap blocks</b>. On the line where trouble starts it names the kind of error. A test checks that this verdict is the same kind of report you get when running the same code under <b>AddressSanitizer</b>, gcc's memory-error detector.</p>
+  <div class="net-presets" id="cScn" role="group" aria-label="scenarios"></div>
+  <div class="demo-grid">
+    <div><ol class="src-lines" id="cSrc"></ol><div class="steps-bar"><button type="button" id="cReset">⏮</button><button type="button" id="cPrev">◀</button><button type="button" id="cNext" class="primary"></button></div></div>
+    <div class="state-box"><h4><span lang="ko">스택 (지역 변수)</span><span lang="en">Stack (local variables)</span></h4><div id="cStack"></div><h4><span lang="ko">힙 (malloc 블록)</span><span lang="en">Heap (malloc blocks)</span></h4><div id="cHeap"></div><h4><span lang="ko">출력</span><span lang="en">Output</span></h4><pre class="out-log" id="cOut"></pre></div>
+  </div>
+  <div class="note-box" id="cNote" aria-live="polite"></div>
+  <div class="note-box bad" id="cVerdict" hidden></div>
+</section>
+
+<section id="concepts">
+  <h2><span lang="ko">핵심 개념 9가지</span><span lang="en">Nine core concepts</span></h2>
+  <p lang="ko">문법 입문은 건너뛰고 <b>C 를 "제대로" 쓰려면 꼭 알아야 하는 것</b>만 모았습니다. 검은 상자는 실제 실행 출력입니다.</p>
+  <p lang="en">Skipping syntax basics, these are the things you must know to use <b>C properly</b>. Dark boxes are real run output.</p>
+  <div class="card lc" id="c1"><h4><span lang="ko">① 메모리는 세 곳: 스택 · 힙 · 정적</span><span lang="en">① Memory lives in three places: stack, heap, static</span></h4>
+    <p lang="ko"><b>지역 변수</b>는 함수 호출 때 <b>스택</b>에 잡히고 함수가 끝나면 사라집니다. <code>malloc</code>으로 얻는 <b>힙</b> 블록은 <code>free</code>할 때까지 남습니다. 전역 변수와 <code>static</code> 지역 변수는 <b>정적 영역</b>에 있어 프로그램 내내 살아 있습니다. 각각의 수명을 알면 "왜 이 값이 사라졌나 / 왜 안 지워지나"가 보입니다. (위 시연이 힙 블록의 수명을 한 줄씩 보여 줍니다.)</p>
+    <p lang="en">A <b>local variable</b> is placed on the <b>stack</b> at the call and vanishes when the function ends. A <b>heap</b> block from <code>malloc</code> stays until you <code>free</code> it. Globals and <code>static</code> locals live in the <b>static area</b> for the whole run. Knowing each lifetime explains "why did this value disappear / why does it not go away". (The demo above shows a heap block's lifetime line by line.)</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+
+int counter = 0;                       // 정적 영역: 프로그램 내내
+
+void tick(void) {
+    static int calls = 0;              // 정적: 함수가 끝나도 값이 남음
+    int local = 10;                    // 스택: 호출마다 새로 만들어짐
+    calls++;
+    counter += local;
+    printf("calls=%d counter=%d\n", calls, counter);
+}
+
+int main(void) {
+    tick();
+    tick();
+    printf("%zu %zu %zu\n", sizeof(int), sizeof(long), sizeof(void *));
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>calls=1 counter=10
+calls=2 counter=20
+4 8 8</code></pre></div>
+<p class="meta" lang="ko">마지막 줄은 64비트 Linux · macOS 기준입니다(Windows 64비트는 <code>long</code>이 4바이트). 크기는 플랫폼마다 다르니 <code>sizeof</code>와 <code>&lt;stdint.h&gt;</code>의 고정 폭 정수를 쓰세요.</p><p class="meta" lang="en">The last line is for 64-bit Linux and macOS (64-bit Windows has a 4-byte <code>long</code>). Sizes differ by platform, so use <code>sizeof</code> and the fixed-width integers of <code>&lt;stdint.h&gt;</code>.</p>  </div>
+  <div class="card lc" id="c2"><h4><span lang="ko">② 포인터와 배열: a[i] 는 *(a+i)</span><span lang="en">② Pointers and arrays: a[i] is *(a+i)</span></h4>
+    <p lang="ko">포인터는 <b>주소를 담는 변수</b>입니다. 배열 이름은 대부분의 식에서 <b>첫 원소의 주소로 "붕괴"</b>하고, 포인터에 1 을 더하면 <b>원소 크기만큼</b> 움직입니다(바이트가 아니라). 그래서 <code>a[i]</code>와 <code>*(a + i)</code>는 같은 뜻이고 <code>1[a]</code>도 됩니다. 함수 매개변수의 <code>int arr[]</code>는 사실 <code>int *arr</code>라서 <b>길이 정보가 사라지니</b> 길이를 따로 넘겨야 합니다.</p>
+    <p lang="en">A pointer is a <b>variable holding an address</b>. In most expressions an array name <b>"decays" to the address of its first element</b>, and adding 1 to a pointer moves it by <b>one element</b> (not one byte). So <code>a[i]</code> and <code>*(a + i)</code> mean the same, and even <code>1[a]</code> works. A function parameter <code>int arr[]</code> is really <code>int *arr</code>, so <b>the length is lost</b> and must be passed separately.</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+
+void show(int arr[], size_t n) {
+    printf("param sizeof=%zu n=%zu\n", sizeof(arr), n);   // 포인터의 크기일 뿐
+}
+
+int main(void) {
+    int a[] = {10, 20, 30};
+    int *p = a;                          // 붕괴: &amp;a[0]
+    printf("%d %d %d\n", a[1], *(p + 1), 1[a]);
+    printf("%td\n", (p + 2) - p);        // 원소 개수의 차이
+    printf("%zu %zu\n", sizeof(a), sizeof(p));   // 배열 전체 vs 포인터 하나
+    show(a, sizeof a / sizeof a[0]);
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>20 20 20
+2
+12 8
+param sizeof=8 n=3</code></pre></div>
+  </div>
+  <div class="card lc" id="c3"><h4><span lang="ko">③ 동적 메모리와 "누가 free 하나"</span><span lang="en">③ Dynamic memory and "who frees it"</span></h4>
+    <p lang="ko"><code>malloc</code>(초기화 안 함) · <code>calloc</code>(0 으로 채움) · <code>realloc</code>(크기 변경) · <code>free</code>. 규칙은 셋입니다: <b>① 실패(<code>NULL</code>)를 검사한다 ② 모든 블록에 "해제할 주인"이 한 명이다 ③ 해제 뒤에는 포인터를 쓰지 않는다</b>. <code>sizeof *p</code> 관용구는 타입이 바뀌어도 크기가 따라옵니다. <code>realloc</code>은 실패 시 원래 블록을 그대로 두므로 <b>결과를 임시 변수에 받아</b> 확인합니다.</p>
+    <p lang="en"><code>malloc</code> (uninitialised), <code>calloc</code> (zero-filled), <code>realloc</code> (resize), <code>free</code>. Three rules: <b>① check for failure (<code>NULL</code>) ② every block has exactly one owner responsible for freeing it ③ never touch the pointer after freeing</b>. The <code>sizeof *p</code> idiom keeps the size right when the type changes. <code>realloc</code> leaves the old block untouched on failure, so <b>take its result in a temporary</b> and check it.</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(void) {
+    size_t n = 3;
+    int *v = malloc(n * sizeof *v);           // sizeof *v : 타입이 바뀌어도 안전
+    if (v == NULL) return 1;
+    for (size_t i = 0; i &lt; n; i++) v[i] = (int)(i * i);
+
+    int *bigger = realloc(v, 5 * sizeof *v);  // 실패하면 v 는 그대로 살아 있음
+    if (bigger == NULL) { free(v); return 1; }
+    v = bigger;
+    v[3] = 9; v[4] = 16;
+
+    for (size_t i = 0; i &lt; 5; i++) printf("%d ", v[i]);
+    printf("\n");
+    free(v);
+    v = NULL;                                  // 매달린 포인터를 남기지 않기
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>0 1 4 9 16 </code></pre></div>
+  </div>
+  <div class="card lc" id="c4"><h4><span lang="ko">④ 문자열은 널로 끝나는 char 배열</span><span lang="en">④ A string is a NUL-terminated char array</span></h4>
+    <p lang="ko">C 에는 문자열 타입이 없습니다. <code>"abc"</code>는 <code>{'a','b','c','\0'}</code> 4바이트이고, 모든 문자열 함수는 <b>끝의 <code>\0</code>을 찾아</b> 길이를 압니다. 그래서 <code>strlen</code>은 3, <code>sizeof</code>는 4 입니다. 문자열 리터럴은 읽기 전용이므로 <code>char *s = "abc"</code>의 내용을 고치면 안 되고, 고치려면 <code>char s[] = "abc"</code>로 복사본을 만듭니다. 복사는 <code>strcpy</code>보다 <b>크기를 받는 <code>snprintf</code></b>가 안전합니다.</p>
+    <p lang="en">C has no string type. <code>"abc"</code> is four bytes <code>{'a','b','c','\0'}</code> and every string function finds the length by <b>looking for the trailing <code>\0</code></b>. So <code>strlen</code> is 3 and <code>sizeof</code> is 4. String literals are read-only: do not modify <code>char *s = "abc"</code>; use <code>char s[] = "abc"</code> for a modifiable copy. For copying, <b><code>snprintf</code>, which takes a size,</b> is safer than <code>strcpy</code>.</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) {
+    char s[] = "abc";                       // 4바이트: a b c \0
+    printf("%zu %zu\n", strlen(s), sizeof s);
+
+    char a[] = "hi", b[] = "hi";
+    printf("%d %d\n", a == b, strcmp(a, b) == 0);   // == 는 주소 비교!
+
+    char buf[8];
+    int n = snprintf(buf, sizeof buf, "%s-%s", "grid", "sub-A");
+    printf("%s (%d chars wanted)\n", buf, n);       // 잘리지만 항상 \0 으로 끝남
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>3 4
+0 1
+grid-su (10 chars wanted)</code></pre></div>
+  </div>
+  <div class="card lc" id="c5"><h4><span lang="ko">⑤ 구조체 · 정렬 · 함수 포인터</span><span lang="en">⑤ Structs, alignment and function pointers</span></h4>
+    <p lang="ko"><code>struct</code>는 값을 묶고, 컴파일러는 접근 속도를 위해 필드 사이에 <b>패딩</b>을 넣습니다(필드 순서만 바꿔도 크기가 달라짐). <b>함수 포인터</b>는 "동작을 인자로 넘기는" 방법으로 콜백 · 정렬 비교 · 간단한 다형성(구조체 안의 함수 포인터 표 = 객체지향의 시작)에 쓰입니다. 표준 라이브러리의 <code>qsort</code>가 대표 예입니다.</p>
+    <p lang="en">A <code>struct</code> groups values, and for speed the compiler inserts <b>padding</b> between fields (reordering fields alone changes the size). A <b>function pointer</b> passes behaviour as an argument, used for callbacks, comparison in sorting and simple polymorphism (a table of function pointers in a struct is the seed of object orientation). The standard <code>qsort</code> is the classic example.</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct { char tag; int health; char kind; } Loose;   // 패딩이 생김
+typedef struct { int health; char tag; char kind; } Tight;   // 같은 필드, 다른 순서
+
+typedef struct { const char *id; int health; } Asset;
+
+static int by_health_desc(const void *a, const void *b) {
+    const Asset *x = a, *y = b;
+    return (y-&gt;health &gt; x-&gt;health) - (y-&gt;health &lt; x-&gt;health);
+}
+
+int main(void) {
+    printf("%zu %zu\n", sizeof(Loose), sizeof(Tight));
+    Asset v[] = {{"T1", 82}, {"T2", 64}, {"B1", 91}};
+    qsort(v, 3, sizeof v[0], by_health_desc);           // 비교 함수를 넘김
+    for (int i = 0; i &lt; 3; i++) printf("%s:%d ", v[i].id, v[i].health);
+    printf("\n");
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>12 8
+B1:91 T1:82 T2:64 </code></pre></div>
+  </div>
+  <div class="card lc" id="c6"><h4><span lang="ko">⑥ 전처리기 · 헤더 · 링크</span><span lang="en">⑥ The preprocessor, headers and linking</span></h4>
+    <p lang="ko"><code>#include</code>와 <code>#define</code>은 <b>컴파일 전에 글자를 바꾸는</b> 단계(전처리)입니다. 헤더에는 <b>선언</b>(이런 함수가 있다)을, <code>.c</code>에는 <b>정의</b>(실제 몸체)를 두고, 헤더는 <code>#ifndef</code> 가드로 중복 포함을 막습니다. 링커가 여러 <code>.c</code>의 오브젝트를 이어 붙이며 "undefined reference"는 선언만 있고 정의가 없을 때 납니다. 매크로는 <b>글자 치환</b>이라 인자를 괄호로 감싸지 않으면 우선순위가 깨집니다.</p>
+    <p lang="en"><code>#include</code> and <code>#define</code> are a step (preprocessing) that <b>rewrites text before compilation</b>. Put <b>declarations</b> (such a function exists) in headers and <b>definitions</b> (the real bodies) in <code>.c</code> files, guarding headers against double inclusion with <code>#ifndef</code>. The linker joins the object files of several <code>.c</code> files; "undefined reference" means a declaration without a definition. A macro is <b>text substitution</b>, so without parentheses around arguments precedence breaks.</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+
+#define SQUARE_BAD(x) x * x             // 글자 그대로 바뀜
+#define SQUARE(x) ((x) * (x))           // 인자와 전체를 괄호로
+
+static inline int square(int x) { return x * x; }   // 가능하면 함수가 안전
+
+int main(void) {
+    printf("%d %d %d\n", SQUARE_BAD(1 + 2), SQUARE(1 + 2), square(1 + 2));
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>5 9 9</code></pre></div>
+<div class="ex" data-lang="bash" data-norun="1"><pre class="lcode"><code class="language-bash">gcc -E main.c      # 전처리만 (매크로 · include 가 펼쳐진 결과)
+gcc -S main.c      # 어셈블리까지
+gcc -c main.c      # 오브젝트 파일 main.o (링크 전)
+gcc main.o util.o -o app    # 링크 → 실행 파일
+gcc -Wall -Wextra -std=c17 -g main.c -o app   # 평소 권장 옵션</code></pre></div>
+  </div>
+  <div class="card lc" id="c7"><h4><span lang="ko">⑦ 정의되지 않은 동작(UB): 무엇이든 일어날 수 있다</span><span lang="en">⑦ Undefined behaviour: anything can happen</span></h4>
+    <p lang="ko">배열 범위 밖 접근, 해제한 메모리 사용, 초기화하지 않은 변수 읽기, <b>부호 있는 정수 오버플로</b>, NULL 역참조 같은 코드는 표준이 "아무 보장 없음"이라 합니다. 컴파일러는 UB 가 <b>없다고 가정하고 최적화</b>하므로 디버그 빌드에서는 멀쩡하다 최적화하면 터지는 일이 흔합니다. 반대로 <b>부호 없는 정수</b>의 오버플로는 정의되어 있어 2 의 거듭제곱으로 돌아갑니다. UB 는 눈으로 찾기 어려우니 <b>도구</b>(경고 · Sanitizer · valgrind)로 잡습니다.</p>
+    <p lang="en">Out-of-bounds access, using freed memory, reading an uninitialised variable, <b>signed integer overflow</b> and dereferencing NULL are cases where the standard promises "nothing". The compiler <b>optimises assuming UB never happens</b>, so code that works in a debug build often breaks when optimised. By contrast <b>unsigned</b> overflow is defined and wraps modulo a power of two. UB is hard to spot by eye, so catch it with <b>tools</b> (warnings, sanitizers, valgrind).</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+int main(void) {
+    uint8_t u = 255;
+    u++;                                  // 부호 없는 오버플로: 정의됨 → 0
+    printf("%u\n", u);
+    // int big = 2147483647; big++;       // 부호 있는 오버플로: UB (결과를 믿을 수 없음)
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>0</code></pre></div>
+<div class="ex" data-lang="bash" data-norun="1"><pre class="lcode"><code class="language-bash">gcc -g -fsanitize=address,undefined -Wall -Wextra main.c -o app
+./app          # 범위 밖 · 해제 후 사용 · 오버플로 등을 실행 중에 정확한 줄과 함께 보고
+# mac(clang)에서도 같은 옵션이 동작합니다. valgrind 는 최신 mac 에서 지원이 제한적이라 Sanitizer 를 권합니다.</code></pre></div>
+  </div>
+  <div class="card lc" id="c8"><h4><span lang="ko">⑧ 비트 연산과 고정 폭 정수</span><span lang="en">⑧ Bit operations and fixed-width integers</span></h4>
+    <p lang="ko">플래그 · 하드웨어 레지스터 · 프로토콜 필드는 <b>비트 단위</b>로 다룹니다: <code>|</code>(켜기) · <code>&amp;</code>(검사 · 끄기, <code>~</code>와 함께) · <code>^</code>(뒤집기) · <code>&lt;&lt;</code> <code>&gt;&gt;</code>. 크기가 중요하면 <code>&lt;stdint.h&gt;</code>의 <code>uint8_t</code> · <code>int32_t</code> 처럼 <b>폭이 고정된</b> 타입을 쓰고, 시프트와 마스크는 <b>부호 없는</b> 타입에서 하세요(부호 있는 값의 시프트는 UB 가 되기 쉽습니다).</p>
+    <p lang="en">Flags, hardware registers and protocol fields are handled <b>bit by bit</b>: <code>|</code> (set), <code>&amp;</code> (test, or clear with <code>~</code>), <code>^</code> (toggle), <code>&lt;&lt;</code> <code>&gt;&gt;</code>. When size matters use the <b>fixed-width</b> types of <code>&lt;stdint.h&gt;</code> such as <code>uint8_t</code> and <code>int32_t</code>, and shift and mask on <b>unsigned</b> types (shifting signed values easily becomes UB).</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+enum { READ = 1u &lt;&lt; 0, WRITE = 1u &lt;&lt; 1, EXEC = 1u &lt;&lt; 2 };
+
+int main(void) {
+    uint8_t perm = 0;
+    perm |= READ | WRITE;                 // 켜기
+    perm &amp;= (uint8_t)~WRITE;              // 끄기
+    perm ^= EXEC;                         // 뒤집기
+    printf("read=%d write=%d exec=%d value=%u\n",
+           (perm &amp; READ) != 0, (perm &amp; WRITE) != 0, (perm &amp; EXEC) != 0, perm);
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>read=1 write=0 exec=1 value=5</code></pre></div>
+  </div>
+  <div class="card lc" id="c9"><h4><span lang="ko">⑨ 오류 처리 관례: 반환 코드 · errno · goto cleanup</span><span lang="en">⑨ Error handling idioms: return codes, errno, goto cleanup</span></h4>
+    <p lang="ko">C 에는 예외가 없어 함수가 <b>성공/실패를 반환값</b>(0 · -1 · NULL)으로 알리고, 이유는 <code>errno</code>에 둡니다. 자원을 여러 개 잡는 함수에서는 실패 지점마다 정리 코드를 반복하는 대신 <b><code>goto cleanup</code></b> 한 곳으로 모아 <b>해제 누락</b>을 막는 것이 커널 · 라이브러리의 관용입니다. 반환값을 무시하지 마세요(<code>fopen</code> · <code>malloc</code> · <code>fclose</code>).</p>
+    <p lang="en">C has no exceptions, so functions signal <b>success or failure through the return value</b> (0, -1, NULL) and put the reason in <code>errno</code>. In functions acquiring several resources, instead of repeating cleanup at each failure point, funnelling to a single <b><code>goto cleanup</code></b> prevents <b>missed releases</b>, a kernel and library idiom. Never ignore return values (<code>fopen</code>, <code>malloc</code>, <code>fclose</code>).</p>
+<div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+static int load(const char *path) {
+    int rc = -1;
+    FILE *f = NULL;
+    char *buf = NULL;
+
+    f = fopen(path, "r");
+    if (!f) { printf("fopen: %s\n", strerror(errno)); goto cleanup; }
+    buf = malloc(64);
+    if (!buf) goto cleanup;
+    rc = 0;
+
+cleanup:                                  // 어느 지점에서 실패해도 여기서 한 번에 정리
+    free(buf);
+    if (f) fclose(f);
+    return rc;
+}
+
+int main(void) {
+    printf("rc=%d\n", load("/no/such/file"));
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>fopen: No such file or directory
+rc=-1</code></pre></div>
+  </div>
+</section>
+
+<section id="pitfalls">
+  <h2><span lang="ko">흔한 함정 5가지: 증상 → 원인 → 해결</span><span lang="en">Five common pitfalls: symptom → cause → fix</span></h2>
+  <div class="card lc pit"><h4><span lang="ko">⚠ strncpy 는 널 문자를 안 붙인다</span><span lang="en">⚠ strncpy does not add a NUL</span></h4>
+    <p lang="ko"><b>증상.</b> 복사한 문자열을 출력했더니 뒤에 쓰레기가 붙습니다.</p><p lang="en"><b>Symptom.</b> The copied string prints with garbage after it.</p>
+    <div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) {
+    char buf[8] = {'X', 'X', 'X', 'X', 'X', 'X', 'X', 0};   // 뒤가 X 라 문제가 눈에 보임
+    strncpy(buf, "abcdefgh", 4);          // 4바이트만 복사, \0 없음
+    printf("%s\n", buf);
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>abcdXXX</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> <code>strncpy</code>는 원본이 <code>n</code>보다 길면 <b>널 종료 없이</b> 정확히 <code>n</code>바이트만 복사합니다.</p><p lang="en"><b>Cause.</b> <code>strncpy</code> copies exactly <code>n</code> bytes <b>without a terminator</b> when the source is longer.</p>
+    <p lang="ko"><b>해결.</b> 크기를 받아 항상 널로 끝내 주는 <code>snprintf</code>를 씁니다.</p><p lang="en"><b>Fix.</b> Use <code>snprintf</code>, which takes a size and always terminates.</p>
+    <div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    char buf[8];
+    snprintf(buf, sizeof buf, "%.4s", "abcdefgh");   // 항상 \0 으로 끝남
+    printf("%s\n", buf);
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>abcd</code></pre></div>
+
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 문자열을 == 로 비교</span><span lang="en">⚠ Comparing strings with ==</span></h4>
+    <p lang="ko"><b>증상.</b> 내용이 같은데 "다르다"고 나옵니다.</p><p lang="en"><b>Symptom.</b> Equal contents report "different".</p>
+    <div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) {
+    char a[] = "grid", b[] = "grid";
+    printf("%d\n", a == b);
+    printf("%d\n", strcmp(a, b) == 0);
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>0
+1</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> <code>==</code>는 <b>주소</b>를 비교합니다. 서로 다른 배열은 내용이 같아도 주소가 다릅니다.</p><p lang="en"><b>Cause.</b> <code>==</code> compares <b>addresses</b>; separate arrays differ in address even with equal contents.</p>
+    <p lang="ko"><b>해결.</b> 내용 비교는 <code>strcmp</code>(같으면 0), 크기 제한이 필요하면 <code>strncmp</code>.</p><p lang="en"><b>Fix.</b> Compare contents with <code>strcmp</code> (0 when equal), or <code>strncmp</code> to limit length.</p>
+    
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 정수 나눗셈</span><span lang="en">⚠ Integer division</span></h4>
+    <p lang="ko"><b>증상.</b> <code>7 / 2</code>가 3.5 가 아니라 3 입니다.</p><p lang="en"><b>Symptom.</b> <code>7 / 2</code> gives 3, not 3.5.</p>
+    <div class="ex" data-lang="c"><pre class="lcode"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    int a = 7, b = 2;
+    double wrong = a / b;                 // 먼저 3 으로 잘리고 3.0 이 됨
+    double right = (double)a / b;         // 한쪽을 먼저 double 로
+    printf("%.1f %.1f\n", wrong, right);
+    return 0;
+}</code></pre><pre class="lout" aria-label="output"><code>3.0 3.5</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> 두 피연산자가 정수면 <b>정수 나눗셈</b>(소수 버림)입니다. 결과를 나중에 double 에 담아도 이미 잘려 있습니다.</p><p lang="en"><b>Cause.</b> With two integer operands it is <b>integer division</b> (fraction dropped); storing the result in a double afterwards is too late.</p>
+    <p lang="ko"><b>해결.</b> 피연산자 하나를 먼저 <code>double</code>로 변환합니다.</p><p lang="en"><b>Fix.</b> Convert one operand to <code>double</code> first.</p>
+    
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 지역 변수의 주소를 돌려줌 / 초기화 안 한 변수</span><span lang="en">⚠ Returning a local's address / uninitialised variables</span></h4>
+    <p lang="ko"><b>증상.</b> 값이 가끔 맞고 가끔 쓰레기이며, 최적화 수준에 따라 달라집니다.</p><p lang="en"><b>Symptom.</b> The value is sometimes right, sometimes garbage, and changes with the optimisation level.</p>
+    <div class="ex" data-lang="c" data-norun="1"><pre class="lcode"><code class="language-c">int *bad(void) {
+    int x = 5;
+    return &amp;x;          // 반환 즉시 x 는 사라진다 → 정의되지 않은 동작
+}
+
+int main(void) {
+    int n;              // 초기화 안 함
+    return n;           // 읽는 순간 정의되지 않은 동작
+}</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> 함수가 끝나면 스택의 지역 변수는 사라지는데 그 주소를 가진 포인터가 남습니다(<b>매달린 포인터</b>). 초기화 안 한 지역 변수에는 이전에 스택에 있던 값이 들어 있습니다.</p><p lang="en"><b>Cause.</b> When a function ends its stack locals vanish but a pointer to them remains (<b>dangling pointer</b>). An uninitialised local contains whatever the stack held before.</p>
+    <p lang="ko"><b>해결.</b> <code>-Wall -Wextra</code>가 둘 다 경고합니다(<code>-Wreturn-local-addr</code> · <code>-Wuninitialized</code>). 경고를 무시하지 말고 <code>-Werror</code>로 오류화하세요. 값은 호출자가 넘긴 버퍼에 쓰거나 <code>malloc</code>으로 돌려줍니다.</p><p lang="en"><b>Fix.</b> <code>-Wall -Wextra</code> warns about both (<code>-Wreturn-local-addr</code>, <code>-Wuninitialized</code>). Do not ignore warnings; make them errors with <code>-Werror</code>. Write results into a caller-supplied buffer or return a <code>malloc</code>ed block.</p>
+    
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ off-by-one: 경계 하나 차이</span><span lang="en">⚠ Off-by-one errors</span></h4>
+    <p lang="ko"><b>증상.</b> 마지막 원소를 빠뜨리거나, 한 칸 넘어 씁니다 (<code>i &lt;= n</code>).</p><p lang="en"><b>Symptom.</b> The last element is missed, or one cell too many is written (<code>i &lt;= n</code>).</p>
+    <div class="ex" data-lang="c" data-norun="1"><pre class="lcode"><code class="language-c">int a[4];
+for (int i = 0; i &lt;= 4; i++)   // i == 4 일 때 범위 밖 쓰기
+    a[i] = i;</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> 길이 n 인 배열의 유효 인덱스는 <b>0 ~ n-1</b> 입니다. 닫힌 구간으로 쓰는 습관이 가장 흔한 원인입니다.</p><p lang="en"><b>Cause.</b> An array of length n has valid indexes <b>0 to n-1</b>. A habit of closed ranges is the commonest cause.</p>
+    <p lang="ko"><b>해결.</b> <code>i &lt; n</code>으로 쓰고, 길이는 <code>sizeof a / sizeof a[0]</code>로 구합니다. 위의 Sanitizer 가 이런 오류를 실행 중에 잡아 줍니다.</p><p lang="en"><b>Fix.</b> Write <code>i &lt; n</code> and get the length from <code>sizeof a / sizeof a[0]</code>. The sanitizer above catches this at run time.</p>
+    
+  </div>
+</section>
+
+<section id="tools">
+  <h2><span lang="ko">도구와 학습 경로</span><span lang="en">Tools and a learning path</span></h2>
+  <div class="net-scroll"><table class="net-tab lt"><thead><tr><th><span lang="ko">목적</span><span lang="en">Purpose</span></th><th><span lang="ko">도구</span><span lang="en">Tools</span></th></tr></thead><tbody><tr><td><span lang="ko">컴파일러</span><span lang="en">Compilers</span></td><td><span lang="ko">gcc · clang (mac 은 Xcode Command Line Tools: <code>xcode-select --install</code>), 윈도우는 MSVC · MinGW</span><span lang="en">gcc and clang (on a Mac, Xcode Command Line Tools: <code>xcode-select --install</code>), MSVC or MinGW on Windows</span></td></tr><tr><td><span lang="ko">빌드</span><span lang="en">Build</span></td><td><span lang="ko"><code>make</code> · CMake · Meson</span><span lang="en"><code>make</code>, CMake, Meson</span></td></tr><tr><td><span lang="ko">디버깅</span><span lang="en">Debugging</span></td><td><span lang="ko">gdb · lldb(mac), <code>-g</code> 로 컴파일, Sanitizer(<code>-fsanitize=address,undefined</code>), valgrind(Linux)</span><span lang="en">gdb and lldb (Mac), compile with <code>-g</code>, sanitizers (<code>-fsanitize=address,undefined</code>), valgrind (Linux)</span></td></tr><tr><td><span lang="ko">품질</span><span lang="en">Quality</span></td><td><span lang="ko"><code>-Wall -Wextra -Werror</code>, clang-tidy · cppcheck(정적 분석), clang-format</span><span lang="en"><code>-Wall -Wextra -Werror</code>, clang-tidy and cppcheck (static analysis), clang-format</span></td></tr><tr><td><span lang="ko">참고서</span><span lang="en">References</span></td><td><span lang="ko"><i>The C Programming Language</i>(K&amp;R), cppreference.com 의 C 항목, <code>man 3 printf</code> 같은 매뉴얼</span><span lang="en"><i>The C Programming Language</i> (K&amp;R), the C section of cppreference.com, man pages like <code>man 3 printf</code></span></td></tr></tbody></table></div>
+  <ol class="flow-list">
+    <li lang="ko"><b>메모리 모델</b>(스택 · 힙 · 정적)과 <b>포인터</b>를 손으로 그려 가며 이해</li><li lang="en">Understand the <b>memory model</b> (stack, heap, static) and <b>pointers</b> by drawing them</li>
+    <li lang="ko">작은 도구(파일 읽기 · 문자열 처리 · 연결 리스트 · 해시 테이블)를 <b>Sanitizer 를 켜고</b> 직접 구현</li><li lang="en">Implement small tools (file reading, string handling, linked list, hash table) <b>with sanitizers on</b></li>
+    <li lang="ko">여러 <code>.c</code> 파일 + 헤더 + Makefile 로 <b>모듈 분리</b>, 소유권 규칙 문서화</li><li lang="en">Split into <b>modules</b> with several <code>.c</code> files, headers and a Makefile, documenting ownership rules</li>
+    <li lang="ko">시스템 프로그래밍: 파일 · 프로세스 · 소켓(<a href="socket.html">소켓 통신</a> 페이지), 스레드</li><li lang="en">Systems programming: files, processes, sockets (the <a href="socket.html">Sockets</a> page), threads</li>
+    <li lang="ko">C 의 위험이 부담스러우면 다음 단계로 <a href="lang-cpp.html">C++</a>(RAII)나 Rust 를 비교</li><li lang="en">If C's risks weigh on you, compare the next step: <a href="lang-cpp.html">C++</a> (RAII) or Rust</li>
+  </ol>
+</section>
+
+<div class="pager"><span></span><a href="lang-cpp.html"><span lang="ko">C++ →</span><span lang="en">C++ →</span></a></div>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

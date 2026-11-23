@@ -267,7 +267,7 @@ const oneline = (s, c = 'git log --oneline') => out(s, c).split('\n').map(l => l
   const html = Object.fromEntries(pages.map(p => [p, readFileSync(join(root, `${p}.html`), 'utf8')]));
   for (const p of pages) {
     const s = html[p];
-    assert.ok(s.includes('id="gitMenu"'), `${p}: menu`); assert.ok(/<meta name="title-en"/.test(s));
+    assert.ok(s.includes('id="otherMenu"'), `${p}: menu`); assert.ok(/<meta name="title-en"/.test(s));
     const ko = (s.match(/lang="ko"/g) || []).length, en = (s.match(/lang="en"/g) || []).length;
     assert.ok(ko > 10 && Math.abs(ko - en) <= 8, `${p}: Korean (${ko}) and English (${en}) texts are paired`);
     const ids = [...s.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]);

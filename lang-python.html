@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Python — intermediate concepts</title>
+<meta name="title-ko" content="Ontology Space · Python — 중급 개념">
+<meta name="title-en" content="Ontology Space · Python — intermediate concepts">
+<meta name="description" content="Python 중급 개념을 실제로 실행한 코드와 출력으로 설명합니다: 객체 모델과 참조, 가변/불변, 제너레이터, 데코레이터, dataclass, 컨텍스트 매니저, GIL과 asyncio, 타입 힌트, 흔한 함정 7가지와 참조 시연.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/lang-python.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-python.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-python.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/lang-python.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · Python — 중급 개념">
+<meta property="og:description" content="Python 중급 개념을 실제로 실행한 코드와 출력으로 설명합니다: 객체 모델과 참조, 가변/불변, 제너레이터, 데코레이터, dataclass, 컨텍스트 매니저, GIL과 asyncio, 타입 힌트, 흔한 함정 7가지와 참조 시연.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/lang-python.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/lang.css?v=d79c459c">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script src="assets/vendor/highlight.min.js?v=0f2dc760" defer></script>
+<script type="module" src="assets/lang/lang-python-app.js?v=8bef016f"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="otherMenu"><span lang="ko">기타 관심사</span><span lang="en">Other interests</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="otherMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">Git 사용법</span><span lang="en">Git usage</span></p>
+      <a href="git-basics.html"><span lang="ko">Git 구조와 로컬 명령</span><span lang="en">Git model and local commands</span><small lang="ko">작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시</small><small lang="en">Working tree · stage · repository · add, commit, log, diff · hashes</small></a>
+      <a href="git-branch.html"><span lang="ko">브랜치 · 병합 · 충돌</span><span lang="en">Branches, merging and conflicts</span><small lang="ko">switch · merge · rebase · cherry-pick · stash · 충돌 풀기</small><small lang="en">switch · merge · rebase · cherry-pick · stash · resolving conflicts</small></a>
+      <a href="git-remote.html"><span lang="ko">GitHub와 함께</span><span lang="en">Working with GitHub</span><small lang="ko">clone · fetch · pull · push · Pull Request 흐름 · 인증</small><small lang="en">clone · fetch · pull · push · the Pull Request flow · authentication</small></a>
+      <a href="git-trouble.html"><span lang="ko">장애 사례집</span><span lang="en">Troubleshooting cases</span><small lang="ko">push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지</small><small lang="en">Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">프로그래밍 언어 (중급)</span><span lang="en">Programming languages (intermediate)</span></p>
+      <a href="lang-c.html"><span lang="ko">C 언어</span><span lang="en">C</span><small lang="ko">포인터 · 메모리 모델 · 전처리기 · 링크 · 정의되지 않은 동작</small><small lang="en">Pointers · memory model · preprocessor · linking · undefined behaviour</small></a>
+      <a href="lang-cpp.html"><span lang="ko">C++</span><span lang="en">C++</span><small lang="ko">RAII · 이동 의미론 · 템플릿 · STL · 스마트 포인터</small><small lang="en">RAII · move semantics · templates · STL · smart pointers</small></a>
+      <a href="lang-java.html"><span lang="ko">Java</span><span lang="en">Java</span><small lang="ko">JVM · 제네릭 · 컬렉션 · 스트림 · 동시성 · equals/hashCode</small><small lang="en">JVM · generics · collections · streams · concurrency · equals/hashCode</small></a>
+      <a href="lang-r.html"><span lang="ko">R</span><span lang="en">R</span><small lang="ko">벡터화 · NA · data.frame · tidyverse · 통계 모델</small><small lang="en">Vectorisation · NA · data.frame · tidyverse · statistical models</small></a>
+      <a href="lang-python.html" aria-current="page"><span lang="ko">Python</span><span lang="en">Python</span><small lang="ko">객체 모델 · 제너레이터 · 데코레이터 · asyncio · 타입 힌트</small><small lang="en">Object model · generators · decorators · asyncio · type hints</small></a>
+      <hr>
+      <a href="lang-compare.html"><span lang="ko">언어 비교</span><span lang="en">Language comparison</span><small lang="ko">같은 문제를 5개 언어로 · 무엇을 고를까</small><small lang="en">One task in five languages · how to choose</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">기타 관심사 · 프로그래밍 언어</span><span lang="en">OTHER INTERESTS · PROGRAMMING LANGUAGES</span></div>
+  <h1><span class="h1ic" aria-hidden="true">🐍</span> <span lang="ko">Python: 이름은 라벨이고<br>값은 객체다</span><span lang="en">Python: names are labels,<br>values are objects</span></h1>
+  <p class="lead" lang="ko">Python 은 쉬워 보이지만 <b>객체 모델</b>을 모르면 이상한 버그를 만납니다. 문법 입문은 건너뛰고, 변수와 객체의 관계 · 이터레이터와 제너레이터 · 데코레이터 · 동시성처럼 <b>중급으로 넘어가는 개념</b>을 실제 실행한 코드로 설명합니다. 맨 위 시연은 변수가 같은 객체를 가리키는 모습을 한 줄씩 보여 줍니다.</p>
+  <p class="lead" lang="en">Python looks easy, but without its <b>object model</b> you meet strange bugs. Skipping syntax basics, this page explains the <b>concepts that carry you to the intermediate level</b> — how variables relate to objects, iterators and generators, decorators, concurrency — with code that was really run. The demo shows variables pointing at the same object, line by line.</p>
+  <p class="meta" lang="ko">코드와 출력은 제작 환경에서 Python 3.13 으로 실행한 결과입니다. 버전이 다르면 일부 출력(오류 문구 · 크기)이 다를 수 있습니다. 시연은 개념 설명용 모형입니다.</p>
+  <p class="meta" lang="en">Code and output come from running Python 3.13 in the authoring environment; with other versions some output (error wording, sizes) may differ. The demo is a conceptual model.</p>
+</div>
+
+<section id="overview">
+  <h2><span lang="ko">한눈에: Python 은 어떤 언어인가</span><span lang="en">At a glance: what kind of language is Python</span></h2>
+  <div class="net-scroll"><table class="net-tab lt"><thead><tr><th><span lang="ko">항목</span><span lang="en">Item</span></th><th><span lang="ko">Python</span><span lang="en">Python</span></th></tr></thead><tbody><tr><td><span lang="ko">주된 용도</span><span lang="en">Main uses</span></td><td><span lang="ko">자동화 스크립트 · 데이터 분석 · 웹 백엔드 · AI/머신러닝 · 과학 계산 · 교육</span><span lang="en">Automation scripts, data analysis, web backends, AI/ML, scientific computing, teaching</span></td></tr><tr><td><span lang="ko">실행 방식</span><span lang="en">Execution</span></td><td><span lang="ko">소스 → <b>바이트코드</b>(.pyc) → CPython 가상 머신이 해석 실행. PyPy(JIT) · Cython · Numba 같은 대안도 있음</span><span lang="en">Source → <b>bytecode</b> (.pyc) → interpreted by the CPython virtual machine. Alternatives: PyPy (JIT), Cython, Numba</span></td></tr><tr><td><span lang="ko">타입</span><span lang="en">Typing</span></td><td><span lang="ko"><b>동적 · 강타입</b>: 변수에는 타입이 없고 값(객체)에 있음. <code>1 + "a"</code>는 오류. 타입 힌트는 선택이며 실행 중에는 강제되지 않음</span><span lang="en"><b>Dynamic, strong</b>: types belong to values (objects), not variables. <code>1 + "a"</code> is an error. Type hints are optional and not enforced at run time</span></td></tr><tr><td><span lang="ko">메모리</span><span lang="en">Memory</span></td><td><span lang="ko">모든 값이 객체. <b>참조 카운트</b> + 순환 참조용 세대별 GC. 정수 · 문자열도 객체라 C 보다 메모리를 더 씀</span><span lang="en">Everything is an object. <b>Reference counting</b> plus a generational GC for cycles. Even ints and strings are objects, so it uses more memory than C</span></td></tr><tr><td><span lang="ko">동시성</span><span lang="en">Concurrency</span></td><td><span lang="ko">CPython 의 <b>GIL</b>: 한 번에 한 스레드만 바이트코드 실행. I/O 대기는 스레드 · <code>asyncio</code>, CPU 병렬은 프로세스 (3.13 의 free-threaded 빌드는 실험적)</span><span lang="en">CPython's <b>GIL</b>: one thread runs bytecode at a time. Use threads or <code>asyncio</code> for I/O waits and processes for CPU parallelism (3.13's free-threaded build is experimental)</span></td></tr><tr><td><span lang="ko">강점</span><span lang="en">Strengths</span></td><td><span lang="ko">읽기 쉬운 문법, 방대한 표준 라이브러리와 패키지(PyPI), 빠른 개발, 데이터 · AI 생태계</span><span lang="en">Readable syntax, huge standard library and package index (PyPI), fast development, the data and AI ecosystem</span></td></tr><tr><td><span lang="ko">약점</span><span lang="en">Weaknesses</span></td><td><span lang="ko">순수 파이썬 코드는 C · Java 보다 수십 배 느릴 수 있음, 모바일 · 임베디드 약함, 배포(의존성 · 버전) 관리가 번거로움</span><span lang="en">Pure Python can be tens of times slower than C or Java, weak on mobile and embedded, dependency and version management is fiddly</span></td></tr></tbody></table></div>
+  <p class="meta"><span lang="ko">이 페이지의 모든 코드는 <b>Python 3.13</b>에서 실제로 실행해 출력을 얻었고, <code>tests/lang.test.mjs</code>가 다시 실행해 출력이 같은지 확인합니다. mac 에서는 명령이 <code>python3</code>입니다.</span><span lang="en">Every piece of code on this page was actually run on <b>Python 3.13</b> to get its output, and <code>tests/lang.test.mjs</code> reruns it to check the output still matches. On a Mac the command is <code>python3</code>.</span></p>
+</section>
+
+<section id="demo">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">시연: 이름과 객체, 누가 같은 것을 가리키나</span><span lang="en">Demo: names and objects, who points at the same thing</span></h2>
+  <p lang="ko">시나리오를 고르고 <b>다음 ▶</b>으로 한 줄씩 실행해 보세요. 왼쪽 코드의 강조된 줄이 실행되고, 오른쪽에 <b>변수(이름표)</b>와 <b>객체</b>가 보입니다. 같은 색의 <code>#번호</code>는 <b>같은 객체</b>입니다. 맨 아래 출력은 실제 Python 이 내는 결과와 같습니다(<code>tests/lang.test.mjs</code>가 확인).</p>
+  <p lang="en">Pick a scenario and press <b>Next ▶</b> to run one line at a time. The highlighted line on the left runs, and the right shows the <b>variables (name labels)</b> and the <b>objects</b>. A <code>#number</code> of the same colour is <b>the same object</b>. The output at the bottom equals what real Python prints (checked by <code>tests/lang.test.mjs</code>).</p>
+  <div class="net-presets" id="pyScn" role="group" aria-label="scenarios"></div>
+  <div class="demo-grid">
+    <div><ol class="src-lines" id="pySrc"></ol><div class="steps-bar"><button type="button" id="pyReset">⏮</button><button type="button" id="pyPrev">◀</button><button type="button" id="pyNext" class="primary"></button></div></div>
+    <div class="state-box"><h4><span lang="ko">변수 (이름표)</span><span lang="en">Variables (name labels)</span></h4><div id="pyVars"></div><h4><span lang="ko">객체</span><span lang="en">Objects</span></h4><div id="pyObjs"></div><h4><span lang="ko">출력</span><span lang="en">Output</span></h4><pre class="out-log" id="pyOut"></pre></div>
+  </div>
+  <div class="note-box" id="pyNote" aria-live="polite"></div>
+</section>
+
+<section id="concepts">
+  <h2><span lang="ko">핵심 개념 11가지</span><span lang="en">Eleven core concepts</span></h2>
+  <p lang="ko">문법 입문은 건너뛰고, <b>알고 나면 코드가 달라지는</b> 것만 모았습니다. 각 블록 아래의 검은 상자가 실제 실행 결과입니다.</p>
+  <p lang="en">Skipping beginner syntax, these are the things that <b>change how you write code once you know them</b>. The dark box under each block is the real run output.</p>
+  <div class="card lc" id="c1"><h4><span lang="ko">① 변수는 이름표, 값은 객체</span><span lang="en">① Names are labels, values are objects</span></h4>
+    <p lang="ko">파이썬의 <code>b = a</code>는 값을 복사하지 않고 <b>같은 객체에 이름을 하나 더 붙입니다</b>. 객체가 <b>가변(mutable)</b>이면 한쪽에서 고쳐도 다른 이름으로 보입니다. <code>is</code>는 "같은 객체인가", <code>==</code>는 "값이 같은가"입니다. 위 시연에서 직접 확인하세요.</p>
+    <p lang="en">In Python <code>b = a</code> does not copy the value; it <b>attaches one more name to the same object</b>. If the object is <b>mutable</b>, a change through one name shows through the other. <code>is</code> asks "same object?", <code>==</code> asks "equal value?". Try it in the demo above.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">a = [1, 2]
+b = a              # 같은 객체에 이름이 하나 더
+b.append(3)
+print(a, a is b)   # a 도 바뀌었다
+
+c = list(a)        # 복사본: 새 객체
+print(c is a, c == a)</code></pre><pre class="lout" aria-label="output"><code>[1, 2, 3] True
+False True</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">② 가변과 불변, 그리고 += 의 두 얼굴</span><span lang="en">② Mutable vs immutable, and the two faces of +=</span></h4>
+    <p lang="ko"><code>int</code> · <code>str</code> · <code>tuple</code>은 불변이라 "바꾸는" 연산이 항상 새 객체를 만듭니다. 리스트는 가변이라 <code>+=</code>는 <b>제자리에서 수정</b>하고, <code>+</code>는 새 리스트를 만듭니다. 별명(alias)이 있을 때 이 차이가 결과를 가릅니다.</p>
+    <p lang="en"><code>int</code>, <code>str</code> and <code>tuple</code> are immutable, so "changing" always creates a new object. A list is mutable: <code>+=</code> <b>modifies in place</b> while <code>+</code> makes a new list. When aliases exist, this difference decides the outcome.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">s = "abc"
+t = s
+s += "d"          # 문자열은 불변 → 새 객체
+print(s, t)
+
+xs = [1, 2]
+ys = xs
+xs += [3]         # 리스트 += 는 제자리 수정 → ys 도 보임
+print(xs, ys)
+xs = xs + [4]     # + 는 새 리스트 → ys 는 그대로
+print(xs, ys)</code></pre><pre class="lout" aria-label="output"><code>abcd abc
+[1, 2, 3] [1, 2, 3]
+[1, 2, 3, 4] [1, 2, 3]</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">③ 이터레이터와 제너레이터: 게으른 계산</span><span lang="en">③ Iterators and generators: lazy computation</span></h4>
+    <p lang="ko"><code>for</code>는 이터러블에서 이터레이터를 얻어 <code>next()</code>를 반복 호출합니다. <code>yield</code>가 든 함수는 <b>제너레이터</b>가 되어 값을 필요할 때 하나씩 만들고, 상태를 기억한 채 멈췄다 이어집니다. 큰 데이터를 <b>리스트로 만들지 않고 흘려 보내는</b> 파이프라인의 기본입니다.</p>
+    <p lang="en"><code>for</code> gets an iterator from an iterable and calls <code>next()</code> repeatedly. A function containing <code>yield</code> becomes a <b>generator</b>, producing values one at a time on demand, pausing and resuming with its state kept. It is the basis of pipelines that <b>stream big data instead of building lists</b>.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">def squares(n):
+    for i in range(n):
+        yield i * i
+
+g = squares(5)
+print(next(g), next(g), list(g))   # 나머지를 한꺼번에 소비
+
+import sys
+print(sum(i * i for i in range(1_000_000)))        # 리스트를 만들지 않고 합산
+print(sys.getsizeof(i for i in range(10**6)) &lt; 1000)  # 제너레이터 자체는 아주 작음</code></pre><pre class="lout" aria-label="output"><code>0 1 [4, 9, 16]
+333332833333500000
+True</code></pre></div>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">def read_lines():
+    yield from ["10", "x", "30", ""]
+
+def numbers(lines):
+    for line in lines:
+        if line.isdigit():
+            yield int(line)
+
+print(sum(numbers(read_lines())))   # 단계마다 한 줄씩 흘러감</code></pre><pre class="lout" aria-label="output"><code>40</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">④ 컴프리헨션 · 언패킹 · enumerate/zip</span><span lang="en">④ Comprehensions, unpacking, enumerate/zip</span></h4>
+    <p lang="ko">파이썬답게 쓰는 도구들입니다. <b>컴프리헨션</b>은 변환 · 필터를 한 식으로, <b>언패킹</b>(<code>a, *rest = …</code>)은 구조 분해, <code>enumerate</code>/<code>zip</code>은 인덱스 변수 없이 반복합니다. C 식 <code>for i in range(len(xs))</code>보다 짧고 실수가 적습니다.</p>
+    <p lang="en">The idiomatic toolbox. A <b>comprehension</b> does transform and filter in one expression, <b>unpacking</b> (<code>a, *rest = …</code>) destructures, and <code>enumerate</code>/<code>zip</code> iterate without index variables. Shorter and less error-prone than C-style <code>for i in range(len(xs))</code>.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">assets = {"T1": 82, "T2": 64, "B1": 91}
+good = {k: v for k, v in assets.items() if v &gt;= 70}
+first, *rest = sorted(assets, key=assets.get, reverse=True)
+print(good, first, rest)
+
+for i, (name, h) in enumerate(sorted(assets.items()), start=1):
+    print(i, name, h)</code></pre><pre class="lout" aria-label="output"><code>{'T1': 82, 'B1': 91} B1 ['T1', 'T2']
+1 B1 91
+2 T1 82
+3 T2 64</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">⑤ 함수는 값이다: 클로저와 데코레이터</span><span lang="en">⑤ Functions are values: closures and decorators</span></h4>
+    <p lang="ko">함수를 변수에 담고, 인자로 넘기고, 함수 안에서 만들어 돌려줄 수 있습니다. 안쪽 함수가 바깥 변수를 기억하면 <b>클로저</b>이고, 이를 이용해 함수를 감싸는 것이 <b>데코레이터</b>(<code>@</code>)입니다. 로깅 · 캐시 · 권한 확인 같은 <b>횡단 관심사</b>를 본문 코드와 분리합니다. <code>functools.wraps</code>를 빠뜨리면 원래 함수의 이름 · 문서가 사라집니다.</p>
+    <p lang="en">Functions can be stored in variables, passed as arguments, and created and returned inside functions. When an inner function remembers an outer variable it is a <b>closure</b>, and wrapping a function with one is a <b>decorator</b> (<code>@</code>). It separates <b>cross-cutting concerns</b> like logging, caching and permission checks from the main code. Forget <code>functools.wraps</code> and the original name and docstring vanish.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">import functools
+
+def logged(fn):
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        print("call", fn.__name__, args)
+        return fn(*args, **kwargs)
+    return wrapper
+
+@logged
+def add(a, b):
+    """두 수의 합"""
+    return a + b
+
+print(add(2, 3), add.__name__, add.__doc__)</code></pre><pre class="lout" aria-label="output"><code>call add (2, 3)
+5 add 두 수의 합</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">⑥ 데이터 모델: 특수 메서드와 dataclass</span><span lang="en">⑥ The data model: special methods and dataclass</span></h4>
+    <p lang="ko"><code>__repr__</code> · <code>__eq__</code> · <code>__len__</code> · <code>__iter__</code> 같은 <b>던더(dunder) 메서드</b>를 정의하면 내 클래스가 내장 타입처럼 <code>print</code> · <code>==</code> · <code>len()</code> · <code>for</code>에 반응합니다. 값을 담는 클래스는 <code>@dataclass</code>가 <code>__init__</code> · <code>__repr__</code> · <code>__eq__</code>를 만들어 주고, <code>frozen=True</code>면 불변 + 해시 가능해져 딕셔너리 키로 쓸 수 있습니다.</p>
+    <p lang="en">Defining <b>dunder methods</b> such as <code>__repr__</code>, <code>__eq__</code>, <code>__len__</code> and <code>__iter__</code> makes your class respond to <code>print</code>, <code>==</code>, <code>len()</code> and <code>for</code> like a built-in. For value classes <code>@dataclass</code> writes <code>__init__</code>, <code>__repr__</code> and <code>__eq__</code> for you, and <code>frozen=True</code> makes it immutable and hashable, usable as a dict key.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">from dataclasses import dataclass
+
+@dataclass(frozen=True, order=True)
+class Asset:
+    id: str
+    health: int
+
+a, b = Asset("T1", 82), Asset("T1", 82)
+print(a == b, a is b, a &lt; Asset("T2", 1))
+print(a)
+print({a: "ok"}[b])          # 값이 같으면 같은 키
+try:
+    a.health = 1
+except Exception as e:
+    print(type(e).__name__)</code></pre><pre class="lout" aria-label="output"><code>True False True
+Asset(id='T1', health=82)
+ok
+FrozenInstanceError</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">⑦ 예외와 컨텍스트 매니저</span><span lang="en">⑦ Exceptions and context managers</span></h4>
+    <p lang="ko"><code>try / except / else / finally</code>에서 <code>else</code>는 "예외가 없을 때", <code>finally</code>는 "무슨 일이 있어도" 실행됩니다. <b><code>with</code></b>는 자원의 열기 · 닫기를 짝지어 <b>예외가 나도 반드시 정리</b>합니다(파일 · 잠금 · DB 연결). <code>@contextmanager</code>로 직접 만들 수 있습니다. 파이썬은 "허락보다 용서(EAFP)": 먼저 검사하기보다 시도하고 예외를 처리하는 방식을 선호합니다.</p>
+    <p lang="en">In <code>try / except / else / finally</code>, <code>else</code> runs "when there was no exception" and <code>finally</code> "no matter what". <b><code>with</code></b> pairs opening and closing a resource so it is <b>always cleaned up even on exceptions</b> (files, locks, DB connections), and you can write your own with <code>@contextmanager</code>. Python favours "easier to ask forgiveness than permission" (EAFP): try, then handle the exception, rather than check first.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">from contextlib import contextmanager
+
+@contextmanager
+def opened(name):
+    print("open", name)
+    try:
+        yield name
+    finally:
+        print("close", name)       # 예외가 나도 실행됨
+
+try:
+    with opened("a.txt") as f:
+        print("work", f)
+        raise ValueError("boom")
+except ValueError as e:
+    print("caught", e)
+else:
+    print("no error")
+finally:
+    print("done")</code></pre><pre class="lout" aria-label="output"><code>open a.txt
+work a.txt
+close a.txt
+caught boom
+done</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">⑧ 모듈 · 패키지 · 가상환경</span><span lang="en">⑧ Modules, packages and virtual environments</span></h4>
+    <p lang="ko"><code>import</code>는 파일을 한 번 실행해 <code>sys.modules</code>에 <b>캐시</b>합니다(두 번째부터는 다시 실행하지 않음). 파일을 직접 실행하면 <code>__name__</code>이 <code>"__main__"</code>이라 "스크립트로 실행될 때만" 코드를 둘 수 있습니다. 의존성은 프로젝트마다 <b>가상환경</b>에 분리해 설치합니다. mac 에서는 <code>python3</code>를 쓰세요.</p>
+    <p lang="en"><code>import</code> runs a file once and <b>caches</b> it in <code>sys.modules</code> (later imports do not rerun it). Run directly, <code>__name__</code> is <code>"__main__"</code>, so code can run "only as a script". Install dependencies per project in a <b>virtual environment</b>. On a Mac use <code>python3</code>.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">import sys
+import json
+
+print("json" in sys.modules, __name__)
+if __name__ == "__main__":
+    print("run as script")</code></pre><pre class="lout" aria-label="output"><code>True __main__
+run as script</code></pre></div>
+<div class="ex" data-lang="bash" data-norun="1"><pre class="lcode"><code class="language-bash">python3 -m venv .venv               # 가상환경 만들기
+source .venv/bin/activate           # 켜기 (끄기: deactivate)
+pip install requests                # 이 환경에만 설치
+pip freeze &gt; requirements.txt       # 버전 기록
+pip install -r requirements.txt     # 다른 곳에서 재현</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">⑨ 동시성: GIL, 스레드, 프로세스, asyncio</span><span lang="en">⑨ Concurrency: the GIL, threads, processes and asyncio</span></h4>
+    <p lang="ko"><b>GIL</b> 때문에 CPython 의 스레드는 CPU 계산을 병렬로 못 합니다. 그러나 <b>I/O 대기(네트워크 · 파일)</b> 동안에는 다른 스레드가 돌아 스레드가 유효합니다. CPU 병렬은 <code>multiprocessing</code>/<code>ProcessPoolExecutor</code>, 수천 개의 대기 작업은 <b><code>asyncio</code></b>(한 스레드에서 <code>await</code> 지점마다 양보)가 맞습니다. <a href="concurrency.html">동시 접속 처리</a> 페이지의 이벤트 루프와 같은 원리입니다.</p>
+    <p lang="en">Because of the <b>GIL</b>, CPython threads cannot run CPU work in parallel. During <b>I/O waits (network, files)</b>, though, other threads run, so threads help. For CPU parallelism use <code>multiprocessing</code>/<code>ProcessPoolExecutor</code>; for thousands of waiting tasks, <b><code>asyncio</code></b> (one thread yielding at each <code>await</code>). Same principle as the event loop on the <a href="concurrency.html">Handling many connections</a> page.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">import asyncio
+
+async def fetch(name, delay):
+    await asyncio.sleep(delay)          # 기다리는 동안 다른 작업이 진행
+    return f"{name}:{delay}"
+
+async def main():
+    results = await asyncio.gather(fetch("a", 0.2), fetch("b", 0.1), fetch("c", 0.15))
+    print(results)                      # 끝나는 순서가 아니라 넘긴 순서대로
+
+asyncio.run(main())                     # 전체 0.2초 (순차라면 0.45초)</code></pre><pre class="lout" aria-label="output"><code>['a:0.2', 'b:0.1', 'c:0.15']</code></pre></div>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">from concurrent.futures import ThreadPoolExecutor
+
+def work(n):
+    return n * n
+
+with ThreadPoolExecutor(max_workers=4) as pool:
+    print(list(pool.map(work, range(6))))   # 결과 순서는 입력 순서</code></pre><pre class="lout" aria-label="output"><code>[0, 1, 4, 9, 16, 25]</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">⑩ 타입 힌트: 문서이자 도구용 정보</span><span lang="en">⑩ Type hints: documentation and tool input</span></h4>
+    <p lang="ko"><code>def f(x: int) -> int</code>의 힌트는 <b>실행에는 영향이 없고</b>, <code>mypy</code> · <code>pyright</code> 같은 검사기와 편집기의 자동 완성이 읽습니다. 큰 코드베이스에서 버그를 실행 전에 잡고 리팩터링을 안전하게 해 줍니다. <code>list[int]</code> · <code>dict[str, int]</code> · <code>X | None</code>(3.10+) · <code>Protocol</code>이 자주 쓰입니다.</p>
+    <p lang="en">The hints in <code>def f(x: int) -> int</code> <b>do not affect execution</b>; checkers like <code>mypy</code> and <code>pyright</code>, and editors, read them. In big codebases they catch bugs before running and make refactoring safe. Common forms: <code>list[int]</code>, <code>dict[str, int]</code>, <code>X | None</code> (3.10+), <code>Protocol</code>.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">def double(x: int) -&gt; int:
+    return x * 2
+
+print(double("ab"))              # 힌트가 있어도 실행은 막지 않는다
+print(double.__annotations__)</code></pre><pre class="lout" aria-label="output"><code>abab
+{'x': &lt;class 'int'&gt;, 'return': &lt;class 'int'&gt;}</code></pre></div>
+  </div>
+  <div class="card lc"><h4><span lang="ko">⑪ 성능: 알고리즘과 내장 · C 확장에 맡기기</span><span lang="en">⑪ Performance: algorithms, builtins and C extensions</span></h4>
+    <p lang="ko">순수 파이썬 반복문은 느리므로 <b>① 자료구조를 맞게</b>(<code>in</code> 검사는 list 가 O(n), set · dict 는 평균 O(1)) <b>② 내장 함수 · 표준 라이브러리</b>(C 로 구현)를 쓰고 <b>③ 수치 계산은 NumPy 같은 벡터화</b>에 맡깁니다. 병목은 짐작이 아니라 <code>cProfile</code>로 재고, 시간 비교는 <code>timeit</code>으로 합니다.</p>
+    <p lang="en">Plain Python loops are slow, so <b>① pick the right data structure</b> (<code>in</code> is O(n) on a list, average O(1) on a set or dict), <b>② use builtins and the standard library</b> (implemented in C) and <b>③ leave numeric work to vectorised code like NumPy</b>. Measure bottlenecks with <code>cProfile</code>, not guesses, and compare timings with <code>timeit</code>.</p>
+<div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">big = list(range(100_000))
+s = set(big)
+print(99_999 in big, 99_999 in s)   # 결과는 같지만 list 는 끝까지 훑고 set 은 바로 찾음</code></pre><pre class="lout" aria-label="output"><code>True True</code></pre></div>
+<div class="ex" data-lang="python" data-norun="1"><pre class="lcode"><code class="language-python">import numpy as np                     # 설치 필요: pip install numpy
+h = np.array([82, 64, 91, 58, 77])
+print(h[h &gt;= 70].mean())               # 반복문 없이 필터 + 평균 (내부는 C)</code></pre></div>
+  </div>
+</section>
+
+<section id="pitfalls">
+  <h2><span lang="ko">흔한 함정 7가지: 증상 → 원인 → 해결</span><span lang="en">Seven common pitfalls: symptom → cause → fix</span></h2>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 가변 기본 인자</span><span lang="en">⚠ A mutable default argument</span></h4>
+    <p lang="ko"><b>증상.</b> 함수를 부를 때마다 리스트가 이전 호출의 값을 기억합니다.</p><p lang="en"><b>Symptom.</b> The list remembers values from previous calls.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">def add_item(x, items=[]):
+    items.append(x)
+    return items
+
+print(add_item(1))
+print(add_item(2))               # [2] 를 기대했는데…</code></pre><pre class="lout" aria-label="output"><code>[1]
+[1, 2]</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> 기본값은 <b>함수를 정의할 때 딱 한 번</b> 만들어집니다. 가변 객체면 모든 호출이 그것을 공유합니다.</p><p lang="en"><b>Cause.</b> The default is created <b>once, when the function is defined</b>. If mutable, every call shares it.</p>
+    <p lang="ko"><b>해결.</b> 기본값은 <code>None</code>으로 두고 함수 안에서 새로 만듭니다.</p><p lang="en"><b>Fix.</b> Use <code>None</code> as the default and create the object inside the function.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">def add_item(x, items=None):
+    if items is None:
+        items = []
+    items.append(x)
+    return items
+
+print(add_item(1))
+print(add_item(2))</code></pre><pre class="lout" aria-label="output"><code>[1]
+[2]</code></pre></div>
+
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ [[0]*3]*3 — 같은 행이 세 번</span><span lang="en">⚠ [[0]*3]*3: the same row three times</span></h4>
+    <p lang="ko"><b>증상.</b> 한 칸을 고쳤는데 모든 행이 바뀝니다.</p><p lang="en"><b>Symptom.</b> You change one cell and every row changes.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">m = [[0] * 3] * 3
+m[0][0] = 1
+print(m)</code></pre><pre class="lout" aria-label="output"><code>[[1, 0, 0], [1, 0, 0], [1, 0, 0]]</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> <code>*</code>는 안쪽 리스트를 복사하지 않고 <b>같은 객체에 대한 참조</b>를 3개 만듭니다.</p><p lang="en"><b>Cause.</b> <code>*</code> does not copy the inner list; it makes <b>three references to the same object</b>.</p>
+    <p lang="ko"><b>해결.</b> 컴프리헨션으로 행마다 새 리스트를 만듭니다.</p><p lang="en"><b>Fix.</b> Build a new list per row with a comprehension.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">m = [[0] * 3 for _ in range(3)]    # 행마다 새 리스트
+m[0][0] = 1
+print(m)</code></pre><pre class="lout" aria-label="output"><code>[[1, 0, 0], [0, 0, 0], [0, 0, 0]]</code></pre></div>
+
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 클로저의 늦은 바인딩</span><span lang="en">⚠ Late binding in closures</span></h4>
+    <p lang="ko"><b>증상.</b> 람다 3개를 만들었는데 모두 같은 값을 돌려줍니다.</p><p lang="en"><b>Symptom.</b> Three lambdas all return the same value.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">fs = [lambda: i for i in range(3)]
+print([f() for f in fs])</code></pre><pre class="lout" aria-label="output"><code>[2, 2, 2]</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> 클로저는 변수 <b>값이 아니라 변수 자체</b>를 기억하고, 호출 시점에 읽습니다. 그때 <code>i</code>는 마지막 값입니다.</p><p lang="en"><b>Cause.</b> A closure remembers <b>the variable, not its value</b>, and reads it at call time, when <code>i</code> holds the last value.</p>
+    <p lang="ko"><b>해결.</b> 기본 인자(<code>i=i</code>)나 <code>functools.partial</code>로 값을 고정합니다.</p><p lang="en"><b>Fix.</b> Freeze the value with a default argument (<code>i=i</code>) or <code>functools.partial</code>.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">fs = [lambda i=i: i for i in range(3)]   # 기본 인자로 "지금 값"을 고정
+print([f() for f in fs])</code></pre><pre class="lout" aria-label="output"><code>[0, 1, 2]</code></pre></div>
+
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 반복 중에 리스트를 수정</span><span lang="en">⚠ Modifying a list while iterating over it</span></h4>
+    <p lang="ko"><b>증상.</b> 짝수를 모두 지웠는데 일부가 남습니다.</p><p lang="en"><b>Symptom.</b> You removed all evens but some remain.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">xs = [2, 4, 6, 1]
+for x in xs:
+    if x % 2 == 0:
+        xs.remove(x)
+print(xs)</code></pre><pre class="lout" aria-label="output"><code>[4, 1]</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> 지우면 뒤 원소가 한 칸 당겨지는데 반복자는 위치를 그대로 증가시켜 <b>한 원소를 건너뜁니다</b>.</p><p lang="en"><b>Cause.</b> Removing shifts later items one step left while the iterator keeps advancing, so <b>one item is skipped</b>.</p>
+    <p lang="ko"><b>해결.</b> 순회하는 컬렉션은 고치지 말고 걸러낸 <b>새 컬렉션</b>을 만듭니다.</p><p lang="en"><b>Fix.</b> Do not change the collection you iterate; build a <b>new filtered one</b>.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">xs = [2, 4, 6, 1]
+xs = [x for x in xs if x % 2 != 0]     # 새 리스트를 만든다
+print(xs)</code></pre><pre class="lout" aria-label="output"><code>[1]</code></pre></div>
+
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ is 와 == 를 혼동</span><span lang="en">⚠ Confusing is with ==</span></h4>
+    <p lang="ko"><b>증상.</b> 같은 숫자인데 <code>is</code>가 False 입니다.</p><p lang="en"><b>Symptom.</b> The same number but <code>is</code> says False.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">a = 1000
+b = int("1000")
+print(a == b, a is b)</code></pre><pre class="lout" aria-label="output"><code>True False</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> <code>is</code>는 객체의 <b>동일성</b>을 봅니다. CPython 은 작은 정수(-5~256)만 캐시하므로 큰 수는 별개의 객체일 수 있습니다.</p><p lang="en"><b>Cause.</b> <code>is</code> tests object <b>identity</b>. CPython caches only small ints (-5 to 256), so bigger numbers can be separate objects.</p>
+    <p lang="ko"><b>해결.</b> 값 비교는 <code>==</code>. <code>is</code>는 <code>None</code>처럼 싱글톤을 확인할 때만 씁니다.</p><p lang="en"><b>Fix.</b> Use <code>==</code> for values; reserve <code>is</code> for singletons like <code>None</code>.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">x = None
+print(x is None)       # is 는 None · True · False 와 비교할 때만</code></pre><pre class="lout" aria-label="output"><code>True</code></pre></div>
+
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 부동소수점 비교</span><span lang="en">⚠ Comparing floats</span></h4>
+    <p lang="ko"><b>증상.</b> <code>0.1 + 0.2 == 0.3</code>이 False 입니다.</p><p lang="en"><b>Symptom.</b> <code>0.1 + 0.2 == 0.3</code> is False.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">print(0.1 + 0.2 == 0.3)
+print(0.1 + 0.2)</code></pre><pre class="lout" aria-label="output"><code>False
+0.30000000000000004</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> 이진 부동소수점은 0.1 을 정확히 표현하지 못해 <b>아주 작은 오차</b>가 있습니다(모든 언어 공통).</p><p lang="en"><b>Cause.</b> Binary floating point cannot represent 0.1 exactly, leaving a <b>tiny error</b> (true in every language).</p>
+    <p lang="ko"><b>해결.</b> <code>math.isclose</code>로 오차 허용 비교, 돈 계산은 <code>decimal.Decimal</code>이나 정수(원 단위)로.</p><p lang="en"><b>Fix.</b> Compare with tolerance via <code>math.isclose</code>; for money use <code>decimal.Decimal</code> or integer units.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">import math
+from decimal import Decimal
+print(math.isclose(0.1 + 0.2, 0.3))
+print(Decimal("0.1") + Decimal("0.2") == Decimal("0.3"))   # 돈은 Decimal</code></pre><pre class="lout" aria-label="output"><code>True
+True</code></pre></div>
+
+  </div>
+  <div class="card lc pit"><h4><span lang="ko">⚠ 내장 이름 덮어쓰기</span><span lang="en">⚠ Shadowing a builtin</span></h4>
+    <p lang="ko"><b>증상.</b> 멀쩡하던 <code>list(...)</code> 호출이 갑자기 오류입니다.</p><p lang="en"><b>Symptom.</b> A <code>list(...)</code> call that worked suddenly fails.</p>
+    <div class="ex" data-lang="python"><pre class="lcode"><code class="language-python">list = [1, 2]
+try:
+    print(list("ab"))
+except TypeError as e:
+    print("TypeError:", e)</code></pre><pre class="lout" aria-label="output"><code>TypeError: 'list' object is not callable</code></pre></div>
+
+    <p lang="ko"><b>원인.</b> <code>list = [1, 2]</code>처럼 <b>내장 이름과 같은 변수</b>를 만들면 이후 그 이름은 내 변수를 가리킵니다 (<code>id</code> · <code>type</code> · <code>input</code> · <code>sum</code>도 흔한 사고).</p><p lang="en"><b>Cause.</b> A variable named like a <b>builtin</b>, e.g. <code>list = [1, 2]</code>, makes the name point at yours from then on (<code>id</code>, <code>type</code>, <code>input</code> and <code>sum</code> are common victims).</p>
+    <p lang="ko"><b>해결.</b> 이름을 바꿉니다(<code>items</code> · <code>values</code>). 린터(<code>ruff</code>)가 이런 덮어쓰기를 경고합니다.</p><p lang="en"><b>Fix.</b> Rename it (<code>items</code>, <code>values</code>). A linter (<code>ruff</code>) warns about shadowing.</p>
+    
+  </div>
+</section>
+
+<section id="tools">
+  <h2><span lang="ko">도구와 학습 경로</span><span lang="en">Tools and a learning path</span></h2>
+  <div class="net-scroll"><table class="net-tab lt"><thead><tr><th><span lang="ko">목적</span><span lang="en">Purpose</span></th><th><span lang="ko">도구</span><span lang="en">Tools</span></th></tr></thead><tbody><tr><td><span lang="ko">환경 · 패키지</span><span lang="en">Environment, packages</span></td><td><span lang="ko"><code>venv</code> · <code>pip</code>, 더 빠른 <code>uv</code>, 설정은 <code>pyproject.toml</code>, 여러 버전은 <code>pyenv</code></span><span lang="en"><code>venv</code> and <code>pip</code>, the faster <code>uv</code>, config in <code>pyproject.toml</code>, multiple versions with <code>pyenv</code></span></td></tr><tr><td><span lang="ko">품질</span><span lang="en">Quality</span></td><td><span lang="ko"><code>ruff</code>(린트 · 포맷), <code>mypy</code>/<code>pyright</code>(타입), <code>pytest</code>(테스트)</span><span lang="en"><code>ruff</code> (lint and format), <code>mypy</code>/<code>pyright</code> (types), <code>pytest</code> (tests)</span></td></tr><tr><td><span lang="ko">디버깅 · 성능</span><span lang="en">Debugging, performance</span></td><td><span lang="ko"><code>breakpoint()</code>(pdb), <code>logging</code>, <code>cProfile</code>, <code>timeit</code></span><span lang="en"><code>breakpoint()</code> (pdb), <code>logging</code>, <code>cProfile</code>, <code>timeit</code></span></td></tr><tr><td><span lang="ko">대화형</span><span lang="en">Interactive</span></td><td><span lang="ko">REPL(<code>python3</code>), IPython, Jupyter 노트북</span><span lang="en">The REPL (<code>python3</code>), IPython, Jupyter notebooks</span></td></tr><tr><td><span lang="ko">영역별</span><span lang="en">By domain</span></td><td><span lang="ko">웹 FastAPI · Django · Flask / 데이터 NumPy · pandas / AI PyTorch</span><span lang="en">Web: FastAPI, Django, Flask / Data: NumPy, pandas / AI: PyTorch</span></td></tr></tbody></table></div>
+  <ol class="flow-list">
+    <li lang="ko"><b>객체 모델</b>(위 ①②)을 확실히 — 대부분의 이상한 버그가 여기서 나옵니다.</li><li lang="en"><b>The object model</b> (① ② above), firmly — most strange bugs come from here.</li>
+    <li lang="ko"><b>표준 라이브러리</b>: <code>collections</code> · <code>itertools</code> · <code>pathlib</code> · <code>argparse</code> · <code>logging</code> · <code>json</code> · <code>datetime</code></li><li lang="en"><b>The standard library</b>: <code>collections</code>, <code>itertools</code>, <code>pathlib</code>, <code>argparse</code>, <code>logging</code>, <code>json</code>, <code>datetime</code></li>
+    <li lang="ko"><b>가상환경 · 테스트 · 타입 힌트</b>로 작은 프로젝트를 끝까지 (프로젝트는 <a href="git-basics.html">Git</a> 으로 관리)</li><li lang="en">Finish a small project with <b>virtualenv, tests and type hints</b> (and manage it with <a href="git-basics.html">Git</a>)</li>
+    <li lang="ko"><b>동시성</b>(<code>asyncio</code> · 프로세스)과 <b>성능</b>(프로파일링 · NumPy)</li><li lang="en"><b>Concurrency</b> (<code>asyncio</code>, processes) and <b>performance</b> (profiling, NumPy)</li>
+    <li lang="ko">한 영역(웹 · 데이터 · AI)을 골라 깊이 들어가기</li><li lang="en">Pick one domain (web, data, AI) and go deep</li>
+  </ol>
+</section>
+
+<div class="pager"><a href="lang-r.html"><span lang="ko">← R</span><span lang="en">← R</span></a><a href="lang-compare.html"><span lang="ko">언어 비교 →</span><span lang="en">Language comparison →</span></a></div>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

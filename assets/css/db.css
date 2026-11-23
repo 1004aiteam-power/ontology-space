@@ -95,3 +95,4 @@
 .dots{color:var(--c);letter-spacing:1px;font-size:13px}.dots .off{color:var(--line)}
 .flow-list{padding-left:22px}.flow-list li{margin:6px 0}
 .st-cap{overflow-wrap:anywhere}
+.net-form [hidden]{display:none !important}

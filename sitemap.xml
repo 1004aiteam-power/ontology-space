@@ -156,6 +156,36 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lab.html?lang=en"/>
   </url>
   <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/lang-c.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-c.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-c.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/lang-compare.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-compare.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-compare.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/lang-cpp.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-cpp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-cpp.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/lang-java.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-java.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-java.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/lang-python.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-python.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-python.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/lang-r.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/lang-r.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/lang-r.html?lang=en"/>
+  </url>
+  <url>
     <loc>https://1004aiteam-power.github.io/ontology-space/neat-drone.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/neat-drone.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/neat-drone.html?lang=en"/>
