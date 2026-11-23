@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Working with GitHub</title>
+<meta name="title-ko" content="Ontology Space · GitHub와 함께">
+<meta name="title-en" content="Ontology Space · Working with GitHub">
+<meta name="description" content="clone·fetch·pull·push로 내 컴퓨터와 GitHub 사이를 오가며 origin/main이 마지막으로 본 사진이라는 것, 추적 브랜치, Pull Request 흐름, fork와 upstream, HTTPS·SSH 인증을 터미널 시뮬레이터로 익힙니다.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/git-remote.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/git-remote.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/git-remote.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/git-remote.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · GitHub와 함께">
+<meta property="og:description" content="clone·fetch·pull·push로 내 컴퓨터와 GitHub 사이를 오가며 origin/main이 마지막으로 본 사진이라는 것, 추적 브랜치, Pull Request 흐름, fork와 upstream, HTTPS·SSH 인증을 터미널 시뮬레이터로 익힙니다.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/git-remote.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/db.css?v=4795c93e">
+<link rel="stylesheet" href="assets/css/git.css?v=baae56ad">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/git/git-remote-app.js?v=4d679074"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="gitMenu"><span lang="ko">Git 사용법</span><span lang="en">Git Usage</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gitMenu" hidden>
+      <a href="git-basics.html"><span lang="ko">Git 구조와 로컬 명령</span><span lang="en">Git model and local commands</span><small lang="ko">작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시</small><small lang="en">Working tree · stage · repository · add, commit, log, diff · hashes</small></a>
+      <a href="git-branch.html"><span lang="ko">브랜치 · 병합 · 충돌</span><span lang="en">Branches, merging and conflicts</span><small lang="ko">switch · merge · rebase · cherry-pick · stash · 충돌 풀기</small><small lang="en">switch · merge · rebase · cherry-pick · stash · resolving conflicts</small></a>
+      <a href="git-remote.html" aria-current="page"><span lang="ko">GitHub와 함께</span><span lang="en">Working with GitHub</span><small lang="ko">clone · fetch · pull · push · Pull Request 흐름 · 인증</small><small lang="en">clone · fetch · pull · push · the Pull Request flow · authentication</small></a>
+      <a href="git-trouble.html"><span lang="ko">장애 사례집</span><span lang="en">Troubleshooting cases</span><small lang="ko">push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지</small><small lang="en">Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">Git 사용법 · GitHub</span><span lang="en">GIT USAGE · GITHUB</span></div>
+  <h1><span class="h1ic" aria-hidden="true">☁️</span> <span lang="ko">내 컴퓨터와 GitHub 사이:<br>clone · push · pull · PR</span><span lang="en">Between my computer and GitHub:<br>clone, push, pull and PRs</span></h1>
+  <p class="lead" lang="ko">Git 저장소는 내 컴퓨터에도, GitHub 에도 <b>완전한 복사본</b>으로 있습니다. 둘을 오가는 네 명령(<code>clone</code> <code>fetch</code> <code>pull</code> <code>push</code>)과 <code>origin/main</code>의 정체, Pull Request 로 일하는 흐름을 <b>가짜 GitHub 저장소</b>를 상대로 직접 해 봅니다.</p>
+  <p class="lead" lang="en">A Git repo exists as a <b>complete copy</b> both on your computer and on GitHub. Try the four commands between them (<code>clone</code>, <code>fetch</code>, <code>pull</code>, <code>push</code>), what <code>origin/main</code> really is, and the Pull Request workflow against a <b>fake GitHub repo</b>.</p>
+  <p class="meta" lang="ko">"GitHub"는 이 페이지 안의 시뮬레이터이고 실제 네트워크 통신은 없습니다. 거절 · 보호 브랜치 · 100MB 제한 같은 GitHub 의 반응은 진짜 문장을 따라 흉내 냈습니다. 동작은 <code>tests/git.test.mjs</code>로 확인합니다.</p>
+  <p class="meta" lang="en">"GitHub" is a simulator inside this page with no real network traffic. GitHub's reactions such as rejections, protected branches and the 100 MB limit imitate the real wording. <code>tests/git.test.mjs</code> checks the behaviour.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB 1</div>
+  <h2><span lang="ko">내 컴퓨터와 GitHub 사이: clone · push · fetch · pull</span><span lang="en">Between your computer and GitHub: clone, push, fetch, pull</span></h2>
+  <p lang="ko">페이지 안에 <b>가짜 GitHub 저장소</b>(<code>https://github.com/acme/grid.git</code>)가 준비되어 있습니다. 왼쪽 그래프는 내 컴퓨터, 오른쪽은 GitHub 입니다. 둘이 어떻게 달라지고 맞춰지는지 보세요. 중간에 <b>"동료가 올림"</b> 버튼으로 GitHub 에 다른 사람의 커밋을 넣을 수 있습니다.</p>
+  <p lang="en">A <b>fake GitHub repo</b> (<code>https://github.com/acme/grid.git</code>) is ready inside the page. The left graph is your computer, the right one GitHub. Watch how they diverge and get reconciled. The <b>"Teammate pushes"</b> button puts someone else's commit on GitHub in between.</p>
+  <div class="gt-grid">
+    <div><div id="term"></div>
+      <div class="ctrl"><button type="button" id="mate"><span lang="ko">👥 동료가 GitHub main 에 커밋을 올림</span><span lang="en">👥 Teammate pushes a commit to GitHub main</span></button><button type="button" id="mate2"><span lang="ko">👥 동료가 새 브랜치를 올림</span><span lang="en">👥 Teammate pushes a new branch</span></button><button type="button" id="reset"><span lang="ko">처음부터 다시</span><span lang="en">Start over</span></button></div></div>
+    <div class="gt-side">
+      <div class="panel"><h4><span lang="ko">내 컴퓨터 (로컬 저장소)</span><span lang="en">My computer (local repo)</span></h4><div id="gGraph"></div></div>
+      <div class="panel"><h4>GitHub (origin)</h4><div id="graphRemote"></div></div>
+    </div>
+  </div>
+  <h3><span lang="ko">① 복제하고 올리기</span><span lang="en">① Clone and push</span></h3>
+  <ol class="gt-steps"><li><div><button type="button" class="gt-cmd" data-run='git clone https://github.com/acme/grid.git'>git clone https://github.com/acme/grid.git</button><small lang="ko">GitHub 의 저장소를 <b>통째로 복제</b>합니다(이력 전부). 오른쪽 "GitHub" 그림이 원격, 왼쪽이 내 컴퓨터입니다.</small><small lang="en">Copies the GitHub repo <b>whole</b> (all history). The "GitHub" graph on the right is the remote; the other is your computer.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='cd grid'>cd grid</button><small lang="ko">clone 은 새 폴더를 만들 뿐, 거기로 들어가지는 않습니다.</small><small lang="en">clone only creates a folder; it does not enter it.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git remote -v'>git remote -v</button><small lang="ko">원격 이름 <code>origin</code> = 복제해 온 주소 (이름은 관례).</small><small lang="en">The remote name <code>origin</code> = the address you cloned from (the name is a convention).</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git branch -vv'>git branch -vv</button><small lang="ko">내 main 이 <code>[origin/main]</code>을 <b>추적</b>합니다. 그래서 <code>git push</code>/<code>git pull</code>에 주소를 안 적어도 됩니다.</small><small lang="en">My main <b>tracks</b> <code>[origin/main]</code>, so <code>git push</code>/<code>git pull</code> need no address.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "my change" >> app.txt && git commit -am "update app"'>echo "my change" &gt;&gt; app.txt && git commit -am "update app"</button><small lang="ko">내 컴퓨터에서 커밋. 아직 GitHub 는 모릅니다.</small><small lang="en">Commit on my computer. GitHub does not know yet.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git status'>git status</button><small lang="ko">"ahead of origin/main by 1 commit": 올릴 커밋이 하나 있습니다.</small><small lang="en">"ahead of origin/main by 1 commit": one commit to publish.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git push'>git push</button><small lang="ko">내 커밋을 GitHub 로 올립니다. 오른쪽 그래프가 따라 움직입니다.</small><small lang="en">Publishes my commit to GitHub. The right-hand graph follows.</small></div></li></ol>
+  <h3><span lang="ko">② 동료가 올렸을 때 (위 버튼을 먼저 누르세요)</span><span lang="en">② When a teammate pushed (press the button above first)</span></h3>
+  <ol class="gt-steps"><li><div><button type="button" class="gt-cmd" data-run='git status'>git status</button><small lang="ko">동료가 올렸는데도 "up to date"! <code>origin/main</code>은 <b>마지막으로 받아 본 시점</b>의 기록일 뿐 실시간이 아닙니다.</small><small lang="en">Still "up to date" though the teammate pushed! <code>origin/main</code> is a record of <b>when you last looked</b>, not live.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git fetch'>git fetch</button><small lang="ko"><b>fetch</b> = 원격의 새 커밋을 받아 오되 내 브랜치와 파일은 <b>건드리지 않음</b>. <code>origin/main</code>만 앞으로 갑니다.</small><small lang="en"><b>fetch</b> = downloads new remote commits but <b>does not touch</b> my branch or files. Only <code>origin/main</code> moves ahead.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git status'>git status</button><small lang="ko">이제 "behind by 1 commit". 안전하게 확인한 뒤 합칠 수 있습니다.</small><small lang="en">Now "behind by 1 commit". You can inspect safely before joining.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git log --oneline --all'>git log --oneline --all</button><small lang="ko">동료의 커밋이 origin/main 이름표와 함께 보입니다.</small><small lang="en">The teammate's commit shows with the origin/main label.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git pull'>git pull</button><small lang="ko"><b>pull = fetch + merge</b>. 내 main 이 앞으로 따라 갑니다(fast-forward). 파일 team.txt 가 생겼습니다.</small><small lang="en"><b>pull = fetch + merge</b>. My main catches up (fast-forward). The file team.txt appears.</small></div></li></ol>
+  <h3><span lang="ko">③ 내 브랜치로 일하고 Pull Request 로</span><span lang="en">③ Work on your branch and go to a Pull Request</span></h3>
+  <ol class="gt-steps"><li><div><button type="button" class="gt-cmd" data-run='git switch -c feature/x'>git switch -c feature/x</button><small lang="ko">공유 브랜치(main)가 아니라 <b>내 브랜치</b>에서 일합니다.</small><small lang="en">Work on <b>your own branch</b>, not the shared main.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "x" > x.txt && git add . && git commit -m "add x"'>echo "x" &gt; x.txt && git add . && git commit -m "add x"</button><small lang="ko"></small><small lang="en"></small></div></li><li><div><button type="button" class="gt-cmd" data-run='git push'>git push</button><small lang="ko">처음 올리는 브랜치라 <b>upstream 이 없다</b>며 거절하고 방법을 알려 줍니다.</small><small lang="en">A first push of a branch is refused: <b>no upstream</b>; it tells you how.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git push --set-upstream origin feature/x'>git push --set-upstream origin feature/x</button><small lang="ko">올리면서 추적 관계도 설정(<code>-u</code>와 같음). 이제 GitHub 에서 <b>Pull Request</b>를 열 수 있습니다.</small><small lang="en">Pushes and sets tracking (same as <code>-u</code>). Now you can open a <b>Pull Request</b> on GitHub.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git branch -vv'>git branch -vv</button><small lang="ko">feature/x 가 origin/feature/x 를 추적합니다.</small><small lang="en">feature/x tracks origin/feature/x.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git push origin --delete feature/x'>git push origin --delete feature/x</button><small lang="ko">PR 이 머지된 뒤 원격 브랜치 정리 (GitHub 의 "Delete branch" 버튼과 같음).</small><small lang="en">Tidy the remote branch after the PR is merged (same as GitHub's "Delete branch" button).</small></div></li></ol>
+</section>
+
+<section id="map">
+  <h2><span lang="ko">그림으로: 네 곳과 네 명령</span><span lang="en">As a picture: four places, four commands</span></h2>
+  <div class="rm-flow">
+    <div class="rm-box a"><b>GitHub</b><small><span lang="ko">원격 저장소 (origin)</span><span lang="en">remote repo (origin)</span></small></div>
+    <div class="rm-arrow"><b>fetch</b> →<br>← <b>push</b></div>
+    <div class="rm-box b"><b>origin/main</b><small><span lang="ko">원격 추적 브랜치: 마지막으로 본 GitHub 의 모습</span><span lang="en">remote-tracking branch: GitHub as last seen</span></small></div>
+    <div class="rm-arrow"><b>merge</b><br>→ <span lang="ko">(pull = fetch+merge)</span><span lang="en">(pull = fetch+merge)</span></div>
+    <div class="rm-box c"><b>main</b><small><span lang="ko">내 브랜치 → 작업 폴더</span><span lang="en">my branch → working tree</span></small></div>
+  </div>
+</section>
+
+<section id="pr">
+  <h2><span lang="ko">Pull Request 로 일하는 하루</span><span lang="en">A working day with Pull Requests</span></h2>
+  <ol class="flow-list">
+    <li lang="ko"><code>git switch main && git pull</code> — 최신 main 에서 시작</li><li lang="en"><code>git switch main && git pull</code> — start from the latest main</li>
+    <li lang="ko"><code>git switch -c feature/주제</code> — 내 브랜치 만들기, 작게 커밋</li><li lang="en"><code>git switch -c feature/topic</code> — make my branch, commit in small steps</li>
+    <li lang="ko"><code>git push -u origin feature/주제</code> — GitHub 에 올리기</li><li lang="en"><code>git push -u origin feature/topic</code> — publish to GitHub</li>
+    <li lang="ko">GitHub 에서 <b>Pull Request</b> 열기: 무엇을 왜 바꿨는지 쓰고, 리뷰어를 지정합니다. 자동 검사(CI)가 돌아갑니다.</li><li lang="en">Open a <b>Pull Request</b> on GitHub: say what and why, assign reviewers. Automated checks (CI) run.</li>
+    <li lang="ko">리뷰 의견대로 같은 브랜치에 커밋을 더 push — PR 에 자동으로 반영됩니다.</li><li lang="en">Push more commits to the same branch per the review; the PR updates automatically.</li>
+    <li lang="ko">승인되면 머지: <b>Merge commit</b>(이력 그대로 + 병합 커밋) · <b>Squash and merge</b>(PR 전체를 커밋 하나로) · <b>Rebase and merge</b>(커밋들을 일렬로). 팀 규칙에 따릅니다.</li><li lang="en">When approved, merge: <b>Merge commit</b> (history as is + a merge commit), <b>Squash and merge</b> (the whole PR as one commit) or <b>Rebase and merge</b> (commits in a line). Follow the team rule.</li>
+    <li lang="ko">정리: GitHub 의 "Delete branch", 로컬은 <code>git switch main && git pull && git branch -d feature/주제</code></li><li lang="en">Tidy up: GitHub's "Delete branch"; locally <code>git switch main && git pull && git branch -d feature/topic</code></li>
+  </ol>
+</section>
+
+<section id="fork">
+  <h2><span lang="ko">남의 저장소에 기여하기: Fork 와 upstream</span><span lang="en">Contributing to someone else's repo: fork and upstream</span></h2>
+  <p lang="ko">쓰기 권한이 없는 저장소는 <b>Fork</b>(내 계정으로 복사)해서 작업하고 PR 을 보냅니다. 원본은 관례적으로 <code>upstream</code>이라는 두 번째 원격으로 연결해 최신 상태를 따라갑니다.</p>
+  <p lang="en">For a repo you cannot write to, <b>fork</b> it (copy to your account), work there and send a PR. Link the original as a second remote named <code>upstream</code> by convention to keep up with it.</p>
+  <pre class="m-pre">git clone https://github.com/me/grid.git          # 내 fork / my fork
+git remote add upstream https://github.com/acme/grid.git
+git fetch upstream
+git switch main &amp;&amp; git merge upstream/main          # 원본의 최신을 내 main 에 / bring upstream's latest into my main
+git push origin main                                 # 내 fork 도 최신으로 / update my fork too</pre>
+</section>
+
+<section id="cheat">
+  <h2><span lang="ko">원격 명령 한눈에</span><span lang="en">Remote commands at a glance</span></h2>
+  <div class="net-scroll"><table class="net-tab und-tab"><tbody><tr><td><code>git clone URL [폴더]</code></td><td><span lang="ko">원격 저장소 복제 (origin 과 추적 설정이 자동)</span><span lang="en">Copy a remote repo (origin and tracking set automatically)</span></td></tr><tr><td><code>git remote -v / add 이름 URL / set-url 이름 URL</code></td><td><span lang="ko">원격 목록 / 추가 / 주소 바꾸기 (HTTPS ↔ SSH 전환에 씀)</span><span lang="en">List / add / change the address (used to switch HTTPS ↔ SSH)</span></td></tr><tr><td><code>git fetch [원격]</code></td><td><span lang="ko">원격의 새 커밋만 내려받기 (내 브랜치는 그대로)</span><span lang="en">Download only new remote commits (my branch untouched)</span></td></tr><tr><td><code>git pull [--rebase]</code></td><td><span lang="ko">fetch + merge (또는 rebase). 갈라졌으면 방식을 지정해야 함</span><span lang="en">fetch + merge (or rebase). If diverged you must choose</span></td></tr><tr><td><code>git push</code></td><td><span lang="ko">추적 중인 원격 브랜치로 올리기</span><span lang="en">Publish to the tracked remote branch</span></td></tr><tr><td><code>git push -u origin 브랜치</code></td><td><span lang="ko">처음 올리며 추적 설정</span><span lang="en">First push, setting tracking</span></td></tr><tr><td><code>git push origin --delete 브랜치</code></td><td><span lang="ko">원격 브랜치 삭제</span><span lang="en">Delete a remote branch</span></td></tr><tr><td><code>git branch -vv</code></td><td><span lang="ko">브랜치별 추적 관계와 앞서/뒤처짐</span><span lang="en">Per-branch tracking and ahead/behind</span></td></tr><tr><td><code>git push --force-with-lease</code></td><td><span lang="ko">내가 본 원격 상태일 때만 강제 push (그냥 <code>--force</code>보다 안전)</span><span lang="en">Force-push only if the remote is as I last saw it (safer than plain <code>--force</code>)</span></td></tr><tr><td><code>git remote add upstream URL</code></td><td><span lang="ko">fork 한 원본 저장소를 <code>upstream</code>으로 연결</span><span lang="en">Link the original repo you forked as <code>upstream</code></span></td></tr></tbody></table></div>
+  <h3><span lang="ko">인증: GitHub 가 나를 알아보는 법</span><span lang="en">Authentication: how GitHub recognises you</span></h3>
+  <div class="net-scroll"><table class="net-tab"><thead><tr><th></th><th>HTTPS</th><th>SSH</th></tr></thead><tbody>
+    <tr><td><span lang="ko">주소 모양</span><span lang="en">URL shape</span></td><td><code>https://github.com/acme/grid.git</code></td><td><code>git@github.com:acme/grid.git</code></td></tr>
+    <tr><td><span lang="ko">증명 수단</span><span lang="en">Credential</span></td><td><span lang="ko"><b>개인 액세스 토큰(PAT)</b> 또는 <code>gh auth login</code> (비밀번호는 거부됨)</span><span lang="en"><b>Personal access token (PAT)</b> or <code>gh auth login</code> (passwords are rejected)</span></td><td><span lang="ko"><b>SSH 키</b> (공개키를 GitHub 에 등록)</span><span lang="en"><b>SSH key</b> (register the public key with GitHub)</span></td></tr>
+    <tr><td><span lang="ko">좋은 점</span><span lang="en">Good for</span></td><td><span lang="ko">방화벽이 엄격한 곳에서도 잘 됨, 설정이 단순</span><span lang="en">Works behind strict firewalls, simple setup</span></td><td><span lang="ko">한 번 설정하면 매번 입력 불필요</span><span lang="en">No retyping once set up</span></td></tr>
+    <tr><td><span lang="ko">흔한 오류</span><span lang="en">Common error</span></td><td><code>Authentication failed</code></td><td><code>Permission denied (publickey)</code></td></tr>
+  </tbody></table></div>
+  <p class="meta"><span lang="ko">두 오류의 해결은 <a href="git-trouble.html#case=auth-failed">장애 사례집</a>에 있습니다.</span><span lang="en">Fixes for both errors are in the <a href="git-trouble.html#case=auth-failed">troubleshooting cases</a>.</span></p>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">알아 둘 원리</span><span lang="en">Principles worth knowing</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① Git 과 GitHub 는 다르다</span><span lang="en">① Git and GitHub are different things</span></h4>
+      <p lang="ko"><b>Git</b>은 내 컴퓨터에서 도는 버전 관리 프로그램이고, <b>GitHub</b>는 Git 저장소를 올려 두고 협업(Pull Request · Issue · 자동화)하게 해 주는 <b>서비스</b>입니다. GitLab · Bitbucket 도 같은 역할입니다. Git 저장소는 GitHub 없이도 완전하며, 원격은 그저 "또 하나의 복사본"입니다.</p>
+      <p lang="en"><b>Git</b> is version-control software running on your machine; <b>GitHub</b> is a <b>service</b> that hosts Git repos and adds collaboration (Pull Requests, Issues, automation). GitLab and Bitbucket do the same job. A Git repo is complete without GitHub; a remote is just "another copy".</p></div>
+    <div class="card"><h4><span lang="ko">② origin/main 은 사진이다</span><span lang="en">② origin/main is a photograph</span></h4>
+      <p lang="ko"><code>origin/main</code>은 "마지막으로 GitHub 와 통신했을 때 main 이 가리키던 곳"을 적어 둔 <b>내 컴퓨터 안의 기록</b>입니다. 그래서 <code>git status</code>가 "up to date"라고 해도 GitHub 에 새 커밋이 있을 수 있고(위 ②단계), <code>git fetch</code>를 해야 사진이 갱신됩니다.</p>
+      <p lang="en"><code>origin/main</code> is a <b>record inside your computer</b> of "where main pointed when I last talked to GitHub". So even when <code>git status</code> says "up to date", GitHub may have new commits (step ② above); only <code>git fetch</code> refreshes the photograph.</p></div>
+    <div class="card"><h4><span lang="ko">③ fetch 는 안전하고 pull 은 합친다</span><span lang="en">③ fetch is safe, pull joins</span></h4>
+      <p lang="ko"><code>fetch</code>는 내려받기만 하므로 언제 해도 안전하고, 받은 뒤 <code>git log HEAD..origin/main</code>(없는 커밋 보기)이나 <code>git diff main origin/main</code>으로 살펴볼 수 있습니다. <code>pull</code>은 거기에 merge(또는 rebase)까지 해 버립니다. 초보일수록 <code>fetch</code> → 확인 → <code>merge</code> 순서가 안전합니다.</p>
+      <p lang="en"><code>fetch</code> only downloads so it is always safe, and afterwards you can inspect with <code>git log HEAD..origin/main</code> (commits you lack) or <code>git diff main origin/main</code>. <code>pull</code> goes on to merge (or rebase). For beginners <code>fetch</code> → inspect → <code>merge</code> is safer.</p></div>
+    <div class="card"><h4><span lang="ko">④ push 는 앞으로만 간다</span><span lang="en">④ push only moves forward</span></h4>
+      <p lang="ko">GitHub 는 원격 브랜치를 <b>fast-forward 로만</b> 움직이게 합니다. 내가 모르는 커밋이 원격에 있으면 push 가 <code>rejected</code>되는데(<a href="git-trouble.html#case=push-rejected">사례 보기</a>), 이는 동료의 작업을 덮어쓰지 않도록 지켜 주는 장치입니다. 해결은 먼저 받아서 합치는 것이고, <code>--force</code>는 마지막 수단입니다.</p>
+      <p lang="en">GitHub lets a remote branch move <b>only by fast-forward</b>. If the remote has commits you lack, the push is <code>rejected</code> (<a href="git-trouble.html#case=push-rejected">see the case</a>), a safeguard against overwriting teammates' work. The cure is to fetch and join first; <code>--force</code> is a last resort.</p></div>
+    <div class="card"><h4><span lang="ko">⑤ 추적(upstream) 설정</span><span lang="en">⑤ Tracking (upstream)</span></h4>
+      <p lang="ko">브랜치가 어느 원격 브랜치와 짝인지 기억해 두는 설정입니다. <code>git clone</code>은 main 에 자동으로 해 주고, 새 브랜치는 <code>git push -u origin 이름</code>으로 처음 올릴 때 설정합니다. 이것이 있어야 <code>git push</code>/<code>git pull</code>만 쳐도 되고 <code>git status</code>가 "ahead/behind"를 알려 줍니다.</p>
+      <p lang="en">The setting remembering which remote branch a branch pairs with. <code>git clone</code> sets it for main; for new branches set it on the first <code>git push -u origin name</code>. With it plain <code>git push</code>/<code>git pull</code> work and <code>git status</code> reports "ahead/behind".</p></div>
+    <div class="card"><h4><span lang="ko">⑥ 머지 방식 세 가지의 이력</span><span lang="en">⑥ The history of the three merge styles</span></h4>
+      <p lang="ko"><b>Merge commit</b>은 브랜치의 모든 커밋과 병합 커밋이 남아 <b>무슨 일이 있었는지</b> 보존합니다. <b>Squash</b>는 PR 하나가 main 에 커밋 하나로 남아 이력이 깔끔하지만 세부 이력은 사라집니다. <b>Rebase and merge</b>는 선형 이력이지만 해시가 바뀝니다. 한 저장소에서는 <b>한 가지로 통일</b>하는 편이 이력을 읽기 쉽습니다.</p>
+      <p lang="en"><b>Merge commit</b> keeps every commit of the branch plus a merge commit, preserving <b>what happened</b>. <b>Squash</b> leaves one commit per PR on main: tidy but the detail is gone. <b>Rebase and merge</b> gives linear history but changes hashes. Within one repo, <b>pick one</b> to keep history readable.</p></div>
+    <div class="card"><h4><span lang="ko">⑦ 올리면 안 되는 것</span><span lang="en">⑦ What must not be pushed</span></h4>
+      <p lang="ko">비밀번호 · API 키 · 개인 키, 큰 바이너리(100MB 초과는 거절), 빌드 산출물, 개인 설정. <code>.gitignore</code>로 막고, 한 번 push 한 비밀은 <b>폐기가 먼저</b>입니다(<a href="git-trouble.html#case=secret-pushed">사례 보기</a>). 공개 저장소는 누구나 복제하므로 push 는 곧 공개입니다.</p>
+      <p lang="en">Passwords, API keys, private keys, big binaries (over 100 MB is refused), build outputs and personal settings. Block them with <code>.gitignore</code>, and for a secret already pushed <b>revoking comes first</b> (<a href="git-trouble.html#case=secret-pushed">see the case</a>). Anyone can clone a public repo, so pushing there is publishing.</p></div>
+    <div class="card"><h4><span lang="ko">⑧ 이 시뮬레이터가 생략한 것</span><span lang="en">⑧ What this simulator leaves out</span></h4>
+      <p lang="ko">네트워크는 없고 "GitHub"는 이 페이지 안의 가짜 저장소입니다. Pull Request · 이슈 · Actions · 태그 push · 원격 브랜치 여러 개 동시 추적 · 부분 clone · LFS · 인증은 구현하지 않았고, 진짜 GitHub 의 오류 문장(거절 사유)을 흉내 내는 데 그쳤습니다.</p>
+      <p lang="en">There is no network, and "GitHub" is a fake repo inside this page. Pull Requests, issues, Actions, tag pushes, tracking several remote branches at once, partial clones, LFS and authentication are not implemented; only real GitHub's rejection wording is imitated.</p></div>
+  </div>
+</section>
+
+<div class="pager"><a href="git-branch.html"><span lang="ko">← 브랜치 · 병합 · 충돌</span><span lang="en">← Branches, merging and conflicts</span></a><a href="git-trouble.html"><span lang="ko">장애 사례집 →</span><span lang="en">Troubleshooting cases →</span></a></div>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

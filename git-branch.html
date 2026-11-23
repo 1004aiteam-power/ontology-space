@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Branches, merging and conflicts</title>
+<meta name="title-ko" content="Ontology Space · 브랜치 · 병합 · 충돌">
+<meta name="title-en" content="Ontology Space · Branches, merging and conflicts">
+<meta name="description" content="브랜치는 이름표라는 원리, fast-forward와 병합 커밋, 충돌을 만들고 푸는 과정, merge와 rebase가 만드는 이력의 차이, cherry-pick과 stash를 Git 터미널 시뮬레이터로 직접 실습합니다.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/git-branch.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/git-branch.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/git-branch.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/git-branch.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 브랜치 · 병합 · 충돌">
+<meta property="og:description" content="브랜치는 이름표라는 원리, fast-forward와 병합 커밋, 충돌을 만들고 푸는 과정, merge와 rebase가 만드는 이력의 차이, cherry-pick과 stash를 Git 터미널 시뮬레이터로 직접 실습합니다.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/git-branch.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/db.css?v=4795c93e">
+<link rel="stylesheet" href="assets/css/git.css?v=baae56ad">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/git/git-branch-app.js?v=b08b6216"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="index.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="netMenu" hidden>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="gitMenu"><span lang="ko">Git 사용법</span><span lang="en">Git Usage</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="gitMenu" hidden>
+      <a href="git-basics.html"><span lang="ko">Git 구조와 로컬 명령</span><span lang="en">Git model and local commands</span><small lang="ko">작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시</small><small lang="en">Working tree · stage · repository · add, commit, log, diff · hashes</small></a>
+      <a href="git-branch.html" aria-current="page"><span lang="ko">브랜치 · 병합 · 충돌</span><span lang="en">Branches, merging and conflicts</span><small lang="ko">switch · merge · rebase · cherry-pick · stash · 충돌 풀기</small><small lang="en">switch · merge · rebase · cherry-pick · stash · resolving conflicts</small></a>
+      <a href="git-remote.html"><span lang="ko">GitHub와 함께</span><span lang="en">Working with GitHub</span><small lang="ko">clone · fetch · pull · push · Pull Request 흐름 · 인증</small><small lang="en">clone · fetch · pull · push · the Pull Request flow · authentication</small></a>
+      <a href="git-trouble.html"><span lang="ko">장애 사례집</span><span lang="en">Troubleshooting cases</span><small lang="ko">push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지</small><small lang="en">Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">Git 사용법 · 브랜치와 병합</span><span lang="en">GIT USAGE · BRANCHES AND MERGING</span></div>
+  <h1><span class="h1ic" aria-hidden="true">🌳</span> <span lang="ko">갈라지고 합치기:<br>브랜치 · 병합 · 충돌</span><span lang="en">Forking and joining:<br>branches, merging and conflicts</span></h1>
+  <p class="lead" lang="ko">Git 의 힘은 <b>가볍게 갈라지고 안전하게 합치는 것</b>에서 나옵니다. 브랜치가 정말 이름표일 뿐임을 그래프로 확인하고, 합치기(fast-forward · 병합 커밋 · rebase)가 이력을 어떻게 다르게 남기는지, 충돌이 나면 어떻게 푸는지를 터미널에서 직접 해 봅니다.</p>
+  <p class="lead" lang="en">Git's strength comes from <b>forking lightly and joining safely</b>. See in the graph that a branch really is just a label, how joining (fast-forward, merge commit, rebase) leaves history differently, and how to resolve a conflict, all in the terminal.</p>
+  <p class="meta" lang="ko">터미널은 페이지 안의 시뮬레이터입니다. 병합 · 충돌 · rebase 의 동작은 <code>tests/git.test.mjs</code>로 확인합니다.</p>
+  <p class="meta" lang="en">The terminal is a simulator inside this page. <code>tests/git.test.mjs</code> checks merging, conflicts and rebase.</p>
+</div>
+
+<section id="branch">
+  <div class="badge">LAB 1</div>
+  <h2><span lang="ko">브랜치는 이름표, 병합은 이름표 옮기기</span><span lang="en">A branch is a label; merging moves labels</span></h2>
+  <p lang="ko">main 에 커밋 3개가 있는 저장소입니다. 아래 ▶ 를 순서대로 눌러 <b>브랜치를 만들고, 커밋하고, 합쳐</b> 보세요. 오른쪽 그래프에서 이름표(초록)가 어떻게 움직이는지가 핵심입니다. 첫 병합은 fast-forward, 두 번째는 갈라진 뒤라 병합 커밋이 만들어집니다.</p>
+  <p lang="en">A repo with three commits on main. Press the ▶ buttons in order to <b>create a branch, commit and merge</b>. Watch how the labels (green) move in the graph on the right. The first merge is a fast-forward; the second, after the history forked, makes a merge commit.</p>
+  <div class="gt-grid">
+    <div><div id="term1"></div><div class="ctrl"><button type="button" id="reset1"><span lang="ko">처음부터 다시</span><span lang="en">Start over</span></button></div></div>
+    <div class="gt-side"><div class="panel"><h4><span lang="ko">커밋 그래프</span><span lang="en">Commit graph</span></h4><div id="graph1"></div></div><div class="panel"><h4><span lang="ko">세 영역</span><span lang="en">Three areas</span></h4><div id="areas1"></div></div></div>
+  </div>
+  <ol class="gt-steps"><li><div><button type="button" class="gt-cmd" data-run='git log --oneline'>git log --oneline</button><small lang="ko">지금 main 에 커밋 3개. 그래프의 <b>main 이름표</b>와 HEAD 가 가장 최근 커밋에 있습니다.</small><small lang="en">main has three commits. The <b>main label</b> and HEAD sit on the newest commit in the graph.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git branch feature'>git branch feature</button><small lang="ko">브랜치를 만든다 = <b>이름표 하나 더 붙이기</b>. 커밋은 하나도 복사되지 않습니다.</small><small lang="en">Making a branch = <b>putting one more label</b>. No commit is copied.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git switch feature'>git switch feature</button><small lang="ko">HEAD 가 feature 로 이동. 파일은 그대로(같은 커밋이니까).</small><small lang="en">HEAD moves to feature. Files stay (same commit).</small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "feature work" > f.txt && git add . && git commit -m "feature: add f.txt"'>echo "feature work" &gt; f.txt && git add . && git commit -m "feature: add f.txt"</button><small lang="ko">feature 에서 커밋. <b>feature 이름표만</b> 앞으로 가고 main 은 제자리입니다.</small><small lang="en">Commit on feature. <b>Only the feature label</b> moves forward; main stays.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git switch main'>git switch main</button><small lang="ko">main 으로 돌아오면 f.txt 가 사라집니다(그 커밋이 main 에는 없으니까). <code>ls</code> 로 확인하세요.</small><small lang="en">Back on main, f.txt disappears (main lacks that commit). Check with <code>ls</code>.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git merge feature'>git merge feature</button><small lang="ko">main 이 feature 의 조상이라 <b>fast-forward</b>: 새 커밋 없이 이름표만 앞으로 옮깁니다.</small><small lang="en">main is an ancestor of feature, so <b>fast-forward</b>: no new commit, the label just moves ahead.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git switch -c login'>git switch -c login</button><small lang="ko">새 브랜치를 만들며 이동 (<code>branch</code> + <code>switch</code> 한 번에).</small><small lang="en">Create and move to a new branch (<code>branch</code> + <code>switch</code> in one).</small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "login" > login.txt && git add . && git commit -m "add login"'>echo "login" &gt; login.txt && git add . && git commit -m "add login"</button><small lang="ko">login 에서 커밋.</small><small lang="en">Commit on login.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git switch main'>git switch main</button><small lang="ko"></small><small lang="en"></small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "fix" > fix.txt && git add . && git commit -m "hotfix"'>echo "fix" &gt; fix.txt && git add . && git commit -m "hotfix"</button><small lang="ko">main 에서도 커밋 — 이제 <b>두 갈래로 갈라졌습니다</b> (그래프 확인).</small><small lang="en">Commit on main too: the history has now <b>forked in two</b> (see the graph).</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git merge login'>git merge login</button><small lang="ko">갈라진 두 줄은 fast-forward 가 안 되어 <b>병합 커밋</b>(부모 둘)이 생깁니다. 파일이 겹치지 않아 자동으로 합쳐졌습니다.</small><small lang="en">Forked lines cannot fast-forward, so a <b>merge commit</b> (two parents) is created. The files do not overlap, so it merged automatically.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git log --oneline'>git log --oneline</button><small lang="ko">병합 커밋이 맨 위에 있습니다.</small><small lang="en">The merge commit is on top.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git branch -d login'>git branch -d login</button><small lang="ko">합친 브랜치는 이름표만 지우면 됩니다 (커밋은 그대로 이력에 남음).</small><small lang="en">A merged branch is deleted by removing just the label (commits stay in history).</small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "wip" >> a.txt'>echo "wip" &gt;&gt; a.txt</button><small lang="ko">아직 커밋하기 이른 작업이 생겼다고 합시다.</small><small lang="en">Suppose some work is too early to commit.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git stash'>git stash</button><small lang="ko">작업 폴더를 깨끗이 치우고 임시 보관함에 넣습니다. 급한 일이 생겼을 때 쓰는 명령.</small><small lang="en">Tucks it into a temporary shelf and cleans the working tree. For when something urgent comes up.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git stash pop'>git stash pop</button><small lang="ko">다시 꺼내서 이어서 작업합니다.</small><small lang="en">Take it back out and carry on.</small></div></li></ol>
+</section>
+
+<section id="conflict">
+  <div class="badge">LAB 2</div>
+  <h2><span lang="ko">충돌을 일부러 만들어 풀어 보기</span><span lang="en">Make a conflict on purpose and resolve it</span></h2>
+  <p lang="ko">충돌은 사고가 아니라 <b>"사람이 정해 줘야 할 곳"을 Git 이 알려 주는 것</b>입니다. 같은 줄을 두 브랜치에서 다르게 고쳐 병합하고, 표시를 지워 해결해 봅니다. 중간에 포기하려면 <code>git merge --abort</code>.</p>
+  <p lang="en">A conflict is not an accident but <b>Git showing where a human must decide</b>. Change the same line differently on two branches, merge, and resolve by removing the markers. To give up midway: <code>git merge --abort</code>.</p>
+  <div class="gt-grid">
+    <div><div id="term2"></div><div class="ctrl"><button type="button" id="reset2"><span lang="ko">처음부터 다시</span><span lang="en">Start over</span></button></div></div>
+    <div class="gt-side"><div class="panel"><h4><span lang="ko">커밋 그래프</span><span lang="en">Commit graph</span></h4><div id="graph2"></div></div><div class="panel"><h4><span lang="ko">세 영역 (⚔ = 충돌 중)</span><span lang="en">Three areas (⚔ = in conflict)</span></h4><div id="areas2"></div></div></div>
+  </div>
+  <ol class="gt-steps"><li><div><button type="button" class="gt-cmd" data-run='git switch -c feature'>git switch -c feature</button><small lang="ko">app.txt 한 줄을 두 브랜치에서 다르게 고쳐 볼 겁니다.</small><small lang="en">You will change one line of app.txt differently on two branches.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "line1\nline2 (blue)\nline3" > app.txt && git commit -am "feature: blue"'>echo "line1\nline2 (blue)\nline3" &gt; app.txt && git commit -am "feature: blue"</button><small lang="ko">feature 에서 둘째 줄을 blue 로.</small><small lang="en">On feature, line 2 becomes blue.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git switch main'>git switch main</button><small lang="ko"></small><small lang="en"></small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "line1\nline2 (green)\nline3" > app.txt && git commit -am "main: green"'>echo "line1\nline2 (green)\nline3" &gt; app.txt && git commit -am "main: green"</button><small lang="ko">main 에서 같은 줄을 green 으로.</small><small lang="en">On main, the same line becomes green.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git merge feature'>git merge feature</button><small lang="ko"><b>CONFLICT!</b> 같은 줄을 서로 다르게 바꿔 Git 이 정할 수 없습니다. 표 끝의 ⚔ 표시 확인.</small><small lang="en"><b>CONFLICT!</b> The same line was changed differently so Git cannot decide. Note the ⚔ mark in the table.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git status'>git status</button><small lang="ko">"Unmerged paths: both modified: app.txt". 병합이 <b>도중에 멈춘</b> 상태이고 프롬프트에 MERGING 이 보입니다.</small><small lang="en">"Unmerged paths: both modified: app.txt". The merge is <b>paused midway</b> and the prompt shows MERGING.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='cat app.txt'>cat app.txt</button><small lang="ko">충돌 표시: <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> 아래가 내 쪽(main), <code>=======</code> 아래가 상대(feature).</small><small lang="en">Conflict markers: below <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> is yours (main), below <code>=======</code> is theirs (feature).</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git commit -m "try"'>git commit -m "try"</button><small lang="ko">해결 전에는 커밋이 거절됩니다.</small><small lang="en">Committing is refused before resolving.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='echo "line1\nline2 (green+blue)\nline3" > app.txt'>echo "line1\nline2 (green+blue)\nline3" &gt; app.txt</button><small lang="ko">파일을 원하는 모양으로 고쳐 씁니다 (표시도 모두 지움). 실제로는 편집기로 합니다.</small><small lang="en">Rewrite the file the way you want (removing all markers). In reality you do this in an editor.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git add app.txt'>git add app.txt</button><small lang="ko">"해결했다"고 표시. ⚔ 가 사라집니다.</small><small lang="en">Mark it "resolved". The ⚔ disappears.</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git commit --no-edit'>git commit --no-edit</button><small lang="ko">병합 커밋 완성 (부모 둘).</small><small lang="en">The merge commit is complete (two parents).</small></div></li><li><div><button type="button" class="gt-cmd" data-run='git log --oneline --all'>git log --oneline --all</button><small lang="ko">결과 확인.</small><small lang="en">Check the result.</small></div></li></ol>
+</section>
+
+<section id="rebase">
+  <div class="badge">LAB 3</div>
+  <h2><span lang="ko">merge 와 rebase: 같은 결과, 다른 이력</span><span lang="en">merge and rebase: the same result, different history</span></h2>
+  <p lang="ko">시작은 같습니다: main 에 커밋 B, feature 에 커밋 C 가 따로 있습니다. 왼쪽은 <code>git merge feature</code>, 오른쪽은 <code>git rebase main</code>(feature 에서) 뒤 main 에서 merge 한 결과입니다. 파일 내용은 같지만 <b>그래프의 모양</b>이 다릅니다.</p>
+  <p lang="en">Same start: commit B on main and commit C on feature. Left is <code>git merge feature</code>; right is <code>git rebase main</code> (on feature) followed by a merge on main. The file contents are the same but the <b>shape of the graph</b> differs.</p>
+  <div class="cmp-two">
+    <div class="panel"><h4>merge</h4><div id="gMerge"></div><pre class="m-pre" id="lMerge"></pre></div>
+    <div class="panel"><h4>rebase</h4><div id="gRebase"></div><pre class="m-pre" id="lRebase"></pre></div>
+  </div>
+  <p class="st-cap"><span lang="ko">rebase 는 C 를 <b>복사해서 B 위에 다시 쌓습니다</b>. 그래서 C 의 해시가 바뀌고(두 그림의 C 해시가 서로 다릅니다), 이력이 한 줄로 깔끔해집니다. 대신 이미 push 해서 남이 쓰는 커밋에는 쓰면 안 됩니다.</span><span lang="en">rebase <b>copies C and stacks it again on top of B</b>. So C's hash changes (C has a different hash in the two pictures) and history becomes one tidy line. In exchange, never use it on commits you already pushed and others use.</span></p>
+</section>
+
+<section id="cheat">
+  <h2><span lang="ko">브랜치 · 병합 명령 한눈에</span><span lang="en">Branch and merge commands at a glance</span></h2>
+  <div class="net-scroll"><table class="net-tab und-tab"><tbody><tr><td><code>git branch</code></td><td><span lang="ko">브랜치 목록 (<code>-vv</code> 상세, <code>-a</code> 원격까지)</span><span lang="en">List branches (<code>-vv</code> detail, <code>-a</code> incl. remote)</span></td></tr><tr><td><code>git branch 이름</code></td><td><span lang="ko">새 브랜치 (이동은 안 함)</span><span lang="en">Create a branch (does not move)</span></td></tr><tr><td><code>git switch 이름 / git switch -c 이름</code></td><td><span lang="ko">브랜치 이동 / 만들면서 이동 (옛 이름 <code>git checkout</code>)</span><span lang="en">Switch / create and switch (old name <code>git checkout</code>)</span></td></tr><tr><td><code>git branch -d 이름 / -D</code></td><td><span lang="ko">합쳐진 브랜치 삭제 / 강제 삭제</span><span lang="en">Delete a merged branch / force delete</span></td></tr><tr><td><code>git branch -m 새이름</code></td><td><span lang="ko">현재 브랜치 이름 바꾸기</span><span lang="en">Rename the current branch</span></td></tr><tr><td><code>git merge 이름</code></td><td><span lang="ko">그 브랜치를 현재 브랜치에 합침 (<code>--no-ff</code> 병합 커밋 강제, <code>--abort</code> 취소)</span><span lang="en">Merge that branch into the current one (<code>--no-ff</code> force a merge commit, <code>--abort</code> cancel)</span></td></tr><tr><td><code>git rebase 이름</code></td><td><span lang="ko">내 커밋들을 그 브랜치 끝으로 옮겨 다시 쌓음 (<code>--continue</code> · <code>--abort</code>)</span><span lang="en">Replay my commits on top of that branch (<code>--continue</code> / <code>--abort</code>)</span></td></tr><tr><td><code>git cherry-pick 커밋</code></td><td><span lang="ko">다른 브랜치의 커밋 <b>하나만</b> 가져오기</span><span lang="en">Take <b>just one</b> commit from another branch</span></td></tr><tr><td><code>git stash / pop / list</code></td><td><span lang="ko">하던 일을 잠시 보관 / 꺼내기 / 목록 (<code>-u</code> 새 파일도)</span><span lang="en">Shelve work / take back / list (<code>-u</code> include new files)</span></td></tr><tr><td><code>git tag v1.0</code></td><td><span lang="ko">커밋에 이름 붙이기 (이동하지 않는 이름표)</span><span lang="en">Name a commit (a label that does not move)</span></td></tr><tr><td><code>git log --oneline --all</code></td><td><span lang="ko">모든 브랜치의 이력 한눈에</span><span lang="en">Every branch's history at a glance</span></td></tr></tbody></table></div>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">알아 둘 원리</span><span lang="en">Principles worth knowing</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 브랜치가 가볍다는 말의 뜻</span><span lang="en">① What "branches are cheap" means</span></h4>
+      <p lang="ko">브랜치는 커밋 하나의 해시를 담은 작은 파일입니다. 만드는 데 파일도 커밋도 복사하지 않으니 <b>실험마다 브랜치를 만드는 것</b>이 Git 의 기본 작법입니다. 합칠 때만 비용이 들고, 쓸모없어진 브랜치는 이름표만 지우면 됩니다.</p>
+      <p lang="en">A branch is a tiny file holding one commit hash. Creating one copies no files or commits, so <b>a branch per experiment</b> is Git's default practice. Only merging costs something, and an obsolete branch is removed by deleting just the label.</p></div>
+    <div class="card"><h4><span lang="ko">② fast-forward 와 세 갈래 병합</span><span lang="en">② Fast-forward vs three-way merge</span></h4>
+      <p lang="ko">한쪽이 다른 쪽의 후손이면 이름표만 앞으로 옮기는 <b>fast-forward</b>입니다. 두 쪽이 갈라졌으면 <b>공통 조상</b>(merge base)과 양쪽을 비교해 합치고 부모 둘인 병합 커밋을 만듭니다. 이력에 합친 흔적을 남기고 싶으면 <code>--no-ff</code>.</p>
+      <p lang="en">If one side descends from the other it is a <b>fast-forward</b>: only the label moves. If they forked, Git compares both sides against their <b>common ancestor</b> (merge base), merges and makes a two-parent merge commit. To keep a visible trace of the merge, use <code>--no-ff</code>.</p></div>
+    <div class="card"><h4><span lang="ko">③ 충돌의 정체와 푸는 순서</span><span lang="en">③ What a conflict is and how to resolve it</span></h4>
+      <p lang="ko">공통 조상 대비 <b>같은 곳을 다르게</b> 바꾼 경우만 충돌입니다(다른 줄이면 자동으로 합쳐짐). 순서: <code>git status</code>로 충돌 파일 확인 → 파일을 열어 표시를 지우고 원하는 내용으로 → <code>git add</code> → <code>git commit</code>. 한쪽만 택하려면 <code>git checkout --ours</code>/<code>--theirs 파일</code>. 에디터나 IDE 의 3-way 병합 도구가 편합니다.</p>
+      <p lang="en">Only changes to <b>the same spot, differently</b> relative to the common ancestor conflict (different lines merge automatically). Steps: find the file via <code>git status</code> → edit away the markers and write what you want → <code>git add</code> → <code>git commit</code>. To take one side: <code>git checkout --ours</code>/<code>--theirs file</code>. An editor or IDE 3-way merge tool helps.</p></div>
+    <div class="card"><h4><span lang="ko">④ rebase: 복사해서 다시 쌓기</span><span lang="en">④ rebase: copy and restack</span></h4>
+      <p lang="ko">rebase 는 내 커밋들을 잠시 떼어 두고 대상 브랜치 끝으로 간 뒤 <b>하나씩 다시 적용</b>합니다(위 LAB 3). 각 단계에서 충돌이 나면 멈추고, 풀고 <code>git add</code> → <code>git rebase --continue</code>, 포기는 <code>--abort</code>. 결과 이력이 직선이라 읽기 좋지만, 커밋 해시가 바뀝니다.</p>
+      <p lang="en">rebase sets my commits aside, goes to the target branch's tip and <b>reapplies them one by one</b> (Lab 3). A conflict stops it at that step; resolve, <code>git add</code>, <code>git rebase --continue</code>, or <code>--abort</code> to give up. The history is a straight line, easier to read, but commit hashes change.</p></div>
+    <div class="card"><h4><span lang="ko">⑤ 황금률: 공유한 커밋은 다시 쓰지 않는다</span><span lang="en">⑤ Golden rule: never rewrite shared commits</span></h4>
+      <p lang="ko">rebase · amend · reset 은 해시를 바꿉니다. <b>이미 push 해서 남이 받은 커밋</b>을 이렇게 바꾸면 남의 이력과 어긋나 큰 혼란이 생깁니다. 내 로컬(또는 나만 쓰는 feature 브랜치)에서만 다듬고, 공유한 것은 <code>merge</code>/<code>revert</code>로 앞으로만 나아가세요.</p>
+      <p lang="en">rebase, amend and reset change hashes. Altering <b>commits already pushed and pulled by others</b> diverges from their history and causes great confusion. Tidy only locally (or on a feature branch only you use) and move forward on shared work with <code>merge</code>/<code>revert</code>.</p></div>
+    <div class="card"><h4><span lang="ko">⑥ cherry-pick: 커밋 하나만</span><span lang="en">⑥ cherry-pick: just one commit</span></h4>
+      <p lang="ko"><code>git cherry-pick 해시</code>는 다른 브랜치의 커밋 하나의 <b>변경만 복사</b>해 현재 브랜치에 새 커밋으로 만듭니다(해시는 다름). 릴리스 브랜치에 급한 수정 하나만 가져갈 때 씁니다. 같은 변경을 양쪽에 다른 커밋으로 두게 되므로 남발하면 이력이 헷갈립니다.</p>
+      <p lang="en"><code>git cherry-pick hash</code> <b>copies only the change</b> of one commit from another branch into a new commit on the current branch (different hash). Use it to take one urgent fix to a release branch. It leaves the same change as two different commits, so overuse muddles history.</p></div>
+    <div class="card"><h4><span lang="ko">⑦ 브랜치 전략: 팀의 약속</span><span lang="en">⑦ Branching strategy: a team agreement</span></h4>
+      <p lang="ko"><b>GitHub Flow</b>: main 은 항상 배포 가능, 모든 작업은 짧은 feature 브랜치 + Pull Request → 머지(작은 팀에 적합). <b>Trunk-based</b>: 아주 짧은 브랜치로 main 에 자주 합침(CI 와 기능 플래그 필수). <b>Git Flow</b>: develop · release · hotfix 브랜치(릴리스 주기가 긴 제품). 정답은 없고 <b>팀이 같은 규칙을 쓰는 것</b>이 중요합니다. 이름은 <code>feature/…</code> <code>fix/…</code>처럼 접두사로 통일하세요.</p>
+      <p lang="en"><b>GitHub Flow</b>: main is always deployable; all work goes on short feature branches + Pull Request → merge (suits small teams). <b>Trunk-based</b>: very short branches merged to main often (needs CI and feature flags). <b>Git Flow</b>: develop, release and hotfix branches (for products with long release cycles). There is no right answer; what matters is <b>the team using the same rule</b>. Unify names with prefixes like <code>feature/…</code>, <code>fix/…</code>.</p></div>
+    <div class="card"><h4><span lang="ko">⑧ 이 시뮬레이터가 생략한 것</span><span lang="en">⑧ What this simulator leaves out</span></h4>
+      <p lang="ko"><code>rebase -i</code>(커밋 합치기 · 순서 바꾸기), 병합 전략 옵션, 서브모듈, <code>git bisect</code>, <code>blame</code>은 넣지 않았습니다. 그래프는 최근 커밋 16개까지만 그립니다. 충돌 병합은 줄 단위 LCS 로 만든 단순 구현이라 진짜 Git 의 ort 병합과 다르게 판정하는 경우가 있습니다.</p>
+      <p lang="en">Left out: <code>rebase -i</code> (squashing and reordering), merge-strategy options, submodules, <code>git bisect</code> and <code>blame</code>. The graph draws only the latest 16 commits. Conflict merging is a simple line-level LCS implementation and may judge some cases differently from real Git's ort merge.</p></div>
+  </div>
+</section>
+
+<div class="pager"><a href="git-basics.html"><span lang="ko">← Git 구조와 로컬 명령</span><span lang="en">← Git model and local commands</span></a><a href="git-remote.html"><span lang="ko">GitHub와 함께 →</span><span lang="en">Working with GitHub →</span></a></div>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

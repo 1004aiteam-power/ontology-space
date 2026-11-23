@@ -106,6 +106,12 @@ NAV = [
         ('h', '정리', 'Wrap-up'),
         ('db-choose.html', '정리: 선택 기준', 'Wrap-up: how to choose', '누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까', 'What to use by caller, shape and scale'),
     ]),
+    ("menu", 'gitMenu', 'Git 사용법', 'Git Usage', [
+        ('git-basics.html', 'Git 구조와 로컬 명령', 'Git model and local commands', '작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시', 'Working tree · stage · repository · add, commit, log, diff · hashes'),
+        ('git-branch.html', '브랜치 · 병합 · 충돌', 'Branches, merging and conflicts', 'switch · merge · rebase · cherry-pick · stash · 충돌 풀기', 'switch · merge · rebase · cherry-pick · stash · resolving conflicts'),
+        ('git-remote.html', 'GitHub와 함께', 'Working with GitHub', 'clone · fetch · pull · push · Pull Request 흐름 · 인증', 'clone · fetch · pull · push · the Pull Request flow · authentication'),
+        ('git-trouble.html', '장애 사례집', 'Troubleshooting cases', 'push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지', 'Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more'),
+    ]),
     ("menu", 'simMenu', '시뮬레이션', 'Simulation', [
         ('h', '전력 현장 교육', 'Power field training'),
         ('safety.html', '배전공사 안전 훈련', 'Distribution Work Safety', '전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄', 'Pole, wire replacement, transformer, manhole & tower sites · printable training record'),

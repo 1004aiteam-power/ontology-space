@@ -1,0 +1,89 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space) */
+/* Git 사용법 페이지(git-*.html)에서 쓰는 모양. 공통 부품은 net.css 와 site.css 를 그대로 쓴다 */
+:root{--gt-bg:#0f1115;--gt-fg:#d7dae0;--gt-dim:#8b93a1;--gt-green:#7ee787;--gt-red:#ff7b72;--gt-blue:#79c0ff;--gt-yellow:#e3b341}
+
+/* 터미널: 밝은 화면에서도 진짜 터미널처럼 어둡게 */
+.gt{background:var(--gt-bg);color:var(--gt-fg);border:1px solid #2c3038;border-radius:10px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.gt-out{height:340px;overflow:auto;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;outline:none}
+.gt-out:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+.gt.tall .gt-out{height:460px}
+.gt-l{min-height:1.5em}
+.gt-p{color:var(--gt-green)}
+.gt-cmd-l{margin-top:4px;color:#fff;font-weight:600}
+.gt-l.e{color:var(--gt-red)}.gt-l.h{color:var(--gt-dim)}.gt-l.o{color:var(--gt-blue)}
+.gt-in{display:flex;gap:8px;align-items:center;border-top:1px solid #2c3038;padding:7px 12px;background:#14171d}
+.gt-prompt{color:var(--gt-green);white-space:nowrap}
+.gt-line{flex:1;min-width:0;background:none;border:0;color:#fff;font:inherit;outline:none}
+
+/* 따라 하기 명령 칩 */
+.gt-steps{list-style:none;margin:10px 0;padding:0;display:grid;gap:6px;counter-reset:s}
+.gt-steps li{counter-increment:s;display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;align-items:start;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.gt-steps li::before{content:counter(s);display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:12px;align-items:center;justify-content:center}
+.gt-steps li.done{opacity:.55}
+.gt-steps small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+button.gt-cmd{font:12.5px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;text-align:left;max-width:100%;overflow-wrap:anywhere}
+button.gt-cmd:hover,button.gt-cmd:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+button.gt-cmd::before{content:"▶ ";font-size:10px;color:var(--accent)}
+
+/* 두 칸 배치: 터미널 | 상태 그림 */
+.gt-grid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1000px){ .gt-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)} }
+.gt-side{display:grid;gap:10px;align-content:start;min-width:0}
+.gt-side h4{margin:0 0 4px;font-size:14px}
+.gt-side .panel{padding:10px 12px;min-width:0}
+
+/* 세 영역 표 */
+.ar-tab th[scope=row]{font:600 12.5px ui-monospace,Menlo,monospace;white-space:nowrap}
+.ar-tab td{font:12.5px ui-monospace,Menlo,monospace;white-space:nowrap}
+.ar-tab td.none{color:var(--muted)}
+.ar-tab td.chg{background:color-mix(in srgb,var(--warm) 22%,transparent);font-weight:700}
+.ar-tab td.chg.i{background:color-mix(in srgb,#1f9d6b 24%,transparent)}
+.ar-tab tr.conf th{color:#d33}
+.ar-tab small{font-weight:400;color:var(--muted)}
+
+/* 커밋 그래프 */
+.gv-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:4px}
+.gv{display:block}
+.gv-h{font:10.5px ui-monospace,Menlo,monospace;fill:var(--muted)}
+.gv-chip rect{fill:var(--code);stroke:var(--line)}
+.gv-chip text{font:600 10.5px ui-monospace,Menlo,monospace;fill:var(--text)}
+.gv-chip.head rect{fill:var(--accent);stroke:var(--accent)}.gv-chip.head text{fill:#fff}
+.gv-chip.branch rect{fill:color-mix(in srgb,#1f9d6b 30%,var(--surface));stroke:#1f9d6b}
+.gv-chip.remote rect{fill:color-mix(in srgb,#8a8f98 25%,var(--surface));stroke:#8a8f98}
+.gv-chip.tag rect{fill:color-mix(in srgb,#b8860b 30%,var(--surface));stroke:#b8860b}
+
+/* 사례 고르기 · 설명 */
+.cs-cats{display:grid;gap:14px;margin:12px 0}
+.cs-cat h3{margin:0 0 6px;font-size:15px}
+.cs-list{display:flex;flex-wrap:wrap;gap:6px}
+.cs-btn{display:inline-flex;gap:6px;align-items:center;font:inherit;font-size:13.5px;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;text-align:left}
+.cs-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700;background:var(--accent-soft)}
+.cs-btn.solved::after{content:"✓";color:#1f9d6b;font-weight:700}
+.cs-btn.guide{border-style:dashed}
+.cs-panel{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface)}
+.cs-panel h3{margin:0 0 6px}
+.cs-status{margin:10px 0;padding:8px 12px;border-radius:8px;border:1px solid var(--line);font-size:14px;background:var(--code)}
+.cs-status.ok{border-color:#1f9d6b;background:color-mix(in srgb,#1f9d6b 14%,var(--surface));font-weight:700}
+.cs-hints{display:grid;gap:6px;margin:8px 0}
+.cs-hints p{margin:0;padding:6px 10px;border-left:3px solid var(--warm);background:var(--code);border-radius:0 8px 8px 0;font-size:14px}
+.cs-trans{margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.cs-sol{font:12.5px ui-monospace,Menlo,monospace;white-space:pre-wrap}
+.cs-explain{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:12px}
+.cs-explain .card h4{font-size:14.5px}
+.cs-explain .card p{font-size:14.5px;color:var(--text)}
+.cs-explain code{overflow-wrap:anywhere}
+.und-tab td:first-child{font-weight:600}
+.und-tab td code{white-space:normal;overflow-wrap:anywhere}
+.cmp-two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))}
+.hash-demo textarea{width:100%;box-sizing:border-box;min-height:70px;font:13px ui-monospace,Menlo,monospace;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px}
+.hash-out{font:13px/1.7 ui-monospace,Menlo,monospace;overflow-wrap:anywhere}
+.hash-out b{color:var(--accent)}
+
+/* 원격 그림 */
+.rm-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:12px 0}
+.rm-box{flex:1 1 150px;min-width:130px;padding:10px 12px;border:1px solid var(--c);border-radius:10px;background:color-mix(in srgb,var(--c) 14%,var(--surface))}
+.rm-box b{display:block;font-size:14px}.rm-box small{color:var(--muted);font-size:12px}
+.rm-box.a{--c:var(--db-a)}.rm-box.b{--c:var(--db-d)}.rm-box.c{--c:var(--db-b)}
+.rm-arrow{align-self:center;text-align:center;color:var(--muted);font-size:13px;line-height:1.5;flex:0 0 auto}
+@media (max-width:640px){ .rm-arrow{flex-basis:100%} }
