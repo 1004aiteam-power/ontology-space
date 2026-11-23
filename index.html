@@ -26,7 +26,7 @@
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
 <link rel="stylesheet" href="assets/site.css?v=32356da7">
-<link rel="stylesheet" href="assets/css/index.css?v=c66bca24">
+<link rel="stylesheet" href="assets/css/index.css?v=e1060f54">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
 </head>
@@ -35,12 +35,12 @@
 <header class="top"><div class="wrap">
   <a class="brand" href="index.html">Ontology Space</a>
   <nav>
-    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu" id="introMenu" hidden>
-      <a href="index.html" aria-current="page"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="about.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
       <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
       <hr>
-      <a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+      <a href="about.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
     </div>
     <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu cols" id="powerMenu" hidden>
@@ -175,183 +175,39 @@
 </div></header>
 
 <main id="main" class="wrap">
-<div class="hero">
-  <div class="eyebrow">ONTOLOGY × POWER GRID</div>
-  <h1><span lang="ko">온톨로지로 전력망을<br>AI가 이해하는 지식으로</span><span lang="en">Turning the power grid into<br>knowledge AI understands</span></h1>
-  <p class="lead" lang="ko">온톨로지의 기본 개념에서 시작해 IEC CIM 기반 전력망 온톨로지, 파이썬 프로젝트 <b>pycim</b>, VPP · 분산에너지, 분야별 온톨로지 설계, AI와의 연결까지 직접 만들어 보며 정리한 곳입니다.</p>
-  <p class="lead" lang="en">Starting from what an ontology is, this site works through the IEC CIM–based power grid ontology, the Python project <b>pycim</b>, VPPs and distributed energy, ontology design in several fields, and the link to AI — all built hands-on.</p>
-  <div class="grid hero-cards" style="margin-top:28px">
-    <a class="card" href="ontology.html"><h4><span class="ic" aria-hidden="true">📚</span><span lang="ko">① 온톨로지 입문</span><span lang="en">① Ontology primer</span></h4>
-      <p lang="ko">개념, 구성요소, RDF · OWL · Cypher, 식별자</p><p lang="en">Concepts, building blocks, RDF · OWL · Cypher, identifiers</p>
-      <span class="more"><span><span lang="ko">입문 페이지</span><span lang="en">Primer</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="grid.html"><h4><span class="ic" aria-hidden="true">⚡</span><span lang="ko">② 전력망 온톨로지</span><span lang="en">② Power grid ontology</span></h4>
-      <p lang="ko">IEC CIM, CGMES, 인터랙티브 단선도, 고장 복구</p><p lang="en">IEC CIM, CGMES, interactive single-line diagram, fault restoration</p>
-      <span class="more"><span><span lang="ko">전력망 페이지</span><span lang="en">Power Grid</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="project.html"><h4><span class="ic" aria-hidden="true">🐍</span><span lang="ko">③ 프로젝트 pycim</span><span lang="en">③ Project: pycim</span></h4>
-      <p lang="ko">CIM 파이썬 클래스, pandapower · OpenDSS 변환</p><p lang="en">CIM in Python, export to pandapower · OpenDSS</p>
-      <span class="more"><span><span lang="ko">프로젝트 페이지</span><span lang="en">Project</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="lab.html"><h4><span class="ic" aria-hidden="true">🔍</span><span lang="ko">④ Cypher 실습</span><span lang="en">④ Cypher lab</span></h4>
-      <p lang="ko">브라우저에서 Cypher 질의, 데이터 검증, 지식 그래프</p><p lang="en">Cypher queries in the browser, data validation, knowledge graph</p>
-      <span class="more"><span><span lang="ko">실습 페이지</span><span lang="en">Lab</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="twin.html"><h4><span class="ic" aria-hidden="true">🗺️</span><span lang="ko">⑤ 디지털 트윈</span><span lang="en">⑤ Digital Twin</span></h4>
-      <p lang="ko">가상 대한민국 전력망의 24시간 상태를 지도 위에서 재생</p><p lang="en">Play 24 hours of a virtual Korean grid on a map</p>
-      <span class="more"><span><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="vpp.html"><h4><span class="ic" aria-hidden="true">🔋</span><span lang="ko">⑥ VPP · 분산에너지</span><span lang="en">⑥ VPP · DER</span></h4>
-      <p lang="ko">가상발전소 기본 개념, VPP 10개가 참여하는 가상 전력시장</p><p lang="en">Virtual power plant basics and a virtual market with ten VPPs</p>
-      <span class="more"><span><span lang="ko">VPP 페이지</span><span lang="en">VPP</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="studio.html"><h4><span class="ic" aria-hidden="true">🧩</span><span lang="ko">⑦ 온톨로지 설계실</span><span lang="en">⑦ Design Studio</span></h4>
-      <p lang="ko">업무 · 자산관리 · 도로 교통 · 전기차 충전 · 고장 영향 · 안전 · 생태계, 일곱 사례의 설계 결정</p><p lang="en">Seven cases with their design decisions: work, assets, roads, EV charging, failure impact, safety, an ecosystem</p>
-      <span class="more"><span><span lang="ko">설계실</span><span lang="en">Design Studio</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="ai.html"><h4><span class="ic" aria-hidden="true">🤖</span><span lang="ko">⑧ AI × 온톨로지</span><span lang="en">⑧ AI × Ontology</span></h4>
-      <p lang="ko">LLM만 · 문서 검색 · GraphRAG 비교, 고장 영향을 추론하는 AI 에이전트</p><p lang="en">LLM alone vs. RAG vs. GraphRAG, and an agent tracing a failure</p>
-      <span class="more"><span><span lang="ko">시연 보기</span><span lang="en">See the demo</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="physical-ai.html"><h4><span class="ic" aria-hidden="true">🦾</span><span lang="ko">⑨ 피지컬 AI</span><span lang="en">⑨ Physical AI</span></h4>
-      <p lang="ko">개념, 관련 기술, 진화로 운전 · 게임 · 비행을 배우는 NEAT 시뮬레이션</p><p lang="en">Concepts, key technologies, and NEAT simulations that evolve to drive, play and fly</p>
-      <span class="more"><span><span lang="ko">피지컬 AI 페이지</span><span lang="en">Physical AI</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="#sims"><h4><span class="ic" aria-hidden="true">🎮</span><span lang="ko">⑩ 시뮬레이션</span><span lang="en">⑩ Simulations</span></h4>
-      <p lang="ko">안전 훈련, 전력망 · 에너지, 교통, 생태계, 진화 학습까지 16개 모두 보기</p><p lang="en">All 16: safety training, grid and energy, traffic, an ecosystem, evolutionary learning</p>
-      <span class="more"><span><span lang="ko">둘러보기</span><span lang="en">Browse</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="bidding.html"><h4><span class="ic" aria-hidden="true">💹</span><span lang="ko">⑪ 내가 이해한 전력시장</span><span lang="en">⑪ The power market, as I understand it</span></h4>
-      <p lang="ko">입찰 → SMP → 급전지시 → 정산, 발전사업자와 VPP 사업자의 수익 (개인 학습 노트)</p><p lang="en">Bidding → SMP → dispatch → settlement, and how generators and VPP operators earn (personal notes)</p>
-      <span class="more"><span><span lang="ko">노트 보기</span><span lang="en">Read the notes</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="ood.html"><h4><span class="ic" aria-hidden="true">⚖️</span><span lang="ko">⑫ 온톨로지 vs. 객체지향 설계</span><span lang="en">⑫ Ontology vs. OOD</span></h4>
-      <p lang="ko">같은 ESS를 파이썬 클래스와 OWL로, 일곱 가지 차이</p><p lang="en">One battery as Python and OWL, seven differences</p>
-      <span class="more"><span><span lang="ko">비교 보기</span><span lang="en">Compare</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-  </div>
-  <a class="card" href="ontology-map.html" style="display:block;margin-top:16px;border-color:var(--accent)"><h4 style="margin-top:0">🗺 <span lang="ko">한눈에 보기: 사이트 전체 온톨로지 지도</span><span lang="en">At a glance: the ontology map of the whole site</span></h4>
-    <p lang="ko">업무 · 전력설비 · 변전소 · 배전선로 · 고장 영향 · 디지털 트윈 · 전기차 · 고속도로 · 안전 · VPP · 생태계, 온톨로지와 데이터 모델 11개가 서로 어떻게 이어지는지 한 장으로 봅니다.</p><p lang="en">Work, assets, a substation, feeders, failure impact, the digital twin, EV charging, roads, safety, VPPs and an ecosystem: see how eleven ontologies and data models connect, on one page.</p>
-    <span class="more"><span lang="ko">지도 보기 →</span><span lang="en">Open the map →</span></span></a>
+<div class="hero welcome">
+  <div class="eyebrow">ONTOLOGY SPACE</div>
+  <h1><span lang="ko">찾아와 주셔서 반갑습니다</span><span lang="en">Welcome, and thanks for stopping by</span></h1>
+  <p class="lead" lang="ko">온톨로지와 전력망을 중심으로, 공부하며 직접 만들어 본 것들을 모아 둔 곳입니다. 관심 가는 분야를 골라 들어가 보세요.</p>
+  <p class="lead" lang="en">A collection of things built while learning, centred on ontologies and the power grid. Pick an area that interests you.</p>
 </div>
 
-<section id="path">
-  <h2><span lang="ko">어디서부터 읽을까</span><span lang="en">Where to start</span></h2>
-  <p class="sub" lang="ko">관심에 따라 고른 읽는 순서입니다. 위에서부터 차례로 보면 됩니다.</p>
-  <p class="sub" lang="en">Reading orders picked by interest. Go from top to bottom.</p>
-  <div class="grid two">
-    <div class="card"><h4><span lang="ko">처음이라면</span><span lang="en">New to ontologies</span></h4><p lang="ko">온톨로지가 무엇인지부터 직접 질의해 보기까지</p><p lang="en">From what an ontology is to running your own queries</p>
-      <ol class="path-list">
-      <li><a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span></a><span lang="ko">: 용어와 기술을 쉬운 비유로</span><span lang="en">: terms and technologies in plain language</span></li>
-      <li><a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span></a><span lang="ko">: 클래스 설계와 무엇이 다른가</span><span lang="en">: how it differs from class design</span></li>
-      <li><a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></a><span lang="ko">: 실제 표준(IEC CIM)에서는 어떻게 쓰이나</span><span lang="en">: how a real standard (IEC CIM) uses it</span></li>
-      <li><a href="lab.html"><span lang="ko">Cypher 실습</span><span lang="en">Cypher lab</span></a><span lang="ko">: 브라우저에서 직접 묻고 그래프로 보기</span><span lang="en">: ask questions in the browser and see the graph</span></li>
-      <li><a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span></a><span lang="ko">: 사이트의 온톨로지가 서로 이어지는 모습</span><span lang="en">: how the site's ontologies connect</span></li>
-      </ol></div>
-    <div class="card"><h4><span lang="ko">전력 분야에서 일한다면</span><span lang="en">If you work in power</span></h4><p lang="ko">설비 · 계통 데이터에서 시장까지</p><p lang="en">From equipment and network data to the market</p>
-      <ol class="path-list">
-      <li><a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></a><span lang="ko">: CIM · 토폴로지 · 배전선로 고장 복구</span><span lang="en">: CIM, topology, feeder fault restoration</span></li>
-      <li><a href="project.html"><span lang="ko">프로젝트 pycim</span><span lang="en">Project: pycim</span></a><span lang="ko">: CIM을 파이썬으로, 조류계산과 CGMES</span><span lang="en">: CIM in Python, load flow and CGMES</span></li>
-      <li><a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital Twin</span></a><span lang="ko">: 가상 전국 전력망 24시간</span><span lang="en">: a virtual national grid over 24 hours</span></li>
-      <li><a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span></a><span lang="ko">: 설비 · 진단 · 위험도</span><span lang="en">: assets, diagnoses, risk</span></li>
-      <li><a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">The AAS and ontologies</span></a><span lang="ko">: 디지털 트윈 표준 형식과 온톨로지의 관계, 변압기 한 대의 데이터셋</span><span lang="en">: the standard digital-twin format, how it relates to ontologies, one transformer as a dataset</span></li>
-      <li><a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span></a><span lang="ko">: 고장이 어느 구간 · 고객에 미치나</span><span lang="en">: which sections and customers a failure reaches</span></li>
-      <li><a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span></a><span lang="ko">: 분산에너지자원과 운영 고리</span><span lang="en">: distributed resources and the operating loop</span></li>
-      <li><a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장</span><span lang="en">VPP virtual market</span></a><span lang="ko">: 입찰 · 정산을 그래프 DB로</span><span lang="en">: bids and settlements as a graph DB</span></li>
-      <li><a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span></a><span lang="ko">: 입찰에서 정산까지</span><span lang="en">: from bidding to settlement</span></li>
-      </ol></div>
-    <div class="card"><h4><span lang="ko">온톨로지를 직접 설계하려면</span><span lang="en">If you want to design one</span></h4><p lang="ko">설계 결정과 그 이유를 사례로</p><p lang="en">Design decisions and their reasons, case by case</p>
-      <ol class="path-list">
-      <li><a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span></a><span lang="ko">: 정답 없는 설계를 기록하는 방법</span><span lang="en">: how to record designs that have no single right answer</span></li>
-      <li><a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span></a><span lang="ko">: 업무 149개를 분류하고 잇기</span><span lang="en">: classifying and linking 149 tasks</span></li>
-      <li><a href="work-graph.html"><span lang="ko">업무 흐름도</span><span lang="en">Workflow map</span></a><span lang="ko">: 선행 관계를 한 장으로 (한국어)</span><span lang="en">: precedence on one page (Korean only)</span></li>
-      <li><a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span></a><span lang="ko">: 도로망과 24시간 차량 흐름</span><span lang="en">: a road network and 24 h of traffic</span></li>
-      <li><a href="ev.html"><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × grid: EV charging</span></a><span lang="ko">: 두 온톨로지를 잇기</span><span lang="en">: joining two ontologies</span></li>
-      <li><a href="safety-ontology.html"><span lang="ko">배전공사 안전 온톨로지</span><span lang="en">Distribution work safety ontology</span></a><span lang="ko">: 시뮬레이션을 온톨로지로</span><span lang="en">: turning a simulation into an ontology</span></li>
-      <li><a href="eco-ontology.html"><span lang="ko">단세포 생태계 온톨로지</span><span lang="en">Cell ecosystem ontology</span></a><span lang="ko">: 시뮬레이션 기록을 그래프로</span><span lang="en">: a simulation record as a graph</span></li>
-      </ol></div>
-    <div class="card"><h4><span lang="ko">AI와의 연결이 궁금하다면</span><span lang="en">If you are here for AI</span></h4><p lang="ko">지식 그래프와 AI, 몸을 가진 AI</p><p lang="en">Knowledge graphs with AI, and AI with a body</p>
-      <ol class="path-list">
-      <li><a href="index.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span></a><span lang="ko">: 만든 이의 생각</span><span lang="en">: a personal view</span></li>
-      <li><a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span></a><span lang="ko">: GraphRAG와 AI 에이전트</span><span lang="en">: GraphRAG and an AI agent</span></li>
-      <li><a href="physical-ai.html"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></a><span lang="ko">: 개념과 NEAT 자율주행</span><span lang="en">: concepts and NEAT self-driving</span></li>
-      <li><a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span></a><span lang="ko">: NEAT 신경진화로 게임을 배우는 뱀 150마리</span><span lang="en">: 150 snakes learning to play by NEAT neuroevolution</span></li>
-      <li><a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span></a><span lang="ko">: NEAT 신경진화로 균형을 잡고 경유점을 나는 드론 150대</span><span lang="en">: 150 drones learning to balance and fly waypoints by NEAT neuroevolution</span></li>
-      </ol></div>
+<section class="welcome-menu" aria-label="Sections">
+  <div class="grid hero-cards">
+    <a class="card" href="about.html"><h4><span class="ic" aria-hidden="true">👋</span><span lang="ko">소개</span><span lang="en">Intro</span></h4>
+      <p lang="ko">이 사이트가 무엇을 다루는지, 어디서부터 읽으면 좋은지, 그리고 온톨로지 입문</p><p lang="en">What this site covers, where to start reading, and an ontology primer</p>
+      <span class="more"><span><span lang="ko">사이트 소개</span><span lang="en">About this site</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="grid.html"><h4><span class="ic" aria-hidden="true">⚡</span><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span></h4>
+      <p lang="ko">IEC CIM 전력망 온톨로지, pycim, 디지털 트윈, VPP · 분산에너지, 전력시장</p><p lang="en">IEC CIM grid ontology, pycim, digital twin, VPPs and DER, the power market</p>
+      <span class="more"><span><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="studio.html"><h4><span class="ic" aria-hidden="true">🧩</span><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span></h4>
+      <p lang="ko">업무 · 교통 · 설비 · 안전 · 생태계 온톨로지 설계와 GraphRAG · AI 에이전트 시연</p><p lang="en">Ontology designs for work, traffic, assets, safety and an ecosystem, plus GraphRAG and AI agent demos</p>
+      <span class="more"><span><span lang="ko">설계실</span><span lang="en">The studio</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="packet.html"><h4><span class="ic" aria-hidden="true">🌐</span><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span></h4>
+      <p lang="ko">패킷 조립에서 TCP · 소켓 · 동시 접속 · HTTP까지 한 층씩</p><p lang="en">From building packets to TCP, sockets, concurrency and HTTP, layer by layer</p>
+      <span class="more"><span><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="db-map.html"><h4><span class="ic" aria-hidden="true">🗄️</span><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span></h4>
+      <p lang="ko">파일과 엔진에서 와이어 프로토콜 · 드라이버 · ORM · REST · GraphQL까지</p><p lang="en">From files and engines to wire protocols, drivers, ORMs, REST and GraphQL</p>
+      <span class="more"><span><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="safety.html"><h4><span class="ic" aria-hidden="true">🎮</span><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span></h4>
+      <p lang="ko">안전 훈련, 교통, 자연, 진화로 배우는 피지컬 AI를 브라우저에서</p><p lang="en">Safety training, traffic, nature and evolving physical AI, in the browser</p>
+      <span class="more"><span><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution work safety</span></span><span class="arr" aria-hidden="true">→</span></span></a>
+    <a class="card" href="git-basics.html"><h4><span class="ic" aria-hidden="true">🧰</span><span lang="ko">기타 관심사</span><span lang="en">Other interests</span></h4>
+      <p lang="ko">Git 사용법과 프로그래밍 언어 중급 개념 (C · C++ · Java · R · Python)</p><p lang="en">Using Git, and intermediate concepts in C, C++, Java, R and Python</p>
+      <span class="more"><span><span lang="ko">Git 사용법</span><span lang="en">Using Git</span></span><span class="arr" aria-hidden="true">→</span></span></a>
   </div>
-</section>
-
-<section id="sims">
-  <h2><span lang="ko">시뮬레이션 둘러보기</span><span lang="en">Simulations</span></h2>
-  <p class="sub" lang="ko">이 사이트에서 브라우저로 바로 돌려 볼 수 있는 시뮬레이션 16개를 모두 모았습니다. 설치할 것은 없고, 모든 데이터는 가상입니다.</p>
-  <p class="sub" lang="en">All 16 simulations on this site that run right in your browser — nothing to install, and all data is virtual.</p>
-  <h3 class="sim-group"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></h3>
-  <a class="sim-card featured" href="safety.html">
-    <img src="assets/thumbs/safety.jpg" alt="" loading="lazy" width="814" height="471">
-    <div><span class="sim-tag"><span lang="ko">신입·신규 담당자 교육용</span><span lang="en">For new hires &amp; new site supervisors</span></span>
-      <h4><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution work safety</span></h4>
-      <p lang="ko">가상 현장 네 곳(전주 애자·완금 교체, 변압기 교체, 지중 맨홀, 송전 철탑)에서 작업자 5명이 "생명을 지키는 안전수칙 11"에 따라 TBM부터 철수까지 안전조치를 단계별로 진행합니다. 훈련 모드에서는 다음 조치를 직접 고르고, 틀리면 왜 위험한지 알려 주고, 끝나면 결과를 인쇄하거나 PDF로 남길 수 있습니다.</p>
-      <p lang="en">On four virtual sites — pole insulators, a pole transformer, an underground manhole and a transmission tower — a crew of five follows the golden safety rules step by step, from the toolbox talk to tear-down. In training mode you pick the next action wrong picks explain the danger, and the result can be printed or saved as PDF.</p>
-      <span class="more"><span lang="ko">훈련 시작 →</span><span lang="en">Start training →</span></span></div></a>
-  <h3 class="sim-group"><span lang="ko">전력망 · 에너지</span><span lang="en">Power grid · energy</span></h3>
-  <div class="sim-cards">
-    <a class="sim-card" href="twin.html"><img src="assets/thumbs/twin.jpg" alt="" loading="lazy" width="834" height="521">
-      <h4><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span></h4><p lang="ko">가상 대한민국 전력망의 24시간 · 부하와 태양광에 따른 전압 · 조류</p><p lang="en">24 hours of a virtual Korean grid · voltages and flows as load and solar change</p></a>
-    <a class="sim-card" href="grid.html#flisr"><img src="assets/thumbs/flisr.jpg" alt="" loading="lazy" width="654" height="354">
-      <h4><span lang="ko">배전선로 고장 복구 (FLISR)</span><span lang="en">Feeder fault restoration (FLISR)</span></h4><p lang="ko">선로를 눌러 고장 → 구간 분리 → 연계 복구 · 배전자동화와 현장 수동 조작 비교</p><p lang="en">Click a line to fault it → isolate → restore through ties · automated vs manual switching</p></a>
-    <a class="sim-card" href="impact.html#trace"><img src="assets/thumbs/impact.jpg" alt="" loading="lazy" width="814" height="478">
-      <h4><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span></h4><p lang="ko">설비 하나가 고장 나면 어느 구간 · 고객이 정전되나 · 개폐기 조작 과정 재생</p><p lang="en">Which sections and customers lose power when one asset fails · replay of the switching steps</p></a>
-    <a class="sim-card" href="ev.html#sim"><img src="assets/thumbs/ev.jpg" alt="" loading="lazy" width="514" height="321">
-      <h4><span lang="ko">고속도로 × 전력망: 전기차 충전</span><span lang="en">Roads × grid: EV charging</span></h4><p lang="ko">24시간 교통량 → 휴게소 충전 수요 → 배전선로 · 변전소 부하</p><p lang="en">24 h of traffic → rest-area charging demand → feeder and substation load</p></a>
-    <a class="sim-card" href="bidding.html#merit"><img src="assets/thumbs/merit.jpg" alt="" loading="lazy" width="928" height="366">
-      <h4><span lang="ko">전력시장 가격 결정</span><span lang="en">How the market price is set</span></h4><p lang="ko">수요를 움직이면 싼 발전기부터 채워져 SMP가 정해짐 · 한낮 태양광 효과</p><p lang="en">Move demand and the cheapest plants fill first to set the price · effect of midday solar</p></a>
-  </div>
-  <h3 class="sim-group"><span lang="ko">교통</span><span lang="en">Traffic</span></h3>
-  <div class="sim-cards">
-    <a class="sim-card" href="intersection.html"><img src="assets/thumbs/intersection.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">교차로 신호</span><span lang="en">Intersection</span></h4><p lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호 · 고정 주기와 감응식</p><p lang="en">Top-down junction · through, left &amp; walk signals · fixed vs actuated</p></a>
-    <a class="sim-card" href="airport.html"><img src="assets/thumbs/airport.jpg" alt="" loading="lazy" width="1168" height="583">
-      <h4><span lang="ko">공항 이착륙</span><span lang="en">Airport runways</span></h4><p lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</p><p lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</p></a>
-    <a class="sim-card" href="flights.html"><img src="assets/thumbs/flights.jpg" alt="" loading="lazy" width="834" height="466">
-      <h4><span lang="ko">세계 항공 교통</span><span lang="en">World air traffic</span></h4><p lang="ko">세계 지도 위 국내선·국제선 · 대권 항로 · 낮과 밤</p><p lang="en">Domestic &amp; international flights · great circles · day and night</p></a>
-    <a class="sim-card" href="city.html"><img src="assets/thumbs/city.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">도시 교통망</span><span lang="en">City traffic network</span></h4><p lang="ko">6×6 블록 도시 · 신호등 49곳 · 좌·직·우회전 차량 · 자율주행차 비율 · 신호 방식 · 유입·유출 대시보드</p><p lang="en">A 6×6-block city · 49 signals · turning traffic · autonomous share · signal plans · inflow/outflow dashboard</p></a>
-    <a class="sim-card" href="highway.html#map"><img src="assets/thumbs/highway.jpg" alt="" loading="lazy" width="547" height="341">
-      <h4><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span></h4><p lang="ko">가상 전국 고속도로 · 국도망의 24시간 차량 흐름 · 사고 시나리오</p><p lang="en">24 h of traffic on a virtual national road network · an incident scenario</p></a>
-  </div>
-  <h3 class="sim-group"><span lang="ko">자연</span><span lang="en">Nature</span></h3>
-  <div class="sim-cards">
-    <a class="sim-card" href="ecosystem.html"><img src="assets/thumbs/ecosystem.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span></h4><p lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 피난처 · 계절 · 진화</p><p lang="en">Predator–prey cycles · refuges · seasons · evolution</p></a>
-    <a class="sim-card" href="tunneling.html"><img src="assets/thumbs/tunneling.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">양자 터널 효과</span><span lang="en">Quantum tunnelling</span></h4><p lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식을 브라우저에서 풀어 이론값과 비교</p><p lang="en">An electron gets through a wall it cannot climb · the Schrödinger equation solved in the browser, checked against theory</p></a>
-    <a class="sim-card" href="particle-life.html"><img src="assets/thumbs/particle-life.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">입자 생명</span><span lang="en">Particle Life</span></h4><p lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 에너지 · 번식 · 유전을 더하면 표가 스스로 진화</p><p lang="en">Groups from one attraction table · add energy, birth and heredity and the table evolves</p></a>
-    <a class="sim-card" href="star-formation.html"><img src="assets/thumbs/star-formation.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of stars and planets</span></h4><p lang="ko">회전하는 먼지 구름이 중력으로 뭉쳐 별이 켜지고 행성이 자람 · 얼음선 · 구름 질량 · 회전을 바꿔 보기</p><p lang="en">A spinning dust cloud becomes a star and planets · change the frost line, mass and spin</p></a>
-  </div>
-  <h3 class="sim-group"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></h3>
-  <div class="sim-cards">
-    <a class="sim-card" href="physical-ai.html#lab"><img src="assets/thumbs/neat-drive.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">자율주행</span><span lang="en">Self-driving</span></h4><p lang="ko">NEAT 신경진화 · 자동차 150대가 진화하며 트랙 주행을 배움 · 여러 트랙 · 도메인 랜덤화</p><p lang="en">NEAT neuroevolution · 150 cars evolve to drive a track · several tracks · domain randomisation</p></a>
-    <a class="sim-card" href="neat-snake.html"><img src="assets/thumbs/neat-snake.jpg" alt="" loading="lazy" width="600" height="375">
-      <h4><span lang="ko">스네이크</span><span lang="en">Snake</span></h4><p lang="ko">NEAT 신경진화 · 뱀 150마리가 진화하며 먹이를 쫓고 제 몸을 피하는 법을 배움</p><p lang="en">NEAT neuroevolution · 150 snakes evolve to chase food and avoid their own bodies</p></a>
-    <a class="sim-card" href="neat-drone.html"><img src="assets/thumbs/drone.jpg" alt="" loading="lazy" width="794" height="496">
-      <h4><span lang="ko">드론</span><span lang="en">Drone</span></h4><p lang="ko">NEAT 신경진화 · 드론 150대가 진화하며 균형을 잡고 경유점을 나는 법을 배움 · 옆바람 실험</p><p lang="en">NEAT neuroevolution · 150 drones evolve to balance and fly through waypoints · side-wind experiment</p></a>
-  </div>
-</section>
-
-<section id="why" class="opinion">
-  <div class="eyebrow"><span lang="ko">만든 이의 생각</span><span lang="en">A personal view</span></div>
-  <h2><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span></h2>
-  <blockquote>
-    <p class="quote" lang="ko">온톨로지는 사람이 세상을 알아보는 방식을<br>그대로 옮겨 적은 데이터 구조입니다.</p>
-    <p class="quote" lang="en">An ontology is a data structure that writes down<br>the way people come to know the world.</p>
-  </blockquote>
-  <p lang="ko">우리는 세상을 글자와 숫자의 나열로 기억하지 않습니다. "변압기"를 떠올리면 그것이 <b>무엇의 한 종류인지</b>, <b>어떤 성질을 가졌는지</b>, <b>무엇과 이어져 있는지</b>가 함께 떠오릅니다. 사람은 사물과 개념을 하나의 객체로 알아보고, 그 객체를 분류하고, 다른 객체와의 관계 속에서 이해합니다.</p>
-  <p lang="en">We do not remember the world as strings of letters and numbers. Think "transformer" and you also recall <b>what kind of thing it is</b>, <b>what properties it has</b> and <b>what it is connected to</b>. People recognise things and ideas as objects, classify them, and understand them through their relations to other objects.</p>
-  <p lang="ko">객체지향 설계가 시스템을 클래스와 객체, 상속과 관계로 짜듯이, 온톨로지는 같은 생각을 <b>데이터</b>로 가져옵니다. 프로그램 코드 안에 갇혀 있던 클래스 구조를 누구나 읽고, 묻고, 이어 붙일 수 있는 지식으로 꺼내 놓는 것입니다. 그래서 저는 온톨로지가 <b>객체지향적인 시스템에서 데이터를 표현하는 가장 좋은 방법</b>이라고 생각합니다.</p>
-  <p lang="en">Just as object-oriented design builds a system from classes and objects, inheritance and relations, an ontology brings the same thinking to <b>data</b>. It takes the class structure locked inside program code and sets it out as knowledge anyone can read, query and connect. That is why I believe an ontology is <b>the best way to represent data in an object-oriented system</b>.</p>
-  <p lang="ko">둘이 어디까지 같고 어디서부터 다른지는 <a href="ood.html"><b>온톨로지 vs. 객체지향 설계</b></a>에 따로 자세히 정리했습니다.</p>
-  <p lang="en">Where the two agree and where they part is set out in detail in <a href="ood.html"><b>Ontology vs. object-oriented design</b></a>.</p>
-  <p lang="ko">사람이 객체를 알아보는 방식과 같은 구조라면, <b>AI가 사람처럼 지식을 익히는 데에도 가장 좋은 바탕</b>이 될 것입니다. 수많은 글을 읽고 말을 배운 AI에게, 온톨로지는 "무엇이 무엇이고, 무엇과 어떻게 이어져 있는가"를 분명하게 알려 주는 지식의 뼈대입니다. 데이터는 계속 쌓이고 모델은 바뀌어도, 세상을 나누고 잇는 이 뼈대는 남습니다.</p>
-  <p lang="en">And if it mirrors the way people recognise objects, it should also be <b>the best foundation for AI to acquire knowledge the way people do</b>. For an AI that learned language from vast amounts of text, an ontology is the skeleton of knowledge that says plainly what each thing is and how it connects to everything else. Data keeps piling up and models keep changing, but this skeleton — how the world is divided and joined — remains.</p>
-  <p lang="ko">이 주장을 실제로 보여 주는 시연은 <a href="ai.html"><b>AI × 온톨로지</b></a>에 있습니다. 자연어 질문을 그래프 질의로 바꿔 답하는 GraphRAG와, 고장 영향을 한 단계씩 따라가는 AI 에이전트입니다.</p>
-  <p lang="en">A demo of this claim is in <a href="ai.html"><b>AI × ontology</b></a>: GraphRAG answering questions through graph queries, and an AI agent tracing a failure step by step.</p>
-  <p class="sig" lang="ko">— 만든 이의 시선으로 적은 문장입니다.</p>
-  <p class="sig" lang="en">— A personal opinion of the author of Ontology Space.</p>
-</section>
-
-<section>
-  <div class="pager"><span></span><a href="ontology.html"><span lang="ko">다음: 온톨로지 입문 →</span><span lang="en">Next: Ontology primer →</span></a></div>
+  <p class="sub welcome-first" lang="ko">처음이라면 <a href="about.html">사이트 소개</a>에서 읽는 순서를 먼저 보거나, <a href="ontology.html">온톨로지 입문</a>부터 시작해 보세요.</p>
+  <p class="sub welcome-first" lang="en">New here? See the reading orders in <a href="about.html">About this site</a>, or start with the <a href="ontology.html">Ontology primer</a>.</p>
 </section>
 </main>
 

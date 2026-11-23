@@ -26,3 +26,8 @@
 .path-list{margin:10px 0 0;padding-left:22px;font-size:15px}
 .path-list li{margin:5px 0}
 .path-list li > span{color:var(--muted)}
+
+/* 처음 화면(index.html): 인사말 + 메뉴별 입구 카드 */
+.hero.welcome{padding:72px 0 28px}
+.welcome-menu{padding-top:0}
+.welcome-first{margin-top:22px}

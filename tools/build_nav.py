@@ -26,10 +26,10 @@ ROOT = Path(__file__).resolve().parents[1]
 # ("hr",) = 구분선, ("h", 한국어, English) = 메뉴 안의 작은 제목, ("col",) = 여기서부터 다음 열 (긴 메뉴를 옆으로 나눔)
 NAV = [
     ("menu", 'introMenu', '소개', 'Intro', [
-        ('index.html', '사이트 소개', 'About this site', '전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기', 'What is here · reading orders · simulations'),
+        ('about.html', '사이트 소개', 'About this site', '전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기', 'What is here · reading orders · simulations'),
         ('ontology.html', '온톨로지 입문', 'Ontology primer', '개념 · 구성요소 · RDF · OWL · Cypher · 식별자', 'Concepts · building blocks · RDF · OWL · Cypher · identifiers'),
         ('hr',),
-        ('index.html#why', '왜 온톨로지인가', 'Why ontology', '만든 이의 생각', 'A personal view'),
+        ('about.html#why', '왜 온톨로지인가', 'Why ontology', '만든 이의 생각', 'A personal view'),
     ]),
     ("menu", 'powerMenu', '전력·에너지', 'Power · Energy', [
         ('h', '전력망 온톨로지', 'Power grid ontology'),
