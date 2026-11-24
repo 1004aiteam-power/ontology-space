@@ -319,7 +319,7 @@ h2::before{content:"✦ ";color:var(--accent);font-size:.8em}
 
 /* 페이지 · 메뉴 아이콘 */
 .h1ic{margin-right:.15em}
-.menu a[href="index.html"]>span[lang]::before{content:"🏠 "}
+.menu a[href="about.html"]>span[lang]::before{content:"🏠 "}
 .menu a[href="ontology.html"]>span[lang]::before{content:"📚 "}
 .menu a[href="grid.html"]>span[lang]::before{content:"⚡ "}
 .menu a[href="project.html"]>span[lang]::before{content:"🐍 "}
@@ -363,9 +363,24 @@ h2::before{content:"✦ ";color:var(--accent);font-size:.8em}
 .menu-btn[aria-controls="simMenu"]>span[lang]::before{content:"🎮 "}
 .menu-btn[aria-controls="aiMenu"]>span[lang]::before{content:"🤖 "}
 .menu a[href="grid.html#flisr"]>span[lang]::before{content:"🔌 "}
-.menu a[href="index.html#why"]>span[lang]::before{content:"💭 "}
+.menu a[href="about.html#why"]>span[lang]::before{content:"💭 "}
 .menu a[href="ai.html#graphrag"]>span[lang]::before{content:"🕸️ "}
 .menu a[href="ai.html#agent"]>span[lang]::before{content:"🕵️ "}
 .menu a[href="physical-ai.html#lab"]>span[lang]::before{content:"🚗 "}
 .menu a[href^="vpp.html#"]>span[lang]::before{content:"▫️ "}
 nav>a[href="bidding.html"]>span[lang]::before{content:"💹 "}
+
+/* 여러 페이지에서 반복되던 인라인 style="…" 을 옮긴 작은 클래스. 인라인 스타일과 똑같이 다른 규칙보다 우선하도록 !important */
+.m-0{margin:0 !important}
+.mt-14{margin-top:14px !important}
+.inline{display:inline !important}
+.span-all{grid-column:1/-1 !important}
+.fw-600{font-weight:600 !important}
+.fw-700{font-weight:700 !important}
+.fs-15{font-size:15px !important}
+.fs-16{font-size:16px !important}
+.bg-accent{background:var(--accent) !important}
+/* 범례의 색 견본 (시뮬레이션 그림과 같은 색) */
+.sw-blue{background:#2a78d6 !important}
+.sw-orange{background:#d95926 !important}
+.sw-green{background:#199e70 !important}

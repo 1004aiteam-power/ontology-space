@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/site.css?v=9e26c77b">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
 <link rel="stylesheet" href="assets/css/neat.css?v=a7a62fb5">
 <link rel="stylesheet" href="assets/css/physai.css?v=0ad6d0ce">
@@ -283,7 +283,7 @@
   <p lang="ko">로봇은 <b>MJCF</b>라는 XML 파일로 몸체·관절·모터를 적고, 파이썬에서 매 스텝 모터 명령을 넣으며 시뮬레이션합니다. 아래는 경첩에 달린 막대를 0.3 rad 기울여 놓고 간단한 제어 정책으로 다시 세우는 예입니다.</p>
   <p lang="en">A robot is described in an XML file called <b>MJCF</b> (bodies, joints, motors), then simulated from Python by setting motor commands at every step. Below, a hinged pole starts tilted by 0.3 rad and a simple control policy stands it back up.</p>
   <div class="grid two">
-<pre style="margin:0"><code>&lt;!-- pole.xml (MJCF) --&gt;
+<pre class="m-0"><code>&lt;!-- pole.xml (MJCF) --&gt;
 &lt;mujoco&gt;
   &lt;option timestep="0.002"/&gt;
   &lt;worldbody&gt;
@@ -298,7 +298,7 @@
     &lt;motor joint="hinge" ctrlrange="-5 5"/&gt;
   &lt;/actuator&gt;
 &lt;/mujoco&gt;</code></pre>
-<pre style="margin:0"><code class="language-python">import mujoco   # pip install mujoco
+<pre class="m-0"><code class="language-python">import mujoco   # pip install mujoco
 
 model = mujoco.MjModel.from_xml_path("pole.xml")
 data = mujoco.MjData(model)
@@ -439,7 +439,7 @@ print(data.qpos[0])           # → 0.0000 (똑바로 섬)</code></pre>
 
   <h3><span lang="ko">학습 곡선</span><span lang="en">Learning curve</span></h3>
   <div class="panel chart-box">
-    <div class="chart-legend"><span><i style="background:#2a78d6"></i><span lang="ko">세대 최고 적합도</span><span lang="en">Best fitness</span></span><span><i style="background:#eb6834"></i><span lang="ko">세대 평균 적합도</span><span lang="en">Mean fitness</span></span></div>
+    <div class="chart-legend"><span><i class="sw-blue"></i><span lang="ko">세대 최고 적합도</span><span lang="en">Best fitness</span></span><span><i style="background:#eb6834"></i><span lang="ko">세대 평균 적합도</span><span lang="en">Mean fitness</span></span></div>
     <canvas id="chart" aria-label="fitness by generation"></canvas>
     <div id="chartTip" hidden></div>
     <p class="meta" lang="ko">적합도 = 트랙 한 바퀴를 1000점으로 정규화한 전진 거리 + 완주 시 남은 시간 보너스 (2바퀴 완주 ≈ 2500~3500)</p>
@@ -485,10 +485,10 @@ print(data.qpos[0])           # → 0.0000 (똑바로 섬)</code></pre>
     <tr><td><span lang="ko">일반화</span><span lang="en">Generalisation</span></td><td><span lang="ko">없음</span><span lang="en">None</span></td><td><span lang="ko">도메인 랜덤화, 센서 잡음, 처음 보는 트랙 평가</span><span lang="en">Domain randomisation, sensor noise, unseen-track evaluation</span></td></tr>
   </table></div>
   <p class="meta"><span lang="ko">코드</span><span lang="en">Code</span>: <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/neat.js">neat.js</a> (NEAT) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/sim.js">sim.js</a> (<span lang="ko">트랙·차량·센서</span><span lang="en">track · car · sensors</span>) · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/assets/physai/app.js">app.js</a> (<span lang="ko">화면</span><span lang="en">UI</span>)</p>
-  <div class="card" style="margin-top:14px"><h4><span lang="ko">같은 NEAT로 하는 두 번째 예제: 스네이크</span><span lang="en">Second example with the same NEAT: Snake</span></h4>
+  <div class="card mt-14"><h4><span lang="ko">같은 NEAT로 하는 두 번째 예제: 스네이크</span><span lang="en">Second example with the same NEAT: Snake</span></h4>
     <p lang="ko">조향(연속값) 대신 <b>세 행동 중 하나를 고르는</b> 문제입니다. 뱀 150마리가 각자의 판에서 동시에 게임하며 먹이를 쫓고 제 몸을 피하는 법을 진화로 배웁니다. <a href="neat-snake.html">스네이크 실행하기 →</a></p>
     <p lang="en">Instead of continuous steering, the network <b>picks one of three actions</b>. 150 snakes play at once on their own boards and evolve to chase food and avoid their own bodies. <a href="neat-snake.html">Run Snake →</a></p></div>
-  <div class="card" style="margin-top:14px"><h4><span lang="ko">같은 NEAT로 하는 세 번째 예제: 드론</span><span lang="en">Third example with the same NEAT: drones</span></h4>
+  <div class="card mt-14"><h4><span lang="ko">같은 NEAT로 하는 세 번째 예제: 드론</span><span lang="en">Third example with the same NEAT: drones</span></h4>
     <p lang="ko">가만히 있으면 떨어지는 몸을 다루는 문제입니다. 드론 150대가 좌우 프로펠러 추력 두 개만으로 <b>균형을 잡으면서 경유점을 차례로 통과하는 법</b>을 진화로 배웁니다. 바람 없이 배운 드론에 옆바람을 불어 보면, 훈련한 환경과 다른 환경에서 어떻게 되는지도 볼 수 있습니다. <a href="neat-drone.html">드론 실행하기 →</a></p>
     <p lang="en">Here the body falls if it does nothing. 150 drones evolve to <b>keep their balance and fly through waypoints in order</b> using only the thrust of two propellers. Add a side wind to drones trained without one and you can see what happens outside the conditions they were trained in. <a href="neat-drone.html">Run Drone →</a></p></div>
 </section>

@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/site.css?v=9e26c77b">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
 <link rel="stylesheet" href="assets/css/eco.css?v=01776260">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
@@ -200,8 +200,8 @@
   </div>
   <div class="ctrl">
     <span class="meta"><span lang="ko">접시를 눌러 넣기:</span><span lang="en">Click the dish to add:</span></span>
-    <button data-add="herb" class="add-btn"><i style="background:#199e70"></i><span lang="ko">초식 3마리</span><span lang="en">3 herbivores</span></button>
-    <button data-add="carn" class="add-btn"><i style="background:#d95926"></i><span lang="ko">육식 3마리</span><span lang="en">3 carnivores</span></button>
+    <button data-add="herb" class="add-btn"><i class="sw-green"></i><span lang="ko">초식 3마리</span><span lang="en">3 herbivores</span></button>
+    <button data-add="carn" class="add-btn"><i class="sw-orange"></i><span lang="ko">육식 3마리</span><span lang="en">3 carnivores</span></button>
     <button data-add="food" class="add-btn"><i style="background:#c98500"></i><span lang="ko">먹이 한 줌</span><span lang="en">A pinch of food</span></button>
     <label class="speed-ctl"><span lang="ko">먹이 자라는 속도</span><span lang="en">Food growth</span>
       <input type="range" id="regrow" min="0.5" max="4" step="0.1" value="2.2" aria-label="food growth"><output id="regrowOut"></output></label>
@@ -215,15 +215,15 @@
     <canvas id="dish" aria-label="culture dish"></canvas>
       <div class="panel chart-box eco-mini">
         <b><span lang="ko">개체수 · 최근 3,000틱</span><span lang="en">Population · last 3,000 ticks</span></b>
-        <div class="chart-legend"><span><i style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">Food</span></span><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
+        <div class="chart-legend"><span><i style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">Food</span></span><span><i class="sw-green"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i class="sw-orange"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span></div>
         <canvas id="liveChart" class="eco-chart mini" aria-label="live population chart"></canvas>
         <div id="liveChartTip" class="eco-tip" hidden></div>
       </div>
   </div>
   <div class="sim-wrap eco-below">
     <p class="meta legend-line">
-      <span><i class="dot" style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">herbivore</span></span>
-      <span><i class="dot" style="background:#d95926"></i><span lang="ko">육식 세포 (벌린 입 = 진행 방향, 가운데 점 = 소화 중)</span><span lang="en">carnivore (open mouth = heading, dark dot = digesting)</span></span>
+      <span><i class="dot sw-green"></i><span lang="ko">초식 세포</span><span lang="en">herbivore</span></span>
+      <span><i class="dot sw-orange"></i><span lang="ko">육식 세포 (벌린 입 = 진행 방향, 가운데 점 = 소화 중)</span><span lang="en">carnivore (open mouth = heading, dark dot = digesting)</span></span>
       <span><i class="dot fade"></i><span lang="ko">옅고 작은 육식 = 배고픔 · ✕ = 죽은 육식 (굶주림·수명)</span><span lang="en">pale, small carnivore = hungry · ✕ = a carnivore died (starvation or age)</span></span>
       <span><i class="sq" style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">food</span></span>
       <span><i class="dot sed"></i><span lang="ko">피난처 (침전물)</span><span lang="en">refuge (sediment)</span></span>
@@ -235,7 +235,7 @@
   <p class="meta" lang="ko">초식이 늘면 → 먹을 것이 많아진 육식이 늘고 → 초식이 줄면 → 굶은 육식이 줄고 → 다시 초식이 늘어나는 순서로 돕니다. 한 주기가 대략 1만 틱이라 배속 16× 이상으로 보면 잘 보입니다.</p>
   <p class="meta" lang="en">Herbivores rise → well-fed carnivores rise → herbivores fall → starving carnivores fall → herbivores rise again. One cycle takes roughly 10,000 ticks, so watch at 16× or faster.</p>
   <div class="panel chart-box">
-    <div class="chart-legend"><span><i style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">Food</span></span><span><i style="background:#199e70"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i style="background:#d95926"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span><span class="season-key"><i class="sk"></i><span lang="ko">배경 띠 = 계절 (봄 · 여름 · 가을 · 겨울)</span><span lang="en">background bands = seasons</span></span></div>
+    <div class="chart-legend"><span><i style="background:#c98500"></i><span lang="ko">먹이</span><span lang="en">Food</span></span><span><i class="sw-green"></i><span lang="ko">초식 세포</span><span lang="en">Herbivores</span></span><span><i class="sw-orange"></i><span lang="ko">육식 세포</span><span lang="en">Carnivores</span></span><span class="season-key"><i class="sk"></i><span lang="ko">배경 띠 = 계절 (봄 · 여름 · 가을 · 겨울)</span><span lang="en">background bands = seasons</span></span></div>
     <canvas id="popChart" class="eco-chart" aria-label="population chart"></canvas>
     <div id="popChartTip" class="eco-tip" hidden></div>
     <details><summary><span lang="ko">표로 보기 (500틱마다, 최근 30개)</span><span lang="en">View as table (every 500 ticks, last 30)</span></summary><div class="tbl"><table id="histTable"></table></div></details>
@@ -262,8 +262,8 @@
     <!-- 위쪽 화살표: 먹히는 쪽 → 먹는 쪽 (+) -->
     <path d="M190 128 C 250 60, 300 60, 350 122" fill="none" stroke="#199e70" stroke-width="2.5" marker-end="url(#ah)"/>
     <path d="M470 128 C 530 60, 580 60, 630 122" fill="none" stroke="#d95926" stroke-width="2.5" marker-end="url(#ah)"/>
-    <text x="260" y="58" text-anchor="middle" style="font-weight:600" lang="ko">먹이를 먹으면 → 초식 늘어남 (+)</text><text x="260" y="58" text-anchor="middle" style="font-weight:600" lang="en">food eaten → more herbivores (+)</text>
-    <text x="540" y="58" text-anchor="middle" style="font-weight:600" lang="ko">초식을 먹으면 → 육식 늘어남 (+)</text><text x="540" y="58" text-anchor="middle" style="font-weight:600" lang="en">herbivores eaten → more carnivores (+)</text>
+    <text class="fw-600" x="260" y="58" text-anchor="middle" lang="ko">먹이를 먹으면 → 초식 늘어남 (+)</text><text class="fw-600" x="260" y="58" text-anchor="middle" lang="en">food eaten → more herbivores (+)</text>
+    <text class="fw-600" x="540" y="58" text-anchor="middle" lang="ko">초식을 먹으면 → 육식 늘어남 (+)</text><text class="fw-600" x="540" y="58" text-anchor="middle" lang="en">herbivores eaten → more carnivores (+)</text>
     <!-- 아래쪽 화살표: 먹는 쪽 → 먹히는 쪽 (−) -->
     <path d="M350 206 C 300 262, 250 262, 190 210" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ah)"/>
     <path d="M630 206 C 580 262, 530 262, 470 210" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ah)"/>
@@ -273,11 +273,11 @@
     <rect x="30" y="128" width="160" height="78" rx="12" fill="var(--surface)" stroke="#c98500" stroke-width="2.5"/>
     <rect x="310" y="128" width="160" height="78" rx="12" fill="var(--surface)" stroke="#199e70" stroke-width="2.5"/>
     <rect x="590" y="128" width="160" height="78" rx="12" fill="var(--surface)" stroke="#d95926" stroke-width="2.5"/>
-    <text x="110" y="160" text-anchor="middle" style="font-weight:700;font-size:16px" lang="ko">먹이</text><text x="110" y="160" text-anchor="middle" style="font-weight:700;font-size:16px" lang="en">Food</text>
+    <text class="fw-700 fs-16" x="110" y="160" text-anchor="middle" lang="ko">먹이</text><text class="fw-700 fs-16" x="110" y="160" text-anchor="middle" lang="en">Food</text>
     <text x="110" y="184" text-anchor="middle" class="muted" lang="ko">빈 자리만큼 다시 자람</text><text x="110" y="184" text-anchor="middle" class="muted" lang="en">regrows in empty space</text>
-    <text x="390" y="160" text-anchor="middle" style="font-weight:700;font-size:16px" lang="ko">초식 세포</text><text x="390" y="160" text-anchor="middle" style="font-weight:700;font-size:16px" lang="en">Herbivores</text>
+    <text class="fw-700 fs-16" x="390" y="160" text-anchor="middle" lang="ko">초식 세포</text><text class="fw-700 fs-16" x="390" y="160" text-anchor="middle" lang="en">Herbivores</text>
     <text x="390" y="184" text-anchor="middle" class="muted" lang="ko">먹이 → 에너지 → 분열</text><text x="390" y="184" text-anchor="middle" class="muted" lang="en">eat food, divide</text>
-    <text x="670" y="160" text-anchor="middle" style="font-weight:700;font-size:16px" lang="ko">육식 세포</text><text x="670" y="160" text-anchor="middle" style="font-weight:700;font-size:16px" lang="en">Carnivores</text>
+    <text class="fw-700 fs-16" x="670" y="160" text-anchor="middle" lang="ko">육식 세포</text><text class="fw-700 fs-16" x="670" y="160" text-anchor="middle" lang="en">Carnivores</text>
     <text x="670" y="184" text-anchor="middle" class="muted" lang="ko">초식 → 에너지 → 분열</text><text x="670" y="184" text-anchor="middle" class="muted" lang="en">eat prey, divide</text>
     <!-- 피난처 -->
     <rect x="300" y="300" width="180" height="44" rx="10" fill="var(--accent-soft)" stroke="var(--muted)" stroke-dasharray="4 4"/>

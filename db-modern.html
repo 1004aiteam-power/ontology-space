@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/site.css?v=9e26c77b">
 <link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
 <link rel="stylesheet" href="assets/css/db.css?v=ad1e0d4d">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
@@ -192,7 +192,7 @@
   <p lang="ko">PostgREST · Supabase · Hasura 같은 도구는 DB의 <b>표 구조를 읽어 REST(또는 GraphQL) API를 자동으로 만들어</b> 줍니다. 서비스 코드를 짜지 않고, 주소의 <code>type=eq.transformer</code> 같은 조건이 SQL로 번역됩니다. 주소를 고쳐 보내 보세요.</p>
   <p lang="en">Tools such as PostgREST, Supabase and Hasura <b>read the DB's table structure and generate a REST (or GraphQL) API automatically</b>. No service code is written; conditions in the address, like <code>type=eq.transformer</code>, are translated to SQL. Edit the address and send it.</p>
   <div class="net-presets" id="pPresets" role="group" aria-label="examples"></div>
-  <div class="net-form"><label style="grid-column:1/-1"><span lang="ko">GET 주소</span><span lang="en">GET address</span><input id="pUrl" autocomplete="off" spellcheck="false"></label></div>
+  <div class="net-form"><label class="span-all"><span lang="ko">GET 주소</span><span lang="en">GET address</span><input id="pUrl" autocomplete="off" spellcheck="false"></label></div>
   <div class="http-grid">
     <div><h3><span lang="ko">번역된 SQL</span><span lang="en">The translated SQL</span></h3><pre class="m-pre" id="pSql"></pre></div>
     <div><h3 id="pStatus"></h3><pre class="m-pre g-out" id="pRes"></pre></div>
@@ -206,7 +206,7 @@
   <p lang="ko">에이전트는 자연어 질문을 받아 SQL <b>초안</b>을 만들고, 도구(MCP 등)를 통해 실행합니다. 초안은 틀리거나, 프롬프트 인젝션에 속아 위험할 수 있으므로 <b>실행 전에 점검</b>합니다: 문장 하나 · SELECT만 · 허용된 표만 · 행 수 상한. 질문을 골라 보세요. (초안을 만드는 부분은 LLM이 아니라 <b>규칙으로 흉내 낸 대역</b>입니다.)</p>
   <p lang="en">An agent takes a natural-language question, writes a SQL <b>draft</b> and runs it through a tool (MCP and the like). A draft can be wrong, or dangerous if prompt injection fooled the agent, so it is <b>checked before running</b>: one statement, SELECT only, allow-listed tables, a row cap. Pick a question. (The draft step is a <b>rule-based stand-in</b>, not an LLM.)</p>
   <div class="net-presets" id="aPresets" role="group" aria-label="questions"></div>
-  <div class="net-form"><label style="grid-column:1/-1"><span lang="ko">질문</span><span lang="en">Question</span><input id="aQ" autocomplete="off" spellcheck="false"></label></div>
+  <div class="net-form"><label class="span-all"><span lang="ko">질문</span><span lang="en">Question</span><input id="aQ" autocomplete="off" spellcheck="false"></label></div>
   <ol class="ag-steps">
     <li><h4><span lang="ko">① SQL 초안 (LLM 대역)</span><span lang="en">① Draft SQL (LLM stand-in)</span></h4><pre class="m-pre" id="aDraft"></pre></li>
     <li><h4><span lang="ko">② 안전 점검 (guardrail)</span><span lang="en">② Safety check (guardrail)</span></h4><div id="aGuard"></div></li>

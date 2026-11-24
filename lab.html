@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/site.css?v=9e26c77b">
 <link rel="stylesheet" href="assets/css/lab.css?v=44c10a36">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <script src="assets/site.js?v=d70a462d" defer></script>
@@ -218,8 +218,8 @@
   <p class="sub" lang="ko">위에서 고른 데이터를 그래프로 그립니다. 노드는 개체, 화살표는 관계(예: <code>:EQUIPMENT_CONTAINER</code>)입니다. 단자(Terminal)를 끄면 설비와 노드를 점선으로 바로 잇습니다.</p>
   <p class="sub" lang="en">The selected dataset drawn as a graph: nodes are individuals, arrows are relationships (e.g. <code>:EQUIPMENT_CONTAINER</code>). With Terminals hidden, equipment links straight to nodes with dashed lines.</p>
   <div class="easy"><b>💡 <span lang="ko">쉽게 말하면</span><span lang="en">In plain words</span></b><p lang="ko">데이터를 <b>마인드맵</b>처럼 그린 그림입니다. 점 하나가 사물(변전소, 차단기, 노드 등), 화살표가 "~에 속한다", "~에 연결된다" 같은 관계입니다. 색은 종류이고, 점을 누르면 그 사물의 속성과 관계가 모두 나옵니다. 마우스 휠로 확대해 보세요.</p><p lang="en">The data drawn like a <b>mind map</b>: each dot is a thing (substation, breaker, node…), each arrow a relationship such as "belongs to" or "connects to". Colour shows the kind; click a dot to see all its properties and relationships. Scroll to zoom.</p></div>
-  <div class="layers" id="layers"><span id="legend" class="layers" style="margin:0"></span>
-    <span class="lab-bar" style="margin:0"><button id="relayout">↻ <span lang="ko">다시 배치</span><span lang="en">Re-layout</span></button></span></div>
+  <div class="layers" id="layers"><span id="legend" class="layers m-0"></span>
+    <span class="lab-bar m-0"><button id="relayout">↻ <span lang="ko">다시 배치</span><span lang="en">Re-layout</span></button></span></div>
   <p class="meta" lang="ko"><b>기타</b>(회색)는 위의 다른 묶음에 들지 않는 개체입니다. 이 데이터에서는 <b>기준 전압</b>(<code>BaseVoltage</code>)이 해당합니다. 154 kV · 22.9 kV 같은 전압 등급을 나타내는 개체로, 전압 레벨 · 선로 · 변압기 권선단이 <code>:BASE_VOLTAGE</code> 관계로 가리킵니다. 범례의 이름에 마우스를 올리면 그 묶음에 속한 클래스가 보입니다.</p>
   <p class="meta" lang="en"><b>Other</b> (grey) holds individuals that fit none of the groups above. In these datasets that is the <b>base voltage</b> (<code>BaseVoltage</code>): an individual standing for a voltage class such as 154 kV or 22.9 kV, which voltage levels, lines and transformer ends point to with <code>:BASE_VOLTAGE</code>. Hover a legend name to see the classes in that group.</p>
   <div id="graph" role="img" aria-label="knowledge graph"></div>

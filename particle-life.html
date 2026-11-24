@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
 <!-- /head:meta -->
-<link rel="stylesheet" href="assets/site.css?v=32356da7">
+<link rel="stylesheet" href="assets/site.css?v=9e26c77b">
 <link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
 <link rel="stylesheet" href="assets/css/plife.css?v=2ef3be8e">
 <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
@@ -234,10 +234,10 @@
           <button id="plZero"><span lang="ko">모두 0</span><span lang="en">All zero</span></button>
         </div>
         <p class="pl-key"><span><i style="background:rgb(42,120,214)"></i><span lang="ko">끌림 (+)</span><span lang="en">attract (+)</span></span><span><i style="background:rgb(217,89,38)"></i><span lang="ko">밀침 (−)</span><span lang="en">repel (−)</span></span></p>
-        <p class="meta" lang="ko" data-only="living" hidden>표의 값은 지금 살아 있는 입자들의 <b style="display:inline">유전자 평균</b>입니다. 아무도 고치지 않아도 세대가 지나면서 바뀝니다. <b style="display:inline">굵은 테두리</b>는 먹이 색 칸, <b style="display:inline">점선 테두리</b>는 포식자 색 칸입니다. 칸을 누르면 그 색 입자 모두의 유전자를 0.25씩 바꿔 끼어들 수 있고, 그 뒤는 다시 진화에 맡겨집니다.</p>
-        <p class="meta" lang="en" data-only="living" hidden>The values are the <b style="display:inline">mean genes</b> of the particles alive right now. They change over the generations with nobody editing them. A <b style="display:inline">thick border</b> marks the prey column, a <b style="display:inline">dashed border</b> the predator column. Clicking a cell shifts that gene by 0.25 in every particle of the colour — an intervention, after which evolution takes over again.</p>
-        <p class="meta" lang="ko" data-only="fixed"><b style="display:inline">가로줄의 색이 세로줄의 색에게</b> 느끼는 힘입니다. 칸을 누르면 0.25씩 올라가고, Shift를 누른 채 누르거나 오른쪽 단추로 누르면 내려갑니다. 화살표 키 ↑ ↓ 로도 바꿀 수 있습니다. <b style="display:inline">표 전체 새로 뽑기</b>는 모든 칸을 한꺼번에 새 값으로 바꾸고, 입자는 지금 자리에서 그대로 새 규칙을 따릅니다.</p>
-        <p class="meta" lang="en" data-only="fixed">The force <b style="display:inline">the row colour feels towards the column colour</b>. Click a cell to raise it by 0.25; Shift-click or right-click to lower it. The ↑ ↓ arrow keys work too. <b style="display:inline">Redraw the whole table</b> replaces every cell at once; the particles carry on from where they are under the new rules.</p>
+        <p class="meta" lang="ko" data-only="living" hidden>표의 값은 지금 살아 있는 입자들의 <b class="inline">유전자 평균</b>입니다. 아무도 고치지 않아도 세대가 지나면서 바뀝니다. <b class="inline">굵은 테두리</b>는 먹이 색 칸, <b class="inline">점선 테두리</b>는 포식자 색 칸입니다. 칸을 누르면 그 색 입자 모두의 유전자를 0.25씩 바꿔 끼어들 수 있고, 그 뒤는 다시 진화에 맡겨집니다.</p>
+        <p class="meta" lang="en" data-only="living" hidden>The values are the <b class="inline">mean genes</b> of the particles alive right now. They change over the generations with nobody editing them. A <b class="inline">thick border</b> marks the prey column, a <b class="inline">dashed border</b> the predator column. Clicking a cell shifts that gene by 0.25 in every particle of the colour — an intervention, after which evolution takes over again.</p>
+        <p class="meta" lang="ko" data-only="fixed"><b class="inline">가로줄의 색이 세로줄의 색에게</b> 느끼는 힘입니다. 칸을 누르면 0.25씩 올라가고, Shift를 누른 채 누르거나 오른쪽 단추로 누르면 내려갑니다. 화살표 키 ↑ ↓ 로도 바꿀 수 있습니다. <b class="inline">표 전체 새로 뽑기</b>는 모든 칸을 한꺼번에 새 값으로 바꾸고, 입자는 지금 자리에서 그대로 새 규칙을 따릅니다.</p>
+        <p class="meta" lang="en" data-only="fixed">The force <b class="inline">the row colour feels towards the column colour</b>. Click a cell to raise it by 0.25; Shift-click or right-click to lower it. The ↑ ↓ arrow keys work too. <b class="inline">Redraw the whole table</b> replaces every cell at once; the particles carry on from where they are under the new rules.</p>
       </div>
       <div id="plStats"></div>
       <div class="panel chart-box" data-only="living" hidden>
