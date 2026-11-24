@@ -10,6 +10,8 @@
 //  - 세포마다 id · 부모 id(parent) · 생긴 방법(origin) · 태어난 틱(born)을 남기고, 사건(events)에도 관련 세포 id를 적는다
 //    → 혈통·포식 관계를 그래프(온톨로지)로 옮길 수 있음 (assets/eco/eco-graph.js). 무작위 순서는 바뀌지 않아 결과는 그대로
 
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 export const WORLD = { w: 960, h: 640 };
 
 export const DEFAULTS = {
@@ -51,16 +53,7 @@ export const DEFAULTS = {
 };
 
 // 시드 난수 (mulberry32)
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { rng };
 
 const TAU = Math.PI * 2;
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));

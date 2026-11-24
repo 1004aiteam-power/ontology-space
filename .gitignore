@@ -2,3 +2,6 @@ __pycache__/
 .pytest_cache/
 *.pyc
 node_modules/
+
+# 경로가 잘못 잡힌 임시 스크립트의 결과물 (예: 스크린샷이 undefined/ 에 저장됨)
+undefined/

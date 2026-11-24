@@ -3,8 +3,8 @@
 // 입자 생명 페이지: 입자 화면 · 규칙 표 · 통계. 세계는 두 가지
 //   고정 규칙 세계 (plife.js)      사람이 정한 표 하나로 움직임. 표를 눌러 고친다
 //   살아 있는 세계 (plife-evo.js)  에너지 · 번식 · 죽음 · 유전. 표는 살아 있는 입자들의 유전자 평균이고 스스로 바뀐다
-import { ParticleLife, WORLD, MAX_TYPES } from './plife.js?v=d3a2454c';
-import { LivingWorld } from './plife-evo.js?v=3c166334';
+import { ParticleLife, WORLD, MAX_TYPES } from './plife.js?v=3929b414';
+import { LivingWorld } from './plife-evo.js?v=ffdd15bf';
 import { $, t, css, fit } from '../lib/dom.js?v=3b73d59c';
 
 // 종류 색: 어두운 바탕에서 서로 구분되는 여섯 색. 색만으로 구분하지 않도록 가 · 나 · 다 … 이름을 함께 적는다

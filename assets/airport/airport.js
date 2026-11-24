@@ -17,6 +17,8 @@
 //  기준 좌표에서 활주로는 y = 600, 착륙·이륙 방향은 +x, 터미널은 y = 0 쪽.
 //  북쪽 활주로(0)는 그대로, 남쪽 활주로(1)는 y를 뒤집고, 서쪽 방향 운영이면 x를 뒤집는다.
 
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 export const GEO = {
   rwyY: 600, rwyHalf: 1650, rwyW: 45,              // 활주로: 길이 3,300m, 폭 45m, 두 활주로 간격 1,200m
   thrX: -1650, tdz: 300,                           // 착륙 시단, 시단에서 착지점까지
@@ -70,16 +72,7 @@ export const DEFAULTS = {
 };
 
 // 시드 난수 (mulberry32)
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { rng };
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const NM = 1852;
 const TAU = Math.PI * 2;

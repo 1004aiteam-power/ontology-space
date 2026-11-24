@@ -9,6 +9,8 @@
 //  - 차량은 자기가 지나갈 횡단보도에 보행자가 있으면 양보 (우회전 차량이 주로 해당)
 //  - 신호 방식: 고정 주기 / 감응식 (감지기에 차가 있으면 녹색 연장, 없으면 일찍 넘기고 수요 없는 좌회전은 건너뜀)
 
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 export const GEO = { laneW: 3.5, half: 7, cwNear: 8, cwFar: 12, stop: 13, len: 110 };   // 교차로 가장자리 7m, 횡단보도 8~12m, 정지선 13m
 export const ARMS = ['N', 'E', 'S', 'W'];
 const OUT = { N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] };          // 갈래 바깥 방향 (화면 좌표: y 아래쪽)
@@ -38,16 +40,7 @@ export const DEFAULTS = {
   dt: 0.1
 };
 
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { rng };
 
 const add = (p, q, k = 1) => [p[0] + q[0] * k, p[1] + q[1] * k];
 const rightVec = (d) => [-d[1], d[0]];                                // 진행 방향 d의 오른쪽 (화면 좌표)

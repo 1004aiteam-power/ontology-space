@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // TCP 페이지: 연결 · 전송 · 종료를 순서도로 재생한다 (계산은 tcp.js)
-import { simulate } from './tcp.js?v=b2a9f85f';
+import { simulate } from './tcp.js?v=9c2aa9b6';
 import { $, T, t } from '../lib/dom.js?v=3b73d59c';
 
 const W = 760, XC = 190, XS = 570, TOP = 30;

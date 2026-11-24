@@ -11,6 +11,8 @@
 //    (떠 있기만 해서는 거의 오르지 않음), 경유점 없이 STARVE 초가 지나면 끝
 //  - 경유점 위치는 시드 난수 → 같은 세대의 모든 드론이 같은 코스로 겨룬다
 
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 export const WORLD = { w: 100, h: 70, dt: 1 / 30 };
 export const DRONE = {
   g: 9.8,            // 중력 가속도 (m/s²)
@@ -32,16 +34,7 @@ export const OUTPUT_LABELS = ['왼쪽 추력', '오른쪽 추력'];
 export const OUTPUT_LABELS_EN = ['left thrust', 'right thrust'];
 
 // 시드 난수 (mulberry32) — 같은 시드면 같은 코스
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { rng };
 
 // 코스: 시드로 정해지는 경유점 순서. 필요한 만큼만 만들어 둔다 (모든 드론이 같은 순서를 본다)
 export class Course {

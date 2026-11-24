@@ -5,6 +5,8 @@
 // 단위: 거리 AU, 질량 태양 질량, 시간 년. 이 단위에서 중력 상수 G = 4π².
 // 교육용 단순 모델이다. 구름 속 가스는 입자로 그리지 않고 (1) 별이 자라는 양 (2) 먼지를 끄는 항력 (3) 거대 행성이 빨아들일 재료로만 다룬다.
 
+import { mulberry32 } from '../lib/rng.js?v=73d9551d';
+
 export const G = 4 * Math.PI * Math.PI;
 export const M_EARTH = 3.003e-6;          // 지구 질량 (태양 질량 단위)
 export const M_JUPITER = 9.546e-4;
@@ -38,16 +40,7 @@ export const DEFAULTS = {
 };
 
 // 씨드를 주면 같은 결과가 나오는 난수
-export function rng(seed) {
-  let a = seed >>> 0 || 1;
-  return () => {
-    a = (a + 0x6D2B79F5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export const rng = (seed) => mulberry32((seed >>> 0) || 1);   // 시드 0 은 1 로 (예전 결과 그대로)
 
 export class Nbody {
   constructor(opts = {}) {

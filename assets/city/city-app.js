@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 도시 교통망 페이지: 위에서 본 도시 · 조절 · 대시보드(숫자, 시간 그래프, 자율주행 비교, 출입구) · 자율주행차 따라가기
-import { City, DEFAULTS, GEO, N, PHASES, lanePoint, XS, YS, SPAN } from './city.js?v=d34525a7';
+import { City, DEFAULTS, GEO, N, PHASES, lanePoint, XS, YS, SPAN } from './city.js?v=e4a370a2';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
 
 const SPEEDS = [1, 2, 5, 10, 20];

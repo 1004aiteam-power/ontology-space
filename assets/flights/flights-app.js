@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 세계 항공 교통 페이지: 메르카토르 세계 지도 위의 국내선·국제선 항공기, 낮·밤 경계, 편 정보
-import { buildSchedule, airborne, stateAt, routePoints, subsolar, AIRPORTS, BY_CODE, KINDS } from './flights.js?v=dbd2fe22';
+import { buildSchedule, airborne, stateAt, routePoints, subsolar, AIRPORTS, BY_CODE, KINDS } from './flights.js?v=2e6e3755';
 import { $, t, css, dark } from '../lib/dom.js?v=3b73d59c';
 
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));

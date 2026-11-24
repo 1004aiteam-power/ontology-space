@@ -6,8 +6,9 @@
 //  - 원근 투영: 지면을 비스듬히 내려다보는 카메라. 멀수록 작고 좁게
 //  - 고도 = 그림자와의 거리: 항공기 아래 땅에 그림자를 그리고, 높을수록 그림자가 멀어지고 옅어짐
 //  - 먼 것부터 그리기, 거리에 따라 대기색으로 흐려짐, 시간에 따라 낮·노을·밤 조명
-import { Airport, GEO, CATS, AIRLINES, PROFILE } from './airport.js?v=cda93957';
+import { Airport, GEO, CATS, AIRLINES, PROFILE } from './airport.js?v=2ff79867';
 import { $, t, css } from '../lib/dom.js?v=3b73d59c';
+import { niceStep } from '../lib/chart.js?v=93b999ef';
 
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
@@ -430,7 +431,6 @@ function chartFrame(id) {
   ctx.clearRect(0, 0, cw, ch);
   return { ctx, cw, ch, pad: { l: 36, r: 20, t: 12, b: 24 } };
 }
-function niceStep(max) { const r = max / 4, p = 10 ** Math.floor(Math.log10(r)); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= r); }
 function axes(ctx, pad, cw, ch, ymax, X) {
   const H = ch - pad.t - pad.b, Y = v => pad.t + H * (1 - v / ymax);
   ctx.font = '11px system-ui, sans-serif'; ctx.strokeStyle = css('--line'); ctx.fillStyle = css('--muted'); ctx.lineWidth = 1;

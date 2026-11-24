@@ -2,8 +2,9 @@
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // NEAT Snake 페이지: 150마리가 동시에 진화하며 Snake를 배우는 과정을 브라우저에서 실행·시각화
 import { Population } from './neat.js?v=a16de3e3';   // ?v= 는 tools/build_nav.py 가 파일 내용으로 만듦
-import { Trainer, Snake, GRID, SNAKE, stepSnake, sense, INPUT_LABELS, INPUT_LABELS_EN } from './snake-sim.js?v=da9d5017';
+import { Trainer, Snake, GRID, SNAKE, stepSnake, sense, INPUT_LABELS, INPUT_LABELS_EN } from './snake-sim.js?v=7bc936ab';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
+import { niceStep } from '../lib/chart.js?v=93b999ef';
 import { drawNetwork, SERIES } from './net-view.js?v=7ec0367a';
 
 const SPECIES_COLORS = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767'];
@@ -215,7 +216,6 @@ function drawNet() {
 }
 
 // ---- 학습 곡선: 세대별 한 판 최고 먹이 수 / 평균 먹이 수 ---------------------------------
-function niceStep(max) { const r = max / 5, p = 10 ** Math.floor(Math.log10(r)); return [1, 2, 5, 10].map(m => m * p).find(s => s >= r); }
 function drawChart() {
   const canvas = $('chart'), { ctx, cw, ch } = fit(canvas);
   ctx.clearRect(0, 0, cw, ch);
@@ -225,7 +225,7 @@ function drawChart() {
   const ymax = Math.max(10, ...h.map(r => r.bestScore)) * 1.08, xmax = Math.max(5, h.length - 1);
   const X = i => pad.l + W * i / xmax, Y = v => pad.t + H * (1 - v / ymax);
   ctx.font = '11px system-ui, sans-serif'; ctx.fillStyle = css('--muted'); ctx.strokeStyle = css('--line'); ctx.lineWidth = 1;
-  const st = niceStep(ymax);
+  const st = niceStep(ymax, 5, [1, 2, 5, 10]);
   for (let v = 0; v <= ymax; v += st) {
     ctx.beginPath(); ctx.moveTo(pad.l, Y(v)); ctx.lineTo(pad.l + W, Y(v)); ctx.stroke();
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(v, pad.l - 6, Y(v));

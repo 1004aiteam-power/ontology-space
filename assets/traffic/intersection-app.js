@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 교차로 신호 페이지: 위에서 내려다본 교차로, 신호 현시, 대기열·지체 그래프
-import { Intersection, PHASES, GEO, ARMS, AXIS, pointAt } from './traffic.js?v=3897f5af';
+import { Intersection, PHASES, GEO, ARMS, AXIS, pointAt } from './traffic.js?v=178bf6c1';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
+import { niceStep } from '../lib/chart.js?v=93b999ef';
 
 // 출발 방향별 차량 색 (dataviz 검증: 밝은·어두운 배경 모두 통과)
 const ARM_COL = () => ({ N: dark() ? '#3987e5' : '#2a78d6', E: '#d95926', S: '#199e70', W: '#9085e9' });
@@ -165,7 +166,6 @@ function stats() {
 const cycle = () => 2 * (sim.cfg.fixed.through + sim.cfg.fixed.left) + 4 * (sim.cfg.yellow + sim.cfg.allRed);
 
 // ---- 그래프 (최근 30분) --------------------------------------------------------------
-function niceStep(max) { const r = max / 4, p = 10 ** Math.floor(Math.log10(r)); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= r); }
 const hover = {};
 function lineChart(id, rows, series, unit) {
   const canvas = $(id), { ctx, cw, ch } = fit(canvas);

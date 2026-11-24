@@ -5,7 +5,7 @@
 import { parse } from '../cypher/turtle.js?v=dd7711a6';
 import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
 import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
-import { Recorder, ECO_CYPHER } from './eco-graph.js?v=208ed727';
+import { Recorder, ECO_CYPHER } from './eco-graph.js?v=e1015136';
 import { $, esc } from '../lib/dom.js?v=3b73d59c';
 
 const T = (o) => window.t(o);

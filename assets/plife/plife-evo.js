@@ -9,7 +9,7 @@
 //   3) 유전   규칙 표가 세계에 하나 있는 것이 아니라, 입자마다 자기 가로줄(유전자)을 갖는다.
 //             나뉠 때 자식은 부모의 유전자를 조금 바뀐 채로 물려받는다 → 잘 먹고 잘 피하는 유전자가 늘어난다
 // 화면의 규칙 표는 이제 사람이 정한 값이 아니라 "지금 살아 있는 입자들의 유전자 평균"이다.
-import { WORLD, MAX_TYPES, force, rng } from './plife.js?v=d3a2454c';
+import { WORLD, MAX_TYPES, force, rng } from './plife.js?v=3929b414';
 
 export const CAP = 2600;                 // 입자 수 상한 (배열 크기)
 export const DEFAULTS = {

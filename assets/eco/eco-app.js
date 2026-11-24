@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 단세포 생태계 페이지: 배양 접시 · 개체수 그래프 · 형질 진화
-import { Ecosystem, WORLD } from './ecosim.js?v=61384595';
+import { Ecosystem, WORLD } from './ecosim.js?v=e1ca7073';
 import { $, t, css, dark, fit } from '../lib/dom.js?v=3b73d59c';
+import { niceStep } from '../lib/chart.js?v=93b999ef';
 
 // 계열 색 (dataviz 검증: 밝은·어두운 배경 모두 색각 이상 구분 통과, 먹이는 밝은 배경 대비가 낮아 직접 라벨 + 표 제공)
 const COL = { food: '#c98500', herb: '#199e70', carn: '#d95926' };
@@ -91,7 +92,6 @@ function drawDish() {
 }
 
 // ---- 선 그래프 (개체수 · 형질): 십자선 + 툴팁, 선 끝 직접 라벨 -------------------------------
-function niceStep(max) { const r = max / 4, p = 10 ** Math.floor(Math.log10(r)); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= r); }
 function lineChart(id, rows, series, fmt = (v) => Math.round(v), compact = false, seasons = false) {   // compact: 작은 차트 (직접 라벨 없음), seasons: 계절 띠
   const canvas = $(id), { ctx, cw, ch } = fit(canvas);
   ctx.clearRect(0, 0, cw, ch);

@@ -3,7 +3,7 @@
 // 서버가 동시에 들어온 접속을 처리하는 방식 7가지를 같은 부하로 돌려 비교하는 모형 (1ms 단위로 시간을 진행).
 // 요청 하나 = [CPU 절반 → I/O 대기(디스크 · DB · 느린 클라이언트) → CPU 절반]. 방식마다 "누가 그 요청을 맡고, 기다리는 동안 무엇을 붙들고 있나"가 다르다.
 // 구조의 차이를 보이려는 학습용 모형이며 실제 벤치마크가 아니다. 브라우저 없이 node 로 테스트: tests/net.test.mjs
-import { rng } from './tcp.js?v=b2a9f85f';
+import { rng } from './tcp.js?v=9c2aa9b6';
 
 export const MODELS = ['iter', 'fork', 'thread', 'pool', 'event', 'async', 'multi'];
 export const SPAWN_MS = { fork: 6, thread: 1 };                                            // 프로세스 · 스레드를 만드는 데 드는 CPU 시간 (모형값)

@@ -3,12 +3,11 @@
 // TCP 연결 · 전송 · 종료를 가상으로 돌려 패킷 기록을 만든다: 3-way handshake, 번호(seq/ack), 윈도우, 분실과 재전송, 4-way 종료.
 // 같은 입력(난수 씨앗 포함)이면 항상 같은 결과다. 실제 네트워크가 아니라 학습용 모형이다 (혼잡 제어 · 지연 ACK · 옵션은 생략)
 
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 export const ISN_C = 1000, ISN_S = 5000, SEG = 1000;      // 시작 번호와 세그먼트 크기 (읽기 쉽게 고정)
 
-export function rng(seed) {                                // mulberry32
-  let a = seed >>> 0;
-  return () => { a = (a + 0x6d2b79f5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-}
+export { rng };
 
 /**
  * simulate({ segments, loss, owd, rto, window, seed, drops })

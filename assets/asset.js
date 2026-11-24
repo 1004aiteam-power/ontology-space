@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 전력설비 자산관리 페이지: 위험도 지도(PoF × CoF)와 자산 상세 (⚠ 가상 데이터)
-import { esc, T } from './lib/dom.js?v=3b73d59c';
+import { $, esc, T } from './lib/dom.js?v=3b73d59c';
 (function () {
-  const $ = (s) => document.querySelector(s);
   let D, spare = false, sel = 'AS-TR-0007';
 
   const SHORT = { 'AS-TR-0007': 'M.Tr', 'AS-CB-0123': 'CB154', 'AS-CB-0457': 'CB22', 'AS-LN-0031': 'T/L' };
@@ -36,7 +35,7 @@ import { esc, T } from './lib/dom.js?v=3b73d59c';
       h += `<g class="mx-dot${a.asset_id === sel ? ' sel' : ''}" data-id="${a.asset_id}" tabindex="0" role="button" aria-label="${esc(a.name)}">
         <circle cx="${cx}" cy="${cy}" r="12"/><text x="${cx}" y="${i % 2 ? cy - 17 : cy + 26}" text-anchor="middle" class="mx-lbl">${SHORT[a.asset_id] || a.asset_id}</text></g>`;
     }));
-    $('#matrix').innerHTML = h;
+    $('matrix').innerHTML = h;
   }
 
   function name(id) { const x = D.tasks.find(t => t.task_id === id); return x ? x.name : id; }
@@ -49,7 +48,7 @@ import { esc, T } from './lib/dom.js?v=3b73d59c';
     const fms = D.failureModes.filter(f => { const [k, q] = f.asset_kind.split(':'); return k === a.kind && (!q || a.rating.includes(q)); });
     const wos = D.workOrders.filter(w => w.asset_id === a.asset_id);
     const hiPct = Math.max(0, c.hi);
-    $('#panel').innerHTML = `
+    $('panel').innerHTML = `
       <div class="ap-head"><span class="badge">${esc(a.eam_no)}</span>
         <h3>${esc(a.name)}</h3>
         <p class="ap-sub">${esc(loc ? loc.name : '')} · ${esc(a.manufacturer)} ${esc(a.model)} · ${a.year_made}${T('년 제작', '')}</p></div>
@@ -73,19 +72,19 @@ import { esc, T } from './lib/dom.js?v=3b73d59c';
 
   function drawLists() {
     const an = (id) => D.assets.find(a => a.asset_id === id)?.name || id;
-    $('#overdue').innerHTML = D.overdue.map(o => `<li><span class="chip warn">${T(o.state, o.state === '기록 없음' ? 'No record' : 'Overdue')}</span> ${esc(an(o.asset))} · ${esc(name(o.task))}</li>`).join('');
-    $('#gaps').innerHTML = D.gaps.map(g => { const l = D.locations.find(x => x.location === g); return `<li><span class="chip warn">${T('경고', 'Warning')}</span> ${esc(l.name)} <small>(${T('고장 시 정전', 'outage if failed')} ${l.outageMW} MW)</small></li>`; }).join('');
+    $('overdue').innerHTML = D.overdue.map(o => `<li><span class="chip warn">${T(o.state, o.state === '기록 없음' ? 'No record' : 'Overdue')}</span> ${esc(an(o.asset))} · ${esc(name(o.task))}</li>`).join('');
+    $('gaps').innerHTML = D.gaps.map(g => { const l = D.locations.find(x => x.location === g); return `<li><span class="chip warn">${T('경고', 'Warning')}</span> ${esc(l.name)} <small>(${T('고장 시 정전', 'outage if failed')} ${l.outageMW} MW)</small></li>`; }).join('');
   }
 
   function render() { drawMatrix(); drawPanel(); drawLists(); }
 
   document.addEventListener('DOMContentLoaded', async () => {
     try { D = await (await fetch('assets/data/asset.json')).json(); }
-    catch (e) { $('#panel').textContent = T('데이터를 불러오지 못했습니다.', 'Could not load data.'); return; }
+    catch (e) { $('panel').textContent = T('데이터를 불러오지 못했습니다.', 'Could not load data.'); return; }
     render();
-    $('#matrix').addEventListener('click', e => { const g = e.target.closest('.mx-dot'); if (g) { sel = g.dataset.id; render(); } });
-    $('#matrix').addEventListener('keydown', e => { const g = e.target.closest('.mx-dot'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); sel = g.dataset.id; render(); } });
-    $('#spare').addEventListener('change', e => { spare = e.target.checked; render(); });
+    $('matrix').addEventListener('click', e => { const g = e.target.closest('.mx-dot'); if (g) { sel = g.dataset.id; render(); } });
+    $('matrix').addEventListener('keydown', e => { const g = e.target.closest('.mx-dot'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); sel = g.dataset.id; render(); } });
+    $('spare').addEventListener('change', e => { spare = e.target.checked; render(); });
     document.addEventListener('langchange', render);
   });
 })();

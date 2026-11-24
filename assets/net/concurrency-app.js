@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 동시 접속 처리 페이지: 같은 부하를 7가지 방식으로 돌려 간트 차트와 비교표로 보여 준다 (계산은 concurrency.js)
-import { MODELS, makeLoad, compareAll } from './concurrency.js?v=7f9e372f';
+import { MODELS, makeLoad, compareAll } from './concurrency.js?v=b9a2fe1b';
 import { $, esc, T, t } from '../lib/dom.js?v=3b73d59c';
 
 const INFO = {

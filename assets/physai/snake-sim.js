@@ -9,6 +9,8 @@
 //  - 적합도: 먹이 × 100 + 생존 걸음 × 0.1, 먹이 없이 STARVE 걸음이면 굶어 죽음 (제자리 돌기 방지)
 //  - 먹이 위치는 시드 난수 → 같은 세대의 모든 개체가 같은 판(시드)으로 겨룬다
 
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 export const GRID = { w: 60, h: 60 };
 export const SNAKE = { startLen: 3, starve: 240, maxSteps: 20000 };   // starve: 먹이까지 가장 먼 거리(약 2×60)의 2배
 export const FIT = { food: 100, step: 0.1 };
@@ -18,16 +20,7 @@ export const ACTIONS = ['straight', 'left', 'right'];
 export const DIRS = [{ x: 0, y: -1 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }];
 
 // 시드 난수 (mulberry32) — 같은 시드면 같은 먹이 순서
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { rng };
 
 export class Snake {
   constructor(seed = 1, genome = null) {

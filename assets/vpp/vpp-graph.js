@@ -13,6 +13,7 @@
 // 브라우저(vpp-market.html)와 빌드 스크립트(examples/vpp/build_vpp.mjs), 테스트가 같이 씀
 //
 // ⚠ 모든 숫자는 가상입니다. 회사 · 설비 · 배전선로 · 가격 · 정산 규칙은 개념 설명용이며 실제 제도와 다릅니다.
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
 
 export const VPP = 'https://1004aiteam-power.github.io/ontology-space/vpp#';
 const CIM = 'http://iec.ch/TC57/CIM100#';
@@ -101,7 +102,6 @@ const OWNERS = {
 };
 
 // 결정적 난수 (같은 데이터가 늘 나오도록)
-function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 const r1 = (x) => Math.round(x * 10) / 10, r3 = (x) => Math.round(x * 1000) / 1000;
 
 // ---- 설비 배치 --------------------------------------------------------------------------------------------------

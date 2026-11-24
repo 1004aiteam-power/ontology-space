@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 1004aiteam-power — Ontology Space (https://github.com/1004aiteam-power/ontology-space)
 // 별과 행성의 탄생 페이지: 원반 화면 · 조절 슬라이더 · 통계 · 반장축–질량 그림 · 사건 기록
-import { Nbody, DEFAULTS, M_EARTH, M_JUPITER } from './nbody.js?v=3ecf9bbd';
+import { Nbody, DEFAULTS, M_EARTH, M_JUPITER } from './nbody.js?v=c9bcd8da';
 import { $, t, css, fit } from '../lib/dom.js?v=3b73d59c';
 
 const SPEEDS = [[0.5, 6], [1, 12], [2, 24], [4, 48]];            // [배속, 한 프레임에 몇 단계(1단계 = 0.01년)]

@@ -9,6 +9,8 @@
 //  - 모든 무작위는 시드 난수 → 같은 시드면 같은 일정
 
 // [코드, 한글, 영문, 나라(지역), 위도, 경도, UTC 시차(표준시), 등급 1~3 (1 = 대형 허브)]
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 const RAW = [
   // 한국
   ['ICN', '인천', 'Incheon', 'KR', 37.4602, 126.4407, 9, 1], ['GMP', '김포', 'Gimpo', 'KR', 37.5583, 126.7906, 9, 2], ['CJU', '제주', 'Jeju', 'KR', 33.5113, 126.4930, 9, 2],
@@ -118,16 +120,7 @@ export const KINDS = {
   wide: { ko: '광동체 제트기', en: 'Wide-body jet' }
 };
 
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export { rng };
 
 // ---- 구면 계산 --------------------------------------------------------------------
 const R_EARTH = 6371;

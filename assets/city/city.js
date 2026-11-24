@@ -14,6 +14,8 @@
 //
 // ⚠ 교육용 단순 모델입니다. 실제 교통 설계 · 신호 운영 기준을 대신하지 않습니다.
 
+import { mulberry32 } from '../lib/rng.js?v=73d9551d';
+
 export const N = 7;                         // 교차로 가로 · 세로 개수 (블록 6×6)
 export const GEO = { laneW: 3.5, setback: 11, gate: 95 };
 // 블록 폭(동서) · 높이(남북). 합은 둘 다 660 m (예전 정사각형 110 m × 6과 같은 크기)
@@ -49,16 +51,7 @@ export const DEFAULTS = {
   dt: 0.25
 };
 
-export function rng(seed) {
-  let a = seed >>> 0 || 1;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+export const rng = (seed) => mulberry32((seed >>> 0) || 1);   // 시드 0 은 1 로 (예전 결과 그대로)
 const dirKey = (d) => (d[0] === 1 ? 'E' : d[0] === -1 ? 'W' : d[1] === -1 ? 'N' : 'S');
 const right = (d) => [-d[1], d[0]];
 export function turnOf(dIn, dOut) {

@@ -6,7 +6,7 @@
 import { parse } from '../cypher/turtle.js?v=dd7711a6';
 import { buildGraph } from '../cypher/graph.js?v=3901bd2d';
 import { runCypher, show } from '../cypher/cypher.js?v=429e52a6';
-import { triples, toQuads, turtleBlock, qname, VPPS, VPP_CYPHER, VPP_SCHEMA, LINKED_FILES, RULE } from './vpp-graph.js?v=ee95d81f';
+import { triples, toQuads, turtleBlock, qname, VPPS, VPP_CYPHER, VPP_SCHEMA, LINKED_FILES, RULE } from './vpp-graph.js?v=e775f0f2';
 import { $, esc, css, dark } from '../lib/dom.js?v=3b73d59c';
 
 const T = (o) => window.t(o);

@@ -7,15 +7,14 @@
 // 표가 대칭이 아니어도 된다 (a 는 b 를 쫓는데 b 는 a 에게서 달아남) → 스스로 움직이는 무리가 생긴다.
 // 세계는 위아래 · 좌우가 이어진 도넛 모양(끝에서 나가면 반대쪽으로 들어옴). 단위: 거리 = 세계 단위, 시간 = 초
 
+import { mulberry32 as rng } from '../lib/rng.js?v=73d9551d';
+
 export const WORLD = { w: 240, h: 150 };
 export const MAX_TYPES = 6;
 export const BETA = 0.3;                 // 작용 거리의 이 비율 안쪽에서는 무조건 밀어냄 (입자가 한 점에 겹치지 않게)
 
 // 시드 난수 (mulberry32): 같은 시드면 같은 배치 · 같은 규칙
-export function rng(seed) {
-  let a = seed >>> 0;
-  return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-}
+export { rng };
 
 // 거리(작용 거리에 대한 비율 0~1)와 규칙 값 a 로 정해지는 힘. 음수 = 밀침, 양수 = 끌림
 //   0 … β   : −1 에서 0 으로 (가까울수록 세게 밀어냄, 규칙과 무관)
