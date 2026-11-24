@@ -33,12 +33,18 @@ export function runCode(lang, src) {
       const c = sh('javac', ['Main.java'], d); assert.equal(c.status, 0, `javac failed:\n${c.stderr}\n${src}`);
       const r = sh('java', ['-cp', '.', 'Main'], d); assert.equal(r.status, 0, `java failed:\n${r.stderr}\n${src}`); return r.stdout.replace(/\n$/, '');
     }
+    if (lang === 'rust') {
+      if (!have('rustc')) return null; writeFileSync(join(d, 'main.rs'), src);
+      const c = sh('rustc', ['--edition', '2021', 'main.rs', '-o', 'a.out'], d); assert.equal(c.status, 0, `rustc failed:\n${c.stderr}\n${src}`);
+      assert.ok(!/^warning/m.test(c.stderr), `rustc warns:\n${c.stderr}`);
+      const r = sh('./a.out', [], d); assert.equal(r.status, 0, `rust run failed:\n${r.stderr}\n${src}`); return r.stdout.replace(/\n$/, '');
+    }
     if (lang === 'r') { if (!have('Rscript')) return null; writeFileSync(join(d, 'main.R'), src); const r = sh('Rscript', ['main.R'], d); assert.equal(r.status, 0, `Rscript failed:\n${r.stderr}\n${src}`); return r.stdout.replace(/\n$/, ''); }
     throw new Error('unknown language ' + lang);
   } finally { rmSync(d, { recursive: true, force: true }); }
 }
 
-const PAGES = ['lang-c', 'lang-cpp', 'lang-java', 'lang-r', 'lang-python', 'lang-compare'].filter(p => existsSync(join(root, `${p}.html`)));
+const PAGES = ['lang-c', 'lang-cpp', 'lang-java', 'lang-r', 'lang-python', 'lang-rust', 'lang-compare'].filter(p => existsSync(join(root, `${p}.html`)));
 
 // 1) 페이지의 모든 예제를 다시 실행해 출력이 같은지 확인
 {
@@ -226,9 +232,33 @@ public class Main { public static void main(String[] a) throws Exception { HashM
   } else console.log('- Rscript missing: R vector demo not compared');
 }
 
+// 6-2) Rust 빌림 시연: 모형의 판정이 진짜 rustc 의 오류 코드(또는 실행 출력)와 같다
+{
+  const { SCENARIOS, simulate } = await import('../assets/lang/rown.js');
+  if (have('rustc')) {
+    for (const scn of SCENARIOS) {
+      const d = mkdtempSync(join(tmpdir(), 'rown-'));
+      try {
+        writeFileSync(join(d, 'main.rs'), scn.program);
+        const c = sh('rustc', ['--edition', '2021', 'main.rs', '-o', 'a.out'], d), model = simulate(scn);
+        if (scn.error === null) {
+          assert.equal(c.status, 0, `${scn.id}: compiles\n${c.stderr}`); assert.equal(model.verdict, null, `${scn.id}: the model accepts it too`);
+          const r = sh('./a.out', [], d); assert.equal(r.stdout.trim(), scn.stdout); assert.equal(model.out.join('\n'), scn.stdout, `${scn.id}: the model prints what the program prints`);
+        } else {
+          assert.notEqual(c.status, 0, `${scn.id}: rustc rejects it`); assert.ok(c.stderr.includes(`error[${scn.error}]`), `${scn.id}: rustc reports ${scn.error}:\n${c.stderr.slice(0, 400)}`);
+          assert.equal(model.verdict?.code, scn.error, `${scn.id}: the model stops with the same error code`);
+          assert.equal(scn.steps.at(-1).line, model.snaps.at(-1).line, `${scn.id}: the model stops on the last step`);
+        }
+        const n = scn.program.split('\n').length; for (const st of scn.steps) assert.ok(st.line >= 0 && st.line < n && st.note[0] && st.note[1], `${scn.id}: step text and line`);
+      } finally { rmSync(d, { recursive: true, force: true }); }
+    }
+    console.log(`✓ the Rust borrow demo agrees with real rustc: error codes and outputs (${SCENARIOS.length} scenarios)`);
+  } else console.log('- rustc missing: Rust borrow demo not compared');
+}
+
 // 7) 페이지: 메뉴 · 한영 짝 · 고유한 id · 링크 · 비교 페이지의 다섯 프로그램은 같은 출력
 {
-  const pages = ['lang-c', 'lang-cpp', 'lang-java', 'lang-r', 'lang-python', 'lang-compare'];
+  const pages = ['lang-c', 'lang-cpp', 'lang-java', 'lang-r', 'lang-python', 'lang-rust', 'lang-compare'];
   const known = new Set([...pages, 'git-basics', 'git-branch', 'git-remote', 'git-trouble', 'db-map', 'db-file', 'db-wire', 'db-driver', 'db-orm', 'db-service', 'db-graphql', 'db-modern', 'db-choose', 'concurrency', 'socket', 'http', 'ontology', 'lab', 'index']);
   for (const p of pages) {
     const s = read(`${p}.html`);
@@ -252,6 +282,6 @@ public class Main { public static void main(String[] a) throws Exception { HashM
   const d = [...div.matchAll(/<div class="ex" data-lang="(\w+)"[^>]*>[\s\S]*?<pre class="lout"[^>]*><code>([\s\S]*?)<\/code>/g)].map(m => [m[1], unesc(m[2])]);
   assert.deepEqual(Object.fromEntries(d), { c: '3 -3 -1', cpp: '3 -3 -1', java: '3 -3 -1', r: '3.5 -4 1', python: '3.5 -4 1' }, 'integer division and remainder differ the way the text says');
   // 페이지마다 시연 요소가 있다
-  for (const [p, ids] of Object.entries({ 'lang-c': ['cScn', 'cNext'], 'lang-cpp': ['xScn', 'xNext'], 'lang-java': ['jScn', 'jNext'], 'lang-r': ['rPresets', 'rA'], 'lang-python': ['pyScn', 'pyNext'] })) for (const id of ids) assert.ok(read(`${p}.html`).includes(`id="${id}"`), `${p}: demo element ${id}`);
-  console.log(`✓ the six language pages are well formed; the five programs of the comparison print the same output`);
+  for (const [p, ids] of Object.entries({ 'lang-c': ['cScn', 'cNext'], 'lang-cpp': ['xScn', 'xNext'], 'lang-java': ['jScn', 'jNext'], 'lang-r': ['rPresets', 'rA'], 'lang-python': ['pyScn', 'pyNext'], 'lang-rust': ['rScn', 'rNext'] })) for (const id of ids) assert.ok(read(`${p}.html`).includes(`id="${id}"`), `${p}: demo element ${id}`);
+  console.log(`✓ the seven language pages are well formed; the five programs of the comparison print the same output`);
 }

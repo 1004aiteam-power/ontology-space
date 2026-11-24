@@ -140,6 +140,7 @@ NAV = [
         ('lang-java.html', 'Java', 'Java', 'JVM · 제네릭 · 컬렉션 · 스트림 · 동시성 · equals/hashCode', 'JVM · generics · collections · streams · concurrency · equals/hashCode'),
         ('lang-r.html', 'R', 'R', '벡터화 · NA · data.frame · tidyverse · 통계 모델', 'Vectorisation · NA · data.frame · tidyverse · statistical models'),
         ('lang-python.html', 'Python', 'Python', '객체 모델 · 제너레이터 · 데코레이터 · asyncio · 타입 힌트', 'Object model · generators · decorators · asyncio · type hints'),
+        ('lang-rust.html', 'Rust', 'Rust', '소유권 · 빌림 · 수명 · 트레이트 · 겁 없는 동시성', 'Ownership · borrowing · lifetimes · traits · fearless concurrency'),
         ('hr',),
         ('lang-compare.html', '언어 비교', 'Language comparison', '같은 문제를 5개 언어로 · 무엇을 고를까', 'One task in five languages · how to choose'),
     ]),
