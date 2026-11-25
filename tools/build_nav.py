@@ -56,7 +56,11 @@ NAV = [
         ('bidding.html', '내가 이해한 전력시장', 'The power market, as I understand it', '입찰 · 정산 · 시장 구조를 내가 이해한 대로', 'Bidding, settlement and market structure, as I understand them'),
         ('col',),
         ('h', '산업·전력 통신', 'Industrial & power comms'),
+        ('ot-map.html', '산업·전력 통신 개요', 'Industrial comms overview', 'IT와 OT · 퍼듀 모델 · 규약 지도', 'IT vs OT · the Purdue model · a protocol map'),
         ('ot-modbus.html', 'Modbus', 'Modbus', 'RTU · TCP 프레임 해부 · 가상 인버터 레지스터 읽기 · 쓰기', 'RTU and TCP frames · read and write a virtual inverter'),
+        ('ot-dnp3.html', 'DNP3 · 사건 보고', 'DNP3 and event reporting', '폴링 vs 사건 · ms 시각 기록 · 통신 끊김과 버퍼', 'Polling vs events · ms timestamps · outages and buffers'),
+        ('ot-61850.html', 'IEC 61850 · GOOSE', 'IEC 61850 · GOOSE', '논리 노드 · 객체 참조 · CIM 대응 · 3 ms 트립', 'Logical nodes · object references · CIM mapping · 3 ms trips'),
+        ('ot-der.html', '분산에너지 · VPP 통신', 'DER and VPP communication', 'OpenADR → IEEE 2030.5 → OCPP · Modbus 수요반응', 'Demand response via OpenADR → IEEE 2030.5 → OCPP · Modbus'),
     ]),
     ("menu", 'aiMenu', '온톨로지 × AI', 'Ontology × AI', [
         ('h', '설계실', 'Studio'),

@@ -54,3 +54,86 @@ console.log('✓ the virtual inverter answers reads, applies writes, and returns
 assert.equal(rtuMs(8, 9600).toFixed(2), '9.17'); assert.equal(gapMs(9600).toFixed(2), '4.01'); assert.equal(gapMs(115200), 1.75);
 assert.equal(hex(10), '0A');
 console.log('✓ RS-485 character and silence times');
+
+// ---- DNP3 (ot-dnp3.html) ----
+import { crcDnp, linkFrame, classPollUser, simulate as dnp } from '../assets/ot/dnp3.js';
+{
+  assert.equal(crcDnp([...'123456789'].map(c => c.charCodeAt(0))), 0xea82, 'CRC-16/DNP check value');
+  const f = linkFrame(10, 1, classPollUser(0));
+  assert.deepEqual(f.bytes.slice(0, 8), [0x05, 0x64, 17, 0xc4, 10, 0, 1, 0], 'start bytes, length = 5 + user data, addresses low byte first');
+  assert.equal(f.bytes.length, 10 + 12 + 2, 'header + CRC, then one data block + CRC');
+  assert.equal(f.parts[f.parts.length - 1].to, f.bytes.length);
+  const big = linkFrame(10, 1, Array.from({ length: 20 }, (_, i) => i));
+  assert.equal(big.bytes.length, 10 + 16 + 2 + 4 + 2, 'a CRC after every 16 data bytes');
+  const P = dnp({ mode: 'poll' }), C = dnp({ mode: 'class' }), U = dnp({ mode: 'unsol' });
+  const cb = (r) => r.missed.filter(e => e.p.startsWith('CB')).length;
+  assert.ok(cb(P) >= 2, 'periodic polling misses the 0.4 s trip-and-reclose');
+  assert.equal(dnp({ mode: 'poll', period: 1000 }).missed.filter(e => e.t === 12300 && e.p === 'CB101').length, 1, 'even 1 s polling misses it');
+  for (const r of [C, U]) { assert.equal(r.stats.missed, 0, 'event reporting misses nothing'); assert.equal(r.stats.tsErrMax, 0, 'with the original timestamps'); }
+  assert.ok(U.stats.latAvg < C.stats.latAvg / 5, 'unsolicited reporting is much faster than event polling');
+  assert.ok(P.stats.tsErrMax > 0, 'polling stamps changes with the poll time');
+  const D = dnp({ mode: 'class', down: [20000, 40000] });
+  assert.equal(D.stats.missed, 0, 'events survive a 20 s outage in the buffer');
+  assert.ok(D.stats.latMax > 15000, '…but arrive late');
+  const O = dnp({ mode: 'class', down: [20000, 40000], buf: 3 });
+  assert.ok(O.overflow && O.stats.missed > 0, 'a small buffer overflows and loses events, and says so');
+  assert.ok(!D.overflow);
+  console.log('✓ DNP3: CRC-16/DNP, link frames, polling misses short events, event reporting keeps them with exact times');
+}
+
+// ---- IEC 61850 (ot-61850.html) ----
+import { leaves, ref, mms, goose } from '../assets/ot/iec61850.js';
+{
+  assert.equal(ref('CTRL', 'XCBR1', 'Pos', 'stVal'), 'E1Q1SB1CTRL/XCBR1.Pos.stVal');
+  assert.equal(mms('MEAS', 'MMXU1', 'A', 'phsA.cVal.mag.f', 'MX'), 'E1Q1SB1MEAS/MMXU1$MX$A$phsA$cVal$mag$f');
+  const L = leaves();
+  assert.ok(L.every(l => /^[A-Z]{4}\d$/.test(l.ln) && ['ST', 'MX', 'CO', 'SG'].includes(l.da.fc)), 'logical node names and functional constraints are well formed');
+  assert.equal(new Set(L.map(l => l.ref)).size, L.length, 'every object reference is unique');
+  const g = goose();
+  const after = g.msgs.filter(m => m.st === g.st), gaps = after.slice(1).map((m, i) => m.t - after[i].t);
+  assert.equal(after[0].t, g.tOp, 'GOOSE goes out the moment the trip happens'); assert.equal(after[0].sq, 0);
+  assert.ok(after.every((m, i) => m.sq === i), 'sqNum counts the repeats of the new state');
+  assert.deepEqual(gaps.slice(0, 5), [2, 4, 8, 16, 32], 'repeat intervals double from Tmin');
+  assert.ok(gaps.every(x => x <= 1000) && gaps[gaps.length - 1] === 1000, '…up to the steady interval T0');
+  assert.ok(g.msgs.filter(m => m.st === g.st - 1).every(m => !m.val), 'before the trip, the old state (no trip) is repeated');
+  assert.equal(g.transfer, 0.2); assert.equal(g.alarm, null);
+  let late = 0, never = 0;
+  for (let seed = 1; seed <= 200; seed++) { const r = goose({ loss: 0.5, seed }); if (r.transfer === null) never++; else if (r.transfer > 3) late++; else assert.ok(r.transfer === 0.2 || r.transfer === 2.2, 'within 3 ms only if the first or second copy arrives'); }
+  assert.ok(late > 0 && never === 0, 'with heavy loss some trips are late, but repetition eventually delivers');
+  const cut = goose({ cut: true });
+  assert.equal(cut.tRx, null, 'a cut cable delivers nothing'); assert.ok(cut.alarm !== null, '…and the subscriber raises an alarm when TAL expires');
+  console.log('✓ IEC 61850: object references and MMS names, GOOSE stNum/sqNum and doubling repeats, loss and supervision');
+}
+
+// ---- DER · VPP (ot-der.html) ----
+import { ACTORS, PROTO, EVENT, ESS, messages, series } from '../assets/ot/der.js';
+{
+  const ids = new Set(ACTORS.map(a => a.id));
+  for (const o of [{}, { evseOffline: true }, { lowSoc: true }]) {
+    const L = messages(o);
+    assert.ok(L.every(m => ids.has(m.from) && ids.has(m.to) && m.from !== m.to && PROTO[m.proto]), 'every message has a real sender, receiver and protocol');
+    assert.ok(L.every((m, i) => !i || m.t >= L[i - 1].t), 'messages are in time order');
+    for (const m of L.filter(x => x.req && !x.lost)) assert.ok(L.some(r => r.res === m.req && r.t >= m.t), `request ${m.name} gets a response`);
+  }
+  assert.ok(messages({ evseOffline: true }).some(m => m.proto === 'ocpp' && m.lost), 'offline chargers: OCPP messages are lost');
+  const N = series(), F = series({ evseOffline: true }), S = series({ lowSoc: true });
+  assert.ok(N.perf.pct > 0.95, `normally the target is met (${N.perf.pct})`);
+  assert.ok(F.perf.pct < 0.8 && Math.abs(F.perf.minShed - ESS.pmax) < 1e-6, 'without the chargers only the battery maximum is shed');
+  assert.ok(S.perf.pct < N.perf.pct && S.perf.essKwh <= 0.2 * ESS.kwh + 1e-6, 'a low battery runs out and cannot exceed its energy');
+  for (const r of [N, F, S]) assert.ok(r.rows.every(x => x.ess >= 0 && x.ess <= ESS.pmax + 1e-9 && x.soc >= 0.05 - 1e-9 && (x.target === null ? x.ess === 0 : true)), 'battery limits respected and idle outside the event');
+  assert.ok(N.rows.filter(r => r.target !== null).length === EVENT.end - EVENT.start);
+  console.log('✓ DER · VPP: message chain is consistent; the event is met normally and falls short on failures');
+}
+
+// ---- 개요 (ot-map.html) ----
+import { LEVELS, PROTOCOLS } from '../assets/ot/protocols.js';
+import { existsSync } from 'node:fs';
+{
+  const lv = new Set(LEVELS.map(l => l.n));
+  for (const p of PROTOCOLS) {
+    assert.ok(p.levels.length && p.levels.every(n => lv.has(n) && n !== 3.5), `${p.id}: levels exist and none crosses the DMZ as its home`);
+    if (p.page) assert.ok(existsSync(new URL('../' + p.page, import.meta.url)), `${p.id}: ${p.page} exists`);
+  }
+  assert.equal(new Set(PROTOCOLS.map(p => p.id)).size, PROTOCOLS.length);
+  console.log('✓ protocol map: levels valid, linked pages exist');
+}

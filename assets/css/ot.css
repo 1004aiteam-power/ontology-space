@@ -43,3 +43,79 @@
 .mb-arch .eth{stroke:var(--mb-fc);stroke-width:3}
 .mb-arch .drop{stroke:var(--warm);stroke-width:1.5}
 @media (max-width:999px){ .mb-dev{position:static} }
+
+/* DNP3 페이지 */
+.dn-svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.dn-svg text{font-size:10px;fill:var(--muted)}
+.dn-svg .gx{stroke:var(--line);stroke-width:1}
+.dn-svg text.rl{font-size:10.5px;font-weight:600;fill:var(--text)}
+.dn-ax{stroke:var(--line);stroke-width:1}
+.dn-down{fill:color-mix(in srgb,#d33 10%,transparent)}
+.dn-dl{font-size:10px;fill:#d33}
+.dn-m{stroke-width:1.5}.dn-m.MO{stroke:var(--mb-fc)}.dn-m.OM{stroke:var(--mb-dt)}
+.dn-x{fill:#d33;font-size:11px}
+.dn-miss{stroke:var(--text);stroke-width:1.5;stroke-dasharray:2 1}
+.dn-bad{color:#d33;font-weight:700}
+.ot-grid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1000px){ .ot-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} }
+.mb-regs{min-width:0}
+.mb-f,.mb-dec{min-width:0}
+
+/* IEC 61850 페이지 */
+.td-tree,.td-tree ul{list-style:none;margin:0;padding-left:16px;font-size:13px;line-height:1.7}
+.td-tree{padding-left:0}
+.td-tree ul{border-left:1px dashed var(--line);margin-left:4px}
+.td-tree small{color:var(--muted)}
+.td-ln{color:var(--mb-fc)}
+.td-do{font-weight:600}
+.td-da{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:6px;padding:1px 6px;cursor:pointer}
+.td-da i{font-style:normal;color:var(--muted)}
+.td-da.on{border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.td-ref{font:15px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere;margin:4px 0}
+.td-p{padding:1px 3px;border-radius:4px;background:color-mix(in srgb,var(--c) 20%,transparent);border-bottom:2px solid var(--c)}
+.p0{--c:#8a63d2}.p1{--c:#b8860b}.p2{--c:#2a78d6}.p3{--c:#1f9d6b}.p4{--c:#d95926}
+.td-sw{--c:inherit}.lg i.td-sw.p0{--c:#8a63d2}.lg i.td-sw.p1{--c:#b8860b}.lg i.td-sw.p2{--c:#2a78d6}.lg i.td-sw.p3{--c:#1f9d6b}.lg i.td-sw.p4{--c:#d95926}
+.td-dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:13.5px}
+.td-dl dt{color:var(--muted)}.td-dl dd{margin:0;overflow-wrap:anywhere}
+.gs-f{fill:#d33}.gs-s{fill:#e8912d}.gs-o{fill:var(--mb-fc)}.gs-k{fill:#1f9d6b}
+.gs-l{font-size:10px;fill:var(--text)}
+.gs-m{stroke:var(--muted);stroke-width:1.5}.gs-m.new{stroke:var(--mb-fc);stroke-width:2.5}
+.gs-ok{color:#1f9d6b}
+.vm-dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:13.5px;margin:6px 0}
+.vm-dl dt{color:var(--muted)}.vm-dl dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.mb-regs tr.hit{background:var(--accent-soft)}
+
+/* DER · VPP 통신 페이지 */
+.de-life{stroke:var(--line);stroke-width:1.5;stroke-dasharray:3 3}
+.de-actor{font-size:10.5px;font-weight:700;text-align:center;line-height:1.2;color:var(--text)}
+.de-hit{fill:transparent}
+.de-row{cursor:pointer;outline:none}
+.de-row.on .de-hit,.de-row:focus .de-hit{fill:var(--accent-soft)}
+.de-t{font-size:10px;fill:var(--muted)}
+.dn-svg text.de-n{font-size:10.5px;fill:var(--text)}
+.de-pr{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;color:var(--c);border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.de-body{max-height:220px;overflow:auto}
+.de-ev{fill:color-mix(in srgb,var(--warm) 10%,transparent)}
+.dn-svg text.de-evl{fill:var(--warm);font-weight:700}
+.de-svg{cursor:default}
+.dn-svg polyline{fill:none;stroke-width:2}
+.de-grid{stroke:#2a78d6;stroke-width:2.6!important}.de-base{stroke:var(--muted);stroke-dasharray:5 4}.de-target{stroke:#d33;stroke-dasharray:2 3}
+.de-evl2{stroke:#e8912d}.de-ess{stroke:#1f9d6b}.de-pv{stroke:#b8860b}
+.lg i.de-k-grid{--c:#2a78d6}.lg i.de-k-base{--c:var(--muted)}.lg i.de-k-target{--c:#d33}.lg i.de-k-ev{--c:#e8912d}.lg i.de-k-ess{--c:#1f9d6b}.lg i.de-k-pv{--c:#b8860b}
+.gs-scroll{max-height:320px;overflow-y:auto}
+.os-now{margin:0 0 6px;font-size:14px}
+.lg i.de-k-p1{--c:#c2549d}.lg i.de-k-p2{--c:#2a78d6}.lg i.de-k-p3{--c:#e8912d}.lg i.de-k-p4{--c:#1f9d6b}
+
+/* 산업·전력 통신 개요 페이지 */
+.om-levels{display:grid;gap:4px}
+.om-l{display:grid;grid-template-columns:170px minmax(0,1fr);grid-template-areas:"t c" "s c";gap:2px 10px;text-align:left;font:inherit;color:var(--text);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.om-l b{grid-area:t;font-size:13.5px}
+.om-l small{grid-area:s;color:var(--muted);font-size:12px;line-height:1.35}
+.om-l.dmz{background:repeating-linear-gradient(135deg,var(--surface),var(--surface) 8px,var(--code) 8px,var(--code) 16px)}
+.om-l.on{border-color:var(--accent);background:var(--accent-soft)}
+.om-chips{grid-area:c;display:flex;flex-wrap:wrap;gap:4px;align-content:center}
+.om-chips i{font-style:normal;font-size:11.5px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.om-chips i.on{border-color:var(--accent);color:var(--accent);font-weight:700}
+@media (max-width:640px){ .om-l{grid-template-columns:minmax(0,1fr);grid-template-areas:"t" "s" "c"} }
+.de-svg{min-width:640px}
+.de-msg{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;background:var(--surface)}
