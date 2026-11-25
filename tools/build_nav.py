@@ -54,6 +54,9 @@ NAV = [
         ('hr',),
         ('h', '전력시장', 'Power market'),
         ('bidding.html', '내가 이해한 전력시장', 'The power market, as I understand it', '입찰 · 정산 · 시장 구조를 내가 이해한 대로', 'Bidding, settlement and market structure, as I understand them'),
+        ('col',),
+        ('h', '산업·전력 통신', 'Industrial & power comms'),
+        ('ot-modbus.html', 'Modbus', 'Modbus', 'RTU · TCP 프레임 해부 · 가상 인버터 레지스터 읽기 · 쓰기', 'RTU and TCP frames · read and write a virtual inverter'),
     ]),
     ("menu", 'aiMenu', '온톨로지 × AI', 'Ontology × AI', [
         ('h', '설계실', 'Studio'),
@@ -83,12 +86,16 @@ NAV = [
         ('h', '피지컬 AI', 'Physical AI'),
         ('physical-ai.html', '피지컬 AI 소개', 'About Physical AI', '개념 · 관련 기술 · MuJoCo', 'Concepts · key technologies · MuJoCo'),
     ]),
-    ("menu", 'netMenu', '네트워크 스택', 'Network Stack', [
+    ("menu", 'netMenu', '운영체제·네트워크', 'OS · Network', [
+        ('h', '네트워크 스택', 'Network stack'),
         ('packet.html', '패킷 조립 과정', 'From data to packets', '데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬', 'Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums'),
         ('tcp.html', 'TCP 연결 · 재전송', 'TCP connection and retransmission', '3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료', '3-way handshake · seq/ack · loss and retransmission · 4-way close'),
         ('socket.html', '소켓 통신', 'Sockets', 'socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열', 'socket · bind · listen · accept · connect · the kernel\'s fd table and accept queue'),
         ('concurrency.html', '동시 접속 처리', 'Handling many connections', '프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교', 'Processes, threads, thread pools, event loops (epoll), async — history and comparison'),
         ('http.html', 'HTTP 통신', 'HTTP', '요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교', 'Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing'),
+        ('col',),
+        ('h', '운영체제', 'Operating systems'),
+        ('os-process.html', '프로세스 · CPU 스케줄링', 'Processes and CPU scheduling', 'FCFS · SJF · 라운드 로빈 · MLFQ · CFS · 상태 전이 · 문맥 전환', 'FCFS · SJF · round robin · MLFQ · CFS · states · context switches'),
     ]),
     ("menu", 'dbMenu', '데이터베이스 접근', 'Database Access', [
         ('h', '밑바닥에서 코드까지', 'From the bottom up'),

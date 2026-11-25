@@ -67,6 +67,9 @@
       <hr>
       <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
       <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">산업·전력 통신</span><span lang="en">Industrial & power comms</span></p>
+      <a href="ot-modbus.html"><span lang="ko">Modbus</span><span lang="en">Modbus</span><small lang="ko">RTU · TCP 프레임 해부 · 가상 인버터 레지스터 읽기 · 쓰기</small><small lang="en">RTU and TCP frames · read and write a virtual inverter</small></a>
       </div>
     </div>
     <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
@@ -100,13 +103,19 @@
       <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
       </div>
     </div>
-    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span><span class="caret" aria-hidden="true">▾</span></button>
-    <div class="menu" id="netMenu" hidden>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">운영체제·네트워크</span><span lang="en">OS · Network</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="netMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">네트워크 스택</span><span lang="en">Network stack</span></p>
       <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
       <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
       <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
       <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
       <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">운영체제</span><span lang="en">Operating systems</span></p>
+      <a href="os-process.html"><span lang="ko">프로세스 · CPU 스케줄링</span><span lang="en">Processes and CPU scheduling</span><small lang="ko">FCFS · SJF · 라운드 로빈 · MLFQ · CFS · 상태 전이 · 문맥 전환</small><small lang="en">FCFS · SJF · round robin · MLFQ · CFS · states · context switches</small></a>
+      </div>
     </div>
     <button type="button" class="menu-btn" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
     <div class="menu cols" id="dbMenu" hidden>
@@ -189,13 +198,13 @@
       <p lang="ko">이 사이트가 무엇을 다루는지, 어디서부터 읽으면 좋은지, 그리고 온톨로지 입문</p><p lang="en">What this site covers, where to start reading, and an ontology primer</p>
       <span class="more"><span><span lang="ko">사이트 소개</span><span lang="en">About this site</span></span><span class="arr" aria-hidden="true">→</span></span></a>
     <a class="card" href="grid.html"><h4><span class="ic" aria-hidden="true">⚡</span><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span></h4>
-      <p lang="ko">IEC CIM 전력망 온톨로지, pycim, 디지털 트윈, VPP · 분산에너지, 전력시장</p><p lang="en">IEC CIM grid ontology, pycim, digital twin, VPPs and DER, the power market</p>
+      <p lang="ko">IEC CIM 전력망 온톨로지, pycim, 디지털 트윈, VPP · 분산에너지, 전력시장, 산업·전력 통신(Modbus)</p><p lang="en">IEC CIM grid ontology, pycim, digital twin, VPPs and DER, the power market, industrial and power communication (Modbus)</p>
       <span class="more"><span><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></span><span class="arr" aria-hidden="true">→</span></span></a>
     <a class="card" href="studio.html"><h4><span class="ic" aria-hidden="true">🧩</span><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span></h4>
       <p lang="ko">업무 · 교통 · 설비 · 안전 · 생태계 온톨로지 설계와 GraphRAG · AI 에이전트 시연</p><p lang="en">Ontology designs for work, traffic, assets, safety and an ecosystem, plus GraphRAG and AI agent demos</p>
       <span class="more"><span><span lang="ko">설계실</span><span lang="en">The studio</span></span><span class="arr" aria-hidden="true">→</span></span></a>
-    <a class="card" href="packet.html"><h4><span class="ic" aria-hidden="true">🌐</span><span lang="ko">네트워크 스택</span><span lang="en">Network Stack</span></h4>
-      <p lang="ko">패킷 조립에서 TCP · 소켓 · 동시 접속 · HTTP까지 한 층씩</p><p lang="en">From building packets to TCP, sockets, concurrency and HTTP, layer by layer</p>
+    <a class="card" href="packet.html"><h4><span class="ic" aria-hidden="true">🌐</span><span lang="ko">운영체제·네트워크</span><span lang="en">OS · Network</span></h4>
+      <p lang="ko">패킷 조립에서 TCP · 소켓 · 동시 접속 · HTTP까지 한 층씩, 그리고 프로세스와 CPU 스케줄링</p><p lang="en">From building packets to TCP, sockets, concurrency and HTTP, layer by layer, plus processes and CPU scheduling</p>
       <span class="more"><span><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span></span><span class="arr" aria-hidden="true">→</span></span></a>
     <a class="card" href="db-map.html"><h4><span class="ic" aria-hidden="true">🗄️</span><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span></h4>
       <p lang="ko">파일과 엔진에서 와이어 프로토콜 · 드라이버 · ORM · REST · GraphQL까지</p><p lang="en">From files and engines to wire protocols, drivers, ORMs, REST and GraphQL</p>

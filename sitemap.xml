@@ -221,6 +221,16 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/ood.html?lang=en"/>
   </url>
   <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/os-process.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/os-process.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/os-process.html?lang=en"/>
+  </url>
+  <url>
+    <loc>https://1004aiteam-power.github.io/ontology-space/ot-modbus.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/ot-modbus.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/ot-modbus.html?lang=en"/>
+  </url>
+  <url>
     <loc>https://1004aiteam-power.github.io/ontology-space/packet.html</loc>
     <xhtml:link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/packet.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/packet.html?lang=en"/>

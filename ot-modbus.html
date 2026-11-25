@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · Modbus</title>
+<meta name="title-ko" content="Ontology Space · Modbus: 현장 장비의 공용어">
+<meta name="title-en" content="Ontology Space · Modbus: the common tongue of field devices">
+<meta name="description" content="Modbus RTU와 TCP 요청 · 응답을 바이트 단위로 해부합니다. 가상 태양광 인버터의 레지스터를 읽고 출력 제한을 써 보며 기능 코드, CRC-16, 예외 응답, 배율 레지스터, RS-485 선로 시간, SunSpec 레지스터 지도를 익힙니다.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/ot-modbus.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/ot-modbus.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/ot-modbus.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/ot-modbus.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · Modbus: 현장 장비의 공용어">
+<meta property="og:description" content="Modbus RTU와 TCP 요청 · 응답을 바이트 단위로 해부합니다. 가상 태양광 인버터의 레지스터를 읽고 출력 제한을 써 보며 기능 코드, CRC-16, 예외 응답, 배율 레지스터, RS-485 선로 시간, SunSpec 레지스터 지도를 익힙니다.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/ot-modbus.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=9e26c77b">
+<link rel="stylesheet" href="assets/css/sim.css?v=2f17aeb4">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/ot.css?v=69935964">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/ot/modbus-app.js?v=63c361b5"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="about.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="about.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">산업·전력 통신</span><span lang="en">Industrial & power comms</span></p>
+      <a href="ot-modbus.html" aria-current="page"><span lang="ko">Modbus</span><span lang="en">Modbus</span><small lang="ko">RTU · TCP 프레임 해부 · 가상 인버터 레지스터 읽기 · 쓰기</small><small lang="en">RTU and TCP frames · read and write a virtual inverter</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="netMenu"><span lang="ko">운영체제·네트워크</span><span lang="en">OS · Network</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="netMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">네트워크 스택</span><span lang="en">Network stack</span></p>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">운영체제</span><span lang="en">Operating systems</span></p>
+      <a href="os-process.html"><span lang="ko">프로세스 · CPU 스케줄링</span><span lang="en">Processes and CPU scheduling</span><small lang="ko">FCFS · SJF · 라운드 로빈 · MLFQ · CFS · 상태 전이 · 문맥 전환</small><small lang="en">FCFS · SJF · round robin · MLFQ · CFS · states · context switches</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="otherMenu"><span lang="ko">기타 관심사</span><span lang="en">Other interests</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="otherMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">Git 사용법</span><span lang="en">Git usage</span></p>
+      <a href="git-basics.html"><span lang="ko">Git 구조와 로컬 명령</span><span lang="en">Git model and local commands</span><small lang="ko">작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시</small><small lang="en">Working tree · stage · repository · add, commit, log, diff · hashes</small></a>
+      <a href="git-branch.html"><span lang="ko">브랜치 · 병합 · 충돌</span><span lang="en">Branches, merging and conflicts</span><small lang="ko">switch · merge · rebase · cherry-pick · stash · 충돌 풀기</small><small lang="en">switch · merge · rebase · cherry-pick · stash · resolving conflicts</small></a>
+      <a href="git-remote.html"><span lang="ko">GitHub와 함께</span><span lang="en">Working with GitHub</span><small lang="ko">clone · fetch · pull · push · Pull Request 흐름 · 인증</small><small lang="en">clone · fetch · pull · push · the Pull Request flow · authentication</small></a>
+      <a href="git-trouble.html"><span lang="ko">장애 사례집</span><span lang="en">Troubleshooting cases</span><small lang="ko">push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지</small><small lang="en">Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">프로그래밍 언어 (중급)</span><span lang="en">Programming languages (intermediate)</span></p>
+      <a href="lang-c.html"><span lang="ko">C 언어</span><span lang="en">C</span><small lang="ko">포인터 · 메모리 모델 · 전처리기 · 링크 · 정의되지 않은 동작</small><small lang="en">Pointers · memory model · preprocessor · linking · undefined behaviour</small></a>
+      <a href="lang-cpp.html"><span lang="ko">C++</span><span lang="en">C++</span><small lang="ko">RAII · 이동 의미론 · 템플릿 · STL · 스마트 포인터</small><small lang="en">RAII · move semantics · templates · STL · smart pointers</small></a>
+      <a href="lang-java.html"><span lang="ko">Java</span><span lang="en">Java</span><small lang="ko">JVM · 제네릭 · 컬렉션 · 스트림 · 동시성 · equals/hashCode</small><small lang="en">JVM · generics · collections · streams · concurrency · equals/hashCode</small></a>
+      <a href="lang-r.html"><span lang="ko">R</span><span lang="en">R</span><small lang="ko">벡터화 · NA · data.frame · tidyverse · 통계 모델</small><small lang="en">Vectorisation · NA · data.frame · tidyverse · statistical models</small></a>
+      <a href="lang-python.html"><span lang="ko">Python</span><span lang="en">Python</span><small lang="ko">객체 모델 · 제너레이터 · 데코레이터 · asyncio · 타입 힌트</small><small lang="en">Object model · generators · decorators · asyncio · type hints</small></a>
+      <a href="lang-rust.html"><span lang="ko">Rust</span><span lang="en">Rust</span><small lang="ko">소유권 · 빌림 · 수명 · 트레이트 · 겁 없는 동시성</small><small lang="en">Ownership · borrowing · lifetimes · traits · fearless concurrency</small></a>
+      <hr>
+      <a href="lang-compare.html"><span lang="ko">언어 비교</span><span lang="en">Language comparison</span><small lang="ko">같은 문제를 5개 언어로 · 무엇을 고를까</small><small lang="en">One task in five languages · how to choose</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">산업·전력 통신 · Modbus</span><span lang="en">INDUSTRIAL &amp; POWER COMMUNICATION · MODBUS</span></div>
+  <h1><span class="h1ic" aria-hidden="true">🔌</span> <span lang="ko">Modbus:<br>현장 장비의 공용어</span><span lang="en">Modbus:<br>the common tongue of field devices</span></h1>
+  <p class="lead" lang="ko">태양광 인버터, ESS의 전력변환장치(PCS), 전력량계, 공장의 PLC는 제조사가 달라도 대개 <b>Modbus</b>로 말합니다. 1979년 PLC 회사 Modicon이 만든 이 규칙은 "몇 번 칸의 숫자를 읽어라 · 써라"가 거의 전부일 만큼 단순해서, 40년 넘게 현장의 공용어가 되었습니다. 가상 인버터에 요청을 보내며 그 바이트를 하나씩 들여다봅니다.</p>
+  <p class="lead" lang="en">Solar inverters, the power conversion systems (PCS) of batteries, energy meters and factory PLCs usually speak <b>Modbus</b>, whoever made them. Created in 1979 by the PLC maker Modicon, the protocol is little more than "read or write the numbers in these slots", and that simplicity has made it the common tongue of the field for over 40 years. Send requests to a virtual inverter and look at the bytes one by one.</p>
+  <p class="meta" lang="ko">프레임 규칙과 CRC-16은 Modbus 규격 그대로이고(<code>tests/ot.test.mjs</code>에서 규격 예제 값으로 확인), 인버터의 레지스터 배치는 SunSpec 모델을 본떠 줄인 <b>가상의 것</b>입니다. 실제 제품의 주소는 제품 설명서의 레지스터 지도를 보세요.</p>
+  <p class="meta" lang="en">The framing rules and CRC-16 follow the Modbus specification (checked against the spec's example values in <code>tests/ot.test.mjs</code>); the inverter's register layout is a <b>made-up</b> reduction modelled on SunSpec. For a real product, use the register map in its manual.</p>
+</div>
+
+<section id="where">
+  <h2><span lang="ko">어디에서 쓰이나</span><span lang="en">Where it is used</span></h2>
+  <svg class="mb-arch" viewBox="0 0 720 230" role="img" aria-label="Modbus RTU bus and Modbus TCP">
+    <rect x="270" y="10" width="180" height="50" rx="10" class="bx m"/><text x="360" y="32" text-anchor="middle">Master (client)</text><text x="360" y="49" text-anchor="middle" class="s">VPP gateway · SCADA · PLC</text>
+    <line x1="300" y1="60" x2="300" y2="120" class="drop"/>
+    <line x1="40" y1="120" x2="470" y2="120" class="bus"/><text x="44" y="112" class="s">RS-485 · Modbus RTU · 9600–115200 bps</text>
+    <line x1="80" y1="120" x2="80" y2="150" class="drop"/><line x1="200" y1="120" x2="200" y2="150" class="drop"/><line x1="320" y1="120" x2="320" y2="150" class="drop"/><line x1="440" y1="120" x2="440" y2="150" class="drop"/>
+    <rect x="30" y="150" width="100" height="48" rx="8" class="bx"/><text x="80" y="170" text-anchor="middle">Inverter #1</text><text x="80" y="187" text-anchor="middle" class="s">unit 1</text>
+    <rect x="150" y="150" width="100" height="48" rx="8" class="bx"/><text x="200" y="170" text-anchor="middle">Inverter #2</text><text x="200" y="187" text-anchor="middle" class="s">unit 2</text>
+    <rect x="270" y="150" width="100" height="48" rx="8" class="bx"/><text x="320" y="170" text-anchor="middle">Meter</text><text x="320" y="187" text-anchor="middle" class="s">unit 3</text>
+    <rect x="390" y="150" width="100" height="48" rx="8" class="bx"/><text x="440" y="170" text-anchor="middle">…</text><text x="440" y="187" text-anchor="middle" class="s">≤ 247</text>
+    <line x1="450" y1="35" x2="560" y2="35" class="eth"/><text x="505" y="28" text-anchor="middle" class="s">Ethernet · TCP 502</text>
+    <rect x="560" y="10" width="140" height="50" rx="10" class="bx"/><text x="630" y="32" text-anchor="middle">ESS PCS</text><text x="630" y="49" text-anchor="middle" class="s">Modbus TCP</text>
+    <line x1="630" y1="60" x2="630" y2="150" class="eth"/>
+    <rect x="560" y="150" width="140" height="48" rx="8" class="bx"/><text x="630" y="170" text-anchor="middle">Gateway</text><text x="630" y="187" text-anchor="middle" class="s">TCP ↔ RTU</text>
+  </svg>
+  <p lang="ko">마스터 하나가 RS-485 선 한 가닥에 여러 장비를 매달고 <b>차례로 물어봅니다(폴링)</b>. 장비는 질문을 받았을 때만 답하고, 먼저 말을 거는 일이 없습니다. 이더넷이 깔린 곳에서는 같은 메시지를 TCP에 실어 보내는 <b>Modbus TCP</b>를 씁니다. VPP의 현장 데이터 수집에서 인버터 · 계량기를 읽는 부분이 바로 이것입니다(<a href="vpp.html#collect">VPP: 현장 데이터 수집</a>).</p>
+  <p lang="en">One master hangs several devices on a single RS-485 line and <b>asks each in turn (polling)</b>. A device answers only when asked and never speaks first. Where Ethernet is available, the same messages ride on TCP as <b>Modbus TCP</b>. This is exactly how a VPP reads inverters and meters in the field (<a href="vpp.html#collect">VPP: field data collection</a>).</p>
+</section>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">가상 인버터에 요청 보내기</span><span lang="en">Send requests to a virtual inverter</span></h2>
+  <div class="net-presets" id="mbPresets" role="group" aria-label="presets"></div>
+  <div class="net-form">
+    <label><span lang="ko">전송 방식</span><span lang="en">Transport</span><select id="mbMode"><option value="rtu">Modbus RTU (RS-485)</option><option value="tcp">Modbus TCP</option></select></label>
+    <label><span lang="ko">장치 주소 (유닛 ID)</span><span lang="en">Device address (unit ID)</span><input id="mbUnit" type="number" min="0" max="247" value="1"></label>
+    <label><span lang="ko">기능 코드</span><span lang="en">Function code</span><select id="mbFc"></select></label>
+    <label><span lang="ko">시작 주소</span><span lang="en">Start address</span><input id="mbAddr" type="number" min="0" max="65535" value="0"></label>
+    <label id="mbQtyL"><span lang="ko">개수</span><span lang="en">Quantity</span><input id="mbQty" type="number" min="1" max="125" value="13"></label>
+    <label id="mbValsL"><span lang="ko">쓸 값 (여러 개는 쉼표로)</span><span lang="en">Value(s) to write (comma-separated)</span><input id="mbVals" autocomplete="off"></label>
+    <label id="mbBaudL"><span lang="ko">통신 속도</span><span lang="en">Baud rate</span><select id="mbBaud"><option>9600</option><option>19200</option><option>38400</option><option>115200</option></select></label>
+  </div>
+  <div class="ctrl">
+    <label id="mbNoiseL"><input type="checkbox" id="mbNoise"> <span lang="ko">선로 잡음 (비트 하나 뒤집기)</span><span lang="en">Line noise (flip one bit)</span></label>
+    <button type="button" id="mbSend" class="primary"><span lang="ko">보내기</span><span lang="en">Send</span></button>
+  </div>
+
+  <div class="mb-grid">
+    <div id="mbOut" aria-live="polite"></div>
+    <div class="mb-dev">
+      <h3><span lang="ko">인버터 안의 레지스터</span><span lang="en">Registers inside the inverter</span></h3>
+      <p class="mb-state" id="mbDevState"></p>
+      <div class="ctrl">
+        <label class="speed-ctl"><span lang="ko">햇빛 (낼 수 있는 출력)</span><span lang="en">Sunlight (available power)</span><input type="range" id="mbSun" min="0" max="10000" step="100" value="7200" aria-label="available power"><output id="mbSunOut"></output></label>
+        <button type="button" id="mbFix"><span lang="ko">제어 초기화</span><span lang="en">Reset controls</span></button>
+      </div>
+      <div class="net-scroll" id="mbRegs"></div>
+      <h4><span lang="ko">주고받은 기록</span><span lang="en">Exchange log</span></h4>
+      <ul class="mb-hist" id="mbHist"></ul>
+    </div>
+  </div>
+  <p class="meta" lang="ko">해 볼 것: ① "출력 50%로 제한"을 보낸 뒤 "측정값 읽기"로 W가 5,000으로 줄고 상태가 "출력 제한 중"이 된 것 확인. ② 햇빛을 4 kW로 낮추면 제한(5 kW)보다 적어 다시 "발전 중"이 되는 것. ③ "같은 읽기를 TCP로"에서 CRC가 사라지고 머리말 7바이트가 붙는 것. ④ 개수를 4로 줄여 읽으면 전압 배율(4번)을 못 읽어 값을 해석할 수 없는 것. ⑤ 통신 속도를 바꿔 선로 시간이 어떻게 변하는지.</p>
+  <p class="meta" lang="en">Try: ① send "Limit output to 50%", then "Read measurements": W drops to 5,000 and the state becomes "Throttled". ② Lower the sunlight to 4 kW: below the 5 kW limit, it goes back to "Producing". ③ In "The same read over TCP", the CRC disappears and a 7-byte header appears. ④ Read only 4 registers and the voltage scale factor (register 4) is missing, so the value cannot be interpreted. ⑤ Change the baud rate and watch the line time change.</p>
+</section>
+
+<section id="model">
+  <h2><span lang="ko">데이터 모델: 네 가지 표</span><span lang="en">The data model: four tables</span></h2>
+  <div class="net-scroll"><table class="net-tab">
+    <thead><tr><th><span lang="ko">표</span><span lang="en">Table</span></th><th><span lang="ko">크기</span><span lang="en">Size</span></th><th><span lang="ko">읽기 · 쓰기</span><span lang="en">Access</span></th><th><span lang="ko">문서 표기</span><span lang="en">Doc. numbering</span></th><th><span lang="ko">기능 코드</span><span lang="en">Function codes</span></th><th><span lang="ko">쓰임 예</span><span lang="en">Typical use</span></th></tr></thead>
+    <tbody>
+      <tr><td><span lang="ko">코일</span><span lang="en">Coils</span></td><td>1 bit</td><td><span lang="ko">읽기 · 쓰기</span><span lang="en">read/write</span></td><td>0xxxx</td><td>1, 5, 15</td><td><span lang="ko">운전 · 정지 명령, 차단기 투입</span><span lang="en">Run/stop commands, close a breaker</span></td></tr>
+      <tr><td><span lang="ko">이산 입력</span><span lang="en">Discrete inputs</span></td><td>1 bit</td><td><span lang="ko">읽기만</span><span lang="en">read-only</span></td><td>1xxxx</td><td>2</td><td><span lang="ko">문 열림, 고장 접점</span><span lang="en">Door open, fault contact</span></td></tr>
+      <tr><td><span lang="ko">입력 레지스터</span><span lang="en">Input registers</span></td><td>16 bit</td><td><span lang="ko">읽기만</span><span lang="en">read-only</span></td><td>3xxxx</td><td>4</td><td><span lang="ko">측정값</span><span lang="en">Measurements</span></td></tr>
+      <tr><td><span lang="ko">보유 레지스터</span><span lang="en">Holding registers</span></td><td>16 bit</td><td><span lang="ko">읽기 · 쓰기</span><span lang="en">read/write</span></td><td>4xxxx</td><td>3, 6, 16</td><td><span lang="ko">설정값, 제어 목표 (측정값을 여기 두는 장비도 많음)</span><span lang="en">Set points, control targets (many devices put measurements here too)</span></td></tr>
+    </tbody>
+  </table></div>
+  <p lang="ko"><b>주의: 하나 차이.</b> 설명서의 "40001"은 보유 레지스터 표의 <b>1번째</b>라는 뜻이고, 바이트로 실리는 프로토콜 주소는 <b>0</b>입니다. 그래서 설명서에 40014라고 적힌 칸을 읽으려면 요청에 13을 넣습니다. 제조사마다 0부터 세기도 1부터 세기도 해서, 현장에서 가장 흔한 실수가 "값이 한 칸씩 밀려 나온다"입니다. 위 레지스터 표에 두 번호를 나란히 적어 두었습니다.</p>
+  <p lang="en"><b>Watch out: off by one.</b> "40001" in a manual means the <b>1st</b> holding register, but the protocol address on the wire is <b>0</b>. To read the slot a manual calls 40014, you put 13 in the request. Manufacturers count from 0 or from 1, so the most common field mistake is "every value comes out shifted by one". The register table above shows both numbers side by side.</p>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">알아 둘 원리</span><span lang="en">Principles worth knowing</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 묻는 쪽과 답하는 쪽</span><span lang="en">① One asks, the others answer</span></h4>
+      <p lang="ko">Modbus는 <b>마스터 · 슬레이브</b>(요즘 용어로 클라이언트 · 서버) 구조입니다. 마스터만 말을 시작하고, 장치는 질문에만 답합니다. 그래서 장치가 고장을 알리고 싶어도 다음 폴링 차례까지 기다려야 합니다. 변전소처럼 사건을 바로 알려야 하는 곳에서 DNP3 · IEC 61850처럼 <b>장치가 먼저 보고</b>할 수 있는 규약을 쓰는 이유입니다.</p>
+      <p lang="en">Modbus is <b>master/slave</b> (client/server in today's terms). Only the master starts a conversation; devices only answer. A device that wants to report a fault must wait for its next poll. That is why places like substations, which need events reported at once, use protocols such as DNP3 and IEC 61850 where <b>devices can report first</b>.</p></div>
+    <div class="card"><h4><span lang="ko">② 레지스터는 16비트 정수뿐</span><span lang="en">② Registers are just 16-bit integers</span></h4>
+      <p lang="ko">레지스터 한 칸은 0~65535(또는 부호가 있으면 −32768~32767)입니다. 소수는 <b>배율</b>(230.1 V = 2301 × 10⁻¹)로, 큰 수는 <b>두 칸을 이어서</b>(누적 발전량 = 상위 × 65536 + 하위), 실수는 IEEE 754 float를 두 칸에 나눠 담습니다. 두 칸 중 어느 쪽이 먼저인지(워드 순서)도 제조사마다 달라서, 설명서 없이는 숫자를 해석할 수 없습니다.</p>
+      <p lang="en">One register holds 0–65535 (or −32768–32767 when signed). Decimals use a <b>scale factor</b> (230.1 V = 2301 × 10⁻¹), big numbers <b>span two registers</b> (lifetime energy = high × 65536 + low), and floats split an IEEE 754 value across two. Which of the two comes first (word order) also varies by maker, so the numbers cannot be read without the manual.</p></div>
+    <div class="card"><h4><span lang="ko">③ RTU · ASCII · TCP</span><span lang="en">③ RTU, ASCII and TCP</span></h4>
+      <p lang="ko"><b>RTU</b>는 바이트를 그대로 보내고, 끝에 CRC-16을 붙이며, <b>3.5글자 동안의 침묵</b>으로 프레임의 끝을 알립니다. <b>ASCII</b>는 바이트를 16진수 글자로 바꿔 보내 사람이 읽기 쉽지만 두 배로 길어 지금은 드뭅니다. <b>TCP</b>는 RTU의 PDU 앞에 7바이트 MBAP 머리말을 붙이고 CRC를 뺍니다. 오류 검사는 이더넷 FCS와 TCP 체크섬이 하기 때문입니다(<a href="packet.html">패킷 조립 과정</a>).</p>
+      <p lang="en"><b>RTU</b> sends raw bytes, appends a CRC-16, and marks the end of a frame with <b>3.5 characters of silence</b>. <b>ASCII</b> sends each byte as hexadecimal text, easier for people to read but twice as long, and rare today. <b>TCP</b> puts a 7-byte MBAP header in front of the same PDU and drops the CRC, since the Ethernet FCS and TCP checksum already check for errors (<a href="packet.html">From data to packets</a>).</p></div>
+    <div class="card"><h4><span lang="ko">④ RS-485: 한 가닥에 여러 대</span><span lang="en">④ RS-485: many devices on one pair</span></h4>
+      <p lang="ko">RS-485는 꼬은 두 선의 <b>전압 차이</b>로 신호를 보내 잡음에 강하고, 1 km 넘게 끌 수 있습니다. 한 선에 여러 장비를 줄줄이 매달 수 있어(규격상 기본 32대, 주소는 1~247) 태양광 발전소의 인버터 수십 대를 한 가닥으로 잇습니다. 대신 한 번에 한 장비만 말할 수 있고, 선 양 끝에 종단 저항이 없거나 접지가 나쁘면 잡음으로 CRC 오류가 잦아집니다.</p>
+      <p lang="en">RS-485 signals with the <b>voltage difference</b> across a twisted pair, so it resists noise and can run over 1 km. Many devices can hang off one line (32 by default in the standard, addresses 1–247), so dozens of inverters in a solar plant share a single pair. Only one device can talk at a time, though, and missing termination resistors at the ends or poor grounding turn noise into frequent CRC errors.</p></div>
+    <div class="card"><h4><span lang="ko">⑤ 인증도 암호화도 없다</span><span lang="en">⑤ No authentication, no encryption</span></h4>
+      <p lang="ko">Modbus는 폐쇄된 공장 안을 가정하고 만들어서, <b>누가 보냈는지 확인하지 않습니다</b>. 같은 망에 들어온 누구든 출력 제한 레지스터에 0을 쓸 수 있습니다. 그래서 제어망을 사무망 · 인터넷과 분리하고, 방화벽에서 502번 포트를 막으며, 필요하면 TLS를 쓰는 Modbus/TCP Security(포트 802)를 씁니다.</p>
+      <p lang="en">Modbus assumed a closed factory floor, so it <b>never checks who sent a request</b>. Anyone who gets onto the network can write 0 to the output-limit register. Control networks are therefore kept apart from office networks and the internet, port 502 is blocked at firewalls, and where needed Modbus/TCP Security (TLS, port 802) is used.</p></div>
+    <div class="card"><h4><span lang="ko">⑥ 숫자에 뜻 붙이기: SunSpec과 온톨로지</span><span lang="en">⑥ Giving numbers meaning: SunSpec and ontologies</span></h4>
+      <p lang="ko">Modbus 자체는 "13번 칸 = 50"만 압니다. 그게 출력 제한 %라는 뜻은 설명서에 있습니다. <b>SunSpec</b>은 인버터 · ESS · 계량기의 레지스터 지도를 표준으로 정하고 기계가 읽는 모델 정의(JSON)로 공개해, 제조사가 달라도 같은 이름(W, PhVphA, WMaxLimPct)으로 읽게 했습니다(IEEE 1547-2018이 인정하는 통신 방식 중 하나). 여기서 한 걸음 더 가면, 이 이름을 CIM의 <code>PowerElectronicsConnection.p</code> 같은 <a href="grid.html">전력망 온톨로지</a> 속성에 잇는 것이 데이터 통합의 시작입니다.</p>
+      <p lang="en">Modbus itself only knows "slot 13 = 50"; that it means an output limit in % lives in a manual. <b>SunSpec</b> standardises register maps for inverters, batteries and meters and publishes them as machine-readable model definitions (JSON), so devices from different makers are read with the same names (W, PhVphA, WMaxLimPct). It is one of the communication options recognised by IEEE 1547-2018. One step further, linking those names to <a href="grid.html">grid ontology</a> properties such as CIM's <code>PowerElectronicsConnection.p</code> is where data integration begins.</p></div>
+    <div class="card"><h4><span lang="ko">⑦ 이 모형이 생략한 것</span><span lang="en">⑦ What this model leaves out</span></h4>
+      <p lang="ko">이산 입력(FC 2), 여러 코일 쓰기(FC 15), 읽고 쓰기 동시(FC 23), 장치 식별(FC 43), ASCII 모드, 글자 사이 1.5글자 침묵 규칙, 타임아웃과 재시도, 게이트웨이의 TCP ↔ RTU 변환은 넣지 않았습니다. SunSpec의 실제 모델 헤더("SunS" 표식, 모델 ID와 길이), 32비트 실수, 워드 순서 차이도 단순화했습니다.</p>
+      <p lang="en">Left out: discrete inputs (FC 2), writing multiple coils (FC 15), read/write in one go (FC 23), device identification (FC 43), ASCII mode, the 1.5-character inter-byte rule, timeouts and retries, and gateway TCP ↔ RTU translation. SunSpec's real model header (the "SunS" marker, model ID and length), 32-bit floats and word-order differences are simplified as well.</p></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>
