@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontology Space · What an Operating System Is</title>
+<meta name="title-ko" content="Ontology Space · 운영체제란">
+<meta name="title-en" content="Ontology Space · What an Operating System Is">
+<meta name="description" content="운영체제는 프로그램과 하드웨어 사이의 심판입니다. write() 한 번이 사용자 모드에서 커널 모드로 넘어가 파일시스템 · 드라이버를 거쳐 SSD까지 가는 과정, 키보드 입력을 기다리며 잠드는 read(), 잘못된 주소 · 특권 명령 · 타이머 인터럽트를 한 단계씩 따라갑니다.">
+<!-- head:meta (tools/build_nav.py) -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://1004aiteam-power.github.io/ontology-space/os-map.html">
+<link rel="alternate" hreflang="ko" href="https://1004aiteam-power.github.io/ontology-space/os-map.html">
+<link rel="alternate" hreflang="en" href="https://1004aiteam-power.github.io/ontology-space/os-map.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://1004aiteam-power.github.io/ontology-space/os-map.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ontology Space">
+<meta property="og:title" content="Ontology Space · 운영체제란">
+<meta property="og:description" content="운영체제는 프로그램과 하드웨어 사이의 심판입니다. write() 한 번이 사용자 모드에서 커널 모드로 넘어가 파일시스템 · 드라이버를 거쳐 SSD까지 가는 과정, 키보드 입력을 기다리며 잠드는 read(), 잘못된 주소 · 특권 명령 · 타이머 인터럽트를 한 단계씩 따라갑니다.">
+<meta property="og:url" content="https://1004aiteam-power.github.io/ontology-space/os-map.html">
+<meta property="og:image" content="https://1004aiteam-power.github.io/ontology-space/assets/og/site.jpg">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script>(function(){var r=document.documentElement,l=null,s=null;try{var v=new URLSearchParams(location.search).get('lang');if(v==='ko'||v==='en')l=v}catch(e){}try{l=l||localStorage.getItem('lang');s=localStorage.getItem('theme')}catch(e){}r.lang=l==='ko'||l==='en'?l:((navigator.language||'ko').indexOf('ko')===0?'ko':'en');if(s==='dark'||s==='light')r.dataset.theme=s;r.classList.add('js');window.currentLang=function(){return r.lang};window.t=function(o){var x=o[r.lang];return x==null?o.ko:x}})();</script>
+<!-- /head:meta -->
+<link rel="stylesheet" href="assets/site.css?v=9e26c77b">
+<link rel="stylesheet" href="assets/css/net.css?v=0b6a388b">
+<link rel="stylesheet" href="assets/css/os.css?v=e009ee8b">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<script src="assets/site.js?v=d70a462d" defer></script>
+<script type="module" src="assets/os/map-app.js?v=22bacd41"></script>
+</head>
+<body>
+<a class="skip" href="#main"><span lang="ko">본문 바로가기</span><span lang="en">Skip to content</span></a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">Ontology Space</a>
+  <nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="introMenu"><span lang="ko">소개</span><span lang="en">Intro</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu" id="introMenu" hidden>
+      <a href="about.html"><span lang="ko">사이트 소개</span><span lang="en">About this site</span><small lang="ko">전체 구성 · 읽는 순서 · 시뮬레이션 둘러보기</small><small lang="en">What is here · reading orders · simulations</small></a>
+      <a href="ontology.html"><span lang="ko">온톨로지 입문</span><span lang="en">Ontology primer</span><small lang="ko">개념 · 구성요소 · RDF · OWL · Cypher · 식별자</small><small lang="en">Concepts · building blocks · RDF · OWL · Cypher · identifiers</small></a>
+      <hr>
+      <a href="about.html#why"><span lang="ko">왜 온톨로지인가</span><span lang="en">Why ontology</span><small lang="ko">만든 이의 생각</small><small lang="en">A personal view</small></a>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="powerMenu"><span lang="ko">전력·에너지</span><span lang="en">Power · Energy</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="powerMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span></p>
+      <a href="grid.html"><span lang="ko">전력망 온톨로지</span><span lang="en">Power grid ontology</span><small lang="ko">IEC CIM · 토폴로지 · 관련 표준</small><small lang="en">IEC CIM · topology · related standards</small></a>
+      <a href="project.html"><span lang="ko">pycim 프로젝트</span><span lang="en">pycim project</span><small lang="ko">CIM을 파이썬 클래스로 · 조류계산 · CGMES</small><small lang="en">CIM as Python classes · load flow · CGMES</small></a>
+      <a href="ood.html"><span lang="ko">온톨로지 vs. 객체지향 설계</span><span lang="en">Ontology vs. OOD</span><small lang="ko">같은 ESS를 파이썬 클래스와 OWL로 · 일곱 가지 차이</small><small lang="en">One battery as Python and OWL · seven differences</small></a>
+      <a href="aas.html"><span lang="ko">자산관리셸(AAS)과 온톨로지</span><span lang="en">AAS and Ontologies</span><small lang="ko">AAS 구조 · 온톨로지와의 관계 · 변압기 한 대의 AAS 데이터셋</small><small lang="en">AAS structure · how it relates to ontologies · one transformer as an AAS dataset</small></a>
+      <a href="lab.html"><span lang="ko">Cypher 실습 · 데이터 검증</span><span lang="en">Cypher lab · data validation</span><small lang="ko">브라우저에서 Neo4j Cypher 질의 · 형상검증</small><small lang="en">Neo4j Cypher in the browser · shape checks</small></a>
+      <a href="twin.html"><span lang="ko">디지털 트윈</span><span lang="en">Digital twin</span><small lang="ko">가상 대한민국 전력망 24시간</small><small lang="en">Virtual Korean grid over 24 hours</small></a>
+      <hr>
+      <a href="grid.html#flisr"><span lang="ko">배전선로 고장 복구</span><span lang="en">Feeder fault restoration</span><small lang="ko">D/L #1 구간 고장 → 분리 → 복구 (FLISR)</small><small lang="en">D/L #1 fault → isolate → restore (FLISR)</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">VPP·분산에너지</span><span lang="en">VPP · DER</span></p>
+      <a href="vpp.html"><span lang="ko">VPP 기본 개념</span><span lang="en">VPP basics</span><small lang="ko">가상발전소란 · 운영 고리 · 기존 발전소와 비교</small><small lang="en">What a VPP is · operating loop · vs. conventional plants</small></a>
+      <a href="vpp-market.html"><span lang="ko">VPP 가상 전력시장 (그래프 DB)</span><span lang="en">VPP virtual market (graph DB)</span><small lang="ko">VPP 10개 · 배전선로 · 입찰 · 정산 → 온톨로지 → 그래프 DB</small><small lang="en">10 VPPs, feeders, bids, settlements → ontology → graph DB</small></a>
+      <hr>
+      <a href="vpp.html#der"><span lang="ko">분산에너지자원(DER)</span><span lang="en">Distributed energy resources</span><small lang="ko">태양광 · ESS · 전기차 · 수요반응</small><small lang="en">Solar, storage, EVs, demand response</small></a>
+      <a href="vpp.html#market"><span lang="ko">예측 · 입찰 · 정산</span><span lang="en">Forecast, bid, settle</span><small lang="ko">하루 전부터 실시간까지의 흐름</small><small lang="en">From day-ahead to real time</small></a>
+      <a href="vpp.html#standards"><span lang="ko">통신 · 데이터 표준</span><span lang="en">Standards</span><small lang="ko">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small><small lang="en">IEC 61850-7-420 · IEEE 2030.5 · OpenADR · OCPP</small></a>
+      <a href="vpp.html#collect"><span lang="ko">현장 데이터 수집</span><span lang="en">Field data collection</span><small lang="ko">인버터 · 게이트웨이 · 통신 · 플랫폼</small><small lang="en">Inverters, gateways, networks, platform</small></a>
+      <a href="vpp.html#policy"><span lang="ko">국내외 제도 (참고용)</span><span lang="en">Rules in Korea and abroad (reference)</span><small lang="ko">소규모전력중개 · 분산에너지법 · FERC 2222 · 정확하지 않을 수 있음</small><small lang="en">Brokerage, Distributed Energy Act, FERC 2222 · may be inaccurate</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">전력시장</span><span lang="en">Power market</span></p>
+      <a href="bidding.html"><span lang="ko">내가 이해한 전력시장</span><span lang="en">The power market, as I understand it</span><small lang="ko">입찰 · 정산 · 시장 구조를 내가 이해한 대로</small><small lang="en">Bidding, settlement and market structure, as I understand them</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">산업·전력 통신</span><span lang="en">Industrial & power comms</span></p>
+      <a href="ot-modbus.html"><span lang="ko">Modbus</span><span lang="en">Modbus</span><small lang="ko">RTU · TCP 프레임 해부 · 가상 인버터 레지스터 읽기 · 쓰기</small><small lang="en">RTU and TCP frames · read and write a virtual inverter</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="aiMenu"><span lang="ko">온톨로지 × AI</span><span lang="en">Ontology × AI</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="aiMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">설계실</span><span lang="en">Studio</span></p>
+      <a href="studio.html"><span lang="ko">설계실 소개</span><span lang="en">About the studio</span><small lang="ko">정답 없는 설계를 기록하는 곳</small><small lang="en">Where design decisions are recorded</small></a>
+      <a href="ontology-map.html"><span lang="ko">온톨로지 지도</span><span lang="en">Ontology map</span><small lang="ko">사이트의 온톨로지가 서로 어떻게 이어지나</small><small lang="en">How the site's ontologies connect</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">업무</span><span lang="en">Work</span></p>
+      <a href="work.html"><span lang="ko">업무 온톨로지</span><span lang="en">Work ontology</span><small lang="ko">가상의 AI추진부 업무 149개</small><small lang="en">149 tasks of a fictional department</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="highway.html"><span lang="ko">고속도로·국도 교통</span><span lang="en">Road traffic</span><small lang="ko">가상 고속도로·국도망 · 24시간 차량 흐름</small><small lang="en">Virtual expressways &amp; national roads · 24 h traffic</small></a>
+      <a href="ev.html"><span lang="ko">전기차 충전</span><span lang="en">EV charging</span><small lang="ko">고속도로 × 전력망 · 휴게소 → 변전소</small><small lang="en">Roads × grid · rest area → substation</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력</span><span lang="en">Power</span></p>
+      <a href="asset.html"><span lang="ko">전력설비 자산관리</span><span lang="en">Power asset management</span><small lang="ko">가상 A변전소 설비 · 진단 · 위험도</small><small lang="en">Virtual substation: assets, diagnoses, risk</small></a>
+      <a href="impact.html"><span lang="ko">설비 고장 영향 분석</span><span lang="en">Failure impact analysis</span><small lang="ko">자산 위험도 × 배전선로 · 고객 · 복구</small><small lang="en">Asset risk × feeder · customers · restoration</small></a>
+      <a href="safety-ontology.html"><span lang="ko">배전공사 안전</span><span lang="en">Distribution work safety</span><small lang="ko">현장 단계 · 수칙 · 위험요인 → 업무 · 자산</small><small lang="en">Field steps, rules, hazards → work, assets</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="eco-ontology.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell ecosystem</span><small lang="ko">시뮬레이션 기록 → 혈통 · 포식 · 진화 그래프</small><small lang="en">Simulation record → lineage, predation, evolution graph</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">AI × 온톨로지</span><span lang="en">AI × Ontology</span></p>
+      <a href="ai.html"><span lang="ko">AI × 온톨로지 시연</span><span lang="en">AI × ontology demo</span><small lang="ko">LLM만 · 문서 검색 · GraphRAG 비교</small><small lang="en">LLM alone vs. RAG vs. GraphRAG</small></a>
+      <a href="ai.html#graphrag"><span lang="ko">GraphRAG 시연</span><span lang="en">GraphRAG demo</span><small lang="ko">자연어 질문 → Cypher → 그래프에서 답</small><small lang="en">Question → Cypher → answer from the graph</small></a>
+      <a href="ai.html#agent"><span lang="ko">AI 에이전트 시연</span><span lang="en">AI agent demo</span><small lang="ko">고장 영향을 단계별로 추론하는 에이전트</small><small lang="en">An agent tracing a failure step by step</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI</span><span lang="en">Physical AI</span></p>
+      <a href="physical-ai.html"><span lang="ko">피지컬 AI 소개</span><span lang="en">About Physical AI</span><small lang="ko">개념 · 관련 기술 · MuJoCo</small><small lang="en">Concepts · key technologies · MuJoCo</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn current" aria-expanded="false" aria-controls="netMenu"><span lang="ko">운영체제·네트워크</span><span lang="en">OS · Network</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="netMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">네트워크 스택</span><span lang="en">Network stack</span></p>
+      <a href="packet.html"><span lang="ko">패킷 조립 과정</span><span lang="en">From data to packets</span><small lang="ko">데이터 → TCP 세그먼트 → IP 패킷 → 이더넷 프레임 · 실제 바이트와 체크섬</small><small lang="en">Data → TCP segment → IP packet → Ethernet frame · real bytes and checksums</small></a>
+      <a href="tcp.html"><span lang="ko">TCP 연결 · 재전송</span><span lang="en">TCP connection and retransmission</span><small lang="ko">3-way handshake · seq/ack · 분실과 재전송 · 4-way 종료</small><small lang="en">3-way handshake · seq/ack · loss and retransmission · 4-way close</small></a>
+      <a href="socket.html"><span lang="ko">소켓 통신</span><span lang="en">Sockets</span><small lang="ko">socket · bind · listen · accept · connect · 커널의 fd 표와 연결 대기열</small><small lang="en">socket · bind · listen · accept · connect · the kernel's fd table and accept queue</small></a>
+      <a href="concurrency.html"><span lang="ko">동시 접속 처리</span><span lang="en">Handling many connections</span><small lang="ko">프로세스 · 스레드 · 스레드 풀 · 이벤트 루프(epoll) · async의 변천사와 비교</small><small lang="en">Processes, threads, thread pools, event loops (epoll), async — history and comparison</small></a>
+      <a href="http.html"><span lang="ko">HTTP 통신</span><span lang="en">HTTP</span><small lang="ko">요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교</small><small lang="en">Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">운영체제</span><span lang="en">Operating systems</span></p>
+      <a href="os-map.html" aria-current="page"><span lang="ko">운영체제란</span><span lang="en">What an OS is</span><small lang="ko">사용자 모드 · 커널 모드 · 시스템 호출 · 인터럽트 · 예외</small><small lang="en">User and kernel mode · system calls · interrupts · exceptions</small></a>
+      <a href="os-process.html"><span lang="ko">프로세스 · CPU 스케줄링</span><span lang="en">Processes and CPU scheduling</span><small lang="ko">FCFS · SJF · 라운드 로빈 · MLFQ · CFS · 상태 전이 · 문맥 전환</small><small lang="en">FCFS · SJF · round robin · MLFQ · CFS · states · context switches</small></a>
+      <a href="os-memory.html"><span lang="ko">가상 메모리</span><span lang="en">Virtual memory</span><small lang="ko">주소 변환 · TLB · 페이지 폴트 · FIFO · LRU · Clock</small><small lang="en">Address translation · TLB · page faults · FIFO · LRU · Clock</small></a>
+      <a href="os-sync.html"><span lang="ko">동기화 · 교착상태</span><span lang="en">Synchronisation and deadlock</span><small lang="ko">경쟁 상태 · 뮤텍스 · 원자적 명령 · 식사하는 철학자</small><small lang="en">Race conditions · mutexes · atomics · dining philosophers</small></a>
+      <a href="os-file.html"><span lang="ko">파일시스템 · 저널링</span><span lang="en">File systems and journaling</span><small lang="ko">inode · 비트맵 · 정전 · 저널 · fsck</small><small lang="en">Inodes · bitmaps · power loss · journal · fsck</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="dbMenu"><span lang="ko">데이터베이스 접근</span><span lang="en">Database Access</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="dbMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">밑바닥에서 코드까지</span><span lang="en">From the bottom up</span></p>
+      <a href="db-map.html"><span lang="ko">데이터베이스란</span><span lang="en">What a database is</span><small lang="ko">같은 데이터 · 일곱 가지 모양 · 접근 사다리 지도</small><small lang="en">The same data in seven shapes · the access ladder</small></a>
+      <a href="db-file.html"><span lang="ko">직접 접근: 파일과 엔진</span><span lang="en">Direct access: files and engines</span><small lang="ko">페이지 · B+트리 인덱스 · 쓰기 전 기록(WAL) · 임베디드</small><small lang="en">Pages · B+tree index · write-ahead log · embedded</small></a>
+      <a href="db-wire.html"><span lang="ko">서버 접속: 와이어 프로토콜</span><span lang="en">Connecting: the wire protocol</span><small lang="ko">PostgreSQL 메시지를 바이트로 · 커넥션 풀</small><small lang="en">PostgreSQL messages as bytes · connection pools</small></a>
+      <a href="db-driver.html"><span lang="ko">드라이버 · 표준 API</span><span lang="en">Drivers and standard APIs</span><small lang="ko">JDBC · ODBC · DB-API · SQL 인젝션 · 트랜잭션</small><small lang="en">JDBC · ODBC · DB-API · SQL injection · transactions</small></a>
+      <a href="db-orm.html"><span lang="ko">쿼리 빌더 · ORM</span><span lang="en">Query builders and ORMs</span><small lang="ko">코드 → SQL · N+1 문제 · 세 가지 불러오기</small><small lang="en">Code → SQL · the N+1 problem · three loading styles</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">API로 접근</span><span lang="en">Through APIs</span></p>
+      <a href="db-service.html"><span lang="ko">서비스 계층: REST</span><span lang="en">The service layer: REST</span><small lang="ko">DB 앞의 서비스 · 인증 · 권한 · 검증 · RPC와 비교</small><small lang="en">A service in front · authN/Z · validation · vs. RPC</small></a>
+      <a href="db-graphql.html"><span lang="ko">GraphQL · 데이터 API</span><span lang="en">GraphQL and data APIs</span><small lang="ko">필요한 필드만 한 번에 · 리졸버 · DataLoader</small><small lang="en">Just the fields you need · resolvers · DataLoader</small></a>
+      <a href="db-modern.html"><span lang="ko">최근 흐름</span><span lang="en">Recent trends</span><small lang="ko">자동 생성 API · BaaS · 서버리스 · AI 에이전트 접근</small><small lang="en">Auto-generated APIs · BaaS · serverless · AI agent access</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">정리</span><span lang="en">Wrap-up</span></p>
+      <a href="db-choose.html"><span lang="ko">정리: 선택 기준</span><span lang="en">Wrap-up: how to choose</span><small lang="ko">누가 · 어떤 모양 · 규모에 따라 무엇을 쓸까</small><small lang="en">What to use by caller, shape and scale</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="simMenu"><span lang="ko">시뮬레이션</span><span lang="en">Simulation</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="simMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">전력 현장 교육</span><span lang="en">Power field training</span></p>
+      <a href="safety.html"><span lang="ko">배전공사 안전 훈련</span><span lang="en">Distribution Work Safety</span><small lang="ko">전주·전선 교체·변압기·맨홀·송전 철탑 현장 · 훈련 기록 인쇄</small><small lang="en">Pole, wire replacement, transformer, manhole & tower sites · printable training record</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">교통</span><span lang="en">Traffic</span></p>
+      <a href="intersection.html"><span lang="ko">교차로 신호</span><span lang="en">Intersection</span><small lang="ko">위에서 본 교차로 · 차량·좌회전·보행 신호</small><small lang="en">Top-down junction · through, left &amp; walk signals</small></a>
+      <a href="airport.html"><span lang="ko">공항 이착륙</span><span lang="en">Airport Runways</span><small lang="ko">평행 활주로 2개 · 도착·출발 안내판 · 입체 시점</small><small lang="en">Two parallel runways · arrival &amp; departure boards · 3D-style view</small></a>
+      <a href="flights.html"><span lang="ko">세계 항공 교통</span><span lang="en">World Air Traffic</span><small lang="ko">세계 지도 위 국내선·국제선 항공기 · 대권 항로 · 낮과 밤</small><small lang="en">Domestic &amp; international flights on a world map · great circles · day and night</small></a>
+      <a href="city.html"><span lang="ko">도시 교통망</span><span lang="en">City Traffic Network</span><small lang="ko">6×6 블록 도시 · 신호등 49곳 · 자율주행차 · 유입·유출 대시보드</small><small lang="en">6×6-block city · 49 signals · autonomous cars · inflow/outflow dashboard</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">자연</span><span lang="en">Nature</span></p>
+      <a href="ecosystem.html"><span lang="ko">단세포 생태계</span><span lang="en">Cell Ecosystem</span><small lang="ko">초식·육식 세포의 포식자–피식자 개체수 주기 · 진화</small><small lang="en">Predator–prey population cycles · evolution</small></a>
+      <a href="particle-life.html"><span lang="ko">입자 생명</span><span lang="en">Particle Life</span><small lang="ko">끌림 · 밀침 표 하나에서 생기는 무리 · 그 표가 진화하는 세계</small><small lang="en">Groups from one attraction table · a world where it evolves</small></a>
+      <a href="tunneling.html"><span lang="ko">양자 터널 효과</span><span lang="en">Quantum Tunnelling</span><small lang="ko">에너지가 모자란 전자가 벽을 뚫고 지나감 · 슈뢰딩거 방정식</small><small lang="en">An electron through a wall · the Schrödinger equation</small></a>
+      <a href="star-formation.html"><span lang="ko">별과 행성의 탄생</span><span lang="en">Birth of Stars and Planets</span><small lang="ko">회전하는 먼지 구름이 별과 행성이 됨 · 얼음선 · 조건 바꿔 보기</small><small lang="en">A spinning dust cloud becomes a star and planets · frost line · change the conditions</small></a>
+      <hr>
+      <p class="menu-h"><span lang="ko">피지컬 AI 진화 실험</span><span lang="en">Physical AI evolution</span></p>
+      <a href="physical-ai.html#lab"><span lang="ko">자율주행</span><span lang="en">Self-driving</span><small lang="ko">150대가 진화하며 트랙 주행을 배움</small><small lang="en">150 cars evolve to drive a track</small></a>
+      <a href="neat-snake.html"><span lang="ko">스네이크</span><span lang="en">Snake</span><small lang="ko">150마리가 진화하며 Snake 게임을 배움</small><small lang="en">150 snakes evolve to play Snake</small></a>
+      <a href="neat-drone.html"><span lang="ko">드론</span><span lang="en">Drone</span><small lang="ko">150대가 진화하며 균형 잡고 경유점 비행을 배움</small><small lang="en">150 drones evolve to balance and fly through waypoints</small></a>
+      </div>
+    </div>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="otherMenu"><span lang="ko">기타 관심사</span><span lang="en">Other interests</span><span class="caret" aria-hidden="true">▾</span></button>
+    <div class="menu cols" id="otherMenu" hidden>
+      <div class="menu-col">
+      <p class="menu-h"><span lang="ko">Git 사용법</span><span lang="en">Git usage</span></p>
+      <a href="git-basics.html"><span lang="ko">Git 구조와 로컬 명령</span><span lang="en">Git model and local commands</span><small lang="ko">작업 폴더 · 스테이지 · 저장소 · add · commit · log · diff · 해시</small><small lang="en">Working tree · stage · repository · add, commit, log, diff · hashes</small></a>
+      <a href="git-branch.html"><span lang="ko">브랜치 · 병합 · 충돌</span><span lang="en">Branches, merging and conflicts</span><small lang="ko">switch · merge · rebase · cherry-pick · stash · 충돌 풀기</small><small lang="en">switch · merge · rebase · cherry-pick · stash · resolving conflicts</small></a>
+      <a href="git-remote.html"><span lang="ko">GitHub와 함께</span><span lang="en">Working with GitHub</span><small lang="ko">clone · fetch · pull · push · Pull Request 흐름 · 인증</small><small lang="en">clone · fetch · pull · push · the Pull Request flow · authentication</small></a>
+      <a href="git-trouble.html"><span lang="ko">장애 사례집</span><span lang="en">Troubleshooting cases</span><small lang="ko">push 거절 · 충돌 · reset 복구 · 비밀키 · 100MB 초과 등 21가지</small><small lang="en">Rejected push · conflicts · reset recovery · leaked keys · 100 MB limit and 17 more</small></a>
+      </div><div class="menu-col">
+      <p class="menu-h"><span lang="ko">프로그래밍 언어 (중급)</span><span lang="en">Programming languages (intermediate)</span></p>
+      <a href="lang-c.html"><span lang="ko">C 언어</span><span lang="en">C</span><small lang="ko">포인터 · 메모리 모델 · 전처리기 · 링크 · 정의되지 않은 동작</small><small lang="en">Pointers · memory model · preprocessor · linking · undefined behaviour</small></a>
+      <a href="lang-cpp.html"><span lang="ko">C++</span><span lang="en">C++</span><small lang="ko">RAII · 이동 의미론 · 템플릿 · STL · 스마트 포인터</small><small lang="en">RAII · move semantics · templates · STL · smart pointers</small></a>
+      <a href="lang-java.html"><span lang="ko">Java</span><span lang="en">Java</span><small lang="ko">JVM · 제네릭 · 컬렉션 · 스트림 · 동시성 · equals/hashCode</small><small lang="en">JVM · generics · collections · streams · concurrency · equals/hashCode</small></a>
+      <a href="lang-r.html"><span lang="ko">R</span><span lang="en">R</span><small lang="ko">벡터화 · NA · data.frame · tidyverse · 통계 모델</small><small lang="en">Vectorisation · NA · data.frame · tidyverse · statistical models</small></a>
+      <a href="lang-python.html"><span lang="ko">Python</span><span lang="en">Python</span><small lang="ko">객체 모델 · 제너레이터 · 데코레이터 · asyncio · 타입 힌트</small><small lang="en">Object model · generators · decorators · asyncio · type hints</small></a>
+      <a href="lang-rust.html"><span lang="ko">Rust</span><span lang="en">Rust</span><small lang="ko">소유권 · 빌림 · 수명 · 트레이트 · 겁 없는 동시성</small><small lang="en">Ownership · borrowing · lifetimes · traits · fearless concurrency</small></a>
+      <hr>
+      <a href="lang-compare.html"><span lang="ko">언어 비교</span><span lang="en">Language comparison</span><small lang="ko">같은 문제를 5개 언어로 · 무엇을 고를까</small><small lang="en">One task in five languages · how to choose</small></a>
+      </div>
+    </div>
+  </nav>
+  <div class="tools"><button id="langBtn">EN</button><button id="themeBtn" aria-label="theme">◐</button></div>
+</div></header>
+
+<main id="main" class="wrap">
+<div class="hero">
+  <div class="eyebrow"><span lang="ko">운영체제 · 개요</span><span lang="en">OPERATING SYSTEMS · OVERVIEW</span></div>
+  <h1><span class="h1ic" aria-hidden="true">🖥️</span> <span lang="ko">운영체제는<br>프로그램과 하드웨어 사이의 심판</span><span lang="en">The operating system:<br>referee between programs and hardware</span></h1>
+  <p class="lead" lang="ko">프로그램은 디스크에 직접 쓰지도, 다른 프로그램의 메모리를 보지도, CPU를 혼자 차지하지도 못합니다. 그런 일은 모두 <b>커널</b>에게 부탁해야 하고, 그 부탁이 <b>시스템 호출</b>입니다. CPU에는 사용자 모드와 커널 모드가 있어서, 그 경계를 넘는 길은 정해진 몇 개의 문(시스템 호출, 인터럽트, 예외)뿐입니다. 그 문을 지나가는 과정을 한 단계씩 따라갑니다.</p>
+  <p class="lead" lang="en">A program cannot write to the disk directly, look at another program's memory, or keep the CPU to itself. All of that must be requested from the <b>kernel</b>, and such a request is a <b>system call</b>. The CPU has a user mode and a kernel mode, and the only ways across are a few fixed gates: system calls, interrupts and exceptions. Follow the trip through those gates step by step.</p>
+  <p class="meta" lang="ko">리눅스 x86-64를 기준으로 크게 줄여 적었습니다. 시스템 호출 번호(read 0 · write 1 · getpid 39)는 커널의 표와 같고, 사용자 모드와 커널 모드가 정해진 문에서만 바뀌는지를 <code>tests/os.test.mjs</code>가 확인합니다.</p>
+  <p class="meta" lang="en">Greatly simplified, based on Linux x86-64. The syscall numbers (read 0 · write 1 · getpid 39) match the kernel's table, and <code>tests/os.test.mjs</code> checks that user and kernel mode change only at the defined gates.</p>
+</div>
+
+<section id="lab">
+  <div class="badge">LAB</div>
+  <h2><span lang="ko">경계를 넘는 여섯 가지 장면</span><span lang="en">Six trips across the boundary</span></h2>
+  <div class="net-presets" id="smScen" role="group" aria-label="scenarios"></div>
+  <code class="sm-code" id="smCode"></code>
+  <div class="ctrl">
+    <button type="button" id="smFirst" aria-label="first">⏮</button>
+    <button type="button" id="smPrev" aria-label="previous">◀</button>
+    <button type="button" id="smPlay" class="primary" aria-label="play">▶</button>
+    <button type="button" id="smNext" aria-label="next">▶|</button>
+  </div>
+  <div class="os-grid">
+    <div><div id="smLayers"></div><p class="st-cap" id="smCap" aria-live="polite"></p></div>
+    <div><h3><span lang="ko">레지스터 · 상태</span><span lang="en">Registers and state</span></h3><div id="smRegs"></div><h3><span lang="ko">전체 단계</span><span lang="en">All steps</span></h3><ol class="sm-list" id="smList"></ol></div>
+  </div>
+</section>
+
+<section id="map">
+  <h2><span lang="ko">운영체제가 하는 일</span><span lang="en">What an operating system does</span></h2>
+  <p lang="ko">커널이 나눠 주고 지켜 주는 자원마다 페이지가 하나씩 있습니다.</p>
+  <p lang="en">Each resource the kernel shares out and protects has its own page.</p>
+  <div class="os-map">
+    <a class="card" href="os-process.html"><h4>⏱️ <span lang="ko">CPU: 프로세스와 스케줄링</span><span lang="en">CPU: processes and scheduling</span></h4><p lang="ko">누구를 언제 얼마나 돌릴까. 선점, 문맥 전환, CFS</p><p lang="en">Who runs, when and for how long. Preemption, context switches, CFS</p></a>
+    <a class="card" href="os-memory.html"><h4>🧠 <span lang="ko">메모리: 가상 메모리</span><span lang="en">Memory: virtual memory</span></h4><p lang="ko">주소 변환, TLB, 페이지 폴트, 교체</p><p lang="en">Address translation, the TLB, page faults, replacement</p></a>
+    <a class="card" href="os-sync.html"><h4>🔒 <span lang="ko">동시성: 동기화와 교착상태</span><span lang="en">Concurrency: synchronisation and deadlock</span></h4><p lang="ko">경쟁 상태, 뮤텍스, 원자적 명령, 식사하는 철학자</p><p lang="en">Race conditions, mutexes, atomics, dining philosophers</p></a>
+    <a class="card" href="os-file.html"><h4>💾 <span lang="ko">저장: 파일시스템</span><span lang="en">Storage: file systems</span></h4><p lang="ko">inode, 비트맵, 정전, 저널링, fsck</p><p lang="en">Inodes, bitmaps, power loss, journaling, fsck</p></a>
+    <a class="card" href="socket.html"><h4>🌐 <span lang="ko">통신: 소켓</span><span lang="en">Communication: sockets</span></h4><p lang="ko">커널의 파일 표와 연결 대기열, 네트워크 스택</p><p lang="en">The kernel's descriptor table, connection queues, the network stack</p></a>
+    <a class="card" href="concurrency.html"><h4>🧵 <span lang="ko">서버: 동시 접속 처리</span><span lang="en">Servers: many connections</span></h4><p lang="ko">프로세스 · 스레드 · 이벤트 루프 · epoll</p><p lang="en">Processes, threads, event loops, epoll</p></a>
+  </div>
+</section>
+
+<section id="kinds">
+  <h2><span lang="ko">커널을 짜는 세 가지 방식</span><span lang="en">Three ways to build a kernel</span></h2>
+  <div class="net-scroll"><table class="net-tab era-tab">
+    <thead><tr><th><span lang="ko">방식</span><span lang="en">Design</span></th><th><span lang="ko">커널 안에 무엇이</span><span lang="en">What lives in the kernel</span></th><th><span lang="ko">예</span><span lang="en">Examples</span></th><th><span lang="ko">장단점</span><span lang="en">Trade-offs</span></th></tr></thead>
+    <tbody>
+      <tr><td><span lang="ko">모놀리식</span><span lang="en">Monolithic</span></td><td><span lang="ko">스케줄러 · 메모리 · 파일시스템 · 네트워크 · 드라이버 모두</span><span lang="en">Scheduler, memory, file systems, networking and drivers, all of it</span></td><td>Linux, FreeBSD</td><td><span lang="ko">함수 호출만으로 오가 빠름. 드라이버 버그 하나가 커널 전체를 멈출 수 있음</span><span lang="en">Fast: parts talk by plain function calls. One driver bug can crash the whole kernel</span></td></tr>
+      <tr><td><span lang="ko">마이크로커널</span><span lang="en">Microkernel</span></td><td><span lang="ko">최소한(주소 공간 · 스레드 · 메시지 전달)만. 드라이버 · 파일시스템은 사용자 프로세스</span><span lang="en">Only the minimum (address spaces, threads, message passing). Drivers and file systems are user processes</span></td><td>seL4, QNX, MINIX 3</td><td><span lang="ko">고장이 격리되고 검증이 쉬움(seL4는 수학적으로 증명됨). 메시지를 주고받는 비용이 듦. 자동차 · 의료 · 산업 장비에 많이 쓰임</span><span lang="en">Faults stay isolated and verification is easier (seL4 is formally proven). Message passing costs time. Common in cars, medical and industrial devices</span></td></tr>
+      <tr><td><span lang="ko">하이브리드</span><span lang="en">Hybrid</span></td><td><span lang="ko">마이크로커널 구조에서 출발했지만 성능 때문에 많은 부분을 커널 안에 둠</span><span lang="en">Started from a microkernel structure but keeps much inside the kernel for speed</span></td><td>Windows NT, macOS (XNU)</td><td><span lang="ko">두 방식의 절충</span><span lang="en">A compromise between the two</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="why">
+  <h2><span lang="ko">알아 둘 원리</span><span lang="en">Principles worth knowing</span></h2>
+  <div class="grid two">
+    <div class="card"><h4><span lang="ko">① 두 가지 모드</span><span lang="en">① Two modes</span></h4>
+      <p lang="ko">CPU는 지금 어느 모드인지 비트로 기억합니다. 사용자 모드에서는 장치 입출력, 인터럽트 끄기, 페이지 테이블 바꾸기 같은 <b>특권 명령</b>이 거부됩니다. 커널 모드로 가는 길은 커널이 부팅 때 정해 둔 진입점뿐이라, 프로그램이 커널 코드의 아무 곳으로나 뛰어들 수 없습니다. 이 하드웨어 경계가 모든 보호의 바탕입니다.</p>
+      <p lang="en">The CPU remembers its current mode in a bit. In user mode, <b>privileged instructions</b> such as device I/O, disabling interrupts or switching page tables are refused. The only way into kernel mode is through entry points the kernel registered at boot, so a program cannot jump into arbitrary kernel code. This hardware boundary underlies all protection.</p></div>
+    <div class="card"><h4><span lang="ko">② 시스템 호출 · 인터럽트 · 예외</span><span lang="en">② System calls, interrupts and exceptions</span></h4>
+      <p lang="ko">커널에 들어가는 문은 셋입니다. <b>시스템 호출</b>은 프로그램이 스스로 부탁하는 것(write, read). <b>인터럽트</b>는 장치가 바깥에서 알리는 것(키보드, SSD 완료, 타이머). <b>예외</b>는 CPU가 명령을 실행하다 문제를 만난 것(페이지 폴트, 0으로 나누기, 특권 명령). 앞의 실험이 각각을 하나씩 보여 줍니다.</p>
+      <p lang="en">There are three gates into the kernel. A <b>system call</b> is a request the program makes itself (write, read). An <b>interrupt</b> is a device signalling from outside (keyboard, SSD completion, timer). An <b>exception</b> is the CPU hitting a problem while executing (page fault, divide by zero, privileged instruction). The scenarios above show each of them.</p></div>
+    <div class="card"><h4><span lang="ko">③ "모든 것은 파일"</span><span lang="en">③ "Everything is a file"</span></h4>
+      <p lang="ko">유닉스 계열은 일반 파일, 터미널, 소켓, 파이프, 장치를 모두 <b>파일 번호(fd)</b> 하나로 다루고 같은 <code>read</code> · <code>write</code>로 읽고 씁니다. 앞의 시나리오에서 파일 쓰기와 키보드 읽기가 같은 호출을 쓴 것이 그 예입니다. 아래 계층이 무엇이든 위에서는 같은 모양으로 보이게 하는 <b>추상화</b>가 운영체제의 핵심 일입니다.</p>
+      <p lang="en">Unix-like systems handle regular files, terminals, sockets, pipes and devices all through a <b>file descriptor</b>, read and written with the same <code>read</code> and <code>write</code>. Writing a file and reading the keyboard used the same calls above. Making everything look the same from above whatever lies below, <b>abstraction</b>, is a core job of an OS.</p></div>
+    <div class="card"><h4><span lang="ko">④ 커널을 오가는 데도 비용이 든다</span><span lang="en">④ Kernel crossings are not free</span></h4>
+      <p lang="ko">모드를 한 번 오갈 때마다 레지스터 저장 · 복원과 보안 대책(Meltdown 이후의 페이지 테이블 분리 등)으로 수십~수백 ns가 듭니다. 그래서 작은 쓰기를 모아 한 번에 보내고(버퍼링), 호출 여러 개를 한 번에 넘기는 인터페이스(리눅스 io_uring)가 생겼습니다. <a href="concurrency.html">동시 접속 처리</a>의 epoll도 "준비된 것만 한 번에 묻기"로 호출 수를 줄이는 방법입니다.</p>
+      <p lang="en">Each round trip costs tens to hundreds of ns for saving and restoring registers and for security measures (such as page-table isolation after Meltdown). Hence small writes are batched (buffering), and interfaces that submit many calls at once exist (Linux io_uring). epoll on the <a href="concurrency.html">many-connections</a> page likewise cuts calls by asking only for what is ready.</p></div>
+    <div class="card"><h4><span lang="ko">⑤ 임베디드와 실시간 OS</span><span lang="en">⑤ Embedded and real-time OSes</span></h4>
+      <p lang="ko">보호계전기, 인버터 제어기, 로봇 관절은 "평균적으로 빠름"이 아니라 "마감 시간을 절대 넘기지 않음"이 중요합니다. 그래서 FreeRTOS · Zephyr · VxWorks 같은 실시간 OS나 PREEMPT_RT를 켠 리눅스를 씁니다. 작은 마이크로컨트롤러는 메모리 보호(MMU)가 없어 사용자 · 커널 구분 없이 하나의 프로그램으로 돌기도 합니다.</p>
+      <p lang="en">Protection relays, inverter controllers and robot joints care about never missing a deadline, not about being fast on average. They run real-time OSes such as FreeRTOS, Zephyr or VxWorks, or Linux with PREEMPT_RT. Small microcontrollers may lack memory protection (an MMU) altogether and run as a single program with no user/kernel split.</p></div>
+    <div class="card"><h4><span lang="ko">⑥ 이 모형이 생략한 것</span><span lang="en">⑥ What this model leaves out</span></h4>
+      <p lang="ko">인터럽트의 위 · 아래 절반 나누기(softirq), 여러 코어에서의 동시 진입, 시스템 호출 필터(seccomp), 가상화(하이퍼바이저의 또 다른 모드), 실제 레지스터 값과 시간은 넣지 않았습니다.</p>
+      <p lang="en">Not included: splitting interrupt handling into top and bottom halves (softirq), simultaneous entry on several cores, syscall filtering (seccomp), virtualisation (the hypervisor's extra mode), and real register values and timings.</p></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">Ontology Space · <a href="https://github.com/1004aiteam-power/ontology-space">GitHub</a> · © 2026 1004aiteam-power · <span lang="ko">문서</span><span lang="en">Docs</span> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> · <span lang="ko">코드</span><span lang="en">Code</span> <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/LICENSE-CODE">AGPL-3.0</a> · <a href="https://github.com/1004aiteam-power/ontology-space/blob/main/README.md#출처-표시-방법"><span lang="ko">가져가실 때는 출처를 꼭 밝혀 주세요</span><span lang="en">Please credit the source when you reuse it</span></a></div></footer>
+</body>
+</html>

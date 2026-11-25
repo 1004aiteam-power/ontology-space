@@ -95,7 +95,11 @@ NAV = [
         ('http.html', 'HTTP 통신', 'HTTP', '요청·응답 글자 그대로 · 상태 코드 · 헤더 · HTTP/1.1 vs 2 vs 3 시간 비교', 'Requests and responses as text · status codes · headers · HTTP/1.1 vs 2 vs 3 timing'),
         ('col',),
         ('h', '운영체제', 'Operating systems'),
+        ('os-map.html', '운영체제란', 'What an OS is', '사용자 모드 · 커널 모드 · 시스템 호출 · 인터럽트 · 예외', 'User and kernel mode · system calls · interrupts · exceptions'),
         ('os-process.html', '프로세스 · CPU 스케줄링', 'Processes and CPU scheduling', 'FCFS · SJF · 라운드 로빈 · MLFQ · CFS · 상태 전이 · 문맥 전환', 'FCFS · SJF · round robin · MLFQ · CFS · states · context switches'),
+        ('os-memory.html', '가상 메모리', 'Virtual memory', '주소 변환 · TLB · 페이지 폴트 · FIFO · LRU · Clock', 'Address translation · TLB · page faults · FIFO · LRU · Clock'),
+        ('os-sync.html', '동기화 · 교착상태', 'Synchronisation and deadlock', '경쟁 상태 · 뮤텍스 · 원자적 명령 · 식사하는 철학자', 'Race conditions · mutexes · atomics · dining philosophers'),
+        ('os-file.html', '파일시스템 · 저널링', 'File systems and journaling', 'inode · 비트맵 · 정전 · 저널 · fsck', 'Inodes · bitmaps · power loss · journal · fsck'),
     ]),
     ("menu", 'dbMenu', '데이터베이스 접근', 'Database Access', [
         ('h', '밑바닥에서 코드까지', 'From the bottom up'),
