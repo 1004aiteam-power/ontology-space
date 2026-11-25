@@ -1,6 +1,6 @@
 # Ontology Space
 
-온톨로지(Ontology)의 기본 개념과 **전력망 온톨로지**를 정리하는 저장소입니다.
+온톨로지(Ontology)의 기본 개념과 **전력망 온톨로지**를 정리하는 저장소입니다. 그 바탕이 되는 산업·전력 통신, 운영체제 · 네트워크 · 데이터베이스도 브라우저에서 직접 돌려 보는 페이지로 함께 다룹니다.
 
 ## 구성
 
@@ -17,6 +17,18 @@
 파일 · 폴더별 자세한 설명과 모든 실행 명령은 **[docs/repository-map.md](docs/repository-map.md)** 에 있습니다.
 
 웹사이트: https://1004aiteam-power.github.io/ontology-space/
+
+## 웹사이트 메뉴
+
+| 메뉴 | 담긴 것 |
+|---|---|
+| 소개 | 사이트 소개(읽는 순서) · 온톨로지 입문 |
+| 전력·에너지 | 전력망 온톨로지(IEC CIM) · pycim · 객체지향 설계와 비교 · 자산관리셸(AAS) · Cypher 실습 · 디지털 트윈 · VPP · 분산에너지 · 전력시장<br>**산업·전력 통신**: 개요(퍼듀 모델 · 규약 지도) · Modbus · DNP3 사건 보고 · IEC 61850 GOOSE · 분산에너지 · VPP 통신(OpenADR · IEEE 2030.5 · OCPP) |
+| 온톨로지 × AI | 설계실 · 온톨로지 지도 · 업무 · 교통 · 전력설비 · 고장 영향 · 배전공사 안전 · 생태계 온톨로지 · GraphRAG · AI 에이전트 · 피지컬 AI |
+| 운영체제·네트워크 | **운영체제**: 운영체제란(시스템 호출) · 프로세스와 CPU 스케줄링 · 가상 메모리 · 동기화와 교착상태 · 파일시스템과 저널링<br>**네트워크 스택**: 패킷 조립 · TCP · 소켓 · 동시 접속 · HTTP |
+| 데이터베이스 접근 | 파일과 엔진 · 와이어 프로토콜 · 드라이버 · ORM · REST · GraphQL · 최근 흐름 · 선택 기준 |
+| 시뮬레이션 | 배전공사 안전 훈련 · 교차로 · 공항 · 세계 항공 · 도시 교통 · 생태계 · 입자 생명 · 양자 터널 · 별의 탄생 · NEAT 진화 실험 |
+| 기타 관심사 | Git 사용법 · 프로그래밍 언어 중급(C · C++ · Java · R · Python · Rust) |
 
 ## 빠르게 써 보기
 
@@ -37,7 +49,7 @@ python -m pytest tests               # 파이썬 테스트
 ```
 
 ```bash
-for t in tests/*.test.mjs; do node "$t"; done   # Node 테스트 (시뮬레이션 · Cypher 엔진 · 온톨로지)
+for t in tests/*.test.mjs; do node "$t"; done   # Node 테스트 (시뮬레이션 · Cypher 엔진 · 온톨로지 · 운영체제 · 산업 통신 등)
 ```
 
 분야별 예제를 다시 만드는 명령은 [docs/repository-map.md](docs/repository-map.md#실행-명령-모음)에 있습니다.
